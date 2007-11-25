@@ -140,7 +140,7 @@ public abstract class MarkupContainer extends Component
 		if (put(child) != null)
 		{
 			throw new IllegalArgumentException(exceptionMessage("A child with id '" +
-					child.getId() + "' already exists"));
+				child.getId() + "' already exists"));
 		}
 
 		return this;
@@ -340,7 +340,7 @@ public abstract class MarkupContainer extends Component
 		try
 		{
 			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this,
-					false, throwException);
+				false, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -352,10 +352,10 @@ public abstract class MarkupContainer extends Component
 		{
 			// throw exception since there is no associated markup
 			throw new MarkupNotFoundException(
-					exceptionMessage("Markup of type '" + getMarkupType() + "' for component '" +
-							getClass().getName() + "' not found." +
-							" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried"),
-					ex);
+				exceptionMessage("Markup of type '" + getMarkupType() + "' for component '" +
+					getClass().getName() + "' not found." +
+					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried"),
+				ex);
 		}
 	}
 
@@ -383,7 +383,7 @@ public abstract class MarkupContainer extends Component
 	public String getMarkupType()
 	{
 		throw new IllegalStateException(
-				exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
+			exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
 	}
 
 	/**
@@ -409,9 +409,8 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer) have to be transparent
-	 * with respect to there child components. A transparent container gets its children from its
-	 * parent container.
+	 * Some MarkupContainers (e.g. HtmlHeaderContainer) have to be transparent with respect to their
+	 * child components. A transparent container gets its children from its parent container.
 	 * <p>
 	 * 
 	 * @see org.apache.wicket.markup.resolver.ParentResolver
@@ -491,7 +490,7 @@ public abstract class MarkupContainer extends Component
 	public final IResourceStream newMarkupResourceStream(Class containerClass)
 	{
 		throw new IllegalStateException(
-				"this method is not used any more (and shouldn't be called by clients anyway)");
+			"this method is not used any more (and shouldn't be called by clients anyway)");
 	}
 
 	/**
@@ -532,7 +531,7 @@ public abstract class MarkupContainer extends Component
 		else
 		{
 			throw new WicketRuntimeException("Unable to find a component with id '" + id +
-					"' to remove");
+				"' to remove");
 		}
 	}
 
@@ -555,7 +554,7 @@ public abstract class MarkupContainer extends Component
 				public String toString()
 				{
 					return "RemoveAllChange[component: " + getPath() + ", removed Children: " +
-							removedChildren + "]";
+						removedChildren + "]";
 				}
 
 				public void undo()
@@ -679,8 +678,8 @@ public abstract class MarkupContainer extends Component
 			if (replaced == null)
 			{
 				throw new WicketRuntimeException(
-						exceptionMessage("Cannot replace a component which has not been added: id='" +
-								child.getId() + "', component=" + child));
+					exceptionMessage("Cannot replace a component which has not been added: id='" +
+						child.getId() + "', component=" + child));
 			}
 
 			// first remove the component.
@@ -823,7 +822,7 @@ public abstract class MarkupContainer extends Component
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
-						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
@@ -831,14 +830,14 @@ public abstract class MarkupContainer extends Component
 
 			// If child is a container
 			if ((child instanceof MarkupContainer) &&
-					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
 				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
-						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
@@ -889,7 +888,7 @@ public abstract class MarkupContainer extends Component
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
 			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException(
-					"added")));
+				"added")));
 		}
 
 		if (page != null)
@@ -955,7 +954,7 @@ public abstract class MarkupContainer extends Component
 	 * @return
 	 */
 	private final Object postprocess(Object object, boolean reconstruct, MarkupContainer parent,
-			int index)
+		int index)
 	{
 		if (reconstruct && object instanceof ComponentSourceEntry)
 		{
@@ -1047,7 +1046,7 @@ public abstract class MarkupContainer extends Component
 	private final int children_indexOf(Component child)
 	{
 		if (children != null && children instanceof Object[] == false &&
-				getId(children).equals(child.getId()))
+			getId(children).equals(child.getId()))
 		{
 			return 0;
 		}
@@ -1132,7 +1131,7 @@ public abstract class MarkupContainer extends Component
 		if (index < children_size())
 		{
 			if (children == null || children instanceof Component ||
-					children instanceof ComponentSourceEntry)
+				children instanceof ComponentSourceEntry)
 			{
 				replaced = children;
 				children = child;
@@ -1260,7 +1259,7 @@ public abstract class MarkupContainer extends Component
 
 				// 3rd try: Try application's component resolvers
 				final List componentResolvers = getApplication().getPageSettings()
-						.getComponentResolvers();
+					.getComponentResolvers();
 				final Iterator iterator = componentResolvers.iterator();
 				while (iterator.hasNext())
 				{
@@ -1276,7 +1275,7 @@ public abstract class MarkupContainer extends Component
 					if (((WicketTag)tag).isChildTag())
 					{
 						markupStream.throwMarkupException("Found " + tag.toString() +
-								" but no <wicket:extend>");
+							" but no <wicket:extend>");
 					}
 					else
 					{
@@ -1286,9 +1285,9 @@ public abstract class MarkupContainer extends Component
 
 				// No one was able to handle the component id
 				markupStream.throwMarkupException("Unable to find component with id '" + id +
-						"' in " + this + ". This means that you declared wicket:id=" + id +
-						" in your markup, but that you either did not add the " +
-						"component to your page at all, or that the hierarchy does not match.");
+					"' in " + this + ". This means that you declared wicket:id=" + id +
+					" in your markup, but that you either did not add the " +
+					"component to your page at all, or that the hierarchy does not match.");
 			}
 		}
 		else
@@ -1372,7 +1371,7 @@ public abstract class MarkupContainer extends Component
 			if (index == markupStream.getCurrentIndex())
 			{
 				markupStream.throwMarkupException("Component at markup stream index " + index +
-						" failed to advance the markup stream");
+					" failed to advance the markup stream");
 			}
 		}
 	}
@@ -1388,7 +1387,7 @@ public abstract class MarkupContainer extends Component
 	 *            The open tag
 	 */
 	protected final void renderComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
 		boolean render = openTag.requiresCloseTag();
@@ -1409,7 +1408,7 @@ public abstract class MarkupContainer extends Component
 				if (index == markupStream.getCurrentIndex())
 				{
 					markupStream.throwMarkupException("Markup element at index " + index +
-							" failed to advance the markup stream");
+						" failed to advance the markup stream");
 				}
 			}
 		}
@@ -1429,7 +1428,7 @@ public abstract class MarkupContainer extends Component
 	private static class ComponentSourceEntry extends org.apache.wicket.ComponentSourceEntry
 	{
 		private ComponentSourceEntry(MarkupContainer container, Component component,
-				IComponentSource componentSource)
+			IComponentSource componentSource)
 		{
 			super(container, component, componentSource);
 		}
@@ -1457,7 +1456,7 @@ public abstract class MarkupContainer extends Component
 				if (child instanceof IComponentSourceProvider)
 				{
 					ComponentSourceEntry entry = new ComponentSourceEntry(this, component,
-							((IComponentSourceProvider)child).getComponentSource());
+						((IComponentSourceProvider)child).getComponentSource());
 					children_set(i, entry, false);
 				}
 				else if (component.isAuto())
@@ -1524,7 +1523,7 @@ public abstract class MarkupContainer extends Component
 			else
 			{
 				throw new WicketRuntimeException("Error attaching this container for rendering: " +
-						this, ex);
+					this, ex);
 			}
 		}
 	}
