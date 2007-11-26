@@ -141,7 +141,7 @@ public class MarkupCache implements IMarkupCache
 				{
 					Markup cacheMarkup = (Markup)markupCache.get(iter.next());
 					MarkupResourceData resourceData = cacheMarkup.getMarkupResourceData()
-							.getBaseMarkupResourceData();
+						.getBaseMarkupResourceData();
 					if (resourceData != null)
 					{
 						String baseCacheKey = resourceData.getResource().getCacheKey();
@@ -150,8 +150,7 @@ public class MarkupCache implements IMarkupCache
 							if (log.isDebugEnabled())
 							{
 								log.debug("Remove from cache: cacheKey=" +
-										cacheMarkup.getMarkupResourceData().getResource()
-												.getCacheKey());
+									cacheMarkup.getMarkupResourceData().getResource().getCacheKey());
 							}
 
 							iter.remove();
@@ -167,7 +166,7 @@ public class MarkupCache implements IMarkupCache
 			// Application.get() since removeMarkup() will be call from a
 			// ModificationWatcher thread which has no associated Application.
 			final ModificationWatcher watcher = application.getResourceSettings()
-					.getResourceWatcher(true);
+				.getResourceWatcher(true);
 			if (watcher != null)
 			{
 				Iterator iter = watcher.getEntries().iterator();
@@ -194,7 +193,7 @@ public class MarkupCache implements IMarkupCache
 	 *      boolean, boolean)
 	 */
 	public final MarkupStream getMarkupStream(final MarkupContainer container,
-			final boolean enforceReload, final boolean throwException)
+		final boolean enforceReload, final boolean throwException)
 	{
 		if (container == null)
 		{
@@ -202,7 +201,7 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// Look for associated markup
-		final Markup markup = getMarkup(container, container.getClass(), false);
+		final Markup markup = getMarkup(container, container.getClass(), enforceReload);
 
 		// If we found markup for this container
 		if (markup != Markup.NO_MARKUP)
@@ -214,8 +213,8 @@ public class MarkupCache implements IMarkupCache
 		{
 			// throw exception since there is no associated markup
 			throw new MarkupNotFoundException("Markup not found. Component class: " +
-					container.getClass().getName() +
-					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried");
+				container.getClass().getName() +
+				" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried");
 		}
 
 		return null;
@@ -258,7 +257,7 @@ public class MarkupCache implements IMarkupCache
 	 *      java.lang.Class, boolean)
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class clazz,
-			final boolean enforceReload)
+		final boolean enforceReload)
 	{
 		Class containerClass = clazz;
 		if (clazz == null)
@@ -268,12 +267,12 @@ public class MarkupCache implements IMarkupCache
 		else if (!clazz.isAssignableFrom(container.getClass()))
 		{
 			throw new WicketRuntimeException("Parameter clazz must be an instance of " +
-					container.getClass().getName() + ", but is a " + clazz.getName());
+				container.getClass().getName() + ", but is a " + clazz.getName());
 		}
 
 		// Get the cache key to be associated with the markup resource stream
 		final String cacheKey = getMarkupCacheKeyProvider(container).getCacheKey(container,
-				containerClass);
+			containerClass);
 
 		// Is the markup already in the cache?
 		Markup markup = (enforceReload == false ? getMarkupFromCache(cacheKey, container) : null);
@@ -286,8 +285,8 @@ public class MarkupCache implements IMarkupCache
 
 			// Who is going to provide the markup resource stream?
 			// And ask the provider to locate the markup resource stream
-			final IResourceStream resourceStream = getMarkupResourceStreamProvider(container)
-					.getMarkupResourceStream(container, containerClass);
+			final IResourceStream resourceStream = getMarkupResourceStreamProvider(container).getMarkupResourceStream(
+				container, containerClass);
 
 			// Found markup?
 			if (resourceStream != null)
@@ -300,14 +299,14 @@ public class MarkupCache implements IMarkupCache
 				else
 				{
 					markupResourceStream = new MarkupResourceStream(resourceStream,
-							new ContainerInfo(container), containerClass);
+						new ContainerInfo(container), containerClass);
 				}
 
 				markupResourceStream.setCacheKey(cacheKey);
 
 				// load the markup and watch for changes
 				markup = loadMarkupAndWatchForChanges(container, markupResourceStream,
-						enforceReload);
+					enforceReload);
 			}
 			else
 			{
@@ -404,13 +403,13 @@ public class MarkupCache implements IMarkupCache
 	 * @return The markup
 	 */
 	private final Markup loadMarkup(final MarkupContainer container,
-			final MarkupResourceStream markupResourceStream, final boolean enforceReload)
+		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		String cacheKey = markupResourceStream.getCacheKey();
 		try
 		{
 			Markup markup = getMarkupLoader().loadMarkup(container, markupResourceStream, null,
-					enforceReload);
+				enforceReload);
 
 			// add the markup to the cache.
 			return putIntoCache(cacheKey, markup);
@@ -448,14 +447,15 @@ public class MarkupCache implements IMarkupCache
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
-			final MarkupResourceStream markupResourceStream, final boolean enforceReload)
+		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		final String cacheKey = markupResourceStream.getCacheKey();
 		if (cacheKey != null)
 		{
 			// Watch file in the future
-			final ModificationWatcher watcher = Application.get().getResourceSettings()
-					.getResourceWatcher(true);
+			final ModificationWatcher watcher = Application.get()
+				.getResourceSettings()
+				.getResourceWatcher(true);
 			if (watcher != null)
 			{
 				watcher.add(markupResourceStream, new IChangeListener()
@@ -512,7 +512,7 @@ public class MarkupCache implements IMarkupCache
 	 * @return IMarkupResourceStreamProvider
 	 */
 	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
-			final MarkupContainer container)
+		final MarkupContainer container)
 	{
 		if (container instanceof IMarkupResourceStreamProvider)
 		{
