@@ -201,7 +201,7 @@ public class WicketTester extends BaseWicketTester
 				}
 
 				public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
-						int ajaxVersionNumber)
+					int ajaxVersionNumber)
 				{
 					return null;
 				}
@@ -223,7 +223,7 @@ public class WicketTester extends BaseWicketTester
 				}
 
 				public boolean containsPage(String sessionId, String pageMapName, int pageId,
-						int pageVersion)
+					int pageVersion)
 				{
 					return false;
 				}
@@ -318,22 +318,19 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertAjaxLocation()
 	{
-		if (null != ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getRedirectLocation())
+		if (null != ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getRedirectLocation())
 		{
 			throw new AssertionFailedError(
-					"Location header should *not* be present when using Ajax");
+				"Location header should *not* be present when using Ajax");
 		}
 
-		String ajaxLocation = ((MockHttpServletResponse)getWicketResponse()
-				.getHttpServletResponse()).getHeader("Ajax-Location");
+		String ajaxLocation = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
 			throw new AssertionFailedError("Ajax-Location header should be present when using Ajax");
 		}
 
-		int statusCode = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getStatus();
+		int statusCode = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getStatus();
 		if (statusCode != 200)
 		{
 			throw new AssertionFailedError("Expected HTTP status code to be 200 (OK)");
@@ -454,6 +451,20 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Asserts the model value of a component.
+	 * 
+	 * @param path
+	 *            path to the component on the page
+	 * @param expectedValue
+	 *            expected value of the component's model
+	 */
+	public void assertModelValue(String path, Object expectedValue)
+	{
+		Component component = getComponentFromLastRenderedPage(path);
+		Assert.assertEquals(expectedValue, component.getModelObject());
+	}
+
+	/**
 	 * Asserts the model of a {@link ListView}.
 	 * 
 	 * @param path
@@ -474,7 +485,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		List messages = getMessages(FeedbackMessage.ERROR);
 		Assert.assertTrue("expect no error message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -484,7 +495,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		List messages = getMessages(FeedbackMessage.INFO);
 		Assert.assertTrue("expect no info message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
