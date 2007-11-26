@@ -20,14 +20,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -55,6 +58,7 @@ public final class GuestBook extends WicketExamplePage
 		// Add commentListView of existing comments
 		add(new PropertyListView("comments", commentList)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				listItem.add(new Label("date"));
@@ -79,30 +83,42 @@ public final class GuestBook extends WicketExamplePage
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new Comment()));
+			super(id, new CompoundPropertyModel(new ValueMap()));
 
 			// this is just to make the unit test happy
 			setMarkupId("commentForm");
 
 			// Add text entry widget
 			add(new TextArea("text"));
+
+			// Add simple automated spam prevention measure.
+			add(new TextField("comment"));
 		}
 
 		/**
 		 * Show the resulting valid edit
 		 */
+		@Override
 		public final void onSubmit()
 		{
+			ValueMap values = (ValueMap)getModelObject();
+
+			// check if the honey pot is filled
+			if (StringUtils.isNotBlank((String)values.get("comment")))
+			{
+				error("Caught a spammer!!!");
+				return;
+			}
 			// Construct a copy of the edited comment
-			final Comment comment = (Comment)getModelObject();
-			final Comment newComment = new Comment(comment);
+			Comment comment = new Comment();
 
 			// Set date of comment to add
-			newComment.setDate(new Date());
-			commentList.add(0, newComment);
+			comment.setDate(new Date());
+			comment.setText((String)values.get("text"));
+			commentList.add(0, comment);
 
 			// Clear out the text component
-			comment.setText("");
+			values.put("text", "");
 		}
 	}
 

@@ -16,48 +16,32 @@
  */
 package org.apache.wicket.examples.guestbook;
 
-import junit.framework.Test;
+import java.util.ArrayList;
+
+import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.examples.WicketWebTestCase;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * jWebUnit test for Hello World.
  */
-public class GuestbookTest extends WicketWebTestCase
+public class GuestbookTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(GuestbookTest.class);
-
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(GuestbookTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public GuestbookTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Sets up the test.
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
-		super.setUp();
 		GuestBook.clear();
 	}
 
@@ -68,33 +52,33 @@ public class GuestbookTest extends WicketWebTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		beginAt("/guestbook");
+		GuestBookApplication book = new GuestBookApplication();
+		WicketTester tester = new WicketTester(book);
 
-		assertTitleEquals("Wicket Examples - guestbook");
-		// this.assertXpathNodeNotPresent("//*[@wicket:id='comments']");
-		this.assertElementNotPresent("comments");
+		tester.startPage(GuestBook.class);
+		tester.assertContains("Wicket Examples - guestbook");
 
-		assertFormPresent("commentForm");
-		this.assertFormElementPresent("text");
-		this.setFormElement("text", "test-1");
-		this.submit();
+		// check if the list of comments is empty
+		tester.assertListView("comments", new ArrayList());
+		tester.assertComponent("commentForm", Form.class);
+		FormTester formTester = tester.newFormTester("commentForm");
+		formTester.setValue("text", "test-1");
+		formTester.submit();
 
-		assertTitleEquals("Wicket Examples - guestbook");
-		assertFormPresent("commentForm");
-		this.assertFormElementPresent("text");
-		this.assertElementPresent("comments");
-		// assertTextInElement() seems to be buggy
-		// this.assertTextInElement("text", "test-1");
-		this.assertTextPresent("test-1");
-		this.setFormElement("text", "test-2");
-		this.submit();
+		tester.assertModelValue("comments:0:text", "test-1");
 
-		assertTitleEquals("Wicket Examples - guestbook");
-		this.assertElementPresent("comments");
-		// assertTextInElement() seems to be buggy
-		// this.assertTextInElement("text", "test-1");
-		this.assertTextPresent("test-1");
-		// this.assertTextInElement("text", "test-2");
-		this.assertTextPresent("test-2");
+		formTester = tester.newFormTester("commentForm");
+		formTester.setValue("text", "test-2");
+		formTester.submit();
+		tester.assertModelValue("comments:0:text", "test-2");
+		tester.assertModelValue("comments:1:text", "test-1");
+
+		formTester = tester.newFormTester("commentForm");
+		formTester.setValue("text", "test-3");
+		formTester.setValue("comment", "test-3");
+		formTester.submit();
+		tester.assertModelValue("comments:0:text", "test-2");
+		tester.assertModelValue("comments:1:text", "test-1");
+		tester.assertErrorMessages(new String[] { "Caught a spammer!!!" });
 	}
 }

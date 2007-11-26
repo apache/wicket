@@ -61,6 +61,9 @@ h1,h2 {
 	list-style: circle;
 	font-weight: bold;
 }
+.nospam {
+	display : none;
+}
 
 .block {
 	padding: 10px;

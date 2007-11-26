@@ -10,8 +10,9 @@
     Add your comment here:
     <p>
     <textarea wicket:id = "text">This is a comment</textarea>
+    <input type="text" wicket:id="comment" class="nospam" onfocus="getElementById('formsubmit').focus();"/>
     <p>
-    <input type = "submit" value = "Submit"/>
+    <input type = "submit" value = "Submit" id="formsubmit"/>
   </form>
   <p/>
   <span wicket:id = "comments" id="comments">
