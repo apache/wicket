@@ -19,9 +19,11 @@ package org.apache.wicket.examples.hangman;
 import java.util.Iterator;
 
 import junit.framework.Assert;
-import junit.framework.Test;
+import junit.framework.TestCase;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Testcase for the <code>Game</code> class.
@@ -29,17 +31,8 @@ import org.apache.wicket.examples.WicketWebTestCase;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangManTest extends WicketWebTestCase
+public class HangManTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(HangManTest.class);
-	}
-
 	/**
 	 * Create the test case.
 	 * 
@@ -149,39 +142,32 @@ public class HangManTest extends WicketWebTestCase
 		Assert.assertTrue(hangman.isLost());
 	}
 
+	private void clickLetter(WicketTester tester, char ch)
+	{
+		tester.clickLink("letters:" + (ch - 'a') + ":letter");
+	}
+
 	/**
 	 * Tests the webapplication for a successful match.
 	 */
 	public void testHangmanSuccessWebGame()
 	{
+		WicketTester tester = new WicketTester(new HangmanApplication());
 
-		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman/?word=hangman");
-
-		assertTitleEquals("Wicket Examples - hangman");
-		assertLinkPresent("start");
-		clickLink("start");
-		assertTitleEquals("Wicket Examples - hangman");
-		assertTextPresent("guesses remaining");
-
-		assertElementPresent("guessesRemaining");
-		assertTextInElement("guessesRemaining", "5");
-
-		clickLink("letter_f");
-
-		assertElementPresent("guessesRemaining");
-		assertTextInElement("guessesRemaining", "4");
-
-		clickLink("letter_h");
-		assertElementPresent("guessesRemaining");
-		assertTextInElement("guessesRemaining", "4");
-
-		clickLink("letter_a");
-		clickLink("letter_n");
-		clickLink("letter_g");
-		clickLink("letter_m");
-
-		assertTextPresent("Congratulations! You guessed that the word was ");
+		tester.startPage(Home.class, new PageParameters("word=hangman"));
+		tester.assertComponent("start", Link.class);
+		tester.assertContains("Wicket Examples - hangman");
+		tester.clickLink("start");
+		tester.assertLabel("guessesRemaining", "5");
+		clickLetter(tester, 'f');
+		tester.assertLabel("guessesRemaining", "4");
+		clickLetter(tester, 'h');
+		tester.assertLabel("guessesRemaining", "4");
+		clickLetter(tester, 'a');
+		clickLetter(tester, 'n');
+		clickLetter(tester, 'g');
+		clickLetter(tester, 'm');
+		tester.assertRenderedPage(Win.class);
 	}
 
 	/**
@@ -189,37 +175,23 @@ public class HangManTest extends WicketWebTestCase
 	 */
 	public void testHangmanFailureWebGame()
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman/?word=hangman");
+		WicketTester tester = new WicketTester(new HangmanApplication());
 
-		assertTitleEquals("Wicket Examples - hangman");
-		assertLinkPresent("start");
-		clickLink("start");
-		assertTitleEquals("Wicket Examples - hangman");
-		assertTextPresent("guesses remaining");
-
-		assertElementPresent("guessesRemaining");
-		assertTextInElement("guessesRemaining", "5");
-
-		clickLink("letter_f");
-
-		assertElementPresent("guessesRemaining");
-		assertTextInElement("guessesRemaining", "4");
-
-		// todo jwebunit doesn't really test if it is a link!
-		// it just finds a html element by that id, and we have one
-// assertLinkNotPresent("letter_f");
-		clickLink("letter_x");
-		assertTextInElement("guessesRemaining", "3");
-
-		clickLink("letter_e");
-		assertTextInElement("guessesRemaining", "2");
-
-		clickLink("letter_t");
-		assertTextInElement("guessesRemaining", "1");
-
-		clickLink("letter_v");
-		assertTextPresent("Bad luck. You failed to guess that the word was");
+		tester.startPage(Home.class, new PageParameters("word=hangman"));
+		tester.assertComponent("start", Link.class);
+		tester.assertContains("Wicket Examples - hangman");
+		tester.clickLink("start");
+		tester.assertLabel("guessesRemaining", "5");
+		clickLetter(tester, 'f');
+		tester.assertLabel("guessesRemaining", "4");
+		clickLetter(tester, 'e');
+		tester.assertLabel("guessesRemaining", "3");
+		clickLetter(tester, 't');
+		tester.assertLabel("guessesRemaining", "2");
+		clickLetter(tester, 'x');
+		tester.assertLabel("guessesRemaining", "1");
+		clickLetter(tester, 'z');
+		tester.assertRenderedPage(Lose.class);
 	}
 
 	/**

@@ -16,35 +16,15 @@
  */
 package org.apache.wicket.examples.helloworld;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class HelloWorldTest extends WicketWebTestCase
+public class HelloWorldTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(HelloWorldTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public HelloWorldTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -52,11 +32,10 @@ public class HelloWorldTest extends WicketWebTestCase
 	 */
 	public void testHelloWorld() throws Exception
 	{
-		beginAt("/helloworld");
-		assertTitleEquals("Wicket Examples - helloworld");
-		// assertXPath("//SPAN", "Hello World!");
-		// assertWicketIdTagText("message", "Hello World");
-
-		assertTextInElement("message", "Hello World!");
+		WicketTester tester = new WicketTester();
+		tester.setupRequestAndResponse();
+		tester.startPage(HelloWorld.class);
+		tester.assertContains("Wicket Examples - helloworld");
+		tester.assertLabel("message", "Hello World!");
 	}
 }
