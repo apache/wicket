@@ -16,35 +16,15 @@
  */
 package org.apache.wicket.examples.encodings;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class EncodingTest extends WicketWebTestCase
+public class EncodingTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(EncodingTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public EncodingTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -52,8 +32,9 @@ public class EncodingTest extends WicketWebTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		beginAt("/encodings");
-		assertTitleEquals("Wicket Examples - encodings");
-		assertTextPresent("Hello world! Test: ���");
+		WicketTester tester = new WicketTester();
+		tester.startPage(Home.class);
+		tester.assertContains("Wicket Examples - encodings");
+		tester.assertContains("Hello world! Test: ���");
 	}
 }

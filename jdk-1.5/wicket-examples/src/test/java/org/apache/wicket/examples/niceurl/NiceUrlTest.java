@@ -16,33 +16,26 @@
  */
 package org.apache.wicket.examples.niceurl;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class NiceUrlTest extends WicketWebTestCase
+public class NiceUrlTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(NiceUrlTest.class);
-	}
+	private WicketTester tester;
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	public NiceUrlTest(String name)
+	@Override
+	protected void setUp() throws Exception
 	{
-		super(name);
+		super.setUp();
+		tester = new WicketTester(new NiceUrlApplication());
+		tester.startPage(Home.class);
 	}
 
 	/**
@@ -50,33 +43,91 @@ public class NiceUrlTest extends WicketWebTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHelloWorld() throws Exception
+	public void testHomePage() throws Exception
 	{
-		beginAt("/niceurl");
-		assertTitleEquals("Wicket Examples - niceurl");
-		assertTextPresent("This example displays how you can work with 'nice' urls for bookmarkable pages.");
+		tester.assertContains("Wicket Examples - niceurl");
+		tester.assertContains("This example displays how you can work with 'nice' urls for bookmarkable pages.");
+	}
 
-		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 1");
-		assertTitleEquals("Wicket Examples - niceurl");
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage1() throws Exception
+	{
+		tester.clickLink("page1Link");
+		tester.assertRenderedPage(Page1.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
 
-		this.clickLinkWithText("[go back]");
-		assertTitleEquals("Wicket Examples - niceurl");
-		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 2");
-		assertTitleEquals("Wicket Examples - niceurl");
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage2() throws Exception
+	{
+		tester.clickLink("page2Link");
+		tester.assertRenderedPage(Page2.class);
+		tester.clickLink("refreshLink");
+		tester.assertRenderedPage(Page2.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
 
-		this.clickLinkWithText("[go back]");
-		assertTitleEquals("Wicket Examples - niceurl");
-		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 3");
-		assertTitleEquals("Wicket Examples - niceurl");
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage2QP() throws Exception
+	{
+		tester.clickLink("page2LinkQP");
+		tester.assertRenderedPage(Page2QP.class);
+		tester.clickLink("refreshLink");
+		tester.assertRenderedPage(Page2QP.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
 
-		this.clickLinkWithText("[go back]");
-		assertTitleEquals("Wicket Examples - niceurl");
-		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 4");
-		assertTitleEquals("Wicket Examples - niceurl");
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage3() throws Exception
+	{
+		tester.clickLink("page3Link");
+		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page3.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
 
-		this.clickLinkWithText("[go back]");
-		assertTitleEquals("Wicket Examples - niceurl");
-		this.clickLinkWithText("Click this BookmarkablePageLink to go to Page 5");
-		assertTitleEquals("Wicket Examples - niceurl");
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage4() throws Exception
+	{
+		tester.clickLink("page4Link");
+		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page4.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
+	}
+
+	/**
+	 * Test page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage5() throws Exception
+	{
+		tester.clickLink("page5Link");
+		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page5.class);
+		tester.clickLink("homeLink");
+		tester.assertRenderedPage(Home.class);
 	}
 }

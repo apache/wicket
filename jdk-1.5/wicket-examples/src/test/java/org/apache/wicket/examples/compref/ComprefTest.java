@@ -16,34 +16,15 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class ComprefTest extends WicketWebTestCase
+public class ComprefTest extends TestCase
 {
-	/**
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(ComprefTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public ComprefTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -51,8 +32,9 @@ public class ComprefTest extends WicketWebTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		beginAt("/compref");
-		// this.dumpResponse(System.out);
-		assertTitleEquals("Wicket Examples - component reference");
+		WicketTester tester = new WicketTester();
+		tester.startPage(Index.class);
+
+		tester.assertContains("Wicket Examples - component reference");
 	}
 }

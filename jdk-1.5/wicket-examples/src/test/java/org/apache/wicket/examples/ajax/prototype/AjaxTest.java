@@ -16,35 +16,15 @@
  */
 package org.apache.wicket.examples.ajax.prototype;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class AjaxTest extends WicketWebTestCase
+public class AjaxTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(AjaxTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public AjaxTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -52,9 +32,16 @@ public class AjaxTest extends WicketWebTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		beginAt("/prototype");
-		// this.dumpResponse(System.out);
-		assertTitleEquals("Wicket Examples - Prototype.js / component render");
-		assertTextInElement("counter", "0");
+		WicketTester tester = new WicketTester();
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		tester.startPage(Index.class);
+		tester.assertContains("Wicket Examples - Prototype.js / component render");
+		tester.assertModelValue("counter", 0);
+		tester.executeListener(tester.getComponentFromLastRenderedPage("link"));
+		tester.assertModelValue("counter", 1);
+		tester.assertResultPage("<span wicket:id=\"counter\">1</span>");
+		tester.executeListener(tester.getComponentFromLastRenderedPage("link"));
+		tester.assertModelValue("counter", 2);
+		tester.assertResultPage("<span wicket:id=\"counter\">2</span>");
 	}
 }

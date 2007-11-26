@@ -17,26 +17,32 @@
 package org.apache.wicket.examples;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.sourceforge.jwebunit.junit.WebTestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Node;
 
 import com.meterware.httpunit.HttpUnitOptions;
+import com.meterware.httpunit.WebConversation;
+import com.meterware.httpunit.WebResponse;
 
 /**
- * Add XPATH based validation
+ * WebTestCase for tests that need to run inside Jetty to test for example the wicket filter using
+ * HttpUnit as the testing mechanism.
  * 
  * @author Juergen Donnerstag
+ * @author Martijn Dashorst
  */
-public abstract class WicketWebTestCase extends WebTestCase
+public abstract class WicketWebTestCase extends TestCase
 {
 	private static final Log logger = LogFactory.getLog(WicketWebTestCase.class);
+
+	/** The base url used to connect the conversation to */
+	private String baseUrl = "http://localhost:8098/";
+
+	/** The web conversation that keeps track of our requests. */
+	private WebConversation conversation;
 
 	/**
 	 * Suite method.
@@ -75,95 +81,27 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 */
 	public WicketWebTestCase()
 	{
-		super();
+	}
+
+	/**
+	 * @param base
+	 */
+	public void setBaseUrl(String base)
+	{
+		baseUrl = base;
 	}
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
+		conversation = new WebConversation();
 	}
 
-	/**
-	 * Select a single node based on the xpath expression
-	 * 
-	 * @param xpath
-	 * @return Node
-	 * @throws Exception
-	 */
-	public Node selectSingleNode(final String xpath) throws Exception
+	protected WebResponse beginAt(String part) throws Exception
 	{
-		final String resp = this.getDialog().getPageText();
-		final Document doc = DocumentHelper.parseText(resp);
-		// String xml = doc.asXML();
-		// System.out.print(xml);
-		final Node node = doc.selectSingleNode(xpath);
-		return node;
-	}
-
-	/**
-	 * Assert the value returned by the xpath matches 'assertValue'
-	 * 
-	 * @param xpath
-	 * @param assertValue
-	 * @throws Exception
-	 */
-	public void assertXPath(final String xpath, final String assertValue) throws Exception
-	{
-		final Node node = selectSingleNode(xpath);
-		assertNotNull("Node not found: " + xpath, node);
-		final String value;
-		if (node instanceof Attribute)
-		{
-			value = ((Attribute)node).getValue();
-		}
-		else
-		{
-			value = node.getText();
-		}
-
-		assertTrue("xpath found, but values don't match: '" + value + "' != '" + assertValue + "'",
-				value.matches(".*" + assertValue + ".*"));
-	}
-
-	/**
-	 * Assert the tag body of the tag identified by wicket:id="wicketId" matches 'assertValue'
-	 * 
-	 * @param wicketId
-	 * @param assertValue
-	 * @throws Exception
-	 */
-	public void assertWicketIdTagText(final String wicketId, final String assertValue)
-			throws Exception
-	{
-		assertXPath("//*[@wicket:id='" + wicketId + "']", assertValue);
-	}
-
-	/**
-	 * Assert no node matching the xpath exists
-	 * 
-	 * @param xpath
-	 * @throws Exception
-	 */
-	public void assertXpathNodeNotPresent(final String xpath) throws Exception
-	{
-		final Node node = selectSingleNode(xpath);
-		assertNull(node);
-	}
-
-	/**
-	 * Assert the node matching the xpath exists
-	 * 
-	 * @param xpath
-	 * @return Node
-	 * @throws Exception
-	 */
-	public Node assertXpathNodePresent(final String xpath) throws Exception
-	{
-		final Node node = selectSingleNode(xpath);
-		assertNotNull(node);
-		return node;
+		return conversation.getResponse(baseUrl + part);
 	}
 }

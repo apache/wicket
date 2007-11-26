@@ -19,6 +19,7 @@ package org.apache.wicket.filtertest;
 import junit.framework.Test;
 
 import org.apache.wicket.examples.JettyTestCaseDecorator;
+import org.apache.wicket.examples.WicketWebTestCase;
 
 
 /**
@@ -30,17 +31,11 @@ public class WithCPWithFPTest extends WithoutCPWithFPTest
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/somecontext");
-	}
-
-	/**
-	 * @param name
-	 */
-	public WithCPWithFPTest(String name)
-	{
-		super(name);
+		setBaseUrl("http://localhost:8098/somecontext");
+		super.setUp();
 	}
 
 	/**
@@ -49,7 +44,7 @@ public class WithCPWithFPTest extends WithoutCPWithFPTest
 	 */
 	public static Test suite()
 	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)suite(WithCPWithFPTest.class);
+		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)WicketWebTestCase.suite(WithCPWithFPTest.class);
 		deco.setContextPath("/somecontext");
 		String basedir = System.getProperty("basedir");
 		String path = "";

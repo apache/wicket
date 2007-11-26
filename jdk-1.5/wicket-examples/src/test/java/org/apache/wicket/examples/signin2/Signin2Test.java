@@ -16,56 +16,39 @@
  */
 package org.apache.wicket.examples.signin2;
 
-import junit.framework.Test;
+import java.util.Collection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.examples.WicketWebTestCase;
+import javax.servlet.http.Cookie;
+
+import junit.framework.TestCase;
+
+import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * jWebUnit test for Hello World.
  */
-public class Signin2Test extends WicketWebTestCase
+public class Signin2Test extends TestCase
 {
-	private final static Log log = LogFactory.getLog(Signin2Test.class);
-
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(Signin2Test.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public Signin2Test(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 */
 	public void testSignIn2()
 	{
-		beginAt("/signin2");
-		assertTitleEquals("Wicket Examples - signin2");
+		WicketTester tester = new WicketTester(new SignIn2Application());
 
-		this.setFormElement("username", "wicket");
-		this.setFormElement("password", "wicket");
-		this.checkCheckbox("rememberMeRow:rememberMe");
-		log.debug("Submit Login screen");
-		this.submit("submit");
+		tester.startPage(Home.class);
 
-		// this.dumpResponse(System.err);
-		assertTitleEquals("Wicket Examples - signin2");
+		tester.assertRenderedPage(SignIn2.class);
+
+		FormTester formTester = tester.newFormTester("signInPanel:signInForm");
+		formTester.setValue("username", "wicket");
+		formTester.setValue("password", "wicket");
+		formTester.setValue("rememberMeRow:rememberMe", "true");
+		formTester.submit();
+		tester.assertRenderedPage(Home.class);
+
 		// a) With wicket submitting a form will result in a temporary redirect,
 		// with the redirect setting the Cookie.
 		// b) jWebUnits Cookie test methods are all using the http response
@@ -81,22 +64,20 @@ public class Signin2Test extends WicketWebTestCase
 		// this.dumpCookies(System.err);
 		// this.assertCookiePresent("signInPanel.signInForm.username");
 		// this.assertCookiePresent("signInPanel.signInForm.password");
-		log.debug("Click 'Sign Out'");
-		this.clickLinkWithText("Sign Out");
 
-		assertTitleEquals("Wicket Examples - signin2");
-		log.debug("Click 'Home'");
-		this.clickLinkWithText("Home");
-		/*
-		 * jWebUnit is missing assertCookieNotPresent() try { // jWebUnit does not offer an
-		 * assertCookieNotPresent this.assertCookiePresent("signInPanel.signInForm.username");
-		 * assertTrue("Should have thrown an excpetion", false); } catch (AssertionFailedError ex) { ; //
-		 * ok }
-		 * 
-		 * try { // jWebUnit does not offer an assertCookieNotPresent
-		 * this.assertCookiePresent("signInPanel.signInForm.password"); assertTrue("Should have
-		 * thrown an excpetion", false); } catch (AssertionFailedError ex) { ; // ok }
-		 */
-		assertTitleEquals("Wicket Examples - signin2");
+		Collection<Cookie> cookies = tester.getServletResponse().getCookies();
+		for (Cookie cookie : cookies)
+		{
+			if ("signInPanel.signInForm.username".equals(cookie.getName()))
+			{
+				assertEquals("wicket", cookie.getValue());
+			}
+		}
+
+		tester.startPage(SignOut.class);
+		tester.assertRenderedPage(SignOut.class);
+
+		tester.startPage(Home.class);
+		tester.assertRenderedPage(SignIn2.class);
 	}
 }

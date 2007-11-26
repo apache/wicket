@@ -16,43 +16,24 @@
  */
 package org.apache.wicket.examples.images;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class ImagesTest extends WicketWebTestCase
+public class ImagesTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(ImagesTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public ImagesTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
 	 * @throws Exception
 	 */
-	public void testHelloWorld() throws Exception
+	public void testImages() throws Exception
 	{
-		beginAt("/images");
-		assertTitleEquals("Wicket Examples - images");
+		WicketTester tester = new WicketTester(new ImagesApplication());
+		tester.startPage(Home.class);
+		tester.assertContains("Wicket Examples - images");
 	}
 }

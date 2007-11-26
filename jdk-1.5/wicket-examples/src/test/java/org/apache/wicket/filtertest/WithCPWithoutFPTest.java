@@ -25,21 +25,14 @@ import org.apache.wicket.examples.JettyTestCaseDecorator;
  */
 public class WithCPWithoutFPTest extends WithoutCPWithoutFPTest
 {
-
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/somecontext");
-	}
-
-	/**
-	 * @param name
-	 */
-	public WithCPWithoutFPTest(String name)
-	{
-		super(name);
+		setBaseUrl("http://localhost:8098/somecontext");
+		super.setUp();
 	}
 
 	/**

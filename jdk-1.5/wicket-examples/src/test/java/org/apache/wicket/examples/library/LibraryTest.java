@@ -16,35 +16,16 @@
  */
 package org.apache.wicket.examples.library;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class LibraryTest extends WicketWebTestCase
+public class LibraryTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(LibraryTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public LibraryTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -52,15 +33,18 @@ public class LibraryTest extends WicketWebTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		beginAt("/library");
-		assertTitleEquals("Wicket Examples - library");
-		assertTextPresent("Username and password are both");
+		WicketTester tester = new WicketTester(new LibraryApplication());
+		tester.startPage(SignIn.class);
+		tester.assertContains("Wicket Examples - library");
+		tester.assertContains("Username and password are both");
 
-		this.setFormElement("username", "wicket");
-		this.setFormElement("password", "wicket");
-		this.submit("submit");
-		// this.dumpResponse(System.out);
-		assertTitleEquals("Wicket Examples - library");
-		assertTextPresent("Effective Java (Joshua Bloch)");
+		FormTester formTester = tester.newFormTester("signInPanel:signInForm");
+		formTester.setValue("username", "wicket");
+		formTester.setValue("password", "wicket");
+		formTester.submit();
+
+		tester.assertRenderedPage(Home.class);
+		tester.assertContains("Wicket Examples - library");
+		tester.assertLabel("books:0:author", "Effective Java (Joshua Bloch)");
 	}
 }

@@ -16,35 +16,15 @@
  */
 package org.apache.wicket.examples.repeater;
 
-import org.apache.wicket.examples.WicketWebTestCase;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class RepeaterTest extends WicketWebTestCase
+public class RepeaterTest extends TestCase
 {
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		return suite(RepeaterTest.class);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public RepeaterTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test page.
 	 * 
@@ -52,66 +32,27 @@ public class RepeaterTest extends WicketWebTestCase
 	 */
 	public void testHelloWorld() throws Exception
 	{
-		beginAt("/repeater");
-		assertTitleEquals("Wicket Examples - repeater views");
+		WicketTester tester = new WicketTester(new RepeaterApplication());
+		tester.startPage(Index.class);
+		tester.assertContains("Wicket Examples - repeater views");
 
-		this.clickLinkWithText("OrderedRepeatingView Example - basic example of a repeater view");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
+		checkPage(tester, RepeatingPage.class);
+		checkPage(tester, RefreshingPage.class);
+		checkPage(tester, FormPage.class);
+		checkPage(tester, SimplePage.class);
+		checkPage(tester, PagingPage.class);
+		checkPage(tester, SortingPage.class);
+		checkPage(tester, OIRPage.class);
+		checkPage(tester, DataGridPage.class);
+		checkPage(tester, GridViewPage.class);
+		checkPage(tester, AjaxDataTablePage.class);
+	}
 
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("RefreshingView Example - basic view that recreates its items every request");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this.clickLinkWithText("Simple DataView Example - simple example of a dataview");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("Paging DataView Example - builds on previous to demonstrate paging and page navigation");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("Sorting DataView Example - builds on previous to demonstrate sorting");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataView and optimized item removal - demonstrates a dataview with a different IItemReuseStrategy implementation");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataGridView Example - a view that generates grids where rows are representing by items of the data provider and columns are represented by an array of ICellPopulators objects");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this
-				.clickLinkWithText("DataTable Example - demonstrates data table component that wraps dataview to offer easy paging and sorting");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
-
-		this.clickLinkWithText("[go back]");
-		this.clickLinkWithText("GridView Example - demonstrates a grid view");
-		assertTitleEquals("Wicket Examples - repeater views");
-		assertTextPresent("Selected Contact: ");
-		assertTextPresent("No Contact Selected");
+	private void checkPage(WicketTester tester, Class page)
+	{
+		tester.startPage(page);
+		tester.assertContains("Wicket Examples - repeater views");
+		tester.assertContains("Selected Contact: ");
+		tester.assertContains("No Contact Selected");
 	}
 }

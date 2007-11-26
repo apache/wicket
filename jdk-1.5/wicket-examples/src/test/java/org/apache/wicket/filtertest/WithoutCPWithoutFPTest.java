@@ -16,25 +16,18 @@
  */
 package org.apache.wicket.filtertest;
 
+import junit.framework.Test;
+
 import org.apache.wicket.examples.JettyTestCaseDecorator;
 import org.apache.wicket.examples.WicketWebTestCase;
 
-import junit.framework.Test;
+import com.meterware.httpunit.WebResponse;
 
 /**
  * jWebUnit test for Hello World.
  */
 public class WithoutCPWithoutFPTest extends WicketWebTestCase
 {
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	public void setUp() throws Exception
-	{
-		getTestContext().setBaseUrl("http://localhost:8098/");
-	}
-
 	/**
 	 * 
 	 * @return Test
@@ -53,14 +46,15 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	}
 
 	/**
-	 * Construct.
+	 * Test page.
 	 * 
-	 * @param name
-	 *            name of test
+	 * @throws Exception
 	 */
-	public WithoutCPWithoutFPTest(String name)
+	public void testHelloWorld() throws Exception
 	{
-		super(name);
+		WebResponse response = beginAt("/hello/message/Test");
+		assertEquals("Wicket Examples - helloworld", response.getTitle());
+		assertEquals("Message is: 'Test'", response.getElementWithID("message").getText());
 	}
 
 	/**
@@ -68,19 +62,11 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHelloWorld() throws Exception
-	{
-		beginAt("/hello/message/Test");
-		dumpHtml();
-		assertTitleEquals("Wicket Examples - helloworld");
-		assertTextInElement("message", "Message is: 'Test'");
-	}
-
 	public void testWithSlash() throws Exception
 	{
-		beginAt("/hello/message/Test%2FWith%20a%20Slash");
-		dumpHtml();
-		assertTitleEquals("Wicket Examples - helloworld");
-		assertTextInElement("message", "Message is: 'Test/With a Slash'");
+		WebResponse response = beginAt("/hello/message/Test%2FWith%20a%20Slash");
+		assertEquals("Wicket Examples - helloworld", response.getTitle());
+		assertEquals("Message is: 'Test/With a Slash'", response.getElementWithID("message")
+			.getText());
 	}
 }
