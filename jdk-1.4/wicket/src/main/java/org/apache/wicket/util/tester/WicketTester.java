@@ -554,7 +554,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		// Validate the document
 		String document = getServletResponse().getDocument();
-		Assert.assertTrue(document.equals(expectedDocument));
+		Assert.assertEquals(expectedDocument, document);
 	}
 
 	/**
