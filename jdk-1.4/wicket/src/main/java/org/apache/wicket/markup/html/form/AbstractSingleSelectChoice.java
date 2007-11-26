@@ -40,7 +40,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
 
-	private static final String NO_SELECTION_VALUE = "-1";
+	protected static final String NO_SELECTION_VALUE = "-1";
 
 	private static final String EMPTY_STRING = "";
 
@@ -70,7 +70,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(final String id, final List data,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		super(id, data, renderer);
 	}
@@ -91,7 +91,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(final String id, IModel model, final List data,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		super(id, model, data, renderer);
 	}
@@ -127,7 +127,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 *      IModel,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel model, IModel choices,
-			IChoiceRenderer renderer)
+		IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -135,7 +135,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
-	public final String getModelValue()
+	public String getModelValue()
 	{
 		final Object object = getModelObject();
 		if (object != null)
@@ -254,7 +254,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 		{
 			// Null is not valid. Is it selected anyway?
 			if (selected == null || selected.equals(NO_SELECTION_VALUE) ||
-					selected.equals(EMPTY_STRING))
+				selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
 				String option = getLocalizer().getString(getId() + ".null", this, "");
@@ -262,8 +262,9 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 				{
 					option = getLocalizer().getString("null", this, CHOOSE_ONE);
 				}
-				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">")
-						.append(option).append("</option>");
+				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(
+					option)
+					.append("</option>");
 			}
 		}
 		return "";
