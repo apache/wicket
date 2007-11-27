@@ -25,8 +25,33 @@ import org.apache.wicket.model.PropertyModel;
 import org.joda.time.MutableDateTime;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a
- * {@link CalendarPopup calendar popup}.
+ * Works on a {@link java.util.Date} object. Displays a {@link DateTextField} and a
+ * {@link DatePicker calendar popup}.<br/>
+ * <p>
+ * Note: {@link DateField} must <strong>not</strong> be associated with an
+ * <code>&lt;input&gt;</code> tag, as opposed to {@link DateTextField}! The corresponding tag is
+ * typically either a <code>&lt;div&gt;</code> or a <code>&lt;span&gt;</code> tag.
+ * </p>
+ * 
+ * Example:
+ * <p>
+ * <u>Java:</u>
+ * 
+ * <pre>
+ * DateField dateField = new DateField(&quot;birthday&quot;);
+ * </pre>
+ * 
+ * </p>
+ * <p>
+ * <u>Markup:</u>
+ * 
+ * <pre>
+ * &lt;div wicket:id=&quot;birthday&quot;&gt;&lt;/div&gt;
+ * </pre>
+ * 
+ * </p>
+ * 
+ * 
  * 
  * @author eelcohillenius
  */
