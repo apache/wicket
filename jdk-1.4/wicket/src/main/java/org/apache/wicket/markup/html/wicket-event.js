@@ -91,6 +91,26 @@ Wicket.Browser = {
  */
 
 Wicket.Event = {
+	idCounter: 0,
+	
+	getId: function(element) {
+		var current = element.getAttribute("id");
+		if (typeof(current) == "string" && current.length > 0) {
+			return current;
+		} else {
+			current = "wicket-generated-id-" + Wicket.Event.idCounter++;
+			element.setAttribute("id", current);
+			return current;
+		}
+	},
+	
+	handler: function() {
+		var id = this[0];
+		var original = this[1];
+		var element = Wicket.$(id);
+		original.bind(element)();
+	},
+
 	// adds an event of specified type to the element
 	// also supports the domready event on window
 	// domready is event fired when the DOM is complete, but before loading external resources (images, ...)
@@ -102,7 +122,7 @@ Wicket.Event = {
 			if (element.addEventListener){
 				element.addEventListener((type == 'mousewheel' && window.gecko) ? 'DOMMouseScroll' : type, fn, false);
 			} else {
-				fn = fn.bind(element);
+				fn = Wicket.Event.handler.bind([Wicket.Event.getId(element), fn]);				
 				// Because of the fn.bind (returning a new function object)
 				// you can't detach the event first to be sure that there are no doubles :(
 				//element.detachEvent('on'+type, fn);
