@@ -1191,6 +1191,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		add(itemContainer);
 
 		add(HeaderContributor.forJavaScript(JAVASCRIPT));
+
+		checkModel();
 	}
 
 	/**
