@@ -169,8 +169,8 @@ Wicket.FunctionsExecuter.prototype = {
 	}
 }
 
-Wicket.replaceOuterHtmlIE = function(element, text) {
-	
+Wicket.replaceOuterHtmlIE = function(element, text) {	
+										
 	if (element.tagName == "SCRIPT") {
 		// we need to get the javascript content, so we create an invalid DOM structure,
 		// (that is necessary for IE to let us see the innerHTML of the script tag	
@@ -193,23 +193,34 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	var scripts = new Array();
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
+	
+		element.innerHTML = "";
+	
 		// in case the element is not any of these
-		
+						
+		document.body.appendChild(tempDiv);						
+						
 		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
 		// because otherwise IE just swallows the <script> tags (sometimes) 
 		tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
-		
+						
 		// now copy the script tags to array (needed later for script execution)
-		var s = tempDiv.getElementsByTagName("script");
-		for (var i = 0; i < s.length; ++i) {
+		var s = tempDiv.getElementsByTagName("script");				
+						
+		for (var i = 0; i < s.length; ++i) {			
 			scripts.push(s[i]);
-		}
+		}						
 		
+		tempDiv.innerHTML = "";
+						
 		// now use regular div so that we won't mess the DOM
 		tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
-		
+
 		// set the outer <div> as parent
 		tempParent = tempDiv.childNodes[0];
+		
+		tempParent.parentNode.removeChild(tempParent);								
+						
 	} else {
 	
 		// same trick as with before, this time we need a div to to create invalid markup
@@ -218,9 +229,12 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	
 		// now copy the script tags to array (needed later for script execution)
 		var s = tempDiv.getElementsByTagName("script");
+						
 		for (var i = 0; i < s.length; ++i) {
 			scripts.push(s[i]);
-		}
+		}		
+		
+		tempDiv.innerHTML = "";	
 	
 		// hack to get around the fact that IE doesn't allow to replace table elements
 		tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
@@ -232,17 +246,25 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	// place all newly created elements before the old element	
 	while(tempParent.childNodes.length > 0) {
 		var tempElement = tempParent.childNodes[0];
+		tempParent.removeChild(tempElement);
 		parent.insertBefore(tempElement, element);
+		tempElement = null;
 	}
-      
+
     // remove the original element
 	parent.removeChild(element);
-		
-	{
-		for (i = 0; i < scripts.length; ++i) {
-			Wicket.Head.addJavascripts(scripts[i]); 
-		}						
-	} 
+
+	element.outerHTML = "";
+	element = "";
+	tempDiv.outerHTML = "";
+
+	parent = null;
+	tempDiv = null;
+	tempParent = null;
+      		
+	for (i = 0; i < scripts.length; ++i) {
+		Wicket.Head.addJavascripts(scripts[i]); 
+	}								 
 }
 
 Wicket.replaceOuterHtmlSafari = function(element, text) {
@@ -1424,537 +1446,3 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 	Wicket.Head.addElement(script);	
 }
 
-// Goes through all script elements contained by the element and add them to head
-Wicket.Head.addJavascripts = function(element) {	
-	function add(element) {
-		var src = element.getAttribute("src");
-		
-		// if it is a reference, just add it to head				
-		if (src != null && src.length > 0) {			
-			var e = document.createElement("script");
-			e.setAttribute("type","text/javascript");
-			e.setAttribute("src", src);
-			Wicket.Head.addElement(e);											
-		} else {	
-			var content = Wicket.DOM.serializeNodeChildren(element);		
-			if (content == null || content == "")
-				content = element.text;
-			
-			Wicket.Head.addJavascript(content);
-		}		
-	}
-	if (typeof(element) != "undefined" &&
-	    typeof(element.tagName) != "undefined" &&
-	    element.tagName.toLowerCase() == "script") {
-		add(element);
-	} else {
-		// we need to check if there are any children, becase Safari
-		// aborts when the element is a text node			
-		if (element.childNodes.length > 0) {			
-			var scripts = element.getElementsByTagName("script");
-			for (var i = 0; i < scripts.length; ++i) {
-				add(scripts[i]);
-			}
-		}
-	}
-}
-
-/**
- * Throttler's purpose is to make sure that ajax requests wont be fired too often.
- */
-
-Wicket.ThrottlerEntry = Wicket.Class.create();
-Wicket.ThrottlerEntry.prototype = {
-	initialize: function(func) {
-		this.func = func;
-		this.timestamp = new Date().getTime();
-	},
-	
-	getTimestamp: function() {
-		return this.timestamp;
-	},
-	
-	getFunc: function() {
-		return this.func;
-	},
-	
-	setFunc: function(func) {
-		this.func = func;
-	}
-};
-
-Wicket.Throttler = Wicket.Class.create();
-Wicket.Throttler.prototype = {
-	initialize: function() {
-		this.entries = new Array();
-	},
-	
-	throttle: function(id, millis, func) {
-		var entry = this.entries[id];
-		var me = this;
-		if (entry == undefined) {
-			entry = new Wicket.ThrottlerEntry(func);
-			this.entries[id] = entry;
-			window.setTimeout(function() { me.execute(id); }, millis);
-		} else {
-			entry.setFunc(func);
-		}	
-	},
-	
-	execute: function(id) {
-		var entry = this.entries[id];
-		if (entry != undefined) {
-			var func = entry.getFunc();
-			var tmp = func();
-		}
-		
-		this.entries[id] = undefined;	
-	}
-};
-
-Wicket.throttler = new Wicket.Throttler();
-
-/**
- * Prevent event from bubbling up in the element hierarchy.
- */
-Wicket.stopEvent = function(e) {
-	e=Wicket.fixEvent(e);		
-	e.cancelBubble = true;
-	if (e.stopPropagation)
-		e.stopPropagation();
-}
-
-/**
- * If no event is given as argument (IE), window.event is returned. 
- */
-Wicket.fixEvent = function(e) {
-	if (typeof e == 'undefined') 
-		e = window.event;
-	return e;		
-}
-
-/**
- * Flexible dragging support.
- */
-Wicket.Drag = {
-	
-	/**
-	 * Initializes the dragging on the specified element.
-	 * Element's onmousedown will be replaced by generated handler.
-	 *
-	 * @param {Element} element - element clicking on which the drag should begin 
-	 * @param {Function} onDragBegin - handler called at the begin on dragging - passed element as first parameter
-	 * @param {Function} onDragEnd - handler called at the end of dragging - passed element as first parameter
-	 * @param {Function} onDrag - handler called during dragging - passed element and mouse deltas	 
-	 */
-	init: function(element, onDragBegin, onDragEnd, onDrag) {		
-		
-		if (typeof(onDragBegin) == "undefined")
-			onDragBegin = Wicket.emptyFunction;
-		if (typeof(onDragEnd) == "undefined")
-			onDragEnd = Wicket.emptyFunction;
-		if (typeof(onDrag) == "undefined")
-			onDrag = Wicket.emptyFunction;
-		
-		// set the mousedown handler 
-		element.onmousedown = function(e) {			
-			
-			e = Wicket.fixEvent(e);
-	
-			// HACK - for safari stopPropagation doesn't work well because
-			// it also prevents scrollbars and form components getting the
-			// event. Therefore for safari the 'ignore' flag is set on event. 
-			if (typeof(e.ignore) == "undefined") {
-				
-				Wicket.stopEvent(e);
-	
-				onDragBegin(element);
-			
-				element.onDrag = onDrag;
-				element.onDragEnd = onDragEnd;
-				
-				element.lastMouseX = e.clientX;
-				element.lastMouseY = e.clientY;
-				
-				element.old_onmousemove = document.onmousemove;
-				element.old_onmouseup = document.onmouseup;
-				element.old_onselectstart = document.onselectstart;	
-				element.old_onmouseout = document.onmouseout;		
-				
-				document.onselectstart = function() { return false; }
-				document.onmousemove = Wicket.Drag.mouseMove;
-				document.onmouseup = Wicket.Drag.mouseUp;
-				document.onmouseout = Wicket.Drag.mouseOut;				
-							
-				Wicket.Drag.current = element;
-							
-				return false;
-			} 			
-		};		
-	},
-	
-	/**
-	 * Deinitializes the dragging support on given element. 
-	 */
-	clean: function(element) {
-		element.onmousedown = null;
-	},
-
-	/**
-	 * Called when mouse is moved. This method fires the onDrag event
-	 * with element instance, deltaX and deltaY (the distance
-	 * between this call and the previous one).
-	 
-	 * The onDrag handler can optionally return an array of two integers 
-	 * - the delta correction. This is used, for example, if there is
-	 * element being resized and the size limit has been reached (but the
-	 * mouse can still move).
-	 * 
-	 * @param {Event} e
-	 */	
-	mouseMove: function(e) {
-		e = Wicket.fixEvent(e);
-		var o = Wicket.Drag.current;
-
-		// this happens sometimes in Safari 
-		if (e.clientX < 0 || e.clientY < 0) {
-			return;
-		}		
-
-		if (o != null) {		
-			var deltaX = e.clientX - o.lastMouseX;
-			var deltaY = e.clientY - o.lastMouseY;
-				
-			var res = o.onDrag(o, deltaX, deltaY, e);
-			
-			if (res == null)
-				res = [0, 0];
-			
-			o.lastMouseX = e.clientX + res[0];
-			o.lastMouseY = e.clientY + res[1];
-		}
-		
-		return false;
-	},
-
-	/**
-	 * Called when the mouse button is released.
-	 * Cleans all temporary variables and callback methods.
-	 * 
-	 * @param {Event} e
-	 */	
-	mouseUp: function(e) {		
-		e = Wicket.fixEvent(e);
-		var o = Wicket.Drag.current;
-		
-		if (o != null && typeof(o) != "undefined") {
-			o.onDragEnd(o);		
-			
-			o.onDrag = null;
-			o.onDragEnd = null;
-			o.lastMouseX = null;
-			o.lastMouseY = null;
-			
-			document.onmousemove = o.old_onmousemove;
-			document.onmouseup = o.old_onmouseup;		
-			document.onselectstart = o.old_onselectstart;
-					
-			document.onmouseout = o.old_onmouseout;
-			
-			o.old_mousemove = null;		
-			o.old_mouseup = null;
-			o.old_onselectstart = null;
-			o.old_onmouseout = null;
-			
-			Wicket.Drag.current = null;
-		}
-	},
-	
-	/**
-	 * Called when mouse leaves an element. We need this for firefox, as otherwise
-	 * the dragging would continue after mouse leaves the document.
-	 * Unfortunately this break dragging in firefox immediately after the mouse leaves
-	 * page. 
-	 */
-	mouseOut: function(e) {
-		if (false && Wicket.Browser.isGecko()) {
-			// other browsers handle this more gracefully		
-			e = Wicket.fixEvent(e);
-			
-			if (e.target.tagName == "HTML") {
-				Wicket.Drag.mouseUp(e);				
-			}
-		}
-	}
-	
-	
-};
-
-Wicket.ChangeHandler=function(elementId){
-    var KEY_BACKSPACE=8;
-    var KEY_TAB=9;
-    var KEY_ENTER=13;
-    var KEY_ESC=27;
-    var KEY_LEFT=37;
-    var KEY_UP=38;
-    var KEY_RIGHT=39;
-    var KEY_DOWN=40;
-    var KEY_SHIFT=16;
-    var KEY_CTRL=17;
-    var KEY_ALT=18;
-
-	var obj = Wicket.$(elementId);
-	obj.setAttribute("autocomplete", "off");
-	if (Wicket.Browser.isIE() || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
-	
-		var objonchange = obj.onchange;
-
-		obj.onkeyup = function(event) {		
-			switch (wicketKeyCode(Wicket.fixEvent(event))) {
-				case KEY_ENTER:
-				case KEY_UP:
-				case KEY_DOWN:
-				case KEY_ESC:
-				case KEY_TAB:
-				case KEY_RIGHT:
-				case KEY_LEFT:
-				case KEY_SHIFT:
-				case KEY_ALT:
-				case KEY_CTRL:
-					return Wicket.stopEvent(event);
-					break;
-				default:
-					if (typeof objonchange == "function")objonchange();
-			}
-			return null;
-		}
-		
-		obj.onpaste = function(event) {
-			if (typeof objonchange == "function"){
-				setTimeout(function() {
-	   			  objonchange();
-			     }, 10);
-			}
-			return null;
-		}
-		
-		obj.oncut = function(event) {
-			if (typeof objonchange == "function"){
-				setTimeout(function() {
-	   			  objonchange();
-			     }, 10);
-			}
-			return null;
-		}
-	} else {
-		obj.addEventListener('input', obj.onchange, true);
-	}
-
-	obj.onchange = function(event) {
-		Wicket.stopEvent(event);
-	}
-} 
-
-/*
- * Compatibility layer to maintain the original wicket-ajax API.
- */
-
-var wicketThrottler = Wicket.throttler;
-
-function wicketAjaxGet(url, successHandler, failureHandler, precondition, channel) {
-
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
-	
-	if (typeof(precondition) != "undefined" && precondition != null) {
-		call.request.precondition = precondition;
-	}
-	
-	return call.call();
-}
-
-function wicketAjaxPost(url, body, successHandler, failureHandler, precondition, channel) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
-	
-	if (typeof(precondition) != "undefined" && precondition != null) {		
-		call.request.precondition = precondition;
-	}
-	
-	return call.post(body);
-}
-
-function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler, precondition, channel) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
-	
-	if (typeof(precondition) != "undefined" && precondition != null) {
-		call.request.precondition = precondition;
-	}
-	
-	return call.submitForm(form, submitButton);
-}
-
-function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler, precondition, channel) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
-	
-	if (typeof(precondition) != "undefined" && precondition != null) {
-		call.request.precondition = precondition;
-	}
-	
-	return call.submitFormById(formId, submitButton);
-}
-
-wicketSerialize = Wicket.Form.serializeElement;
-
-wicketSerializeForm = Wicket.Form.serialize;
-
-wicketEncode = Wicket.Form.encode;
-
-wicketDecode = Wicket.decode;
-
-wicketAjaxGetTransport = Wicket.Ajax.getTransport;
-
-// Global handlers stubs
-
-Wicket.Ajax.registerPreCallHandler(function() {
-	if (typeof(window.wicketGlobalPreCallHandler) != "undefined") {
-	    var global=wicketGlobalPreCallHandler;
-	    if (global!=null) {
-	    	global();
-	    }
-	}    
-});
-
-Wicket.Ajax.registerPostCallHandler(function() {
-	if (typeof(window.wicketGlobalPostCallHandler) != "undefined") {
-	    var global=wicketGlobalPostCallHandler;
-	    if (global!=null) {
-	    	global();
-	    }
-	}    
-});
-
-Wicket.Ajax.registerFailureHandler(function() {
-	if (typeof(window.wicketGlobalFailureHandler) != "undefined") {
-	    var global=wicketGlobalFailureHandler;
-	    if (global!=null) {
-	    	global();
-	    }
-	}    
-});
-
-// FOCUS FUNCTIONS
-
-Wicket.Focus = {
-	lastFocusId : "",
-
-	setFocus: function(event)
-	{ 
-		event = Wicket.fixEvent(event);
-	
-	    // IE doesn't have the property "target".
-	    // Use "srcElement" instead.
-	    var target = event.target ? event.target : event.srcElement;
-	    if (target) {
-			lastFocusId=target.id;
-			Wicket.Log.info("focus set on " + lastFocusId);
-		}
-	},
-	
-	setFocusOnId: function(id)
-	{
-		lastFocusId=id;
-		Wicket.Log.info("focus set on " + lastFocusId + " from serverside");
-	},
-	
-	getFocusedElement: function()
-	{
-		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
-		{
-			Wicket.Log.info("returned focused element: " + Wicket.$(lastFocusId)); 
-			return Wicket.$(lastFocusId);
-		}
-		return;
-	},
-	
-	requestFocus: function()
-	{
-		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
-		{ 
-			var toFocus = Wicket.$(lastFocusId);
-			if (toFocus != null && typeof(toFocus) != "undefined") {
-				Wicket.Log.info("Calling focus on " + lastFocusId);
-				try {
-					toFocus.focus();
-				} catch (ignore) {
-				}
-			}
-			else
-			{
-				lastFocusId = "";
-				Wicket.Log.info("Couldn't set focus on " + lastFocusId + " not on the page anymore");
-			}
-		}
-		else
-		{
-			Wicket.Log.info("last focus id was not set");
-		}
-	},
-	
-	setFocusOnElements: function (elements)
-	{
-		for (var i=0; i< elements.length; i++)
-		{
-		    if ( typeof(elements[i].focusSet) == "undefined")
-		    {
-		         Wicket.Event.add(elements[i],'focus',Wicket.Focus.setFocus);
-		         elements[i].focusSet = true;
-		    }
-		}
-	},
-	
-	attachFocusEvent: function()
-	{
-		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("input"));
-		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("select"));
-		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("textarea"));
-		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
-		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
-	}
-}
-Wicket.Event.addDomReadyEvent(Wicket.Focus.attachFocusEvent);
-
-
-// DEBUG FUNCTIONS
-function wicketAjaxDebugEnabled() {
-    if (typeof(wicketAjaxDebugEnable)=="undefined") {
-        return false;
-    } else {
-        return wicketAjaxDebugEnable==true;
-    }
-}
-
-// MISC FUNCTIONS
-function wicketKeyCode(event) {
-    if (typeof(event.keyCode)=="undefined") {
-        return event.which;
-    } else {
-        return event.keyCode;
-    }
-}
-
-function wicketGet(id) {
-    return Wicket.$(id);
-}
-
-function wicketShow(id) {
-    var e=wicketGet(id);
-    if (e!=null) {
-	    e.style.display = "";
-	}
-}
-
-function wicketHide(id) {
-    var e=wicketGet(id);
-	if (e!=null) {
-	    e.style.display = "none";
-	}
-}
