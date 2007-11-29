@@ -1561,7 +1561,7 @@ Wicket.fixEvent = function(e) {
  * Flexible dragging support.
  */
 Wicket.Drag = {
-	
+		
 	/**
 	 * Initializes the dragging on the specified element.
 	 * Element's onmousedown will be replaced by generated handler.
@@ -1579,42 +1579,48 @@ Wicket.Drag = {
 			onDragEnd = Wicket.emptyFunction;
 		if (typeof(onDrag) == "undefined")
 			onDrag = Wicket.emptyFunction;
+
+		element.wicketOnDragBegin = onDragBegin;
+		element.wicketOnDrag = onDrag;
+		element.wicketOnDragEnd = onDragEnd;
+
 		
 		// set the mousedown handler 
-		element.onmousedown = function(e) {			
-			
-			e = Wicket.fixEvent(e);
+		Wicket.Event.add(element, "mousedown", Wicket.Drag.mouseDownHandler);									
+	},
 	
-			// HACK - for safari stopPropagation doesn't work well because
-			// it also prevents scrollbars and form components getting the
-			// event. Therefore for safari the 'ignore' flag is set on event. 
-			if (typeof(e.ignore) == "undefined") {
-				
-				Wicket.stopEvent(e);
+	mouseDownHandler: function(e) {
+		e = Wicket.fixEvent(e);
 	
-				onDragBegin(element);
+		var element = this;
+	
+		// HACK - for safari stopPropagation doesn't work well because
+		// it also prevents scrollbars and form components getting the
+		// event. Therefore for safari the 'ignore' flag is set on event. 
+		if (typeof(e.ignore) == "undefined") {
 			
-				element.onDrag = onDrag;
-				element.onDragEnd = onDragEnd;
-				
-				element.lastMouseX = e.clientX;
-				element.lastMouseY = e.clientY;
-				
-				element.old_onmousemove = document.onmousemove;
-				element.old_onmouseup = document.onmouseup;
-				element.old_onselectstart = document.onselectstart;	
-				element.old_onmouseout = document.onmouseout;		
-				
-				document.onselectstart = function() { return false; }
-				document.onmousemove = Wicket.Drag.mouseMove;
-				document.onmouseup = Wicket.Drag.mouseUp;
-				document.onmouseout = Wicket.Drag.mouseOut;				
-							
-				Wicket.Drag.current = element;
-							
-				return false;
-			} 			
-		};		
+			Wicket.stopEvent(e);
+
+			element.wicketOnDragBegin(element);		
+			
+			element.lastMouseX = e.clientX;
+			element.lastMouseY = e.clientY;
+			
+			element.old_onmousemove = document.onmousemove;
+			element.old_onmouseup = document.onmouseup;
+			element.old_onselectstart = document.onselectstart;	
+			element.old_onmouseout = document.onmouseout;		
+			
+			document.onselectstart = function() { return false; }
+			document.onmousemove = Wicket.Drag.mouseMove;
+			document.onmouseup = Wicket.Drag.mouseUp;
+			document.onmouseout = Wicket.Drag.mouseOut;				
+						
+			Wicket.Drag.current = element;
+						
+			return false;
+		} 			
+			
 	},
 	
 	/**
@@ -1649,7 +1655,7 @@ Wicket.Drag = {
 			var deltaX = e.clientX - o.lastMouseX;
 			var deltaY = e.clientY - o.lastMouseY;
 				
-			var res = o.onDrag(o, deltaX, deltaY, e);
+			var res = o.wicketOnDrag(o, deltaX, deltaY, e);
 			
 			if (res == null)
 				res = [0, 0];
@@ -1672,10 +1678,8 @@ Wicket.Drag = {
 		var o = Wicket.Drag.current;
 		
 		if (o != null && typeof(o) != "undefined") {
-			o.onDragEnd(o);		
+			o.wicketOnDragEnd(o);		
 			
-			o.onDrag = null;
-			o.onDragEnd = null;
 			o.lastMouseX = null;
 			o.lastMouseY = null;
 			
