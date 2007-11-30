@@ -89,8 +89,8 @@ import org.apache.wicket.model.IModel;
  * @author Juergen Donnerstag
  */
 public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
-		implements
-			IComponentResolver
+	implements
+		IComponentResolver
 {
 	/**
 	 * 
@@ -123,6 +123,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 	/** only required during render phase. The <span wicket:id="myBorder"> tag */
 	private transient ComponentTag openTag;
+	private int beginOfBodyIndex;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -203,7 +204,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+		final ComponentTag tag)
 	{
 		// In case of nested Borders, the outer border is no longer able to find
 		// its body container easily. Thus we need to help resolve it.
@@ -253,8 +254,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		if (tag.isOpen() == false)
 		{
 			throw new WicketRuntimeException(
-					"The border tag must be an open tag. Open-close is not allowed: " +
-							tag.toString());
+				"The border tag must be an open tag. Open-close is not allowed: " + tag.toString());
 		}
 
 		super.onComponentTag(tag);
@@ -265,11 +265,14 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		final ComponentTag openTag)
 	{
 		// Remember the data for easy access by the Body component
 		this.openTag = openTag;
 		originalMarkupStream = getMarkupStream();
+
+		// Remember the current position (start of border-body) of the markupstream
+		beginOfBodyIndex = originalMarkupStream.getCurrentIndex();
 
 		// body.isVisible(false) needs a little extra work. We must skip the
 		// markup between <span wicket:id="myBorder"> and </span>
@@ -277,10 +280,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		{
 			originalMarkupStream.skipToMatchingCloseTag(openTag);
 		}
-
 		// Render the associated markup
 		renderAssociatedMarkup("border",
-				"Markup for a border component must begin a tag like '<wicket:border>'");
+			"Markup for a border component must begin a tag like '<wicket:border>'");
 	}
 
 	/**
@@ -333,13 +335,22 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		 *      org.apache.wicket.markup.ComponentTag)
 		 */
 		protected void onComponentTagBody(final MarkupStream markupStream,
-				final ComponentTag openTag)
+			final ComponentTag openTag)
 		{
 			if (wasOpenCloseTag == false)
 			{
 				// It is open-preview-close. Only RawMarkup is allowed within
 				// the preview region, which gets stripped from output
 				markupStream.skipRawMarkup();
+			}
+
+			// this check always results in false for normal requests.
+			// in case of ajax requests, the markupstream is not reset after the first render, thus
+			// the current index of the markup stream points to the element after the body.
+			// as a result, no elements are detected and always omitted.
+			if (beginOfBodyIndex != originalMarkupStream.getCurrentIndex())
+			{
+				originalMarkupStream.setCurrentIndex(beginOfBodyIndex);
 			}
 
 			super.onComponentTagBody(originalMarkupStream, Border.this.openTag);
@@ -350,7 +361,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
 		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-				final ComponentTag tag)
+			final ComponentTag tag)
 		{
 			// Usually you add child components to Border instead of Body. Hence
 			// we need to help Body to properly resolve the children.

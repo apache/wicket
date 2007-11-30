@@ -33,6 +33,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
@@ -1075,16 +1076,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					while (iterator2.hasNext())
 					{
 						Component sibling = (Component)iterator2.next();
-						if (!sibling.isVisible() && sibling instanceof MarkupContainer &&
-							((MarkupContainer)sibling).isTransparentResolver())
+						if (!sibling.isVisible())
 						{
-							// we found a transparent container that isn't visible
-							// then ignore this component and only do a debug statement here.
-							log.warn("Component " + component +
-								" wasn't rendered but most likely it has a transparent parent: " +
-								sibling);
-							iterator.remove();
-							break;
+							boolean isTransparentMarkupContainer = sibling instanceof MarkupContainer &&
+								((MarkupContainer)sibling).isTransparentResolver();
+							boolean isComponentResolver = sibling instanceof IComponentResolver;
+							if (isTransparentMarkupContainer || isComponentResolver)
+							{
+								// we found a transparent container that isn't visible
+								// then ignore this component and only do a debug statement here.
+								log.warn("Component " +
+									component +
+									" wasn't rendered but most likely it has a transparent parent: " +
+									sibling);
+								iterator.remove();
+								break;
+							}
 						}
 					}
 				}
