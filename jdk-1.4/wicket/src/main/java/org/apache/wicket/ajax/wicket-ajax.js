@@ -170,7 +170,7 @@ Wicket.FunctionsExecuter.prototype = {
 }
 
 Wicket.replaceOuterHtmlIE = function(element, text) {	
-										
+							
 	if (element.tagName == "SCRIPT") {
 		// we need to get the javascript content, so we create an invalid DOM structure,
 		// (that is necessary for IE to let us see the innerHTML of the script tag	
@@ -190,15 +190,13 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	var tempParent;
 	
 	// array for javascripts that were in the text
-	var scripts = new Array();
+	var scripts = new Array();				
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
-	
-		element.innerHTML = "";
-	
-		// in case the element is not any of these
+		
+		// in case the element is not any of these								
 						
-		document.body.appendChild(tempDiv);						
+		document.body.appendChild(tempDiv);									
 						
 		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
 		// because otherwise IE just swallows the <script> tags (sometimes) 
@@ -264,7 +262,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
       		
 	for (i = 0; i < scripts.length; ++i) {
 		Wicket.Head.addJavascripts(scripts[i]); 
-	}								 
+	}									
 }
 
 Wicket.replaceOuterHtmlSafari = function(element, text) {
