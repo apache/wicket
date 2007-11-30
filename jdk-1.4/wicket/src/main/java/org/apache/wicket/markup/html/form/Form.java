@@ -1378,7 +1378,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 							.valueOf(model), defaultValue);
 					error(msg);
 
-					log.error(msg, e);
+					log.warn(msg, e);
 				}
 
 				// don't process the form if there is a FileUploadException
