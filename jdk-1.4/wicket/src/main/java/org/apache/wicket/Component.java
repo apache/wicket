@@ -2302,11 +2302,22 @@ public abstract class Component implements IClusterable, IConverterLocator
 				// write out a placeholder tag into the markup
 				final ComponentTag tag = markupStream.getTag();
 
+				String namespacePrefix = Strings.isEmpty(tag.getNamespace()) ? null
+					: tag.getNamespace() + ":";
+
 				getResponse().write("<");
+				if (namespacePrefix != null)
+				{
+					getResponse().write(namespacePrefix);
+				}
 				getResponse().write(tag.getName());
 				getResponse().write(" id=\"");
 				getResponse().write(getMarkupId());
 				getResponse().write("\" style=\"display:none\"></");
+				if (namespacePrefix != null)
+				{
+					getResponse().write(namespacePrefix);
+				}
 				getResponse().write(tag.getName());
 				getResponse().write(">");
 			}
