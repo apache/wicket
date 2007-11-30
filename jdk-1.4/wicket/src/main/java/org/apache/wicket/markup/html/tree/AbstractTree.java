@@ -34,6 +34,7 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -213,6 +214,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							markupStream.setCurrentIndex(index);
 							// render child
 							item.onRender(markupStream);
+
+							// go through the behaviors and invoke IBehavior.afterRender
+							List behaviors = item.getBehaviors();
+							for (Iterator i = behaviors.iterator(); i.hasNext();)
+							{
+								IBehavior behavior = (IBehavior)i.next();
+								behavior.afterRender(item);
+							}
 						}
 					});
 					//
