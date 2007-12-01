@@ -81,6 +81,22 @@ import org.apache.wicket.model.IModel;
  * tag) which will automatically be expanded to &lt;wicket:body&gt;body content&lt;/wicket:body&gt;
  * or use &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's markup. The preview
  * region (everything in between the open and close tag) will automatically be removed.
+ * <p>
+ * Note that if body is not an immediate child of border (example see below), than you must use code
+ * like the following <code>someContainer.add(getBodyContainer())</code> to add the body component
+ * to the correct container.
+ * 
+ * <pre>
+ *   &lt;html&gt;
+ *   &lt;body&gt;
+ *     &lt;wicket:border&gt;
+ *       &lt;span wicket:id=&quot;someContainer&quot;&gt;
+ *         &lt;wicket:body/&gt;
+ *       &lt;/span&gt;
+ *     &lt;/wicket:border&gt;
+ *   &lt;/body&gt;
+ *   &lt;/html&gt;
+ * </pre>
  * 
  * @see BorderBodyResolver
  * @see BorderBodyContainer
