@@ -24,6 +24,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
 import org.apache.wicket.response.NullResponse;
@@ -113,9 +115,20 @@ public class Enclosure extends WebMarkupContainer
 	private Component getChildComponent(final CharSequence childId)
 	{
 		MarkupContainer parent = getParent();
-		while ((parent != null) && parent.isTransparentResolver())
+		while (parent != null)
 		{
-			parent = parent.getParent();
+			if (parent.isTransparentResolver())
+			{
+				parent = parent.getParent();
+			}
+			else if (parent instanceof BorderBodyContainer)
+			{
+				parent = ((BorderBodyContainer)parent).findParent(Border.class);
+			}
+			else
+			{
+				break;
+			}
 		}
 
 		if (parent == null)

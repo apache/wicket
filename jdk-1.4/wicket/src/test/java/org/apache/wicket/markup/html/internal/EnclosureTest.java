@@ -64,4 +64,12 @@ public class EnclosureTest extends WicketTestCase
 	{
 		executeTest(EnclosurePage_2.class, "EnclosurePageExpectedResult_2.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage3() throws Exception
+	{
+		executeTest(EnclosurePage_3.class, "EnclosurePageExpectedResult_3.html");
+	}
 }
