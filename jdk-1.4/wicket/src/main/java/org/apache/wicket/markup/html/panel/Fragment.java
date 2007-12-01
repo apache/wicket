@@ -323,11 +323,15 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		MarkupStream stream = null;
 
 		// TODO Post 1.3: Cleanup this after deprecated constructors are removed
-
-
 		if (markupProvider != null)
 		{
 			stream = markupProvider.getAssociatedMarkupStream(false);
+			if (stream == null)
+			{
+				// The following statement assumes that the markup provider is a
+				// parent along the line up to the Page
+				stream = markupProvider.getMarkupStream();
+			}
 		}
 
 		// try self's markup stream
