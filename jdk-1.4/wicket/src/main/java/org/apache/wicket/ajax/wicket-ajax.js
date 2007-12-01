@@ -1880,34 +1880,34 @@ Wicket.Focus = {
 	    // Use "srcElement" instead.
 	    var target = event.target ? event.target : event.srcElement;
 	    if (target) {
-			lastFocusId=target.id;
-			Wicket.Log.info("focus set on " + lastFocusId);
+			Wicket.Focus.lastFocusId=target.id;
+			Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId);
 		}
 	},
 	
 	setFocusOnId: function(id)
 	{
-		lastFocusId=id;
-		Wicket.Log.info("focus set on " + lastFocusId + " from serverside");
+		Wicket.Focus.lastFocusId=id;
+		Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId + " from serverside");
 	},
 	
 	getFocusedElement: function()
 	{
-		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
+		if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 		{
-			Wicket.Log.info("returned focused element: " + Wicket.$(lastFocusId)); 
-			return Wicket.$(lastFocusId);
+			Wicket.Log.info("returned focused element: " + Wicket.$(Wicket.Focus.lastFocusId)); 
+			return Wicket.$(Wicket.Focus.lastFocusId);
 		}
 		return;
 	},
 	
 	requestFocus: function()
 	{
-		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
+		if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 		{ 
-			var toFocus = Wicket.$(lastFocusId);
+			var toFocus = Wicket.$(Wicket.Focus.lastFocusId);
 			if (toFocus != null && typeof(toFocus) != "undefined") {
-				Wicket.Log.info("Calling focus on " + lastFocusId);
+				Wicket.Log.info("Calling focus on " + Wicket.Focus.lastFocusId);
 				try {
 					toFocus.focus();
 				} catch (ignore) {
@@ -1915,8 +1915,8 @@ Wicket.Focus = {
 			}
 			else
 			{
-				lastFocusId = "";
-				Wicket.Log.info("Couldn't set focus on " + lastFocusId + " not on the page anymore");
+				Wicket.Focus.lastFocusId = "";
+				Wicket.Log.info("Couldn't set focus on " + Wicket.Focus.lastFocusId + " not on the page anymore");
 			}
 		}
 		else
