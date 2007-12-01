@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
@@ -26,6 +27,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
@@ -35,6 +37,7 @@ import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressingWebR
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressor;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.slf4j.Logger;
@@ -112,8 +115,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 			Session session = Session.get();
 
-			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
-				.getMetaData(Session.PAGEMAP_ACCESS_MDK);
+			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
 				meta = new Session.PageMapAccessMetaData();
@@ -125,8 +127,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
-				response
-					.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
+				response.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				response.write("wicket-" + name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
@@ -142,8 +143,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-						session.createAutoPageMapName(), current.getPageClass(), current
-							.getPageParameters());
+						session.createAutoPageMapName(), current.getPageClass(),
+						current.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
@@ -151,19 +152,17 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					url = webPage.urlFor(INewBrowserWindowListener.INTERFACE);
 				}
 				JavascriptUtils.writeOpenTag(response);
-				response
-					.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
-						"wicket-" + name + "')) { window.location=\"");
+				response.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
+					"wicket-" + name + "')) { window.location=\"");
 				response.write(url);
-				response
-					.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
+				response.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 		}
 	}
 
 	/** log. */
-	private static final Logger _log = LoggerFactory.getLogger(WebPage.class);
+	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
@@ -310,7 +309,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		}
 		catch (Exception e)
 		{
-			_log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
+			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
 		}
 		final IPageMap map = getSession().createAutoPageMap();
 		clonedPage.moveToPageMap(map);
@@ -397,11 +396,61 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		// is != iter.remove(). And the iterator is not available
 		// inside onEndRequest(). Obviously WebPage.onEndRequest()
 		// is invoked outside the iterator loop.
-		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
+		HtmlHeaderContainer header = (HtmlHeaderContainer)get(HtmlHeaderSectionHandler.HEADER_ID);
 		if (header != null)
 		{
 			this.remove(header);
 		}
+		else if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
+		{
+			// the markup must at least contain a <body> tag for wicket to automatically
+			// create a HtmlHeaderContainer. Log an error if no header container
+			// was created but any of the components or behavior want to contribute
+			// something to the header.
+			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+			add(header);
+
+			Response orgResponse = getRequestCycle().getResponse();
+			try
+			{
+				final StringResponse response = new StringResponse();
+				getRequestCycle().setResponse(response);
+
+				// Render all header sections of all components on the page
+				renderHead(header);
+
+				// Make sure all Components interested in contributing to the header
+				// and there attached behaviors are asked.
+				final HtmlHeaderContainer finalHeader = header;
+				visitChildren(new IVisitor()
+				{
+					/**
+					 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+					 */
+					public Object component(Component component)
+					{
+						component.renderHead(finalHeader);
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+				response.close();
+
+				if (response.getBuffer().length() > 0)
+				{
+					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					log.error("You probably forgot to add a <body> tag to your markup since no Header Container was \n" +
+						"found but components where found which want to write to the <head> section.\n" +
+						response.getBuffer());
+					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+				}
+			}
+			finally
+			{
+				this.remove(header);
+				getRequestCycle().setResponse(orgResponse);
+			}
+		}
+
 		super.onDetach();
 	}
 }
