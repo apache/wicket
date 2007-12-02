@@ -502,12 +502,20 @@ public class MockWebApplication
 	 * Reset the request and the response back to a starting state and recreate the necessary wicket
 	 * request, response and session objects. The request and response objects can be accessed and
 	 * Initialized at this point.
+	 * 
+	 * @param isAjax
+	 *            indicates whether the request should be initialized as an ajax request (ajax
+	 *            header "Wicket-Ajax" is set)
 	 */
-	public WebRequestCycle setupRequestAndResponse()
+	public WebRequestCycle setupRequestAndResponse(boolean isAjax)
 	{
 		servletRequest.initialize();
 		servletResponse.initialize();
 		servletRequest.setParameters(parametersForNextRequest);
+		if (isAjax)
+		{
+			servletRequest.addHeader("Wicket-Ajax", "Yes");
+		}
 		parametersForNextRequest.clear();
 		wicketRequest = application.newWebRequest(servletRequest);
 		wicketResponse = application.newWebResponse(servletResponse);
@@ -515,6 +523,16 @@ public class MockWebApplication
 		application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
 		return requestCycle;
+	}
+
+	/**
+	 * Reset the request and the response back to a starting state and recreate the necessary wicket
+	 * request, response and session objects. The request and response objects can be accessed and
+	 * Initialized at this point.
+	 */
+	public WebRequestCycle setupRequestAndResponse()
+	{
+		return setupRequestAndResponse(false);
 	}
 
 	/**

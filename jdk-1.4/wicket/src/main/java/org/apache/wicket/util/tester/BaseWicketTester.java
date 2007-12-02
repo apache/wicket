@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -55,6 +57,7 @@ import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.http.HttpSessionStore;
+import org.apache.wicket.protocol.http.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -256,7 +259,7 @@ public class BaseWicketTester extends MockWebApplication
 		// setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
 		CharSequence url = behavior.getCallbackUrl(false);
-		setupRequestAndResponse();
+		setupRequestAndResponse(true);
 		cycle = createRequestCycle();
 		getServletRequest().setRequestToRedirectString(url.toString());
 		processRequestCycle(cycle);
@@ -657,7 +660,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			AjaxLink link = (AjaxLink)linkComponent;
 
-			setupRequestAndResponse();
+			setupRequestAndResponse(true);
 			RequestCycle requestCycle = createRequestCycle();
 			AjaxRequestTarget target = new AjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
@@ -675,7 +678,7 @@ public class BaseWicketTester extends MockWebApplication
 		{
 			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
 
-			setupRequestAndResponse();
+			setupRequestAndResponse(true);
 			RequestCycle requestCycle = createRequestCycle();
 			AjaxRequestTarget target = new AjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
@@ -716,7 +719,7 @@ public class BaseWicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
-			setupRequestAndResponse();
+			setupRequestAndResponse(true);
 			RequestCycle requestCycle = createRequestCycle();
 
 			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
@@ -1108,11 +1111,21 @@ public class BaseWicketTester extends MockWebApplication
 		WebRequestCycle requestCycle;
 		if (RequestCycle.get() == null)
 		{
-			requestCycle = setupRequestAndResponse();
+			requestCycle = setupRequestAndResponse(true);
 		}
 		else
 		{
 			requestCycle = (WebRequestCycle)RequestCycle.get();
+		}
+		// when the requestcycle is not created via setupRequestAndResponse(true), it can happen
+		// that the request is not an ajax request -> we have to set the header manually
+		if (!requestCycle.getWebRequest().isAjax())
+		{
+			HttpServletRequest req = requestCycle.getWebRequest().getHttpServletRequest();
+			if (req instanceof MockHttpServletRequest)
+			{
+				((MockHttpServletRequest)req).addHeader("Wicket-Ajax", "Yes");
+			}
 		}
 
 		// If the event is an FormSubmitBehavior then also "submit" the form

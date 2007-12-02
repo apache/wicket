@@ -44,7 +44,7 @@ public class SimpleTestPanelTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-		tester.setupRequestAndResponse();
+		tester.setupRequestAndResponse(true);
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 		WebRequestCycle cycle = tester.createRequestCycle();
 
@@ -54,6 +54,6 @@ public class SimpleTestPanelTest extends WicketTestCase
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, SimpleTestPage.class,
-				"SimpleTestPageExpectedResult-1.html", true);
+			"SimpleTestPageExpectedResult-1.html", true);
 	}
 }
