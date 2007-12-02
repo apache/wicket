@@ -123,13 +123,12 @@ public class Initializer implements IInitializer, IDestroyer
 				String impl = null;
 				try
 				{
-					System.getProperty("wicket.mbean.server.class");
+					impl = System.getProperty("wicket.mbean.server.class");
 				}
 				catch (SecurityException e)
 				{
 					// Ignore - we're not allowed to read this property.
-					log
-							.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
+					log.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
 				}
 				if (impl != null)
 				{
