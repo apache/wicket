@@ -63,8 +63,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID)
-				.setOutputMarkupId(true));
+		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
 		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
@@ -74,7 +73,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				WebMarkupContainer wmc = new WebMarkupContainer(
-						MockPageWithLinkAndComponent.COMPONENT_ID);
+					MockPageWithLinkAndComponent.COMPONENT_ID);
 				wmc.setOutputMarkupId(true);
 				wmc.add(timer);
 				page.replace(wmc);
@@ -137,11 +136,11 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		String document = tester.getServletResponse().getDocument();
 
 		String updateScript = timer.getUpdateScript();
-		String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " +
-				updateScript + ";});";
 
 		if (inBodyOnLoad)
 		{
+			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " +
+				updateScript + ";});";
 			validateTimerScript(document, bodyOnLoadUpdateScript);
 		}
 		else
@@ -151,6 +150,12 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 
 		tester.executeBehavior(timer);
+
+
+		if (inBodyOnLoad)
+		{
+			updateScript = timer.getUpdateScript();
+		}
 
 		// Validate the document
 		document = tester.getServletResponse().getDocument();
@@ -180,7 +185,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		}
 		// make sure there is only one match
 		assertEquals("There should be 1 and only 1 script in the markup for this behavior," +
-				"but " + count + " were found", 1, count);
+			"but " + count + " were found", 1, count);
 	}
 
 	// quick fix for JDK 5 method
@@ -225,7 +230,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		public MyAjaxSelfUpdatingTimerBehavior(Duration updateInterval)
 		{
 			super(updateInterval);
-			this.duration = updateInterval;
+			duration = updateInterval;
 		}
 
 		protected void onComponentRendered()

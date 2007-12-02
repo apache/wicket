@@ -42,6 +42,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private boolean stopped = false;
 
+	private boolean headRendered = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -99,8 +101,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
 
-		if (!stopped && request.isAjax() == false)
+		if (!stopped && !headRendered)
 		{
+			headRendered = true;
 			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
 		}
 	}
@@ -114,13 +117,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		// this might look strange, but it is necessary for IE not to leak :(
 		return "setTimeout(\"" + getCallbackScript() + "\", " + updateInterval.getMilliseconds() +
-				");";
+			");";
 	}
 
 	protected CharSequence getCallbackScript()
 	{
 		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage()) +
-				"'");
+			"'");
 	}
 
 	/**
@@ -133,7 +136,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		{
 			String componentId = getComponent().getMarkupId();
 			precondition = "var c = Wicket.$('" + componentId +
-					"'); return typeof(c) != 'undefined' && c != null";
+				"'); return typeof(c) != 'undefined' && c != null";
 		}
 		return precondition;
 	}
