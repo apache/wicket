@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -121,5 +124,67 @@ public final class RequestUtils
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	/**
+	 * Calculates absolute path to url relative to another absolute url.
+	 * 
+	 * @param relativePagePath
+	 *            path, relative to requestPath
+	 * @return absolute path for given url
+	 */
+	public final static String toAbsolutePath(final String relativePagePath)
+	{
+		HttpServletRequest req = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+		return toAbsolutePath(req.getRequestURL().toString(), relativePagePath);
+	}
+
+	/**
+	 * Calculates absolute path to url relative to another absolute url.
+	 * 
+	 * @param requestPath
+	 *            absolute path.
+	 * @param relativePagePath
+	 *            path, relative to requestPath
+	 * @return absolute path for given url
+	 */
+	public final static String toAbsolutePath(final String requestPath,
+		final String relativePagePath)
+	{
+		final StringBuffer result;
+		if (requestPath.endsWith("/"))
+		{
+			result = new StringBuffer(requestPath);
+		}
+		else
+		{
+			// Remove everything after last slash (but not slash itself)
+			result = new StringBuffer(requestPath.substring(0, requestPath.lastIndexOf('/') + 1));
+		}
+
+		if (relativePagePath.startsWith("../"))
+		{
+			StringBuffer tempRelative = new StringBuffer(relativePagePath);
+
+			// Go up through hierarchy until we find most common directory for both pathes.
+			while (tempRelative.indexOf("../") == 0)
+			{
+				// Delete ../ from relative path
+				tempRelative.delete(0, 3);
+
+				// Delete last slash from result
+				result.setLength(result.length() - 1);
+
+				// Delete everyting up to last slash
+				result.delete(result.lastIndexOf("/") + 1, result.length());
+			}
+			result.append(tempRelative);
+		}
+		else
+		{
+			// Pages are in the same directory
+			result.append(relativePagePath);
+		}
+		return result.toString();
 	}
 }
