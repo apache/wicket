@@ -152,8 +152,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		Integer pageId = pageInfo != null ? pageInfo.getPageId() : null;
 
 		// decode parameters
-		PageParameters parameters = new PageParameters(decodeParameters(extraction
-			.getUrlAfterExtraction(), requestParameters.getParameters()));
+		PageParameters parameters = new PageParameters(decodeParameters(
+			extraction.getUrlAfterExtraction(), requestParameters.getParameters()));
 
 		if (requestParameters.getPageMapName() == null)
 		{
@@ -167,13 +167,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		// do some extra work for checking whether this is a normal request to a
 		// bookmarkable page, or a request to a stateless page (in which case a
 		// wicket:interface parameter should be available
-		final String interfaceParameter = (String)parameters
-			.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+		final String interfaceParameter = (String)parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 
 		// we need to remember the amount of trailing slashes after the redirect
 		// (otherwise we'll break relative urls)
-		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction
-			.getUrlAfterExtraction());
+		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction.getUrlAfterExtraction());
 
 		boolean redirect = isRedirectOnBookmarkableRequest();
 		if (Strings.isEmpty(pageMapName) != true && alwaysRedirectWhenPageMapIsSpecified())
@@ -185,9 +183,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			// stateless listener interface
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
-			return new BookmarkableListenerInterfaceRequestTarget(pageMapName, (Class)pageClassRef
-				.get(), parameters, requestParameters.getComponentPath(), requestParameters
-				.getInterfaceName(), requestParameters.getVersionNumber());
+			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
+				(Class)pageClassRef.get(), parameters, requestParameters.getComponentPath(),
+				requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else if (pageId == null)
 		{
@@ -223,8 +221,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			{
 				// we didn't find the page, act as bookmarkable page request -
 				// create new instance
-				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-					.get(), parameters, originalUrlTrailingSlashesCount, redirect);
+				return new HybridBookmarkablePageRequestTarget(pageMapName,
+					(Class)pageClassRef.get(), parameters, originalUrlTrailingSlashesCount,
+					redirect);
 			}
 		}
 
@@ -297,8 +296,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
-			return new PageInfo(new Integer(page.getNumericId()), new Integer(page
-				.getCurrentVersionNumber()), page.getPageMapName());
+			return new PageInfo(new Integer(page.getNumericId()), new Integer(
+				page.getCurrentVersionNumber()), page.getPageMapName());
 		}
 		else
 		{
@@ -406,7 +405,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
-		appendParameters(url, parameters);
+
+		// there are cases where the parameters are null
+		if (parameters != null)
+		{
+			appendParameters(url, parameters);
+		}
 
 		// check whether we know if the initial URL ended with slash
 		Integer trailingSlashesCount = getOriginalOriginalTrailingSlashesCount(requestTarget);
