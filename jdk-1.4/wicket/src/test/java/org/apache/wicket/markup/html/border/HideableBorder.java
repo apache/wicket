@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * 
@@ -36,6 +37,9 @@ public class HideableBorder extends Border
 	public HideableBorder(String name)
 	{
 		super(name);
+		final WebMarkupContainer containerWrapper = new WebMarkupContainer("wrapper");
+		add(containerWrapper);
+		containerWrapper.add(getBodyContainer());
 		add(new AjaxLink("hideLink")
 		{
 			private static final long serialVersionUID = 1L;
@@ -43,10 +47,10 @@ public class HideableBorder extends Border
 			public void onClick(AjaxRequestTarget target)
 			{
 				hidden = !hidden;
-				getBodyContainer().setVisible(!hidden);
-				target.addComponent(getBodyContainer());
+				containerWrapper.setVisible(!hidden);
+				target.addComponent(containerWrapper);
 			}
 		});
-		getBodyContainer().setOutputMarkupPlaceholderTag(true);
+		containerWrapper.setOutputMarkupPlaceholderTag(true);
 	}
 }
