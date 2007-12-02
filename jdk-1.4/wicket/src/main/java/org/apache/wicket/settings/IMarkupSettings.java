@@ -99,6 +99,12 @@ public interface IMarkupSettings
 	boolean getStripXmlDeclarationFromOutput();
 
 	/**
+	 * @since 1.3
+	 * @return if true, an exception is thrown if the markup file does not contain a xml declaration
+	 */
+	boolean getThrowExceptionOnMissingXmlDeclaration();
+
+	/**
 	 * Application default for automatic link resolution. Please
 	 * 
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
@@ -189,4 +195,12 @@ public interface IMarkupSettings
 	 *            if true, xml declaration will be stripped from output
 	 */
 	void setStripXmlDeclarationFromOutput(final boolean strip);
+
+	/**
+	 * If true, an exception is thrown if the markup file does not contain a xml declaration
+	 * 
+	 * @since 1.3
+	 * @param throwException
+	 */
+	void setThrowExceptionOnMissingXmlDeclaration(final boolean throwException);
 }

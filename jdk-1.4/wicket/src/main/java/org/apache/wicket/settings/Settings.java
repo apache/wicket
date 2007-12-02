@@ -78,18 +78,18 @@ import org.apache.wicket.util.watch.ModificationWatcher;
  * @author Martijn Dashorst
  */
 public final class Settings
-		implements
-			IApplicationSettings,
-			IDebugSettings,
-			IExceptionSettings,
-			IMarkupSettings,
-			IPageSettings,
-			IRequestCycleSettings,
-			IResourceSettings,
-			ISecuritySettings,
-			ISessionSettings,
-			IFrameworkSettings,
-			IRequestLoggerSettings
+	implements
+		IApplicationSettings,
+		IDebugSettings,
+		IExceptionSettings,
+		IMarkupSettings,
+		IPageSettings,
+		IRequestCycleSettings,
+		IResourceSettings,
+		ISecuritySettings,
+		ISessionSettings,
+		IFrameworkSettings,
+		IRequestLoggerSettings
 {
 	/** Class of access denied page. */
 	private WeakReference/* <Class<? extends Page> */accessDeniedPage;
@@ -181,6 +181,9 @@ public final class Settings
 	/** A markup cache which will load the markup if required. */
 	private IMarkupCache markupCache;
 
+	/** if true than throw an exception if the xml declaration is missing from the markup file */
+	private boolean throwExceptionOnMissingXmlDeclaration = false;
+
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 5;
 
@@ -201,7 +204,7 @@ public final class Settings
 
 	/** The eviction strategy. */
 	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
-			5);
+		5);
 
 	/** The factory to be used for the property files */
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
@@ -349,7 +352,7 @@ public final class Settings
 		if (!(finder instanceof IResourcePath))
 		{
 			throw new IllegalArgumentException(
-					"To add a resource folder, the application's resource finder must be an instance of IResourcePath");
+				"To add a resource folder, the application's resource finder must be an instance of IResourcePath");
 		}
 
 		// Cast to resource path and add folder
@@ -891,7 +894,7 @@ public final class Settings
 	 * @see org.apache.wicket.settings.ISecuritySettings#setCookieValuePersisterSettings(org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettings)
 	 */
 	public void setCookieValuePersisterSettings(
-			CookieValuePersisterSettings cookieValuePersisterSettings)
+		CookieValuePersisterSettings cookieValuePersisterSettings)
 	{
 		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
 	}
@@ -1132,7 +1135,7 @@ public final class Settings
 	 * @see org.apache.wicket.settings.ISecuritySettings#setUnauthorizedComponentInstantiationListener(org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener)
 	 */
 	public void setUnauthorizedComponentInstantiationListener(
-			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
+		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
 	{
 		this.unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListener;
 	}
@@ -1141,7 +1144,7 @@ public final class Settings
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
 	 */
 	public void setUnexpectedExceptionDisplay(
-			final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
+		final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
 	}
@@ -1178,7 +1181,7 @@ public final class Settings
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
 			throw new IllegalArgumentException("argument " + pageClass +
-					" must be a subclass of Page");
+				" must be a subclass of Page");
 		}
 	}
 
@@ -1334,5 +1337,21 @@ public final class Settings
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl()
 	{
 		return addLastModifiedTimeToResourceReferenceUrl;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#getThrowExceptionOnMissingXmlDeclaration()
+	 */
+	public boolean getThrowExceptionOnMissingXmlDeclaration()
+	{
+		return throwExceptionOnMissingXmlDeclaration;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#setThrowExceptionOnMissingXmlDeclaration(boolean)
+	 */
+	public void setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
+	{
+		throwExceptionOnMissingXmlDeclaration = throwException;
 	}
 }

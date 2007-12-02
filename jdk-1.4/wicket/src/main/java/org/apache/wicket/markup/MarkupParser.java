@@ -43,6 +43,8 @@ import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a streaming XML parser to
@@ -62,9 +64,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupParser
 {
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(MarkupParser.class);
+
 	/** Conditional comment section, which is NOT treated as a comment section */
-	private static final Pattern CONDITIONAL_COMMENT = Pattern
-		.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
+	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -258,8 +262,8 @@ public class MarkupParser
 		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
 
 		// Initialize the xml parser
-		xmlParser.parse(markupResourceData.getResource().getInputStream(), markupSettings
-			.getDefaultMarkupEncoding());
+		xmlParser.parse(markupResourceData.getResource().getInputStream(),
+			markupSettings.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
@@ -267,6 +271,22 @@ public class MarkupParser
 
 		markupResourceData.setEncoding(xmlParser.getEncoding());
 		markupResourceData.setXmlDeclaration(xmlParser.getXmlDeclaration());
+
+		if (xmlParser.getXmlDeclaration() == null)
+		{
+			if (markupSettings.getThrowExceptionOnMissingXmlDeclaration())
+			{
+				throw new MarkupException(markupResourceData.getResource(),
+					"The markup file does not have a XML declaration prolog. "
+						+ ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+			}
+			else
+			{
+				log.debug("The markup file does not have a XML declaration prolog: " +
+					markupResourceData.getResource() +
+					". It is more save to use it. E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+			}
+		}
 
 		return markup;
 	}
@@ -422,8 +442,8 @@ public class MarkupParser
 		while (true)
 		{
 			boolean matched = m.find();
-			String nonPre = matched ? rawMarkup.substring(lastend, m.start()) : rawMarkup
-				.substring(lastend);
+			String nonPre = matched ? rawMarkup.substring(lastend, m.start())
+				: rawMarkup.substring(lastend);
 			nonPre = nonPre.replaceAll("[ \\t]+", " ");
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
 
