@@ -1402,7 +1402,7 @@ Wicket.Window.Mask.prototype = {
 	 */
 	disableTabs: function () {		
 		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME");
-		if (false && Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIE()) {
 			var win = Wicket.Window.current;			
 			var i = 0;			
 			this.tabIndexes = new Array();
