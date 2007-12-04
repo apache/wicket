@@ -437,11 +437,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 				if (response.getBuffer().length() > 0)
 				{
-					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-					log.error("You probably forgot to add a <body> tag to your markup since no Header Container was \n" +
-						"found but components where found which want to write to the <head> section.\n" +
-						response.getBuffer());
-					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					// @TODO it is not yet working properly. JDo to fix it
+// log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+// log.error("You probably forgot to add a <body> tag to your markup since no Header Container was
+// \n" +
+// "found but components where found which want to write to the <head> section.\n" +
+// response.getBuffer());
+// log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 				}
 			}
 			finally
