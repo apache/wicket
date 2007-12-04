@@ -31,7 +31,7 @@ import org.apache.wicket.IClusterable;
 /**
  * Default implementation of TreeState.
  * <p>
- * This implementation tries to be as lightweight as possible.
+ * This implementation tries to be as lightweight as possible. By default all nodes are collapsed.
  * 
  * @author Matej Knopp
  */
@@ -50,8 +50,8 @@ public class DefaultTreeState implements ITreeState, IClusterable
 	 */
 	private final Set nodes = new HashSet();
 
-	/** Whether the nodes set should be treated as collapsed or expanded. */
-	private boolean nodesCollapsed = true;
+	/** Whether the nodes set should be treated as set of collapsed or expanded nodes. */
+	private boolean nodesCollapsed = false; // by default treat the node set as expanded nodes
 
 	/** Set selected nodes. */
 	private final Set selectedNodes = new HashSet();
@@ -212,7 +212,6 @@ public class DefaultTreeState implements ITreeState, IClusterable
 	 */
 	public void selectNode(TreeNode node, boolean selected)
 	{
-
 		if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 		{
 			for (Iterator i = selectedNodes.iterator(); i.hasNext();)
