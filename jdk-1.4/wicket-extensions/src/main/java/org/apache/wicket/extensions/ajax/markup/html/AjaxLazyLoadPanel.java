@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component
@@ -42,7 +43,16 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 */
 	public AjaxLazyLoadPanel(String id)
 	{
-		super(id);
+		this(id, null);
+	}
+
+	/**
+	 * @param id
+	 * @param model
+	 */
+	public AjaxLazyLoadPanel(String id, IModel model)
+	{
+		super(id, model);
 		setOutputMarkupId(true);
 		Component loadingComponent = getLoadingComponent("content");
 		add(loadingComponent.setRenderBodyOnly(true));
@@ -82,8 +92,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	public Component getLoadingComponent(String markupId)
 	{
 		return new Label(markupId, "<img src=\"" +
-				RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>")
-				.setEscapeModelStrings(false);
+			RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
 	}
 
 }
