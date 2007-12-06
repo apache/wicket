@@ -21,6 +21,8 @@ package org.apache.wicket.model;
  * {@link IComponentInheritedModel} so that you don't have to have empty methods like detach or
  * setObject() when not used in the wrapper.
  * 
+ * The detach method calls the wrapped models detach.
+ * 
  * @author jcompagner
  */
 public abstract class AbstractWrapModel implements IWrapModel
@@ -43,5 +45,15 @@ public abstract class AbstractWrapModel implements IWrapModel
 	 */
 	public void setObject(Object object)
 	{
+	}
+
+	/**
+	 * Calls getWrappedModel().detach();
+	 * 
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		getWrappedModel().detach();
 	}
 }
