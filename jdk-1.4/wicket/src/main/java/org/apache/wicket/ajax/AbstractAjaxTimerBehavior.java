@@ -85,7 +85,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/**
 	 * Returns the update interval
 	 * 
-	 * @return
+	 * @return The update interval
 	 */
 	public final Duration getUpdateInterval()
 	{
@@ -101,7 +101,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
 
-		if (!stopped && !headRendered)
+		if (!stopped && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
 			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
