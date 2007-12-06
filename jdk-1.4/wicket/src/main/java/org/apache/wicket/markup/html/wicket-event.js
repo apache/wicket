@@ -122,19 +122,16 @@ Wicket.Event = {
 			if (element.addEventListener){
 				element.addEventListener((type == 'mousewheel' && window.gecko) ? 'DOMMouseScroll' : type, fn, false);
 			} else {
-			   if (element == window)
-			   {
-			   	fn = fn.bind(element);
-			   }
-			   else
-			   {
-					fn = Wicket.Event.handler.bind([Wicket.Event.getId(element), fn]);
+				if (element == window || element == document)   {
+					fn = fn.bind(element);
+				}
+				else {
+					fn = Wicket.Event.handler.bind([Wicket.Event.getId(element), fn]);					
 				}				
 				// Because of the fn.bind (returning a new function object)
 				// you can't detach the event first to be sure that there are no doubles :(
 				//element.detachEvent('on'+type, fn);
 				element.attachEvent('on'+type, fn);
-
 			}
 		}
 		return element;
