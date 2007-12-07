@@ -82,14 +82,13 @@ import org.slf4j.LoggerFactory;
  * public class HelloWorldServlet extends HttpServlet
  * {
  * 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
- * 			IOException
+ * 		IOException
  * 	{
  * 		res.setContentType(&quot;text/html&quot;);
  * 		PrintWriter out = res.getWriter();
  * 		String message = &quot;Hi. &quot; +
- * 				(Session.exists()
- * 						? &quot; I know Wicket session &quot; + Session.get() + &quot;.&quot;
- * 						: &quot; I can't find a Wicket session.&quot;);
+ * 			(Session.exists() ? &quot; I know Wicket session &quot; + Session.get() + &quot;.&quot;
+ * 				: &quot; I can't find a Wicket session.&quot;);
  * 		out.println(message);
  * 		out.close();
  * 	}
@@ -132,8 +131,8 @@ public class WicketSessionFilter implements Filter
 		if (filterName == null)
 		{
 			throw new ServletException(
-					"you must provide init parameter 'filterName if you want to use " +
-							getClass().getName());
+				"you must provide init parameter 'filterName if you want to use " +
+					getClass().getName());
 		}
 
 		if (log.isDebugEnabled())
@@ -154,7 +153,7 @@ public class WicketSessionFilter implements Filter
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException
+		throws IOException, ServletException
 	{
 		HttpServletRequest httpServletRequest = ((HttpServletRequest)request);
 		HttpSession httpSession = httpServletRequest.getSession(false);
@@ -169,8 +168,8 @@ public class WicketSessionFilter implements Filter
 				if (log.isDebugEnabled())
 				{
 					log.debug("session " + session + " set as current for " +
-							httpServletRequest.getContextPath() + "," +
-							httpServletRequest.getServerName());
+						httpServletRequest.getContextPath() + "," +
+						httpServletRequest.getServerName());
 				}
 			}
 			else
@@ -178,9 +177,8 @@ public class WicketSessionFilter implements Filter
 				if (log.isDebugEnabled())
 				{
 					log.debug("could not set Wicket session: key " + sessionKey +
-							" not found in http session for " +
-							httpServletRequest.getContextPath() + "," +
-							httpServletRequest.getServerName());
+						" not found in http session for " + httpServletRequest.getContextPath() +
+						"," + httpServletRequest.getServerName());
 				}
 			}
 		}
@@ -189,13 +187,19 @@ public class WicketSessionFilter implements Filter
 			if (log.isDebugEnabled())
 			{
 				log.debug("could not set Wicket session: no http session was created yet for " +
-						httpServletRequest.getContextPath() + "," +
-						httpServletRequest.getServerName());
+					httpServletRequest.getContextPath() + "," + httpServletRequest.getServerName());
 			}
 		}
 
-		// go on with processing
-		chain.doFilter(request, response);
+		try
+		{
+			// go on with processing
+			chain.doFilter(request, response);
+		}
+		finally
+		{
+			Session.unset();
+		}
 	}
 
 	/**
