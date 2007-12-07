@@ -662,7 +662,7 @@ Wicket.Window.prototype = {
 
 		var doShow = function() {
 			// if there is a previous window  
-			if (typeof(this.oldWindow) != "undefined") {
+			if (this.oldWindow != null) {
 				// lower it's z-index so that it's moved under the mask
 				this.oldWindow.window.style.zIndex = Wicket.Window.Mask.zIndex - 1;
 			}			
@@ -1226,7 +1226,7 @@ Wicket.Window.Mask.prototype = {
 		
 		var doc = document;
 		var old = Wicket.Window.current.oldWindow;
-		if (typeof(old) != "undefined") {
+		if (typeof(old) != "undefined" && old != null) {
 			doc = old.getContentDocument();
 		}
 		
