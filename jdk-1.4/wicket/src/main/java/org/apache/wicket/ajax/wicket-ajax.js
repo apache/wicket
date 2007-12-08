@@ -187,14 +187,15 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	var tn = element.tagName;
 				
 					
-	var container = Wicket.$("wicket-temp-container");					
 	var tempDiv = document.createElement("div");
 	var tempParent;
 	
 	// array for javascripts that were in the text
 	var scripts = new Array();				
 	
-	container.appendChild(tempDiv);
+	if (window.parent == window || window.parent == null) {
+		document.body.appendChild(tempDiv);
+	}
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
 		
@@ -253,8 +254,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	element.outerHTML = "";	
 	element = "";
 		
-	container.removeChild(tempDiv);
-	container.innerHTML = "";
+	document.body.removeChild(tempDiv);
 	tempDiv.outerHTML = "";
 
 	parent = null;
@@ -1985,12 +1985,3 @@ function wicketHide(id) {
 	    e.style.display = "none";
 	}
 }
-
-Wicket.Event.addDomReadyEvent(function() {
-	if (Wicket.Browser.isIE()) {
-		var div = document.createElement("div");
-		div.setAttribute("id", "wicket-temp-container");
-		div.setAttribute("style", "display:none");
-		document.body.appendChild(div);
-	}
-});
