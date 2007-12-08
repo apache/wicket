@@ -193,11 +193,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	var scripts = new Array();				
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
-		
-		// in case the element is not any of these								
-						
-		document.body.appendChild(tempDiv);									
-						
+								
 		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
 		// because otherwise IE just swallows the <script> tags (sometimes) 
 		tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
