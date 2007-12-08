@@ -191,9 +191,13 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	
 	// array for javascripts that were in the text
 	var scripts = new Array();				
+	
+	document.body.appendChild(tempDiv);
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
-								
+		
+		// in case the element is not any of these																									
+						
 		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
 		// because otherwise IE just swallows the <script> tags (sometimes) 
 		tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
@@ -250,6 +254,8 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 
 	element.outerHTML = "";
 	element = "";
+	
+	document.body.removeChild(tempDiv);
 	tempDiv.outerHTML = "";
 
 	parent = null;
