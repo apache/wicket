@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.Panel;
 
-
 /**
  * Navigation panel for the examples project.
  * 
@@ -48,7 +47,7 @@ public final class WicketExampleHeader extends Panel
 	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
 	{
 		super(id);
-		add(new WebMarkupContainer("hideInPortlet")
+		WebMarkupContainer hideInPortlet = new WebMarkupContainer("hideInPortlet")
 		{
 			/**
 			 * @see org.apache.wicket.Component#isVisible()
@@ -58,11 +57,13 @@ public final class WicketExampleHeader extends Panel
 			{
 				return !RequestContext.get().isPortletRequest();
 			}
-		});
-		add(new InspectorBug("inspector", page));
+		};
+		add(hideInPortlet);
+		hideInPortlet.add(new InspectorBug("inspector", page));
 		add(new Label("exampleTitle", exampleTitle));
 		Link link = new Link("sources")
 		{
+			@Override
 			public void onClick()
 			{
 				setResponsePage(new SourcesPage(getPage().getClass()));
@@ -71,7 +72,7 @@ public final class WicketExampleHeader extends Panel
 		add(link);
 
 		PopupSettings settings = new PopupSettings(PageMap.forName("sources"),
-				PopupSettings.RESIZABLE);
+			PopupSettings.RESIZABLE);
 		settings.setWidth(800);
 		settings.setHeight(600);
 		settings.setWindowName("sources");

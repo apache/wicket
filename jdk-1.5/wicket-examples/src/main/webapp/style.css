@@ -16,10 +16,8 @@
  */
 body {
 	background-color: white;
-	background-image: url('wicket-logo.png');
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: 96% 96%;
+	background-image: url('wicket-bg.png');
+	background-repeat: repeat-x;
 	color: black;
 	font-family: 'Tahoma', 'Lucida Sans', 'Arial', 'Helvetica', 'Sans-serif', 'sans';
 	font-size: 9pt;
@@ -80,12 +78,10 @@ h1,h2 {
 }
 
 #titleblock {
-	background-color: #BBBBBB;
 	color: white;
 	font-weight: bold;
-	border-bottom: solid #E9601A;
 	border-width: thin;
-	padding: 2px 2px 2px 6px;
+	padding: 17px 2px 2px 6px;
 }
 
 #titleblock a {

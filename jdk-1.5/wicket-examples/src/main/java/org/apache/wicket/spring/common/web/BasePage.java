@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring.common.web;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 /**
@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BasePage extends WebPage
+public class BasePage extends WicketExamplePage
 {
 	public BasePage()
 	{

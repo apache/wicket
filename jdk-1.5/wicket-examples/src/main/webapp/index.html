@@ -1,19 +1,23 @@
-<html xmlns:wicket="http://wicket.apache.org/">
-	<head>
-		<title>Wicket examples</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-	</head>
-	<body>
-    <p>
-	<h1>Wicket Examples</h1>
-    <p id="titleblock">
-        <b><font size="+1">menu</font></b>
-    </p>
-    <p>
-    The following examples demonstrate both core functionality and also functionality in other modules (e.g. wicket-extensions):
-    </p>
-	<table>
-        <tr><td align="right"><a href="helloworld">helloworld</a></td><td> - As simple as it gets.</td></tr>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Wicket Examples</title>
+	<link href="main_style.css" rel="stylesheet" type="text/css" />
+	<!--[if lte IE 6]>
+		<link href="ie.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+	
+</head>
+
+<body>
+<div id="container">
+	<div id="content">
+		<div id="header"></div>		
+	</div>
+	<h1>&nbsp;&nbsp;&nbsp;&nbsp;Menu</h1>
+<table>
+        <tbody><tr><td align="right"><a href="helloworld">helloworld</a></td><td> - As simple as it gets.</td></tr>
 		<tr><td align="right"><a href="echo">echo</a></td><td> - Trivial input form.</td></tr>
         <tr><td align="right"><a href="forminput">forminput</a></td><td> - Basic form processing.</td></tr>
 		<tr><td align="right"><a href="compref">compref</a></td><td> - Component Reference.</td></tr>
@@ -54,6 +58,14 @@
 		<tr class="section"><td align="right"><a href="spring">spring</a></td><td> - Demonstrates integration options with the Spring framework.</td></tr>
 		<tr><td align="right"><a href="guice">guice</a></td><td> - Integration with the Google Guice IoC container.</td></tr>
 		<tr><td align="right"><a href="velocity">velocity</a></td><td> - Shows a Velocity panel in action.</td></tr>
-    </table>
-  </body>
+    </tbody></table>	
+	
+	
+	
+	
+	<!-- </div> -->
+	<div id="clearer"/>
+</div>
+</body>
+
 </html>
