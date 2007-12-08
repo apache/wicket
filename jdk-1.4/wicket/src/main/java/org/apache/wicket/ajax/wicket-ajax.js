@@ -169,7 +169,7 @@ Wicket.FunctionsExecuter.prototype = {
 	}
 }
 
-Wicket.replaceOuterHtmlIE = function(element, text) {	
+Wicket.replaceOuterHtmlIE = function(element, text) {						
 							
 	if (element.tagName == "SCRIPT") {
 		// we need to get the javascript content, so we create an invalid DOM structure,
@@ -186,13 +186,15 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	var parent = element.parentNode;
 	var tn = element.tagName;
 				
+					
+	var container = Wicket.$("wicket-temp-container");					
 	var tempDiv = document.createElement("div");
 	var tempParent;
 	
 	// array for javascripts that were in the text
 	var scripts = new Array();				
 	
-	document.body.appendChild(tempDiv);
+	container.appendChild(tempDiv);
 		
 	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
 		
@@ -208,8 +210,6 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		for (var i = 0; i < s.length; ++i) {			
 			scripts.push(s[i]);
 		}						
-		
-		tempDiv.innerHTML = "";
 						
 		// now use regular div so that we won't mess the DOM
 		tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
@@ -232,8 +232,6 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 			scripts.push(s[i]);
 		}		
 		
-		tempDiv.innerHTML = "";	
-	
 		// hack to get around the fact that IE doesn't allow to replace table elements
 		tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
 		
@@ -252,10 +250,11 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
     // remove the original element
 	parent.removeChild(element);
 
-	element.outerHTML = "";
+	element.outerHTML = "";	
 	element = "";
-	
-	document.body.removeChild(tempDiv);
+		
+	container.removeChild(tempDiv);
+	container.innerHTML = "";
 	tempDiv.outerHTML = "";
 
 	parent = null;
@@ -1986,3 +1985,12 @@ function wicketHide(id) {
 	    e.style.display = "none";
 	}
 }
+
+Wicket.Event.addDomReadyEvent(function() {
+	if (Wicket.Browser.isIE()) {
+		var div = document.createElement("div");
+		div.setAttribute("id", "wicket-temp-container");
+		div.setAttribute("style", "display:none");
+		document.body.appendChild(div);
+	}
+});
