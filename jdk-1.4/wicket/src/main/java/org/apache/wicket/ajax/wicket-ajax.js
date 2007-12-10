@@ -253,8 +253,11 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 
 	element.outerHTML = "";	
 	element = "";
-		
-	document.body.removeChild(tempDiv);
+	
+	if (window.parent == window || window.parent == null) {
+		document.body.removeChild(tempDiv);
+	}	
+	
 	tempDiv.outerHTML = "";
 
 	parent = null;
