@@ -20,13 +20,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.MockPageWithLinkAndComponent;
-import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
@@ -105,9 +105,18 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	{
 		Duration dur = Duration.seconds(20);
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
-		final MockPageWithOneComponent page = new MockPageWithOneComponent();
-		Label label = new Label(MockPageWithOneComponent.COMPONENT_ID, "Hello");
+		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
 		page.add(label);
+		page.add(new Link(MockPageWithLinkAndComponent.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				// do nothing, link is just used to simulate a roundtrip
+			}
+		});
 		label.setOutputMarkupId(true);
 		label.add(timer);
 
@@ -120,6 +129,10 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 				return page;
 			}
 		});
+
+		validate(timer, true);
+
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		validate(timer, true);
 
