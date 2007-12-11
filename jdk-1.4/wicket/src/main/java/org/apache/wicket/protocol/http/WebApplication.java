@@ -26,10 +26,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -138,8 +140,8 @@ public abstract class WebApplication extends Application
 		if (applicationKey == null)
 		{
 			throw new IllegalStateException("the application key does not seem to"
-					+ " be set properly or this method is called before WicketServlet is"
-					+ " set, which leads to the wrong behavior");
+				+ " be set properly or this method is called before WicketServlet is"
+				+ " set, which leads to the wrong behavior");
 		}
 		return applicationKey;
 	}
@@ -158,8 +160,8 @@ public abstract class WebApplication extends Application
 			return wicketFilter.getFilterConfig().getInitParameter(key);
 		}
 		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-				+ " Application object that uses the wicketServlet/Filter instance should be put"
-				+ " in the init() method instead of your constructor");
+			+ " Application object that uses the wicketServlet/Filter instance should be put"
+			+ " in the init() method instead of your constructor");
 	}
 
 	/**
@@ -191,8 +193,8 @@ public abstract class WebApplication extends Application
 			return wicketFilter.getFilterConfig().getServletContext();
 		}
 		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-				+ " Application object that uses the wicket filter instance should be put"
-				+ " in the init() method instead of your constructor");
+			+ " Application object that uses the wicket filter instance should be put"
+			+ " in the init() method instead of your constructor");
 	}
 
 	/**
@@ -209,7 +211,7 @@ public abstract class WebApplication extends Application
 		if (sessionAttributePrefix == null)
 		{
 			sessionAttributePrefix = "wicket:" +
-					getWicketFilter().getFilterConfig().getFilterName() + ":";
+				getWicketFilter().getFilterConfig().getFilterName() + ":";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
@@ -308,10 +310,10 @@ public abstract class WebApplication extends Application
 	 *            the bookmarkable page class to mount
 	 */
 	public final void mountBookmarkablePage(final String path, final String pageMapName,
-			final Class bookmarkablePageClass)
+		final Class bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				pageMapName));
+			pageMapName));
 	}
 
 	/**
@@ -575,7 +577,19 @@ public abstract class WebApplication extends Application
 	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 	{
 		return (getRequestCycleSettings().getBufferResponse() ? new BufferedWebResponse(
-				servletResponse) : new WebResponse(servletResponse));
+			servletResponse) : new WebResponse(servletResponse));
+	}
+
+	/**
+	 * Creates a new ajax request target used to control ajax responses
+	 * 
+	 * @param page
+	 *            page on which ajax response is made
+	 * @return non-null ajax request target instance
+	 */
+	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
+	{
+		return new AjaxRequestTarget(page);
 	}
 
 	/**
@@ -600,7 +614,7 @@ public abstract class WebApplication extends Application
 	 *            the response to buffer
 	 */
 	final void addBufferedResponse(String sessionId, String bufferId,
-			BufferedHttpServletResponse renderedResponse)
+		BufferedHttpServletResponse renderedResponse)
 	{
 		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
 		if (responsesPerSession == null)
@@ -641,11 +655,11 @@ public abstract class WebApplication extends Application
 	protected void outputDevelopmentModeWarning()
 	{
 		System.err.print("********************************************************************\n"
-				+ "*** WARNING: Wicket is running in DEVELOPMENT mode.              ***\n"
-				+ "***                               ^^^^^^^^^^^                    ***\n"
-				+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
-				+ "*** See Application#getConfigurationType() for more information. ***\n"
-				+ "********************************************************************\n");
+			+ "*** WARNING: Wicket is running in DEVELOPMENT mode.              ***\n"
+			+ "***                               ^^^^^^^^^^^                    ***\n"
+			+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
+			+ "*** See Application#getConfigurationType() for more information. ***\n"
+			+ "********************************************************************\n");
 	}
 
 	// TODO remove after deprecation release
@@ -667,8 +681,7 @@ public abstract class WebApplication extends Application
 		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
 		if (responsesPerSession != null)
 		{
-			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession
-					.remove(bufferId);
+			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession.remove(bufferId);
 			if (responsesPerSession.size() == 0)
 			{
 				bufferedResponses.remove(sessionId);

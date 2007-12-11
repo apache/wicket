@@ -25,6 +25,7 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -230,7 +231,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');")
+			call = new AppendingStringBuffer("wicketShow('").append(indicatorId)
+				.append("');")
 				.append(call);
 		}
 
@@ -280,7 +282,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		AjaxRequestTarget target = new AjaxRequestTarget(getComponent().getPage());
+		WebApplication app = (WebApplication)getComponent().getApplication();
+		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
 		RequestCycle.get().setRequestTarget(target);
 		respond(target);
 	}
@@ -332,8 +335,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			throw new IllegalArgumentException("throttleDelay cannot be null");
 		}
 
-		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append(
-			"', ").append(throttleDelay.getMilliseconds()).append(", function() { ").append(script)
+		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId)
+			.append("', ")
+			.append(throttleDelay.getMilliseconds())
+			.append(", function() { ")
+			.append(script)
 			.append("});");
 	}
 }
