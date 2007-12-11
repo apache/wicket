@@ -52,11 +52,11 @@ Wicket.Browser = {
 	},
 	
 	isOpera: function() {
-		return typeof(window.opera) != "undefined";
+		return !Wicket.Browser.isSafari() && typeof(window.opera) != "undefined";
 	},
 
 	isIE: function() {
-		return typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
+		return !Wicket.Browser.isSafari() && typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
 	},
 	
 	isIEQuirks: function() {
