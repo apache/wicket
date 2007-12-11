@@ -72,7 +72,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		if (!(getComponent() instanceof FormComponent))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName() +
-					" can only be added to an instance of a FormComponent");
+				" can only be added to an instance of a FormComponent");
 		}
 	}
 
@@ -91,8 +91,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final CharSequence getEventHandler()
 	{
 		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
-				getCallbackUrl(false)).append(
-				"', wicketSerialize(Wicket.$('" + getComponent().getMarkupId() + "'))"));
+			getCallbackUrl(false)).append(
+			"', wicketSerialize(Wicket.$('" + getComponent().getMarkupId() + "'))"));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		if ("href".equalsIgnoreCase(event))
 		{
 			throw new IllegalArgumentException(
-					"this behavior cannot be attached to an 'href' event");
+				"this behavior cannot be attached to an 'href' event");
 		}
 	}
 
@@ -133,7 +133,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			else
 			{
 				formComponent.valid();
-				formComponent.updateModel();
+				if (getUpdateModel())
+				{
+					formComponent.updateModel();
+				}
 
 				onUpdate(target);
 			}
@@ -143,6 +146,14 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			onError(target, e);
 
 		}
+	}
+
+	/**
+	 * @return true if the model of form component should be updated, false otherwise
+	 */
+	protected boolean getUpdateModel()
+	{
+		return true;
 	}
 
 	/**
