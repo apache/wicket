@@ -58,9 +58,9 @@ public class WebClientInfo extends ClientInfo
 	{
 		super();
 		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-				.getHttpServletRequest();
+			.getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
-		properties.setRemoteAddress(httpServletRequest.getRemoteAddr());
+		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
 	}
 
@@ -77,8 +77,8 @@ public class WebClientInfo extends ClientInfo
 		super();
 		this.userAgent = userAgent;
 		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-				.getHttpServletRequest();
-		properties.setRemoteAddress(httpServletRequest.getRemoteAddr());
+			.getHttpServletRequest();
+		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
 	}
 
@@ -100,6 +100,32 @@ public class WebClientInfo extends ClientInfo
 	public final String getUserAgent()
 	{
 		return userAgent;
+	}
+
+	/**
+	 * When using ProxyPass, requestCycle().getHttpServletRequest(). getRemoteAddr() returns the IP
+	 * of the machine forwarding the request. In order to maintain the clients ip address, the
+	 * server places it in the <a
+	 * href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#x-headers">X-Forwarded-For</a>
+	 * Header.
+	 * 
+	 * @author Ryan Gravener (rgravener)
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * @return remoteAddr IP address of the client, using the X-Forwarded-For header and defaulting
+	 *         to: getHttpServletRequest().getRemoteAddr()
+	 * 
+	 */
+	protected String getRemoteAddr(WebRequestCycle requestCycle)
+	{
+		HttpServletRequest httpServletReq = requestCycle.getWebRequest().getHttpServletRequest();
+		String remoteAddr = httpServletReq.getHeader("X-Forwarded-For");
+		if (remoteAddr == null)
+		{
+			remoteAddr = httpServletReq.getRemoteAddr();
+		}
+		return remoteAddr;
 	}
 
 	/**
