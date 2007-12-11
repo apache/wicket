@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -99,7 +100,8 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		}
 		else
 		{
-			Map beans = ac.getBeansOfType(WebApplication.class, false, false);
+			Map beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac, WebApplication.class,
+					false, false);
 			if (beans.size() == 0)
 			{
 				throw new IllegalStateException("bean of type [" + WebApplication.class.getName() +
