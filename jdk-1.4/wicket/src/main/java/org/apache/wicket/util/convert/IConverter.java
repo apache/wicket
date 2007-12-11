@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.markup.html.form.FormComponent;
 
 
 /**
@@ -32,6 +33,11 @@ import org.apache.wicket.IClusterable;
  * components to interpret incoming values Such values are strings as they are send as request
  * parameters from browsers. An incoming value could be the string '12/12/2007' which could be
  * translated to a corresponding {@link Date} object.
+ * 
+ * Notice that incoming value, when used by a FormComponent, will never be null because before
+ * validation form components perform the required (see {@link FormComponent#isRequired()} check
+ * which errors out on null values. In the case the FormComponent is not required and the user
+ * enters a null value converters will not be invoked because no type conversion is necessary.
  * </p>
  * 
  * @author Eelco Hillenius
