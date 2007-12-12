@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.validation.IValidator;
 
@@ -196,6 +197,20 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
+	 * Implementation that returns null by default (panels don't typically need converters anyway).
+	 * This is used by the embedded default instances of label and form field to determine whether
+	 * they should use a converter like they normally would (when this method returns null), or
+	 * whether they should use a custom converter (when this method is overridden and returns not
+	 * null).
+	 * 
+	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
+	 */
+	public IConverter getConverter(Class type)
+	{
+		return null;
+	}
+
+	/**
 	 * The value will be made available to the validator property by means of ${label}. It does not
 	 * have any specific meaning to FormComponent itself.
 	 * 
@@ -261,6 +276,12 @@ public class AjaxEditableLabel extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
+			public IConverter getConverter(Class type)
+			{
+				IConverter c = AjaxEditableLabel.this.getConverter(type);
+				return c != null ? c : super.getConverter(type);
+			}
+
 			protected void onModelChanged()
 			{
 				super.onModelChanged();
@@ -295,6 +316,12 @@ public class AjaxEditableLabel extends Panel
 		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
+
+			public IConverter getConverter(Class type)
+			{
+				IConverter c = AjaxEditableLabel.this.getConverter(type);
+				return c != null ? c : super.getConverter(type);
+			}
 
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
