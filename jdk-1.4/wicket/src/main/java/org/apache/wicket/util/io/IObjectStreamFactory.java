@@ -129,6 +129,11 @@ public interface IObjectStreamFactory
 						}
 						throw e;
 					}
+					catch (RuntimeException e)
+					{
+						log.error("error writing object " + obj + ": " + e.getMessage(), e);
+						throw e;
+					}
 				}
 			};
 		}
