@@ -1127,7 +1127,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 				if (behavior.isTemporary())
 				{
-					i.remove();
+					removeBehavior(behavior);
 				}
 			}
 		}
