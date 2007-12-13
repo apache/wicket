@@ -94,6 +94,10 @@ public class LabelTree extends BaseTree
 	 * NOTE: remember that the nodeModel represents the TreeNode object, not the model object inside
 	 * it
 	 * 
+	 * NOTE: this method is called from the default implementation of
+	 * {@link #newNodeComponent(String, IModel)}, so if it is subclassed this method may no longer
+	 * be called unless the subclassing code maintains the callback explicitly
+	 * 
 	 * @param nodeModel
 	 *            model representing the current tree node
 	 * @return model used for text
