@@ -73,7 +73,33 @@ public class LabelTree extends BaseTree
 	 */
 	protected Component newNodeComponent(String id, IModel model)
 	{
-		return new LabelIconPanel(id, model, this);
+		return new LabelIconPanel(id, model, this)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+			{
+				return super.newContentComponent(componentId, tree, getNodeTextModel(model));
+			}
+
+		};
 	}
 
+	/**
+	 * Provides the model that will be used to feed the node text.
+	 * 
+	 * Example implementation: <code>return new PropertyModel(nodeModel, "object.name");</code>
+	 * which will translate to <code>YourTreeNodeSubclass.getObject().getName();</code>
+	 * 
+	 * NOTE: remember that the nodeModel represents the TreeNode object, not the model object inside
+	 * it
+	 * 
+	 * @param nodeModel
+	 *            model representing the current tree node
+	 * @return model used for text
+	 */
+	protected IModel getNodeTextModel(IModel nodeModel)
+	{
+		return nodeModel;
+	}
 }

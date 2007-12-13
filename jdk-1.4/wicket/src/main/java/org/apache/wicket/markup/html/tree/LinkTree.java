@@ -23,6 +23,7 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -32,7 +33,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Matej Knopp
  */
-public class LinkTree extends BaseTree
+public class LinkTree extends LabelTree
 {
 	private static final long serialVersionUID = 1L;
 
@@ -87,6 +88,11 @@ public class LinkTree extends BaseTree
 				super.onNodeLinkClicked(node, tree, target);
 				LinkTree.this.onNodeLinkClicked(node, tree, target);
 			}
+
+			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+			{
+				return new Label(componentId, getNodeTextModel(model));
+			}
 		};
 	}
 
@@ -101,4 +107,6 @@ public class LinkTree extends BaseTree
 	{
 
 	}
+
+
 }
