@@ -125,6 +125,15 @@ public class WebClientInfo extends ClientInfo
 		{
 			remoteAddr = httpServletReq.getRemoteAddr();
 		}
+		else
+		{
+			if (remoteAddr.indexOf(",") != -1)
+			{
+				// sometimes the header is of form client ip,proxy 1 ip,proxy 2 ip,...,proxy n ip,
+				// we just want the client
+				remoteAddr = remoteAddr.split(",")[0].trim();
+			}
+		}
 		return remoteAddr;
 	}
 
