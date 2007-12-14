@@ -31,7 +31,7 @@
 	<packaging>jar</packaging>
 
 	<name>Wicket JMX</name>
-	<description>Wicket Java Management Extensions for Wicket 1.x (will be part of the main distro from Wicket 2.0 on)</description>
+	<description>Wicket Java Management Extensions</description>
 
 	<dependencies>
 		<dependency>
