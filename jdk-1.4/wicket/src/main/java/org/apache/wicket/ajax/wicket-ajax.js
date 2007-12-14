@@ -1042,6 +1042,13 @@ Wicket.Ajax.Call.prototype = {
 			// iinitialize the array for steps (closures that execute each action)
 		    var steps = new Array();
 
+		   // start it a bit later so that the browser does handle the next event 
+		   // before the component is or can be replaced. We could do (if (!posponed))
+		   // because if there is already something in the queue then we could execute that immedietly 
+			steps.push(function(notify) {
+			   window.setTimeout(notify,2);
+			}.bind(this));
+			
 		    if (Wicket.Browser.isKHTML()) {
 		    	// there's a nasty bug in KHTML that makes the browser crash
 		    	// when the methods are delayed. Therefore we have to fire it

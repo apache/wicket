@@ -122,7 +122,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getPreconditionScript()
 	{
-		return "return Wicket.$$(this)";
+		return "return Wicket.$('" + getComponent().getMarkupId() + "') != null;";
 	}
 
 	/**
