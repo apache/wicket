@@ -191,8 +191,8 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
-						"=' + this.checked;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
+					"=' + this.checked;");
 			}
 
 		}
@@ -222,7 +222,15 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		catch (StringValueConversionException e)
 		{
 			throw new ConversionException("Invalid boolean input value posted \"" + getInput() +
-					"\"", e).setTargetType(Boolean.class);
+				"\"", e).setTargetType(Boolean.class);
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
+	 */
+	public boolean checkRequired()
+	{
+		return true;
 	}
 }
