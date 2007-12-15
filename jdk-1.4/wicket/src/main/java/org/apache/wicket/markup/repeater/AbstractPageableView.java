@@ -66,7 +66,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 * potentially be expensive ( a select count query ) and so we do not want to execute it
 	 * multiple times.
 	 */
-	private int cachedItemCount;
+	private transient int cachedItemCount;
 
 
 	/** @see org.apache.wicket.Component#Component(String, IModel) */
@@ -389,5 +389,9 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 	};
 
-
+	protected void onDetach()
+	{
+		clearCachedItemCount();
+		super.onDetach();
+	}
 }
