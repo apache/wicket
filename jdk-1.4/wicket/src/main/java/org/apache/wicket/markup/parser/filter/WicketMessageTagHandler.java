@@ -45,8 +45,8 @@ import org.apache.wicket.util.string.Strings;
  * @author Igor Vaynberg
  */
 public final class WicketMessageTagHandler extends AbstractMarkupFilter
-		implements
-			IComponentResolver
+	implements
+		IComponentResolver
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -85,7 +85,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 
 		final String wicketMessageAttribute = tag.getAttributes().getString(
-				WICKET_MESSAGE_ATTRIBUTE_NAME);
+			WICKET_MESSAGE_ATTRIBUTE_NAME);
 
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
@@ -131,13 +131,13 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				for (int i = 0; i < attrsAndKeys.length; i++)
 				{
 					String attrAndKey = attrsAndKeys[i];
-					int colon = attrAndKey.indexOf(":");
+					int colon = attrAndKey.lastIndexOf(":");
 					// make sure the attribute-key pair is valid
 					if (attrAndKey.length() < 3 || colon < 1 || colon > attrAndKey.length() - 2)
 					{
 						throw new WicketRuntimeException(
-								"wicket:message attribute contains an invalid value [[" + expr +
-										"]], must be of form (attr:key)+");
+							"wicket:message attribute contains an invalid value [[" + expr +
+								"]], must be of form (attr:key)+");
 					}
 
 					String attr = attrAndKey.substring(0, colon);
@@ -175,12 +175,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			if (tag.isOpenClose())
 			{
 				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID +
-						container.getPage().getAutoIndex());
+					container.getPage().getAutoIndex());
 			}
 			else
 			{
 				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID +
-						container.getPage().getAutoIndex());
+					container.getPage().getAutoIndex());
 			}
 
 			container.autoAdd(wc, markupStream);
