@@ -101,6 +101,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
 
+	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
+
+	private static final ResourceReference WICKET_DATE = new JavascriptResourceReference(
+			DatePicker.class, "wicket-date.js");
+
 	private static final long serialVersionUID = 1L;
 
 	/** The target component. */
@@ -175,10 +180,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
 		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
 		// variables for YUILoader
-		variables.put("basePath", RequestCycle.get().urlFor(
-				new JavascriptResourceReference(YuiLib.class, "")));
-		variables.put("wicketDatePath", RequestCycle.get().urlFor(
-				new JavascriptResourceReference(DatePicker.class, "wicket-date.js")));
+		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().urlFor(YUI)));
+		variables.put("wicketDatePath", Strings.stripJSessionId(RequestCycle.get().urlFor(
+				WICKET_DATE)));
 		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
 		String script = getAdditionalJavascript();
 		if (script != null)
@@ -343,10 +347,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected void configure(Map widgetProperties)
 	{
 		widgetProperties.put("close", Boolean.TRUE);
-		widgetProperties.put("title", "&nbsp;");
-		// TODO we might want to localize the title nicer in the future, but for
-		// now, people can override this method or put "title" in the map in
-		// localize.
 
 		// localize date fields
 		localize(widgetProperties);
