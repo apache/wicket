@@ -91,7 +91,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 
 	private static final ResourceReference JS = new JavascriptResourceReference(
-			MultiFileUploadField.class, "MultiFileUploadField.js");
+		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 
 	private final WebComponent upload;
@@ -186,7 +186,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		{
 			// woops
 			throw new IllegalStateException("Component " + getClass().getName() + " must have a " +
-					Form.class.getName() + " component above in the hierarchy");
+				Form.class.getName() + " component above in the hierarchy");
 		}
 		form.setMultiPart(true);
 	}
@@ -200,8 +200,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		// initialize the javascript library
 		response.renderJavascriptReference(JS);
 		response.renderOnDomReadyJavascript("new MultiSelector('" + getInputName() +
-				"', document.getElementById('" + container.getMarkupId() + "'), " + max +
-				").addElement(document.getElementById('" + upload.getMarkupId() + "'));");
+			"', document.getElementById('" + container.getMarkupId() + "'), " + max + ",'" +
+			getString("org.apache.wicket.mfu.delete") + "').addElement(document.getElementById('" +
+			upload.getMarkupId() + "'));");
 	}
 
 	/**
@@ -232,8 +233,8 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 					final FileItem item = (FileItem)entry.getValue();
 
 					if (!Strings.isEmpty(name) &&
-							name.startsWith(getInputName() + MAGIC_SEPARATOR) &&
-							!Strings.isEmpty(item.getName()))
+						name.startsWith(getInputName() + MAGIC_SEPARATOR) &&
+						!Strings.isEmpty(item.getName()))
 					{
 
 						// make sure the fileitem belongs to this component and
@@ -301,9 +302,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			{
 				// fail early if there is something interesting in the model
 				throw new IllegalStateException("Model object of " + getClass().getName() +
-						" component must be of type `" + Collection.class.getName() + "<" +
-						FileUpload.class.getName() + ">` but is of type `" +
-						object.getClass().getName() + "`");
+					" component must be of type `" + Collection.class.getName() + "<" +
+					FileUpload.class.getName() + ">` but is of type `" +
+					object.getClass().getName() + "`");
 			}
 			else
 			{
@@ -374,7 +375,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			else
 			{
 				return getString(RESOURCE_LIMITED, Model.valueOf(Collections.singletonMap("max",
-						new Integer(max))));
+					new Integer(max))));
 			}
 		}
 

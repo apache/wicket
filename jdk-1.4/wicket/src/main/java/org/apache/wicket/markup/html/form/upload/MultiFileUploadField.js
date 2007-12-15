@@ -38,7 +38,7 @@
  *      [for duplicate name bug]
  *         'neal'
  */
-function MultiSelector( eprefix, list_target,max ){
+function MultiSelector( eprefix, list_target,max, del_label ){
 
 	// Where to write the list
 	this.list_target = list_target;
@@ -53,6 +53,7 @@ function MultiSelector( eprefix, list_target,max ){
 		this.max = -1;
 	};
 	
+	this.delete_label=del_label
 	this.element_name_prefix=eprefix;
 	
 	/**
@@ -118,7 +119,7 @@ function MultiSelector( eprefix, list_target,max ){
 		// Delete button
 		var new_row_button = document.createElement( 'input' );
 		new_row_button.type = 'button';
-		new_row_button.value = 'Delete';
+		new_row_button.value = this.delete_label;
 
 		// References
 		new_row.element = element;
