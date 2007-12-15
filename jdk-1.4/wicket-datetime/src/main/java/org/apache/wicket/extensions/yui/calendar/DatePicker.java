@@ -37,7 +37,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -57,10 +56,15 @@ import org.joda.time.DateTime;
  * set in the component it is coupled to, after which the popup is closed again. This behavior can
  * only be used with components that either implement {@link ITextFormatProvider} or that use
  * {@link DateConverter} configured with an instance of {@link SimpleDateFormat} (like Wicket's
- * default configuration has).
+ * default configuration has).<br/>
  * 
  * To use, simply add a new instance to your component, which would typically a TextField, like
- * {@link DateTextField}.
+ * {@link DateTextField}.<br/>
+ * 
+ * The CalendarNavigator can be configured by overriding {@link #configure(Map)} and setting the
+ * property or by returning <code>true</code> for {@link #enableMonthYearSelection()}.
+ * 
+ * @see http://developer.yahoo.com/yui/calendar/
  * 
  * @author eelcohillenius
  */
@@ -162,16 +166,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	public void renderHead(IHeaderResponse response)
 	{
 		YuiLib.load(response);
-		if (enableMonthYearSelection())
-		{
-			response.renderCSSReference(new ResourceReference(YuiLib.class,
-					"calendar/assets/wicket-calendar.css"));
-			String idSelector = "#" + getEscapedComponentMarkupId() + "DpJs";
-			new StringHeaderContributor("<style>" + idSelector + ".yui-calendar .calnavleft, " +
-					idSelector + ".yui-calendar .calnavright {display: none;}</style>")
-					.renderHead(response);
-		}
-
 		// variables for the initialization script
 		Map variables = new HashMap();
 		String widgetId = getEscapedComponentMarkupId();
@@ -181,11 +175,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
 		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
 		// variables for YUILoader
-		variables.put("pathToWicketDate", RequestCycle.get().urlFor(
-				new JavascriptResourceReference(DatePicker.class, "wicket-date.js")));
 		variables.put("basePath", RequestCycle.get().urlFor(
 				new JavascriptResourceReference(YuiLib.class, "")));
-		variables.put("enableMonthYearSelection", Boolean.valueOf(enableMonthYearSelection()));
+		variables.put("wicketDatePath", RequestCycle.get().urlFor(
+				new JavascriptResourceReference(DatePicker.class, "wicket-date.js")));
 		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
 		String script = getAdditionalJavascript();
 		if (script != null)
@@ -196,6 +189,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// print out the initialization properties
 		Properties p = new Properties();
 		configure(p);
+		if (!p.containsKey("navigator") && enableMonthYearSelection())
+		{
+			p.put("navigator", Boolean.TRUE);
+		}
 
 		if (enableMonthYearSelection() && p.containsKey("pages") &&
 				Objects.longValue(p.get("pages")) > 1)

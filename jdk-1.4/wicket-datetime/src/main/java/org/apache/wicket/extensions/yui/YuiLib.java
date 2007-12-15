@@ -37,11 +37,8 @@ public final class YuiLib implements IClusterable
 	 * @param response
 	 *            header response
 	 */
-	// TODO see http://tech.groups.yahoo.com/group/ydn-javascript/message/16209
 	public static void load(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
-				"yahoo/yahoo.js"));
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
 	}

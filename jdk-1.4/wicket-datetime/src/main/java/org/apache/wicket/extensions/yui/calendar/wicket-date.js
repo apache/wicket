@@ -143,134 +143,48 @@ Wicket.DateTime.substituteDate = function(datePattern, date) {
 Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 	if (date) {
 		date = Wicket.DateTime.parseDate(datePattern, date);
-		if (!isNaN(date) && !isNaN(date.getTime())) { 		
-			widget.select(date);
-			firstDate = widget.getSelectedDates()[0];
-			widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
-			widget.render();
-		}
+		widget.select(date);
+		firstDate = widget.getSelectedDates()[0];
+		widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
+		widget.render();
 	}
 	widget.show();
-}
-
-/**
- * Renders the Month-Year-label as two select boxes.
- * The year-select uses the following pattern for the widget.
- */
-Wicket.DateTime.enableMonthYearSelection = function(widget) {
-	var monthSelectId = widget.id + "MonthSelect";	
-	var yearInputId = widget.id + "YearInput";
-	var yearUpId = widget.id + "YearUp";
-	var yearDownId = widget.id + "YearDown";
-	
-	// sets the select boxes to the proper values after navigating the datepicker with the arrows
-	var sync = function(type) {
-		var month = parseInt(widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key).getMonth());
-		var year = parseInt(widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key).getFullYear());
-		YAHOO.util.Dom.get(monthSelectId).selectedIndex = month;
-		YAHOO.util.Dom.get(yearInputId).value = year;
-	}
-	
-	widget.renderEvent.subscribe(sync);		
-	
-	// override the default applyListeners method to register onChange-listeners for the select boxes 
-	if (typeof(widget.YUIApplyListeners) == 'undefined') {
-		widget.YUIApplyListeners = widget.applyListeners;
-	}
-	widget.applyListeners = function () {
-		widget.YUIApplyListeners();
-		var E = YAHOO.util.Event;
-		E.on(monthSelectId, "change", function() {
-			widget.setMonth(YAHOO.util.Dom.get(monthSelectId).value);
-			widget.render();
-		});
-		
-		widget.yearChanged = new YAHOO.util.CustomEvent("yearChanged", widget);
-		widget.yearChanged.subscribe(function() {			
-			widget.setYear(YAHOO.util.Dom.get(yearInputId).value);
-			widget.render();
-		});				
-		
-		E.on(yearInputId, "blur", function() { processNumber(0); }, this);		
-		
-		var processNumber = function(offset) {
-			var field = YAHOO.util.Dom.get(yearInputId);
-			field.value = field.value.replace(/\D*/, "");
-			field.value = parseInt(field.value, 10) + offset; 
-			if (/\d+/.test(field.value)) {
-				widget.yearChanged.fire();				
-			}   
-		};
-		
-		E.on(yearUpId, "click", function() {
-			processNumber(1);
-		});
-		
-		E.on(yearDownId, "click", function() {
-			processNumber(-1);
-		});
-	}
-		
-	// override the function which is used to generate the month label and render two select boxes instead
-  	widget.buildMonthLabel = function () {
-		var pageDate = widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key);
-
-		var selectHtml = "<table>";
-		selectHtml += "<tr><th>";
-
-		// generate month select box using localized strings
-		selectHtml += "<select id=\"" + monthSelectId + "\">";
-		var i;
-		for (i = 0; i < 12; i++) {
-			selectHtml += "<option value=\"" + i + "\"";
-			if (i == pageDate.getMonth()) {
-				selectHtml += " selected=\"selected\"";
-			} 	
-			selectHtml += ">" + widget.Locale.LOCALE_MONTHS[i] + "</option>";
-		}
-		selectHtml += "</select></th>";
-
-		// generate year input and spinner buttons	
-		selectHtml += "<th><a class='yearDown' id='" + yearDownId + "'/></th>";
-		selectHtml += "<th><input type='text' size='4' id='" + yearInputId + "'/></th>";
-		selectHtml += "<th><a class='yearUp' id='" + yearUpId + "'/></th>";			
-		selectHtml += "</tr></table>";
-		return selectHtml;  
-	}
 }
 
 // configures a datepicker using the cfg object
 Wicket.DateTime.init = function(cfg) {
 	cfg.dpJs = cfg.widgetId + "DpJs";
 	cfg.dp = cfg.widgetId + "Dp";
-	cfg.icon = cfg.widgetId +"Icon";
+	cfg.icon = cfg.widgetId +"Icon";	
 	YAHOO.namespace("wicket");
+	
 	if (cfg.calendarInit.pages && cfg.calendarInit.pages > 1) {
 		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.CalendarGroup(cfg.dpJs,cfg.dp, cfg.calendarInit);
 	} else {
 		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.Calendar(cfg.dpJs,cfg.dp, cfg.calendarInit);
 	}	
 	YAHOO.wicket[cfg.dpJs].isVisible = function() { return YAHOO.wicket[cfg.dpJs].oDomContainer.style.display == 'block'; }
-	if (cfg.enableMonthYearSelection) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket[cfg.dpJs]); 
 	
 	function showCalendar() {
 		Wicket.DateTime.showCalendar(YAHOO.wicket[cfg.dpJs], YAHOO.util.Dom.get(cfg.componentId).value, cfg.datePattern);
 		if (cfg.alignWithIcon) Wicket.DateTime.positionRelativeTo(YAHOO.wicket[cfg.dpJs].oDomContainer, cfg.icon);
-		if (cfg.enableMonthYearSelection) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket[cfg.dpJs]); 
 	}
 
 	YAHOO.util.Event.addListener(cfg.icon, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
 
 	function selectHandler(type, args, cal) {
 		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg.datePattern, args[0][0]);
-		var wasVisible = YAHOO.wicket[cfg.dpJs].isVisible();
-		if (cfg.hideOnSelect) { cal.hide(); }
-		if (cfg.fireChangeEvent && wasVisible) {
-			var field = YAHOO.util.Dom.get(cfg.componentId);
-			if (field.onchange != null && typeof(field.onchange) != 'undefined') field.onchange();
+		if (cal.isVisible()) {
+			if (cfg.hideOnSelect) cal.hide();
+			if (cfg.fireChangeEvent) {
+				var field = YAHOO.util.Dom.get(cfg.componentId);
+				if (field.onchange != null && typeof(field.onchange) != 'undefined') field.onchange();
+			}
 		}
 	}
-
-	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);
+ 
+	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);	 
 	YAHOO.wicket[cfg.dpJs].render();
 }
+
+YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.3.0", build: "rc1"});

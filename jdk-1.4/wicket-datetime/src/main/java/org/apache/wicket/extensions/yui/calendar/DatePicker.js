@@ -14,53 +14,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- if (typeof wicketYuiLoader == 'undefined')	wicketYuiLoader = new YAHOO.util.YUILoader({base: "${basePath}", filter: "RAW"});
-
-function checkWicketDate(name, loaderCallback) {
-	if (typeof(Wicket) != 'undefined' && typeof(Wicket.DateTime) != 'undefined') {
-		loaderCallback();
-	} else {
-		setTimeout(function() {
-			checkWicketDate(name, loaderCallback);
-		}, 50);
-	}
+if (typeof wicketCalendarInits == 'undefined') {
+	wicketCalendarInits = new Array();
+	wicketCalendarInitFinished = false;
 }
 
-wicketYuiLoader.addModule({
-	name: "wicket-date",
-	type: "js",
-	fullpath: "${pathToWicketDate}",
-	verifier: checkWicketDate,
-	requires: ['calendar']
-});	
-
-
-function check${widgetId}Loader() {	
-	if (!wicketYuiLoader.initializing) {
-		wicketYuiLoader.initializing = true;	
-		wicketYuiLoader.require("wicket-date");
-		wicketYuiLoader.insert(function() {
-			wicketYuiLoader.initializing = false;
-			// init the datepicker			
-			init${widgetId}DpJs();
-		});
-	}  else {
-		setTimeout(check${widgetId}Loader, 50);
-	}
-}
-
-init${widgetId}DpJs = function() {
+init${widgetId} = function() {
 	Wicket.DateTime.init( {
-				widgetId: "${widgetId}",
-				componentId: "${componentId}",				
-				calendarInit: { ${calendarInit} },
-				datePattern: "${datePattern}",
-				alignWithIcon: ${alignWithIcon},
-				enableMonthYearSelection: ${enableMonthYearSelection},
-				fireChangeEvent: ${fireChangeEvent},
-				hideOnSelect: ${hideOnSelect}
-			});
+		widgetId: "${widgetId}",
+		componentId: "${componentId}",				
+		calendarInit: { ${calendarInit} },
+		datePattern: "${datePattern}",
+		alignWithIcon: ${alignWithIcon},
+		fireChangeEvent: ${fireChangeEvent},
+		hideOnSelect: ${hideOnSelect}
+	});
 	${additionalJavascript}
+};
+
+if (wicketCalendarInitFinished) {
+	// when a DatePicker is added via ajax, the loader is already finished, so
+	// we call the init function directly.
+	init${widgetId}();
+} else {
+	// when page is rendered, all calendar components will be initialized after
+	// the required js libraries have been loaded.
+	wicketCalendarInits.push(init${widgetId});
 }
 
-check${widgetId}Loader();
+if (typeof wicketYuiLoader == 'undefined')	{
+	wicketYuiLoader = new YAHOO.util.YUILoader({
+		base: "${basePath}", 
+		filter: "RAW",
+		allowRollup: false,
+		require: ["wicket-date"],		
+		onSuccess: function() {
+			wicketCalendarInitFinished = true;	
+			while (wicketCalendarInits.length > 0) {
+				wicketCalendarInits.pop()();
+			}		
+		}
+	});
+	
+	wicketYuiLoader.addModule({
+		name: "wicket-date",
+		type: "js",
+		requires: ["calendar"],
+		fullpath: "${wicketDatePath}"		           
+	});
+	wicketYuiLoader.insert();
+}
+

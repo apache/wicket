@@ -2,7 +2,7 @@
 Copyright (c) 2007, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.3.0
+version: 2.4.0
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -53,7 +53,15 @@ version: 2.3.0
  * @see yuiloader
  */
 
-if (typeof YAHOO == "undefined") {
+/**
+ * Forces the use of the supplied locale where applicable in the library
+ * @property locale
+ * @type string
+ * @static
+ * @default undefined
+ */
+
+if (typeof YAHOO == "undefined" || !YAHOO) {
     /**
      * The YAHOO global namespace object.  If YAHOO is already defined, the
      * existing YAHOO object will not be overwritten so that defined
@@ -273,7 +281,17 @@ YAHOO.env.ua = function() {
          * @property webkit
          * @type float
          */
-        webkit:0
+        webkit:0,
+
+        /**
+         * The mobile property will be set to a string containing any relevant
+         * user agent information when a modern mobile browser is detected.
+         * Currently limited to Safari on the iPhone/iPod Touch, Nokia N-series
+         * devices with the WebKit-based browser, and Opera Mini.  
+         * @property mobile 
+         * @type string
+         */
+        mobile: null 
     };
 
     var ua=navigator.userAgent, m;
@@ -286,6 +304,17 @@ YAHOO.env.ua = function() {
     m=ua.match(/AppleWebKit\/([^\s]*)/);
     if (m&&m[1]) {
         o.webkit=parseFloat(m[1]);
+
+        // Mobile browser check
+        if (/ Mobile\//.test(ua)) {
+            o.mobile = "Apple"; // iPhone or iPod Touch
+        } else {
+            m=ua.match(/NokiaN[^\/]*/);
+            if (m) {
+                o.mobile = m[0]; // Nokia N-series, ex: NokiaN95
+            }
+        }
+
     }
 
     if (!o.webkit) { // not webkit
@@ -293,6 +322,10 @@ YAHOO.env.ua = function() {
         m=ua.match(/Opera[\s\/]([^\s]*)/);
         if (m&&m[1]) {
             o.opera=parseFloat(m[1]);
+            m=ua.match(/Opera Mini[^;]*/);
+            if (m) {
+                o.mobile = m[0]; // ex: Opera Mini/2.0.4509/1316
+            }
         } else { // not opera or webkit
             m=ua.match(/MSIE\s([^;]*)/);
             if (m&&m[1]) {
@@ -323,7 +356,7 @@ YAHOO.env.ua = function() {
  */
 (function() {
     YAHOO.namespace("util", "widget", "example");
-    if (typeof YAHOO_config != "undefined") {
+    if ("undefined" !== typeof YAHOO_config) {
         var l=YAHOO_config.listener,ls=YAHOO.env.listeners,unique=true,i;
         if (l) {
             // if YAHOO is loaded multiple times we need to check to see if
@@ -345,7 +378,7 @@ YAHOO.env.ua = function() {
  * Provides the language utilites and extensions used by the library
  * @class YAHOO.lang
  */
-YAHOO.lang = {
+YAHOO.lang = YAHOO.lang || {
     /**
      * Determines whether or not the provided object is an array.
      * Testing typeof/instanceof/constructor of arrays across frame 
@@ -361,8 +394,7 @@ YAHOO.lang = {
 
         if (o) {
            var l = YAHOO.lang;
-           return l.isNumber(o.length) && l.isFunction(o.splice) && 
-                  !l.hasOwnProperty(o.length);
+           return l.isNumber(o.length) && l.isFunction(o.splice);
         }
         return false;
     },
@@ -479,7 +511,7 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      */
     _IEEnumFix: function(r, s) {
         if (YAHOO.env.ua.ie) {
-            var add=["toString", "valueOf"];
+            var add=["toString", "valueOf"], i;
             for (i=0;i<add.length;i=i+1) {
                 var fname=add[i],f=s[fname];
                 if (YAHOO.lang.isFunction(f) && f!=Object.prototype[fname]) {
@@ -610,12 +642,13 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
         var l=YAHOO.lang,i,len,s=[],OBJ="{...}",FUN="f(){...}",
             COMMA=', ', ARROW=' => ';
 
-        // Skip non-objects
+        // Cast non-objects to string
         // Skip dates because the std toString is what we want
         // Skip HTMLElement-like objects because trying to dump 
         // an element will cause an unhandled exception in FF 2.x
-        if (!l.isObject(o) || o instanceof Date || 
-            ("nodeType" in o && "tagName" in o)) {
+        if (!l.isObject(o)) {
+            return o + "";
+        } else if (o instanceof Date || ("nodeType" in o && "tagName" in o)) {
             return o;
         } else if  (l.isFunction(o)) {
             return FUN;
@@ -786,16 +819,67 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * @return the new merged object
      */
     merge: function() {
-        var o={}, a=arguments, i;
-        for (i=0; i<a.length; i=i+1) {
+        var o={}, a=arguments;
+        for (var i=0, l=a.length; i<l; i=i+1) {
             YAHOO.lang.augmentObject(o, a[i], true);
-            /*
-            for (var j in a[i]) {
-                o[j] = a[i][j];
-            }
-            */
         }
         return o;
+    },
+
+    /**
+     * Executes the supplied function in the scope of the supplied 
+     * object 'when' milliseconds later.  Executes the function a 
+     * single time unless periodic is set to true.
+     * @method later
+     * @since 2.4.0
+     * @param when {int} the number of milliseconds to wait until the fn 
+     * is executed
+     * @param o the scope object
+     * @param fn {Function|String} the function to execute or the name of 
+     * the method in the 'o' object to execute
+     * @param data [Array] data that is provided to the function.  This accepts
+     * either a single item or an array.  If an array is provided, the
+     * function is executed with one parameter for each array item.  If
+     * you need to pass a single array parameter, it needs to be wrapped in
+     * an array [myarray]
+     * @param periodic {boolean} if true, executes continuously at supplied 
+     * interval until canceled
+     * @return a timer object. Call the cancel() method on this object to 
+     * stop the timer.
+     */
+    later: function(when, o, fn, data, periodic) {
+        when = when || 0; 
+        o = o || {};
+        var m=fn, d=data, f, r;
+
+        if (YAHOO.lang.isString(fn)) {
+            m = o[fn];
+        }
+
+        if (!m) {
+            throw new TypeError("method undefined");
+        }
+
+        if (!YAHOO.lang.isArray(d)) {
+            d = [data];
+        }
+
+        f = function() {
+            m.apply(o, d);
+        };
+
+        r = (periodic) ? setInterval(f, when) : setTimeout(f, when);
+
+        return {
+            interval: periodic,
+            cancel: function() {
+                if (this.interval) {
+                    clearInterval(r);
+                } else {
+                    clearTimeout(r);
+                }
+            }
+        };
     },
 
     /**
@@ -865,4 +949,4 @@ YAHOO.augment = YAHOO.lang.augmentProto;
  */
 YAHOO.extend = YAHOO.lang.extend;
 
-YAHOO.register("yahoo", YAHOO, {version: "2.3.0", build: "442"});
+YAHOO.register("yahoo", YAHOO, {version: "2.4.0", build: "733"});
