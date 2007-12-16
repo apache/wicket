@@ -7,6 +7,6 @@ wicketAjaxDebugEnable=true;
 /*-->]]>*/</script>
 
 </head><body>
-  <span wicket:id="comp" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:comp::IBehaviorListener:0:',null,null, function() {return Wicket.$$(this)}.bind(this));" id="comp1">body</span>
+  <span wicket:id="comp" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:comp::IBehaviorListener:0:',null,null, function() {return Wicket.$('comp1') != null;}.bind(this));" id="comp1">body</span>
 </body>
 </html>

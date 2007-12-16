@@ -27,6 +27,6 @@ test
 <span wicket:id="test3" id="test36"><wicket:panel>
 test
 </wicket:panel></span>
-<a href="?wicket:interface=:0:link::ILinkListener::" wicket:id="link" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:link::IBehaviorListener:0:',null,null, function() {return Wicket.$$(this)}.bind(this));return !wcall;" id="link7">Test</a>
+<a href="?wicket:interface=:0:link::ILinkListener::" wicket:id="link" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:link::IBehaviorListener:0:',null,null, function() {return Wicket.$('link7') != null;}.bind(this));return !wcall;" id="link7">Test</a>
 </body>
 </html>

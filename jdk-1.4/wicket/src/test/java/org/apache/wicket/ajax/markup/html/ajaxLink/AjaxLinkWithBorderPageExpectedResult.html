@@ -11,7 +11,7 @@ wicketAjaxDebugEnable=true;
     Border
     <wicket:body>
     <span wicket:id="ajaxLabel" id="ajaxLabel1">UpdateMe</span>
-    <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:ajaxLink::IBehaviorListener:0:',null,null, function() {return Wicket.$$(this)}.bind(this));return !wcall;" id="ajaxLink2">Update</a>
+    <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:ajaxLink::IBehaviorListener:0:',null,null, function() {return Wicket.$('ajaxLink2') != null;}.bind(this));return !wcall;" id="ajaxLink2">Update</a>
   </wicket:body>
     Border
   </wicket:border></span>
