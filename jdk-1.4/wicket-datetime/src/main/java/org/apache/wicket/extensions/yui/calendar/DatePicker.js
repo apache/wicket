@@ -45,8 +45,8 @@ if (wicketCalendarInitFinished) {
 if (typeof wicketYuiLoader == 'undefined')	{
 	wicketYuiLoader = new YAHOO.util.YUILoader({
 		base: "${basePath}", 
-		filter: "RAW",
-		allowRollup: false,
+		${filter}
+		allowRollup: ${allowRollup},
 		require: ["wicket-date"],		
 		onSuccess: function() {
 			wicketCalendarInitFinished = true;	

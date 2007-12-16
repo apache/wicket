@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.extensions.yui;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
@@ -30,6 +32,20 @@ public final class YuiLib implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final ResourceReference YUILOADER;
+
+	static
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("yuiloader-beta");
+		if (Application.DEPLOYMENT.equals(Application.get().getConfigurationType()))
+		{
+			sb.append("-min");
+		}
+		sb.append(".js");
+		YUILOADER = new JavascriptResourceReference(YuiLib.class, sb.toString());
+	}
+
 	/**
 	 * Load the YUI loader script. After that, you can declare YUI dependencies using
 	 * YAHOO.util.YUILoader.
@@ -39,8 +55,7 @@ public final class YuiLib implements IClusterable
 	 */
 	public static void load(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
-				"yuiloader-beta.js"));
+		response.renderJavascriptReference(YUILOADER);
 	}
 
 	/**

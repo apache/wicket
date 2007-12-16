@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
@@ -179,11 +180,22 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("datePattern", getDatePattern());
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
 		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
+		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
 		// variables for YUILoader
 		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().urlFor(YUI)));
 		variables.put("wicketDatePath", Strings.stripJSessionId(RequestCycle.get().urlFor(
 				WICKET_DATE)));
-		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
+		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
+		{
+			variables.put("filter", "filter: \"RAW\",");
+			variables.put("allowRollup", Boolean.FALSE);
+		}
+		else
+		{
+			variables.put("filter", "");
+			variables.put("allowRollup", Boolean.TRUE);
+		}
+
 		String script = getAdditionalJavascript();
 		if (script != null)
 		{

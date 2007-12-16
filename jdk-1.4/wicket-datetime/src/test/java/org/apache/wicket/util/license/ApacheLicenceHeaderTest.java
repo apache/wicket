@@ -43,9 +43,12 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		javaScriptIgnore = new String[] {
 				"src/main/java/org/apache/wicket/extensions/yui/yuiloader-beta.js",
+				"src/main/java/org/apache/wicket/extensions/yui/yuiloader-beta-min.js",
 				"src/main/java/org/apache/wicket/extensions/yui/yahoo/yahoo.js",
+				"src/main/java/org/apache/wicket/extensions/yui/yahoo-dom-event/yahoo-dom-event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/event/event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/dom/dom.js",
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js" };
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js",
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar-min.js" };
 	}
 }
