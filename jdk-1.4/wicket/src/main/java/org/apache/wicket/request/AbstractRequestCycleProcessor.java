@@ -394,7 +394,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			}
 
 			// Get component
-			Component component = null;
+			Component component;
 			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(pageRelativeComponentPath))
@@ -477,7 +477,6 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(requestParameters);
 	}
 }

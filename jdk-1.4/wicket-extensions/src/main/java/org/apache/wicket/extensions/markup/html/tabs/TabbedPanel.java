@@ -87,7 +87,7 @@ public class TabbedPanel extends Panel
 	public static final String TAB_PANEL_ID = "panel";
 
 
-	private List tabs;
+	private final List tabs;
 
 	/**
 	 * Constructor
@@ -139,7 +139,6 @@ public class TabbedPanel extends Panel
 			{
 				final int index = item.getIteration();
 				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
-				final int selected = getSelectedTab();
 
 				final WebMarkupContainer titleLink = newLink("link", index);
 
@@ -296,17 +295,17 @@ public class TabbedPanel extends Panel
 		if (panel == null)
 		{
 			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
-					getPath() + "] ITab index [" + index + "]");
+				getPath() + "] ITab index [" + index + "]");
 
 		}
 
 		if (!panel.getId().equals(TAB_PANEL_ID))
 		{
 			throw new WicketRuntimeException(
-					"ITab.getPanel() returned a panel with invalid id [" +
-							panel.getId() +
-							"]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel [" +
-							getPath() + "] ITab index [" + index + "]");
+				"ITab.getPanel() returned a panel with invalid id [" +
+					panel.getId() +
+					"]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel [" +
+					getPath() + "] ITab index [" + index + "]");
 		}
 
 

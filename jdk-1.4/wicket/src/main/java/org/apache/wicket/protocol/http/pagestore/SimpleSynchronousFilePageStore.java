@@ -185,7 +185,6 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 					ajaxVersionNumber);
 			if (pageFile.exists())
 			{
-				long t1 = System.currentTimeMillis();
 				FileInputStream fis = null;
 				try
 				{

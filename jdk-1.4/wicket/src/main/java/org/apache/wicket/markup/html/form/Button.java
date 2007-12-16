@@ -191,8 +191,6 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
-		String name = tag.getName();
-
 		try
 		{
 			String value = getModelObjectAsString();

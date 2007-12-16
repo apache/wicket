@@ -1223,9 +1223,6 @@ public abstract class RequestCycle
 	{
 		try
 		{
-			// get the processor
-			IRequestCycleProcessor processor = safeGetRequestProcessor();
-
 			// Arbitrary maximum number of steps
 			final int maxSteps = 100;
 

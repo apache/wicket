@@ -121,12 +121,7 @@ public class PagingNavigationIncrementLink extends Link
 	 */
 	public boolean linksTo(final Page page)
 	{
-		int currentPage = pageable.getCurrentPage();
-		if (((increment < 0) && isFirst()) || ((increment > 0) && isLast()))
-		{
-			return true;
-		}
-
-		return false;
+		pageable.getCurrentPage();
+		return ((increment < 0) && isFirst()) || ((increment > 0) && isLast());
 	}
 }

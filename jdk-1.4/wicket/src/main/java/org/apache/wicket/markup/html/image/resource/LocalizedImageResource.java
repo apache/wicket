@@ -259,12 +259,11 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		Locale l = component.getLocale();
 		String s = component.getStyle();
 		if (resourceKind == null &&
-			(!Objects.equal(locale, component.getLocale()) || !Objects.equal(style,
-				component.getStyle())))
+			(!Objects.equal(locale, l) || !Objects.equal(style, s)))
 		{
 			// Get new component locale and style
-			locale = component.getLocale();
-			style = component.getStyle();
+			locale = l;
+			style = s;
 
 			// Invalidate current resource so it will be reloaded/recomputed
 			resourceReference = null;
