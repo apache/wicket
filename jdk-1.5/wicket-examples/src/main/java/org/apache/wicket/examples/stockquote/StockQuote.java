@@ -146,7 +146,7 @@ public class StockQuote
 	private void writeRequest(String message, HttpURLConnection httpConn) throws IOException
 	{
 		OutputStream out = httpConn.getOutputStream();
-		out.write(message.toString().getBytes());
+		out.write(message.getBytes());
 		out.close();
 	}
 

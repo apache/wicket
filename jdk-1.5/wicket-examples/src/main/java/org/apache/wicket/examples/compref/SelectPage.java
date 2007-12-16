@@ -105,7 +105,7 @@ public class SelectPage extends WicketExamplePage
 	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
-		public String site = new String("sd");
+		public String site = "sd";
 
 		/** the selected choices. */
 		public List choices = new ArrayList();

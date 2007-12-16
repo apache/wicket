@@ -339,8 +339,8 @@ public final class SerializableChecker extends ObjectOutputStream
 
 		if (!(obj instanceof Serializable) && (!Proxy.isProxyClass(cls)))
 		{
-			throw new WicketNotSerializableException(toPrettyPrintedStack(obj.getClass().getName())
-					.toString(), exception);
+			throw new WicketNotSerializableException(
+				  toPrettyPrintedStack(obj.getClass().getName()), exception);
 		}
 
 		ObjectStreamClass desc;

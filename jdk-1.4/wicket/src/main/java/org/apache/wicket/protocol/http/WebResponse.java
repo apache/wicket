@@ -201,7 +201,7 @@ public class WebResponse extends Response
 			if (httpServletResponse != null)
 			{
 				// encode to make sure no caller forgot this
-				url = httpServletResponse.encodeRedirectURL(url).toString();
+				url = httpServletResponse.encodeRedirectURL(url);
 				try
 				{
 					if (httpServletResponse.isCommitted())

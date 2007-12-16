@@ -89,7 +89,7 @@ public abstract class AbstractOptions extends FormComponent
 				while (iter.hasNext())
 				{
 					String next = (String)iter.next();
-					buffer.append(" " + next.toString() + "=\"" +
+					buffer.append(" " + next + "=\"" +
 							additionalAttributesMap.get(next).toString() + "\"");
 				}
 			}

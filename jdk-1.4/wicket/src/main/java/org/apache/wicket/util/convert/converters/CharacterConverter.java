@@ -41,15 +41,14 @@ public final class CharacterConverter extends AbstractConverter
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{
-		final String stringValue = value.toString();
-		int length = stringValue.length();
+		int length = value.length();
 		if (length == 0)
 		{
 			return null;
 		}
 		else if (length == 1)
 		{
-			return new Character(value.toString().charAt(0));
+			return new Character(value.charAt(0));
 		}
 		throw newConversionException("Cannot convert '" + value + "' to Character", value, locale);
 	}

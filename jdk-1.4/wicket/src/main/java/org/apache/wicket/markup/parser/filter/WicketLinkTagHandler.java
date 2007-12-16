@@ -135,7 +135,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 						// remember the current setting to be reset after the
 						// region
-						autolinkStatus.push(new Boolean(autolinking));
+						autolinkStatus.push(Boolean.valueOf(autolinking));
 					}
 
 					// html allows to represent true in different ways
