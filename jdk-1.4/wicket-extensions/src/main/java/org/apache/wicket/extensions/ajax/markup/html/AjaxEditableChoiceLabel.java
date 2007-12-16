@@ -19,10 +19,8 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -152,28 +150,6 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 		this(id, model, new Model((Serializable)choices), renderer);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
-	 *      java.lang.String, org.apache.wicket.model.IModel)
-	 */
-	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
-	{
-		MultiLineLabel label = new MultiLineLabel(componentId, model);
-		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
-		return label;
-	}
-
-	/**
-	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
-	 * should be triggered
-	 * 
-	 * @return The event name
-	 */
-	protected String getLabelAjaxEvent()
-	{
-		return "onclick";
-	}
 
 	/**
 	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
