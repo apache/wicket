@@ -54,10 +54,10 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	{
 		super(id, model);
 		setOutputMarkupId(true);
-		Component loadingComponent = getLoadingComponent("content");
+		final Component loadingComponent = getLoadingComponent("content");
 		add(loadingComponent.setRenderBodyOnly(true));
 
-		loadingComponent.add(new AbstractDefaultAjaxBehavior()
+		add(new AbstractDefaultAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -73,9 +73,13 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				super.renderHead(response);
 				response.renderOnDomReadyJavascript(getCallbackScript().toString());
 			}
+
+			public boolean isEnabled(Component component)
+			{
+				return get("content") == loadingComponent;
+			}
 		});
 	}
-
 
 	/**
 	 * @param markupId
