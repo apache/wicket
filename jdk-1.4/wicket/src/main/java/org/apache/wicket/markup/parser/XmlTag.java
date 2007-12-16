@@ -477,17 +477,17 @@ public class XmlTag extends MarkupElement
 	 */
 	public void putAll(final Map map)
 	{
-		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
 		{
-			final String key = (String)iterator.next();
-			Object value = map.get(key);
-			put(key, (value != null) ? value.toString() : null);
+			final Map.Entry entry = (Map.Entry) iterator.next();
+			Object value = entry.getValue();
+			put((String) entry.getKey(), (value != null) ? value.toString() : null);
 		}
 	}
 
 	/**
 	 * Removes an attribute.
-	 * 
+	 *
 	 * @param key
 	 *            The key to remove
 	 */

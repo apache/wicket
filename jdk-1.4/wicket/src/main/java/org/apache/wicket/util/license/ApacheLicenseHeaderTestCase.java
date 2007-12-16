@@ -261,17 +261,19 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			StringBuffer failString = new StringBuffer();
 
-			for (Iterator iter = files.keySet().iterator(); iter.hasNext();)
+			for (Iterator iter = files.entrySet().iterator(); iter.hasNext();)
 			{
-				ILicenseHeaderHandler licenseHeaderHandler = (ILicenseHeaderHandler)iter.next();
+				Map.Entry entry = (Map.Entry) iter.next();
+
+				ILicenseHeaderHandler licenseHeaderHandler = (ILicenseHeaderHandler) entry.getKey();
+				List/* <File> */fileList = (List) entry.getValue();
 
 				failString.append("\n");
 				failString.append(licenseHeaderHandler.getClass().getName());
 				failString.append(" failed. The following files(");
-				failString.append(((List)files.get(licenseHeaderHandler)).size());
+				failString.append(fileList.size());
 				failString.append(") didn't have correct license header:\n");
 
-				List/* <File> */fileList = (List)files.get(licenseHeaderHandler);
 				for (Iterator iterator = fileList.iterator(); iterator.hasNext();)
 				{
 					File file = (File)iterator.next();

@@ -407,10 +407,11 @@ public class HtmlDocumentValidator
 					Map actualAttributes = parser.getAttributes();
 
 					Map expectedAttributes = workingTag.getExpectedAttributes();
-					for (Iterator it = expectedAttributes.keySet().iterator(); it.hasNext();)
+					for (Iterator it = expectedAttributes.entrySet().iterator(); it.hasNext();)
 					{
-						String name = (String)it.next();
-						String pattern = (String)expectedAttributes.get(name);
+						Map.Entry entry = (Map.Entry) it.next();
+						String name = (String) entry.getKey();
+						String pattern = (String)entry.getValue();
 						if (!actualAttributes.containsKey(name))
 						{
 							log.error("Tag <" + workingTag.getTag() + "> was expected to have a '" +

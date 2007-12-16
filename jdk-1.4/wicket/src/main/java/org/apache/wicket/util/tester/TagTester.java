@@ -17,6 +17,7 @@
 package org.apache.wicket.util.tester;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.MarkupElement;
@@ -382,11 +383,13 @@ public class TagTester
 						{
 							IValueMap attributeMap = xmlTag.getAttributes();
 
-							for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();)
+							for (Iterator iter = attributeMap.entrySet().iterator(); iter.hasNext();)
 							{
-								String attr = (String)iter.next();
+								Map.Entry entry = (Map.Entry) iter.next();
 
-								if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
+								String attr = (String) entry.getKey();
+
+								if (attr.equals(attribute) && value.equals(entry.getValue()))
 								{
 									if (xmlTag.isOpen())
 									{
