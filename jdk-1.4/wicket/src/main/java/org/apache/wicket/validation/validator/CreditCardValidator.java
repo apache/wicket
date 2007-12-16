@@ -38,7 +38,8 @@ public class CreditCardValidator extends AbstractValidator
 	 */
 	protected void onValidate(IValidatable validatable)
 	{
-		String numberToCheck = (String)validatable.getValue();
+		String input = ((String)validatable.getValue());
+		String numberToCheck = input.replaceAll("[ -]", "");
 		int nulOffset = '0';
 		int sum = 0;
 		for (int i = 1; i <= numberToCheck.length(); i++)
