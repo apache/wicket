@@ -133,12 +133,12 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	protected String extractLicenseHeader(File file, int start, int length)
 	{
 		StringBuffer header = new StringBuffer();
-		FileReader fileReader = null;
+		LineNumberReader lineNumberReader = null;
 
 		try
 		{
-			fileReader = new FileReader(file);
-			LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
+			FileReader fileReader = new FileReader(file);
+			lineNumberReader = new LineNumberReader(fileReader);
 
 			for (int i = start; i < length; i++)
 			{
@@ -152,11 +152,11 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		finally
 		{
-			if (fileReader != null)
+			if (lineNumberReader != null)
 			{
 				try
 				{
-					fileReader.close();
+					lineNumberReader.close();
 				}
 				catch (IOException e)
 				{
