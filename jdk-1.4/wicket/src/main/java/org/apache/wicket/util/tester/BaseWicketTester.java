@@ -985,6 +985,21 @@ public class BaseWicketTester extends MockWebApplication
 		String failMessage = "A component which is null could not have been added to the AJAX response";
 		notNull(failMessage, component);
 
+		Result result;
+
+		// test that the component renders the placeholder tag if it's not visible
+		if (!component.isVisible())
+		{
+			failMessage = "A component which is invisible and doesn't render a placeholder tag"
+				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction";
+			result = isTrue(failMessage, component.getOutputMarkupPlaceholderTag());
+			if (result.wasFailed())
+			{
+				return result;
+			}
+		}
+
+
 		// Get the AJAX response
 		String ajaxResponse = getServletResponse().getDocument();
 
@@ -992,7 +1007,7 @@ public class BaseWicketTester extends MockWebApplication
 		failMessage = "The Previous response was not an AJAX response. "
 			+ "You need to execute an AJAX event, using clickLink, before using this assert";
 		boolean isAjaxResponse = ajaxResponse.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
-		Result result = isTrue(failMessage, isAjaxResponse);
+		result = isTrue(failMessage, isAjaxResponse);
 		if (result.wasFailed())
 		{
 			return result;

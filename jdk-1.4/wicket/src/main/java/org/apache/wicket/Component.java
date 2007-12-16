@@ -1582,6 +1582,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Gets whether or not an invisible component will render a placeholder tag.
+	 * 
+	 * @return true if a placeholder tag should be rendered
+	 */
+	public final boolean getOutputMarkupPlaceholderTag()
+	{
+		return getFlag(FLAG_PLACEHOLDER);
+	}
+
+	/**
 	 * Gets the page holding this component.
 	 * 
 	 * @return The page holding this component
