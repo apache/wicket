@@ -112,7 +112,7 @@ public final class Book implements IClusterable
 
 		if (hit == false)
 		{
-			idToBook.put(new Long(book.id), book);
+			idToBook.put(book.id, book);
 		}
 	}
 
@@ -123,7 +123,7 @@ public final class Book implements IClusterable
 	 */
 	public static Book get(final long id)
 	{
-		return (Book)idToBook.get(new Long(id));
+		return (Book)idToBook.get(id);
 	}
 
 	/**

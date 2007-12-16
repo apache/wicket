@@ -109,7 +109,7 @@ public class RatingsPage extends BasePage
 		 */
 		public Integer getNrOfVotes()
 		{
-			return new Integer(nrOfVotes);
+			return nrOfVotes;
 		}
 
 		/**
@@ -132,7 +132,7 @@ public class RatingsPage extends BasePage
 		 */
 		public Double getRating()
 		{
-			return new Double(rating);
+			return rating;
 		}
 
 		/**
@@ -180,9 +180,9 @@ public class RatingsPage extends BasePage
 				RatingsPage.rating1.addRating(rating);
 			}
 		});
-		add(new RatingPanel("rating2", new PropertyModel(rating2, "rating"), new Model(new Integer(
-				5)), new PropertyModel(rating2, "nrOfVotes"), new PropertyModel(this, "hasVoted"),
-				true)
+		add(new RatingPanel("rating2", new PropertyModel(rating2, "rating"),
+							new Model(5), new PropertyModel(rating2, "nrOfVotes"),
+							new PropertyModel(this, "hasVoted"), true)
 		{
 			protected String getActiveStarUrl(int iteration)
 			{

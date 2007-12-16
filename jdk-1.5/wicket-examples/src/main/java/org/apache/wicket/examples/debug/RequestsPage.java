@@ -73,8 +73,8 @@ public class RequestsPage extends WebPage
 			add(new Label("startDate", new Model(sdf.format(sessionData.getStartDate()))));
 			add(new Label("lastRequestTime", new Model(sdf.format(sessionData.getLastActive()))));
 			add(new Label("numberOfRequests",
-					new Model(new Long(sessionData.getNumberOfRequests()))));
-			add(new Label("totalTimeTaken", new Model(new Long(sessionData.getTotalTimeTaken()))));
+					new Model(sessionData.getNumberOfRequests())));
+			add(new Label("totalTimeTaken", new Model(sessionData.getTotalTimeTaken())));
 			add(new Label("size", new Model(Bytes.bytes(sessionData.getSessionSize()))));
 			add(new WebMarkupContainer("sessionid").setVisible(false));
 		}

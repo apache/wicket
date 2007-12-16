@@ -40,8 +40,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			"Java.Net" });
 
 	/** available numbers for selection. */
-	private static final List INTEGERS = Arrays.asList(new Integer[] { new Integer(1),
-			new Integer(2), new Integer(3) });
+	private static final List INTEGERS = Arrays.asList(new Integer[] {1, 2, 3});
 
 	/**
 	 * Constructor
@@ -98,7 +97,7 @@ public class DropDownChoicePage extends WicketExamplePage
 				// your business
 				// object or in a utility.
 				String stringrep;
-				int value = ((Integer)object).intValue();
+				int value = (Integer) object;
 				switch (value)
 				{
 					case 1 :

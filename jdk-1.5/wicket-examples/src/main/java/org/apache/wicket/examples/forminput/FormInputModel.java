@@ -81,11 +81,11 @@ public final class FormInputModel implements IClusterable
 	}
 
 	private Boolean booleanProperty;
-	private Double doubleProperty = new Double(20.5);
-	private Integer integerInRangeProperty = new Integer(50);
-	private Integer integerProperty = new Integer(100);
+	private Double doubleProperty = 20.5;
+	private Integer integerInRangeProperty = 50;
+	private Integer integerProperty = 100;
 	private List lines = new ArrayList();
-	private Integer multiply = new Integer(0);
+	private Integer multiply = 0;
 	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
 	private List numbersCheckGroup = new ArrayList();
 	private String numbersGroup;

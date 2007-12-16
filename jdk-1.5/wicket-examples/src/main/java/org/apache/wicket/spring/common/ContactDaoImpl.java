@@ -67,7 +67,7 @@ public class ContactDaoImpl implements ContactDao
 	 */
 	public Contact get(long id)
 	{
-		Contact c = (Contact)map.get(new Long(id));
+		Contact c = (Contact)map.get(id);
 		if (c == null)
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
 		return c;
@@ -75,7 +75,7 @@ public class ContactDaoImpl implements ContactDao
 
 	protected void add(final Contact contact)
 	{
-		map.put(new Long(contact.getId()), contact);
+		map.put(contact.getId(), contact);
 		fnameIdx.add(contact);
 		lnameIdx.add(contact);
 		fnameDescIdx.add(contact);
@@ -149,7 +149,7 @@ public class ContactDaoImpl implements ContactDao
 	 */
 	public void delete(final Contact contact)
 	{
-		map.remove(new Long(contact.getId()));
+		map.remove(contact.getId());
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);

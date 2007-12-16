@@ -80,8 +80,7 @@ public class LiveSessionsPage extends WebPage
 				{
 					return "Disable request recording";
 				}
-			};
-
+			}
 		}));
 		add(link);
 		add(new Label("totalSessions", new Model()
@@ -90,7 +89,7 @@ public class LiveSessionsPage extends WebPage
 
 			public Object getObject()
 			{
-				return new Integer(getRequestLogger().getTotalCreatedSessions());
+				return getRequestLogger().getTotalCreatedSessions();
 			}
 		}));
 		add(new Label("peakSessions", new Model()
@@ -99,7 +98,7 @@ public class LiveSessionsPage extends WebPage
 
 			public Object getObject()
 			{
-				return new Integer(getRequestLogger().getPeakSessions());
+				return getRequestLogger().getPeakSessions();
 			}
 		}));
 		add(new Label("liveSessions", new Model()
@@ -108,7 +107,7 @@ public class LiveSessionsPage extends WebPage
 
 			public Object getObject()
 			{
-				return new Integer(getRequestLogger().getPeakSessions());
+				return getRequestLogger().getPeakSessions();
 			}
 		}));
 
@@ -145,8 +144,8 @@ public class LiveSessionsPage extends WebPage
 				link.add(new Label("id", new Model(sd.getSessionId())));
 				item.add(link);
 				item.add(new Label("lastRequestTime", new Model(sdf.format(sd.getLastActive()))));
-				item.add(new Label("requestCount", new Model(new Long(sd.getNumberOfRequests()))));
-				item.add(new Label("requestsTime", new Model(new Long(sd.getTotalTimeTaken()))));
+				item.add(new Label("requestCount", new Model(sd.getNumberOfRequests())));
+				item.add(new Label("requestsTime", new Model(sd.getTotalTimeTaken())));
 				item.add(new Label("sessionSize", new Model(Bytes.bytes(sd.getSessionSize()))));
 			}
 		};

@@ -110,7 +110,7 @@ public class TextFieldPage extends WicketExamplePage
 		public String text = "some text";
 
 		/** an integer. */
-		public Integer integer = new Integer(12);
+		public Integer integer = 12;
 
 		/**
 		 * @see java.lang.Object#toString()

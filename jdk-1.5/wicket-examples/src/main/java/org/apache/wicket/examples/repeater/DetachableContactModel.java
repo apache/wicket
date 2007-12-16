@@ -58,7 +58,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 	 */
 	public int hashCode()
 	{
-		return new Long(id).hashCode();
+		return Long.valueOf(id).hashCode();
 	}
 
 	/**
