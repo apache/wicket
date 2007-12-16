@@ -99,13 +99,13 @@ public class WicketFilter implements Filter
 	 * The name of the optional filter parameter indicating it may/can only be accessed from within
 	 * a Portlet context. Value should be true
 	 */
-	private final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
+	private static final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
 
 	/**
 	 * The name of the optional filter parameter indicating a javax.portlet.PortletContext class
 	 * should be looked up to determine if portlet support should be provided.
 	 */
-	private final String DETECT_PORTLET_CONTEXT = "detectPortletContext";
+	private static final String DETECT_PORTLET_CONTEXT = "detectPortletContext";
 
 	/**
 	 * The name of the optional web.xml context parameter indicating if a portlet context is to be
@@ -115,12 +115,12 @@ public class WicketFilter implements Filter
 	 * resource will be looked up through the classpath which, if found, is queried for a property
 	 * with the same name.
 	 */
-	private final String DETECT_PORTLET_CONTEXT_FULL_NAME = "org.apache.wicket.detectPortletContext";
+	private static final String DETECT_PORTLET_CONTEXT_FULL_NAME = "org.apache.wicket.detectPortletContext";
 
 	/**
 	 * The classpath resource name of an optional WicketPortlet.properties file.
 	 */
-	private final String WICKET_PORTLET_PROPERTIES = "org/apache/wicket/protocol/http/portlet/WicketPortlet.properties";
+	private static final String WICKET_PORTLET_PROPERTIES = "org/apache/wicket/protocol/http/portlet/WicketPortlet.properties";
 
 	/*
 	 * Delegate for handling Portlet specific filtering. Not instantiated if not running in a

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
  */
 public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 {
-	private ServletContext context;
 	private String contextPath;
 	private String servletPath;
 	private String pathInfo;
@@ -50,7 +49,6 @@ public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 			HttpServletRequest request, String filterPath)
 	{
 		super(request);
-		this.context = context;
 		this.session = proxiedSession;
 		if (proxiedSession == null)
 		{

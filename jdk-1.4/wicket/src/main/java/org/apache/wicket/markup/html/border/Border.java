@@ -126,7 +126,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	private boolean transparentResolver = false;
 
 	/** Must be the same as the id automatically assigned to <wicket:body> */
-	private final String BODY_ID = "_body";
+	private static final String BODY_ID = "_body";
 
 	/** The body component associated with <wicket:body> */
 	private BorderBodyContainer body;

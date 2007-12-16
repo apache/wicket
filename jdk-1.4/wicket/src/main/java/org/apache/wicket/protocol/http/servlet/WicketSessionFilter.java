@@ -104,8 +104,6 @@ public class WicketSessionFilter implements Filter
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketSessionFilter.class);
 
-	private FilterConfig filterConfig;
-
 	/** the filter name/ application key. */
 	private String filterName;
 
@@ -124,8 +122,6 @@ public class WicketSessionFilter implements Filter
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
-		this.filterConfig = filterConfig;
-
 		filterName = filterConfig.getInitParameter("filterName");
 
 		if (filterName == null)
