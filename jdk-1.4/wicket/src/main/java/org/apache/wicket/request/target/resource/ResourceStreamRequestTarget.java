@@ -61,6 +61,19 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Construct.
+	 * 
+	 * @param resourceStream
+	 *            the resource stream for the response
+	 * @param fileName
+	 */
+	public ResourceStreamRequestTarget(IResourceStream resourceStream, String fileName)
+	{
+		this.resourceStream = resourceStream;
+		this.fileName = fileName;
+	}
+
+	/**
 	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
@@ -76,7 +89,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		{
 			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
 			return resourceStream.equals(that.resourceStream) &&
-					((fileName != null) ? fileName.equals(that.fileName) : true);
+				((fileName != null) ? fileName.equals(that.fileName) : true);
 		}
 		return false;
 	}
@@ -133,7 +146,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		catch (ResourceStreamNotFoundException e)
 		{
 			requestCycle.setRequestTarget(new WebErrorCodeResponseTarget(
-					HttpServletResponse.SC_NOT_FOUND));
+				HttpServletResponse.SC_NOT_FOUND));
 		}
 	}
 
@@ -156,7 +169,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	public String toString()
 	{
 		return "[ResourceStreamRequestTarget[resourceStream=" + resourceStream + ",fileName=" +
-				fileName + "]";
+			fileName + "]";
 	}
 
 	/**
@@ -170,7 +183,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 *            the resource stream that will be rendered
 	 */
 	protected void configure(final RequestCycle requestCycle, final Response response,
-			final IResourceStream resourceStream)
+		final IResourceStream resourceStream)
 	{
 		// Configure response with content type of resource, if available
 		String responseType = resourceStream.getContentType();
