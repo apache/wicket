@@ -44,30 +44,34 @@ public class Page5 extends WicketExamplePage
 		String p1 = "CANNOT RESOLVE FROM URL";
 		if (parameters.containsKey("param1"))
 		{
-			p1 = "";
+			StringBuffer sb = new StringBuffer();
 			String[] array = parameters.getStringArray("param1");
 			for (int i = 0; i < array.length; i++)
 			{
-				p1 += array[i];
+				sb.append(array[i]);
 				if (array.length - 1 != i)
 				{
-					p1 += ", ";
+					sb.append(", ");
 				}
 			}
+
+			p1 = sb.toString();
 		}
 		String p2 = "CANNOT RESOLVE FROM URL";
 		if (parameters.containsKey("param2"))
 		{
-			p2 = "";
+			StringBuffer sb = new StringBuffer();
 			String[] array = parameters.getStringArray("param2");
 			for (int i = 0; i < array.length; i++)
 			{
-				p2 += array[i];
+				sb.append(array[i]);
 				if (array.length - 1 != i)
 				{
-					p2 += ", ";
+					sb.append(", ");
 				}
 			}
+
+			p2 = sb.toString();
 		}
 
 		add(new Label("p1", p1));

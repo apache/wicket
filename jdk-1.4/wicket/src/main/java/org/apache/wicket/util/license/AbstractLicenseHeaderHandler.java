@@ -66,7 +66,6 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	{
 		if (Strings.isEmpty(licenseHeader))
 		{
-			String header = "";
 			LineNumberReader lineNumberReader = null;
 			InputStream inputStream = null;
 			InputStreamReader inputStreamReader = null;
@@ -78,14 +77,16 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 				inputStreamReader = new InputStreamReader(inputStream);
 				lineNumberReader = new LineNumberReader(inputStreamReader);
 
+				StringBuffer header = new StringBuffer();
 				String line = lineNumberReader.readLine();
 				while (line != null)
 				{
-					header += line + LINE_ENDING;
+					header.append(line);
+					header.append(LINE_ENDING);
 					line = lineNumberReader.readLine();
 				}
 
-				licenseHeader = header.trim();
+				licenseHeader = header.toString().trim();
 			}
 			catch (Exception e)
 			{
@@ -103,7 +104,6 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 					{ /* Ignore */
 					}
 				}
-				;
 				if (inputStream != null)
 				{
 					try
@@ -114,7 +114,6 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 					{ /* Ignore */
 					}
 				}
-				;
 				if (inputStreamReader != null)
 				{
 					try
@@ -125,7 +124,6 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 					{ /* Ignore */
 					}
 				}
-				;
 			}
 		}
 
@@ -134,7 +132,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 	protected String extractLicenseHeader(File file, int start, int length)
 	{
-		String header = "";
+		StringBuffer header = new StringBuffer();
 		FileReader fileReader = null;
 
 		try
@@ -144,7 +142,8 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 			for (int i = start; i < length; i++)
 			{
-				header += lineNumberReader.readLine() + LINE_ENDING;
+				header.append(lineNumberReader.readLine());
+				header.append(LINE_ENDING);
 			}
 		}
 		catch (Exception e)
@@ -166,7 +165,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 		}
 
-		return header.trim();
+		return header.toString().trim();
 	}
 
 	/**
