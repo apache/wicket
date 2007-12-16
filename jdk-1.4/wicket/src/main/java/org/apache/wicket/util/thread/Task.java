@@ -97,34 +97,46 @@ public final class Task
 					startTime.fromNow().sleep();
 					final Logger log = getLog();
 
-					while (!stop)
+					try
 					{
-						// Get the start of the current period
-						final Time startOfPeriod = Time.now();
-
-						if (log.isTraceEnabled())
+						while (!stop)
 						{
-							log.trace("Run the job: " + code.toString());
-						}
+							// Get the start of the current period
+							final Time startOfPeriod = Time.now();
 
-						try
-						{
-							// Run the user's code
-							code.run(getLog());
-						}
-						catch (Exception e)
-						{
-							log.error("Unhandled exception thrown by user code in task " + name, e);
-						}
+							if (log.isTraceEnabled())
+							{
+								log.trace("Run the job: " + code.toString());
+							}
 
-						if (log.isTraceEnabled())
-						{
-							log.trace("Finished with job: " + code.toString());
-						}
+							try
+							{
+								// Run the user's code
+								code.run(getLog());
+							}
+							catch (Exception e)
+							{
+								log.error(
+									"Unhandled exception thrown by user code in task " + name, e);
+							}
 
-						// Sleep until the period is over (or not at all if it's
-						// already passed)
-						startOfPeriod.add(frequency).fromNow().sleep();
+							if (log.isTraceEnabled())
+							{
+								log.trace("Finished with job: " + code.toString());
+							}
+
+							// Sleep until the period is over (or not at all if it's
+							// already passed)
+							startOfPeriod.add(frequency).fromNow().sleep();
+						}
+					}
+					catch (Throwable t)
+					{
+						log.error("Task " + name + " terminated", t);
+					}
+					finally
+					{
+						isStarted = false;
 					}
 				}
 			};
