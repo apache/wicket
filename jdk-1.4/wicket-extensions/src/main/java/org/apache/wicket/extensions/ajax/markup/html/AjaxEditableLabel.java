@@ -337,9 +337,21 @@ public class AjaxEditableLabel extends Panel
 			}
 		};
 		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior("onclick"));
+		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 		return label;
 	}
+
+	/**
+	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
+	 * should be triggered
+	 * 
+	 * @return The event name
+	 */
+	protected String getLabelAjaxEvent()
+	{
+		return "onclick";
+	}
+
 
 	/**
 	 * Gets the editor component.

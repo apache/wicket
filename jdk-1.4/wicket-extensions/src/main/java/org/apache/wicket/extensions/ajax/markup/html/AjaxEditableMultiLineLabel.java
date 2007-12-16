@@ -90,8 +90,19 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 			}
 		};
 		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior("onclick"));
+		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 		return label;
+	}
+
+	/**
+	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
+	 * should be triggered
+	 * 
+	 * @return The event name
+	 */
+	protected String getLabelAjaxEvent()
+	{
+		return "onclick";
 	}
 
 	/**
@@ -132,13 +143,13 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 			{
 				super.onComponentTag(tag);
 				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
-						"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
+					"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
 				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
-						"&save=false'); return false;}";
+					"&save=false'); return false;}";
 
 				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
-						"; ";
+					"; ";
 
 				tag.put("onblur", saveCall);
 				tag.put("onkeypress", keypress);
