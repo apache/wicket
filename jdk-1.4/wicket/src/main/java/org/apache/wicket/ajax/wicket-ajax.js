@@ -197,7 +197,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		document.body.appendChild(tempDiv);
 	}
 		
-	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
+	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TFOOT") {
 		
 		// in case the element is not any of these																									
 						
