@@ -487,7 +487,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            path to <code>Label</code> component
 	 * @param expectedLabelText
 	 *            expected label text
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result hasLabel(String path, String expectedLabelText)
 	{
@@ -502,7 +502,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            path to <code>PageLink</code> component
 	 * @param expectedPageClass
 	 *            expected page class to link
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result isPageLink(String path, Class expectedPageClass)
 	{
@@ -535,7 +535,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            path to component
 	 * @param expectedComponentClass
 	 *            expected component class
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result isComponent(String path, Class expectedComponentClass)
 	{
@@ -550,7 +550,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @param path
 	 *            path to component
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result isVisible(String path)
 	{
@@ -569,7 +569,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @param path
 	 *            path to component
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result isInvisible(String path)
 	{
@@ -581,7 +581,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @param pattern
 	 *            reqex pattern to match
-	 * @return
+	 * @return a <code>Result</code>
 	 */
 	public Result ifContains(String pattern)
 	{
@@ -1116,8 +1116,8 @@ public class BaseWicketTester extends MockWebApplication
 
 		// If there haven't been found any event behaviors on the component
 		// which matches the parameters we fail.
-		failMessage = "No AjaxEventBehavior found on component: " +
-					  component.getId() + " which matches the event: " + event;
+		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
+			" which matches the event: " + event;
 		notNull(failMessage, ajaxEventBehavior);
 
 		// initialize the request only if needed to allow the user to pass
