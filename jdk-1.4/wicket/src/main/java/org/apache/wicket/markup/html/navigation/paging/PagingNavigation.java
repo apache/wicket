@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.navigation.paging;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.version.undo.Change;
 
 /**
@@ -194,9 +195,9 @@ public class PagingNavigation extends Loop
 	 *            The label provider for the text that the links should be displaying.
 	 */
 	public PagingNavigation(final String id, final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
-		super(id, pageable.getPageCount());
+		super(id, null);
 		this.pageable = pageable;
 		this.labelProvider = labelProvider;
 		startIndex = 0;
@@ -271,6 +272,7 @@ public class PagingNavigation extends Loop
 
 	protected void onBeforeRender()
 	{
+		setModel(new Model(Integer.valueOf(pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
