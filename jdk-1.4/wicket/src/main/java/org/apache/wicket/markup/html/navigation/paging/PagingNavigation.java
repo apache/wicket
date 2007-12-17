@@ -272,7 +272,7 @@ public class PagingNavigation extends Loop
 
 	protected void onBeforeRender()
 	{
-		setModel(new Model(Integer.valueOf(pageable.getPageCount())));
+		setModel(new Model(new Integer(pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
