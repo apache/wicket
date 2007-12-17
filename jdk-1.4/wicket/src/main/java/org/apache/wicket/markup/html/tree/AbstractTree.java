@@ -870,6 +870,17 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
+	 * Allows to intercept adding dirty components to AjaxRequestTarget.
+	 * 
+	 * @param target
+	 * @param component
+	 */
+	protected void addComponent(AjaxRequestTarget target, Component component)
+	{
+		target.addComponent(component);
+	}
+
+	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
 	 * you modified the tree model during an ajax request target and you want to partially update
 	 * the component on page. Make sure that the tree model has fired the proper listener functions.
@@ -893,7 +904,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		if (dirtyAll)
 		{
 			// render entire tree component
-			target.addComponent(this);
+			addComponent(target, this);
 		}
 		else
 		{
@@ -974,7 +985,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				}
 
 				// add the component to target
-				target.addComponent(item);
+				addComponent(target, item);
 			}
 
 			// clear dirty flags
