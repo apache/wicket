@@ -76,8 +76,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets an Integer minimum validator for checking if a number is greater than the given minimum
-	 * value. If that is not the case, an error message will be generated with the key
+	 * Gets an Integer minimum validator for checking if a number is greater than or equal to the
+	 * given minimum value. If that is not the case, an error message will be generated with the key
 	 * "NumberValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
@@ -100,8 +100,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets an Integer range validator for checking if a number is smaller than the given maximum
-	 * value. If that is not the case, an error message will be generated with the key
+	 * Gets an Integer range validator for checking if a number is smaller than or equal to the
+	 * given maximum value. If that is not the case, an error message will be generated with the key
 	 * "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
@@ -125,8 +125,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double range validator for checking if a number falls between the minimum and maximum
-	 * values. If that is not the case, an error message will be generated with the key
+	 * Gets a Double range validator for checking if a number falls between (including) the minimum
+	 * and maximum values. If that is not the case, an error message will be generated with the key
 	 * "NumberValidator.range". The message keys that can be used are:
 	 * <p>
 	 * <ul>
@@ -152,8 +152,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double minimum validator for checking if number is greater then the given minimum
-	 * value. If that is not the case, an error message will be generated with the key
+	 * Gets a Double minimum validator for checking if number is greater then or equal to the given
+	 * minimum value. If that is not the case, an error message will be generated with the key
 	 * "NumberValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
@@ -176,8 +176,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double maximum validator for checking if an number is smaller than the given maximum
-	 * value. If that is not the case, an error message will be generated with the key
+	 * Gets a Double maximum validator for checking if an number is smaller than or equal to the
+	 * given maximum value. If that is not the case, an error message will be generated with the key
 	 * "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
