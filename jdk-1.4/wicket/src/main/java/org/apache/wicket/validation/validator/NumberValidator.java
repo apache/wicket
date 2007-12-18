@@ -39,12 +39,12 @@ public abstract class NumberValidator extends AbstractValidator
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * a validator for ensuring for a positive number value
+	 * a validator for ensuring for a positive number value (>0 so not including 0)
 	 */
 	public static final NumberValidator POSITIVE = minimum(Double.MIN_VALUE);
 
 	/**
-	 * a validator for ensuring a negative number value
+	 * a validator for ensuring a negative number value (<0 so not including 0)
 	 */
 	public static final NumberValidator NEGATIVE = maximum(-Double.MIN_VALUE);
 
