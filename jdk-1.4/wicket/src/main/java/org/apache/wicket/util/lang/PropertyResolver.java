@@ -104,7 +104,7 @@ public final class PropertyResolver
 	 * @param value
 	 *            The value to set.
 	 * @param converter
-	 *            The convertor to convert the value if needed to the right type.
+	 *            The converter to convert the value if needed to the right type.
 	 */
 	public final static void setValue(final String expression, final Object object, Object value,
 		PropertyResolverConverter converter)
