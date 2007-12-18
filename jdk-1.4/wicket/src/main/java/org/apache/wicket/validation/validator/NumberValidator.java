@@ -41,12 +41,12 @@ public abstract class NumberValidator extends AbstractValidator
 	/**
 	 * a validator for ensuring for a positive number value
 	 */
-	public static final NumberValidator POSITIVE = minimum(0);
+	public static final NumberValidator POSITIVE = minimum(Double.MIN_VALUE);
 
 	/**
-	 * a validator for ensuring a positive number value
+	 * a validator for ensuring a negative number value
 	 */
-	public static final NumberValidator NEGATIVE = maximum(0);
+	public static final NumberValidator NEGATIVE = maximum(-Double.MIN_VALUE);
 
 	/**
 	 * Gets an Integer range validator for checking if a number falls between the minimum and

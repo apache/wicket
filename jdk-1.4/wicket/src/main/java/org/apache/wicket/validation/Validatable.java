@@ -66,6 +66,17 @@ public class Validatable implements IValidatable
 	}
 
 	/**
+	 * Constructor.
+	 * 
+	 * @param value
+	 *            The value that will be tested
+	 */
+	public Validatable(Object value)
+	{
+		this.value = value;
+	}
+
+	/**
 	 * Sets the value object that will be returned by {@link #getValue()}.
 	 * 
 	 * @param value
