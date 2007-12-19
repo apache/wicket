@@ -22,4 +22,9 @@ package org.apache.wicket.util.lang;
 public class Person2 extends Person
 {
 
+// TODO ENABLE THIS IN WICKET 1.4 (Java5)
+// public String getName()
+// {
+// return (String)super.getName();
+// }
 }

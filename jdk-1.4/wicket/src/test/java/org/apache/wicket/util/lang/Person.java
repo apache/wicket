@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class Person
 {
-	private String name;
+	private CharSequence name;
 
 	private Address address;
 
@@ -48,15 +48,15 @@ public class Person
 	/**
 	 * @return The name
 	 */
-	public String getName()
+	public CharSequence getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	/**
 	 * @param name
 	 */
-	public void setName(String name)
+	public void setName(CharSequence name)
 	{
 		this.name = name;
 	}
@@ -66,7 +66,7 @@ public class Person
 	 */
 	public Address getAddress()
 	{
-		return this.address;
+		return address;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Person
 	 */
 	public List getAddressList()
 	{
-		return this.addressList;
+		return addressList;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class Person
 	 */
 	public Map getAddressMap()
 	{
-		return this.addressMap;
+		return addressMap;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Person
 	 */
 	public Country getCountry()
 	{
-		return this.country;
+		return country;
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class Person
 	 */
 	public Address[] getAddressArray()
 	{
-		return this.addressArray;
+		return addressArray;
 	}
 
 	/**

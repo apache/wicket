@@ -1123,6 +1123,25 @@ public final class PropertyResolver
 				}
 				return method;
 			}
+			catch (NoSuchMethodException e)
+			{
+				Method[] methods = clz.getMethods();
+				for (int i = 0; i < methods.length; i++)
+				{
+					if (methods[i].getName().equals(name))
+					{
+						Class[] parameterTypes = methods[i].getParameterTypes();
+						if (parameterTypes.length == 1)
+						{
+							if (parameterTypes[0].isAssignableFrom(getMethod.getReturnType()))
+							{
+								return methods[i];
+							}
+						}
+					}
+				}
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
+			}
 			catch (Exception e)
 			{
 				log.debug("Cannot find setter corresponding to " + getMethod, e);

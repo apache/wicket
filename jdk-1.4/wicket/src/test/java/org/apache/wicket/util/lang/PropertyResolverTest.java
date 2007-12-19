@@ -221,8 +221,7 @@ public class PropertyResolverTest extends TestCase
 		assertNotNull(hm.get("address.test"));
 		PropertyResolver.setValue("addressMap[address.test].street", person, "wicket-street",
 			CONVERTER);
-		String street = (String)PropertyResolver
-			.getValue("addressMap[address.test].street", person);
+		String street = (String)PropertyResolver.getValue("addressMap[address.test].street", person);
 		assertEquals(street, "wicket-street");
 	}
 
@@ -320,7 +319,7 @@ public class PropertyResolverTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testArraytSizeLookup() throws Exception
+	public void testArraySizeLookup() throws Exception
 	{
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		Object size = PropertyResolver.getValue("addressArray.length", person);
@@ -479,6 +478,24 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		method = PropertyResolver.getPropertySetter("addressArray[0].number", person);
 		assertEquals(method.getName(), "setNumber");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testOverriddenGetter() throws Exception
+	{
+		Person2 person = new Person2();
+		person.setName("foo");
+
+		String name = (String)PropertyResolver.getValue("name", person);
+		assertEquals("foo", name);
+
+		PropertyResolver.setValue("name", person, "bar", CONVERTER);
+
+		name = (String)PropertyResolver.getValue("name", person);
+		assertEquals("bar", name);
+
 	}
 
 	/**
