@@ -104,16 +104,19 @@ Wicket.DateTime.positionRelativeTo = function(subject, target) {
 	viewPortHeight = Wicket.DateTime.getViewportHeight();	
 	viewPortWidth = YAHOO.util.Dom.getViewportWidth();
 	
+	// also take scroll position into account
+	scrollPos = [YAHOO.util.Dom.getDocumentScrollLeft(), YAHOO.util.Dom.getDocumentScrollTop()];
+	
 	// correct datepicker's position so that it isn't rendered off screen on the right side or bottom
-	if (targetPos[0] + subjectWidth > viewPortWidth) {
+	if (targetPos[0] + subjectWidth > scrollPos[0] + viewPortWidth) {
 		// correct horizontal position
-		YAHOO.util.Dom.setX(subject, viewPortWidth - subjectWidth);
+		YAHOO.util.Dom.setX(subject, Math.max(targetPos[0], viewPortWidth) - subjectWidth);
 	} else {
 		YAHOO.util.Dom.setX(subject, targetPos[0]);
 	}
-	if (targetPos[1] + targetHeight + 1 + subjectHeight > viewPortHeight) {
+	if (targetPos[1] + targetHeight + 1 + subjectHeight > scrollPos[1] + viewPortHeight) {
 		// correct vertical position
-		YAHOO.util.Dom.setY(subject, viewPortHeight - subjectHeight);
+		YAHOO.util.Dom.setY(subject, Math.max(targetPos[1], viewPortHeight) - subjectHeight);
 	} else {
 		YAHOO.util.Dom.setY(subject, targetPos[1] + targetHeight + 1);
 	}
