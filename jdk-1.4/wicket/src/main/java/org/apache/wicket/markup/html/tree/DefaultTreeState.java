@@ -132,7 +132,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 			for (int i = 0; i < listenersCopy.length; i++)
 			{
 				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.allNodesCollapsed();
+				l.allNodesExpanded();
 			}
 		}
 	}
