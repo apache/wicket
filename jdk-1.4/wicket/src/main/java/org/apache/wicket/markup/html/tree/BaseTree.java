@@ -77,7 +77,7 @@ public abstract class BaseTree extends AbstractTree
 
 	// default stylesheet resource
 	private static final ResourceReference CSS = new CompressedResourceReference(BaseTree.class,
-			"res/base-tree.css");
+		"res/base-tree.css");
 
 	/**
 	 * Returns the stylesheet reference
@@ -212,7 +212,7 @@ public abstract class BaseTree extends AbstractTree
 			CharSequence classes[] = new CharSequence[level];
 			for (int i = 0; i < level; ++i)
 			{
-				if (isNodeLast(parent))
+				if (parent == null || isNodeLast(parent))
 				{
 					classes[i] = "spacer";
 				}
