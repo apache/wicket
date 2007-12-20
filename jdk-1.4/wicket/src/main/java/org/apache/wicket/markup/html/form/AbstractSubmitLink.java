@@ -122,7 +122,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 				public String toString()
 				{
 					return "DefaultFormProcessingChange[component: " + getPath() +
-							", default processing: " + formerValue + "]";
+						", default processing: " + formerValue + "]";
 				}
 			});
 		}
@@ -144,9 +144,9 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 */
 	public Form getForm()
 	{
-		if (this.form != null)
+		if (form != null)
 		{
-			return this.form;
+			return form;
 		}
 		else
 		{
@@ -173,6 +173,13 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 			}
 			inputName.prepend(Component.PATH_SEPARATOR);
 			id = c.getId();
+		}
+
+		// having input name "submit" causes problems with javascript, so we
+		// create a unique string to replace it by prepending a path separator
+		if (inputName.equals("submit"))
+		{
+			inputName.prepend(Component.PATH_SEPARATOR);
 		}
 		return inputName.toString();
 	}
