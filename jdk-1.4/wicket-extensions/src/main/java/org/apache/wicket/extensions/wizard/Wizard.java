@@ -71,9 +71,6 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 	private static final long serialVersionUID = 1L;
 
-	/** The currently active step. */
-	private IWizardStep activeStep;
-
 	/**
 	 * The form in which the view is nested, and on which the wizard buttons work.
 	 */
@@ -222,9 +219,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public void onActiveStepChanged(IWizardStep newStep)
 	{
-		this.activeStep = newStep;
-		form.replace(activeStep.getView(VIEW_ID, this, this));
-		form.replace(activeStep.getHeader(HEADER_ID, this, this));
+		form.replace(newStep.getView(VIEW_ID, this, this));
+		form.replace(newStep.getHeader(HEADER_ID, this, this));
 	}
 
 	/**
@@ -329,8 +325,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		Component buttonBar = form.get(BUTTONS_ID);
 		if (buttonBar instanceof IDefaultButtonProvider)
 		{
-			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar)
-					.getDefaultButton(wizardModel);
+			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar).getDefaultButton(wizardModel);
 			form.setDefaultButton(defaultButton);
 		}
 	}
