@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
@@ -28,7 +27,6 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
-import org.apache.wicket.response.NullResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,16 +181,7 @@ public class Enclosure extends WebMarkupContainer
 		}
 		else
 		{
-			Response response = getResponse();
-			getRequestCycle().setResponse(NullResponse.getInstance());
-			try
-			{
-				super.onComponentTagBody(markupStream, openTag);
-			}
-			finally
-			{
-				getRequestCycle().setResponse(response);
-			}
+			markupStream.skipUntil(openTag.getName());
 		}
 	}
 }
