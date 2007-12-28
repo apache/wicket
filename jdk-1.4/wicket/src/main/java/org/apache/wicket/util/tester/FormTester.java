@@ -37,6 +37,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -129,7 +130,7 @@ public class FormTester
 			if (formComponent instanceof RadioGroup)
 			{
 				Radio foundRadio = (Radio)formComponent.visitChildren(Radio.class,
-						new SearchOptionByIndexVisitor(index));
+					new SearchOptionByIndexVisitor(index));
 				if (foundRadio == null)
 				{
 					fail("RadioGroup " + formComponent.getPath() + " does not have index:" + index);
@@ -139,7 +140,7 @@ public class FormTester
 			else if (formComponent instanceof CheckGroup)
 			{
 				Check foundCheck = (Check)formComponent.visitChildren(Check.class,
-						new SearchOptionByIndexVisitor(index));
+					new SearchOptionByIndexVisitor(index));
 				if (foundCheck == null)
 				{
 					fail("CheckGroup " + formComponent.getPath() + " does not have index:" + index);
@@ -175,15 +176,15 @@ public class FormTester
 			try
 			{
 				Method getChoicesMethod = formComponent.getClass().getMethod("getChoices",
-						(Class[])null);
+					(Class[])null);
 				getChoicesMethod.setAccessible(true);
 				List choices = (List)getChoicesMethod.invoke(formComponent, (Object[])null);
 
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
-						"getChoiceRenderer", (Class[])null);
+					"getChoiceRenderer", (Class[])null);
 				getChoiceRendererMethod.setAccessible(true);
 				IChoiceRenderer choiceRenderer = (IChoiceRenderer)getChoiceRendererMethod.invoke(
-						formComponent, (Object[])null);
+					formComponent, (Object[])null);
 
 				return choiceRenderer.getIdValue(choices.get(index), index);
 			}
@@ -231,7 +232,7 @@ public class FormTester
 				if (!allowMultipleChoice(formComponent))
 				{
 					fail("Component:'" + formComponent.getPath() +
-							"' Does not support multiple selection.");
+						"' Does not support multiple selection.");
 				}
 			}
 
@@ -289,7 +290,7 @@ public class FormTester
 			}
 
 			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice ||
-					formComponent instanceof RadioChoice)
+				formComponent instanceof RadioChoice)
 			{
 				return new SingleChoiceSelector(formComponent);
 			}
@@ -300,7 +301,7 @@ public class FormTester
 			else
 			{
 				fail("Selecting on the component:'" + formComponent.getPath() +
-						"' is not supported.");
+					"' is not supported.");
 				return null;
 			}
 		}
@@ -327,7 +328,7 @@ public class FormTester
 		private boolean allowMultipleChoice(FormComponent formComponent)
 		{
 			return formComponent instanceof CheckGroup ||
-					formComponent instanceof ListMultipleChoice;
+				formComponent instanceof ListMultipleChoice;
 		}
 	}
 
@@ -362,7 +363,7 @@ public class FormTester
 	 *            <code>String</code>s
 	 */
 	protected FormTester(final String path, final Form workingForm,
-			final BaseWicketTester wicketTester, final boolean fillBlankString)
+		final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
 		this.path = path;
 		this.workingForm = workingForm;
@@ -397,15 +398,14 @@ public class FormTester
 					}
 				}
 				else if ((formComponent instanceof DropDownChoice) ||
-						(formComponent instanceof RadioChoice) ||
-						(formComponent instanceof CheckBox))
+					(formComponent instanceof RadioChoice) || (formComponent instanceof CheckBox))
 				{
 					setFormComponentValue(formComponent, formComponent.getValue());
 				}
 				else if (formComponent instanceof ListMultipleChoice)
 				{
 					final String[] modelValues = formComponent.getValue().split(
-							FormComponent.VALUE_SEPARATOR);
+						FormComponent.VALUE_SEPARATOR);
 					for (int i = 0; i < modelValues.length; i++)
 					{
 						addFormComponentValue(formComponent, modelValues[i]);
@@ -483,11 +483,11 @@ public class FormTester
 		{
 			try
 			{
-				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class
-						.getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
+				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod(
+					"wantOnSelectionChangedNotifications", new Class[0]);
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
-				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod
-						.invoke(component, new Object[0])).booleanValue();
+				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod.invoke(
+					component, new Object[0])).booleanValue();
 				if (wantOnSelectionChangedNotifications)
 				{
 					((DropDownChoice)component).onSelectionChanged();
@@ -516,8 +516,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		ChoiceSelector choiceSelector = choiceSelectorFactory
-				.createForMultiple((FormComponent)workingForm.get(formComponentId));
+		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent)workingForm.get(formComponentId));
 
 		for (int i = 0; i < indexes.length; i++)
 		{
@@ -530,7 +529,7 @@ public class FormTester
 	 * 
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
-	 *            <code>FormComponent</code>
+	 *            <code>FormComponent</code> or <code>IFormSubmittingComponent</code>
 	 * @param value
 	 *            the field value
 	 */
@@ -538,8 +537,15 @@ public class FormTester
 	{
 		checkClosed();
 
-		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
-		setFormComponentValue(formComponent, value);
+		Component component = workingForm.get(formComponentId);
+		if (component instanceof IFormSubmittingComponent)
+		{
+			setFormSubmittingComponentValue((IFormSubmittingComponent)component, value);
+		}
+		else if (component instanceof FormComponent)
+		{
+			setFormComponentValue((FormComponent)component, value);
+		}
 	}
 
 	/**
@@ -563,8 +569,8 @@ public class FormTester
 		if (formComponent instanceof FileUploadField == false)
 		{
 			throw new IllegalArgumentException("'" + formComponentId + "' is not " +
-					"a FileUploadField. You can only attach a file to form " +
-					"component of this type.");
+				"a FileUploadField. You can only attach a file to form " +
+				"component of this type.");
 		}
 
 		MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
@@ -649,7 +655,7 @@ public class FormTester
 		if (parameterExist(formComponent))
 		{
 			String[] values = baseWicketTester.getServletRequest().getParameterValues(
-					formComponent.getInputName());
+				formComponent.getInputName());
 			// remove duplicated
 			HashSet all = new HashSet(Arrays.asList(values));
 			all.add(value);
@@ -672,7 +678,7 @@ public class FormTester
 		if (closed)
 		{
 			throw new IllegalStateException("'" + path +
-					"' already sumbitted. Note that FormTester " + "is allowed to submit only once");
+				"' already sumbitted. Note that FormTester " + "is allowed to submit only once");
 		}
 	}
 
@@ -686,7 +692,7 @@ public class FormTester
 	private boolean parameterExist(FormComponent formComponent)
 	{
 		String parameter = baseWicketTester.getServletRequest().getParameter(
-				formComponent.getInputName());
+			formComponent.getInputName());
 		return parameter != null && parameter.trim().length() > 0;
 	}
 
@@ -703,6 +709,18 @@ public class FormTester
 		baseWicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}
 
+	/**
+	 * Set component's value into request parameter, this method overwrites existing parameters.
+	 * 
+	 * @param component
+	 *            an {@link IFormSubmittingComponent}
+	 * @param value
+	 *            a value to add
+	 */
+	private void setFormSubmittingComponentValue(IFormSubmittingComponent component, String value)
+	{
+		baseWicketTester.getServletRequest().setParameter(component.getInputName(), value);
+	}
 
 	private void fail(String message)
 	{
