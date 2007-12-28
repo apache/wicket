@@ -2,7 +2,7 @@
 Copyright (c) 2007, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.4.0
+version: 2.4.1
 */
 
 /**
@@ -252,8 +252,8 @@ throw new Error("Invalid callback for subscriber to '" + this.type + "'");
                 } else {
                     try {
                         ret = s.fn.call(scope, this.type, args, s.obj);
-                    } catch(e) {
-                        this.lastError = e;
+                    } catch(ex) {
+                        this.lastError = ex;
                     }
                 }
                 if (false === ret) {
@@ -1437,7 +1437,7 @@ if (!YAHOO.util.Event) {
                              !o.tagName            && // o is not an HTML element
                              !o.alert              && // o is not a window
                              typeof o[0] !== "undefined" );
-                } catch(e) {
+                } catch(ex) {
                     return false;
                 }
 
@@ -1746,16 +1746,20 @@ if (!YAHOO.util.Event) {
 
                 unloadListeners = null;
 
-                // use clearAttributes to handle IE memory leaks
-                if (YAHOO.env.ua.IE && listeners && listeners.length > 0) {
+                // call clearAttributes or remove listeners to handle IE memory leaks
+                if (YAHOO.env.ua.ie && listeners && listeners.length > 0) {
                     j = listeners.length;
                     while (j) {
                         index = j-1;
                         l = listeners[index];
                         if (l) {
-                            l[EU.EL].clearAttributes();
+                            //try {
+                                //l[EU.EL].clearAttributes(); // errors on window objects
+                            //} catch(ex) {
+                            EU.removeListener(l[EU.EL], l[EU.TYPE], l[EU.FN], index);
+                            //}
                         } 
-                        j = j - 1;
+                        j--;
                     }
                     l=null;
                 }
@@ -1853,7 +1857,7 @@ if (!YAHOO.util.Event) {
                     // throws an error until the doc is ready
                     n.doScroll('left'); 
                     ready = true;
-                } catch(er){ 
+                } catch(ex){ 
                     // document is not ready
                 }
 
@@ -1988,7 +1992,7 @@ if (!YAHOO.util.Event) {
                     n.doScroll('left');
                     n = null;
                     YAHOO.util.Event._ready();
-                } catch (e){
+                } catch (ex){
                     n = null;
 setTimeout(arguments.callee, YAHOO.util.Event.POLL_INTERVAL);
                 }
@@ -2004,7 +2008,7 @@ setTimeout(arguments.callee, YAHOO.util.Event.POLL_INTERVAL);
                     EU._dri = null;
                     EU._ready();
                     n = null;
-                } catch (e) { 
+                } catch (ex) { 
                     n = null;
                 }
             }, EU.POLL_INTERVAL); 
@@ -2485,4 +2489,4 @@ YAHOO.util.KeyListener.KEY = {
     TAB          : 9,
     UP           : 38
 };
-YAHOO.register("event", YAHOO.util.Event, {version: "2.4.0", build: "733"});
+YAHOO.register("event", YAHOO.util.Event, {version: "2.4.1", build: "742"});

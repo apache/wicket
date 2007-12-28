@@ -2,7 +2,7 @@
 Copyright (c) 2007, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.4.0
+version: 2.4.1
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -949,7 +949,7 @@ YAHOO.augment = YAHOO.lang.augmentProto;
  */
 YAHOO.extend = YAHOO.lang.extend;
 
-YAHOO.register("yahoo", YAHOO, {version: "2.4.0", build: "733"});
+YAHOO.register("yahoo", YAHOO, {version: "2.4.1", build: "742"});
 /**
  * Provides a mechanism to fetch remote resources and
  * insert them into a document
@@ -1568,7 +1568,7 @@ YAHOO.util.Get = function() {
     };
 }();
 
-YAHOO.register("get", YAHOO.util.Get, {version: "2.4.0", build: "733"});
+YAHOO.register("get", YAHOO.util.Get, {version: "2.4.1", build: "742"});
 /**
  * Provides dynamic loading for the YUI library.  It includes the dependency
  * info for the library, and will automatically pull in dependencies for
@@ -1603,7 +1603,7 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.4.0", build: "733"});
          */
         info: {
 
-    'base': 'http://yui.yahooapis.com/2.4.0/build/',
+    'base': 'http://yui.yahooapis.com/2.4.1/build/',
 
     'skin': {
         'defaultSkin': 'sam',
@@ -1792,13 +1792,15 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.4.0", build: "733"});
         'reset-fonts-grids': {
             'type': 'css',
             'path': 'reset-fonts-grids/reset-fonts-grids.css',
-            'supersedes': ['reset', 'fonts', 'grids']
+            'supersedes': ['reset', 'fonts', 'grids', 'reset-fonts'],
+            'rollup': 3
         },
 
         'reset-fonts': {
             'type': 'css',
             'path': 'reset-fonts/reset-fonts.css',
-            'supersedes': ['reset', 'fonts']
+            'supersedes': ['reset', 'fonts'],
+            'rollup': 2
         },
 
         'selector': {
@@ -2031,16 +2033,16 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.4.0", build: "733"});
         this.allowRollup = true;
 
         /**
-         * Filter to apply to result url.  This filter will modify the default
+         * A filter to apply to result urls.  This filter will modify the default
          * path for all modules.  The default path for the YUI library is the
          * minified version of the files (e.g., event-min.js).  The filter property
          * can be a predefined filter or a custom filter.  The valid predefined 
          * filters are:
          * <dl>
-         *  <dt>debug</dt>
+         *  <dt>DEBUG</dt>
          *  <dd>Selects the debug versions of the library (e.g., event-debug.js).
          *      This option will automatically include the logger widget</dd>
-         *  <dt>raw</dt>
+         *  <dt>RAW</dt>
          *  <dd>Selects the non-minified version of the library (e.g., event.js).
          * </dl>
          * You can also define a custom filter, which must be an object literal 
@@ -2051,10 +2053,6 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.4.0", build: "733"});
          *      'replaceStr': "-debug.js"
          *  &#125;
          * </pre>
-         * Note: the default base path for the YUI library is http://yui.yahooapis.com.
-         * Only the minified versions of the components are available on this host,
-         * so if you choose to use the raw or debug versions of the files, you will
-         * have to host these files locally, and change the "base" property.
          * @property filter
          * @type string|{searchExp: string, replaceStr: string}
          */
