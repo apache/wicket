@@ -24,16 +24,16 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
- * content and a {@link TextArea text area} as its editor.
- * 
+ * And inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
+ * {@link DropDownChoice} is displayed.
+ *
  * @author Eelco Hillenius
  */
 public class AjaxEditableChoiceLabel extends AjaxEditableLabel
@@ -48,7 +48,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 */
@@ -59,7 +59,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -72,7 +72,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param choices
@@ -85,7 +85,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -101,7 +101,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -120,7 +120,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -135,7 +135,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
