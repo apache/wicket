@@ -18,3 +18,8 @@
 	background-image: none;
 	filter:progid:DXimageTransform.Microsoft.AlphaimageLoader(src='images/bg_container.png', sizingMethod='scale');
 }
+
+#content {
+	z-index: 1;
+	position: relative;
+}
