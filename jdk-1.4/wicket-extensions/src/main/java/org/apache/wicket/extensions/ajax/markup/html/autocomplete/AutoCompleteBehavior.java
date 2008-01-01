@@ -83,8 +83,9 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 				WebResponse r = (WebResponse)requestCycle.getResponse();
 
 				// Determine encoding
-				final String encoding = Application.get().getRequestCycleSettings()
-						.getResponseRequestEncoding();
+				final String encoding = Application.get()
+					.getRequestCycleSettings()
+					.getResponseRequestEncoding();
 				r.setCharacterEncoding(encoding);
 				r.setContentType("text/xml; charset=" + encoding);
 
@@ -112,13 +113,13 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	}
 
 	/**
-	 * Callback method that should return an iterator over all possiblet choice objects. These
+	 * Callback method that should return an iterator over all possible choice objects. These
 	 * objects will be passed to the renderer to generate output. Usually it is enough to return an
 	 * iterator over strings.
 	 * 
 	 * @param input
 	 *            current input
-	 * @return iterator ver all possible choice objects
+	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator getChoices(String input);
 }

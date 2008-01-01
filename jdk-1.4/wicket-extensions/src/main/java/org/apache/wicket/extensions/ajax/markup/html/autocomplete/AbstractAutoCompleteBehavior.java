@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.JavascriptUtils;
 public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final ResourceReference AUTOCOMPLETE_JS = new JavascriptResourceReference(
-			AutoCompleteBehavior.class, "wicket-autocomplete.js");
+		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,6 +48,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 	}
 
+	/**
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
+	 */
 	protected void onBind()
 	{
 		// add empty AbstractDefaultAjaxBehavior to the component, to force
@@ -63,13 +66,16 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		});
 	}
 
+	/**
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentRendered()
+	 */
 	protected void onComponentRendered()
 	{
 		Response response = getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
 		response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
 		response.write("new Wicket.AutoComplete('" + id + "','" + getCallbackUrl() + "'," +
-				preselect + ");");
+			preselect + ");");
 		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 

@@ -58,7 +58,7 @@ public abstract class AutoCompleteTextField extends TextField
 	{
 		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, preselect);
 
-	}
+	} 
 
 	/**
 	 * @param id
@@ -136,7 +136,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param preselect
 	 */
 	public AutoCompleteTextField(String id, IModel model, Class type,
-			IAutoCompleteRenderer renderer, boolean preselect)
+		IAutoCompleteRenderer renderer, boolean preselect)
 	{
 		super(id, model, type);
 
@@ -166,7 +166,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * 
 	 * @param input
 	 *            current input
-	 * @return iterator ver all possible choice objects
+	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator getChoices(String input);
 
