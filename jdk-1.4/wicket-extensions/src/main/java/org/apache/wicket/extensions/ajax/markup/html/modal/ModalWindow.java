@@ -116,10 +116,10 @@ public class ModalWindow extends Panel
 	private static final long serialVersionUID = 1L;
 
 	private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
-			ModalWindow.class, "res/modal.js");
+		ModalWindow.class, "res/modal.js");
 
 	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
-			"res/modal.css");
+		"res/modal.css");
 
 	/**
 	 * Creates a new modal window component.
@@ -169,11 +169,11 @@ public class ModalWindow extends Panel
 	public static interface CloseButtonCallback extends IClusterable
 	{
 		/**
-		 * Methods invoked after the button has been clicked. The invokation is done using an ajax
+		 * Methods invoked after the button has been clicked. The invocation is done using an ajax
 		 * call, so <code>{@link AjaxRequestTarget}</code> instance is available.
 		 * 
 		 * @param target
-		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax reuqest.
+		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax request.
 		 * 
 		 * @return True if the window can be closed (will close the window), false otherwise
 		 */
@@ -193,7 +193,7 @@ public class ModalWindow extends Panel
 		 * Called after the window has been closed.
 		 * 
 		 * @param target
-		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax reuqest.
+		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax request.
 		 */
 		public void onClose(AjaxRequestTarget target);
 	}
@@ -312,20 +312,19 @@ public class ModalWindow extends Panel
 	private static String getCloseJavacript()
 	{
 		return "var win;\n" //
-				+ "try {\n"
-				+ "	win = window.parent.Wicket.Window;\n"
-				+ "} catch (ignore) {\n"
-				+ "}\n"
-				+ "if (typeof(win) == \"undefined\" || typeof(win.current) == \"undefined\") {\n"
-				+ "  try {\n"
-				+ "     win = window.Wicket.Window;\n"
-				+ "  } catch (ignore) {\n"
-				+ "  }\n"
-				+ "}\n"
-				+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
-				+ "	window.parent.setTimeout(function() {\n"
-				+ "		win.current.close();\n"
-				+ "	}, 0);\n" + "}";
+			+ "try {\n" + "	win = window.parent.Wicket.Window;\n"
+			+ "} catch (ignore) {\n"
+			+ "}\n"
+			+ "if (typeof(win) == \"undefined\" || typeof(win.current) == \"undefined\") {\n"
+			+ "  try {\n"
+			+ "     win = window.Wicket.Window;\n"
+			+ "  } catch (ignore) {\n"
+			+ "  }\n"
+			+ "}\n"
+			+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
+			+ "	window.parent.setTimeout(function() {\n" + "		win.current.close();\n"
+			+ "	}, 0);\n"
+			+ "}";
 	}
 
 	/**
@@ -448,7 +447,7 @@ public class ModalWindow extends Panel
 	 * Sets the initial height of the window. The height refers to the height of window content
 	 * (without frame). If the window is resizable, the height unit is always "px". If the window is
 	 * not resizable, the unit can be specified using {@link #setHeightUnit(String)}. If cookie
-	 * name is set and window is resizable, the initial height may be ignred in favor of height
+	 * name is set and window is resizable, the initial height may be ignored in favor of height
 	 * stored in cookie.
 	 * 
 	 * @param initialHeight
@@ -483,7 +482,7 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Returns true if the initial height should be used (in favour of preserving real content
+	 * Returns true if the initial height should be used (in favor of preserving real content
 	 * height).
 	 * 
 	 * @return True if initial height should be used, false is real content height should be
@@ -561,7 +560,7 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Sets the name of the cookie that is used to remeber window position (and size if the window
+	 * Sets the name of the cookie that is used to remember window position (and size if the window
 	 * is resizable).
 	 * 
 	 * @param cookieName
@@ -577,7 +576,7 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Returns the name of cookie that is used to remebember window position (and size if the window
+	 * Returns the name of cookie that is used to remember window position (and size if the window
 	 * is resizable).
 	 * 
 	 * @return Name of the cookie
@@ -841,17 +840,23 @@ public class ModalWindow extends Panel
 		protected void respond(AjaxRequestTarget target)
 		{
 			if (closeButtonCallback == null ||
-					closeButtonCallback.onCloseButtonClicked(target) == true)
+				closeButtonCallback.onCloseButtonClicked(target) == true)
 			{
 				close(target);
 			}
 		}
 
+		/**
+		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
+		 */
 		protected IAjaxCallDecorator getAjaxCallDecorator()
 		{
 			return new CancelEventIfNoAjaxDecorator(super.getAjaxCallDecorator());
 		}
 
+		/**
+		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
+		 */
 		protected CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
@@ -869,7 +874,7 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Replaces all occurences of " in string with \".
+	 * Replaces all occurrences of " in string with \".
 	 * 
 	 * @param string
 	 *            String to be escaped.
@@ -897,7 +902,7 @@ public class ModalWindow extends Panel
 		if (isCustomComponent() == true)
 		{
 			buffer.append("var element = document.getElementById(\"" + getContentMarkupId() +
-					"\");\n");
+				"\");\n");
 		}
 
 		buffer.append("var settings = new Object();\n");
@@ -969,9 +974,9 @@ public class ModalWindow extends Panel
 		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
-					WindowClosedBehavior.class).get(0);
+				WindowClosedBehavior.class).get(0);
 			buffer.append("settings.onClose = function() { " + behavior.getCallbackScript() +
-					" };\n");
+				" };\n");
 
 			haveCloseCallback = true;
 		}
@@ -982,9 +987,9 @@ public class ModalWindow extends Panel
 		if (closeButtonCallback != null || haveCloseCallback == false)
 		{
 			CloseButtonBehavior behavior = (CloseButtonBehavior)getBehaviors(
-					CloseButtonBehavior.class).get(0);
+				CloseButtonBehavior.class).get(0);
 			buffer.append("settings.onCloseButton = function() { " + behavior.getCallbackScript() +
-					"};\n");
+				"};\n");
 		}
 
 		postProcessSettings(buffer);
