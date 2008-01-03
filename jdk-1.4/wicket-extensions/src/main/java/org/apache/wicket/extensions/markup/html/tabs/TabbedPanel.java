@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.list.Loop.LoopItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -148,36 +149,49 @@ public class TabbedPanel extends Panel
 
 			protected LoopItem newItem(int iteration)
 			{
-				return new LoopItem(iteration)
-				{
-					private static final long serialVersionUID = 1L;
-
-					protected void onComponentTag(ComponentTag tag)
-					{
-						super.onComponentTag(tag);
-						String cssClass = (String)tag.getString("class");
-						if (cssClass == null)
-						{
-							cssClass = " ";
-						}
-						cssClass += " tab" + getIteration();
-
-						if (getIteration() == getSelectedTab())
-						{
-							cssClass += " selected";
-						}
-						if (getIteration() == getIterations() - 1)
-						{
-							cssClass += " last";
-						}
-						tag.put("class", cssClass.trim());
-					}
-
-				};
+				return newTabContainer(iteration);
 			}
 
 		});
 	}
+
+
+	/**
+	 * Generates a loop item used to represent a specific tab's <code>li</code> element.
+	 * 
+	 * @param tabIndex
+	 * @return new loop item
+	 */
+	protected LoopItem newTabContainer(int tabIndex)
+	{
+		return new LoopItem(tabIndex)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				String cssClass = (String)tag.getString("class");
+				if (cssClass == null)
+				{
+					cssClass = " ";
+				}
+				cssClass += " tab" + getIteration();
+
+				if (getIteration() == getSelectedTab())
+				{
+					cssClass += " selected";
+				}
+				if (getIteration() == getTabs().size() - 1)
+				{
+					cssClass += " last";
+				}
+				tag.put("class", cssClass.trim());
+			}
+
+		};
+	}
+
 
 	// @see org.apache.wicket.Component#onAttach()
 	protected void onBeforeRender()
