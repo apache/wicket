@@ -522,6 +522,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected void localize(Map widgetProperties)
 	{
 		DateFormatSymbols dfSymbols = new DateFormatSymbols(getLocale());
+		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()))
+		{
+			dfSymbols.setShortWeekdays(new String[] { "", "\u65E5", "\u4E00", "\u4E8C", "\u4E09",
+					"\u56DB", "\u4E94", "\u516D" });
+		}
 		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
