@@ -30,7 +30,7 @@ Wicket.WUPB= {
 	},
 	
 	start : function(def) {
-		Wicket.WUPB.get(def.formid).submit();
+		//Wicket.WUPB.get(def.formid).submit();
 		Wicket.WUPB.get(def.statusid).innerHTML='Upload starting...';
 	    Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width='0%';
 	    
