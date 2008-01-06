@@ -1274,7 +1274,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	// called after readObject
-	private Object readResolve() throws ObjectStreamException
+	/**
+	 * @return
+	 * @throws ObjectStreamException
+	 */
+	public Object readResolve() throws ObjectStreamException
 	{
 		if (pageToResolve == null)
 		{
