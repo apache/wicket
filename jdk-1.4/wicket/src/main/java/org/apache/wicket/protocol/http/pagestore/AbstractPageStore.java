@@ -67,7 +67,7 @@ public abstract class AbstractPageStore implements IPageStore
 		 * @param data
 		 */
 		public SerializedPage(int pageId, String pageMapName, int versionNumber,
-				int ajaxVersionNumber, byte[] data)
+			int ajaxVersionNumber, byte[] data)
 		{
 			this.pageId = pageId;
 			this.pageMapName = pageMapName;
@@ -83,10 +83,10 @@ public abstract class AbstractPageStore implements IPageStore
 		 */
 		public SerializedPage(Page page)
 		{
-			this.pageId = page.getNumericId();
-			this.pageMapName = page.getPageMapName();
-			this.versionNumber = page.getCurrentVersionNumber();
-			this.ajaxVersionNumber = page.getAjaxVersionNumber();
+			pageId = page.getNumericId();
+			pageMapName = page.getPageMapName();
+			versionNumber = page.getCurrentVersionNumber();
+			ajaxVersionNumber = page.getAjaxVersionNumber();
 		}
 
 		/**
@@ -140,7 +140,7 @@ public abstract class AbstractPageStore implements IPageStore
 		public int hashCode()
 		{
 			return pageId * 1931 + versionNumber * 13 + ajaxVersionNumber * 301 +
-					(pageMapName != null ? pageMapName.hashCode() : 0);
+				(pageMapName != null ? pageMapName.hashCode() : 0);
 		}
 
 		public boolean equals(Object obj)
@@ -154,9 +154,8 @@ public abstract class AbstractPageStore implements IPageStore
 			SerializedPage rhs = (SerializedPage)obj;
 
 			return pageId == rhs.pageId &&
-					(pageMapName == rhs.pageMapName || (pageMapName != null && pageMapName
-							.equals(rhs.pageMapName))) && versionNumber == rhs.versionNumber &&
-					ajaxVersionNumber == rhs.ajaxVersionNumber;
+				(pageMapName == rhs.pageMapName || (pageMapName != null && pageMapName.equals(rhs.pageMapName))) &&
+				versionNumber == rhs.versionNumber && ajaxVersionNumber == rhs.ajaxVersionNumber;
 		}
 	};
 
@@ -256,8 +255,8 @@ public abstract class AbstractPageStore implements IPageStore
 	{
 		private SerializedPage current;
 
-		private List previous = new ArrayList();
-		private List completed = new ArrayList();
+		private final List previous = new ArrayList();
+		private final List completed = new ArrayList();
 
 
 		protected void onPageSerialized(SerializedPage page)
@@ -272,7 +271,7 @@ public abstract class AbstractPageStore implements IPageStore
 		 */
 		public PageSerializer(SerializedPage page)
 		{
-			this.current = page;
+			current = page;
 		}
 
 		/**
@@ -304,7 +303,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		public Page deserializePage(int id, String pageMapName, Page page, ObjectInputStream stream)
-				throws IOException, ClassNotFoundException
+			throws IOException, ClassNotFoundException
 		{
 			HashMap pageMaps = (HashMap)SecondLevelCacheSessionStore.getUsedPages().get();
 			if (pageMaps == null)
@@ -318,18 +317,18 @@ public abstract class AbstractPageStore implements IPageStore
 				pages = new IntHashMap();
 				pageMaps.put(pageMapName, pages);
 			}
-			pages.put(id, page);
 			boolean b = stream.readBoolean();
 			if (b == false)
 			{
 				stream.defaultReadObject();
-				return page;
 			}
 			else
 			{
 				// the object will resolve to a Page (probably PageHolder)
-				return (Page)stream.readObject();
+				page = (Page)stream.readObject();
 			}
+			pages.put(id, page);
+			return page;
 		}
 	}
 
@@ -346,8 +345,8 @@ public abstract class AbstractPageStore implements IPageStore
 
 		PageHolder(Page page)
 		{
-			this.pageid = page.getNumericId();
-			this.pagemap = page.getPageMapName();
+			pageid = page.getNumericId();
+			pagemap = page.getPageMapName();
 		}
 
 		protected Object readResolve() throws ObjectStreamException
