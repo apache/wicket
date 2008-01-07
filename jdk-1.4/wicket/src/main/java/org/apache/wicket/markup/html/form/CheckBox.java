@@ -226,11 +226,4 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
-	 */
-	public boolean checkRequired()
-	{
-		return true;
-	}
 }
