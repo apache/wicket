@@ -196,6 +196,8 @@ public class MockWebApplication
 
 		this.application.getRequestCycleSettings().setRenderStrategy(
 			IRequestCycleSettings.ONE_PASS_RENDER);
+		// Don't buffer the response, as this can break ajax tests: see WICKET-1264
+		this.application.getRequestCycleSettings().setBufferResponse(false);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 
