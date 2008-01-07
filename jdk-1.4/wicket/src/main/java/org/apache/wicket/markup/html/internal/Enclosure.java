@@ -181,7 +181,7 @@ public class Enclosure extends WebMarkupContainer
 		}
 		else
 		{
-			markupStream.skipUntil(openTag.getName());
+			markupStream.skipToMatchingCloseTag(openTag);
 		}
 	}
 }
