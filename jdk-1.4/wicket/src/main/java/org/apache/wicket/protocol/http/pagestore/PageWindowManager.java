@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.pagestore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,15 +32,19 @@ import org.apache.wicket.util.collections.IntHashMap;
  * 
  * @author Matej Knopp
  */
-public class PageWindowManager
+public class PageWindowManager implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Contains information about a page inside the file.
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static class PageWindowInternal
+	private static class PageWindowInternal implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		// id of page or -1 if the window is empty
 		private int pageId;
 
@@ -104,7 +109,7 @@ public class PageWindowManager
 	}
 
 	private int getWindowIndex(List /* Integer */indices, int pageId, int versionNumber,
-			int ajaxVersionNumber)
+		int ajaxVersionNumber)
 	{
 		int result = -1;
 
@@ -117,7 +122,7 @@ public class PageWindowManager
 				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
 
 				if (window.pageId == pageId && window.versionNumber == versionNumber &&
-						window.ajaxVersionNumber == ajaxVersionNumber)
+					window.ajaxVersionNumber == ajaxVersionNumber)
 				{
 					result = currentIndex;
 					break;
@@ -157,7 +162,7 @@ public class PageWindowManager
 				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
 
 				if (window.pageId == pageId && window.versionNumber == versionNumber &&
-						window.ajaxVersionNumber > lastAjaxVersion)
+					window.ajaxVersionNumber > lastAjaxVersion)
 				{
 					result = currentIndex;
 					lastAjaxVersion = window.ajaxVersionNumber;
@@ -443,7 +448,7 @@ public class PageWindowManager
 	 * @return
 	 */
 	public PageWindow createPageWindow(int pageId, int versionNumber, int ajaxVersionNumber,
-			int size)
+		int size)
 	{
 		int index = getWindowIndex(pageId, versionNumber, ajaxVersionNumber);
 
