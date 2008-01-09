@@ -26,7 +26,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
+import org.apache.wicket.protocol.http.pagestore.SerializedPagesCache.SerializedPageWithSession;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
@@ -805,7 +805,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	{
 		List pages = serializePage(page);
 
-		cacheSerializedPage(sessionId, page, pages);
+		serializedPagesCache.storePage(sessionId, page, pages);
 
 		onPagesSerialized(sessionId, pages);
 
@@ -1023,141 +1023,187 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * @return
 	 */
-	public int getLastRecentlySerializedPagesCacheSize()
+	protected int getLastRecentlySerializedPagesCacheSize()
 	{
 		return lastRecentlySerializedPagesCacheSize;
 	}
 
-	private final List /* SerializedPageWithSession */lastRecentlySerializedPagesCache = new ArrayList(
-		lastRecentlySerializedPagesCacheSize);
-
-	private SerializedPageWithSession removePageFromLastRecentlySerializedPagesCache(Page page)
-	{
-		for (Iterator i = lastRecentlySerializedPagesCache.iterator(); i.hasNext();)
-		{
-			SerializedPageWithSession entry = (SerializedPageWithSession)i.next();
-			if (entry != null && entry.page.get() == page)
-			{
-				i.remove();
-				return entry;
-			}
-		}
-		return null;
-	}
+	private final SerializedPagesCache serializedPagesCache = new SerializedPagesCache(
+		getLastRecentlySerializedPagesCacheSize());
 
 	/**
-	 * Store the serialized page in the request metadata,.
+	 * Strips the actual serialized page data. This is used to store
+	 * {@link SerializedPageWithSession} instance in http session to reduce the memory consumption.
+	 * The data can be stripped because it's already stored on disk
 	 * 
-	 * @param sessionId
 	 * @param page
-	 * @param pagesList
+	 * @return
 	 */
-	private void cacheSerializedPage(String sessionId, Page page,
-		List /* <SerializedPage> */pagesList)
+	private SerializedPageWithSession stripSerializedPage(SerializedPageWithSession page)
 	{
-		if (getLastRecentlySerializedPagesCacheSize() > 0)
+		List pages = new ArrayList(page.pages.size());
+		for (Iterator i = page.pages.iterator(); i.hasNext();)
 		{
-			SerializedPageWithSession entry = new SerializedPageWithSession(sessionId, page,
-				pagesList);
+			SerializedPage sp = (SerializedPage)i.next();
+			pages.add(new SerializedPage(sp.getPageId(), sp.getPageMapName(),
+				sp.getVersionNumber(), sp.getAjaxVersionNumber(), null));
+		}
+		return new SerializedPageWithSession(page.sessionId, page.pageId, page.pageMapName,
+			page.versionNumber, page.ajaxVersionNumber, pages);
+	}
 
-			synchronized (lastRecentlySerializedPagesCache)
+	private byte[] getPageData(String sessionId, int pageId, String pageMapName, int versionNumber,
+		int ajaxVersionNumber)
+	{
+		SessionEntry entry = getSessionEntry(sessionId, false);
+		if (entry != null)
+		{
+			byte[] data;
+
+			if (isSynchronous())
 			{
-				removePageFromLastRecentlySerializedPagesCache(page);
-				lastRecentlySerializedPagesCache.add(entry);
-				if (lastRecentlySerializedPagesCache.size() > getLastRecentlySerializedPagesCacheSize())
+				data = entry.loadPage(pageMapName, pageId, versionNumber, ajaxVersionNumber);
+			}
+			else
+			{
+				// we need to make sure that the there are no pending pages to
+				// be saved before loading a page
+				List pages = getPagesToSaveList(sessionId);
+				synchronized (pages)
 				{
-					lastRecentlySerializedPagesCache.remove(0);
+					flushPagesToSaveList(sessionId, pages);
+					data = entry.loadPage(pageMapName, pageId, versionNumber, ajaxVersionNumber);
 				}
 			}
+			return data;
+		}
+		else
+		{
+			return null;
 		}
 	}
 
 	/**
+	 * Loads the data stripped by
+	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}.
 	 * 
-	 * @author Matej Knopp
+	 * @param page
+	 * @return
 	 */
-	private static class SerializedPageWithSession implements Serializable
+	private SerializedPageWithSession restoreStrippedSerializedPage(SerializedPageWithSession page)
 	{
-		private static final long serialVersionUID = 1L;
-
-		// this is used for lookup on pagemap serialization. We don't have the
-		// session id at that point, because it can happen outside the request
-		// thread. We only have the page instance and we need to use it as a key
-		private final transient WeakReference /* <Page> */page;
-
-		// list of serialized pages
-		private final List pages;
-
-		private final String sessionId;
-
-		// after deserialization, we need to be able to know which page to load
-		private final int pageId;
-		private final String pageMapName;
-		private final int versionNumber;
-		private final int ajaxVersionNumber;
-
-		private SerializedPageWithSession(String sessionId, Page page,
-			List /* <SerializablePage> */pages)
+		List pages = new ArrayList(page.pages.size());
+		for (Iterator i = page.pages.iterator(); i.hasNext();)
 		{
-			this.sessionId = sessionId;
-			pageId = page.getNumericId();
-			pageMapName = page.getPageMapName();
-			versionNumber = page.getCurrentVersionNumber();
-			ajaxVersionNumber = page.getAjaxVersionNumber();
-			this.pages = new ArrayList(pages);
-			this.page = new WeakReference(page);
+			SerializedPage sp = (SerializedPage)i.next();
+			byte data[] = getPageData(page.sessionId, sp.getPageId(), sp.getPageMapName(),
+				sp.getVersionNumber(), sp.getAjaxVersionNumber());
+
+			pages.add(new SerializedPage(sp.getPageId(), sp.getPageMapName(),
+				sp.getVersionNumber(), sp.getAjaxVersionNumber(), data));
 		}
 
-		public String toString()
-		{
-			return getClass().getName() + " [ pageId:" + pageId + ", pageMapName: " + pageMapName +
-				", session: " + sessionId + "]";
-		}
-	};
+		return new SerializedPageWithSession(page.sessionId, page.pageId, page.pageMapName,
+			page.versionNumber, page.ajaxVersionNumber, pages);
+	}
+
 
 	/**
-	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore#prepareForSerialization(org.apache.wicket.Page)
+	 * {@inheritDoc}
 	 */
-	public Serializable prepareForSerialization(Page page)
+	public Serializable prepareForSerialization(String sessionId, Object page)
 	{
-		Serializable result = page;
-
-		if (getLastRecentlySerializedPagesCacheSize() > 0)
+		SerializedPageWithSession result = null;
+		if (page instanceof Page)
 		{
-			SerializedPageWithSession entry;
-			synchronized (lastRecentlySerializedPagesCache)
+			result = serializedPagesCache.getPage((Page)page);
+			if (result == null)
 			{
-				entry = removePageFromLastRecentlySerializedPagesCache(page);
+				List serialized = serializePage((Page)page);
+				result = serializedPagesCache.storePage(sessionId, (Page)page, serialized);
 			}
-
-			if (entry != null)
+		}
+		else if (page instanceof SerializedPageWithSession)
+		{
+			SerializedPageWithSession serialized = (SerializedPageWithSession)page;
+			if (serialized.page.get() == SerializedPageWithSession.NO_PAGE)
 			{
-				result = entry;
+				// stripped page, need to restore it first
+				result = restoreStrippedSerializedPage(serialized);
+			}
+			else
+			{
+				result = serialized;
 			}
 		}
 
-		return result;
+		if (result != null)
+		{
+			return result;
+		}
+		else
+		{
+			return (Serializable)page;
+		}
+	}
+
+	protected boolean storeAfterSessionReplication()
+	{
+		return true;
 	}
 
 	/**
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore#restoreAfterSerialization(java.io.Serializable)
 	 */
-	public Page restoreAfterSerialization(Serializable serializable)
+	public Object restoreAfterSerialization(Serializable serializable)
 	{
-		if (serializable instanceof Page)
+		if (!storeAfterSessionReplication() || serializable instanceof Page)
 		{
-			return (Page)serializable;
+			return serializable;
 		}
 		else if (serializable instanceof SerializedPageWithSession)
 		{
 			SerializedPageWithSession page = (SerializedPageWithSession)serializable;
-			storeSerializedPages(page.sessionId, page.pages);
-			return getPage(page.sessionId, page.pageMapName, page.pageId, page.versionNumber,
-				page.ajaxVersionNumber);
+			if (page.page == null || page.page.get() != SerializedPageWithSession.NO_PAGE)
+			{
+				storeSerializedPages(page.sessionId, page.pages);
+				return stripSerializedPage(page);
+			}
+			else
+			{
+				return page;
+			}
 		}
 		else
 		{
-			throw new IllegalArgumentException("Unknown object type");
+			String type = serializable != null ? serializable.getClass().getName() : null;
+			throw new IllegalArgumentException("Unknown object type " + type);
+		}
+	}
+
+	public Page convertToPage(Object page)
+	{
+		if (page instanceof Page)
+		{
+			return (Page)page;
+		}
+		else if (page instanceof SerializedPageWithSession)
+		{
+			SerializedPageWithSession serialized = (SerializedPageWithSession)page;
+
+			if (serialized.page == null ||
+				serialized.page.get() != SerializedPageWithSession.NO_PAGE)
+			{
+				storeSerializedPages(serialized.sessionId, serialized.pages);
+			}
+
+			return getPage(serialized.sessionId, serialized.pageMapName, serialized.pageId,
+				serialized.versionNumber, serialized.ajaxVersionNumber);
+		}
+		else
+		{
+			String type = page != null ? page.getClass().getName() : null;
+			throw new IllegalArgumentException("Unknown object type + type");
 		}
 	}
 
