@@ -33,6 +33,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
@@ -75,8 +76,8 @@ import org.apache.wicket.version.undo.Change;
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class FormComponent extends LabeledWebMarkupContainer
-		implements
-			IFormVisitorParticipant
+	implements
+		IFormVisitorParticipant
 {
 	/**
 	 * Visitor for traversing form components
@@ -196,7 +197,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		public String substitute(String string, Map vars) throws IllegalStateException
 		{
 			return new MapVariableInterpolator(string, addDefaultVars(vars), Application.get()
-					.getResourceSettings().getThrowExceptionOnMissingResource()).toString();
+				.getResourceSettings()
+				.getThrowExceptionOnMissingResource()).toString();
 		}
 
 		/**
@@ -354,19 +356,19 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 *            The visitor to call
 	 */
 	public static final void visitFormComponentsPostOrder(Component component,
-			final FormComponent.IVisitor visitor)
+		final FormComponent.IVisitor visitor)
 	{
 		if (visitor == null)
 		{
 			throw new IllegalArgumentException("Argument `visitor` cannot be null");
 		}
 
-
 		visitFormComponentsPostOrderHelper(component, visitor);
 	}
 
+
 	private static final Object visitFormComponentsPostOrderHelper(Component component,
-			final FormComponent.IVisitor visitor)
+		final FormComponent.IVisitor visitor)
 	{
 		if (component instanceof MarkupContainer)
 		{
@@ -567,11 +569,32 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	public Form getForm()
 	{
-		// Look for parent form
-		final Form form = (Form)findParent(Form.class);
+		class FindFormVisitor implements Component.IVisitor
+		{
+			Form form = null;
+
+			public Object component(Component component)
+			{
+				form = (Form)component;
+				return Component.IVisitor.STOP_TRAVERSAL;
+			}
+		}
+
+		Form form = (Form)findParent(Form.class);
 		if (form == null)
 		{
-			throw new WicketRuntimeException("Could not find Form parent for " + this);
+			// check whether the form is a child of a surrounding border
+			final Border border = (Border)findParent(Border.class);
+			if (border != null)
+			{
+				FindFormVisitor formVisitor = new FindFormVisitor();
+				border.visitChildren(Form.class, formVisitor);
+				form = formVisitor.form;
+			}
+			if (form == null)
+			{
+				throw new WicketRuntimeException("Could not find Form parent for " + this);
+			}
 		}
 		return form;
 	}
@@ -627,6 +650,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	public String getInputName()
 	{
+		// TODO: keep this in sync with AbstractSubmitLink#getInputName
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
 		Component c = this;
@@ -930,7 +954,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		else
 		{
 			throw new UnsupportedOperationException("FormComponent " + getClass() +
-					" does not support cookies");
+				" does not support cookies");
 		}
 		return this;
 	}
@@ -946,7 +970,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		if (!required && getType() != null && getType().isPrimitive())
 		{
 			throw new WicketRuntimeException(
-					"FormComponent can't be not required when the type is primitive class: " + this);
+				"FormComponent can't be not required when the type is primitive class: " + this);
 		}
 		if (required != isRequired())
 		{
@@ -1222,8 +1246,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		catch (NumberFormatException e)
 		{
 			throw new IllegalArgumentException(
-					exceptionMessage("Internal error.  Request string '" + string +
-							"' not a valid integer"));
+				exceptionMessage("Internal error.  Request string '" + string +
+					"' not a valid integer"));
 		}
 	}
 
@@ -1247,7 +1271,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 			catch (NumberFormatException e)
 			{
 				throw new IllegalArgumentException(exceptionMessage("Request string '" + string +
-						"' is not a valid integer"));
+					"' is not a valid integer"));
 			}
 		}
 		else
@@ -1404,7 +1428,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation " +
-					validator.getClass().getName() + " on component " + getPath(), e);
+				validator.getClass().getName() + " on component " + getPath(), e);
 		}
 	}
 

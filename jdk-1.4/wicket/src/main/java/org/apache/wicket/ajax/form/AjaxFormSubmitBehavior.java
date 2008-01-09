@@ -86,9 +86,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			if (cursor == null)
 			{
 				throw new IllegalStateException(
-						"form was not specified in the constructor and cannot "
-								+ "be found in the hierarchy of the component this behavior "
-								+ "is attached to");
+					"form was not specified in the constructor and cannot "
+						+ "be found in the hierarchy of the component this behavior "
+						+ "is attached to");
 			}
 			else
 			{
@@ -106,12 +106,13 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
-				formId).append("', '").append(url).append("', ");
+			formId).append("', '").append(url).append("', ");
 
 		if (getComponent() instanceof IFormSubmittingComponent)
 		{
-			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName())
-					.append("' ");
+			call.append("'")
+				.append(((IFormSubmittingComponent)getComponent()).getInputName())
+				.append("' ");
 		}
 		else
 		{
@@ -124,6 +125,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		getForm().onFormSubmitted();
+		if (!getForm().isSubmitted())
+		{ // only process the form submission if the form was actually submitted -> needs to be
+			// enabled and visible
+			return;
+		}
 		if (!getForm().hasError())
 		{
 			onSubmit(target);
