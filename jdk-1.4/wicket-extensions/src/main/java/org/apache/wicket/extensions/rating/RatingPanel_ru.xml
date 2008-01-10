@@ -17,6 +17,6 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="rating.simple">??????? ?????? {0,number,#.#}</entry>
-	<entry key="rating.complete">??????? ?????? {0,number,#.#} ?? {1,number,#} ?????(??)(?)</entry>
+	<entry key="rating.simple">Уровень оценки {0,number,#.#}</entry>
+	<entry key="rating.complete">Уровень оценки {0,number,#.#} из {1,number,#} голос(ов)(а)</entry>
 </properties>
