@@ -17,6 +17,6 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="org.apache.wicket.mfu.caption.unlimited">?????:</entry>
-	<entry key="org.apache.wicket.mfu.caption.limited">????? (????? ?? ?????? ${max}): </entry>
+	<entry key="org.apache.wicket.mfu.caption.unlimited">Файлы:</entry>
+	<entry key="org.apache.wicket.mfu.caption.limited">Файлы (всего не больше ${max}): </entry>
 </properties>
