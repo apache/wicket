@@ -17,12 +17,14 @@
 package org.apache.wicket.util.convert;
 
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.util.convert.converters.BigDecimalConverter;
 import org.apache.wicket.util.convert.converters.BooleanConverter;
 import org.apache.wicket.util.convert.converters.ByteConverter;
 import org.apache.wicket.util.convert.converters.CharacterConverter;
@@ -142,6 +144,7 @@ public class ConverterLocator implements IConverterLocator
 		set(java.sql.Date.class, new SqlDateConverter());
 		set(java.sql.Time.class, new SqlTimeConverter());
 		set(java.sql.Timestamp.class, new SqlTimestampConverter());
+		set(BigDecimal.class, new BigDecimalConverter());
 	}
 
 	/**
