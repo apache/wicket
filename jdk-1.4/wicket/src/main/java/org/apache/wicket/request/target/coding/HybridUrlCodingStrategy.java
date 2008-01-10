@@ -326,11 +326,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		return (PageParameters)page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
 	}
 
-	// meta data key to store PageParameters in page instance. This is used to
-	// save the PageParameters that were
-	// used to create the page instance so that later we can used them when
-	// generating page URL
-	private static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
+	/**
+	 * Meta data key to store PageParameters in page instance. This is used to save the
+	 * PageParameters that were used to create the page instance so that later they can be used when
+	 * generating page URL
+	 */
+	public static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
 
 	private static class PageParametersMetaDataKey extends MetaDataKey
 	{
