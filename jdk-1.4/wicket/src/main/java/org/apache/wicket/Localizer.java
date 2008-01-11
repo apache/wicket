@@ -318,15 +318,18 @@ public class Localizer
 		String cacheKey = key;
 		if (component != null)
 		{
-			cacheKey += '-' + component.getPageRelativePath();
+			AppendingStringBuffer buffer = new AppendingStringBuffer(key);
 
-			Page page = component.findPage();
-			if (page != null)
+			Component cursor = component;
+			while (cursor != null)
 			{
-				cacheKey += '-' + page.getClass().getName();
+				buffer.append("-").append(cursor.getClass().getName());
+				buffer.append(":").append(cursor.getId());
+				cursor = cursor.getParent();
 			}
 
-			cacheKey += "-" + component.getLocale();
+			buffer.append("-").append(component.getLocale());
+			cacheKey = buffer.toString();
 		}
 		return cacheKey;
 	}
