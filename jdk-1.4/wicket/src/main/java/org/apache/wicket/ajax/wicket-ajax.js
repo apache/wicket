@@ -173,6 +173,21 @@ Wicket.FunctionsExecuter.prototype = {
 }
 
 Wicket.replaceOuterHtmlIE = function(element, text) {						
+
+	// replaces all <iframe references with <__WICKET_JS_REMOVE_X9F4A__iframe text
+	var marker = "__WICKET_JS_REMOVE_X9F4A__"; 					
+	function markIframe(text) {
+		var t = text;
+		var r = /<\s*iframe/i;
+		while ((m = t.match(r)) != null) {			
+			t = Wicket.replaceAll(t, m[0], "<" + marker + m[0].substring(1));            
+		}
+        return t;
+	}
+	
+	function removeIframeMark(text) {
+		return Wicket.replaceAll(text, marker, "");
+	}
 							
 	if (element.tagName == "SCRIPT") {
 		// we need to get the javascript content, so we create an invalid DOM structure,
@@ -205,8 +220,8 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		// in case the element is not any of these																									
 						
 		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
-		// because otherwise IE just swallows the <script> tags (sometimes) 
-		tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
+		// because otherwise IE just swallows the <script> tags (sometimes)		
+		tempDiv.innerHTML = '<table style="display:none">' + markIframe(text) + '</table>';
 						
 		// now copy the script tags to array (needed later for script execution)
 		var s = tempDiv.getElementsByTagName("script");				
@@ -227,7 +242,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	
 		// same trick as with before, this time we need a div to to create invalid markup
 		// (otherwise we wouldn't be able to get the script tags)
-		tempDiv.innerHTML = '<div style="display:none">' + text + '</div>';
+		tempDiv.innerHTML = '<div style="display:none">' + markIframe(text) + '</div>';
 	
 		// now copy the script tags to array (needed later for script execution)
 		var s = tempDiv.getElementsByTagName("script");
@@ -268,7 +283,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	tempParent = null;
       		
 	for (i = 0; i < scripts.length; ++i) {
-		Wicket.Head.addJavascripts(scripts[i]); 
+		Wicket.Head.addJavascripts(scripts[i], removeIframeMark); 
 	}									
 }
 
@@ -1461,7 +1476,7 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 }
 
 // Goes through all script elements contained by the element and add them to head
-Wicket.Head.addJavascripts = function(element) {	
+Wicket.Head.addJavascripts = function(element, contentFilter) {	
 	function add(element) {
 		var src = element.getAttribute("src");
 		
@@ -1476,6 +1491,10 @@ Wicket.Head.addJavascripts = function(element) {
 			if (content == null || content == "")
 				content = element.text;
 			
+			if (typeof(contentFilter) == "function") {
+				content = contentFilter(content);
+			}
+			
 			Wicket.Head.addJavascript(content);
 		}		
 	}
@@ -1484,7 +1503,7 @@ Wicket.Head.addJavascripts = function(element) {
 	    element.tagName.toLowerCase() == "script") {
 		add(element);
 	} else {
-		// we need to check if there are any children, becase Safari
+		// we need to check if there are any children, because Safari
 		// aborts when the element is a text node			
 		if (element.childNodes.length > 0) {			
 			var scripts = element.getElementsByTagName("script");
