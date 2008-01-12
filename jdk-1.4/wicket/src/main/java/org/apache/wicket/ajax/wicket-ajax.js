@@ -38,6 +38,9 @@ if (typeof(Wicket) == "undefined")
 
 
 Wicket.$ = function(arg) {
+	if (arg == null || typeof(arg) == "undefined") {
+		return null;
+	}
 	if (arguments.length > 1) {
 		var e=[];
 		for (var i=0; i<arguments.length; i++) {
@@ -53,7 +56,7 @@ Wicket.$ = function(arg) {
 
 // returns if the element belongs to current document
 // if the argument is not element, function returns true
-Wicket.$$ = function(element) {
+Wicket.$$ = function(element) {	
 	if (typeof(element) == "string") {		
 		element = Wicket.$(element);
 	}	
@@ -1911,12 +1914,14 @@ Wicket.Focus = {
 		}
 		return;
 	},
+
 	
 	requestFocus: function()
 	{
 		if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 		{ 
 			var toFocus = Wicket.$(Wicket.Focus.lastFocusId);
+			
 			if (toFocus != null && typeof(toFocus) != "undefined") {
 				Wicket.Log.info("Calling focus on " + Wicket.Focus.lastFocusId);
 				try {

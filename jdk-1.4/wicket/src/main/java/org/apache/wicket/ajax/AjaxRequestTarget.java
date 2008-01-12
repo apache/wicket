@@ -305,8 +305,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (childCriteria == null)
 		{
 			throw new IllegalArgumentException(
-					"Argument `childCriteria` cannot be null. If you want to traverse all components use `" +
-							Component.class.getName() + ".class` as the value for this argument");
+				"Argument `childCriteria` cannot be null. If you want to traverse all components use `" +
+					Component.class.getName() + ".class` as the value for this argument");
 		}
 
 
@@ -337,8 +337,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (component.getOutputMarkupId() == false)
 		{
 			throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-							component.toString());
+				"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+					component.toString());
 		}
 		addComponent(component, component.getMarkupId());
 	}
@@ -369,9 +369,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		else if (component instanceof AbstractRepeater)
 		{
 			throw new IllegalArgumentException(
-					"Component " +
-							component.getClass().getName() +
-							" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
+				"Component " +
+					component.getClass().getName() +
+					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
 		markupIdToComponent.put(markupId, component);
@@ -400,11 +400,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (component != null && component.getOutputMarkupId() == false)
 		{
 			throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-							component.toString());
+				"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+					component.toString());
 		}
-		final String id = component != null ? component.getMarkupId() : null;
-		appendJavascript("Wicket.Focus.setFocusOnId('" + id + "');");
+		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
+		appendJavascript("Wicket.Focus.setFocusOnId(" + id + ");");
 	}
 
 
@@ -446,8 +446,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
 			return markupIdToComponent.equals(that.markupIdToComponent) &&
-					prependJavascripts.equals(that.prependJavascripts) &&
-					appendJavascripts.equals(that.appendJavascripts);
+				prependJavascripts.equals(that.prependJavascripts) &&
+				appendJavascripts.equals(that.appendJavascripts);
 		}
 		return false;
 	}
@@ -611,8 +611,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent +
-				"], prependJavascript [" + prependJavascripts + "], appendJavascript [" +
-				appendJavascripts + "]";
+			"], prependJavascript [" + prependJavascripts + "], appendJavascript [" +
+			appendJavascripts + "]";
 	}
 
 	/**
@@ -667,13 +667,13 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 *            component to render
 	 */
 	private void respondComponent(final Response response, final String markupId,
-			final Component component)
+		final Component component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
 			throw new IllegalStateException(
-					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: " +
-							component.toString());
+				"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: " +
+					component.toString());
 		}
 
 		component.setOutputMarkupId(true);
@@ -689,7 +689,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (page == null)
 		{
 			throw new IllegalStateException(
-					"Ajax request attempted on a component that is not associated with a Page");
+				"Ajax request attempted on a component that is not associated with a Page");
 		}
 
 		page.startComponentRender(component);
@@ -737,7 +737,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			if (headerRendering == false)
 			{
 				throw new WicketRuntimeException(
-						"Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
+					"Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
 			}
 		}
 
