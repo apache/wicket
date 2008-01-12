@@ -23,24 +23,29 @@
 
 /**
  * In case wicket-ajax.js is not yet loaded, create 
- * Class.create function and Wicket namespace. 
+ * Wicket namespace and Wicket.Class.create. 
  */  
-if (typeof(Class) == "undefined") {
-	var Class = {
+if (typeof(Wicket) == "undefined") {
+	Wicket = { };
+}
+
+
+if (Wicket.Class == null) {
+	Wicket.Class = {
 		create: function() {
 			return function() {
 				this.initialize.apply(this, arguments);
 			}
 		}
-	}
+	};
 }
 
-if (typeof(Wicket) == "undefined")
-	Wicket = { };
+if (Wicket.Object == null) {
+	Wicket.Object = { };
+}
 
-
-if (typeof(Object.extend) == "undefined") {
-	Object.extend = function(destination, source) {
+if (Wicket.Object.extend == null) {
+	Wicket.Object.extend = function(destination, source) {
 		for (property in source) {
 			destination[property] = source[property];
 		}
@@ -185,7 +190,7 @@ Wicket.Iframe = {
  * Draggable (and optionally resizable) window that can either hold a div
  * or an iframe. 
  */
-Wicket.Window = Class.create();
+Wicket.Window = Wicket.Class.create();
 
 /**
  * Display confirmation dialog if the user is about to leave a page (IE and FF).
@@ -271,7 +276,7 @@ Wicket.Window.prototype = {
 	initialize: function(settings) {
 				
 		// override default settings with user settings
-		this.settings = Object.extend({
+		this.settings = Wicket.Object.extend({
 			
 			minWidth: 200,  /* valid only if resizable */
 			minHeight: 150, /* valid only if resizable */
@@ -1145,7 +1150,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
  * Transparent or semi-transparent masks that prevents user from interacting
  * with the portion of page behind a window.  
  */
-Wicket.Window.Mask = Class.create();
+Wicket.Window.Mask = Wicket.Class.create();
 
 Wicket.Window.Mask.zIndex = 20000;
 
