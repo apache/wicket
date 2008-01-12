@@ -66,7 +66,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * Represents an unlimited max count of uploads
 	 */
-	public static final int UNLIMITED = 1;
+	public static final int UNLIMITED = -1;
 
 	/**
 	 * Resource key used to retrieve caption message for when a limit on the number of uploads is
@@ -108,7 +108,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	 */
 	public MultiFileUploadField(String id)
 	{
-		this(id, null, -1);
+		this(id, null, UNLIMITED);
 	}
 
 	/**
