@@ -2011,7 +2011,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public boolean isVersioned()
 	{
 		// Is the component itself versioned?
-		if (!getFlag(FLAG_VERSIONED) || !getFlag(FLAG_HAS_BEEN_RENDERED))
+		if (!getFlag(FLAG_VERSIONED))
 		{
 			return false;
 		}
