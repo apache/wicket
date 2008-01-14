@@ -36,7 +36,7 @@ import org.apache.wicket.markup.html.PackageResource;
  * but the initializer that property denotes can delegate to other initializers of that library.
  * </p>
  * <p>
- * If an initializer also implement {@link IDestroyer}, the instance will be kept for destroying,
+ * If an initializer also implements {@link IDestroyer}, the instance will be kept for destroying,
  * so that it may clean up whatever it did when initializing.
  * </p>
  * 
