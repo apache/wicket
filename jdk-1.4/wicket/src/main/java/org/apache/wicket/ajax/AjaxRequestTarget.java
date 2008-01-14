@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -1027,5 +1028,18 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the HTML id of the last focused element.
+	 * 
+	 * @return
+	 */
+	public String getLastFocusedElementId()
+	{
+		String id = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+			.getHttpServletRequest()
+			.getHeader("Wicket-FocusedElementId");
+		return Strings.isEmpty(id) ? null : id;
 	}
 }

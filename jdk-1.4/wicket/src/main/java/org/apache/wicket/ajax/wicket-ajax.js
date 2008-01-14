@@ -825,7 +825,8 @@ Wicket.Ajax.Request.prototype = {
 				t.open("GET", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
-				t.setRequestHeader("Wicket-Ajax", "true");
+				t.setRequestHeader("Wicket-Ajax", "true");				
+				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(null);
 				return true;
@@ -872,6 +873,7 @@ Wicket.Ajax.Request.prototype = {
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
+				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(body);
 				return true;
@@ -1918,6 +1920,19 @@ Wicket.Focus = {
 		}
 	},
 	
+	blur: function(event)
+	{ 
+		event = Wicket.fixEvent(event);		
+	
+	    // IE doesn't have the property "target".
+	    // Use "srcElement" instead.
+	    var target = event.target ? event.target : event.srcElement;
+	    if (target && Wicket.Focus.lastFocusId==target.id) {
+			Wicket.Focus.lastFocusId=null;
+			Wicket.Log.info("focus removed from " + target.id);
+		}
+	},
+	
 	setFocusOnId: function(id)
 	{
 		Wicket.Focus.lastFocusId=id;
@@ -1964,10 +1979,11 @@ Wicket.Focus = {
 	{
 		for (var i=0; i< elements.length; i++)
 		{
-		    if ( typeof(elements[i].focusSet) == "undefined")
+		    if (elements[i].wicketFocusSet != true)
 		    {
 		         Wicket.Event.add(elements[i],'focus',Wicket.Focus.setFocus);
-		         elements[i].focusSet = true;
+		         Wicket.Event.add(elements[i],'blur',Wicket.Focus.blur);		         
+		         elements[i].wicketFocusSet = true;
 		    }
 		}
 	},
