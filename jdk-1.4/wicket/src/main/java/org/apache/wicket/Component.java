@@ -2271,12 +2271,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 		markRendering();
 
 		setMarkupStream(markupStream);
-		setFlag(FLAG_HAS_BEEN_RENDERED, true);
 
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
 		if (isRenderAllowed() && isVisible())
 		{
+			setFlag(FLAG_HAS_BEEN_RENDERED, true);
+
 			// Rendering is beginning
 			if (log.isDebugEnabled())
 			{
