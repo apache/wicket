@@ -1391,21 +1391,32 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
 	 * the markup, or an automatically generated id - in that order.
 	 * <p>
-	 * If no explicit id is set this function will generate an id value that will be unique in the
-	 * page. This is the preferred way as there is no chance of id collision.
+	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return
+	 * null. Otherwise it will generate an id value that will be unique in the page. This is the
+	 * preferred way as there is no chance of id collision.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
 	 * 
+	 * @param createIfDoesNotExist
+	 *            When there is no existing markup id, determines whether it should be generated or
+	 *            whether <code>null</code> should be returned.
+	 * 
 	 * @return markup id of the component
 	 */
-	public String getMarkupId()
+
+	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		Object storedMarkupId = getMarkupIdImpl();
 
 		if (storedMarkupId instanceof String)
 		{
 			return (String)storedMarkupId;
+		}
+
+		if (storedMarkupId == null && createIfDoesNotExist == false)
+		{
+			return null;
 		}
 
 		final int generatedMarkupId = storedMarkupId instanceof Integer
@@ -1437,6 +1448,24 @@ public abstract class Component implements IClusterable, IConverterLocator
 		markupId = markupId.replace('-', '_');
 
 		return markupId;
+	}
+
+	/**
+	 * Retrieves id by which this component is represented within the markup. This is either the id
+	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
+	 * the markup, or an automatically generated id - in that order.
+	 * <p>
+	 * If no explicit id is set this function will generate an id value that will be unique in the
+	 * page. This is the preferred way as there is no chance of id collision.
+	 * <p>
+	 * Note: This method should only be called after the component or its parent have been added to
+	 * the page.
+	 * 
+	 * @return markup id of the component
+	 */
+	public String getMarkupId()
+	{
+		return getMarkupId(true);
 	}
 
 	/**
