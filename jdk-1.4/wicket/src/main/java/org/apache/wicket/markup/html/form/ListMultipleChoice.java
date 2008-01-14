@@ -124,7 +124,7 @@ public class ListMultipleChoice extends AbstractChoice
 	 *      List,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(final String id, IModel object, final List choices,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		super(id, object, choices, renderer);
 	}
@@ -188,8 +188,8 @@ public class ListMultipleChoice extends AbstractChoice
 		if (modelObject != null && !(modelObject instanceof Collection))
 		{
 			throw new WicketRuntimeException(
-					"Model object for a ListMultipleChoice must be a Collection (found " +
-							modelObject.getClass() + ")");
+				"Model object for a ListMultipleChoice must be a Collection (found " +
+					modelObject.getClass() + ")");
 		}
 		final Collection selectedValues = (Collection)modelObject;
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
@@ -217,8 +217,7 @@ public class ListMultipleChoice extends AbstractChoice
 		if (selected != null)
 		{
 			// Loop through ids
-			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer
-					.hasMoreTokens();)
+			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
 				if (id.equals(getChoiceRenderer().getIdValue(choice, index)))
@@ -313,7 +312,11 @@ public class ListMultipleChoice extends AbstractChoice
 		{
 			modelChanging();
 			selectedValues.clear();
-			selectedValues.addAll((Collection)getConvertedInput());
+			final Collection converted = (Collection)getConvertedInput();
+			if (converted != null)
+			{
+				selectedValues.addAll(converted);
+			}
 			modelChanged();
 			getModel().setObject(selectedValues);
 		}
