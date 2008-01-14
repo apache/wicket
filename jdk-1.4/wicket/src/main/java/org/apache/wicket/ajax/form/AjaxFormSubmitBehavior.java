@@ -73,7 +73,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		}
 	}
 
-	private Form getForm()
+	protected Form getForm()
 	{
 		if (form == null)
 		{
@@ -124,7 +124,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	protected void onEvent(AjaxRequestTarget target)
 	{
-		getForm().onFormSubmitted();
+		getForm().getRootForm().onFormSubmitted();
 		if (!getForm().isSubmitted())
 		{ // only process the form submission if the form was actually submitted -> needs to be
 			// enabled and visible
