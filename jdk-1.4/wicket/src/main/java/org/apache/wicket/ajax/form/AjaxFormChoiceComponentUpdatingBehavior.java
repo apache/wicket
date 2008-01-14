@@ -62,13 +62,15 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 		AppendingStringBuffer asb = new AppendingStringBuffer();
 		asb.append("function attachChoiceHandlers(markupid, callbackscript) {\n");
-		asb.append(" var choiceElement = document.getElementById(markupid);\n");
-		asb.append(" for( var x = 0; x < choiceElement.childNodes.length; x++ ) {\n");
-		asb
-				.append("   if (choiceElement.childNodes[x] && choiceElement.childNodes[x].tagName) {\n");
-		asb.append("     var tag = choiceElement.childNodes[x].tagName.toLowerCase();\n");
-		asb.append("     if (tag == 'input') {\n");
-		asb.append("       Wicket.Event.add(choiceElement.childNodes[x],'click', callbackscript);");
+		asb.append(" var choiceElementGroup = document.getElementById(markupid);\n");
+		asb.append(" for( var x = 0; x < choiceElementGroup.childNodes.length; x++ ) {\n");
+		asb.append("   var choiceElementList = choiceElementGroup.childNodes[x];");
+		asb.append("   for( var y = 0; y < choiceElementList.childNodes.length; y++ ) {\n");
+		asb.append("     if (choiceElementList.childNodes[y] && choiceElementList.childNodes[y].tagName) {\n");
+		asb.append("       var tag = choiceElementList.childNodes[y].tagName.toLowerCase();\n");
+		asb.append("       if (tag == 'input') {\n");
+		asb.append("         Wicket.Event.add(choiceElementList.childNodes[y],'click', callbackscript);");
+		asb.append("       }\n");
 		asb.append("     }\n");
 		asb.append("   }\n");
 		asb.append(" }\n");
@@ -77,7 +79,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		response.renderJavascript(asb, "attachChoice");
 
 		response.renderOnLoadJavascript("attachChoiceHandlers('" + getComponent().getMarkupId() +
-				"', function() {" + getEventHandler() + "});");
+			"', function() {" + getEventHandler() + "});");
 
 	}
 
@@ -118,11 +120,11 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 
 		if (!(getComponent() instanceof RadioChoice) &&
-				!(getComponent() instanceof CheckBoxMultipleChoice) &&
-				!(getComponent() instanceof RadioGroup) && !(getComponent() instanceof CheckGroup))
+			!(getComponent() instanceof CheckBoxMultipleChoice) &&
+			!(getComponent() instanceof RadioGroup) && !(getComponent() instanceof CheckGroup))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName() +
-					" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
+				" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
 		}
 
 		if (getComponent() instanceof RadioGroup || getComponent() instanceof CheckGroup)
@@ -146,9 +148,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	protected final CharSequence getEventHandler()
 	{
 		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
-				getCallbackUrl()).append(
-				"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId() +
-						"',false))"));
+			getCallbackUrl()).append(
+			"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId() +
+				"',false))"));
 	}
 
 	/**
