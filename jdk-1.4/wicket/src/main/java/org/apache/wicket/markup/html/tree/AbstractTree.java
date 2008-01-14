@@ -1216,6 +1216,16 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
+	 * INTERNAL
+	 * 
+	 * @param node
+	 */
+	public final void markNodeDirty(TreeNode node)
+	{
+		invalidateNode(node, false);
+	}
+
+	/**
 	 * Invalidates single node (without children). On the next render, this node will be updated.
 	 * Node will not be rebuilt, unless forceRebuild is true.
 	 * 
