@@ -69,7 +69,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 	/**
 	 * Returns iterator over ICellPopulator elements in the populators array. This method caches the
-	 * iterator implemenation in a transient member instance.
+	 * iterator implementation in a transient member instance.
 	 * 
 	 * @return iterator over ICellPopulator elements in the populators array
 	 */
@@ -161,6 +161,9 @@ public abstract class AbstractDataGridView extends DataViewBase
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.repeater.RefreshingView#populateItem(org.apache.wicket.markup.repeater.Item)
+	 */
 	protected final void populateItem(Item item)
 	{
 		RepeatingView cells = new RepeatingView(CELL_REPEATER_ID);
@@ -180,10 +183,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 			if (cellItem.get("cell") == null)
 			{
 				throw new WicketRuntimeException(
-						populator.getClass().getName() +
-								".populateItem() failed to add a component with id [" +
-								CELL_ITEM_ID +
-								"] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
+					populator.getClass().getName() +
+						".populateItem() failed to add a component with id [" +
+						CELL_ITEM_ID +
+						"] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 			}
 		}
 

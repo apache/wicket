@@ -22,7 +22,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * A convinience implementation of {@link ICellPopulator} that adds a label that will display the
+ * A convenience implementation of {@link ICellPopulator} that adds a label that will display the
  * value of the specified property. Non-string properties will be converted to a string before
  * display.
  * <p>

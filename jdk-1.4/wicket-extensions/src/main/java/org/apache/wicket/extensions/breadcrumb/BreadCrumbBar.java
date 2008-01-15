@@ -31,7 +31,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 
 /**
  * A component that renders bread crumbs. By default, it renders a horizontal list from left to
- * right (oldest left) with bread crumb links and a ' / ' as a seperator, e.g.
+ * right (oldest left) with bread crumb links and a ' / ' as a separator, e.g.
  * 
  * <pre>
  * first / second / third
@@ -69,11 +69,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 *            Whether the link should be enabled
 		 */
 		public BreadCrumbComponent(String id, int index, IBreadCrumbModel breadCrumbModel,
-				final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
+			final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
 		{
 			super(id);
 			add(new Label("sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
-					.setRenderBodyOnly(true));
+				.setRenderBodyOnly(true));
 			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
 			{
 				private static final long serialVersionUID = 1L;
@@ -129,7 +129,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
 		public void breadCrumbActivated(IBreadCrumbParticipant previousParticipant,
-				IBreadCrumbParticipant breadCrumbParticipant)
+			IBreadCrumbParticipant breadCrumbParticipant)
 		{
 			signalModelChange();
 		}
@@ -153,9 +153,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 */
 		private void signalModelChange()
 		{
-			// else let the listview recalculate it's childs immediately;
-			// it was attached, but it needs to go trhough that again now
-			// as the signalling component attached after this
+			// else let the listview recalculate it's children immediately;
+			// it was attached, but it needs to go through that again now
+			// as the signaling component attached after this
 			getModel().detach();
 			super.internalOnAttach();
 		}
@@ -168,7 +168,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			super.onBeforeRender();
 			if (dirty)
 			{
-				this.dirty = false;
+				dirty = false;
 			}
 		}
 
@@ -178,8 +178,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		protected void populateItem(ListItem item)
 		{
 			int index = item.getIndex();
-			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item
-					.getModelObject();
+			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getModelObject();
 			item.add(newBreadCrumbComponent("crumb", index, size, breadCrumbParticipant));
 		}
 	}
@@ -197,7 +196,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	public BreadCrumbBar(String id)
 	{
 		super(id);
-		this.decorated = new DefaultBreadCrumbsModel();
+		decorated = new DefaultBreadCrumbsModel();
 		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView("crumbs");
 		addListener(breadCrumbsListView);
 		add(breadCrumbsListView);
@@ -246,7 +245,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 
 	/**
 	 * Gets whether the current bread crumb should be displayed as a link (e.g. for refreshing) or
-	 * as a disabled link (effictively just a label). The latter is the default. Override if you
+	 * as a disabled link (effectively just a label). The latter is the default. Override if you
 	 * want different behavior.
 	 * 
 	 * @return Whether the current bread crumb should be displayed as a link; this method returns
@@ -272,7 +271,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 * @return A new bread crumb component
 	 */
 	protected Component newBreadCrumbComponent(String id, int index, int total,
-			IBreadCrumbParticipant breadCrumbParticipant)
+		IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
 		return new BreadCrumbComponent(id, index, this, breadCrumbParticipant, enableLink);

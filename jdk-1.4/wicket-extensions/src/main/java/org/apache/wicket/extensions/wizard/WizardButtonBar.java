@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * The button bar holds the {@link PreviousButton previous}, [@link NextButton next},
  * {@link LastButton last}, [@link CancelButton cancel} and {@link FinishButton finish} buttons.
  * The {@link LastButton last button} is off by default. You can turn it on by having the wizard
- * model return true for {@link IWizardModel#isLastVisible() the is last visble method}.
+ * model return true for {@link IWizardModel#isLastVisible() the is last visible method}.
  * </p>
  * 
  * @author Eelco Hillenius

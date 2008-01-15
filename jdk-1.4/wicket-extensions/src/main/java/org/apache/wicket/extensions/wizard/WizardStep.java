@@ -66,7 +66,7 @@ import org.apache.wicket.model.Model;
  *     &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
  *    &lt;/tr&gt;
  *    &lt;tr&gt;
- *     &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *     &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Address&lt;/wicket:message&gt;&lt;/td&gt;
  *     &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
  *    &lt;/tr&gt;
  *   &lt;/table&gt;
@@ -93,7 +93,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 		void execute()
 		{
-			Form form = (Form)WizardStep.this.findParent(Form.class);
+			Form form = (Form)findParent(Form.class);
 			form.add(formValidatorWrapper);
 		}
 	}

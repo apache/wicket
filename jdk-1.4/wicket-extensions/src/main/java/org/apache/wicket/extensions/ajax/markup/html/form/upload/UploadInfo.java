@@ -146,7 +146,7 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @return estimate of the remaning time in a human readable string
+	 * @return estimate of the remaining time in a human readable string
 	 */
 	public String getRemainingTimeString()
 	{

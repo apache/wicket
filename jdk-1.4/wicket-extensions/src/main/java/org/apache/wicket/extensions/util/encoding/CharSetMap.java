@@ -206,7 +206,7 @@ public final class CharSetMap
 		{
 			// Check whether the system directory contains mappings.
 			path = System.getProperty("java.home") + File.separator + "lib" + File.separator +
-					CHARSET_RESOURCE;
+				CHARSET_RESOURCE;
 
 			mappers[MAP_SYS] = loadPath(path);
 		}
@@ -226,10 +226,10 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Contructs a charset map from properties.
+	 * Constructs a charset map from properties.
 	 * 
 	 * @param props
-	 *            charset mapping propeties.
+	 *            charset mapping properties.
 	 */
 	public CharSetMap(final Properties props)
 	{
@@ -238,7 +238,7 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Contructs a charset map read from a stream.
+	 * Constructs a charset map read from a stream.
 	 * 
 	 * @param input
 	 *            an input stream.
@@ -252,7 +252,7 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Contructs a charset map read from a property file.
+	 * Constructs a charset map read from a property file.
 	 * 
 	 * @param file
 	 *            a property file.
@@ -266,7 +266,7 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Contructs a charset map read from a property file path.
+	 * Constructs a charset map read from a property file path.
 	 * 
 	 * @param path
 	 *            a property file path.
@@ -341,7 +341,7 @@ public final class CharSetMap
 
 	/**
 	 * Gets the charset for a locale with a variant. The search is performed in the following order:
-	 * "lang"_"country"_"variant"="charset", _"counry"_"variant"="charset",
+	 * "lang"_"country"_"variant"="charset", _"country"_"variant"="charset",
 	 * "lang"__"variant"="charset", __"variant"="charset", "lang"_"country"="charset",
 	 * _"country"="charset", "lang"="charset". If nothing of the above is found, the default charset
 	 * is returned.

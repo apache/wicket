@@ -41,7 +41,7 @@ public class Recorder extends HiddenField
 
 	private static final String[] EMPTY_IDS = new String[0];
 
-	/** conviniently maintained array of selected ids */
+	/** conveniently maintained array of selected ids */
 	private String[] ids;
 
 	/** parent palette object */
@@ -83,7 +83,7 @@ public class Recorder extends HiddenField
 	}
 
 	/**
-	 * Syncrhonize ids collection from the palette's model
+	 * Synchronize ids collection from the palette's model
 	 */
 	private void initIds()
 	{

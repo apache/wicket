@@ -21,7 +21,7 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 
 
 /**
- * Factory interface to enabled defered creation of a bread crumb panel while getting the proper id
+ * Factory interface to enabled deferred creation of a bread crumb panel while getting the proper id
  * for creation. Mainly meant for supporting
  * {@link BreadCrumbPanel#activate(IBreadCrumbPanelFactory)}.
  */

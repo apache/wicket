@@ -104,26 +104,26 @@ public class Palette extends Panel implements IHeaderContributor
 
 	/** reference to the palette's javascript resource */
 	private static final ResourceReference JAVASCRIPT = new ResourceReference(Palette.class,
-			"palette.js");
+		"palette.js");
 
 	/** reference to the palette's css resource */
 	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
 
 
-	/** reference to default up buttom image */
+	/** reference to default up button image */
 	private static final ResourceReference UP_IMAGE = new ResourceReference(Palette.class, "up.gif");
 
 	/** reference to default down button image */
 	private static final ResourceReference DOWN_IMAGE = new ResourceReference(Palette.class,
-			"down.gif");
+		"down.gif");
 
 	/** reference to default remove button image */
 	private static final ResourceReference REMOVE_IMAGE = new ResourceReference(Palette.class,
-			"remove.gif");
+		"remove.gif");
 
-	/** reference to default add buttom image */
+	/** reference to default add button image */
 	private static final ResourceReference ADD_IMAGE = new ResourceReference(Palette.class,
-			"add.gif");
+		"add.gif");
 
 	/**
 	 * @param id
@@ -139,7 +139,7 @@ public class Palette extends Panel implements IHeaderContributor
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(String id, IModel choicesModel, IChoiceRenderer choiceRenderer, int rows,
-			boolean allowOrder)
+		boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -160,7 +160,7 @@ public class Palette extends Panel implements IHeaderContributor
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(String id, IModel model, IModel choicesModel, IChoiceRenderer choiceRenderer,
-			int rows, boolean allowOrder)
+		int rows, boolean allowOrder)
 	{
 		super(id, model);
 
@@ -217,7 +217,7 @@ public class Palette extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * Can be overriden by clients for custom style sheet
+	 * Can be overridden by clients for custom style sheet
 	 * 
 	 * @return the style sheet reference
 	 */
@@ -519,9 +519,14 @@ public class Palette extends Panel implements IHeaderContributor
 	 */
 	protected String buildJSCall(String funcName)
 	{
-		return new StringBuffer(funcName).append("('").append(getChoicesComponent().getMarkupId())
-				.append("','").append(getSelectionComponent().getMarkupId()).append("','").append(
-						getRecorderComponent().getMarkupId()).append("');").toString();
+		return new StringBuffer(funcName).append("('")
+			.append(getChoicesComponent().getMarkupId())
+			.append("','")
+			.append(getSelectionComponent().getMarkupId())
+			.append("','")
+			.append(getRecorderComponent().getMarkupId())
+			.append("');")
+			.toString();
 	}
 
 

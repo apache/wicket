@@ -78,7 +78,7 @@ public class OrderByLink extends Link
 	 * 
 	 */
 	public OrderByLink(String id, String property, ISortStateLocator stateLocator,
-			ICssProvider cssProvider)
+		ICssProvider cssProvider)
 	{
 		super(id);
 
@@ -290,7 +290,7 @@ public class OrderByLink extends Link
 	}
 
 	/**
-	 * Convineince implementation of ICssProvider that always returns a null and so never adds a
+	 * Convenience implementation of ICssProvider that always returns a null and so never adds a
 	 * class attribute
 	 * 
 	 * @author Igor Vaynberg ( ivaynberg )

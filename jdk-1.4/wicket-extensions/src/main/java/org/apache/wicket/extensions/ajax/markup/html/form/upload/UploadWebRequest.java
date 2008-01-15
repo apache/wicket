@@ -101,39 +101,49 @@ public class UploadWebRequest extends ServletWebRequest
 			}
 		}
 
+		/**
+		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#wantUploadProgressUpdates()
+		 */
 		protected boolean wantUploadProgressUpdates()
 		{
 			return true;
 		}
 
+		/**
+		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadStarted(int)
+		 */
 		protected void onUploadStarted(int totalBytes)
 		{
 			UploadInfo info = new UploadInfo(totalBytes);
 
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest())
-					.getHttpServletRequest();
+			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
 			setUploadInfo(request, info);
 		}
 
+		/**
+		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadUpdate(int,
+		 *      int)
+		 */
 		protected void onUploadUpdate(int bytesUploaded, int total)
 		{
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest())
-					.getHttpServletRequest();
+			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
 			UploadInfo info = getUploadInfo(request);
 			if (info == null)
 			{
 				throw new IllegalStateException(
-						"could not find UploadInfo object in session which should have been set when uploaded started");
+					"could not find UploadInfo object in session which should have been set when uploaded started");
 			}
 			info.setBytesUploaded(bytesUploaded);
 
 			setUploadInfo(request, info);
 		}
 
+		/**
+		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadCompleted()
+		 */
 		protected void onUploadCompleted()
 		{
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest())
-					.getHttpServletRequest();
+			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
 			clearUploadInfo(request);
 		}
 	}

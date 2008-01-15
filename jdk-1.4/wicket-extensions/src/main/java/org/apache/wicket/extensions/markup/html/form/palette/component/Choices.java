@@ -24,7 +24,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * select box containg all available choices of the palette
+ * select box containing all available choices of the palette
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 

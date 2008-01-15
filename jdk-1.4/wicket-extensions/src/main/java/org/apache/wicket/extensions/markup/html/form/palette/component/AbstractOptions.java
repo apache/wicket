@@ -30,7 +30,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * Generats html option elements based on iterator specified by getOptionsIterator() and
+ * Generates html option elements based on iterator specified by getOptionsIterator() and
  * IChoiceRender specified by the palette
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -90,7 +90,7 @@ public abstract class AbstractOptions extends FormComponent
 				{
 					String next = (String)iter.next();
 					buffer.append(" " + next + "=\"" +
-							additionalAttributesMap.get(next).toString() + "\"");
+						additionalAttributesMap.get(next).toString() + "\"");
 				}
 			}
 
@@ -133,12 +133,11 @@ public abstract class AbstractOptions extends FormComponent
 
 		// A piece of javascript to avoid serializing the options during AJAX
 		// serialization.
-		getResponse()
-				.write(
-						JavascriptUtils.SCRIPT_OPEN_TAG +
-								"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
-								"    Wicket.Form.excludeFromAjaxSerialization." +
-								this.getMarkupId() + "='true';" + JavascriptUtils.SCRIPT_CLOSE_TAG);
+		getResponse().write(
+			JavascriptUtils.SCRIPT_OPEN_TAG +
+				"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
+				"    Wicket.Form.excludeFromAjaxSerialization." + getMarkupId() + "='true';" +
+				JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
 	/**

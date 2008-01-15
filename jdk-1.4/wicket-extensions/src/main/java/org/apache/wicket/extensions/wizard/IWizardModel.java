@@ -166,7 +166,7 @@ public interface IWizardModel extends IClusterable
 	void reset();
 
 	/**
-	 * Returns an iterator over all the steps in the model. The iteration order is not guarenteed to
+	 * Returns an iterator over all the steps in the model. The iteration order is not guaranteed to
 	 * the be the order of traversal. This is an optional operation; dynamic models can just return
 	 * null, and should call init the first time a step is encountered right before rendering it.
 	 * 

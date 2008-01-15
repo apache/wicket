@@ -60,7 +60,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 */
 	public final void addListener(IWizardModelListener listener)
 	{
-		this.wizardModelListeners.add(listener);
+		wizardModelListeners.add(listener);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * {@link IWizardModel#isLastAvailable} can return true at any point. Returning false will
 	 * prevent the last button from appearing on the wizard at all.
 	 * 
-	 * @return <tt>true</tt> if the previou last should be displayed, <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the previous last should be displayed, <tt>false</tt> otherwise.
 	 */
 	public boolean isLastVisible()
 	{
@@ -115,7 +115,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 */
 	public final void removeListener(IWizardModelListener listener)
 	{
-		this.wizardModelListeners.remove(listener);
+		wizardModelListeners.remove(listener);
 	}
 
 	/**
