@@ -56,4 +56,19 @@ public class PrependingStringBufferTest extends TestCase
 		psb.prepend('1');
 		assertEquals("1234567890", psb.toString());
 	}
+
+	/**
+	 * Test <a
+	 * href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html#equals(java.lang.Object)">reflexivity<a>
+	 * of the equals implementation.
+	 * 
+	 * @throws Exception
+	 */
+	public void testEqualsReflexive() throws Exception
+	{
+		PrependingStringBuffer psb = new PrependingStringBuffer("foo");
+		assertTrue(psb.equals(psb));
+	}
+
+
 }

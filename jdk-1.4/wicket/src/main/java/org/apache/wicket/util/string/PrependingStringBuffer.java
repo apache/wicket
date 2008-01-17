@@ -140,6 +140,18 @@ public class PrependingStringBuffer
 
 	public boolean equals(Object obj)
 	{
-		return toString().equals(obj);
+		if (obj == this)
+		{
+			return true;
+		}
+		else if (obj == null)
+		{
+			return false;
+		}
+		else
+		{
+			return toString().equals(obj.toString());
+		}
+
 	}
 }
