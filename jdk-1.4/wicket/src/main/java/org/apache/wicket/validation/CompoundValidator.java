@@ -17,6 +17,7 @@
 package org.apache.wicket.validation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,5 +68,15 @@ public class CompoundValidator implements IValidator
 		{
 			((IValidator)it.next()).validate(validatable);
 		}
+	}
+
+	/**
+	 * Gets an unmodifiable list of the registered validators.
+	 * 
+	 * @return
+	 */
+	public final List getValidators()
+	{
+		return Collections.unmodifiableList(validators);
 	}
 }

@@ -254,6 +254,25 @@ public abstract class NumberValidator extends AbstractValidator
 			}
 		}
 
+		/**
+		 * Gets the minimum value.
+		 * 
+		 * @return
+		 */
+		public long getMinimum()
+		{
+			return minimum;
+		}
+
+		/**
+		 * Gets the maximum value.
+		 * 
+		 * @return
+		 */
+		public long getMaximum()
+		{
+			return maximum;
+		}
 	}
 
 	/**
@@ -305,6 +324,15 @@ public abstract class NumberValidator extends AbstractValidator
 
 		}
 
+		/**
+		 * Gets the minimum.
+		 * 
+		 * @return minimum
+		 */
+		public long getMinimum()
+		{
+			return minimum;
+		}
 	}
 
 	/**
@@ -353,6 +381,16 @@ public abstract class NumberValidator extends AbstractValidator
 			{
 				error(validatable);
 			}
+		}
+
+		/**
+		 * Gets the maximum.
+		 * 
+		 * @return maximum
+		 */
+		public long getMaximum()
+		{
+			return maximum;
 		}
 	}
 
@@ -411,6 +449,25 @@ public abstract class NumberValidator extends AbstractValidator
 			}
 		}
 
+		/**
+		 * Gets the minimum.
+		 * 
+		 * @return minimum
+		 */
+		public double getMinimum()
+		{
+			return minimum;
+		}
+
+		/**
+		 * Gets the maximum.
+		 * 
+		 * @return maximum
+		 */
+		public double getMaximum()
+		{
+			return maximum;
+		}
 	}
 
 	/**
@@ -461,6 +518,15 @@ public abstract class NumberValidator extends AbstractValidator
 			}
 		}
 
+		/**
+		 * Gets the minimum.
+		 * 
+		 * @return minimum
+		 */
+		public double getMinimum()
+		{
+			return minimum;
+		}
 	}
 
 	/**
@@ -509,6 +575,16 @@ public abstract class NumberValidator extends AbstractValidator
 			{
 				error(validatable);
 			}
+		}
+
+		/**
+		 * Gets the maximum.
+		 * 
+		 * @return maximum
+		 */
+		public double getMaximum()
+		{
+			return maximum;
 		}
 	}
 
