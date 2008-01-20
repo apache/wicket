@@ -32,7 +32,9 @@ import org.apache.wicket.util.value.ValueMap;
  * An Image component displays a localizable image resource.
  * <p>
  * For details of how Images load, generate and manage images, see {@link LocalizedImageResource}.
- * 
+ *
+ * @see NonCachingImage
+ *
  * @author Jonathan Locke
  */
 public class Image extends WebComponent implements IResourceListener
@@ -46,7 +48,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * This constructor can be used if you have a img tag that has a src that points to a
 	 * PackageResource (which will be created and bind to the shared resources) Or if you have a
 	 * value attribute in your tag for which the image factory can make an image.
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public Image(final String id)
@@ -57,13 +59,13 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Constructs an image from an image resourcereference. That resource reference will bind its
 	 * resource to the current SharedResources.
-	 * 
+	 *
 	 * If you are using non sticky session clustering and the resource reference is pointing to a
 	 * Resource that isn't guaranteed to be on every server, for example a dynamic image or
 	 * resources that aren't added with a IInitializer at application startup. Then if only that
 	 * resource is requested from another server, without the rendering of the page, the image won't
 	 * be there and will result in a broken link.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
@@ -77,13 +79,13 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Constructs an image from an image resourcereference. That resource reference will bind its
 	 * resource to the current SharedResources.
-	 * 
+	 *
 	 * If you are using non sticky session clustering and the resource reference is pointing to a
 	 * Resource that isn't guaranteed to be on every server, for example a dynamic image or
 	 * resources that aren't added with a IInitializer at application startup. Then if only that
 	 * resource is requested from another server, without the rendering of the page, the image won't
 	 * be there and will result in a broken link.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
@@ -92,7 +94,7 @@ public class Image extends WebComponent implements IResourceListener
 	 *            The resource parameters
 	 */
 	public Image(final String id, final ResourceReference resourceReference,
-			ValueMap resourceParameters)
+		ValueMap resourceParameters)
 	{
 		super(id);
 		setImageResourceReference(resourceReference, resourceParameters);
@@ -100,14 +102,14 @@ public class Image extends WebComponent implements IResourceListener
 
 	/**
 	 * Constructs an image directly from an image resource.
-	 * 
+	 *
 	 * This one doesn't have the 'non sticky session clustering' problem that the ResourceReference
 	 * constructor has. But this will result in a non 'stable' url and the url will have request
 	 * parameters.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
-	 * 
+	 *
 	 * @param imageResource
 	 *            The image resource
 	 */
@@ -170,7 +172,7 @@ public class Image extends WebComponent implements IResourceListener
 	 *            Set the resource parameters for the resource.
 	 */
 	public void setImageResourceReference(final ResourceReference resourceReference,
-			final ValueMap parameters)
+		final ValueMap parameters)
 	{
 		localizedImageResource.setResourceReference(resourceReference, parameters);
 	}
