@@ -39,7 +39,7 @@ public class SelectOptions extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 	private boolean recreateChoices = false;
-	private IOptionRenderer renderer;
+	private final IOptionRenderer renderer;
 
 	/**
 	 * Constructor
@@ -75,7 +75,7 @@ public class SelectOptions extends RepeatingView
 	 */
 	public SelectOptions setRecreateChoices(boolean refresh)
 	{
-		this.recreateChoices = refresh;
+		recreateChoices = refresh;
 		return this;
 	}
 
@@ -96,7 +96,7 @@ public class SelectOptions extends RepeatingView
 				if (!(modelObject instanceof Collection))
 				{
 					throw new WicketRuntimeException("Model object " + modelObject +
-							" not a collection");
+						" not a collection");
 				}
 
 				// iterator over model objects for SelectOption components
@@ -113,16 +113,29 @@ public class SelectOptions extends RepeatingView
 					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel model = renderer.getModel(value);
-					row.add(new SimpleSelectOption("option", model, text));
+					row.add(newOption(text, model));
 				}
 			}
 		}
 	}
 
+	/**
+	 * Factory method for creating a new <code>SelectOption</code>. Override to add your own
+	 * extensions, such as Ajax behaviors.
+	 * 
+	 * @param text
+	 * @param model
+	 * @return
+	 */
+	protected SelectOption newOption(String text, IModel model)
+	{
+		return new SimpleSelectOption("option", model, text);
+	}
+
 	private static class SimpleSelectOption extends SelectOption
 	{
 
-		private String text;
+		private final String text;
 
 		/**
 		 * @param id

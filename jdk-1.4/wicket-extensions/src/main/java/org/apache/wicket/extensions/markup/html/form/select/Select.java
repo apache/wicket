@@ -37,7 +37,29 @@ import org.apache.wicket.util.string.Strings;
  * markup between the &lt;select&gt; tag and its children &lt;option&gt; tags: allowing for such
  * things as &lt;optgroup&gt; tags.
  * 
- * TODO Post 1.2: General: Example
+ * <p>
+ * Example HTML:
+ * 
+ * <pre>
+ *    &lt;select wicket:id=&quot;select&quot; multiple=&quot;multiple&quot;&gt;
+ *        &lt;wicket:container wicket:id=&quot;options&quot;&gt;
+ *            &lt;option wicket:id=&quot;option&quot;&gt;Option Label&lt;/option&gt;
+ *        &lt;/wicket:container&gt;
+ *    &lt;/select&gt;
+ * </pre>
+ * 
+ * Related Java Code:
+ * 
+ * <pre>
+ * Select select = new Select(&quot;select&quot;, selectionModel);
+ * add(select);
+ * SelectOptions options = new SelectOptions(&quot;options&quot;, elements, renderer);
+ * select.add(options);
+ * </pre>
+ * 
+ * Note that you don't need to add component(s) for the &lt;option&gt; tag - they are created by
+ * SelectOptions
+ * <p>
  * 
  * @see SelectOption
  * @see SelectOptions
