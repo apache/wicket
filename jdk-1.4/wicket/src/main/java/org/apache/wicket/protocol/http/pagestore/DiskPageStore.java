@@ -923,7 +923,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			while (stop == false)
 			{
 				// wait until we have something to save
-				while (pagesToSaveActive.isEmpty())
+				while (pagesToSaveActive.isEmpty() && stop == false)
 				{
 					try
 					{
@@ -957,6 +957,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 					}
 				}
 			}
+
+			stop = false;
 		}
 
 		/**
@@ -965,6 +967,18 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public void stop()
 		{
 			stop = true;
+
+			// Block the calling thread until this thread has really stopped running
+			while (stop)
+			{
+				try
+				{
+					Thread.sleep(getSavingThreadSleepTime());
+				}
+				catch (InterruptedException ignore)
+				{
+				}
+			}
 		}
 	};
 
