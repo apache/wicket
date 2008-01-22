@@ -602,7 +602,15 @@ Wicket.Window.prototype = {
 		if (this.settings.title == null)
 			this.update = window.setInterval(this.updateTitle.bind(this), 100);
 		
-		this.content.src = this.settings.src;
+		try
+		{
+			this.content.contentWindow.location.replace(this.settings.src);
+		}
+		catch(ignore)
+		{
+			this.content.src = this.settings.src;
+		}
+
 	
 		// opera seems to have problem accessing contentWindow here
 		if (Wicket.Browser.isOpera() || Wicket.Browser.isSafari()) {
