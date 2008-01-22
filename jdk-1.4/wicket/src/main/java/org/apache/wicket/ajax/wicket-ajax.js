@@ -1347,8 +1347,25 @@ Wicket.Head.Contributor.prototype = {
 			style.id = node.getAttribute("id");										
 				
 			// create stylesheet
-			if (Wicket.Browser.isIE()) { 			
-				document.createStyleSheet().cssText = content;
+			if (Wicket.Browser.isIE()) {
+			   try
+			   {
+					document.createStyleSheet().cssText = content;
+				}
+				catch(ignore)
+				{
+					var run = function() {
+						try
+						{
+							document.createStyleSheet().cssText = content;
+						}
+						catch(e)
+						{
+							Wicket.Log.error(e);
+						}
+					}
+					window.setTimeout(run, 1);
+				}
 			} else {			
 				var textNode = document.createTextNode(content);
 				style.appendChild(textNode);
