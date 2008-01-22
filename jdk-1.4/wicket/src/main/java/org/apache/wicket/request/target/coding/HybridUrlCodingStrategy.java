@@ -26,6 +26,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
@@ -220,7 +221,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			else
 			{
 				// we didn't find the page, act as bookmarkable page request -
-				// create new instance
+				// create new instance, but only if there is no callback to a non-existing page
+				if (requestParameters.getInterface() != null)
+				{
+					throw new PageExpiredException(
+						"Request cannot be processed. The target page does not exist anymore.");
+				}
 				return new HybridBookmarkablePageRequestTarget(pageMapName,
 					(Class)pageClassRef.get(), parameters, originalUrlTrailingSlashesCount,
 					redirect);
