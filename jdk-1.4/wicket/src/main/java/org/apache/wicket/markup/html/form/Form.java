@@ -1778,7 +1778,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validateComponents()
 	{
-		visitFormComponents(new ValidationVisitor()
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
 			{
