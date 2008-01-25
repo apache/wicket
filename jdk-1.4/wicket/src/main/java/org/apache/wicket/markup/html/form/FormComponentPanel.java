@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.html.IHeaderPartContainerProvider;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -110,10 +111,17 @@ import org.apache.wicket.model.IModel;
  * @author eelcohillenius
  */
 public abstract class FormComponentPanel extends FormComponent
-		implements
-			IHeaderPartContainerProvider
+	implements
+		IHeaderPartContainerProvider
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:panel"
+		WicketTagIdentifier.registerWellKnownTagName("panel");
+	}
+
 
 	private ContainerWithAssociatedMarkupHelper markupHelper;
 
@@ -201,7 +209,7 @@ public abstract class FormComponentPanel extends FormComponent
 	{
 		// Render the associated markup
 		renderAssociatedMarkup("panel",
-				"Markup for a panel component has to contain part '<wicket:panel>'");
+			"Markup for a panel component has to contain part '<wicket:panel>'");
 
 		if (wasOpenCloseTag == false)
 		{
