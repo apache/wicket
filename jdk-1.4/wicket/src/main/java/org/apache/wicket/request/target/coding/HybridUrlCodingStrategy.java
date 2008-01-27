@@ -841,7 +841,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static class HybridBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
+	public static class HybridBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
 	{
 		private final int originalUrlTrailingSlashesCount;
 		private final boolean redirect;
