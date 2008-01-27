@@ -224,8 +224,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// create new instance, but only if there is no callback to a non-existing page
 				if (requestParameters.getInterface() != null)
 				{
-					throw new PageExpiredException(
-						"Request cannot be processed. The target page does not exist anymore.");
+					handleExpiredPage(pageMapName, (Class)pageClassRef.get(),
+						originalUrlTrailingSlashesCount, redirect);
 				}
 				return new HybridBookmarkablePageRequestTarget(pageMapName,
 					(Class)pageClassRef.get(), parameters, originalUrlTrailingSlashesCount,
@@ -233,6 +233,32 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 		}
 
+	}
+
+	/**
+	 * Handles the case where a non-bookmarkable url with a hybrid base refers to a page that is no
+	 * longer in session. eg <code>/context/hybrid-mount.0.23?wicket:interface=...</code>. The
+	 * default behavior is to throw a <code>PageExpiredException</code>.
+	 * 
+	 * This method can be overwritten to, for example, return the user to a new instance of the
+	 * bookmarkable page that was mounted using hybrid strategy - this, however, should only be used
+	 * in cases where the page expects no page parameters because they are no longer available.
+	 * 
+	 * @param pageMapName
+	 *            page map name this page is mounted in
+	 * @param pageClass
+	 *            class of mounted page
+	 * @param trailingSlashesCount
+	 *            count of trailing slsahes in the url
+	 * @param redirect
+	 *            whether or not a redirect should be issued
+	 * @return request target used to handle this situation
+	 */
+	protected IRequestTarget handleExpiredPage(String pageMapName, Class pageClass,
+		int trailingSlashesCount, boolean redirect)
+	{
+		throw new PageExpiredException(
+			"Request cannot be processed. The target page does not exist anymore.");
 	}
 
 	/**
