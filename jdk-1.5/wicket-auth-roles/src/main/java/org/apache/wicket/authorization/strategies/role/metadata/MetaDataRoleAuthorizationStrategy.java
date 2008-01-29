@@ -28,32 +28,32 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 /**
  * Strategy that uses the Wicket metadata facility to check authorization. The static
  * <code>authorize</code> methods are for authorizing component actions and component
- * instantiation by role. This class is is the main entry point for users wanting to use the
+ * instantiation by role. This class is the main entry point for users wanting to use the
  * roles-based authorization of the wicket-auth-roles package based on wicket metadata.
- * 
+ *
  * For instance, use like:
- * 
+ *
  * <pre>
  * MetaDataRoleAuthorizationStrategy.authorize(myPanel, RENDER, &quot;ADMIN&quot;);
  * </pre>
- * 
+ *
  * for actions on component instances, or:
- * 
+ *
  * <pre>
  * MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, &quot;ADMIN&quot;);
  * </pre>
- * 
+ *
  * for doing role based authorization for component instantation.
- * 
+ *
  * @see org.apache.wicket.MetaDataKey
- * 
+ *
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
 public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorizationStrategy
 {
 	/**
-	 * Component meta data key for ations/ roles information. Typically, you do not need to use this
+	 * Component meta data key for actions/roles information. Typically, you do not need to use this
 	 * meta data key directly, but instead use one of the bind methods of this class.
 	 */
 	public static final MetaDataKey ACTION_PERMISSIONS = new MetaDataKey(ActionPermissions.class)
@@ -62,7 +62,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	};
 
 	/**
-	 * Application meta data key for ations/ roles information. Typically, you do not need to use
+	 * Application meta data key for actions/roles information. Typically, you do not need to use
 	 * this meta data key directly, but instead use one of the bind methods of this class.
 	 */
 	public static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
@@ -77,7 +77,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	/**
 	 * Authorizes the given role to create component instances of type componentClass. This
 	 * authorization is added to any previously authorized roles.
-	 * 
+	 *
 	 * @param componentClass
 	 *            The component type that is subject for the authorization
 	 * @param roles
@@ -100,7 +100,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Authorizes the given role to perform the given action on the given component.
-	 * 
+	 *
 	 * @param component
 	 *            The component that is subject to the authorization
 	 * @param action
@@ -123,7 +123,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Grants permission to all roles to create instances of the given component class.
-	 * 
+	 *
 	 * @param componentClass
 	 *            The component class
 	 */
@@ -140,7 +140,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Grants permission to all roles to perform the given action on the given component.
-	 * 
+	 *
 	 * @param component
 	 *            The component that is subject to the authorization
 	 * @param action
@@ -162,7 +162,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * authorization grant is removed for a given componentClass, the internal role NO_ROLE will
 	 * automatically be added, effectively denying access to all roles (if this was not done, all
 	 * roles would suddenly have access since no authorization is equivalent to full access).
-	 * 
+	 *
 	 * @param componentClass
 	 *            The component type
 	 * @param roles
@@ -186,7 +186,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * authorization grant is removed for a given action, the internal role NO_ROLE will
 	 * automatically be added, effectively denying access to all roles (if this was not done, all
 	 * roles would suddenly have access since no authorization is equivalent to full access).
-	 * 
+	 *
 	 * @param component
 	 *            The component
 	 * @param action
@@ -209,7 +209,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	/**
 	 * Grants authorization to instantiate the given class to just the role NO_ROLE, effectively
 	 * denying all other roles.
-	 * 
+	 *
 	 * @param componentClass
 	 *            The component class
 	 */
@@ -222,7 +222,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	/**
 	 * Grants authorization to perform the given action to just the role NO_ROLE, effectively
 	 * denying all other roles.
-	 * 
+	 *
 	 * @param component
 	 *            the component that is subject to the authorization
 	 * @param action
@@ -236,7 +236,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param roleCheckingStrategy
 	 *            the authorizer object
 	 */
@@ -247,7 +247,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Uses component level meta data to match roles for component action execution.
-	 * 
+	 *
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
@@ -272,7 +272,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Uses application level meta data to match roles for component instantiation.
-	 * 
+	 *
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
@@ -300,7 +300,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 
 	/**
 	 * Gets the roles for creation of the given component class, or null if none were registered.
-	 * 
+	 *
 	 * @param componentClass
 	 *            the component class
 	 * @return the roles that are authorized for creation of the componentClass, or null if no
@@ -319,8 +319,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Gets the roles for the given action/ component combination.
-	 * 
+	 * Gets the roles for the given action/component combination.
+	 *
 	 * @param component
 	 *            the component
 	 * @param action
