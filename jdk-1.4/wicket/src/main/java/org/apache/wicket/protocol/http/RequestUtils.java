@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,6 +120,25 @@ public final class RequestUtils
 		try
 		{
 			return URLDecoder.decode(path, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
+
+	/**
+	 * Does a URLEncoder.encode() in UTF-8
+	 * 
+	 * @param value
+	 *            value to be encoded
+	 * @return encoded value
+	 */
+	public static String encode(String value)
+	{
+		try
+		{
+			return URLEncoder.encode(value, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e)
 		{
