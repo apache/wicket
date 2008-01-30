@@ -1,0 +1,40 @@
+This file contains the changes done to the 1.3.x releases sinse 1.3-final.
+
+Release Notes - Wicket - Version 1.3.1
+
+
+** Bug
+    * [WICKET-812] - Submit button, multipart content and UploadProgressBar
+    * [WICKET-989] - DatePicker: NaN if numerical input cannot be parsed
+    * [WICKET-1184] - PageSavingThread keeps running after undeploy
+    * [WICKET-1194] - UploadProgressBar incompatible with submit buttons onSubmit method (in FireFox at least)
+    * [WICKET-1243] - the DatePicker show the same week title in china.  
+    * [WICKET-1249] - modal.js conflicts with mootools and possibly other javascript frameworks. + patch fix
+    * [WICKET-1254] - Binding to a BigDecimal don't honor browser locale
+    * [WICKET-1257] - iframe get request done 2x after ajax change in IE
+    * [WICKET-1258] - AjaxFormChoiceComponentUpdatingBehavior assumes Radio/Choice items are a direct child of the group in the client-side DOM
+    * [WICKET-1260] - CheckBox.setRequired() is not picked up in 1.3-final
+    * [WICKET-1262] - Page#readResolve is not called
+    * [WICKET-1263] - Using nested wicket:enclosure throws exception
+    * [WICKET-1264] - assertComponentOnAjaxResponse does not work with WicketTester.clickLink
+    * [WICKET-1270] - NPE in ListMultipleChoice.updateModel()
+    * [WICKET-1271] - Script in RenderHead method of AjaxFormChoiceComponentUpdatingBehavior needs fixing
+    * [WICKET-1274] - Only properties from first panel-implementation loaded when using different implementations of an abstract panel on the same page
+    * [WICKET-1275] - FLAG_HAS_BEEN_RENDERED is set when rendering invisible components
+    * [WICKET-1277] - When no component is focused on AjaxRequestTarget, wicket tries to focus element with id 'null'
+    * [WICKET-1282] - AjaxFormSubmitBehavior doesn't work well with nested forms
+    * [WICKET-1290] - PrependingStringBuffer.equals(Object obj) is not reflexive
+    * [WICKET-1304] - Form processing workflow is broken for FormComponentPanels
+
+** Improvement
+    * [WICKET-1020] - expose configuration of CompoundValidator, NumberValidator
+    * [WICKET-1193] - i18n: Translation of resource files in Korean
+    * [WICKET-1252] - Default start week day based on locale
+    * [WICKET-1272] - Better clustering support for DiskPageStore
+    * [WICKET-1283] - Allow to query component markup id without creating one
+    * [WICKET-1284] - Report last focused element id on ajax request
+    * [WICKET-1293] - Improve SelectOptions: allow customization of created SelectOption objects
+    * [WICKET-1299] - HybridUrlCodingStrategy should throw a PageExpiredException if a RequestListenerInterface is targeted on a non-existent page-id/version
+    * [WICKET-1309] - Properties files translation (_es)
+    * [WICKET-1313] - Created Norwegian translation of Application.properties
+
