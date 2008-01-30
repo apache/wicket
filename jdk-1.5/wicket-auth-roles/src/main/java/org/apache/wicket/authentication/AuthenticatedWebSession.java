@@ -25,13 +25,13 @@ import org.apache.wicket.protocol.http.WebSession;
 /**
  * Basic authenticated web session. Subclasses must provide a method that authenticates the session
  * based on a username and password, and a method implementation that gets the Roles
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class AuthenticatedWebSession extends WebSession
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -48,21 +48,33 @@ public abstract class AuthenticatedWebSession extends WebSession
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param application
 	 *            The web application
 	 * @param request
 	 *            The current request object
-	 * @param response
+	 * @deprecated Use {@link #AuthenticatedWebSession(Request)}
 	 */
+	@Deprecated
 	public AuthenticatedWebSession(final AuthenticatedWebApplication application, Request request)
 	{
 		super(application, request);
 	}
 
 	/**
+	 * Construct.
+	 *
+	 * @param request
+	 *            The current request object
+	 */
+	public AuthenticatedWebSession(Request request)
+	{
+		super(request);
+	}
+
+	/**
 	 * Authenticates this session using the given username and password
-	 * 
+	 *
 	 * @param username
 	 *            The username
 	 * @param password
@@ -86,7 +98,7 @@ public abstract class AuthenticatedWebSession extends WebSession
 
 	/**
 	 * Signs user in by authenticating them with a username and password
-	 * 
+	 *
 	 * @param username
 	 *            The username
 	 * @param password
