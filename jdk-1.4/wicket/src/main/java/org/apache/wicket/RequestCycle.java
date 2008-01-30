@@ -18,11 +18,14 @@ package org.apache.wicket;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
@@ -38,6 +41,7 @@ import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.collections.ArrayListStack;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.ValueMap;
@@ -273,7 +277,7 @@ public abstract class RequestCycle
 	 *            The response
 	 */
 	protected RequestCycle(final Application application, final Request request,
-			final Response response)
+		final Response response)
 	{
 		this.application = application;
 		this.request = request;
@@ -684,10 +688,10 @@ public abstract class RequestCycle
 	 *            The pagemap in which the response page should be created
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters,
-			final String pageMapName)
+		final String pageMapName)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
-				pageParameters);
+			pageParameters);
 		setRequestTarget(target);
 	}
 
@@ -709,7 +713,7 @@ public abstract class RequestCycle
 	public String toString()
 	{
 		return "[RequestCycle" + "@" + Integer.toHexString(hashCode()) + " thread=" +
-				Thread.currentThread().getName() + "]";
+			Thread.currentThread().getName() + "]";
 	}
 
 	/**
@@ -777,13 +781,13 @@ public abstract class RequestCycle
 	 * @return A URL that encodes a page, component, behavior and interface to call
 	 */
 	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 		int index = component.getBehaviors().indexOf(behaviour);
 		if (index == -1)
 		{
 			throw new IllegalArgumentException("Behavior " + this +
-					" was not registered with this component: " + component.toString());
+				" was not registered with this component: " + component.toString());
 		}
 		RequestParameters params = new RequestParameters();
 		params.setBehaviorId(String.valueOf(index));
@@ -800,7 +804,7 @@ public abstract class RequestCycle
 		}
 
 		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
-				listener, params);
+			listener, params);
 		return encodeUrlFor(target);
 	}
 
@@ -813,22 +817,40 @@ public abstract class RequestCycle
 	 *            The component to reference
 	 * @param listener
 	 *            The listener interface on the component
+	 * @param params
+	 *            Additional parameters to pass to the page
 	 * @return A URL that encodes a page, component and interface to call
 	 */
 	public final CharSequence urlFor(final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener, ValueMap params)
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		final IRequestTarget target;
 		if (listener != IRedirectListener.INTERFACE && component.isStateless() &&
-				page.isBookmarkable())
+			page.isBookmarkable())
 		{
 			PageParameters pageParameters = page.getPageParameters();
 			if (pageParameters == null)
+			{
 				pageParameters = new PageParameters();
-			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(), page
-					.getClass(), pageParameters, component, listener);
+			}
+
+			if (params != null)
+			{
+				Iterator it = params.entrySet().iterator();
+				while (it.hasNext())
+				{
+					final Map.Entry entry = (Entry)it.next();
+					final String key = entry.getKey().toString();
+					final String value = entry.getValue().toString();
+					pageParameters.add(encode(key), encode(value));
+				}
+			}
+
+			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
+				page.getClass(), pageParameters, component, listener);
+			return encodeUrlFor(target);
 		}
 		else
 		{
@@ -843,8 +865,59 @@ public abstract class RequestCycle
 
 			// Get the listener interface name
 			target = new ListenerInterfaceRequestTarget(page, component, listener);
+
+			CharSequence url = encodeUrlFor(target);
+
+			if (params != null)
+			{
+				AppendingStringBuffer buff = new AppendingStringBuffer(url);
+				Iterator it = params.entrySet().iterator();
+				while (it.hasNext())
+				{
+					final Map.Entry entry = (Entry)it.next();
+					final String key = entry.getKey().toString();
+					final String value = entry.getValue().toString();
+					buff.append("&");
+					buff.append(encode(key));
+					buff.append("=");
+					buff.append(encode(value));
+
+				}
+
+				url = buff;
+			}
+			return url;
 		}
-		return encodeUrlFor(target);
+
+	}
+
+	/**
+	 * Url encodes value using UTF-8
+	 * 
+	 * @param value
+	 *            value to encode
+	 * @return encoded value
+	 */
+	private static String encode(String value)
+	{
+		return RequestUtils.encode(value);
+	}
+
+	/**
+	 * Returns a URL that references a given interface on a component. When the URL is requested
+	 * from the server at a later time, the interface will be called. A URL returned by this method
+	 * will not be stable across sessions and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param listener
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public final CharSequence urlFor(final Component component,
+		final RequestListenerInterface listener)
+	{
+		return urlFor(component, listener, null);
 	}
 
 	/**
@@ -861,11 +934,10 @@ public abstract class RequestCycle
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
+		final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
-				? PageMap.DEFAULT_NAME
-				: pageMap.getName(), pageClass, parameters);
+			? PageMap.DEFAULT_NAME : pageMap.getName(), pageClass, parameters);
 		return encodeUrlFor(target);
 	}
 
@@ -923,7 +995,7 @@ public abstract class RequestCycle
 		RequestParameters requestParameters = new RequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
 		if (getApplication().getResourceSettings().getAddLastModifiedTimeToResourceReferenceUrl() &&
-				!Strings.isEmpty(resourceReference.getName()))
+			!Strings.isEmpty(resourceReference.getName()))
 		{
 			Time time = resourceReference.lastModifiedTime();
 			if (time != null)
@@ -950,8 +1022,8 @@ public abstract class RequestCycle
 		{
 			detach();
 			throw new WicketRuntimeException(
-					"RequestCycles are non-reusable objects. This instance (" + this +
-							") already executed");
+				"RequestCycles are non-reusable objects. This instance (" + this +
+					") already executed");
 		}
 	}
 
@@ -1021,7 +1093,7 @@ public abstract class RequestCycle
 			catch (RuntimeException re)
 			{
 				log.error("there was an error detaching the request from the session " + session +
-						".", re);
+					".", re);
 			}
 		}
 
@@ -1149,14 +1221,14 @@ public abstract class RequestCycle
 				case RESOLVE_TARGET : {
 					// resolve the target of the request using the request
 					// parameters
-					final IRequestTarget target = processor.resolve(this, request
-							.getRequestParameters());
+					final IRequestTarget target = processor.resolve(this,
+						request.getRequestParameters());
 
 					// has to result in a request target
 					if (target == null)
 					{
 						throw new WicketRuntimeException(
-								"the processor did not resolve to any request target");
+							"the processor did not resolve to any request target");
 					}
 					// Add (inserting at the bottom) in case before or during
 					// target resolving one or more request targets were pushed
@@ -1210,8 +1282,7 @@ public abstract class RequestCycle
 			{
 				// hmmm, we were already handling an exception! give up
 				log.error(
-						"unexpected exception when handling another exception: " + e.getMessage(),
-						e);
+					"unexpected exception when handling another exception: " + e.getMessage(), e);
 			}
 		}
 	}
@@ -1238,7 +1309,7 @@ public abstract class RequestCycle
 				if (totalSteps >= maxSteps)
 				{
 					throw new IllegalStateException("Request processing executed " + maxSteps +
-							" steps, which means it is probably in an infinite loop.");
+						" steps, which means it is probably in an infinite loop.");
 				}
 				try
 				{
