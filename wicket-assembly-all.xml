@@ -101,6 +101,7 @@
 				<include>LICENSE</include>
 				<include>NOTICE</include>
 				<include>README</include>
+				<include>migrate-13.html</include>
 				<include>DISCLAIMER</include>
 				<include>licenses/**</include>
 			</includes>
