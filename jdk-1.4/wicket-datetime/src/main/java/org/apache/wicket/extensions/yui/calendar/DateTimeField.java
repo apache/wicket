@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -287,12 +288,6 @@ public class DateTimeField extends FormComponentPanel
 
 			try
 			{
-				TimeZone zone = getClientTimeZone();
-				if (zone != null)
-				{
-					date.setZone(DateTimeZone.forTimeZone(zone));
-				}
-
 				boolean use12HourFormat = use12HourFormat();
 				if (hours != null)
 				{
@@ -303,6 +298,13 @@ public class DateTimeField extends FormComponentPanel
 				if (use12HourFormat)
 				{
 					date.set(DateTimeFieldType.halfdayOfDay(), amOrPm == AM_PM.PM ? 1 : 0);
+				}
+
+				TimeZone zone = getClientTimeZone();
+				if (zone != null)
+				{
+					date.setMillis(DateTimeZone.getDefault().getMillisKeepLocal(
+							DateTimeZone.forTimeZone(zone), date.getMillis()));
 				}
 
 				// the date will be in the server's timezone
@@ -338,7 +340,7 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	protected DateTextField newDateTextField(String id, PropertyModel dateFieldModel)
 	{
-		return DateTextField.forShortStyle(id, dateFieldModel);
+		return new DateTextField(id, dateFieldModel, new StyleDateConverter(false));
 	}
 
 	/**
