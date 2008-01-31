@@ -408,7 +408,6 @@ public class PackageResource extends WebResource implements IModifiable
 		if (resource == null)
 		{
 			resource = new PackageResource(scope, path, locale, style);
-			sharedResources.add(scope, path, locale, style, resource);
 		}
 		return resource;
 	}
