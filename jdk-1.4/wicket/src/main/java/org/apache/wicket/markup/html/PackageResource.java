@@ -207,7 +207,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale,
-			String style)
+		String style)
 	{
 		if (name == null)
 		{
@@ -220,12 +220,14 @@ public class PackageResource extends WebResource implements IModifiable
 			// we have got a hit, so we may safely assume the name
 			// argument is not a regular expression, and can thus
 			// just add the resource and return
-			get(scope, name, locale, style);
+			PackageResource packageResource = get(scope, name, locale, style);
+			SharedResources sharedResources = Application.get().getSharedResources();
+			sharedResources.add(scope, name, locale, style, packageResource);
 		}
 		else
 		{
 			throw new IllegalArgumentException("no package resource was found for scope " + scope +
-					", name " + name + ", locale " + locale + ", style " + style);
+				", name " + name + ", locale " + locale + ", style " + style);
 		}
 	}
 
@@ -245,11 +247,11 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @return true if a resource could be loaded, false otherwise
 	 */
 	public static boolean exists(final Class scope, final String path, final Locale locale,
-			final String style)
+		final String style)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
-				absolutePath, style, locale, null) != null;
+			absolutePath, style, locale, null) != null;
 	}
 
 	/**
@@ -291,7 +293,7 @@ public class PackageResource extends WebResource implements IModifiable
 	{
 		final List resources = new ArrayList();
 		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
-				.toString();
+			.toString();
 		ClassLoader loader = scope.getClassLoader();
 		try
 		{
@@ -347,13 +349,12 @@ public class PackageResource extends WebResource implements IModifiable
 						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 						JarFile jarFile = new JarFile(filename, false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
-						return (PackageResource[])resources.toArray(new PackageResource[resources
-								.size()]);
+						return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
 					}
 					if (!basedir.isDirectory())
 					{
 						throw new IllegalStateException("unable to read resources from directory " +
-								basedir);
+							basedir);
 					}
 				}
 			}
@@ -400,11 +401,11 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @return The resource
 	 */
 	public static PackageResource get(final Class scope, final String path, final Locale locale,
-			final String style)
+		final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
+			true);
 		if (resource == null)
 		{
 			resource = new PackageResource(scope, path, locale, style);
@@ -414,7 +415,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/* removed in 2.0 */
 	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse,
-			final List resources, String packageRef, JarFile jf)
+		final List resources, String packageRef, JarFile jf)
 	{
 		Enumeration enumeration = jf.entries();
 		while (enumeration.hasMoreElements())
@@ -462,17 +463,18 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The style of the resource
 	 */
 	protected PackageResource(final Class scope, final String path, final Locale locale,
-			final String style)
+		final String style)
 	{
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, path);
 
-		IPackageResourceGuard guard = Application.get().getResourceSettings()
-				.getPackageResourceGuard();
+		IPackageResourceGuard guard = Application.get()
+			.getResourceSettings()
+			.getPackageResourceGuard();
 		if (!guard.accept(scope, path))
 		{
 			throw new PackageResourceBlockedException("package resource " + absolutePath +
-					" may not be accessed");
+				" may not be accessed");
 		}
 
 		scopeName = scope.getName();
@@ -539,8 +541,10 @@ public class PackageResource extends WebResource implements IModifiable
 	public IResourceStream getResourceStream(boolean failOnError)
 	{
 		// Locate resource
-		IResourceStream resourceStream = Application.get().getResourceSettings()
-				.getResourceStreamLocator().locate(getScope(), absolutePath, style, locale, null);
+		IResourceStream resourceStream = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(getScope(), absolutePath, style, locale, null);
 
 		// Check that resource was found
 		if (resourceStream == null)
@@ -552,7 +556,7 @@ public class PackageResource extends WebResource implements IModifiable
 			}
 
 			String msg = "Unable to find package resource [path = " + absolutePath + ", style = " +
-					style + ", locale = " + locale + "]";
+				style + ", locale = " + locale + "]";
 			log.warn(msg);
 			if (RequestCycle.get() instanceof WebRequestCycle)
 			{
@@ -606,7 +610,7 @@ public class PackageResource extends WebResource implements IModifiable
 	public Time lastModifiedTime()
 	{
 		if (lastModifiedTimeUpdate == 0 ||
-				lastModifiedTimeUpdate < System.currentTimeMillis() - 5 * (1000 * 60))
+			lastModifiedTimeUpdate < System.currentTimeMillis() - 5 * (1000 * 60))
 		{
 			lastModifiedTime = getResourceStream().lastModifiedTime();
 			lastModifiedTimeUpdate = System.currentTimeMillis();
