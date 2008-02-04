@@ -21,10 +21,16 @@ import java.util.regex.Pattern;
 /**
  * Validator for checking the form/pattern of email addresses.
  * 
+ * NOTICE: This validator only checks the most commonly used email address patterns. For a validator
+ * that can check the entire range of rfc compliant email addresses see
+ * <code>org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator</code>
+ * 
  * @author Chris Turner
  * @author Jonathan Locke
  * @author Martijn Dashorst
  * @author Al Maw
+ * 
+ * @see org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator
  * 
  * @since 1.3
  */
@@ -52,7 +58,7 @@ public class EmailAddressValidator extends PatternValidator
 	protected EmailAddressValidator()
 	{
 		super(
-				"^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
-				Pattern.CASE_INSENSITIVE);
+			"^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
+			Pattern.CASE_INSENSITIVE);
 	}
 }
