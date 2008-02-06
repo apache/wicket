@@ -499,6 +499,26 @@ public class PropertyResolverTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testPropertyClassWithSubType() throws Exception
+	{
+		Person person = new Person();
+		assertEquals(String.class, PropertyResolver.getPropertyClass("country.name", person));
+		try
+		{
+			PropertyResolver.getPropertyClass("country.subCountry.name", person);
+			fail("country.subCountry shouldnt be found");
+		}
+		catch (Exception e)
+		{
+
+		}
+		person.setCountry(new Country2("test", new Country("test")));
+		PropertyResolver.getPropertyClass("country.subCountry.name", person);
+	}
+
+	/**
 	 * Used for models in testing.
 	 */
 	private static class InnerVectorPOJO extends Vector

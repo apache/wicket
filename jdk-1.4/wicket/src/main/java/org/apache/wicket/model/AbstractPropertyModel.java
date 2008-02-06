@@ -41,10 +41,10 @@ import org.apache.wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public abstract class AbstractPropertyModel
-		implements
-			IChainingModel,
-			IObjectClassAwareModel,
-			IPropertyReflectionAwareModel
+	implements
+		IChainingModel,
+		IObjectClassAwareModel,
+		IPropertyReflectionAwareModel
 {
 	/**
 	 * 
@@ -159,8 +159,8 @@ public abstract class AbstractPropertyModel
 		else
 		{
 			PropertyResolverConverter prc = null;
-			prc = new PropertyResolverConverter(Application.get().getConverterLocator(), Session
-					.get().getLocale());
+			prc = new PropertyResolverConverter(Application.get().getConverterLocator(),
+				Session.get().getLocale());
 			PropertyResolver.setValue(expression, getTarget(), object, prc);
 		}
 	}
@@ -208,7 +208,14 @@ public abstract class AbstractPropertyModel
 		final Object target = getTarget();
 		if (target != null)
 		{
-			return PropertyResolver.getPropertyClass(expression, target);
+			try
+			{
+				return PropertyResolver.getPropertyClass(expression, target);
+			}
+			catch (Exception e)
+			{
+				// ignore.
+			}
 		}
 		return null;
 	}
@@ -230,6 +237,7 @@ public abstract class AbstractPropertyModel
 				}
 				catch (Exception ignore)
 				{
+					// ignore.
 				}
 			}
 		}

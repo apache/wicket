@@ -23,6 +23,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,6 +36,10 @@ public abstract class AbstractTextComponent extends FormComponent
 {
 	// Flag for the type resolving. FLAG_RESERVED1-3 is taken by form component
 	private static final int TYPE_RESOLVED = Component.FLAG_RESERVED4;
+
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(AbstractTextComponent.class);
+
 
 	/**
 	 * 
@@ -124,7 +130,13 @@ public abstract class AbstractTextComponent extends FormComponent
 	{
 		if (model instanceof IObjectClassAwareModel)
 		{
-			return ((IObjectClassAwareModel)model).getObjectClass();
+			Class objectClass = ((IObjectClassAwareModel)model).getObjectClass();
+			if (objectClass == null)
+			{
+				log.warn("Couldn't resolve model type of " + model + " for " + this +
+					", please set the type yourself.");
+			}
+			return objectClass;
 		}
 		else
 		{
