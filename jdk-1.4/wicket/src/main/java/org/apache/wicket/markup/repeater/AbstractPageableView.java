@@ -394,4 +394,12 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		clearCachedItemCount();
 		super.onDetach();
 	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
+		ClassNotFoundException
+	{
+		// Read in all fields
+		s.defaultReadObject();
+		clearCachedItemCount();
+	}
 }
