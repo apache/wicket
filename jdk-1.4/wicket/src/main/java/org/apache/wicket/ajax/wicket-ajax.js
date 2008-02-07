@@ -934,6 +934,12 @@ Wicket.Ajax.Request.prototype = {
 						    }
 					    }
 					    calculatedRedirect += "/" + redirectUrl;
+					    
+					    if (Wicket.Browser.isGecko()) {					    
+					    	// firefox 3 has problem with window.location setting relative url
+					    	calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;					    	
+					    }
+					    
 					    window.location = calculatedRedirect;
 					}
 				}
@@ -1348,19 +1354,15 @@ Wicket.Head.Contributor.prototype = {
 				
 			// create stylesheet
 			if (Wicket.Browser.isIE()) {
-			   try
-			   {
+				try  {
 					document.createStyleSheet().cssText = content;
 				}
-				catch(ignore)
-				{
+				catch(ignore) {
 					var run = function() {
-						try
-						{
+						try {
 							document.createStyleSheet().cssText = content;
 						}
-						catch(e)
-						{
+						catch(e) {
 							Wicket.Log.error(e);
 						}
 					}
