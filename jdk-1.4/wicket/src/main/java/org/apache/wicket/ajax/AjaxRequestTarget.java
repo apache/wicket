@@ -329,7 +329,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public final void addComponent(Component component)
+	public void addComponent(Component component)
 	{
 		if (component == null)
 		{
