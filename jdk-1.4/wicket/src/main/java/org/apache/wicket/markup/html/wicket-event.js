@@ -120,7 +120,7 @@ Wicket.Event = {
 			Wicket.Event.addDomReadyEvent(fn);
 		} else {
 			if (element.addEventListener){
-				element.addEventListener((type == 'mousewheel' && window.gecko) ? 'DOMMouseScroll' : type, fn, false);
+				element.addEventListener((type == 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type, fn, false);
 			} else {
 				if (element == window || element == document)   {
 					fn = fn.bind(element);
