@@ -4058,6 +4058,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 					// change the id of the close tag
 					closeTag = closeTag.mutable();
 					closeTag.setName(openTag.getName());
+					closeTag.setNamespace(openTag.getNamespace());
 				}
 
 				// Render the close tag
