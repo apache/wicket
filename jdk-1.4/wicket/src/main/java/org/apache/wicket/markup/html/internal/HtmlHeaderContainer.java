@@ -168,9 +168,13 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 			if (output.length() > 0)
 			{
-				webResponse.write("<head>");
+				if (renderOpenAndCloseTags())
+					webResponse.write("<head>");
+				
 				webResponse.write(output);
-				webResponse.write("</head>");
+				
+				if (renderOpenAndCloseTags())
+					webResponse.write("</head>");
 			}
 		}
 		finally
@@ -180,6 +184,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		}
 	}
 
+	protected boolean renderOpenAndCloseTags() {
+		return true;
+	}
+	
 	/**
 	 * Ask all child components of the Page if they have something to contribute to the &lt;head&gt;
 	 * section of the HTML output. Every component interested must implement IHeaderContributor.
