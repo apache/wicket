@@ -20,6 +20,8 @@ package org.apache.wicket.request.target.coding;
  * Temporary interface to make the transition to 2.0, where {@link IRequestTargetUrlCodingStrategy}
  * has a method that reveals the mount path.
  * 
+ * TODO: remove in 1.4
+ * 
  * @author eelcohillenius
  */
 public interface IMountableRequestTargetUrlCodingStrategy extends IRequestTargetUrlCodingStrategy
