@@ -1085,10 +1085,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							{
 								// we found a transparent container that isn't visible
 								// then ignore this component and only do a debug statement here.
-								log.warn("Component " +
-									component +
-									" wasn't rendered but most likely it has a transparent parent: " +
-									sibling);
+								log.debug(
+									"Component {} wasn't rendered but most likely it has a transparent parent: {}",
+									component, sibling);
 								iterator.remove();
 								break;
 							}
