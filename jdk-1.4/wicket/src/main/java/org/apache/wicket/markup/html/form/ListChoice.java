@@ -135,7 +135,7 @@ public class ListChoice extends DropDownChoice
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
 	public ListChoice(final String id, final IModel model, final List choices,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
 	}
@@ -154,7 +154,7 @@ public class ListChoice extends DropDownChoice
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
 	public ListChoice(final String id, final IModel model, final List choices,
-			final IChoiceRenderer renderer, final int maxRows)
+		final IChoiceRenderer renderer, final int maxRows)
 	{
 		super(id, model, choices, renderer);
 		this.maxRows = maxRows;
@@ -231,7 +231,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		if (!tag.getAttributes().containsKey("size"))
