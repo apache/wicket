@@ -152,6 +152,10 @@ public class PrependingStringBuffer
 		{
 			return toString().equals(obj.toString());
 		}
+	}
 
+	public int hashCode()
+	{
+		return toString().hashCode();
 	}
 }

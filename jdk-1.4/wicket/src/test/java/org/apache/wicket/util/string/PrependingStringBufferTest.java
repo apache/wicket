@@ -70,5 +70,19 @@ public class PrependingStringBufferTest extends TestCase
 		assertTrue(psb.equals(psb));
 	}
 
+	/**
+	 * Test if implementation of hashCode() meets its <a
+	 * href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html#hashCode()">contract<a>.
+	 * 
+	 * @throws Exception
+	 */
+	public void testHash() throws Exception
+	{
+		PrependingStringBuffer foo = new PrependingStringBuffer("foo");
+		PrependingStringBuffer bar = new PrependingStringBuffer("foo");
+		assertTrue(foo.equals(bar));
+		assertEquals(foo.hashCode(), bar.hashCode());
+	}
+
 
 }
