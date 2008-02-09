@@ -20,6 +20,7 @@ import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 
 
@@ -124,6 +125,19 @@ public class DefaultPageFactoryTest extends WicketTestCase
 
 	}
 
+	public static class PageThrowingCheckedException extends Page
+	{
+		private static final long serialVersionUID = 1L;
+
+		public static final Exception EXCEPTION = new Exception("a checked exception");
+
+		public PageThrowingCheckedException() throws Exception
+		{
+			throw EXCEPTION;
+		}
+	}
+
+
 	final private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/**
@@ -191,6 +205,22 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		catch (AbstractRestartResponseException e)
 		{
 			// noop
+		}
+
+		try
+		{
+			pageFactory.newPage(PageThrowingCheckedException.class);
+			fail();
+		}
+		catch (WicketRuntimeException e)
+		{
+			assertNotNull(e.getCause());
+			assertNotNull(e.getCause().getCause());
+			assertEquals(PageThrowingCheckedException.EXCEPTION, e.getCause().getCause());
+		}
+		catch (Exception e)
+		{
+			fail();
 		}
 	}
 }
