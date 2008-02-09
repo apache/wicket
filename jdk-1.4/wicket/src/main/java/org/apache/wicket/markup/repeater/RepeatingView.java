@@ -100,15 +100,6 @@ public class RepeatingView extends AbstractRepeater
 	public String newChildId()
 	{
 		childIdCounter++;
-
-		if (childIdCounter == Long.MAX_VALUE)
-		{
-			// mmm yeah...like this will ever happen
-			throw new RuntimeException("generateChildId() out of space.");
-		}
-
-		// We prepend the id's with the text 'id' so they will generate valid
-		// markup id's if needed.
 		return String.valueOf(childIdCounter);
 	}
 
