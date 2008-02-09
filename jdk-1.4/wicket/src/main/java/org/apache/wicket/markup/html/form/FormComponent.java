@@ -613,7 +613,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			return input[0].trim();
+			return trim(input[0]);
 		}
 	}
 
@@ -1211,7 +1211,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	protected Object convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0 && value[0] != null ? value[0].trim() : null;
+		return value != null && value.length > 0 && value[0] != null ? trim(value[0]) : null;
 	}
 
 	/**
@@ -1366,6 +1366,33 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	protected void onValid()
 	{
+	}
+
+	/**
+	 * Determines whether or not this component should trim its input prior to processing it. The
+	 * default value is <code>true</code>
+	 * 
+	 * @return True if the input should be trimmed.
+	 */
+	protected boolean shouldTrimInput()
+	{
+		return true;
+	}
+
+	/**
+	 * Trims the input according to {@link #shouldTrimInput()}
+	 * 
+	 * @param string
+	 * @return trimmed input if {@link #shouldTrimInput()} returns true, unchanged input otherwise
+	 */
+	protected final String trim(String string)
+	{
+		String trimmed = string;
+		if (trimmed != null && shouldTrimInput())
+		{
+			trimmed = trimmed.trim();
+		}
+		return trimmed;
 	}
 
 	/**
