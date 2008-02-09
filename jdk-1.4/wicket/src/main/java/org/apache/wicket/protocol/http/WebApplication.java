@@ -504,6 +504,21 @@ public abstract class WebApplication extends Application
 			// Ignore - we're not allowed to read system properties.
 		}
 
+		/*
+		 * FIXME 1.4: roll in 'wicket.' into Application.CONFIGURATION, we should only support a
+		 * namespaced param. see WICKET-1317
+		 */
+
+		// If no system parameter check filter/servert initparam and context param
+		if (result == null)
+		{
+			result = getInitParameter("wicket." + Application.CONFIGURATION);
+		}
+		if (result == null)
+		{
+			result = getServletContext().getInitParameter("wicket." + Application.CONFIGURATION);
+		}
+
 		// If no system parameter check filter/servlet specific <init-param>
 		if (result == null)
 		{
