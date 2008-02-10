@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * bookmarkable pages as well as non-bookmarkable component interfaces. The protected handleRender
  * method is the internal entrypoint which takes care of the details of rendering a response to an
  * HTTP request.
- * 
+ *
  * @see RequestCycle
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -60,7 +60,7 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * Constructor which simply passes arguments to superclass for storage there. This instance will
 	 * be set as the current one for this thread.
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 * @param request
@@ -69,7 +69,7 @@ public class WebRequestCycle extends RequestCycle
 	 *            The response
 	 */
 	public WebRequestCycle(final WebApplication application, final WebRequest request,
-			final Response response)
+		final Response response)
 	{
 		super(application, request, response);
 	}
@@ -83,7 +83,7 @@ public class WebRequestCycle extends RequestCycle
 	 * {@link #onRuntimeException(Page, RuntimeException)} is not called unless you deliberately put
 	 * effort in it to make it work.</strong>
 	 * </p>
-	 * 
+	 *
 	 * @see org.apache.wicket.RequestCycle#getProcessor()
 	 */
 	public IRequestCycleProcessor getProcessor()
@@ -120,7 +120,7 @@ public class WebRequestCycle extends RequestCycle
 	 * directly, but work with setResponsePage instead. This method is part of Wicket's internal
 	 * behavior and should only be used when you want to circumvent the normal framework behavior
 	 * and issue the redirect directly.
-	 * 
+	 *
 	 * @param page
 	 *            The page to redirect to
 	 */
@@ -131,7 +131,8 @@ public class WebRequestCycle extends RequestCycle
 		// Check if use serverside response for client side redirects
 		IRequestCycleSettings settings = application.getRequestCycleSettings();
 		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER) &&
-				(application instanceof WebApplication) && !(getWebRequest().isAjax()))
+			(application instanceof WebApplication) && !(getWebRequest().isAjax()) &&
+			(!page.isPageStateless()))
 		{
 			// remember the current response
 			final WebResponse currentResponse = getWebResponse();
@@ -142,12 +143,11 @@ public class WebRequestCycle extends RequestCycle
 					// Get the redirect url and set it in the ServletWebRequest
 					// so that it can be used for relative url calculation.
 					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(Strings.replaceAll(
-							page.urlFor(IRedirectListener.INTERFACE).toString(), "../", "")
-							.toString());
+						page.urlFor(IRedirectListener.INTERFACE).toString(), "../", "").toString());
 				}
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
-						currentResponse.getHttpServletResponse());
+					currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
 					public CharSequence encodeURL(CharSequence url)
@@ -198,9 +198,9 @@ public class WebRequestCycle extends RequestCycle
 					String stripped = Strings.replaceAll(redirectUrl, "../", "").toString();
 					int index = stripped.indexOf("?");
 					String sessionId = getApplication().getSessionStore().getSessionId(request,
-							true);
-					((WebApplication)application).addBufferedResponse(sessionId, stripped
-							.substring(index + 1), servletResponse);
+						true);
+					((WebApplication)application).addBufferedResponse(sessionId,
+						stripped.substring(index + 1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
@@ -272,7 +272,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * If it's an ajax request we always redirect.
-	 * 
+	 *
 	 * @see org.apache.wicket.RequestCycle#isRedirect()
 	 */
 	public final boolean isRedirect()
