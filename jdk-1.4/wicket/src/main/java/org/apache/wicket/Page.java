@@ -754,6 +754,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					"but the stateless hint is set to true!");
 			}
 		}
+		
+		if (getStatelessHint() == false) 
+		{
+			return false;
+		}
+			
 
 		if (stateless == null)
 		{
@@ -1152,6 +1158,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 		final IPageMap pageMap = PageMap.forName(pageMapName);
 		init(pageMap);
+		
+		if (isBookmarkable())
+			setStatelessHint(true);
 	}
 
 	/**
