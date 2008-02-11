@@ -154,7 +154,7 @@ import org.slf4j.LoggerFactory;
  * their way with continueToOriginalDestination(). These methods could also be useful in
  * "interstitial" advertising or other kinds of "intercepts".
  * <p>
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
@@ -190,7 +190,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets request cycle for calling thread.
-	 * 
+	 *
 	 * @return Request cycle for calling thread
 	 */
 	public static RequestCycle get()
@@ -203,7 +203,7 @@ public abstract class RequestCycle
 	 * as the request cycle is set to current for you in the constructor. However, if you have a <a
 	 * href="http://issues.apache.org/jira/browse/WICKET-366">very special need</a> to set it to
 	 * something else, you can expose this method.
-	 * 
+	 *
 	 * @param cycle
 	 *            The request cycle to set current
 	 */
@@ -268,7 +268,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Constructor. This instance will be set as the current one for this thread.
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 * @param request
@@ -291,7 +291,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the application object.
-	 * 
+	 *
 	 * @return Application interface
 	 */
 	public final Application getApplication()
@@ -303,7 +303,7 @@ public abstract class RequestCycle
 	 * Gets the new agent info object for this session. This method calls
 	 * {@link Session#getClientInfo()}, which may or may not cache the client info object and
 	 * typically calls {@link #newClientInfo()} when no client info object was cached.
-	 * 
+	 *
 	 * @return the agent info object based on this request
 	 */
 	public final ClientInfo getClientInfo()
@@ -315,7 +315,7 @@ public abstract class RequestCycle
 	 * Get the original response the request was create with. Access may be necessary with the
 	 * response has temporarily being replaced but your components requires access to lets say the
 	 * cookie methods of a WebResponse.
-	 * 
+	 *
 	 * @return The original response object.
 	 */
 	public final Response getOriginalResponse()
@@ -326,7 +326,7 @@ public abstract class RequestCycle
 	/**
 	 * Any set page parameters. Typically only available when a request to a bookmarkable page with
 	 * a {@link Page#Page(PageParameters)} constructor was made.
-	 * 
+	 *
 	 * @return the page parameters or null
 	 */
 	public final PageParameters getPageParameters()
@@ -336,14 +336,14 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the processor for delegated request cycle handling.
-	 * 
+	 *
 	 * @return the processor for delegated request cycle handling
 	 */
 	public abstract IRequestCycleProcessor getProcessor();
 
 	/**
 	 * Gets whether the page for this request should be redirected.
-	 * 
+	 *
 	 * @return whether the page for this request should be redirected
 	 * @deprecated Use {@link #isRedirect()} instead
 	 */
@@ -354,7 +354,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the request.
-	 * 
+	 *
 	 * @return Request object
 	 */
 	public final Request getRequest()
@@ -364,7 +364,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the current request target. May be null.
-	 * 
+	 *
 	 * @return the current request target, null if none was set yet.
 	 */
 	public final IRequestTarget getRequestTarget()
@@ -374,7 +374,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the response.
-	 * 
+	 *
 	 * @return Response object
 	 */
 	public final Response getResponse()
@@ -385,7 +385,7 @@ public abstract class RequestCycle
 	/**
 	 * Gets the page that is to be rendered for this request in case the last set request target is
 	 * of type {@link PageRequestTarget}.
-	 * 
+	 *
 	 * @return the page or null
 	 */
 	public final Page getResponsePage()
@@ -405,7 +405,7 @@ public abstract class RequestCycle
 	/**
 	 * Gets the page class that is to be instantiated and rendered for this request in case the last
 	 * set request target is of type {@link BookmarkablePageRequestTarget}.
-	 * 
+	 *
 	 * @return the page class or null
 	 */
 	public final Class getResponsePageClass()
@@ -420,7 +420,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the session.
-	 * 
+	 *
 	 * @return Session object
 	 */
 	public final Session getSession()
@@ -442,7 +442,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets whether the page for this request should be redirected.
-	 * 
+	 *
 	 * @return whether the page for this request should be redirected
 	 */
 	public boolean isRedirect()
@@ -454,7 +454,7 @@ public abstract class RequestCycle
 	 * Template method that is called when a runtime exception is thrown, just before the actual
 	 * handling of the runtime exception. This is called by
 	 * {@link AbstractRequestCycleProcessor#respond(RuntimeException, RequestCycle)}.
-	 * 
+	 *
 	 * @param page
 	 *            Any page context where the exception was thrown
 	 * @param e
@@ -471,7 +471,7 @@ public abstract class RequestCycle
 	 * <p>
 	 * Redirects browser to the given page. Don't use this method directly, but use
 	 * {@link #setResponsePage(Page)} instead.
-	 * 
+	 *
 	 * @param page
 	 *            The page to redirect to
 	 */
@@ -501,7 +501,7 @@ public abstract class RequestCycle
 	 * <p>
 	 * NOTE: This method is typically only used for testing purposes.
 	 * </p>
-	 * 
+	 *
 	 * @param component
 	 *            to be re-rendered
 	 */
@@ -521,7 +521,7 @@ public abstract class RequestCycle
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Responds to a request with the request target.
-	 * 
+	 *
 	 * @param target
 	 *            request target
 	 */
@@ -541,7 +541,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Permit clients like testers to examine feedback messages after processing.
-	 * 
+	 *
 	 * @param automaticallyClearFeedbackMessages
 	 *            True to automatically detach request cycle at end of processing
 	 */
@@ -554,7 +554,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets whether the page for this request should be redirected.
-	 * 
+	 *
 	 * @param redirect
 	 *            True if the page for this request cycle should be redirected to rather than
 	 *            directly rendered.
@@ -575,7 +575,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets the request target as the current.
-	 * 
+	 *
 	 * @param requestTarget
 	 *            the request target to set as current
 	 */
@@ -616,7 +616,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets response.
-	 * 
+	 *
 	 * @param response
 	 *            The response
 	 * @return the original response
@@ -630,7 +630,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Attempts to return name of current page map
-	 * 
+	 *
 	 * @return
 	 */
 	private String getCurrentPageMap()
@@ -654,7 +654,7 @@ public abstract class RequestCycle
 	/**
 	 * Convenience method that sets page class as the response. This will generate a redirect to the
 	 * page with a bookmarkable url
-	 * 
+	 *
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
@@ -665,7 +665,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets the page class with optionally the page parameters as the render target of this request.
-	 * 
+	 *
 	 * @param pageClass
 	 *            The page class to render as a response
 	 * @param pageParameters
@@ -679,7 +679,7 @@ public abstract class RequestCycle
 	/**
 	 * Sets the page class with optionally the page parameters and page map name as the render
 	 * target of this request.
-	 * 
+	 *
 	 * @param pageClass
 	 *            The page class to render as a response
 	 * @param pageParameters
@@ -697,7 +697,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets the page as the render target of this request.
-	 * 
+	 *
 	 * @param page
 	 *            The page to render as a response
 	 */
@@ -738,7 +738,7 @@ public abstract class RequestCycle
 	/**
 	 * Returns an encoded URL that references the given request target and clears the
 	 * urlForNewWindowEncoding flag.
-	 * 
+	 *
 	 * @param requestTarget
 	 *            the request target to reference
 	 * @return a URL that references the given request target
@@ -754,7 +754,7 @@ public abstract class RequestCycle
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
+	 *
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -771,7 +771,7 @@ public abstract class RequestCycle
 	 * URL is requested from the server at a later time, the interface on the behavior will be
 	 * called. A URL returned by this method will not be stable across sessions and cannot be
 	 * bookmarked by a user.
-	 * 
+	 *
 	 * @param component
 	 *            The component to reference
 	 * @param behaviour
@@ -812,7 +812,7 @@ public abstract class RequestCycle
 	 * Returns a URL that references a given interface on a component. When the URL is requested
 	 * from the server at a later time, the interface will be called. A URL returned by this method
 	 * will not be stable across sessions and cannot be bookmarked by a user.
-	 * 
+	 *
 	 * @param component
 	 *            The component to reference
 	 * @param listener
@@ -828,7 +828,7 @@ public abstract class RequestCycle
 		final Page page = component.getPage();
 		final IRequestTarget target;
 		if (listener != IRedirectListener.INTERFACE && component.isStateless() &&
-			page.isBookmarkable())
+			page.isBookmarkable() && page.getStatelessHint())
 		{
 			PageParameters pageParameters = page.getPageParameters();
 			if (pageParameters == null)
@@ -893,7 +893,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Url encodes value using UTF-8
-	 * 
+	 *
 	 * @param value
 	 *            value to encode
 	 * @return encoded value
@@ -907,7 +907,7 @@ public abstract class RequestCycle
 	 * Returns a URL that references a given interface on a component. When the URL is requested
 	 * from the server at a later time, the interface will be called. A URL returned by this method
 	 * will not be stable across sessions and cannot be bookmarked by a user.
-	 * 
+	 *
 	 * @param component
 	 *            The component to reference
 	 * @param listener
@@ -924,7 +924,7 @@ public abstract class RequestCycle
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
+	 *
 	 * @param pageMap
 	 *            Pagemap to use. If null is passed the default page map will be used
 	 * @param pageClass
@@ -943,7 +943,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Returns a URL that references the given request target.
-	 * 
+	 *
 	 * @param requestTarget
 	 *            the request target to reference
 	 * @return a URL that references the given request target
@@ -957,7 +957,7 @@ public abstract class RequestCycle
 	 * Returns a URL that references the given page. It also {@link Session#touch(Page) touches} the
 	 * page in the session so that it is put in the front of the page stack. Use this method only if
 	 * you plan to use it the next request.
-	 * 
+	 *
 	 * @param page
 	 *            The page
 	 * @return The url pointing to the provided page
@@ -971,7 +971,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Returns a URL that references a shared resource through the provided resource reference.
-	 * 
+	 *
 	 * @param resourceReference
 	 *            The resource reference where a url must be generated for.
 	 * @return The url for the shared resource
@@ -983,7 +983,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Returns a URL that references a shared resource through the provided resource reference.
-	 * 
+	 *
 	 * @param resourceReference
 	 *            The resource reference where a url must be generated for.
 	 * @param parameters
@@ -1183,7 +1183,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Safe version of {@link #getProcessor()} that throws an exception when the processor is null.
-	 * 
+	 *
 	 * @return the request processor
 	 */
 	private final IRequestCycleProcessor safeGetRequestProcessor()
@@ -1373,7 +1373,7 @@ public abstract class RequestCycle
 	/**
 	 * Possibly set the page parameters. Only set when the request is resolving and the parameters
 	 * are passed into a page.
-	 * 
+	 *
 	 * @param parameters
 	 *            the parameters to set
 	 */
@@ -1390,7 +1390,7 @@ public abstract class RequestCycle
 	 * will result in displaying a user facing error page. Clients can override this method in case
 	 * they want to customize logging. NOT called for
 	 * {@link PageExpiredException page expired exceptions}.
-	 * 
+	 *
 	 * @param e
 	 *            the runtime exception
 	 */
@@ -1404,7 +1404,7 @@ public abstract class RequestCycle
 	 * by the session and the returned object will be cached in the session after that call; we can
 	 * expect the client to stay the same for the whole session, and implementations of
 	 * {@link #newClientInfo()} might be relatively expensive.
-	 * 
+	 *
 	 * @return the agent info object based on this request
 	 */
 	protected abstract ClientInfo newClientInfo();
@@ -1432,7 +1432,7 @@ public abstract class RequestCycle
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
-	 * 
+	 *
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -1447,7 +1447,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets metadata for this request cycle using the given key.
-	 * 
+	 *
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata or null if no metadata was found for the given key
