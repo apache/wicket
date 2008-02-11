@@ -1368,10 +1368,15 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Gets the method used to submit the form. Defaults to either what is explicitly defined in the
-	 * markup or 'post'. Override this if you have a requirement to alter this behavior.
+	 * Gets the HTTP submit method that will appear in form markup. If no method is specified in 
+	 * the template, "post" is the default. Note that the markup-declared HTTP method may not
+	 * correspond to the one actually used to submit the form; in an Ajax submit, for example, 
+	 * JavaScript event handlers may submit the form with a "get" even when the form method is 
+	 * declared as "post." Therefore this method should not be considered a guarantee of the 
+	 * HTTP method used, but a value for the markup only.
+	 * Override if you have a requirement to alter this behavior.
 	 * 
-	 * @return the method used to submit the form.
+	 * @return the submit method specified in markup.
 	 */
 	protected String getMethod()
 	{
