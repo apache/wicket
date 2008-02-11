@@ -728,4 +728,12 @@ public class StringValue implements IClusterable
 	{
 		return (text == null) ? defaultValue : toTime();
 	}
+	
+	/**
+	 * Returns whether the text is null.
+	 * @return <code>true</code> if the text is <code>null</code>, <code>false</code> otherwise.
+	 */
+	public boolean isNull() {
+		return text == null;
+	}
 }
