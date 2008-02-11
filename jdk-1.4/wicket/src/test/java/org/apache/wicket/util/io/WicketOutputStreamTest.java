@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -38,7 +39,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	/**
 	 * Tests serialization of a big int.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testBigInteger() throws Exception
@@ -131,6 +132,8 @@ public class WicketOutputStreamTest extends WicketTestCase
 		Assert.assertEquals(a, a2);
 
 		Assert.assertSame(a2, a2.getB().getA());
+		
+		RequestCycle.get().detach();
 	}
 
 
