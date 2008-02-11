@@ -223,6 +223,9 @@ public abstract class Session implements IClusterable
 		{
 			// Create session using session factory
 			session = application.newSession(request, response);
+			
+			dirtyObjects.set(null);
+			touchedPages.set(null);
 		}
 
 		// set thread local
