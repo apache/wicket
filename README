@@ -27,7 +27,7 @@ License
 -------
 
 Wicket is distributed under the terms of the Apache Software Foundation
-license, version 2.0. The text is included in the file LICENSE.txt in the root
+license, version 2.0. The text is included in the file LICENSE in the root
 of the project.
 
 Java/Application server requirements
@@ -50,8 +50,10 @@ You will find the source code here:
    - wicket
    - wicket-extensions
    - wicket-datetime
+   - wicket-ioc
    - wicket-spring
    - wicket-velocity
+   - wicket-quickstart
  - src/jdk-1.5
    - wicket-examples
    - wicket-auth-roles
@@ -122,7 +124,10 @@ started quickly:
 Dependencies
 ------------
 
-The easiest way of getting the dependencies of your Wicket based projects right is to use Maven with your projects and include the wicket dependencies you want like is outlined in the quickstart. Maven will then take care of including the appropriate dependencies.
+The easiest way of getting the dependencies of your Wicket based projects right 
+is to use Apache Maven (http://maven.apache.org) with your projects and include
+the wicket dependencies you want is outlined in the wicket-quickstart. 
+Maven will then take care of including the appropriate dependencies.
 
 If you do not want to use maven, here is a break down of the dependencies you need.
 
@@ -178,8 +183,8 @@ Building Wicket from source
 ---------------------------
 
 The Wicket distribution contains the final Wicket jar. You can use this
-directly in your applications. The Wicket project also uploads the source-jars
-and JavaDoc jars together with the final jar to the Maven repository used by
+directly in your applications. The Wicket project also uploads the source 
+and JavaDoc jars as well as the final jar to the Maven repository used by
 the Maven build tool. So there is actually no specific need to build Wicket
 yourself from the distribution.
 
@@ -192,7 +197,7 @@ Building using maven 2, change the working directory to src and either do:
  - mvn install
 
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
-    into your local repository for use in other projects.
+    into your local Maven repository for use in other projects.
 
 Migrating from 1.2
 ------------------

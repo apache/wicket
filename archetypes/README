@@ -1,9 +1,10 @@
 Apache Wicket Archetypes
 ========================
 
-This is the readme file for the wicket-archetypes folder
+This is the README file for the archetypes directory
 
-Wicket-archetypes is a collection of maven project archetypes designed for wicket.
+Wicket's archetypes directory is a collection of Apache Maven project 
+archetypes designed for Wicket.
 
 Contents
 --------
@@ -13,7 +14,8 @@ Contents
 
 Requirements
 ------------
-To install and use these archetype Maven2 needs to be present.
+To install and use these archetypes Apache Maven (http://maven.apache.org)
+needs to be present.
 
 
 Getting started
