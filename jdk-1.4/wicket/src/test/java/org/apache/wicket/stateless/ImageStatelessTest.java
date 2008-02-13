@@ -39,20 +39,10 @@ public class ImageStatelessTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testEmpty()
-	{
-		final Image i = new Image("test");
-		tester.startComponent(i);
-		assertTrue("image with resource reference should be statefull", !i.isStateless());
-	}
-
-	/**
-	 * 
-	 */
 	public void testResource()
 	{
 		final Image i = new Image("test", new ByteArrayResource("text/text", new byte[0]));
 		tester.startComponent(i);
-		assertTrue("image with resource reference should be statefull", !i.isStateless());
+		assertTrue("image with resource should be statefull", !i.isStateless());
 	}
 }

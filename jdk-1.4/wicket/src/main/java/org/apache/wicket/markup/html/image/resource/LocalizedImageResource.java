@@ -221,7 +221,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	}
 
 	/**
-	 * @return If it is stateless (if resource is null)
+	 * @return true if it has a resourceReference. (it points to a shared resource)
 	 */
 	public final boolean isStateless()
 	{
@@ -258,8 +258,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		// resource, then we need to reload the resource in the new locale
 		Locale l = component.getLocale();
 		String s = component.getStyle();
-		if (resourceKind == null &&
-			(!Objects.equal(locale, l) || !Objects.equal(style, s)))
+		if (resourceKind == null && (!Objects.equal(locale, l) || !Objects.equal(style, s)))
 		{
 			// Get new component locale and style
 			locale = l;
