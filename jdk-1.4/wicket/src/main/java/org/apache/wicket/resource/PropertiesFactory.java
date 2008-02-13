@@ -105,33 +105,40 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		// Check the cache
 		Properties properties = (Properties)propertiesCache.get(path);
-		if (properties != null)
-		{
-			// Return null, if no resource stream was found
-			if (properties == Properties.EMPTY_PROPERTIES)
-			{
-				properties = null;
-			}
-			return properties;
-		}
 
-		// If not in the cache than try to load the resource stream
-		IResourceStream stream = application.getResourceSettings().getResourceStreamLocator()
-				.locate(clazz, path);
-		if (stream != null)
+		if (properties == null)
 		{
-			// Load the properties from the stream
-			properties = loadPropertiesFileAndWatchForChanges(path, stream);
-			if (properties != null)
+			// If not in the cache than try to load properties
+			IResourceStream stream = application.getResourceSettings()
+				.getResourceStreamLocator()
+				.locate(clazz, path);
+			if (stream != null)
+			{
+				// Load the properties from the stream
+				properties = loadPropertiesFileAndWatchForChanges(path, stream);
+			}
+
+
+			// Cache the lookup
+			if (properties == null)
+			{
+				// Could not locate properties, store a placeholder
+				propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
+			}
+			else
 			{
 				propertiesCache.put(path, properties);
-				return properties;
 			}
+
 		}
 
-		// Add a placeholder to the cache. Null is not a valid value to add.
-		propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
-		return null;
+		if (properties == Properties.EMPTY_PROPERTIES)
+		{
+			// Translate empty properties placeholder to null prior to returning
+			properties = null;
+		}
+
+		return properties;
 	}
 
 	/**
@@ -144,7 +151,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @return The map of loaded resources
 	 */
 	private synchronized Properties loadPropertiesFile(final String key,
-			final IResourceStream resourceStream)
+		final IResourceStream resourceStream)
 	{
 		// Make sure someone else didn't load our resources while we were
 		// waiting for the synchronized lock on the method
@@ -167,15 +174,14 @@ public class PropertiesFactory implements IPropertiesFactory
 				try
 				{
 					// Get the InputStream
-					BufferedInputStream in = new BufferedInputStream(resourceStream
-							.getInputStream());
+					BufferedInputStream in = new BufferedInputStream(
+						resourceStream.getInputStream());
 
 					// Determine if resource is a XML File
 					boolean loadAsXml = false;
 					if (resourceStream instanceof IFixedLocationResourceStream)
 					{
-						String location = ((IFixedLocationResourceStream)resourceStream)
-								.locationAsString();
+						String location = ((IFixedLocationResourceStream)resourceStream).locationAsString();
 						if (location != null)
 						{
 							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
@@ -239,11 +245,11 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * @return The map of loaded resources
 	 */
 	private final Properties loadPropertiesFileAndWatchForChanges(final String key,
-			final IResourceStream resourceStream)
+		final IResourceStream resourceStream)
 	{
 		// Watch file modifications
 		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
-				true);
+			true);
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()
@@ -251,7 +257,7 @@ public class PropertiesFactory implements IPropertiesFactory
 				public void onChange()
 				{
 					log.info("A properties files has changed. Removing all entries " +
-							"from the cache. Resource: " + resourceStream);
+						"from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
 					// be affected and may need reloading as well.
@@ -272,7 +278,7 @@ public class PropertiesFactory implements IPropertiesFactory
 						catch (Throwable ex)
 						{
 							log.error("PropertiesReloadListener has thrown an exception: " +
-									ex.getMessage());
+								ex.getMessage());
 						}
 					}
 				}
