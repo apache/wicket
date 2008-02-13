@@ -1652,6 +1652,10 @@ Wicket.Drag = {
 		if (typeof(e.ignore) == "undefined") {
 			
 			Wicket.stopEvent(e);
+			
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
 
 			element.wicketOnDragBegin(element);		
 			
