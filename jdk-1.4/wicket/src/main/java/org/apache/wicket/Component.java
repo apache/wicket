@@ -1420,7 +1420,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		final int generatedMarkupId = storedMarkupId instanceof Integer
-			? ((Integer)storedMarkupId).intValue() : nextAutoIndex();
+			? ((Integer)storedMarkupId).intValue() : Session.get().nextSequenceValue();
 
 		if (storedMarkupId == null)
 		{
@@ -1433,7 +1433,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// for issue http://issues.apache.org/jira/browse/WICKET-694
 		// markupId = getMarkupAttributes().getString("id");
 
-		String markupId = RequestContext.get().encodeMarkupId(getId() + generatedMarkupId);
+
+		String markupIdPrefix = "i";
+		if (!Application.get().getConfigurationType().equals(Application.DEPLOYMENT))
+		{
+			// in non-deployment mode we make the markup id include component id so it is easier to
+			// debug
+			markupIdPrefix = getId();
+		}
+
+		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase();
+		markupIdPostfix = RequestContext.get().encodeMarkupId(markupIdPostfix);
+
+		String markupId = markupIdPrefix + markupIdPostfix;
 		// make sure id is compliant with w3c requirements (starts with a
 		// letter)
 		char c = markupId.charAt(0);

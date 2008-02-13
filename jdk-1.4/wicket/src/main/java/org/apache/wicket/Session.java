@@ -147,6 +147,9 @@ public abstract class Session implements IClusterable
 		}
 	}
 
+	/** a sequence used for whenever something session-specific needs a unique value */
+	public int sequence = 1;
+
 	/** meta data key for missing body tags logging. */
 	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
 		PageMapAccessMetaData.class)
@@ -223,7 +226,7 @@ public abstract class Session implements IClusterable
 		{
 			// Create session using session factory
 			session = application.newSession(request, response);
-			
+
 			dirtyObjects.set(null);
 			touchedPages.set(null);
 		}
@@ -1460,5 +1463,15 @@ public abstract class Session implements IClusterable
 	synchronized protected int nextPageId()
 	{
 		return pageIdCounter++;
+	}
+
+	/**
+	 * Retrieves the next available session-unique value
+	 * 
+	 * @return session-unique value
+	 */
+	public synchronized int nextSequenceValue()
+	{
+		return sequence++;
 	}
 }
