@@ -598,7 +598,7 @@ Wicket.Window.prototype = {
 	/**
 	 * Loads the content 
 	 */
-	load: function() {			
+	load: function() {
 		if (this.settings.title == null)
 			this.update = window.setInterval(this.updateTitle.bind(this), 100);
 		
@@ -729,7 +729,7 @@ Wicket.Window.prototype = {
 		}
 
 		// create the mask that covers the background		
-		this.createMask();				
+		this.createMask();	
 	},
 	
 	/**
@@ -1249,7 +1249,6 @@ Wicket.Window.Mask.prototype = {
 		this.hideSelectBoxes();						
 		this.disableTabs();
 		this.disableFocus();		
-
 	},
 	
 	/**
@@ -1414,7 +1413,7 @@ Wicket.Window.Mask.prototype = {
 	 * Disable tab indexes (ie).
 	 */
 	disableTabs: function () {		
-		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME");
+		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME", "SELECT");
 		if (Wicket.Browser.isIE()) {
 			var win = Wicket.Window.current;			
 			var i = 0;			
