@@ -758,7 +758,6 @@ Wicket.Ajax.Request.prototype = {
 	},
 	
 	createUrl: function() {
-	
 		if (this.randomURL == false)
 			return this.url;
 		else
@@ -822,6 +821,14 @@ Wicket.Ajax.Request.prototype = {
 			
 			var t = this.transport;
 			if (t != null) {
+				if (Wicket.Browser.isGecko()) {
+					var href = document.location.href;
+					var lastIndexOf = href.lastIndexOf('/');
+					if (lastIndexOf > 0)
+					{
+						url = href.substring(0,lastIndexOf+1) + url;
+					}
+				} 
 				t.open("GET", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
