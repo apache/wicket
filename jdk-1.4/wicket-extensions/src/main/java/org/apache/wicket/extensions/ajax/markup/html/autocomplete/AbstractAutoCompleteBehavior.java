@@ -18,12 +18,10 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
-import org.apache.wicket.util.string.JavascriptUtils;
 
 /**
  * @since 1.2
@@ -46,6 +44,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	{
 		super.renderHead(response);
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
+		final String id = getComponent().getMarkupId();
+		response.renderOnDomReadyJavascript("new Wicket.AutoComplete('" + id + "','" +
+			getCallbackUrl() + "'," + preselect + ");");
 	}
 
 	/**
@@ -64,19 +65,6 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			{
 			}
 		});
-	}
-
-	/**
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentRendered()
-	 */
-	protected void onComponentRendered()
-	{
-		Response response = getComponent().getResponse();
-		final String id = getComponent().getMarkupId();
-		response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
-		response.write("new Wicket.AutoComplete('" + id + "','" + getCallbackUrl() + "'," +
-			preselect + ");");
-		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
 	/**
