@@ -16,11 +16,10 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
 
 /**
  * Class used for holding meta data entries.
- * 
+ *
  * @author Jonathan Locke
  */
 final class MetaDataEntry implements IClusterable
@@ -29,16 +28,16 @@ final class MetaDataEntry implements IClusterable
 
 	final MetaDataKey key;
 
-	Serializable object;
+	Object object;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param key
 	 *            meta data key
 	 * @param object
 	 */
-	public MetaDataEntry(MetaDataKey key, Serializable object)
+	public MetaDataEntry(MetaDataKey key, Object object)
 	{
 		this.key = key;
 		this.object = object;
@@ -50,6 +49,6 @@ final class MetaDataEntry implements IClusterable
 	public String toString()
 	{
 		return key + "=" + object.getClass().getName() + "@" +
-				Integer.toHexString(object.hashCode());
+			Integer.toHexString(object.hashCode());
 	}
 }

@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -466,7 +465,7 @@ public abstract class Application
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final Object getMetaData(final MetaDataKey key)
 	{
 		return key.get(metaData);
 	}
@@ -739,7 +738,7 @@ public abstract class Application
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized void setMetaData(final MetaDataKey key, final Serializable object)
+	public final synchronized void setMetaData(final MetaDataKey key, final Object object)
 	{
 		metaData = key.set(metaData, object);
 	}

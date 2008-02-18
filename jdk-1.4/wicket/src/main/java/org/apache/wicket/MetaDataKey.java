@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
-
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -27,7 +25,7 @@ import org.apache.wicket.util.lang.Classes;
  * subtype. That subtype is used to test for identity when looking for the metadata because actual
  * object identity would suffer from problems under serialization. So, the correct way to declare a
  * MetaDataKey is like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class MetaDataKey implements IClusterable
@@ -39,13 +37,13 @@ public abstract class MetaDataKey implements IClusterable
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param type
 	 *            The type of value stored under this key
 	 */
 	public MetaDataKey(final Class type)
 	{
-		this.typeName = type.getName();
+		typeName = type.getName();
 	}
 
 	/**
@@ -61,7 +59,7 @@ public abstract class MetaDataKey implements IClusterable
 	 *            Array of metadata to search
 	 * @return The entry value
 	 */
-	Serializable get(MetaDataEntry[] metaData)
+	Object get(MetaDataEntry[] metaData)
 	{
 		if (metaData != null)
 		{
@@ -84,7 +82,7 @@ public abstract class MetaDataKey implements IClusterable
 	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	MetaDataEntry[] set(MetaDataEntry[] metaData, final Serializable object)
+	MetaDataEntry[] set(MetaDataEntry[] metaData, final Object object)
 	{
 		checkType(object);
 		boolean set = false;
@@ -142,7 +140,7 @@ public abstract class MetaDataKey implements IClusterable
 
 	/**
 	 * Checks the type of the given object against the type for this metadata key.
-	 * 
+	 *
 	 * @param object
 	 *            The object to check
 	 * @throws IllegalArgumentException
@@ -154,7 +152,7 @@ public abstract class MetaDataKey implements IClusterable
 		if (object != null && !clazz.isAssignableFrom(object.getClass()))
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass() +
-					" requires argument of " + clazz + ", not " + object.getClass());
+				" requires argument of " + clazz + ", not " + object.getClass());
 		}
 	}
 
