@@ -1034,7 +1034,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (feedbacks == null)
 			{
 				feedbacks = new ArrayList();
-				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
+				getRequestCycle().setMetaData(FEEDBACK_LIST, (Serializable)feedbacks);
 			}
 			feedbacks.add(this);
 		}
