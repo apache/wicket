@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1427,6 +1428,15 @@ public abstract class RequestCycle
 	 */
 	private MetaDataEntry[] metaData;
 
+	/**
+	 * 
+	 * @param key
+	 * @param object
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object) {
+		setMetaData(key, (Object)object);
+	}
+	
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For

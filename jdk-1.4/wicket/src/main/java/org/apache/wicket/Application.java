@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -726,6 +727,15 @@ public abstract class Application
 		}
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @param object
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object) {
+		setMetaData(key, (Object)object);
+	}
+	
 	/**
 	 * Sets the metadata for this application using the given key. If the metadata object is not of
 	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
