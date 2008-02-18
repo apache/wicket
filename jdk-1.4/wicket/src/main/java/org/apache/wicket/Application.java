@@ -466,9 +466,9 @@ public abstract class Application
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final Object getMetaData(final MetaDataKey key)
+	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return key.get(metaData);
+		return (Serializable) key.get(metaData);
 	}
 
 	/**
@@ -726,15 +726,6 @@ public abstract class Application
 			}
 		}
 	}
-
-	/**
-	 * 
-	 * @param key
-	 * @param object
-	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object) {
-		setMetaData(key, (Object)object);
-	}
 	
 	/**
 	 * Sets the metadata for this application using the given key. If the metadata object is not of
@@ -748,7 +739,8 @@ public abstract class Application
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized void setMetaData(final MetaDataKey key, final Object object)
+	// TODO: Replace the Serializable type with Object for next wicket version
+	public final synchronized void setMetaData(final MetaDataKey key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
