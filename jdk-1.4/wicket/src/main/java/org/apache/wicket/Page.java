@@ -1156,11 +1156,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
 		}
-		final IPageMap pageMap = PageMap.forName(pageMapName);
-		init(pageMap);
 		
-		if (isBookmarkable())
-			setStatelessHint(true);
+		final IPageMap pageMap = PageMap.forName(pageMapName);
+		init(pageMap);		
 	}
 
 	/**
@@ -1171,6 +1169,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init(final IPageMap pageMap)
 	{
+		if (isBookmarkable())
+			setStatelessHint(true);
+		
 		// Set the page map
 		if (pageMap != null)
 		{
