@@ -1227,8 +1227,10 @@ public abstract class RequestCycle
 					// has to result in a request target
 					if (target == null)
 					{
-						throw new WicketRuntimeException(
-							"the processor did not resolve to any request target");
+						this.handled = false;
+						currentStep = DONE;
+						//throw new WicketRuntimeException(
+						//	"the processor did not resolve to any request target");
 					}
 					// Add (inserting at the bottom) in case before or during
 					// target resolving one or more request targets were pushed
@@ -1287,6 +1289,18 @@ public abstract class RequestCycle
 		}
 	}
 
+	/**
+	 * INTERNAL. This method is not part of public Wicket Api. Do not call it.
+	 * Returns whether wicket handled this request or not (i.e. when no request target was found). 
+	 * @return true if wicket handled this request, false otherwise
+	 */
+	public boolean wasHandled()
+	{
+		return handled;
+	}
+	
+	private boolean handled = true;
+	
 	/**
 	 * Loop through the processing steps starting from the current one.
 	 */
@@ -1427,15 +1441,6 @@ public abstract class RequestCycle
 	 * MetaDataEntry array.
 	 */
 	private MetaDataEntry[] metaData;
-
-	/**
-	 * 
-	 * @param key
-	 * @param object
-	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object) {
-		setMetaData(key, (Object)object);
-	}
 	
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
@@ -1449,7 +1454,8 @@ public abstract class RequestCycle
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Object object)
+	// TODO: Replace the Serializable type with Object for next wicket version
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -1462,8 +1468,8 @@ public abstract class RequestCycle
 	 * @return The metadata or null if no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	public final Object getMetaData(final MetaDataKey key)
+	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return key.get(metaData);
+		return (Serializable)key.get(metaData);
 	}
 }

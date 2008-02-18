@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -32,6 +34,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
@@ -382,6 +385,10 @@ public class MockWebApplication
 		try
 		{
 			cycle.request();
+			if (cycle.wasHandled() == false) 
+			{
+				cycle.setRequestTarget(new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND));
+			}
 			createRequestCycle();
 		}
 		finally

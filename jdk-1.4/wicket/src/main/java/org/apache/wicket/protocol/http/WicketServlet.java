@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.servlet.FilterConfig;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.util.io.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,7 +121,10 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		wicketFilter.doGet(servletRequest, servletResponse);
+		if (wicketFilter.doGet(servletRequest, servletResponse) == false) 
+		{
+			fallback(servletRequest, servletResponse);
+		}
 	}
 
 	/**
@@ -136,9 +142,43 @@ public class WicketServlet extends HttpServlet
 	public final void doPost(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		wicketFilter.doGet(servletRequest, servletResponse);
+		if (wicketFilter.doGet(servletRequest, servletResponse) == false) 
+		{
+			fallback(servletRequest, servletResponse);
+		}
 	}
 
+	private void fallback(HttpServletRequest request, HttpServletResponse response) throws IOException 
+	{
+		
+		// The ServletWebRequest is created here to avoid code duplication. The getURL
+		// call doesn't depend on anything wicket specific 
+		ServletWebRequest req = new ServletWebRequest(request);
+		String url = req.getURL();
+		
+		// Get the relative URL we need for loading the resource from
+		// the servlet context
+		// NOTE: we NEED to put the '/' in front as otherwise some versions
+		// of application servers (e.g. Jetty 5.1.x) will fail for requests
+		// like '/mysubdir/myfile.css'
+		
+		if ((url.length() > 0 && url.charAt(0) != '/') || url.length() == 0)
+		{
+			url = '/' + url;
+		}
+		
+		InputStream stream = getServletContext().getResourceAsStream(url);
+						
+		if (stream == null) 
+		{
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} 
+		else 
+		{
+			Streams.copy(stream, response.getOutputStream());
+		}
+	}
+	
 	/**
 	 * Servlet initialization
 	 */

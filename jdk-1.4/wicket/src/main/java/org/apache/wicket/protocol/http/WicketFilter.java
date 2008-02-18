@@ -191,7 +191,10 @@ public class WicketFilter implements Filter
 				{
 					// servlet doesn't support if-modified-since, no reason
 					// to go through further expensive logic
-					doGet(httpServletRequest, httpServletResponse);
+					if (doGet(httpServletRequest, httpServletResponse) == false)
+					{
+						chain.doFilter(request, response);
+					}
 				}
 				else
 				{
@@ -239,11 +242,12 @@ public class WicketFilter implements Filter
 	 *            Servlet request object
 	 * @param servletResponse
 	 *            Servlet response object
+	 * @return true if the request was handled by wicket, false otherwise
 	 * @throws ServletException
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
-	public void doGet(final HttpServletRequest servletRequest,
+	public boolean doGet(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		String relativePath = getRelativePath(servletRequest);
@@ -254,7 +258,7 @@ public class WicketFilter implements Filter
 		{
 			final String redirectUrl = servletRequest.getRequestURI() + "/";
 			servletResponse.sendRedirect(servletResponse.encodeRedirectURL(redirectUrl));
-			return;
+			return true;
 		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
@@ -320,7 +324,7 @@ public class WicketFilter implements Filter
 						bufferedResponse.writeTo(servletResponse);
 						// redirect responses are ignored for the request
 						// logger...
-						return;
+						return true;
 					}
 				}
 			}
@@ -352,6 +356,8 @@ public class WicketFilter implements Filter
 				{
 					// Process request
 					cycle.request();
+					
+					return cycle.wasHandled();
 				}
 				catch (AbortException e)
 				{
@@ -383,6 +389,7 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 		}
+		return true;
 	}
 
 	/**

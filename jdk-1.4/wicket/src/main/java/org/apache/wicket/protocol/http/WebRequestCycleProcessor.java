@@ -201,6 +201,9 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 		}
 
+		// (WICKET-1356) in case no target was found, return null here. RequestCycle will deal with it
+		// possible letting wicket filter to pass the request down the filter chain		
+		/*
 		if (target == null)
 		{
 			// if we get here, we have no recognized Wicket target, and thus
@@ -208,6 +211,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			// this server
 			return resolveExternalResource(requestCycle);
 		}
+		*/
 
 		return target;
 	}
