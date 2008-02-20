@@ -35,6 +35,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
@@ -62,8 +63,14 @@ import org.apache.wicket.version.undo.Change;
  * component children.
  * <p>
  * If this component is required and that fails, the error key that is used is the "Required"; if
- * the type conversion fails, it will use the key "IConverter". The keys that can be used in both
- * are:
+ * the type conversion fails, it will use the key "IConverter" if the conversion failed in a
+ * converter, or "ConversionError" if type was explicitly specified via {@link #setType(Class)} or a
+ * {@link IPropertyReflectionAwareModel} was used. Notice that both "IConverter" and
+ * "ConversionError" have a more specific variant of "key.classname" where classname is the type
+ * that we failed to convert to. Classname is not full qualified, so only the actual name of the
+ * class is used.
+ * 
+ * Property expressions that can be used in error messages are:
  * <ul>
  * <li>${input}: the input the user did give</li>
  * <li>${name}: the name of the component that failed</li>
