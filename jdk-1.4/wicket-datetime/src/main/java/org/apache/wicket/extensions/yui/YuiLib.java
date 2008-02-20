@@ -25,37 +25,41 @@ import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 /**
  * Use the {@link #load(IHeaderResponse, boolean)} method to initialize the YUI library using the
  * YUI loader. It is OK to call this multiple times.
- * 
+ *
  * @author eelcohillenius
  */
 public final class YuiLib implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final ResourceReference YUILOADER;
-
-	static
-	{
-		StringBuffer sb = new StringBuffer();
-		sb.append("yuiloader-beta");
-		if (Application.DEPLOYMENT.equals(Application.get().getConfigurationType()))
-		{
-			sb.append("-min");
-		}
-		sb.append(".js");
-		YUILOADER = new JavascriptResourceReference(YuiLib.class, sb.toString());
-	}
+	private static ResourceReference YUILOADER;
 
 	/**
 	 * Load the YUI loader script. After that, you can declare YUI dependencies using
 	 * YAHOO.util.YUILoader.
-	 * 
+	 *
 	 * @param response
 	 *            header response
 	 */
 	public static void load(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(YUILOADER);
+		response.renderJavascriptReference(getYuiLoader());
+	}
+
+	private static ResourceReference getYuiLoader()
+	{
+		if (YUILOADER == null)
+		{
+			StringBuffer sb = new StringBuffer();
+			sb.append("yuiloader-beta");
+			if (Application.DEPLOYMENT.equals(Application.get().getConfigurationType()))
+			{
+				sb.append("-min");
+			}
+			sb.append(".js");
+			YUILOADER = new JavascriptResourceReference(YuiLib.class, sb.toString());
+		}
+		return YUILOADER;
 	}
 
 	/**
