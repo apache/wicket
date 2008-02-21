@@ -186,7 +186,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return The servlet context for this application
 	 */
-	public final ServletContext getServletContext()
+	public ServletContext getServletContext()
 	{
 		if (wicketFilter != null)
 		{
