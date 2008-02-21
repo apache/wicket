@@ -47,7 +47,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 		super("onchange");
 	}
 
-	protected final void onComponentRendered()
+	protected void onComponentRendered()
 	{
 		if (getComponent() instanceof AbstractTextComponent)
 		{
