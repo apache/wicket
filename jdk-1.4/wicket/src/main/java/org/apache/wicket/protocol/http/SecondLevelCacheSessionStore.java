@@ -635,6 +635,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 */
 	public static ThreadLocal getUsedPages()
 	{
+		// TODO: Move this to RequestCycle metadata!
 		return usedPages;
 	}
 

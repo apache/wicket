@@ -255,9 +255,38 @@ public abstract class AbstractPageStore implements IPageStore
 	{
 		private SerializedPage current;
 
-		private final List previous = new ArrayList();
 		private final List completed = new ArrayList();
 
+		public Object getPageReplacementObject(Page callingPage)
+		{
+			SerializedPage calling = new SerializedPage(callingPage);
+			
+			// if current page writeObject is called we need to really serialize the page instance
+			if (calling.equals(current))
+			{
+				completed.add(calling);
+				return callingPage;
+			}
+			else // serializing page referenced from current page
+			{
+				// if the referenced page has not yet been serialized...
+				if (completed.contains(calling) == false)
+				{
+					// ...get the bytearray representation of it
+					SerializedPage prev = current;
+					current = calling;
+					current.data = Objects.objectToByteArray(callingPage);
+					
+					// invoke callback with the data
+					onPageSerialized(current);
+					current = prev;
+				}
+				
+				// return page holder instance (object that will readResolve to
+				// actual page instance
+				return new PageHolder(callingPage);
+			}
+		}
 
 		protected void onPageSerialized(SerializedPage page)
 		{
@@ -279,32 +308,16 @@ public abstract class AbstractPageStore implements IPageStore
 		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page,
 		 *      java.io.ObjectOutputStream)
 		 */
+
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{
-			if (current.getPageId() == page.getNumericId())
-			{
-				stream.writeBoolean(false);
-				stream.defaultWriteObject();
-				return;
-			}
-			SerializedPage spk = new SerializedPage(page);
-			if (!completed.contains(spk) && !previous.contains(spk))
-			{
-				previous.add(current);
-				current = spk;
-				byte[] bytes = Objects.objectToByteArray(page.getPageMapEntry());
-				current.setData(bytes);
-				onPageSerialized(current);
-				completed.add(current);
-				current = (SerializedPage)previous.remove(previous.size() - 1);
-			}
-			stream.writeBoolean(true);
-			stream.writeObject(new PageHolder(page));
+			stream.defaultWriteObject();
 		}
 
-		public Page deserializePage(int id, String pageMapName, Page page, ObjectInputStream stream)
+		public void deserializePage(int id, String pageMapName, Page page, ObjectInputStream stream)
 			throws IOException, ClassNotFoundException
 		{
+			// get the page instance registry
 			HashMap pageMaps = (HashMap)SecondLevelCacheSessionStore.getUsedPages().get();
 			if (pageMaps == null)
 			{
@@ -317,18 +330,14 @@ public abstract class AbstractPageStore implements IPageStore
 				pages = new IntHashMap();
 				pageMaps.put(pageMapName, pages);
 			}
-			boolean b = stream.readBoolean();
-			if (b == false)
-			{
-				stream.defaultReadObject();
-			}
-			else
-			{
-				// the object will resolve to a Page (probably PageHolder)
-				page = (Page)stream.readObject();
-			}
+
+			// register the new page instance so that when the same page is being deserialized
+			// (curricular page references) we can use existing page instance (otherwise deadlock
+			// would happen)
+			
 			pages.put(id, page);
-			return page;
+
+			stream.defaultReadObject();
 		}
 	}
 

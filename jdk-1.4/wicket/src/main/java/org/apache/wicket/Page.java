@@ -140,12 +140,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		 *            TODO
 		 * @param page
 		 * @param stream
-		 * @return New instance to replace page instance being deserialized
 		 * @throws IOException
 		 * @throws ClassNotFoundException
 		 * 
 		 */
-		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
+		public void deserializePage(int id, String name, Page page, ObjectInputStream stream)
 			throws IOException, ClassNotFoundException;
 
 		/**
@@ -157,7 +156,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		 *            ObjectOutputStream
 		 * @throws IOException
 		 */
+
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
+
+		/**
+		 * Returns object to be serialized instead of given page (called from writeReplace).
+		 * 
+		 * @param serializedPage
+		 * @return object to be serialized instead of page (or the page instance itself)
+		 */
+		public Object getPageReplacementObject(Page serializedPage);
 	}
 
 	/**
@@ -202,9 +210,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
-
-	// temporary variable to pass page instance from readObject to readResolve
-	private transient Page pageToResolve = null;
 
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
@@ -754,12 +759,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					"but the stateless hint is set to true!");
 			}
 		}
-		
-		if (getStatelessHint() == false) 
+
+		if (getStatelessHint() == false)
 		{
 			return false;
 		}
-			
+
 
 		if (stateless == null)
 		{
@@ -1156,9 +1161,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
 		}
-		
+
 		final IPageMap pageMap = PageMap.forName(pageMapName);
-		init(pageMap);		
+		init(pageMap);
 	}
 
 	/**
@@ -1171,7 +1176,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		if (isBookmarkable())
 			setStatelessHint(true);
-		
+
 		// Set the page map
 		if (pageMap != null)
 		{
@@ -1274,7 +1279,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		IPageSerializer ps = (IPageSerializer)serializer.get();
 		if (ps != null)
 		{
-			pageToResolve = ps.deserializePage(id, name, this, s);
+			ps.deserializePage(id, name, this, s);
 		}
 		else
 		{
@@ -1282,22 +1287,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	// called after readObject
-	/**
-	 * @return
-	 * @throws ObjectStreamException
-	 */
-	public Object readResolve() throws ObjectStreamException
+	protected Object writeReplace() throws ObjectStreamException
 	{
-		if (pageToResolve == null)
+
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+
+		if (ps != null)
 		{
-			return this;
+			return ps.getPageReplacementObject(this);
 		}
 		else
 		{
-			Page page = pageToResolve;
-			pageToResolve = null;
-			return page;
+			return this;
 		}
 	}
 
@@ -1305,7 +1306,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		s.writeShort(numericId);
 		s.writeObject(pageMapName);
-
 
 		IPageSerializer ps = (IPageSerializer)serializer.get();
 
@@ -1318,6 +1318,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			s.defaultWriteObject();
 		}
 	}
+
 
 	/**
 	 * Set-up response with appropriate content type, locale and encoding. The locale is set equal
