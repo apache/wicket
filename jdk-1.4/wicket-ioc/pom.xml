@@ -42,10 +42,12 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 		</dependency>
+    <!--
 		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm</artifactId>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>easymock</groupId>
 			<artifactId>easymock</artifactId>
