@@ -115,7 +115,7 @@ public abstract class GridView extends DataViewBase
 					public String toString()
 					{
 						return "GridViewColumnsChange[component: " + getPath() +
-								", removed columns: " + old + "]";
+							", removed columns: " + old + "]";
 					}
 				});
 			}
@@ -165,7 +165,7 @@ public abstract class GridView extends DataViewBase
 					public String toString()
 					{
 						return "GridViewRowsChange[component: " + getPath() + ", removed rows: " +
-								old + "]";
+							old + "]";
 					}
 				});
 			}
@@ -344,15 +344,17 @@ public abstract class GridView extends DataViewBase
 			{
 				next = (Item)cells.next();
 			}
-
-			while (rows.hasNext())
+			else
 			{
-				MarkupContainer row = (MarkupContainer)rows.next();
-				cells = ((MarkupContainer)row.iterator().next()).iterator();
-				if (cells.hasNext())
+				while (rows.hasNext())
 				{
-					next = (Item)cells.next();
-					break;
+					MarkupContainer row = (MarkupContainer)rows.next();
+					cells = ((MarkupContainer)row.iterator().next()).iterator();
+					if (cells.hasNext())
+					{
+						next = (Item)cells.next();
+						break;
+					}
 				}
 			}
 		}
