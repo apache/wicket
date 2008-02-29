@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.pagestore;
 
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,7 +60,8 @@ class SerializedPagesCache
 			{
 				for (Iterator i = cache.iterator(); i.hasNext();)
 				{
-					SerializedPageWithSession entry = (SerializedPageWithSession)i.next();
+					SoftReference ref = (SoftReference) i.next();					
+					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
 					if (entry != null && entry.page.get() == page)
 					{
 						i.remove();
@@ -80,7 +82,8 @@ class SerializedPagesCache
 			{
 				for (Iterator i = cache.iterator(); i.hasNext();)
 				{
-					SerializedPageWithSession entry = (SerializedPageWithSession)i.next();
+					SoftReference ref = (SoftReference)i.next();
+					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
 					if (entry != null && entry.page.get() == page)
 					{
 						i.remove();
@@ -107,8 +110,9 @@ class SerializedPagesCache
 			{
 				for (Iterator i = cache.iterator(); i.hasNext();)
 				{
-					SerializedPageWithSession entry = (SerializedPageWithSession)i.next();
-					if (entry.sessionId.equals(sessionId) && entry.pageId == pageId &&
+					SoftReference ref = (SoftReference)i.next();
+					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
+					if (entry != null && entry.sessionId.equals(sessionId) && entry.pageId == pageId &&
 						entry.pageMapName.equals(pageMapName) && entry.versionNumber == version &&
 						entry.ajaxVersionNumber == ajaxVersion)
 					{
@@ -132,13 +136,14 @@ class SerializedPagesCache
 		List /* <SerializedPage> */pagesList)
 	{
 		SerializedPageWithSession entry = new SerializedPageWithSession(sessionId, page, pagesList);
+		SoftReference ref = new SoftReference(entry);
 
 		if (size > 0)
 		{
 			synchronized (cache)
 			{
 				removePage(page);
-				cache.add(entry);
+				cache.add(ref);
 				if (cache.size() > size)
 				{
 					cache.remove(0);
