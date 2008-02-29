@@ -94,7 +94,7 @@ class SerializedPagesCache
 
 				if (result != null)
 				{
-					cache.add(result);
+					cache.add(new SoftReference(result));
 				}
 			}
 		}
