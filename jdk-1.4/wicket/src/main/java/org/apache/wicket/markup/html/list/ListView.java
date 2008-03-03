@@ -141,7 +141,7 @@ public abstract class ListView extends AbstractRepeater
 		if (model == null)
 		{
 			throw new IllegalArgumentException(
-					"Null models are not allowed. If you have no model, you may prefer a Loop instead");
+				"Null models are not allowed. If you have no model, you may prefer a Loop instead");
 		}
 
 		// A reasonable default for viewSize can not be determined right now,
@@ -236,7 +236,7 @@ public abstract class ListView extends AbstractRepeater
 		if ((Integer.MAX_VALUE - size) < firstIndex)
 		{
 			throw new IllegalStateException(
-					"firstIndex + size must be smaller than Integer.MAX_VALUE");
+				"firstIndex + size must be smaller than Integer.MAX_VALUE");
 		}
 
 		return size;
@@ -549,14 +549,17 @@ public abstract class ListView extends AbstractRepeater
 				removeAll();
 			}
 
+			boolean hasChildren = size() != 0;
 			// Loop through the markup in this container for each item
 			for (int i = 0; i < size; i++)
 			{
 				// Get index
 				final int index = firstIndex + i;
 
-				// If this component does not already exist, populate it
-				ListItem item = (ListItem)get(Integer.toString(index));
+				ListItem item = null;
+				if (hasChildren)
+					// If this component does not already exist, populate it
+					item = (ListItem)get(Integer.toString(index));
 				if (item == null)
 				{
 					// Create item for index

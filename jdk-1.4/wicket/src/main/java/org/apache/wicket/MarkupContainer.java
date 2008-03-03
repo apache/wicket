@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -469,6 +470,10 @@ public abstract class MarkupContainer extends Component
 				sorted = new ArrayList(1);
 				sorted.add(children);
 			}
+			else if (children instanceof ChildList)
+			{
+				sorted = new ArrayList((ChildList)children);
+			}
 			else
 			{
 				sorted = Arrays.asList((Component[])children);
@@ -574,13 +579,17 @@ public abstract class MarkupContainer extends Component
 			int size = children_size();
 			for (int i = 0; i < size; i++)
 			{
-				// Get next child
-				final Component child = children_get(i);
+				Object childObject = children_get(i, false);
+				if (childObject instanceof Component)
+				{
+					// Get next child
+					final Component child = (Component)childObject;
 
-				// Do not call remove() because the state change would than be
-				// recorded twice.
-				child.detachModel();
-				child.setParent(null);
+					// Do not call remove() because the state change would than be
+					// recorded twice.
+					child.detachModel();
+					child.setParent(null);
+				}
 			}
 
 			children = null;
@@ -917,23 +926,12 @@ public abstract class MarkupContainer extends Component
 		}
 		else
 		{
-			// Get current list size
-			final int size = children_size();
-
-			// Create array that holds size + 1 elements
-			final Object[] children = new Object[size + 1];
-
-			// Loop through existing children copying them
-			for (int i = 0; i < size; i++)
+			if (!(children instanceof ChildList))
 			{
-				children[i] = children_get(i, false);
+				// Save new children
+				children = new ChildList(children);
 			}
-
-			// Add new child to the end
-			children[size] = child;
-
-			// Save new children
-			this.children = children;
+			((ChildList)children).add(child);
 		}
 	}
 
@@ -966,25 +964,39 @@ public abstract class MarkupContainer extends Component
 	private final Object children_get(int index, boolean reconstruct)
 	{
 		Object component = null;
-		if (index == 0 && children != null && children instanceof Object[] == false)
+		if (children != null)
 		{
-			component = postprocess(children, reconstruct, this, 0);
-			if (children != component)
+			if (children instanceof Object[] == false && children instanceof ChildList == false)
 			{
-				children = component;
+				if (index != 0)
+					throw new ArrayIndexOutOfBoundsException("index " + index +
+						" is greater then 0");
+				component = postprocess(children, reconstruct, this, 0);
+				if (children != component)
+				{
+					children = component;
+				}
+			}
+			else
+			{
+				Object[] children = null;
+				if (this.children instanceof ChildList)
+				{
+					// we have a list
+					children = ((ChildList)this.children).childs;
+				}
+				else
+				{
+					// we have a object array
+					children = (Object[])this.children;
+				}
+				component = postprocess(children[index], reconstruct, this, index);
+				if (children[index] != component)
+				{
+					children[index] = component;
+				}
 			}
 		}
-		else
-		{
-			// we have a list
-			Object[] children = (Object[])this.children;
-			component = postprocess(children[index], reconstruct, this, index);
-			if (children[index] != component)
-			{
-				children[index] = component;
-			}
-		}
-
 		return component;
 	}
 
@@ -1013,30 +1025,46 @@ public abstract class MarkupContainer extends Component
 
 	private final Component children_get(final String id)
 	{
-		Component component = null;
-		if (children != null && children instanceof Object[] == false && getId(children).equals(id))
+		if (children == null)
 		{
-			component = (Component)postprocess(children, true, this, 0);
-			if (children != component)
+			return null;
+		}
+		Component component = null;
+		if (children instanceof Object[] == false && children instanceof List == false)
+		{
+			if (getId(children).equals(id))
 			{
-				children = component;
+				component = (Component)postprocess(children, true, this, 0);
+				if (children != component)
+				{
+					children = component;
+				}
 			}
 		}
-		else if (children instanceof Object[])
+		else
 		{
-			final Object[] children = (Object[])this.children;
+			Object[] children = null;
+			int size = 0;
+			if (this.children instanceof ChildList)
 			{
-				for (int i = 0; i < children.length; i++)
+				children = ((ChildList)this.children).childs;
+				size = ((ChildList)this.children).size;
+			}
+			else
+			{
+				children = (Object[])this.children;
+				size = children.length;
+			}
+			for (int i = 0; i < size; i++)
+			{
+				if (getId(children[i]).equals(id))
 				{
-					if (getId(children[i]).equals(id))
+					component = (Component)postprocess(children[i], true, this, i);
+					if (children[i] != component)
 					{
-						component = (Component)postprocess(children[i], true, this, i);
-						if (children[i] != component)
-						{
-							children[i] = component;
-						}
-						break;
+						children[i] = component;
 					}
+					break;
 				}
 			}
 		}
@@ -1045,15 +1073,33 @@ public abstract class MarkupContainer extends Component
 
 	private final int children_indexOf(Component child)
 	{
-		if (children != null && children instanceof Object[] == false &&
-			getId(children).equals(child.getId()))
+		if (children == null)
 		{
-			return 0;
+			return -1;
 		}
-		else if (children instanceof Object[])
+		if (children instanceof Object[] == false && children instanceof ChildList == false)
 		{
-			final Object[] children = (Object[])this.children;
-			for (int i = 0; i < children.length; i++)
+			if (getId(children).equals(child.getId()))
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			int size = 0;
+			Object[] children;
+			if (this.children instanceof Object[])
+			{
+				children = (Object[])this.children;
+				size = children.length;
+			}
+			else
+			{
+				children = ((ChildList)this.children).childs;
+				size = ((ChildList)this.children).size;
+			}
+
+			for (int i = 0; i < size; i++)
 			{
 				if (getId(children[i]).equals(child.getId()))
 				{
@@ -1076,6 +1122,9 @@ public abstract class MarkupContainer extends Component
 
 	private final Component children_remove(int index)
 	{
+		if (children == null)
+			return null;
+
 		if (children instanceof Component || children instanceof ComponentSourceEntry)
 		{
 			if (index == 0)
@@ -1091,35 +1140,34 @@ public abstract class MarkupContainer extends Component
 		}
 		else
 		{
-			Object[] c = ((Object[])children);
-			final Object removed = c[index];
-			if (c.length == 2)
+			if (children instanceof Object[])
 			{
-				if (index == 0)
+				Object[] c = ((Object[])children);
+				final Object removed = c[index];
+				if (c.length == 2)
 				{
-					children = c[1];
-				}
-				else if (index == 1)
-				{
-					children = c[0];
-				}
-				else
-				{
-					throw new IndexOutOfBoundsException();
-				}
-			}
-			else
-			{
-				Object[] newChildren = new Object[c.length - 1];
-				int j = 0;
-				for (int i = 0; i < c.length; i++)
-				{
-					if (i != index)
+					if (index == 0)
 					{
-						newChildren[j++] = c[i];
+						children = c[1];
 					}
+					else if (index == 1)
+					{
+						children = c[0];
+					}
+					else
+					{
+						throw new IndexOutOfBoundsException();
+					}
+					return (Component)postprocess(removed, true, null, -1);
 				}
-				children = newChildren;
+				children = new ChildList(children);
+			}
+
+			ChildList lst = (ChildList)children;
+			Object removed = lst.remove(index);
+			if (lst.size == 1)
+			{
+				children = lst.get(0);
 			}
 			return (Component)postprocess(removed, true, null, -1);
 		}
@@ -1128,19 +1176,25 @@ public abstract class MarkupContainer extends Component
 	private final Object children_set(int index, Object child, boolean reconstruct)
 	{
 		Object replaced;
-		if (index < children_size())
+		if (index >= 0 && index < children_size())
 		{
-			if (children == null || children instanceof Component ||
-				children instanceof ComponentSourceEntry)
+			if (children instanceof Component || children instanceof ComponentSourceEntry)
 			{
 				replaced = children;
 				children = child;
 			}
 			else
 			{
-				final Object[] children = (Object[])this.children;
-				replaced = children[index];
-				children[index] = child;
+				if (children instanceof ChildList)
+				{
+					replaced = ((ChildList)children).set(index, child);
+				}
+				else
+				{
+					final Object[] children = (Object[])this.children;
+					replaced = children[index];
+					children[index] = child;
+				}
 			}
 		}
 		else
@@ -1166,6 +1220,10 @@ public abstract class MarkupContainer extends Component
 			if (children instanceof Component || children instanceof ComponentSourceEntry)
 			{
 				return 1;
+			}
+			else if (children instanceof ChildList)
+			{
+				return ((ChildList)children).size;
 			}
 			return ((Object[])children).length;
 		}
@@ -1465,6 +1523,13 @@ public abstract class MarkupContainer extends Component
 				}
 			}
 		}
+		if (children instanceof ChildList)
+		{
+			ChildList lst = (ChildList)children;
+			Object[] tmp = new Object[lst.size];
+			System.arraycopy(lst.childs, 0, tmp, 0, lst.size);
+			children = tmp;
+		}
 	}
 
 	void internalMarkRendering()
@@ -1569,5 +1634,100 @@ public abstract class MarkupContainer extends Component
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+
+	private static class ChildList extends AbstractList
+	{
+		private int size;
+		private Object[] childs;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param children
+		 */
+		public ChildList(Object children)
+		{
+			if (children instanceof Object[])
+			{
+				childs = (Object[])children;
+				size = childs.length;
+			}
+			else
+			{
+				childs = new Object[3];
+				add(children);
+			}
+		}
+
+		public Object get(int index)
+		{
+			return childs[index];
+		}
+
+		public int size()
+		{
+			return size;
+		}
+
+		public boolean add(Object o)
+		{
+			ensureCapacity(size + 1);
+			childs[size++] = o;
+			return true;
+		}
+
+		public void add(int index, Object element)
+		{
+			if (index > size || index < 0)
+				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+
+			ensureCapacity(size + 1);
+			System.arraycopy(childs, index, childs, index + 1, size - index);
+			childs[index] = element;
+			size++;
+		}
+
+		public Object set(int index, Object element)
+		{
+			if (index >= size)
+				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+
+			Object oldValue = childs[index];
+			childs[index] = element;
+			return oldValue;
+		}
+
+		public Object remove(int index)
+		{
+			if (index >= size)
+				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+
+			Object oldValue = childs[index];
+
+			int numMoved = size - index - 1;
+			if (numMoved > 0)
+				System.arraycopy(childs, index + 1, childs, index, numMoved);
+			childs[--size] = null; // Let gc do its work
+
+			return oldValue;
+		}
+
+		/**
+		 * @param minCapacity
+		 */
+		public void ensureCapacity(int minCapacity)
+		{
+			int oldCapacity = childs.length;
+			if (minCapacity > oldCapacity)
+			{
+				Object oldData[] = childs;
+				int newCapacity = oldCapacity * 2;
+				if (newCapacity < minCapacity)
+					newCapacity = minCapacity;
+				childs = new Object[newCapacity];
+				System.arraycopy(oldData, 0, childs, 0, size);
+			}
+		}
 	}
 }
