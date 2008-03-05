@@ -32,9 +32,9 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Igor Vaynberg
  */
 public abstract class AbstractAjaxBehavior extends AbstractBehavior
-		implements
-			IBehaviorListener,
-			IHeaderContributor
+	implements
+		IBehaviorListener,
+		IHeaderContributor
 {
 	/**
 	 * 
@@ -66,8 +66,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		if (component != null)
 		{
 			throw new IllegalStateException("this kind of handler cannot be attached to " +
-					"multiple components; it is already attached to component " + component +
-					", but component " + hostComponent + " wants to be attached too");
+				"multiple components; it is already attached to component " + component +
+				", but component " + hostComponent + " wants to be attached too");
 
 		}
 
@@ -81,6 +81,11 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * Gets the url that references this handler.
 	 * 
 	 * @return the url that references this handler
+	 */
+	/*
+	 * TODO 1.4 remove this and only keep the (boolean) variant. its a huge mess to have both
+	 * because both need to be overridable and you never know which one an intermediary subclass
+	 * overrides to add its behavior, or all subclasses must be made to override both :|
 	 */
 	public CharSequence getCallbackUrl()
 	{
@@ -96,12 +101,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the url that references this handler
 	 */
-	public final CharSequence getCallbackUrl(final boolean onlyTargetActivePage)
+	public CharSequence getCallbackUrl(final boolean onlyTargetActivePage)
 	{
 		if (getComponent() == null)
 		{
 			throw new IllegalArgumentException(
-					"Behavior must be bound to a component to create the URL");
+				"Behavior must be bound to a component to create the URL");
 		}
 
 		final RequestListenerInterface rli;
