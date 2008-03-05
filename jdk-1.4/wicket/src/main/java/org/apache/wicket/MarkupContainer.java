@@ -1636,7 +1636,7 @@ public abstract class MarkupContainer extends Component
 		});
 	}
 
-	private static class ChildList extends AbstractList
+	private static class ChildList extends AbstractList implements IClusterable
 	{
 		private int size;
 		private Object[] childs;
