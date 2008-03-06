@@ -72,15 +72,15 @@ public class Palette extends Panel implements IHeaderContributor
 	private static final long serialVersionUID = 1L;
 
 	/** collection containing all available choices */
-	private IModel choicesModel;
+	private final IModel choicesModel;
 
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private IChoiceRenderer choiceRenderer;
+	private final IChoiceRenderer choiceRenderer;
 
 	/** number of rows to show in the select boxes */
-	private int rows;
+	private final int rows;
 
 	/** if reordering of selected items is allowed in */
 	private final boolean allowOrder;
@@ -259,7 +259,7 @@ public class Palette extends Panel implements IHeaderContributor
 	 * 
 	 * @return tracker component
 	 */
-	private Recorder newRecorderComponent()
+	protected Recorder newRecorderComponent()
 	{
 		// create component that will keep track of selections
 		return new Recorder("recorder", this)
