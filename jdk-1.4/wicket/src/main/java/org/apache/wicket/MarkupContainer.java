@@ -383,8 +383,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public String getMarkupType()
 	{
-		throw new IllegalStateException(
-			exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
+	    return getPage().getMarkupType();
 	}
 
 	/**
@@ -1638,6 +1637,7 @@ public abstract class MarkupContainer extends Component
 
 	private static class ChildList extends AbstractList implements IClusterable
 	{
+		private static final long serialVersionUID = -7861580911447631127L;
 		private int size;
 		private Object[] childs;
 

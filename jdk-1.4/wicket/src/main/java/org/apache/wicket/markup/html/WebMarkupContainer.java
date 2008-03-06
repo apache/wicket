@@ -54,7 +54,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 */
 	public String getMarkupType()
 	{
-		return "html";
+	    return getPage().getMarkupType();
 	}
 
 	/**
