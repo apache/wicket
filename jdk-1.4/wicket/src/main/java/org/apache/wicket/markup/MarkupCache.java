@@ -56,7 +56,10 @@ public class MarkupCache implements IMarkupCache
 	private static final Logger log = LoggerFactory.getLogger(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
-	private final ICache markupCache;
+	private final ICache /* <String(LocationString),Markup> */markupCache;
+
+	/** Map of markup tags by class (exactly what is in the file). */
+	private final ICache /* <String(CacheKey),String(LocationString)> */markupKeyCache;
 
 	/** The markup cache key provider used by MarkupCache */
 	private IMarkupCacheKeyProvider markupCacheKeyProvider;
@@ -80,6 +83,7 @@ public class MarkupCache implements IMarkupCache
 		this.application = application;
 
 		markupCache = newCacheImplementation();
+		markupKeyCache = newCacheImplementation();
 		if (markupCache == null)
 		{
 			throw new WicketRuntimeException("The map used to cache markup must not be null");
@@ -92,6 +96,7 @@ public class MarkupCache implements IMarkupCache
 	public final void clear()
 	{
 		markupCache.clear();
+		markupKeyCache.clear();
 	}
 
 	/**
@@ -101,6 +106,7 @@ public class MarkupCache implements IMarkupCache
 	public void shutdown()
 	{
 		markupCache.shutdown();
+		markupKeyCache.shutdown();
 	}
 
 	/**
@@ -120,10 +126,11 @@ public class MarkupCache implements IMarkupCache
 
 		// Remove the markup and any other markup which depends on it
 		// (inheritance)
-		Markup markup = (Markup)markupCache.get(cacheKey);
+		String locationString = (String)markupKeyCache.get(cacheKey);
+		Markup markup = (Markup)markupCache.get(locationString);
 		if (markup != null)
 		{
-			markupCache.remove(cacheKey);
+			markupCache.remove(locationString);
 
 			// In practice markup inheritance has probably not more than 3 or 4
 			// levels. And since markup reloading is only enabled in development
@@ -145,7 +152,9 @@ public class MarkupCache implements IMarkupCache
 					if (resourceData != null)
 					{
 						String baseCacheKey = resourceData.getResource().getCacheKey();
-						if (markupCache.get(baseCacheKey) == null)
+						String baseLocationString = (String)markupKeyCache.get(baseCacheKey);
+						if (baseLocationString != null &&
+							markupCache.get(baseLocationString) == null)
 						{
 							if (log.isDebugEnabled())
 							{
@@ -177,7 +186,9 @@ public class MarkupCache implements IMarkupCache
 					{
 						MarkupResourceStream resourceStream = (MarkupResourceStream)modifiable;
 						String resourceCacheKey = resourceStream.getCacheKey();
-						if (markupCache.containsKey(resourceCacheKey) == false)
+						String resouceLocationString = (String)markupKeyCache.get(resourceCacheKey);
+						if (resouceLocationString != null &&
+							markupCache.containsKey(resouceLocationString) == false)
 						{
 							iter.remove();
 						}
@@ -342,19 +353,19 @@ public class MarkupCache implements IMarkupCache
 	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
 	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
 	 * 
-	 * @param cacheKey
+	 * @param locationString
 	 *            If null, than ignore the cache
 	 * @param markup
 	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
 	 *         the markup from the cache is provided.
 	 */
-	protected Markup putIntoCache(final String cacheKey, Markup markup)
+	protected Markup putIntoCache(final String locationString, Markup markup)
 	{
-		if (cacheKey != null)
+		if (locationString != null)
 		{
-			if (markupCache.containsKey(cacheKey) == false)
+			if (markupCache.containsKey(locationString) == false)
 			{
-				markupCache.put(cacheKey, markup);
+				markupCache.put(locationString, markup);
 			}
 			else
 			{
@@ -365,7 +376,7 @@ public class MarkupCache implements IMarkupCache
 				// loading in avg takes less than 100ms, it is not really an
 				// issue. For consistency reasons however, we should always use
 				// the markup loaded first which is why it gets returned.
-				markup = (Markup)markupCache.get(cacheKey);
+				markup = (Markup)markupCache.get(locationString);
 			}
 		}
 		return markup;
@@ -385,7 +396,11 @@ public class MarkupCache implements IMarkupCache
 	{
 		if (cacheKey != null)
 		{
-			return (Markup)markupCache.get(cacheKey);
+			String locationString = (String)markupKeyCache.get(cacheKey);
+			if (locationString != null)
+			{
+				return (Markup)markupCache.get(locationString);
+			}
 		}
 		return null;
 	}
@@ -406,13 +421,21 @@ public class MarkupCache implements IMarkupCache
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		String cacheKey = markupResourceStream.getCacheKey();
+		String locationString = markupResourceStream.locationAsString();
+		if (locationString == null)
+		{
+			// set the cache key as location string, because location string
+			// couldn't be resolved.
+			locationString = cacheKey;
+		}
 		try
 		{
 			Markup markup = getMarkupLoader().loadMarkup(container, markupResourceStream, null,
 				enforceReload);
 
 			// add the markup to the cache.
-			return putIntoCache(cacheKey, markup);
+			markupKeyCache.put(cacheKey, locationString);
+			return putIntoCache(locationString, markup);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
@@ -450,6 +473,20 @@ public class MarkupCache implements IMarkupCache
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		final String cacheKey = markupResourceStream.getCacheKey();
+		// get the location String
+		String locationString = markupResourceStream.locationAsString();
+		if (locationString == null)
+		{
+			// set the cache key as location string, because location string
+			// couldn't be resolved.
+			locationString = cacheKey;
+		}
+		Markup markup = (Markup)markupCache.get(locationString);
+		if (markup != null)
+		{
+			markupKeyCache.put(cacheKey, locationString);
+			return markup;
+		}
 		if (cacheKey != null)
 		{
 			// Watch file in the future

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
@@ -31,7 +32,7 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupResourceStream implements IResourceStream
+public class MarkupResourceStream implements IResourceStream, IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1846489965076612828L;
 
@@ -77,7 +78,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * @param markupClass
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream,
-			final ContainerInfo containerInfo, final Class markupClass)
+		final ContainerInfo containerInfo, final Class markupClass)
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
@@ -87,6 +88,15 @@ public class MarkupResourceStream implements IResourceStream
 		{
 			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
 		}
+	}
+
+	public String locationAsString()
+	{
+		if (resourceStream instanceof IFixedLocationResourceStream)
+		{
+			return ((IFixedLocationResourceStream)resourceStream).locationAsString();
+		}
+		return null;
 	}
 
 	/**
