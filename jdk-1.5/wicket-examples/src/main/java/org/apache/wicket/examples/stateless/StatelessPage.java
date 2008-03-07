@@ -22,7 +22,8 @@ import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.validator.NumberValidator;
 
 /**
  * Another page of the stateless example.
@@ -31,6 +32,8 @@ import org.apache.wicket.model.Model;
  */
 public class StatelessPage extends WebPage
 {
+	private final Integer number = new Integer(10);
+
 	/**
 	 * Constructor
 	 */
@@ -39,7 +42,8 @@ public class StatelessPage extends WebPage
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
-		final TextField field = new TextField("textfield", new Model());
+		final TextField field = new TextField("textfield", new PropertyModel(this, "number"));
+		field.add(NumberValidator.maximum(20));
 		field.setRequired(true);
 
 		StatelessForm statelessForm = new StatelessForm("statelessform")
@@ -57,4 +61,5 @@ public class StatelessPage extends WebPage
 		add(statelessForm);
 		add(new FeedbackPanel("feedback"));
 	}
+
 }

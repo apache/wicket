@@ -104,6 +104,13 @@ public abstract class AbstractTextComponent extends FormComponent
 		return false;
 	}
 
+	protected void convertInput()
+	{
+		// Stateless forms don't have to be rendered first, convertInput could be called before
+		// onBeforeRender calling resolve type here again to check if the type is correctly set.
+		resolveType();
+		super.convertInput();
+	}
 
 	/**
 	 * If the type is not set try to guess it if the model supports it.
@@ -113,6 +120,11 @@ public abstract class AbstractTextComponent extends FormComponent
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
+		resolveType();
+	}
+
+	private void resolveType()
+	{
 		if (!getFlag(TYPE_RESOLVED) && getType() == null)
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
