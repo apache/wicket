@@ -73,7 +73,7 @@ public class BookmarkablePageLink extends Link
 
 	}
 
-	private PageParameters getPageParameters()
+	public PageParameters getPageParameters()
 	{
 		PageParameters result = new PageParameters();
 		if (parameters != null)
