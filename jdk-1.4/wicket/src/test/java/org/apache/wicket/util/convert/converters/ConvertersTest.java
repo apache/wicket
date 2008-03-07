@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converters;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -61,11 +62,11 @@ public final class ConvertersTest extends TestCase
 	{
 		final IConverterLocator converter = new ConverterLocator();
 		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7),
-				Locale.US));
+			Locale.US));
 		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1),
-				Locale.US));
+			Locale.US));
 		assertEquals("7,1", converter.getConverter(Double.class).convertToString(new Double(7.1),
-				DUTCH_LOCALE));
+			DUTCH_LOCALE));
 
 		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
 		cal.clear();
@@ -73,9 +74,9 @@ public final class ConvertersTest extends TestCase
 		Date date = cal.getTime();
 
 		assertEquals(date, converter.getConverter(Date.class).convertToObject("24-10-02",
-				DUTCH_LOCALE));
+			DUTCH_LOCALE));
 		assertEquals("24-10-02", converter.getConverter(Date.class).convertToString(date,
-				DUTCH_LOCALE));
+			DUTCH_LOCALE));
 
 		// empty strings should return null, NOT throw NPEs
 		assertNull(converter.getConverter(Integer.class).convertToObject("", Locale.US));
@@ -87,8 +88,21 @@ public final class ConvertersTest extends TestCase
 		assertNull(converter.getConverter(Date.class).convertToObject("", Locale.US));
 		assertNull(converter.getConverter(Double.class).convertToObject("", Locale.US));
 		assertEquals(Boolean.FALSE, converter.getConverter(Boolean.class).convertToObject("",
-				Locale.US));
+			Locale.US));
 		assertNotNull(converter.getConverter(String.class).convertToObject("", Locale.US));
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testThousandSeperator() throws Exception
+	{
+		BigDecimalConverter bdc = new BigDecimalConverter();
+		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
+
+		DoubleConverter dc = new DoubleConverter();
+		assertEquals(new Double(3000), dc.convertToObject("3 000", Locale.FRENCH));
+
 	}
 
 	/**

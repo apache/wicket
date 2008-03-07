@@ -17,7 +17,6 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
@@ -40,39 +39,30 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 		if (value == null || value.trim().equals(""))
 			return null;
 
-		NumberFormat format = getNumberFormat(locale);
-		try
+		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
+		if (number instanceof BigDecimal)
 		{
-			Number number = format.parse(value);
-			if (number instanceof BigDecimal)
-			{
-				return number;
-			}
-			else if (number instanceof Double)
-			{
-				return new BigDecimal(number.doubleValue());
-			}
-			else if (number instanceof Long)
-			{
-				return new BigDecimal(number.longValue());
-			}
-			else if (number instanceof Float)
-			{
-				return new BigDecimal(number.floatValue());
-			}
-			else if (number instanceof Integer)
-			{
-				return new BigDecimal(number.intValue());
-			}
-			else
-			{
-				return new BigDecimal(value);
-			}
+			return number;
 		}
-		catch (Exception e)
+		else if (number instanceof Double)
 		{
-			throw newConversionException("Cannot parse '" + value + "' using format " + format,
-				value, locale).setFormat(format);
+			return new BigDecimal(number.doubleValue());
+		}
+		else if (number instanceof Long)
+		{
+			return new BigDecimal(number.longValue());
+		}
+		else if (number instanceof Float)
+		{
+			return new BigDecimal(number.floatValue());
+		}
+		else if (number instanceof Integer)
+		{
+			return new BigDecimal(number.intValue());
+		}
+		else
+		{
+			return new BigDecimal(value);
 		}
 	}
 }
