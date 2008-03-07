@@ -41,12 +41,28 @@ public abstract class NumberValidator extends AbstractValidator
 	/**
 	 * a validator for ensuring for a positive number value (>0 so not including 0)
 	 */
-	public static final NumberValidator POSITIVE = minimum(Double.MIN_VALUE);
+	public static final NumberValidator POSITIVE = new DoubleMinimumValidator(Double.MIN_VALUE)
+	{
+		private static final long serialVersionUID = 1L;
+
+		protected String resourceKey()
+		{
+			return "NumberValidator.positive";
+		}
+	};
 
 	/**
 	 * a validator for ensuring a negative number value (<0 so not including 0)
 	 */
-	public static final NumberValidator NEGATIVE = maximum(-Double.MIN_VALUE);
+	public static final NumberValidator NEGATIVE = new DoubleMaximumValidator(-Double.MIN_VALUE)
+	{
+		private static final long serialVersionUID = 1L;
+
+		protected String resourceKey()
+		{
+			return "NumberValidator.negative";
+		}
+	};
 
 	/**
 	 * Gets an Integer range validator for checking if a number falls between the minimum and
@@ -495,7 +511,14 @@ public abstract class NumberValidator extends AbstractValidator
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
-			map.put("minimum", new Double(minimum));
+			if (Math.abs(minimum) == Double.MIN_VALUE)
+			{
+				map.put("minimum", new Integer(0));
+			}
+			else
+			{
+				map.put("minimum", new Double(minimum));
+			}
 			return map;
 		}
 
@@ -554,7 +577,14 @@ public abstract class NumberValidator extends AbstractValidator
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
-			map.put("maximum", new Double(maximum));
+			if (Math.abs(maximum) == Double.MIN_VALUE)
+			{
+				map.put("maximum", new Integer(0));
+			}
+			else
+			{
+				map.put("maximum", new Double(maximum));
+			}
 			return map;
 		}
 
