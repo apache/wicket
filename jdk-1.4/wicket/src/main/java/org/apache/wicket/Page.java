@@ -791,11 +791,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				stateless = (Boolean)returnValue;
 			}
 
+			// TODO (matej_k): The stateless hint semantics has been changed, this warning doesn't work anymore. but we don't really have
+			// alternative to this 
+			/*
 			if (!stateless.booleanValue() && getStatelessHint())
 			{
 				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0] +
 					"' but the stateless hint is set to true!");
 			}
+			*/
 		}
 
 		return stateless.booleanValue();
