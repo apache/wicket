@@ -27,9 +27,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * An ajax submit button that will degrade to a normal request if ajax is not available or
  * javascript is disabled.
- * 
+ *
  * @since 1.3
- * 
+ *
  * @author Jeremy Thomerson (jthomerson)
  * @author Alastair Maw
  */
@@ -42,7 +42,7 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param form
 	 */
@@ -53,7 +53,7 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 * @param form
@@ -70,12 +70,12 @@ public abstract class AjaxFallbackButton extends Button
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(target, mForm);
+				AjaxFallbackButton.this.onSubmit(target, getForm());
 			}
 
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target, mForm);
+				AjaxFallbackButton.this.onError(target, getForm());
 			}
 
 			protected CharSequence getEventHandler()
@@ -93,10 +93,10 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Listener method invoked on form submit with errors
-	 * 
+	 *
 	 * @param target
 	 * @param form
-	 * 
+	 *
 	 * TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form form)
@@ -123,7 +123,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
 	 * submission, the target argument will be null
-	 * 
+	 *
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
@@ -138,7 +138,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * Helper methods that both checks whether the link is enabled and whether the action ENABLE is
 	 * allowed.
-	 * 
+	 *
 	 * @return whether the link should be rendered as enabled
 	 */
 	protected final boolean isButtonEnabled()
