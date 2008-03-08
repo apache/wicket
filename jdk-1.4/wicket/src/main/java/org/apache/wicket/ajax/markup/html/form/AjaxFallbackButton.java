@@ -65,17 +65,16 @@ public abstract class AjaxFallbackButton extends Button
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(target, getForm());
+				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
 			}
 
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target, getForm());
+				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
 			}
 
 			protected CharSequence getEventHandler()
