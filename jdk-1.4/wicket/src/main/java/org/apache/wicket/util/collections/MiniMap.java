@@ -437,17 +437,20 @@ public class MiniMap implements Map, Serializable
 	 */
 	private int findKey(final Object key)
 	{
-		// Find key starting at search index
-		final int index = findKey(lastSearchIndex, key);
-
-		// Found match?
-		if (index != -1)
+		if (size > 0)
 		{
-			// Start search at the next index next time
-			lastSearchIndex = nextIndex(index);
+			// Find key starting at search index
+			final int index = findKey(lastSearchIndex, key);
 
-			// Return index of key
-			return index;
+			// Found match?
+			if (index != -1)
+			{
+				// Start search at the next index next time
+				lastSearchIndex = nextIndex(index);
+
+				// Return index of key
+				return index;
+			}
 		}
 
 		return -1;
