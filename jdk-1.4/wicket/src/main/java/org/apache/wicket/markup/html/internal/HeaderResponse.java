@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -69,6 +70,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference)
 	{
+		if (reference == null)
+		{
+			throw new IllegalArgumentException("reference cannot be null");
+		}
 		if (!closed)
 		{
 			CharSequence url = RequestCycle.get().urlFor(reference);
@@ -82,6 +87,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
+		if (reference == null)
+		{
+			throw new IllegalArgumentException("reference cannot be null");
+		}
 		if (!closed)
 		{
 			CharSequence url = RequestCycle.get().urlFor(reference);
@@ -94,6 +103,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(String url)
 	{
+		if (Strings.isEmpty(url))
+		{
+			throw new IllegalArgumentException("url cannot be empty or null");
+		}
 		if (!closed)
 		{
 			renderCSSReference(url, null);
@@ -106,6 +119,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(String url, String media)
 	{
+		if (Strings.isEmpty(url))
+		{
+			throw new IllegalArgumentException("url cannot be empty or null");
+		}
 		if (!closed)
 		{
 			List token = Arrays.asList(new Object[] { "css", url, media });
@@ -131,6 +148,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(ResourceReference reference)
 	{
+		if (reference == null)
+		{
+			throw new IllegalArgumentException("reference cannot be null");
+		}
 		if (!closed)
 		{
 			CharSequence url = RequestCycle.get().urlFor(reference);
@@ -144,6 +165,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(ResourceReference reference, String id)
 	{
+		if (reference == null)
+		{
+			throw new IllegalArgumentException("reference cannot be null");
+		}
 		if (!closed)
 		{
 			CharSequence url = RequestCycle.get().urlFor(reference);
@@ -156,6 +181,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url)
 	{
+		if (Strings.isEmpty(url))
+		{
+			throw new IllegalArgumentException("url cannot be empty or null");
+		}
 		if (!closed)
 		{
 			List token = Arrays.asList(new Object[] { "javascript", url });
@@ -173,6 +202,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url, String id)
 	{
+		if (Strings.isEmpty(url))
+		{
+			throw new IllegalArgumentException("url cannot be empty or null");
+		}
 		if (!closed)
 		{
 			List token1 = Arrays.asList(new Object[] { "javascript", url });
@@ -192,6 +225,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascript(CharSequence javascript, String id)
 	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
 		if (!closed)
 		{
 			List token = Arrays.asList(new Object[] { javascript.toString(), id });
@@ -208,6 +245,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderString(CharSequence string)
 	{
+		if (string == null)
+		{
+			throw new IllegalArgumentException("string cannot be null");
+		}
 		if (!closed)
 		{
 			String token = string.toString();
@@ -232,6 +273,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnDomReadyJavascript(String javascript)
 	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
 		if (!closed)
 		{
 			renderOnEventJavacript("window", "domready", javascript);
@@ -243,6 +288,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
 		if (!closed)
 		{
 			renderOnEventJavacript("window", "load", javascript);
@@ -258,13 +307,12 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (!closed)
 		{
-			List token = Arrays
-					.asList(new Object[] { "javascript-event", target, event, javascript });
+			List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
 			if (wasRendered(token) == false)
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);
 				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
-						", \"" + event + "\", function() { " + javascript + ";});");
+					", \"" + event + "\", function() { " + javascript + ";});");
 				markRendered(token);
 			}
 		}
@@ -275,7 +323,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void close()
 	{
-		this.closed = true;
+		closed = true;
 	}
 
 	/**
