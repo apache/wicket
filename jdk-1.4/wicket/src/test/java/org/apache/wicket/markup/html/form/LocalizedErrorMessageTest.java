@@ -45,7 +45,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		page.form.onFormSubmitted();
 
-		tester.assertErrorMessages(new String[] { "'foo' is geen valide type van Integer." });
+		tester.assertErrorMessages(new String[] { "'foo' in veld 'integer' moet een geheel getal zijn. " });
 		tester.getWicketSession().setLocale(new Locale("us"));
 
 		tester.getWicketSession().cleanupFeedbackMessages();
