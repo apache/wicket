@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -51,6 +53,8 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.version.undo.Change;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -86,6 +90,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	implements
 		IFormVisitorParticipant
 {
+	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
+
 	/**
 	 * Visitor for traversing form components
 	 */
@@ -128,6 +134,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	private class MessageSource implements IErrorMessageSource
 	{
+		private final Set/* <String> */triedKeys = new LinkedHashSet();
 
 		/**
 		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
@@ -153,7 +160,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, formComponent.getParent(), "");
+			String message = getString(localizer, resource, formComponent.getParent());
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
@@ -162,7 +169,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 
 				resource = prefix + key;
 
-				message = localizer.getString(resource, formComponent.getParent(), "");
+				message = getString(localizer, resource, formComponent.getParent());
 			}
 
 			if (Strings.isEmpty(message))
@@ -175,7 +182,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 				// provided
 				// to getString() not to throw a MissingResourceException or to
 				// return a default string like "[Warning: String ..."
-				message = localizer.getString(resource, formComponent, "");
+				message = getString(localizer, resource, formComponent);
 
 				// If not found, than ...
 				if (Strings.isEmpty(message))
@@ -183,8 +190,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 					// Try a variation of the resource key
 
 					resource = prefix + key;
-
-					message = localizer.getString(resource, formComponent, "");
+					message = getString(localizer, resource, formComponent);
 				}
 			}
 
@@ -195,6 +201,12 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 				message = null;
 			}
 			return message;
+		}
+
+		private String getString(Localizer localizer, String key, Component component)
+		{
+			triedKeys.add(key);
+			return localizer.getString(key, component, "");
 		}
 
 		/**
@@ -535,14 +547,31 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		{
 			throw new IllegalArgumentException("Argument [[error]] cannot be null");
 		}
-		String message = error.getErrorMessage(new MessageSource());
+		MessageSource source = new MessageSource();
+		String message = error.getErrorMessage(source);
 
 		if (message == null)
 		{
-			// XXX maybe make message source remember tried resource keys so a
-			// more detailed error message can be created - like show which keys
-			// were tried
-			message = "Could not locate error message for error: " + error.toString();
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("Could not locate error message for component: ");
+			buffer.append(Classes.simpleName(getClass()));
+			buffer.append("@");
+			buffer.append(getPageRelativePath());
+			buffer.append(" and error: ");
+			buffer.append(error.toString());
+			buffer.append(". Tried keys: ");
+			Iterator/* <String> */keys = source.triedKeys.iterator();
+			while (keys.hasNext())
+			{
+				buffer.append(keys.next());
+				if (keys.hasNext())
+				{
+					buffer.append(", ");
+				}
+			}
+			buffer.append(".");
+			message = buffer.toString();
+			logger.warn(message);
 		}
 		error(new ValidationErrorFeedback(error, message));
 	}

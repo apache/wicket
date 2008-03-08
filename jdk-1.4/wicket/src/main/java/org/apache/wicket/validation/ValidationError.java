@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message resolution from
@@ -97,12 +98,12 @@ public class ValidationError implements IValidationError, IClusterable
 		if (name == null || name.trim().length() == 0)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[name]] cannot be null or an empty string");
+				"Argument [[name]] cannot be null or an empty string");
 		}
 		if (value == null)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[value]] cannot be null or an empty string");
+				"Argument [[value]] cannot be null or an empty string");
 		}
 
 		getVariables().put(name, value);
@@ -159,9 +160,9 @@ public class ValidationError implements IValidationError, IClusterable
 		}
 
 		// ... if no keys matched try the default
-		if (errorMessage == null && this.message != null)
+		if (errorMessage == null && message != null)
 		{
-			errorMessage = this.message;
+			errorMessage = message;
 		}
 
 		// if a message was found perform variable substitution
@@ -207,7 +208,7 @@ public class ValidationError implements IValidationError, IClusterable
 	public String toString()
 	{
 		StringBuffer tostring = new StringBuffer();
-		tostring.append("[").append(getClass().getName());
+		tostring.append("[").append(Classes.simpleName(getClass()));
 
 		tostring.append(" message=[").append(message);
 
@@ -236,8 +237,11 @@ public class ValidationError implements IValidationError, IClusterable
 			while (i.hasNext())
 			{
 				final Map.Entry e = (Entry)i.next();
-				tostring.append("[").append(e.getKey()).append("=").append(e.getValue())
-						.append("]");
+				tostring.append("[")
+					.append(e.getKey())
+					.append("=")
+					.append(e.getValue())
+					.append("]");
 				if (i.hasNext())
 				{
 					tostring.append(",");
