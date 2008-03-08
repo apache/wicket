@@ -189,7 +189,16 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		String responseType = resourceStream.getContentType();
 		if (responseType != null)
 		{
-			response.setContentType(responseType + "; charset=" + response.getCharacterEncoding());
+			if (responseType.toLowerCase().indexOf("text") != -1)
+			{
+				response.setContentType(responseType + "; charset=" +
+					response.getCharacterEncoding());
+			}
+			else
+			{
+				response.setContentType(responseType);
+			}
+
 		}
 		else
 		{

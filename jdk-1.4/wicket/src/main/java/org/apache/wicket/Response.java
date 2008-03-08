@@ -258,22 +258,21 @@ public abstract class Response
 			{
 				String message = throwable.getMessage();
 				ignoreException = message != null &&
-						(message.indexOf("Connection reset") != -1 ||
-								message.indexOf("Broken pipe") != -1 ||
-								message.indexOf("Socket closed") != -1 || message
-								.indexOf("connection abort") != -1);
+					(message.indexOf("Connection reset") != -1 ||
+						message.indexOf("Broken pipe") != -1 ||
+						message.indexOf("Socket closed") != -1 || message.indexOf("connection abort") != -1);
 			}
 			else
 			{
 				ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") >= 0 ||
-						throwable.getClass().getName().indexOf("EofException") >= 0;
+					throwable.getClass().getName().indexOf("EofException") >= 0;
 			}
 			if (ignoreException)
 			{
 				if (log.isDebugEnabled())
 				{
 					log.debug("Socket exception ignored for sending Resource "
-							+ "response to client (ClientAbort)", e);
+						+ "response to client (ClientAbort)", e);
 				}
 				break;
 			}
@@ -351,8 +350,7 @@ public abstract class Response
 	public void detectContentType(RequestCycle requestCycle, String uri)
 	{
 		// Configure response with content type of resource
-		final ServletContext context = ((WebApplication)requestCycle.getApplication())
-				.getServletContext();
+		final ServletContext context = ((WebApplication)requestCycle.getApplication()).getServletContext();
 		// First look for user defined content-type in web.xml
 		String contentType = context.getMimeType(uri);
 
@@ -366,7 +364,15 @@ public abstract class Response
 
 		if (contentType != null)
 		{
-			setContentType(contentType + "; charset=" + getCharacterEncoding());
+			// only set the charset when the contentType is the text type
+			if (contentType.toLowerCase().indexOf("text") != -1)
+			{
+				setContentType(contentType + "; charset=" + getCharacterEncoding());
+			}
+			else
+			{
+				setContentType(contentType);
+			}
 		}
 	}
 }
