@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.lang.Objects;
@@ -33,7 +34,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 {
 	/**
 	 * Visitor interface for visiting entries in this map
-	 *
+	 * 
 	 * @author Jonathan Locke
 	 */
 	static interface IVisitor
@@ -55,7 +56,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * Gets a page map for a page map name, automatically creating the page map if it does not
 	 * exist. If you do not want the pagemap to be automatically created, you can call
 	 * Session.pageMapForName(pageMapName, false).
-	 *
+	 * 
 	 * @param pageMapName
 	 *            The name of the page map to get
 	 * @return The PageMap with the given name from the current session
@@ -77,7 +78,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param name
 	 *            The name of this page map
 	 */
@@ -115,7 +116,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 	/**
 	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
-	 *
+	 * 
 	 * @return True if an original destination was redirected to
 	 * @see PageMap#redirectToInterceptPage(Page)
 	 */
@@ -217,7 +218,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * is saved exactly as it was requested for future use by continueToOriginalDestination(); Only
 	 * use this method when you plan to continue to the current URL at some later time; otherwise
 	 * just use setResponsePage or, when you are in a constructor, redirectTo.
-	 *
+	 * 
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
@@ -233,7 +234,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * is saved exactly as it was requested for future use by continueToOriginalDestination(); Only
 	 * use this method when you plan to continue to the current URL at some later time; otherwise
 	 * just use setResponsePage or, when you are in a constructor, redirectTo.
-	 *
+	 * 
 	 * @param page
 	 *            The page to temporarily redirect to
 	 */
@@ -254,7 +255,15 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 		// The intercept continuation URL should be saved exactly as the
 		// original request specified.
-		interceptContinuationURL = "/" + cycle.getRequest().getURL();
+		// Only if it is an ajax request just redirect to the page where the request is from.
+		if (cycle.getRequest() instanceof WebRequest && ((WebRequest)cycle.getRequest()).isAjax())
+		{
+			interceptContinuationURL = cycle.urlFor(cycle.getRequest().getPage()).toString();
+		}
+		else
+		{
+			interceptContinuationURL = "/" + cycle.getRequest().getURL();
+		}
 
 		// Page map is dirty
 		dirty();
@@ -351,7 +360,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * Sets the metadata for this PageMap using the given key. If the metadata object is not of the
 	 * correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
-	 *
+	 * 
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -366,7 +375,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 	/**
 	 * Gets metadata for this PageMap using the given key.
-	 *
+	 * 
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata or null of no metadata was found for the given key
