@@ -54,6 +54,51 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	public void testClickLinkInsideForm_ajaxSubmitLink()
+	{
+		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
+		mockPojo.setName("Mock name");
+
+		final MockPageWithFormAndContainedLink page = new MockPageWithFormAndContainedLink(mockPojo);
+		page.addLink(new AjaxSubmitLink("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onSubmit(AjaxRequestTarget target, Form form)
+			{
+				assertNotNull(form);
+				linkClicked = true;
+			}
+		});
+
+		tester.startPage(new ITestPageSource()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+
+		tester.assertRenderedPage(MockPageWithFormAndContainedLink.class);
+
+		// Change the name in the textfield
+		page.getNameField().setModelValue(new String[] { "new mock value" });
+
+		// Click the submit link
+		tester.clickLink("form:link");
+
+		// Has it really been clicked?
+		assertTrue(linkClicked);
+
+		// And has the form been "submitted"
+		assertEquals("new mock value", mockPojo.getName());
+	}
+
+	/**
+	 * 
+	 */
 	public void testClickLink_ajaxSubmitLink()
 	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
@@ -66,6 +111,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
+				assertNotNull(form);
 				linkClicked = true;
 			}
 		};
@@ -84,7 +130,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		tester.assertRenderedPage(MockPageWithFormAndLink.class);
 
 		// Change the name in the textfield
-		page.getNameField().setModelValue("new mock value");
+		page.getNameField().setModelValue(new String[] { "new mock value" });
 
 		// Click the submit link
 		tester.clickLink("link");

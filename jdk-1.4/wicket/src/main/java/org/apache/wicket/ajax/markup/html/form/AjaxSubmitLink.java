@@ -27,37 +27,37 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * A link that submits a form via ajax. Since this link takes the form as a constructor argument it
  * does not need to be inside form's component hierarchy.
- * 
+ *
  * <p/> It works by splitting the javascript/Ajax calls from the normal non-ajax requests by
  * generating:
- * 
+ *
  * <pre>
  * &lt;a href=&quot;normal action url&quot; onclick=&quot;ajax javascript script; return
  * false;&quot;&gt;link&lt;/a&gt;
  * </pre>
- * 
+ *
  * If/when javascript is turned off in the browser, or it doesn't support javascript, then the
  * browser will not respond to the onclick event, using the href directly. Wicket will then use a
  * normal request target, and call the serverside onClick with a null {@link AjaxRequestTarget}.
- * 
+ *
  * If javascript is enabled, Wicket will send an ajax request, and process it serverside with an
  * {@link AjaxRequestTarget} that is supplied to the server-side onClick method. The "return false"
  * in the &lt;a href&gt; onclick handler ensures the browser doesn't perform the normal request too.
- * 
+ *
  * The latter is nicely illustrated with this:
- * 
+ *
  * <pre>
  * &lt;a href=&quot;javascript:alert('href event handler');&quot;
  * onclick=&quot;alert('onclick event handler');&quot;&gt;clicking me gives two
  * alerts&lt;/a&gt;
- * 
+ *
  * &lt;a href=&quot;javascript:alert('href event handler');&quot;
  * onclick=&quot;alert('onclick event handler');return false;&quot;&gt;clicking me
  * gives only one alert&lt;/a&gt;
  * </pre>
- * 
+ *
  * @since 1.2
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AjaxSubmitLink extends AbstractSubmitLink
@@ -66,7 +66,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 */
 	public AjaxSubmitLink(String id)
@@ -76,7 +76,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param form
 	 */
@@ -91,12 +91,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, form);
+				AjaxSubmitLink.this.onSubmit(target, getForm());
 			}
 
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, form);
+				AjaxSubmitLink.this.onError(target, getForm());
 			}
 
 			protected CharSequence getEventHandler()
@@ -124,7 +124,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
 	 * This is the preferred way of changing the javascript in the onclick handler
-	 * 
+	 *
 	 * @return call decorator used to modify the generated javascript or null for none
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
@@ -152,7 +152,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have there own onSubmit which
 	 * is called.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.html.form.Button#onSubmit()
 	 */
 	public final void onSubmit()
@@ -161,7 +161,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	/**
 	 * Listener method invoked on form submit
-	 * 
+	 *
 	 * @param target
 	 * @param form
 	 */
@@ -169,10 +169,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	/**
 	 * Listener method invoked on form submit with errors
-	 * 
+	 *
 	 * @param target
 	 * @param form
-	 * 
+	 *
 	 * TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form form)
