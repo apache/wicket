@@ -78,21 +78,14 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		if (form == null)
 		{
 			// try to find form in the hierarchy of owning component
-			Component cursor = getComponent();
-			while (cursor != null && !(cursor instanceof Form))
-			{
-				cursor = cursor.getParent();
-			}
-			if (cursor == null)
+			Component component = getComponent();
+			form = (Form)component.findParent(Form.class);
+			if (form == null)
 			{
 				throw new IllegalStateException(
 					"form was not specified in the constructor and cannot "
 						+ "be found in the hierarchy of the component this behavior "
 						+ "is attached to");
-			}
-			else
-			{
-				form = (Form)cursor;
 			}
 		}
 		return form;
