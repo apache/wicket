@@ -842,6 +842,7 @@ Wicket.Ajax.Request.prototype = {
 	       		return false;
 			}
 		} else {
+			Wicket.Log.info("Ajax GET stopped because of precondition check, url:" + this.url);
 			this.done();
 			return true;
 		}
@@ -889,6 +890,7 @@ Wicket.Ajax.Request.prototype = {
 	       		return false;
 			}
 		} else {
+			Wicket.Log.info("Ajax POST stopped because of precondition check, url:" + this.url);
 			this.done();
 			return true;
 		}
