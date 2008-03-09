@@ -45,6 +45,10 @@
 		<param-value>deployment</param-value>
 	</context-param>
 
+    <!--
+     Parameter used by Spring to locate its context configuration used for creating
+     a WebApplicationContext.
+    --> 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
