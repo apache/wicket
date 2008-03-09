@@ -329,6 +329,8 @@ public class Localizer
 			}
 
 			buffer.append("-").append(component.getLocale());
+			buffer.append("-").append(component.getStyle());
+			buffer.append("-").append(component.getVariation());
 			cacheKey = buffer.toString();
 		}
 		return cacheKey;
@@ -375,7 +377,7 @@ public class Localizer
 	/**
 	 * Create a new cache
 	 * 
-	 * @return
+	 * @return cache
 	 */
 	private Map newCache()
 	{
