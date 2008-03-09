@@ -102,6 +102,7 @@
 				<include>NOTICE</include>
 				<include>README</include>
 				<include>migrate-13.html</include>
+				<include>CHANGELOG-1.3</include>
 				<include>DISCLAIMER</include>
 				<include>licenses/**</include>
 			</includes>
