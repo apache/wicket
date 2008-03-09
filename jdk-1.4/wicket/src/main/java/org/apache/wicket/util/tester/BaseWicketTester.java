@@ -561,7 +561,7 @@ public class BaseWicketTester extends MockWebApplication
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 
-		return isTrue("component '" + path + "' is not visible", component.isVisible());
+		return isTrue("component '" + path + "' is not visible", component.isVisibleInHierarchy());
 	}
 
 	/**
