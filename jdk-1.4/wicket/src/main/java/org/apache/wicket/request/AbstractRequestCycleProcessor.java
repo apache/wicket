@@ -36,6 +36,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.INewBrowserWindowListener;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import org.apache.wicket.request.target.IEventProcessor;
@@ -127,14 +128,14 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			// else we need to make a page (see below) or set it hard to a
 			// redirect.
 			Class accessDeniedPageClass = application.getApplicationSettings()
-					.getAccessDeniedPage();
+				.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
 		else if (e instanceof PageExpiredException)
 		{
 			Class pageExpiredErrorPageClass = application.getApplicationSettings()
-					.getPageExpiredErrorPage();
+				.getPageExpiredErrorPage();
 			boolean mounted = isPageMounted(pageExpiredErrorPageClass);
 			RequestCycle.get().setRedirect(mounted);
 			throw new RestartResponseException(pageExpiredErrorPageClass);
@@ -148,11 +149,11 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 			// figure out which error page to show
 			Class internalErrorPageClass = application.getApplicationSettings()
-					.getInternalErrorPage();
+				.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass &&
-					settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
+				settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				throw new RestartResponseException(internalErrorPageClass);
 			}
@@ -165,8 +166,13 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			{
 				// give up while we're ahead!
 				throw new WicketRuntimeException("Internal Error: Could not render error page " +
-						internalErrorPageClass, e);
+					internalErrorPageClass, e);
 			}
+		}
+		else if (requestCycle.getResponse() instanceof WebResponse)
+		{
+			((WebResponse)requestCycle.getResponse()).getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -181,7 +187,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	{
 		RequestCycle cycle = RequestCycle.get();
 		CharSequence path = getRequestCodingStrategy().pathForTarget(
-				new BookmarkablePageRequestTarget(pageClass));
+			new BookmarkablePageRequestTarget(pageClass));
 		return path != null;
 	}
 
@@ -221,7 +227,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the bookmarkable page as a request target
 	 */
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+		final RequestParameters requestParameters)
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
@@ -233,42 +239,42 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		catch (ClassNotFoundException e)
 		{
 			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-					"Unable to load Bookmarkable Page");
+				"Unable to load Bookmarkable Page");
 		}
 
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
 			if (requestParameters.getComponentPath() != null &&
-					requestParameters.getInterfaceName() != null)
+				requestParameters.getInterfaceName() != null)
 			{
 				final String componentPath = requestParameters.getComponentPath();
 				final Page page = session.getPage(requestParameters.getPageMapName(),
-						componentPath, requestParameters.getVersionNumber());
+					componentPath, requestParameters.getVersionNumber());
 
 				if (page != null && page.getClass() == pageClass)
 				{
 					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-							requestParameters.getInterfaceName(), requestParameters);
+						requestParameters.getInterfaceName(), requestParameters);
 				}
 				else
 				{
-					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-							.getPageMapName(), pageClass, params, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName(),
-							requestParameters.getVersionNumber());
+					return new BookmarkableListenerInterfaceRequestTarget(
+						requestParameters.getPageMapName(), pageClass, params,
+						requestParameters.getComponentPath(), requestParameters.getInterfaceName(),
+						requestParameters.getVersionNumber());
 				}
 			}
 			else
 			{
 				return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
-						pageClass, params);
+					pageClass, params);
 			}
 		}
 		catch (RuntimeException e)
 		{
 			throw new WicketRuntimeException("Unable to instantiate Page class: " +
-					bookmarkablePageClass + ". See below for details.", e);
+				bookmarkablePageClass + ". See below for details.", e);
 		}
 	}
 
@@ -304,7 +310,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the home page as a request target
 	 */
 	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+		final RequestParameters requestParameters)
 	{
 		Session session = requestCycle.getSession();
 		Application application = session.getApplication();
@@ -317,9 +323,9 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			// and create a dummy target for looking up whether the home page is
 			// mounted
 			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
-					homePageClass, parameters);
+				homePageClass, parameters);
 			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-					.getRequestCodingStrategy();
+				.getRequestCodingStrategy();
 			CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
 
 			if (path != null)
@@ -361,8 +367,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return The RequestTarget that was resolved
 	 */
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
-			final Page page, final String componentPath, final String interfaceName,
-			final RequestParameters requestParameters)
+		final Page page, final String componentPath, final String interfaceName,
+		final RequestParameters requestParameters)
 	{
 		if (page == null)
 		{
@@ -380,23 +386,22 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		else if (interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
 		{
 			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,
-					INewBrowserWindowListener.INTERFACE, requestParameters);
+				INewBrowserWindowListener.INTERFACE, requestParameters);
 		}
 		else
 		{
 			// Get the listener interface we need to call
-			final RequestListenerInterface listener = RequestListenerInterface
-					.forName(interfaceName);
+			final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
 			if (listener == null)
 			{
 				throw new WicketRuntimeException(
-						"Attempt to access unknown request listener interface " + interfaceName);
+					"Attempt to access unknown request listener interface " + interfaceName);
 			}
 
 			// Get component
 			Component component;
 			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
-					Component.PATH_SEPARATOR);
+				Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(pageRelativeComponentPath))
 			{
 				component = page;
@@ -409,8 +414,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			if (component == null)
 			{
 				throw new WicketRuntimeException("component " + pageRelativeComponentPath +
-						" not found on page " + page.getClass().getName() + "[id = " +
-						page.getNumericId() + "], listener interface = " + listener);
+					" not found on page " + page.getClass().getName() + "[id = " +
+					page.getNumericId() + "], listener interface = " + listener);
 			}
 
 			if (!component.isEnableAllowed())
@@ -436,12 +441,12 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the previously rendered page as a request target
 	 */
 	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+		final RequestParameters requestParameters)
 	{
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
 		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
-				requestParameters.getVersionNumber());
+			requestParameters.getVersionNumber());
 
 		// Does page exist?
 		if (page != null)
@@ -454,7 +459,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			if (interfaceName != null)
 			{
 				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName, requestParameters);
+					interfaceName, requestParameters);
 			}
 			else
 			{
@@ -475,7 +480,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the shared resource as a request target
 	 */
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+		final RequestParameters requestParameters)
 	{
 		return new SharedResourceRequestTarget(requestParameters);
 	}
