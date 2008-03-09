@@ -176,6 +176,7 @@ public class SubmitLink extends Button implements ILinkListener
 	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
+		super.onComponentTag(tag);
 		if (getOutputMarkupId())
 		{
 			tag.put("id", getMarkupId());
