@@ -135,9 +135,8 @@ public class CookieValuePersister implements IValuePersister
 	private String cookieToDebugString(final Cookie cookie)
 	{
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
-				", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() +
-				", maxAge = " + Time.valueOf(cookie.getMaxAge()).toDateString() + "(" +
-				cookie.getMaxAge() + ")" + "]";
+			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
+			Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 
 	/**
@@ -209,8 +208,10 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private CookieValuePersisterSettings getSettings()
 	{
-		return RequestCycle.get().getApplication().getSecuritySettings()
-				.getCookieValuePersisterSettings();
+		return RequestCycle.get()
+			.getApplication()
+			.getSecuritySettings()
+			.getCookieValuePersisterSettings();
 	}
 
 	/**
@@ -260,7 +261,8 @@ public class CookieValuePersister implements IValuePersister
 				cookie.setDomain(domain);
 			}
 
-			cookie.setPath("/");
+			cookie.setPath(getWebRequest().getHttpServletRequest().getContextPath());
+			// cookie.setPath("/");
 			// cookie.setPath(getWebRequest().getContextPath());
 
 			cookie.setVersion(getSettings().getVersion());
