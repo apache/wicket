@@ -210,7 +210,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			List token1 = Arrays.asList(new Object[] { "javascript", url });
 			List token2 = Arrays.asList(new Object[] { "javascript", id });
-			if (wasRendered(token1) == false && wasRendered(token2))
+			if (wasRendered(token1) == false && wasRendered(token2) == false)
 			{
 				JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
 				markRendered(token1);
