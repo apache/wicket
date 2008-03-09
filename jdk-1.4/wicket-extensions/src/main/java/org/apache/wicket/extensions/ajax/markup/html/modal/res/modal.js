@@ -825,6 +825,11 @@ Wicket.Window.prototype = {
 			// There's a strange focus problem in IE that disables focus on entire page,
 			// unless something focuses an input
 			var e = document.createElement("input");
+			var x = Wicket.Window.getScrollX();
+			var y = Wicket.Window.getScrollY();
+			e.style.position = "absolute";
+			e.style.left = x + "px";
+			e.style.top = y + "px";
 			document.body.appendChild(e);
 			e.focus();
 			document.body.removeChild(e);
