@@ -107,7 +107,8 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals("/", ((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals("/WicketTester$DummyWebApplication",
+			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
 		// (maxAge=0) to the response, provided a cookie with
@@ -118,7 +119,8 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals("/", ((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals("/WicketTester$DummyWebApplication",
+			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name
 		// it remains unchanged
@@ -157,8 +159,8 @@ public class CookieValuePersisterTest extends TestCase
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
 	{
-		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest())
-				.addCookie((Cookie)getResponseCookies(cycle).get(0));
+		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest()).addCookie((Cookie)getResponseCookies(
+			cycle).get(0));
 	}
 
 	private Cookie[] getRequestCookies(final RequestCycle cycle)
@@ -168,7 +170,6 @@ public class CookieValuePersisterTest extends TestCase
 
 	private List getResponseCookies(final RequestCycle cycle)
 	{
-		return (List)((MockHttpServletResponse)((WebResponse)cycle.getResponse())
-				.getHttpServletResponse()).getCookies();
+		return (List)((MockHttpServletResponse)((WebResponse)cycle.getResponse()).getHttpServletResponse()).getCookies();
 	}
 }
