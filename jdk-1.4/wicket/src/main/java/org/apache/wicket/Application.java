@@ -51,6 +51,8 @@ import org.apache.wicket.markup.resolver.WicketLinkResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IDebugSettings;
@@ -102,11 +104,9 @@ import org.slf4j.LoggerFactory;
  * if the resource is dynamically generated). Resources shared in this manner may also be localized.
  * See {@link org.apache.wicket.ResourceReference} for more details.
  * 
- * <li><b>Session Factory </b>- The Application subclass WebApplication supplies an implementation
- * of getSessionFactory() which returns an implementation of ISessionFactory that creates WebSession
- * Session objects appropriate for web applications. You can (and probably will want to) override
- * getSessionFactory() to provide your own session factory that creates Session instances of your
- * own application-specific subclass of WebSession.
+ * <li><b>Custom Session Subclasses</b>- In order to install your own {@link Session} subclass you
+ * must override Application{@link #newSession(Request, Response)}. For subclasses of
+ * {@link WebApplication} you will want to subclass {@link WebSession}.
  * 
  * </ul>
  * 
@@ -468,7 +468,7 @@ public abstract class Application
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return (Serializable) key.get(metaData);
+		return (Serializable)key.get(metaData);
 	}
 
 	/**
@@ -726,7 +726,7 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets the metadata for this application using the given key. If the metadata object is not of
 	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
