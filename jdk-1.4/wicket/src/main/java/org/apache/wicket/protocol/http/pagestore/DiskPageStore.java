@@ -382,6 +382,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private File getSessionFolder(String sessionId, boolean create)
 	{
 		File storeFolder = getStoreFolder();
+		
+		sessionId = sessionId.replace('*', '_');
+		sessionId = sessionId.replace('/', '_');
+		
 		File sessionFolder = new File(storeFolder, sessionId);
 		if (create && sessionFolder.exists() == false)
 		{
