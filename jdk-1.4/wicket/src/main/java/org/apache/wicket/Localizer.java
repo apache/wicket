@@ -347,7 +347,7 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	protected String substitutePropertyExpressions(final Component component, final String string,
+	public String substitutePropertyExpressions(final Component component, final String string,
 		final IModel model)
 	{
 		if ((string != null) && (model != null))

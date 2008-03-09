@@ -338,19 +338,29 @@ public class StringResourceModel extends LoadableDetachableModel
 			}
 		}
 
-		// Get the string resource, doing any property substitutions as part
-		// of the get operation
-		String value = localizer.getString(getResourceKey(), component, model, defaultValue);
-		if (value == null)
+		String value = null;
+		// Substitute any parameters if necessary
+		Object[] parameters = getParameters();
+		if (parameters == null)
 		{
-			value = defaultValue;
+			// Get the string resource, doing any property substitutions as part
+			// of the get operation
+			value = localizer.getString(getResourceKey(), component, model, defaultValue);
+			if (value == null)
+			{
+				value = defaultValue;
+			}
 		}
-
-		if (value != null)
+		else
 		{
-			// Substitute any parameters if necessary
-			Object[] parameters = getParameters();
-			if (parameters != null)
+			// Get the string resource, doing not any property substitutions
+			// that has to be done later after MessageFormat
+			value = localizer.getString(getResourceKey(), component, null, defaultValue);
+			if (value == null)
+			{
+				value = defaultValue;
+			}
+			if (value != null)
 			{
 				// Build the real parameters
 				Object[] realParams = new Object[parameters.length];
@@ -371,12 +381,24 @@ public class StringResourceModel extends LoadableDetachableModel
 					}
 				}
 
-				// escape single quotes for MessageFormat
-				value = Strings.replaceAll(value, "'", "''").toString();
+				if (model != null)
+				{
+					// First escape all substitute properties so that message format doesn't try to
+					// parse that.
+					value = Strings.replaceAll(value, "${", "$'{'").toString();
+				}
 				// Apply the parameters
 				final MessageFormat format = new MessageFormat(value, component != null
-					? component.getLocale() : locale);				
+					? component.getLocale() : locale);
 				value = format.format(realParams);
+
+				if (model != null)
+				{
+					// un escape the substitute properties
+					value = Strings.replaceAll(value, "$'{'", "${").toString();
+					// now substitute the properties
+					value = localizer.substitutePropertyExpressions(component, value, model);
+				}
 			}
 		}
 

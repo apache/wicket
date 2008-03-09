@@ -19,6 +19,7 @@ package org.apache.wicket.model;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -177,6 +178,16 @@ public class StringResourceModelTest extends TestCase
 		expected = format.format(new Object[] { cal.getTime(), "raining", new Double(11.568),
 				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
+	}
+
+
+	public void testSubstitutionParametersResourceWithSingleQuote() throws Exception
+	{
+		tester.getWicketSession().setLocale(Locale.ENGLISH);
+		StringResourceModel model = new StringResourceModel("with.quote", page, null, new Object[] {
+				new Integer(10), new Integer(20) });
+		assertEquals("2010.00", model.getString());
+
 	}
 
 	/**
