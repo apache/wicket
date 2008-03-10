@@ -330,7 +330,9 @@ public class Localizer
 
 			buffer.append("-").append(component.getLocale());
 			buffer.append("-").append(component.getStyle());
-			buffer.append("-").append(component.getVariation());
+			// TODO 1.4 look if we want to properly separate getstyle/getvariation
+			// for now getvariation() is rolled up into getstyle()
+			// buffer.append("-").append(component.getVariation());
 			cacheKey = buffer.toString();
 		}
 		return cacheKey;
