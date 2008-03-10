@@ -17,6 +17,7 @@
 package org.apache.wicket.feedback;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * Filter for accepting feedback messages for a particular component.
@@ -46,6 +47,6 @@ public class ComponentFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public boolean accept(FeedbackMessage message)
 	{
-		return component == message.getReporter();
+		return Objects.equal(component, message.getReporter());
 	}
 }
