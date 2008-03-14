@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -212,7 +211,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(final String id, IModel model, final List choices,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -353,7 +352,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @return Prefix to use before choice
 	 */
-	public final String getPrefix()
+	public String getPrefix()
 	{
 		return prefix;
 	}
@@ -366,12 +365,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	public final RadioChoice setPrefix(String prefix)
 	{
 		// Tell the page that this component's prefix was changed
-		final Page page = findPage();
-		if (page != null)
-		{
-			addStateChange(new PrefixChange(this.prefix));
-		}
-
+		addStateChange(new PrefixChange(this.prefix));
 		this.prefix = prefix;
 		return this;
 	}
@@ -379,7 +373,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @return Separator to use between radio options
 	 */
-	public final String getSuffix()
+	public String getSuffix()
 	{
 		return suffix;
 	}
@@ -392,12 +386,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	public final RadioChoice setSuffix(String suffix)
 	{
 		// Tell the page that this component's suffix was changed
-		final Page page = findPage();
-		if (page != null)
-		{
-			addStateChange(new SuffixChange(this.suffix));
-		}
-
+		addStateChange(new SuffixChange(this.suffix));
 		this.suffix = suffix;
 		return this;
 	}
@@ -406,7 +395,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		final ComponentTag openTag)
 	{
 		// Iterate through choices
 		final List choices = getChoices();
@@ -449,11 +438,17 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add radio tag
-				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
-						" type=\"radio\"").append(
-						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
-						.append(id).append("\" id=\"").append(idAttr).append("\"");
+				buffer.append("<input name=\"")
+					.append(getInputName())
+					.append("\"")
+					.append(" type=\"radio\"")
+					.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+					.append((isEnabled() ? "" : " disabled=\"disabled\""))
+					.append(" value=\"")
+					.append(id)
+					.append("\" id=\"")
+					.append(idAttr)
+					.append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
@@ -472,7 +467,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 							url = ((PortletRequestContext)rc).getLastEncodedPath();
 						}
 						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
-								";\"");
+							";\"");
 					}
 					else
 					{
@@ -481,11 +476,13 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 						// with an ActionURL or something
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
-						buffer.append(" onclick=\"window.location.href='").append(url)
-								.append(
-										(url.toString().indexOf('?') > -1 ? "&amp;" : "?") +
-												getInputName()).append("=").append(id).append(
-										"';\"");
+						buffer.append(" onclick=\"window.location.href='")
+							.append(url)
+							.append(
+								(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName())
+							.append("=")
+							.append(id)
+							.append("';\"");
 					}
 				}
 
@@ -499,7 +496,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				}
 				CharSequence escaped = Strings.escapeMarkup(display, false, true);
 				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
-						"</label>");
+					"</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());
