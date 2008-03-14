@@ -12,7 +12,7 @@ public class TestHomePage extends TestCase
 
 	public void setUp()
 	{
-		tester = new WicketTester();
+		tester = new WicketTester(new WicketApplication());
 	}
 
 	public void testRenderMyPage()
