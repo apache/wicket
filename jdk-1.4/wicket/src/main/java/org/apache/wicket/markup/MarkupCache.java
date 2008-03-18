@@ -433,8 +433,11 @@ public class MarkupCache implements IMarkupCache
 			Markup markup = getMarkupLoader().loadMarkup(container, markupResourceStream, null,
 				enforceReload);
 
-			// add the markup to the cache.
-			markupKeyCache.put(cacheKey, locationString);
+			if (cacheKey != null)
+			{
+				// add the markup to the cache.
+				markupKeyCache.put(cacheKey, locationString);
+			}
 			return putIntoCache(locationString, markup);
 		}
 		catch (ResourceStreamNotFoundException e)
@@ -473,22 +476,22 @@ public class MarkupCache implements IMarkupCache
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		final String cacheKey = markupResourceStream.getCacheKey();
-		// get the location String
-		String locationString = markupResourceStream.locationAsString();
-		if (locationString == null)
-		{
-			// set the cache key as location string, because location string
-			// couldn't be resolved.
-			locationString = cacheKey;
-		}
-		Markup markup = (Markup)markupCache.get(locationString);
-		if (markup != null)
-		{
-			markupKeyCache.put(cacheKey, locationString);
-			return markup;
-		}
 		if (cacheKey != null)
 		{
+			// get the location String
+			String locationString = markupResourceStream.locationAsString();
+			if (locationString == null)
+			{
+				// set the cache key as location string, because location string
+				// couldn't be resolved.
+				locationString = cacheKey;
+			}
+			Markup markup = (Markup)markupCache.get(locationString);
+			if (markup != null)
+			{
+				markupKeyCache.put(cacheKey, locationString);
+				return markup;
+			}
 			// Watch file in the future
 			final ModificationWatcher watcher = Application.get()
 				.getResourceSettings()
