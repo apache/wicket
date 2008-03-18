@@ -652,7 +652,7 @@ Wicket.channelManager = new Wicket.ChannelManager();
  	// Creates a new instance of a XmlHttpRequest
 	createTransport: function() {
 	    var transport = null;
-	    if (window.ActiveXObject) {
+	    if (Wicket.Browser.isIELessThan7() && window.ActiveXObject) {
 	        transport = new ActiveXObject("Microsoft.XMLHTTP");
 	    } else if (window.XMLHttpRequest) {
 	        transport = new XMLHttpRequest();
