@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
@@ -122,7 +123,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getPreconditionScript()
 	{
-		return "return Wicket.$('" + getComponent().getMarkupId() + "') != null;";
+		if (getComponent() instanceof Page) {
+			return "return true;";			
+		} else {
+			return "return Wicket.$('" + getComponent().getMarkupId() + "') != null;";
+		}
 	}
 
 	/**
