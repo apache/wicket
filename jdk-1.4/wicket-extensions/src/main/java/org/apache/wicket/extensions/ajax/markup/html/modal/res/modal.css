@@ -128,6 +128,8 @@ div.wicket-modal a.w_close {
 	background-position: -64px 0px;
 	position: absolute;
 	right: 3px;
+	padding: 0px;
+	margin: 0px;
 }
 
 div.wicket-modal a.w_close:hover {
