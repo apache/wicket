@@ -62,7 +62,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 * @return The string resource value or null if resource not found
 	 */
 	public final String loadStringResource(final Class clazz, final String key, Locale locale,
-			final String style)
+		final String style)
 	{
 		if (locale == null)
 		{
@@ -91,6 +91,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 */
 	public final String loadStringResource(final Component component, final String key)
 	{
-		return loadStringResource(null, key, component.getLocale(), null);
+		final Locale locale = (component != null) ? component.getLocale() : null;
+		return loadStringResource(null, key, locale, null);
 	}
 }
