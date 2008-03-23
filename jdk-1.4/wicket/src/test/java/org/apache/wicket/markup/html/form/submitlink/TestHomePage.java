@@ -17,20 +17,16 @@
 package org.apache.wicket.markup.html.form.submitlink;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.util.tester.FormTester;
 
 public class TestHomePage extends WicketTestCase
 {
-	public void bugTestSubmitLinkByClickingLink()
+	public void testSubmitLinkByClickingLink()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 		HomePage home = (HomePage)tester.getLastRenderedPage();
-		System.out.println(((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getDocument());
 		tester.setParameterForNextRequest("form:text", "Hello");
-		// FIXME clickLink should submit the form
 		tester.clickLink("form:link");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
@@ -51,14 +47,13 @@ public class TestHomePage extends WicketTestCase
 		assertTrue("SubmitLink.onSubmit() has not been called!", home.isSubmittedViaLink());
 	}
 
-	public void bugTestSubmitLinkByUsingFormTester()
+	public void testSubmitLinkByUsingFormTester()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 		HomePage home = (HomePage)tester.getLastRenderedPage();
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("text", "Hello");
-		// FIXME submit(String) should allow for SubmitLink
 		formTester.submit("link");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());

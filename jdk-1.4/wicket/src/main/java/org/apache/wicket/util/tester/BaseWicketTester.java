@@ -49,6 +49,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.IPageLink;
@@ -731,6 +732,17 @@ public class BaseWicketTester extends MockWebApplication
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
 			requestCycle.detach();
+		}
+		/*
+		 * If the link is a submitlink then we pretend to have clicked it
+		 */
+		else if (linkComponent instanceof SubmitLink)
+		{
+			SubmitLink submitLink = (SubmitLink)linkComponent;
+
+			String pageRelativePath = submitLink.getInputName();
+			getParametersForNextRequest().put(pageRelativePath, "x");
+			submitForm(submitLink.getForm().getPageRelativePath());
 		}
 		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof AbstractLink)
