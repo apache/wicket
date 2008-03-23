@@ -662,6 +662,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			setupRequestAndResponse(true);
 			RequestCycle requestCycle = createRequestCycle();
+			callOnBeginRequest(requestCycle);
 			AjaxRequestTarget target = new AjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
 
@@ -1327,4 +1328,22 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		throw new WicketRuntimeException(message);
 	}
+
+	public static void callOnBeginRequest(RequestCycle rc)
+	{
+		// FIXME 1.5: REMOVE THIS HACK. Currently there is no way to call
+		// requestcycle.onbeginrequest() from outside and since tester shortcircuits the normal
+		// workflow it is necessary to call onbeginrequest manually
+		try
+		{
+			Method method = RequestCycle.class.getDeclaredMethod("onBeginRequest", null);
+			method.setAccessible(true);
+			method.invoke(rc, null);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Exception invoking requestcycle.onbeginrequest()", e);
+		}
+	}
+
 }
