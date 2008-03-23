@@ -387,26 +387,18 @@ public final class AutoLinkResolver implements IComponentResolver
 			{
 				// Obviously a href like href="myPkg.MyLabel.html" will do as
 				// well. Wicket will not throw an exception. It accepts it.
-				String infoPath = Strings.replaceAll(pathInfo.path, "/", ".").toString();
+
 
 				Page page = container.getPage();
 				final IClassResolver defaultClassResolver = page.getApplication()
 						.getApplicationSettings().getClassResolver();
-
-				String className;
-				if (!infoPath.startsWith("."))
-				{
-					// Href is relative. Resolve the url given relative to the
-					// current page
-					className = Packages.extractPackageName(page.getClass()) + "." + infoPath;
-				}
-				else
-				{
-					// Href is absolute. If class with the same absolute path
-					// exists, use it. Else don't change the href.
-					className = infoPath.substring(1);
-				}
-
+                String className = Packages.absolutePath(page.getClass(), pathInfo.path );
+                className = Strings.replaceAll(className, "/", ".").toString();
+                if(className.startsWith("."))
+                {
+                    className = className.substring(1);
+                }
+                
 				try
 				{
 					final Class clazz = defaultClassResolver.resolveClass(className);
@@ -425,7 +417,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				{
 					parentWithContainer = container.findParentWithAssociatedMarkup();
 				}
-				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".") &&
+				if ((parentWithContainer instanceof Page) && !pathInfo.path.startsWith("/") &&
 						page.getMarkupStream().isMergedMarkup())
 				{
 					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
@@ -433,7 +425,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					{
 						// Href is relative. Resolve the url given relative to
 						// the current page
-						className = Packages.extractPackageName(clazz) + "." + infoPath;
+						className = Packages.absolutePath(clazz, pathInfo.path);
 
 						try
 						{
