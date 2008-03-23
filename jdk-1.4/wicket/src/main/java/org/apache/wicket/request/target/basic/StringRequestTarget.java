@@ -24,6 +24,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.StringBufferResourceStream;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -36,21 +37,43 @@ public class StringRequestTarget implements IRequestTarget
 	/** the string for the response. */
 	private final String string;
 
+	/** content type for the string */
+	private final String contentType;
+
 	/**
-	 * Construct.
+	 * Constructor
 	 * 
 	 * @param string
 	 *            the string for the response
 	 */
 	public StringRequestTarget(String string)
 	{
+		this("text", string);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param contentType
+	 *            content type of the data the string represents eg
+	 *            <code>text/html; charset=utf-8</code>
+	 * @param string
+	 *            string for the response
+	 */
+	public StringRequestTarget(String contentType, String string)
+	{
 		if (string == null)
 		{
 			throw new IllegalArgumentException("Argument string must be not null");
 		}
-
+		if (Strings.isEmpty(contentType))
+		{
+			throw new IllegalArgumentException("Argument contentType must not be null or empty");
+		}
+		this.contentType = contentType;
 		this.string = string;
 	}
+
 
 	/**
 	 * Responds by sending the string property.
@@ -61,7 +84,7 @@ public class StringRequestTarget implements IRequestTarget
 	{
 		// Get servlet response to use when responding with resource
 		final Response response = requestCycle.getResponse();
-		final StringBufferResourceStream stream = new StringBufferResourceStream();
+		final StringBufferResourceStream stream = new StringBufferResourceStream(contentType);
 		stream.append(string);
 
 		// Respond with resource
