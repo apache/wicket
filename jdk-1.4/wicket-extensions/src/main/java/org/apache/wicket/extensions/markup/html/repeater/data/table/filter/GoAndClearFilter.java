@@ -80,7 +80,7 @@ public class GoAndClearFilter extends GoFilter
 			}
 		};
 
-		clear.setDefaultFormProcessing(false);
+		clear.setDefaultFormProcessing(true);
 
 		add(clear);
 	}
