@@ -24,7 +24,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-site-skin</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.7</version>
+	<version>1.2-SNAPSHOT</version>
 
 	<name>Wicket Site Skin</name>
 	<description>This is the maven site skin for the Wicket project.</description>

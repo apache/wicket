@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.7</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java open source, component based web application framework currently hosted at http://wicket.apache.org.</description>
 	<url>http://wicketframework.org/${project.artifactId}</url>
