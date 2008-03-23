@@ -53,7 +53,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public AuthenticatedWebApplication()
 	{
 		// Get web session class to instantiate
-		this.webSessionClassRef = new WeakReference<Class< ? extends AuthenticatedWebSession>>(
+		webSessionClassRef = new WeakReference<Class< ? extends AuthenticatedWebSession>>(
 				getWebSessionClass());
 	}
 
@@ -111,9 +111,8 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		try
 		{
-			return webSessionClassRef.get().getDeclaredConstructor(
-					AuthenticatedWebApplication.class, Request.class).newInstance(
-					AuthenticatedWebApplication.this, request);
+			return webSessionClassRef.get().getDeclaredConstructor(Request.class).newInstance(
+					request);
 		}
 		catch (Exception e)
 		{
