@@ -426,6 +426,29 @@ public class FormTester
 						}
 					});
 				}
+				else if (formComponent instanceof RadioGroup)
+				{
+					// TODO 1.5: see if all these transformations can be factored out into
+					// checkgroup/radiogroup by them implementing some sort of interface {
+					// getValue(); } otherwise all these implementation details leak into the tester
+					final Object value = formComponent.getModelObject();
+					if (value != null)
+					{
+						formComponent.visitChildren(Radio.class, new IVisitor()
+						{
+							public Object component(Component component)
+							{
+								if (value.equals(component.getModelObject()))
+								{
+									addFormComponentValue(formComponent,
+										((Radio)component).getValue());
+									return STOP_TRAVERSAL;
+								}
+								return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+							}
+						});
+					}
+				}
 			}
 
 		});
