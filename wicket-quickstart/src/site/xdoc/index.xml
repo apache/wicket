@@ -5,6 +5,11 @@
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java, quickstart, eclipse, netbeans, intellij, idea" />
 	<body>
+		<blockquote>
+			<h3>IMPORTANT NOTICE</h3>
+			Wicket 1.2 is no longer supported. For supported versions
+            go to <a href="http://wicket.apache.org">Apache Wicket</a>.
+		</blockquote>
 		<section name="Quick Start">
 			<p>
 				This quick start is a small guide to get you up and running to start using

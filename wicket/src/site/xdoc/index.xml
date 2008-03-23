@@ -6,6 +6,11 @@
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java" />
 	<body>
+		<blockquote>
+			<h3>IMPORTANT NOTICE</h3>
+			Wicket 1.2 is no longer supported. For supported versions
+            go to <a href="http://wicket.apache.org">Apache Wicket</a>.
+		</blockquote>
 		<section name="Welcome to Wicket">
 			<p>
 
@@ -54,7 +59,7 @@
 				<li>Get in touch with us on irc: ##wicket on irc.freenode.net</li>
 				<li>
 					Download the newest version of
-					<a href="http://sourceforge.net/projects/wicket/files">Wicket 1.2</a>
+					<a href="http://sourceforge.net/project/platformdownload.php?group_id=119783">Wicket 1.2</a>
 				</li>
 			</ul>
 			<p>
@@ -63,191 +68,52 @@
 				.
 			</p>
 		</section>
-		<section name="Wicket joins Apache Software Foundation">
-			<p>
-				The Wicket project has officially joined the Apache Software 
-				Foundation. In the Board meeting of June 20th, 2007 the Apache 
-				Board established the Apache Wicket project.
-			</p>
-			<p>
-				We will start moving our infrastructure to our new home at 
-				Apache in the coming weeks. This means moving the mailing
-				lists, website and other assets to Apache. We will try to make
-				this process as smooth as possible.
-			</p>
-		</section>
 		<section name="Latest News">
-			<subsection name="June 29th, 2007 - Wicket 1.3.0-beta 2 available">
+			<subsection name="March 23rd, 2008 - Wicket 1.2.7 released">
 				<p>
-
-					The second beta for Wicket 1.3 has been released. This
-                    release contains many improvements from the first beta
-                    release. Upgrading from beta 1 should not be too big a
-                    deal, as our API is quite stable already.
-
+				The Wicket team announces the last maintenance release of Wicket 1.2: Wicket 1.2.7. This release marks the end-of-life for the non-Apache product branch. This release fixes the remaining issues for Wicket 1.2. For future support we ask you to upgrade to Apache Wicket 1.3 or newer.
 				</p><p>
-
-					Download the release <a
-                    href="http://www.apache.org/dyn/closer.cgi/wicket/1.3.0-beta2/">here</a>.
-
+				This release of the Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in no way affiliated with this release.
+				</p><p>
+				Below are the release notes for Wicket 1.2.7.
+				<ul><li><a href="http://sourceforge.net/project/platformdownload.php?group_id=119783">Download Wicket 1.2.7</a></li></ul>
+				</p><p>
+				Have fun! - the Wicket team
 				</p>
-			</subsection>
-			<subsection name="April 22nd, 2007 - Wicket 1.2.6 available">
-				<p>
-					The Wicket team is proud to announce another maintenance release for Wicket 1.2. With our first 1.3 release
-					looming on the horizon, this probably marks the last 1.2 release. This release contains numerous fixes. 
-				</p>
-				<h3>IMPORTANT NOTE</h3>
-				<p>
-					A critical bug has been identified in the request processing of Wicket. In rare cases this bug could
-					lead to users being presented with a page from another user's session. This bug is caused by a failure to 
-					clean up resources in the processing thread under very rare circumstances. See 
-					[<a href="https://issues.apache.org/jira/browse/WICKET-476">WICKET-476</a>] for more information
-					on this issue.
-				</p>
-				<p>
-					Users are advised to upgrade their Wicket to 1.2.6. If you are using a custom built Wicket, please apply 
-					<a href="http://svn.apache.org/viewvc?view=rev&amp;rev=529917">revision 529917</a> to your code.
-				</p>
-				<h3>Other issues</h3>
-				<p>
-					This release fixes other issues as well:
-				</p>
-				<h3>Bugs:</h3>
+				<h2>Release Notes - Wicket - Version 1.2.7</h2>
+				<h3>Bug</h3>
 				<ul>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-9'>WICKET-9</a>] - OnError does not work on file upload exceding max size</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-134'>WICKET-134</a>] - servlet.jar is included in the wicket examples war file.</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-260'>WICKET-260</a>] - Wicket uses trivial encryption if com.sun.crypto.provider.SunJCE is not available</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-268'>WICKET-268</a>] - NPE in ListView.renderItem(ListItem)</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-269'>WICKET-269</a>] - Calls to enabled and visibleInHierarchy should not be done in component resolving.</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-276'>WICKET-276</a>] - AbstractHeaderContributor.cleanup() will never be called</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-281'>WICKET-281</a>] - wicket-ajax.js is sometime missing from &lt;head&gt; section</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-290'>WICKET-290</a>] - Inconsistent url generation</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-291'>WICKET-291</a>] - return immutable parameter map or a copy of parameters</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-304'>WICKET-304</a>] - AnnotSpringInjector corrupted class file in 1.2.5 release.</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-342'>WICKET-342</a>] - Application_sv.properties variable bugs</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-117'>WICKET-117</a>] - Page expired using ajax</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-311'>WICKET-311</a>] - race condition between wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy and Session.getPage()</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-312'>WICKET-312</a>] - AjaxFormComponentUpdatingBehavior doesn't call onError when FormComponent is not valid</li>
 				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-349'>WICKET-349</a>] - ListView can't undo changes to model</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-378'>WICKET-378</a>] - autocomplete does not explicitly call input's onchange event</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-395'>WICKET-395</a>] - Bookmarkable page problems</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-432'>WICKET-432</a>] - getvariation() is called from webpage constructor through commoninit()</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-438'>WICKET-438</a>] - File handles are leaked when loading images from a jar file, Tomcat crashes</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-475'>WICKET-475</a>] - NPE in WebClientInfo when user-agent header is not sent</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-476'>WICKET-476</a>] - Backport RequestCycle#updateSession and pagemap#session removal to 1.2.x</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-490'>WICKET-490</a>] - The wicket-auth-roles-1.2.5.jar contains the .svn subdirectories.</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-427'>WICKET-427</a>] - WebRequestCodingStrategy.urlCodingStrategyForPath() passes null as key</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-487'>WICKET-487</a>] - Buggy behaviour in PageMap.access(IPageMapEntry,int). Wicket1.2.4</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-511'>WICKET-511</a>] - New ServletWebRequest.getParameterMap() implementation changed between 1.2.5 and 1.2.6</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-524'>WICKET-524</a>] - ClassCastException in WebRequestCodingStrategy</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-540'>WICKET-540</a>] - ServletWebRequest.getContextPath() ignores ContextPath as set by user (accesses HttpServletRequest directly)</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-546'>WICKET-546</a>] - SubmitLink issue : Need for handling user's own onclick javascript call + default &amp;&amp; modification in onComponentTag call.</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-571'>WICKET-571</a>] - AjaxLinks throws java.lang.ClassCastException</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-593'>WICKET-593</a>] - equals() in ResourceStreamRequestTarget compares the wrong filename</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-623'>WICKET-623</a>] - Backport call to super onComponentTag in ExternalLink</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-642'>WICKET-642</a>] - Need to escape select html option value</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-828'>WICKET-828</a>] - Using form method=get does not work</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-943'>WICKET-943</a>] - java.lang.NullPointerException at wicket.markup.html.list.ListView.renderItem(ListView.java:676)</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-1076'>WICKET-1076</a>] - SubmitLink component does not render markup id</li>
 				</ul>
 				<h3>Improvement</h3>
 				<ul>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-324'>WICKET-324</a>] - AjaxFormComponentUpdatingBehavior updating other Component</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-325'>WICKET-325</a>] - Enable WebMarkupContainer as target for wicketSerialize</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-1145'>WICKET-1145</a>] - Patch for allowing &lt;input type="search"/&gt; to be serialized</li>
 				</ul>
-
 				<h3>New Feature</h3>
 				<ul>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-3'>WICKET-3</a>] - listen for "selection changed"  event at AutocompleteTextField</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-338'>WICKET-338</a>] - DateTextField</li>
-				</ul>
-				<p>
-					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely 
-					as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the 
-					Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in 
-					no way affiliated with this release.
-				</p>
-				<ul>
-					<li>Download Wicket 1.2.6 <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
-				</ul>
-			</subsection>
-			<subsection name="Febuari 5th, 2007 - Wicket 1.2.5 available">
-				<p>
-					With Valentine's day rapidly approaching, what could be better than roses, chocolates or fancy dinners? 
-					Yes, that's right - a new Wicket release! Get out of the office faster and back to where it matters with 
-					this list of fixes to help you:
-				</p>
-				<ul>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-188'>WICKET-188</a>] - Header contribution is sometimes not rendered after the request</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-218'>WICKET-218</a>] - Removing comments from markup can fail</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-242'>WICKET-242</a>] - Modal Window always creates new cookies</li>
-				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-251'>WICKET-251</a>] - replace &amp; with &amp;amp; in ExternalLink</li>
-				</ul>
-				<p>
-					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely 
-					as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the 
-					Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in 
-					no way affiliated with this release.
-				</p>
-				<ul>
-					<li>Download the Wicket 1.2.5 <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-786'>WICKET-786</a>] - Add "deny" capability to AuthorizeAction</li>
 				</ul>
 			</subsection>
 			<p>
 				See
 				<a href="News.html">the news archive</a>
 				for more (older) news.
-			</p>
-		</section>
-		<section name="Special Thanks">
-			<p>
-				The Wicket development team would like to thank the
-				following partners for supporting Open Source in general
-				and Wicket in particular.
-			</p>
-			<a href="http://www.topicus.nl" target="_blank"
-				class="logoLink">
-				<img alt="Topicus B.V." src="images/topicus.gif" />
-			</a>
-			<a href="http://www.servoy.com" target="_blank" class="logoLink">
-				<img alt="Servoy" src="images/servoy-logo-plain.png" />
-			</a>
-			<a href="http://www.yourkit.com" target="_blank"
-				class="logoLink">
-				<img alt="YourKit" src="images/yip_logo.gif" />
-			</a>
-			<a href="http://www.cenqua.com" target="_blank"
-				class="logoLink">
-				<img alt="Clover"
-					src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif" />
-			</a>
-			<p>
-				<!--ONESTAT SCRIPTCODE START-->
-				<!--
-					// Het wijzigen van deze code is niet toegestaan en zal uw account definitief blokkeren!
-					// Account ID : 239584
-					// Website URL: http://wicket.sourceforge.net
-					// Copyright (C) 2002-2005 OneStat.com All Rights Reserved
-				-->
-				<div id="OneStatTag">
-					<table border='0' cellpadding='0' cellspacing='0'>
-						<tr>
-							<td align='center'>
-								<script type="text/javascript"
-									src="onestat.js">
-								</script>
-								<noscript>
-									<a href="http://www.onestat.com">
-										<img border="0"
-											src="http://stat.onestat.com/stat.aspx?tagver=2&amp;sid=239584&amp;js=No&amp;"
-											ALT="online web site analyser" />
-									</a>
-									<br />
-									<a href="http://www.onestat.com">
-										online web site analyser
-									</a>
-								</noscript>
-							</td>
-						</tr>
-						<tr>
-							<td align='center'>
-								<div
-									style="DISPLAY: none; FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: black; FONT-FAMILY: 'Verdana'; HEIGHT: 15px">
-									<a href="http://www.onestat.com"
-										style="text-decoration:none; COLOR: black;" target="_blank">
-										webtraffic analysis
-									</a>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!--ONESTAT SCRIPTCODE END-->
 			</p>
 		</section>
 	</body>

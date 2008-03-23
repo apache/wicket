@@ -355,10 +355,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<configuration>
-						<templateDirectory>${basedir}/src/site/template/</templateDirectory>
-						<template>wicket-site.vm</template>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
