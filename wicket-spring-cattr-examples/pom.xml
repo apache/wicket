@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-spring-cattr-examples</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2.7</version>
 	<name>Examples of Wicket Spring Integration through Commons Attributes</name>
 	<description>Examples of Spring integration in your Wicket web applications using commons attributes.</description>
 	<organization>
@@ -77,13 +77,13 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>1.2.7</version>
 		</dependency>
 
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring-cattr</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>1.2.7</version>
 		</dependency>
 
 		<dependency>
