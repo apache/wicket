@@ -35,48 +35,54 @@ import org.apache.wicket.model.Model;
 /**
  * TabbedPanel component represets a panel with tabs that are used to switch between different
  * content panels inside the TabbedPanel panel.
+ * 
  * <p>
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
+ * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <p>
+ * 
  * Example:
- *
+ * 
  * <pre>
- *
+ * 
  * List tabs=new ArrayList();
- *
+ * 
  * tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *
+ * 
  *   public Panel getPanel(String panelId)
  *   {
  *     return new TabPanel1(panelId);
  *   }
- *
+ * 
  * });
- *
+ * 
  * tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *
+ * 
  *   public Panel getPanel(String panelId)
  *   {
  *     return new TabPanel2(panelId);
  *   }
- *
+ * 
  * });
- *
+ * 
  * add(new TabbedPanel(&quot;tabs&quot;, tabs));
- *
- *
+ * 
+ * 
  * &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *
+ * 
+ * 
  * </pre>
- *
+ * 
  * </p>
- *
+ * 
  * <p>
  * For a complete example see the component references in wicket-examples project
  * </p>
- *
+ * 
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
- *
+ * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
- *
+ * 
  */
 public class TabbedPanel extends Panel
 {
@@ -92,7 +98,7 @@ public class TabbedPanel extends Panel
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param tabs
@@ -158,7 +164,7 @@ public class TabbedPanel extends Panel
 
 	/**
 	 * Generates a loop item used to represent a specific tab's <code>li</code> element.
-	 *
+	 * 
 	 * @param tabIndex
 	 * @return new loop item
 	 */
@@ -224,7 +230,7 @@ public class TabbedPanel extends Panel
 	/**
 	 * Factory method for tab titles. Returned component can be anything that can attach to span
 	 * tags such as a fragment, panel, or a label
-	 *
+	 * 
 	 * @param titleId
 	 *            id of title component
 	 * @param titleModel
@@ -241,23 +247,23 @@ public class TabbedPanel extends Panel
 
 	/**
 	 * Factory method for links used to switch between tabs.
-	 *
+	 * 
 	 * The created component is attached to the following markup. Label component with id: title
 	 * will be added for you by the tabbed panel.
-	 *
+	 * 
 	 * <pre>
 	 *            &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
-	 *
+	 * 
 	 * Example implementation:
-	 *
+	 * 
 	 * <pre>
 	 * protected WebMarkupContainer newLink(String linkId, final int index)
 	 * {
 	 * 	return new Link(linkId)
 	 * 	{
 	 * 		private static final long serialVersionUID = 1L;
-	 *
+	 * 
 	 * 		public void onClick()
 	 * 		{
 	 * 			setSelectedTab(index);
@@ -265,7 +271,7 @@ public class TabbedPanel extends Panel
 	 * 	};
 	 * }
 	 * </pre>
-	 *
+	 * 
 	 * @param linkId
 	 *            component id with which the link should be created
 	 * @param index
@@ -288,10 +294,10 @@ public class TabbedPanel extends Panel
 
 	/**
 	 * sets the selected tab
-	 *
+	 * 
 	 * @param index
 	 *            index of the tab to select
-	 *
+	 * 
 	 */
 	public void setSelectedTab(int index)
 	{
