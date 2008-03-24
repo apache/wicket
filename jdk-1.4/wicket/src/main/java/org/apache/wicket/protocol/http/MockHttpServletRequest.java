@@ -183,7 +183,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	private boolean useMultiPartContentType;
 
 	/**
-	 * Create the request using the supplied session object.
+	 * Create the request using the supplied session object. Note that in order for temporary
+	 * sessions to work, the supplied session must be an instance of {@link MockHttpSession}
 	 * 
 	 * @param application
 	 *            The application that this request is for
@@ -193,7 +194,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The current servlet context
 	 */
 	public MockHttpServletRequest(final Application application, final HttpSession session,
-			final ServletContext context)
+		final ServletContext context)
 	{
 		this.application = application;
 		this.session = session;
@@ -233,14 +234,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (file.exists() == false)
 		{
 			throw new IllegalArgumentException(
-					"File does not exists. You must provide an existing file: " +
-							file.getAbsolutePath());
+				"File does not exists. You must provide an existing file: " +
+					file.getAbsolutePath());
 		}
 
 		if (file.isFile() == false)
 		{
 			throw new IllegalArgumentException(
-					"You can only add a File, which is not a directory. Only files can be uploaded.");
+				"You can only add a File, which is not a directory. Only files can be uploaded.");
 		}
 
 		if (uploadedFiles == null)
@@ -410,7 +411,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		catch (ParseException e)
 		{
 			throw new IllegalArgumentException("Can't convert header to date " + name + ": " +
-					value);
+				value);
 		}
 	}
 
@@ -779,6 +780,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getRequestedSessionId()
 	{
+		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
+			return null;
 		return session.getId();
 	}
 
@@ -870,6 +873,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public HttpSession getSession()
 	{
+		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
+			return null;
 		return session;
 	}
 
@@ -882,7 +887,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public HttpSession getSession(boolean b)
 	{
-		return session;
+		if (b && session instanceof MockHttpSession)
+			((MockHttpSession)session).setTemporary(false);
+		return getSession();
 	}
 
 	/**
@@ -1153,7 +1160,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		parameters.putAll(params);
 		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
-				.getName());
+			.getName());
 	}
 
 	/**
@@ -1170,7 +1177,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
 			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
-					':' + clazz.getName());
+				':' + clazz.getName());
 		}
 		else
 		{
@@ -1199,18 +1206,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 			else
 			{
 				throw new IllegalArgumentException(
-						"The component class doesn't seem to implement any of the known *Listener interfaces: " +
-								component.getClass());
+					"The component class doesn't seem to implement any of the known *Listener interfaces: " +
+						component.getClass());
 			}
 
 			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
-					component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
-					Classes.simpleName(clazz) + "::");
+				component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
+				Classes.simpleName(clazz) + "::");
 
 			if (component.isStateless() && component.getPage().isBookmarkable())
 			{
 				parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-						pageMapName + ':' + component.getPage().getClass().getName());
+					pageMapName + ':' + component.getPage().getClass().getName());
 			}
 		}
 	}
@@ -1239,8 +1246,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 					String value = (String)values.get(component);
 					if (value != null)
 					{
-						parameters.put(((FormComponent)component).getInputName(), values
-								.get(component));
+						parameters.put(((FormComponent)component).getInputName(),
+							values.get(component));
 						valuesApplied.put(component.getId(), component);
 					}
 				}
@@ -1259,9 +1266,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 				diff.remove(iter.next());
 			}
 
-			log
-					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': " +
-							diff.keySet());
+			log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': " +
+				diff.keySet());
 		}
 	}
 
@@ -1301,13 +1307,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		headers.clear();
 		addHeader("Accept", "text/xml,application/xml,application/xhtml+xml,"
-				+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
+			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		Locale l = Locale.getDefault();
 		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-" +
-				l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
+			l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
-				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
+			"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
 	}
 
 	private static final String crlf = "\r\n";

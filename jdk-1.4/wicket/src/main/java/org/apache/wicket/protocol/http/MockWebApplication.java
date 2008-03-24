@@ -187,6 +187,7 @@ public class MockWebApplication
 
 		// Construct mock session, request and response
 		servletSession = new MockHttpSession(context);
+		servletSession.setTemporary(initializeHttpSessionAsTemporary());
 		servletRequest = new MockHttpServletRequest(this.application, servletSession, context);
 		servletResponse = new MockHttpServletResponse(servletRequest);
 
@@ -214,6 +215,18 @@ public class MockWebApplication
 		// watcher still runs, taking up file handles and memory, leading
 		// to "Too many files opened" or a regular OutOfMemoryException
 		this.application.getResourceSettings().setResourcePollFrequency(null);
+	}
+
+	/**
+	 * Callback to signal the application to create temporary sessions instead of normal sessions.
+	 * This should only be used if you want to test stuff like {@link Session#bind()}. Default
+	 * returns false.
+	 * 
+	 * @return true if sessions should be temporary by default, otherwise false
+	 */
+	public boolean initializeHttpSessionAsTemporary()
+	{
+		return false;
 	}
 
 	/**
@@ -405,7 +418,7 @@ public class MockWebApplication
 	 * 
 	 * @param cycle
 	 */
-	private void postProcessRequestCycle(WebRequestCycle cycle)
+	public final void postProcessRequestCycle(WebRequestCycle cycle)
 	{
 		previousRenderedPage = lastRenderedPage;
 
@@ -532,7 +545,8 @@ public class MockWebApplication
 		wicketRequest = application.newWebRequest(servletRequest);
 		wicketResponse = application.newWebResponse(servletResponse);
 		WebRequestCycle requestCycle = createRequestCycle();
-		application.getSessionStore().bind(wicketRequest, wicketSession);
+		if (!initializeHttpSessionAsTemporary())
+			application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
 		return requestCycle;
 	}

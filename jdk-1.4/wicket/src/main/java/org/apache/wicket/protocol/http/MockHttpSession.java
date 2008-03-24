@@ -45,6 +45,8 @@ public class MockHttpSession implements HttpSession, Serializable
 	private final String id = (new UID()).toString().replace(':', '_').replace('-', '_');
 
 	private long lastAccessedTime = 0;
+	
+	private boolean temporary = true;
 
 	/**
 	 * Create the session.
@@ -249,5 +251,25 @@ public class MockHttpSession implements HttpSession, Serializable
 	public void timestamp()
 	{
 		lastAccessedTime = System.currentTimeMillis();
+	}
+	
+	/**
+	 * Indicates the state of the session. Temporary or persisted.
+	 * 
+	 * @return true if this is a temporary session, false otherwise
+	 */
+	public final boolean isTemporary()
+	{
+		return temporary;
+	}
+
+	/**
+	 * Changes the state of this session. Temporary or persisted.
+	 * Uppon creation all sessions are temporary.
+	 * @param temporary trur, for a temporary session, false for a persisted session
+	 */
+	public final void setTemporary(boolean temporary)
+	{
+		this.temporary = temporary;
 	}
 }
