@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.version.undo.Change;
@@ -101,6 +102,19 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 		return null;
 	}
 
+	public Form getForm()
+	{
+		try
+		{
+			return super.getForm();
+		}
+		catch (WicketRuntimeException wre)
+		{
+			// ignore this and return null. (Form.findSubmittingComponent expects this)
+		}
+		return null;
+	}
+
 	/**
 	 * Gets the defaultFormProcessing property. When false (default is true), all validation and
 	 * formupdating is bypassed and the onSubmit method of that button is called directly, and the
@@ -142,7 +156,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 				public String toString()
 				{
 					return "DefaultFormProcessingChange[component: " + getPath() +
-							", default processing: " + formerValue + "]";
+						", default processing: " + formerValue + "]";
 				}
 			});
 		}
