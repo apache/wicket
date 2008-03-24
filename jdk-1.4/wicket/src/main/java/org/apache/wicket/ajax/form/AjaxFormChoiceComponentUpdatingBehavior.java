@@ -61,18 +61,15 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		super.renderHead(response);
 
 		AppendingStringBuffer asb = new AppendingStringBuffer();
-		asb.append("function attachChoiceHandlers(markupid, callbackscript) {\n");
-		asb.append(" var choiceElementGroup = document.getElementById(markupid);\n");
-		asb.append(" for( var x = 0; x < choiceElementGroup.childNodes.length; x++ ) {\n");
-		asb.append("   var choiceElementList = choiceElementGroup.childNodes[x];");
-		asb.append("   for( var y = 0; y < choiceElementList.childNodes.length; y++ ) {\n");
-		asb.append("     if (choiceElementList.childNodes[y] && choiceElementList.childNodes[y].tagName) {\n");
-		asb.append("       var tag = choiceElementList.childNodes[y].tagName.toLowerCase();\n");
-		asb.append("       if (tag == 'input') {\n");
-		asb.append("         Wicket.Event.add(choiceElementList.childNodes[y],'click', callbackscript);");
-		asb.append("       }\n");
-		asb.append("     }\n");
-		asb.append("   }\n");
+		asb.append("function attachChoiceHandlers(markupId, callbackScript) {\n");
+		asb.append(" var inputNodes = wicketGet(markupId).getElementsByTagName('input');\n");
+		asb.append(" for (var i = 0 ; i < inputNodes.length ; i ++) {\n");
+		asb.append(" var inputNode = inputNodes[i];\n");
+		asb.append(" if (!inputNode.type) continue;\n");
+		asb.append(" var inputType = inputNode.type.toLowerCase();\n");
+		asb.append(" if (inputType == 'check' || inputType == 'radio') {\n");
+		asb.append(" Wicket.Event.add(inputNode, 'click', callbackScript);\n");
+		asb.append(" }\n");
 		asb.append(" }\n");
 		asb.append("}\n");
 
