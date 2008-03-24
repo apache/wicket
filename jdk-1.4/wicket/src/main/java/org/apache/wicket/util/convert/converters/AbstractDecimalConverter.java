@@ -29,16 +29,13 @@ import org.apache.wicket.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	/** The date format to use */
 	private final Map/* <Locale, NumberFormat> */numberFormats = new ConcurrentHashMap/*
-	 * <Locale,
-	 * NumberFormat>
-	 */();
-
+																					 * <Locale,
+																					 * NumberFormat>
+																					 */();
 
 	/**
 	 * @param locale
@@ -52,7 +49,7 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 			numberFormat = NumberFormat.getInstance(locale);
 			numberFormats.put(locale, numberFormat);
 		}
-		return numberFormat;
+		return (NumberFormat)numberFormat.clone();
 	}
 
 	/**
