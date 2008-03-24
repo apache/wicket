@@ -1036,9 +1036,9 @@ public abstract class RequestCycle
 		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
 		// furthermore, the targets will be gc-ed with this cycle too
-		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
+		for (int i = 0; i < requestTargets.size(); i++)
 		{
-			IRequestTarget target = (IRequestTarget)iter.next();
+			IRequestTarget target = (IRequestTarget)requestTargets.get(i);
 			if (target != null)
 			{
 				try
@@ -1227,10 +1227,10 @@ public abstract class RequestCycle
 					// has to result in a request target
 					if (target == null)
 					{
-						this.handled = false;
+						handled = false;
 						currentStep = DONE;
-						//throw new WicketRuntimeException(
-						//	"the processor did not resolve to any request target");
+						// throw new WicketRuntimeException(
+						// "the processor did not resolve to any request target");
 					}
 					// Add (inserting at the bottom) in case before or during
 					// target resolving one or more request targets were pushed
@@ -1290,17 +1290,18 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * INTERNAL. This method is not part of public Wicket Api. Do not call it.
-	 * Returns whether wicket handled this request or not (i.e. when no request target was found). 
+	 * INTERNAL. This method is not part of public Wicket Api. Do not call it. Returns whether
+	 * wicket handled this request or not (i.e. when no request target was found).
+	 * 
 	 * @return true if wicket handled this request, false otherwise
 	 */
 	public boolean wasHandled()
 	{
 		return handled;
 	}
-	
+
 	private boolean handled = true;
-	
+
 	/**
 	 * Loop through the processing steps starting from the current one.
 	 */
@@ -1441,7 +1442,7 @@ public abstract class RequestCycle
 	 * MetaDataEntry array.
 	 */
 	private MetaDataEntry[] metaData;
-	
+
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For

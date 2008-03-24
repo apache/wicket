@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * a no-arg constructor or with a constructor that accepts a PageParameters argument (which wraps
  * any query string parameters for a request). In case the page has both constructors, the
  * constructor with PageParameters will be used.
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -79,7 +79,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param webPage
 		 */
 		PageMapChecker(WebPage webPage)
@@ -220,10 +220,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * Note that nothing is done with the page parameters argument. This constructor is provided so
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
-	 *
+	 * 
 	 * Please call this constructor (or the one with the pagemap) if you want to remember the
 	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
-	 *
+	 * 
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
@@ -241,10 +241,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * Note that nothing is done with the page parameters argument. This constructor is provided so
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
-	 *
+	 * 
 	 * Please call this constructor (or the one without the pagemap) if you want to remember the
 	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
-	 *
+	 * 
 	 * @param pageMap
 	 *            The pagemap where the webpage needs to be constructed in.
 	 * @param parameters
@@ -261,7 +261,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * markup language, such as VXML, would require the creation of a different Page subclass in an
 	 * appropriate package under org.apache.wicket.markup. To support VXML (voice markup), one might
 	 * create the package org.apache.wicket.markup.vxml and a subclass of Page called VoicePage.
-	 *
+	 * 
 	 * @return Markup type for HTML
 	 */
 	public String getMarkupType()
@@ -272,18 +272,18 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * This method is called when the compressing coding and response strategies are configured in
 	 * your Application object like this:
-	 *
+	 * 
 	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
 	 * 	return new UrlCompressingWebRequestProcessor();
 	 * }
 	 * </pre>
-	 *
+	 * 
 	 * @return The URLCompressor for this webpage.
-	 *
+	 * 
 	 * @since 1.2
-	 *
+	 * 
 	 * @see UrlCompressingWebRequestProcessor
 	 * @see UrlCompressor
 	 */
@@ -345,15 +345,15 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * Subclasses can override this to set there headers when the Page is being served. By default 2
 	 * headers will be set
-	 *
+	 * 
 	 * <pre>
 	 * response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
 	 * response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache, max-age=0, must-revalidate&quot;);
 	 * </pre>
-	 *
+	 * 
 	 * So if a Page wants to control this or doesn't want to set this info it should override this
 	 * method and don't call super.
-	 *
+	 * 
 	 * @param response
 	 *            The WebResponse where set(Date)Header can be called on.
 	 */
@@ -374,7 +374,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
-	 *
+	 * 
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application
@@ -384,75 +384,77 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		return new BookmarkablePageLink(id, getApplication().getHomePage());
 	}
 
-	/**
-	 *
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
-	protected void onDetach()
+	protected void onAfterRender()
 	{
-		// This code can not go into HtmlHeaderContainer as
-		// header.onEndRequest() is executed inside an iterator
-		// and you can only call container.remove() which
-		// is != iter.remove(). And the iterator is not available
-		// inside onEndRequest(). Obviously WebPage.onEndRequest()
-		// is invoked outside the iterator loop.
-		HtmlHeaderContainer header = (HtmlHeaderContainer)get(HtmlHeaderSectionHandler.HEADER_ID);
-		if (header != null)
+		super.onAfterRender();
+		if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
 		{
-			this.remove(header);
-		}
-		else if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
-		{
-			// the markup must at least contain a <body> tag for wicket to automatically
-			// create a HtmlHeaderContainer. Log an error if no header container
-			// was created but any of the components or behavior want to contribute
-			// something to the header.
-			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
-			add(header);
-
-			Response orgResponse = getRequestCycle().getResponse();
-			try
+			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor()
 			{
-				final StringResponse response = new StringResponse();
-				getRequestCycle().setResponse(response);
-
-				// Render all header sections of all components on the page
-				renderHead(header);
-
-				// Make sure all Components interested in contributing to the header
-				// and there attached behaviors are asked.
-				final HtmlHeaderContainer finalHeader = header;
-				visitChildren(new IVisitor()
+				public Object component(Component component)
 				{
-					/**
-					 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
-					 */
-					public Object component(Component component)
+					if (component instanceof HtmlHeaderContainer)
 					{
-						component.renderHead(finalHeader);
-						return CONTINUE_TRAVERSAL;
+						return component;
 					}
-				});
-				response.close();
+					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				}
+			});
+			if (header == null)
+			{
+				// the markup must at least contain a <body> tag for wicket to automatically
+				// create a HtmlHeaderContainer. Log an error if no header container
+				// was created but any of the components or behavior want to contribute
+				// something to the header.
+				header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+				add(header);
 
-				if (response.getBuffer().length() > 0)
+				Response orgResponse = getRequestCycle().getResponse();
+				try
 				{
-					// @TODO it is not yet working properly. JDo to fix it
-// log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-// log.error("You probably forgot to add a <body> tag to your markup since no Header Container was
-// \n" +
-// "found but components where found which want to write to the <head> section.\n" +
-// response.getBuffer());
-// log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					final StringResponse response = new StringResponse();
+					getRequestCycle().setResponse(response);
+
+					// Render all header sections of all components on the page
+					renderHead(header);
+
+					// Make sure all Components interested in contributing to the header
+					// and there attached behaviors are asked.
+					final HtmlHeaderContainer finalHeader = header;
+					visitChildren(new IVisitor()
+					{
+						/**
+						 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+						 */
+						public Object component(Component component)
+						{
+							component.renderHead(finalHeader);
+							return CONTINUE_TRAVERSAL;
+						}
+					});
+					response.close();
+
+					if (response.getBuffer().length() > 0)
+					{
+						// @TODO it is not yet working properly. JDo to fix it
+						log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+						log.error("You probably forgot to add a <body> or <header> tag to your markup since no Header Container was \n" +
+							"found but components where found which want to write to the <head> section.\n" +
+							response.getBuffer());
+						log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					}
+				}
+				catch (Exception e)
+				{
+					// just swallow this exception, there isn't much we can do about.
+					log.error("header/body check throws exception", e);
+				}
+				finally
+				{
+					this.remove(header);
+					getRequestCycle().setResponse(orgResponse);
 				}
 			}
-			finally
-			{
-				this.remove(header);
-				getRequestCycle().setResponse(orgResponse);
-			}
 		}
-
-		super.onDetach();
 	}
 }
