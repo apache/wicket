@@ -199,11 +199,11 @@ public class WicketFilter implements Filter
 				else
 				{
 					long ifModifiedSince;
-					try 
+					try
 					{
 						ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
 					}
-					catch (IllegalArgumentException e) 
+					catch (IllegalArgumentException e)
 					{
 						log.warn("Invalid If-Modified-Since header", e);
 						ifModifiedSince = -1;
@@ -256,7 +256,12 @@ public class WicketFilter implements Filter
 		if (relativePath.length() == 0 &&
 			!Strings.stripJSessionId(servletRequest.getRequestURI()).endsWith("/"))
 		{
-			final String redirectUrl = servletRequest.getRequestURI() + "/";
+			String redirectUrl = servletRequest.getRequestURI() + "/";
+			String queryString = servletRequest.getQueryString();
+			if (queryString != null)
+			{
+				redirectUrl += "?" + queryString;
+			}
 			servletResponse.sendRedirect(servletResponse.encodeRedirectURL(redirectUrl));
 			return true;
 		}
@@ -356,7 +361,7 @@ public class WicketFilter implements Filter
 				{
 					// Process request
 					cycle.request();
-					
+
 					return cycle.wasHandled();
 				}
 				catch (AbortException e)
