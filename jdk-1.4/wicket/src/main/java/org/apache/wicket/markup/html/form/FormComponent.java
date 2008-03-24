@@ -496,10 +496,18 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Checks if the form component's 'required' requirement is met. This method should typically
-	 * only be called when {@link #isRequired()} returns true.
+	 * Checks if the form component's 'required' requirement is met by first checking
+	 * {@link #isRequired()} to see if it has to check for requirement. If that is true then by
+	 * default it checks if the input is null or an empty String
+	 * {@link Strings#isEmpty(CharSequence)}
+	 * <p>
+	 * Subclasses that overwrite this method should also call {@link #isRequired()} first.
+	 * </p>
 	 * 
 	 * @return true if the 'required' requirement is met, false otherwise
+	 * 
+	 * @see Strings#isEmpty(CharSequence)
+	 * @see #isInputNullable()
 	 */
 	public boolean checkRequired()
 	{
