@@ -19,7 +19,10 @@ package org.apache.wicket.protocol.http;
 import java.lang.reflect.Field;
 import java.util.TimeZone;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -299,12 +302,12 @@ public class ClientProperties implements IClusterable
 							dstOffset = dstOffset.substring(1);
 						}
 						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") +
-								dstOffset);
+							dstOffset);
 					}
 					// if the dstTimezone (1 July) has a different offset then
 					// the real time zone (1 January) try to combine the 2.
 					if (dstTimeZone != null &&
-							dstTimeZone.getRawOffset() != timeZone.getRawOffset())
+						dstTimeZone.getRawOffset() != timeZone.getRawOffset())
 					{
 						int dstSaving = dstTimeZone.getRawOffset() - timeZone.getRawOffset();
 						String[] availableIDs = TimeZone.getAvailableIDs(timeZone.getRawOffset());
@@ -419,6 +422,11 @@ public class ClientProperties implements IClusterable
 	 */
 	public boolean isCookiesEnabled()
 	{
+		if (!cookiesEnabled && RequestCycle.get() != null)
+		{
+			Cookie[] cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
+			cookiesEnabled = cookies != null ? cookies.length > 0 : false;
+		}
 		return cookiesEnabled;
 	}
 
@@ -943,7 +951,7 @@ public class ClientProperties implements IClusterable
 	 *            scrolling region.
 	 */
 	public void setQuirkIETablePercentWidthScrollbarError(
-			boolean quirkIETablePercentWidthScrollbarError)
+		boolean quirkIETablePercentWidthScrollbarError)
 	{
 		this.quirkIETablePercentWidthScrollbarError = quirkIETablePercentWidthScrollbarError;
 	}
@@ -964,7 +972,7 @@ public class ClientProperties implements IClusterable
 	 *            hierarchies from a DOM.
 	 */
 	public void setQuirkMozillaPerformanceLargeDomRemove(
-			boolean quirkMozillaPerformanceLargeDomRemove)
+		boolean quirkMozillaPerformanceLargeDomRemove)
 	{
 		this.quirkMozillaPerformanceLargeDomRemove = quirkMozillaPerformanceLargeDomRemove;
 	}
@@ -1055,8 +1063,8 @@ public class ClientProperties implements IClusterable
 
 			// Ignore these fields
 			if (field.getName().equals("serialVersionUID") == false &&
-					field.getName().startsWith("class$") == false &&
-					field.getName().startsWith("timeZone") == false)
+				field.getName().startsWith("class$") == false &&
+				field.getName().startsWith("timeZone") == false)
 			{
 
 				field.setAccessible(true);
