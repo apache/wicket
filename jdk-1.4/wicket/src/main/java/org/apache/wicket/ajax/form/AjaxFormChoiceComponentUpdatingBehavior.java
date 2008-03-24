@@ -67,7 +67,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" var inputNode = inputNodes[i];\n");
 		asb.append(" if (!inputNode.type) continue;\n");
 		asb.append(" var inputType = inputNode.type.toLowerCase();\n");
-		asb.append(" if (inputType == 'check' || inputType == 'radio') {\n");
+		asb.append(" if (inputType == 'checkbox' || inputType == 'radio') {\n");
 		asb.append(" Wicket.Event.add(inputNode, 'click', callbackScript);\n");
 		asb.append(" }\n");
 		asb.append(" }\n");
