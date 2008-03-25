@@ -135,6 +135,18 @@ public interface IObjectStreamFactory
 						throw e;
 					}
 				}
+
+				public void flush() throws IOException
+				{
+					oos.flush();
+					super.flush();
+				}
+
+				public void close() throws IOException
+				{
+					oos.close();
+					super.close();
+				}
 			};
 		}
 	}
