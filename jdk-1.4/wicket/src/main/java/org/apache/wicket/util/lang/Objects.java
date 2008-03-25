@@ -386,12 +386,18 @@ public final class Objects
 		try
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			ObjectInputStream ois = null;
 			try
 			{
-				return objectStreamFactory.newObjectInputStream(in).readObject();
+				ois = objectStreamFactory.newObjectInputStream(in);
+				return ois.readObject();
 			}
 			finally
 			{
+				if (ois != null)
+				{
+					ois.close();
+				}
 				in.close();
 			}
 		}

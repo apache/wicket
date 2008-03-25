@@ -110,7 +110,7 @@ public interface IObjectStreamFactory
 			final ObjectOutputStream oos = new ObjectOutputStream(out);
 			return new ObjectOutputStream()
 			{
-				protected void writeObjectOverride(final Object obj) throws IOException
+				protected final void writeObjectOverride(final Object obj) throws IOException
 				{
 					try
 					{
