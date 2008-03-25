@@ -61,7 +61,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		else if (requestParameters.getResourceKey() == null)
 		{
 			throw new IllegalArgumentException("requestParameters.getResourceKey() "
-					+ "may not be null");
+				+ "may not be null");
 		}
 	}
 
@@ -81,7 +81,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		{
 			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
 			return getRequestParameters().getResourceKey().equals(
-					that.getRequestParameters().getResourceKey());
+				that.getRequestParameters().getResourceKey());
 		}
 		return false;
 	}
@@ -150,7 +150,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					PackageResource packageResource = PackageResource.get(scope, path);
 					if (sharedResources.get(resourceKey) == null)
 					{
-						sharedResources.add(resourceKey, packageResource);
+						sharedResources.add(scope, path, null, null, packageResource);
 					}
 					resource = packageResource;
 				}
@@ -170,7 +170,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			if (response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
-						HttpServletResponse.SC_NOT_FOUND);
+					HttpServletResponse.SC_NOT_FOUND);
 				log.error("shared resource " + resourceKey + " not found");
 				return;
 			}
@@ -196,6 +196,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	public String toString()
 	{
 		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
-				getRequestParameters().getResourceKey() + "]";
+			getRequestParameters().getResourceKey() + "]";
 	}
 }
