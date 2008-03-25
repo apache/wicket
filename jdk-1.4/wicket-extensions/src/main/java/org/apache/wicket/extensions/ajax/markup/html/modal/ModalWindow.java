@@ -34,7 +34,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
-import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -608,9 +607,7 @@ public class ModalWindow extends Panel
 	 */
 	public void setTitle(IModel title)
 	{
-		if (title instanceof IComponentAssignedModel) {
-			title = ((IComponentAssignedModel)title).wrapOnAssignment(this);
-		}
+		title = wrap(title);
 		this.title = title;
 	}
 
