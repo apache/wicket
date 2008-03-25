@@ -104,7 +104,7 @@ public final class Objects
 		private final HashMap replacedComponents;
 
 		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents,
-				ClassLoader classloader) throws IOException
+			ClassLoader classloader) throws IOException
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
@@ -116,7 +116,7 @@ public final class Objects
 		// bundle, i.e.
 		// The classes can be resolved by OSGI classresolver implementation
 		protected Class resolveClass(ObjectStreamClass desc) throws IOException,
-				ClassNotFoundException
+			ClassNotFoundException
 		{
 			String className = desc.getName();
 
@@ -127,8 +127,7 @@ public final class Objects
 			catch (ClassNotFoundException ex1)
 			{
 				// ignore this exception.
-				log
-						.debug("Class not found by using objects own classloader, trying the IClassResolver");
+				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
 			}
 
 			Application application = Application.get();
@@ -170,7 +169,7 @@ public final class Objects
 		private final HashMap replacedComponents;
 
 		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
-				throws IOException
+			throws IOException
 		{
 			super(out);
 			this.replacedComponents = replacedComponents;
@@ -399,12 +398,12 @@ public final class Objects
 		catch (ClassNotFoundException e)
 		{
 			throw new RuntimeException("Could not deserialize object using `" +
-					objectStreamFactory.getClass().getName() + "` object factory", e);
+				objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 		catch (IOException e)
 		{
 			throw new RuntimeException("Could not deserialize object using `" +
-					objectStreamFactory.getClass().getName() + "` object factory", e);
+				objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 	}
 
@@ -431,8 +430,8 @@ public final class Objects
 				final HashMap replacedObjects = new HashMap();
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
-				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()), replacedObjects, object.getClass().getClassLoader());
+				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(
+					out.toByteArray()), replacedObjects, object.getClass().getClassLoader());
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -468,32 +467,30 @@ public final class Objects
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(object);
-				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()))
+				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(
+					out.toByteArray()))
 				{
 					// This override is required to resolve classes inside in different bundle, i.e.
 					// The classes can be resolved by OSGI classresolver implementation
 					protected Class resolveClass(ObjectStreamClass desc) throws IOException,
-							ClassNotFoundException
+						ClassNotFoundException
 					{
 						String className = desc.getName();
 
 						try
 						{
 							return Class.forName(className, true, object.getClass()
-									.getClassLoader());
+								.getClassLoader());
 						}
 						catch (ClassNotFoundException ex1)
 						{
 							// ignore this exception.
-							log
-									.debug("Class not found by using objects own classloader, trying the IClassResolver");
+							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
 						}
 
 
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application
-								.getApplicationSettings();
+						IApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class candidate = null;
@@ -560,7 +557,7 @@ public final class Objects
 		else
 		{
 			int t1 = getNumericType(v1), t2 = getNumericType(v2), type = getNumericType(t1, t2,
-					true);
+				true);
 
 			switch (type)
 			{
@@ -576,7 +573,7 @@ public final class Objects
 					if ((t1 == NONNUMERIC) && (t2 == NONNUMERIC))
 					{
 						if ((v1 instanceof Comparable) &&
-								v1.getClass().isAssignableFrom(v2.getClass()))
+							v1.getClass().isAssignableFrom(v2.getClass()))
 						{
 							result = ((Comparable)v1).compareTo(v2);
 							break;
@@ -584,7 +581,7 @@ public final class Objects
 						else
 						{
 							throw new IllegalArgumentException("invalid comparison: " +
-									v1.getClass().getName() + " and " + v2.getClass().getName());
+								v1.getClass().getName() + " and " + v2.getClass().getName());
 						}
 					}
 					// else fall through
@@ -931,7 +928,7 @@ public final class Objects
 			if ((object1 != null) && object1.getClass().isArray())
 			{
 				if ((object2 != null) && object2.getClass().isArray() &&
-						(object2.getClass() == object1.getClass()))
+					(object2.getClass() == object1.getClass()))
 				{
 					result = (Array.getLength(object1) == Array.getLength(object2));
 					if (result)
@@ -948,7 +945,7 @@ public final class Objects
 				// Check for converted equivalence first, then equals()
 				// equivalence
 				result = (object1 != null) && (object2 != null) &&
-						((compareWithConversion(object1, object2) == 0) || object1.equals(object2));
+					((compareWithConversion(object1, object2) == 0) || object1.equals(object2));
 			}
 		}
 		return result;
@@ -1080,12 +1077,18 @@ public final class Objects
 		try
 		{
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
 			try
 			{
-				objectStreamFactory.newObjectOutputStream(out).writeObject(object);
+				oos = objectStreamFactory.newObjectOutputStream(out);
+				oos.writeObject(object);
 			}
 			finally
 			{
+				if (oos != null)
+				{
+					oos.close();
+				}
 				out.close();
 			}
 			return out.toByteArray();
@@ -1093,7 +1096,7 @@ public final class Objects
 		catch (Exception e)
 		{
 			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
-					e);
+				e);
 		}
 		return null;
 	}
