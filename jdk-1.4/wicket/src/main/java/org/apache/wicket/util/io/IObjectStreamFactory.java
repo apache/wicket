@@ -139,13 +139,11 @@ public interface IObjectStreamFactory
 				public void flush() throws IOException
 				{
 					oos.flush();
-					super.flush();
 				}
 
 				public void close() throws IOException
 				{
 					oos.close();
-					super.close();
 				}
 			};
 		}
