@@ -59,13 +59,21 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         objonblur = obj.onblur;
         objonkeyup = obj.onkeyup;
         objonkeypress = obj.onkeypress;
+        
+        // WICKET-1280
+        objonchangeoriginal = obj.onchange; 
+        obj.onchange=function(event){
+      		if(mouseactive==1) return false;
+      		if(typeof objonchangeoriginal == "function")objonchangeoriginal();
+      	}
         objonchange = obj.onchange;
-
-      	obj.onblur=function(event){
+                
+      	obj.onblur=function(event){      		
+      		Wicket.Log.info('onBlur:' + mouseactive);
     		if(mouseactive==1)return false;
           	hideAutoComplete();
         }
-
+      	
         obj.onkeydown=function(event){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_UP:
@@ -102,7 +110,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
 					}
-
+	                mouseactive=0;
 		            if(typeof objonkeydown == "function")objonkeydown();
     				if(typeof objonchange == "function")objonchange();
 
@@ -255,6 +263,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 	            var node=element.firstChild.childNodes[i];
 
 				node.onclick = function(event){
+					mouseactive=0;
 					wicketGet(elementId).value=getSelectedValue();
 					if(typeof objonchange == "function")objonchange();
 					hideAutoComplete();
