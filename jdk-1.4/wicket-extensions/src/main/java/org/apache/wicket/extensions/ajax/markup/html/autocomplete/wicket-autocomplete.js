@@ -69,7 +69,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         objonchange = obj.onchange;
                 
       	obj.onblur=function(event){      		
-      		Wicket.Log.info('onBlur:' + mouseactive);
     		if(mouseactive==1)return false;
           	hideAutoComplete();
         }
