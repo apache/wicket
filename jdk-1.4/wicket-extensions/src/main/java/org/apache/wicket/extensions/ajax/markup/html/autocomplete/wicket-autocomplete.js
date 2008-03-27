@@ -294,6 +294,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         render();
         
         scheduleEmptyCheck();
+        
+        Wicket.Log.info("Response processed successfully.");
+        Wicket.Ajax.invokePostCallHandlers();
     }
     
     function scheduleEmptyCheck() {
