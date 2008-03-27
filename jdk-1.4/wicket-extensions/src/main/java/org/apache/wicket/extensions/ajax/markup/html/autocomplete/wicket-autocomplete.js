@@ -51,25 +51,29 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 	var objonkeyup;
 	var objonkeypress;
 	var objonchange;
+	var objonchangeoriginal;
 
-    function initialize(){
+    function initialize(){    	
         var obj=wicketGet(elementId);
 
-        objonkeydown = obj.onkeydown;
-        objonblur = obj.onblur;
-        objonkeyup = obj.onkeyup;
-        objonkeypress = obj.onkeypress;
+        objonkeydown=obj.onkeydown;
+        objonblur=obj.onblur;
+        objonkeyup=obj.onkeyup;
+        objonkeypress=obj.onkeypress;
         
         // WICKET-1280
-        objonchangeoriginal = obj.onchange; 
+        objonchangeoriginal=obj.onchange; 
         obj.onchange=function(event){
-      		if(mouseactive==1) return false;
-      		if(typeof objonchangeoriginal == "function")objonchangeoriginal();
+      		if(mouseactive==1)return false;
+      		if(typeof objonchangeoriginal=="function")objonchangeoriginal();
       	}
-        objonchange = obj.onchange;
+        objonchange=obj.onchange;
                 
       	obj.onblur=function(event){      		
-    		if(mouseactive==1)return false;
+    		if(mouseactive==1){
+    			Wicket.$(elementId).focus();
+    			return false;
+    		}
           	hideAutoComplete();
         }
       	
@@ -105,13 +109,13 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     	                obj.value=getSelectedValue();
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
-					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection == true) {
+					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection==true) {
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
 					}
 	                mouseactive=0;
-		            if(typeof objonkeydown == "function")objonkeydown();
-    				if(typeof objonchange == "function")objonchange();
+		            if(typeof objonkeydown=="function")objonkeydown();
+    				if(typeof objonchange=="function")objonchange();
 
 	                if(selected>-1){
 	                	//return killEvent(event);
@@ -139,7 +143,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
                 default:
     	            updateChoices();
             }
-			if(typeof objonkeyup == "function")objonkeyup();
+			if(typeof objonkeyup=="function")objonkeyup();
             return null;
         }
 
@@ -150,7 +154,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 	                return killEvent(event);
                 }
             }
-			if(typeof objonkeypress == "function")objonkeypress();
+			if(typeof objonkeypress=="function")objonkeypress();
         }
     }
 
@@ -168,6 +172,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
             choiceDiv.style.display = "none";
             choiceDiv.style.position = "absolute";
             choiceDiv.style.zIndex = "10000";
+            
+            // WICKET-1350/WICKET-1351
+            choiceDiv.onmouseout=function() {mouseactive=0;};
+            choiceDiv.onmouseover=function() {mouseactive=1;};
         }
 
         choiceDiv.show = function() { wicketShow(this.id) }
@@ -175,7 +183,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 
         return choiceDiv;
     }
-
+    
     function killEvent(event){
         if(!event)event=window.event;
         if(!event)return false;
@@ -237,7 +245,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         var leftPosition=0;
         var topPosition=0;
         do {
-            topPosition += obj.offsetTop  || 0;
+            topPosition += obj.offsetTop || 0;
             leftPosition += obj.offsetLeft || 0;
             obj = obj.offsetParent;
         } while (obj);
@@ -248,7 +256,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
-   		if (input.value == null || input.value == "") {
+   		if (input.value==null || input.value=="") {
    			hideAutoComplete();
    			return;
    		}
@@ -264,19 +272,14 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 				node.onclick = function(event){
 					mouseactive=0;
 					wicketGet(elementId).value=getSelectedValue();
-					if(typeof objonchange == "function")objonchange();
+					if(typeof objonchange=="function")objonchange();
 					hideAutoComplete();
        			}
 
-				node.onmouseover = function(event){
-					mouseactive=1;
+				node.onmouseover = function(event){					
 					selected = getElementIndex(this);
 					render();
 				 	showAutoComplete();
-				}
-
-				node.onmouseout = function(event){
-					mouseactive=0;
 				}
        		}
         } else {
@@ -296,20 +299,20 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     function scheduleEmptyCheck() {
     	window.setTimeout(function() {
     		var input=wicketGet(elementId);
-    		if (input.value == null || input.value == "") {
+    		if (input.value==null || input.value=="") {
     			hideAutoComplete();
     		}
     	}, 100);
     }
 
     function getSelectedValue(){
-        var element = getAutocompleteMenu();
+        var element=getAutocompleteMenu();
         var attr=element.firstChild.childNodes[selected].attributes['textvalue'];
         var value;
         if (attr==undefined) {
-            value = element.firstChild.childNodes[selected].innerHTML;
+            value=element.firstChild.childNodes[selected].innerHTML;
             } else {
-            value = attr.value;
+            value=attr.value;
         }
         return stripHTML(value);
     }
@@ -331,18 +334,19 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         for(var i=0;i<elementCount;i++){
             var node=element.firstChild.childNodes[i];
 
-            var classNames = node.className.split(" ");
+            var classNames=node.className.split(" ");
             for (var j=0; j<classNames.length; j++) {
-                if (classNames[j] == 'selected') {
-                    classNames[j] = '';
+                if (classNames[j]=='selected') {
+                    classNames[j]='';
                 }
             }
 
             if(selected==i){
                 classNames.push('selected');
+                node.scrollIntoView(true);
             }
 
-            node.className = classNames.join(" ");
+            node.className=classNames.join(" ");
         }
     }
 
@@ -351,11 +355,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 		var value = obj.style.visibility;
 		if (!value) {
 			if (document.defaultView && typeof(document.defaultView.getComputedStyle)=="function") {
-				value = document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
+				value=document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
 			} else if (obj.currentStyle) {
 				value = obj.currentStyle.visibility;
 			} else {
-				value = '';
+				value='';
 			}
 		}
 		return value;
@@ -371,25 +375,25 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
     
     function hideShowCoveredTimeout(){
-		var el = getAutocompleteMenu();
-        var p = getPosition(el);
+		var el=getAutocompleteMenu();
+        var p=getPosition(el);
 
         var acLeftX=p[0];
         var acRightX=el.offsetWidth+acLeftX;
         var acTopY=p[1];
         var acBottomY=el.offsetHeight+acTopY;
 
-        var hideTags = new Array("select","iframe","applet");
+        var hideTags=new Array("select","iframe","applet");
 
         for (var j=0;j<hideTags.length;j++) {
-            var tagsFound = document.getElementsByTagName(hideTags[j]);
+            var tagsFound=document.getElementsByTagName(hideTags[j]);
             for (var i=0; i<tagsFound.length; i++){
                 var tag=tagsFound[i];
                 p=getPosition(tag);
-                var leftX = p[0];
-                var rightX = leftX+tag.offsetWidth;
-                var topY = p[1];
-                var bottomY = topY+tag.offsetHeight;
+                var leftX=p[0];
+                var rightX=leftX+tag.offsetWidth;
+                var topY=p[1];
+                var bottomY=topY+tag.offsetHeight;
 
                 if (this.hidden || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
                     if(!tag.wicket_element_visibility) {
