@@ -18,6 +18,7 @@ package org.apache.wicket.contrib.markup.html.velocity;
 
 import java.util.HashMap;
 
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -27,7 +28,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**
  * Test page for <code>VelocityPanel</code>
- * 
+ *
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
 public class VelocityWithMarkupParsingPage extends WebPage
@@ -43,7 +44,7 @@ public class VelocityWithMarkupParsingPage extends WebPage
 		{
 			protected IStringResourceStream getTemplateResource()
 			{
-				return new UrlResourceStream(this.getClass().getResource("testWithMarkup.html"));
+				return new UrlResourceStream(getClass().getResource("testWithMarkup.html"));
 			}
 
 			public boolean parseGeneratedMarkup()
@@ -51,7 +52,15 @@ public class VelocityWithMarkupParsingPage extends WebPage
 				return true;
 			}
 		};
-		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING));
+		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING)
+		{
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				// check whether the markupstream can be located
+				getMarkupAttributes();
+			}
+		});
 		add(velocityPanel);
 	}
 }

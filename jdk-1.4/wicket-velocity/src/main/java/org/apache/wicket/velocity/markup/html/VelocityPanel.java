@@ -67,7 +67,7 @@ public abstract class VelocityPanel extends Panel
 	 *            optional model for variable substituation.
 	 * @param templateResource
 	 *            The template resource
-	 * @return
+	 * @return an instance of {@link VelocityPanel}
 	 */
 	public static VelocityPanel forTemplateResource(String id, IModel model,
 			final IStringResourceStream templateResource)
@@ -85,6 +85,23 @@ public abstract class VelocityPanel extends Panel
 			}
 		};
 	}
+
+	/**
+	 * Is used to cache the evaluated template and is nulled in onDetach().
+	 */
+	private transient String evaluatedTemplate;
+
+	/**
+	 * Is used to store the markupStream parameter in onComponentTagBody and is nulled in
+	 * onDetach().
+	 */
+	private transient MarkupStream currentMarkupStream;
+
+	/**
+	 * Is used to store the markupStream parameter in onComponentTagBody and is nulled in
+	 * onDetach().
+	 */
+	private transient ComponentTag currentOpenTag;
 
 	/**
 	 * Construct.
@@ -173,8 +190,43 @@ public abstract class VelocityPanel extends Panel
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+		currentMarkupStream = markupStream;
+		currentOpenTag = openTag;
+
 		final Reader templateReader = getTemplateReader();
 		if (templateReader != null)
+		{
+			String result = evaluateVelocityTemplate(templateReader);
+			if (!parseGeneratedMarkup())
+			{
+				// now replace the body of the tag with the velocity merge
+				// result
+				replaceComponentTagBody(markupStream, openTag, result);
+			}
+			else
+			{
+				Markup markup = getMarkup(result);
+				markupStream.skipRawMarkup();
+				renderAll(new MarkupStream(markup));
+			}
+		}
+		else
+		{
+			replaceComponentTagBody(markupStream, openTag, ""); // just empty it
+		}
+	}
+
+
+	/**
+	 * Evaluates the template and returns the result.
+	 * 
+	 * @param templateReader
+	 *            used to read the template
+	 * @return the result of evaluating the velocity template
+	 */
+	private String evaluateVelocityTemplate(Reader templateReader)
+	{
+		if (evaluatedTemplate == null)
 		{
 			// Get model as a map
 			final Map map = (Map)getModelObject();
@@ -202,53 +254,62 @@ public abstract class VelocityPanel extends Panel
 					// does not break the rest of the page
 					result = Strings.escapeMarkup(result).toString();
 				}
-
-				if (!parseGeneratedMarkup())
-				{
-					// now replace the body of the tag with the velocity merge
-					// result
-					replaceComponentTagBody(markupStream, openTag, result);
-				}
-				else
-				{
-					// now parse the velocity merge result
-					Markup markup;
-					try
-					{
-						MarkupParser parser = getApplication().getMarkupSettings()
-								.getMarkupParserFactory().newMarkupParser(
-										new MarkupResourceStream(new StringResourceStream(result)));
-						markup = parser.parse();
-					}
-					catch (ResourceStreamNotFoundException e)
-					{
-						throw new RuntimeException("Could not parse resulting markup", e);
-					}
-					markupStream.skipRawMarkup();
-					renderAll(new MarkupStream(markup));
-				}
-			}
-			catch (ParseErrorException e)
-			{
-				onException(e, markupStream, openTag);
-			}
-			catch (MethodInvocationException e)
-			{
-				onException(e, markupStream, openTag);
-			}
-			catch (ResourceNotFoundException e)
-			{
-				onException(e, markupStream, openTag);
+				evaluatedTemplate = result;
+				return evaluatedTemplate;
 			}
 			catch (IOException e)
 			{
-				onException(e, markupStream, openTag);
+				onException(e, currentMarkupStream, currentOpenTag);
 			}
+			catch (ParseErrorException e)
+			{
+				onException(e, currentMarkupStream, currentOpenTag);
+			}
+			catch (MethodInvocationException e)
+			{
+				onException(e, currentMarkupStream, currentOpenTag);
+			}
+			catch (ResourceNotFoundException e)
+			{
+				onException(e, currentMarkupStream, currentOpenTag);
+			}
+			return "";
 		}
 		else
 		{
-			replaceComponentTagBody(markupStream, openTag, ""); // just empty it
+			return evaluatedTemplate;
 		}
+	}
+
+	/**
+	 * @param evaluatedTemplate
+	 *            the evaluated velocity template
+	 * @return the {@link Markup} of the param <code>evaluatedTemplate</code>
+	 */
+	private Markup getMarkup(String evaluatedTemplate)
+	{
+		if (!parseGeneratedMarkup())
+		{
+			return Markup.NO_MARKUP;
+		}
+		// now parse the velocity merge result
+		Markup markup = null;
+		try
+		{
+			MarkupParser parser = getApplication().getMarkupSettings().getMarkupParserFactory()
+					.newMarkupParser(
+							new MarkupResourceStream(new StringResourceStream(evaluatedTemplate)));
+			markup = parser.parse();
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			throw new RuntimeException("Could not parse resulting markup", e);
+		}
+		catch (IOException e)
+		{
+			onException(e, currentMarkupStream, currentOpenTag);
+		}
+		return markup;
 	}
 
 	/**
@@ -278,5 +339,37 @@ public abstract class VelocityPanel extends Panel
 	protected boolean throwVelocityExceptions()
 	{
 		return false;
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getAssociatedMarkupStream(boolean)
+	 */
+	public MarkupStream getAssociatedMarkupStream(boolean throwException)
+	{
+		Reader reader = getTemplateReader();
+		if (reader == null)
+		{
+			throw new WicketRuntimeException("could not find velocity template for panel: " + this);
+		}
+
+		// evaluate the template and return a new markupstream
+		String result = evaluateVelocityTemplate(reader);
+		return new MarkupStream(getMarkup(result));
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#hasAssociatedMarkup()
+	 */
+	public boolean hasAssociatedMarkup()
+	{
+		return true;
+	}
+
+	protected void onDetach()
+	{
+		super.onDetach();
+		evaluatedTemplate = null;
+		currentMarkupStream = null;
+		currentOpenTag = null;
 	}
 }
