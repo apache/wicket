@@ -172,7 +172,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
             choiceDiv.className = "wicket-aa";
             choiceDiv.style.display = "none";
             choiceDiv.style.position = "absolute";
-            choiceDiv.style.zIndex = "10000";
+            choiceDiv.style.zIndex = "30000";
             
             // WICKET-1350/WICKET-1351
             choiceDiv.onmouseout=function() {mouseactive=0;};
