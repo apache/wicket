@@ -72,9 +72,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
       	obj.onblur=function(event){      		
     		if(mouseactive==1){
     			Wicket.$(elementId).focus();
-    			return false;
+    			return killEvent(event);
     		}
           	hideAutoComplete();
+          	if(typeof objonblur=="function")objonblur();
         }
       	
         obj.onkeydown=function(event){
@@ -109,13 +110,13 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     	                obj.value=getSelectedValue();
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
+          		        if(typeof objonchange=="function")objonchange();
 					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection==true) {
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
 					}
 	                mouseactive=0;
-		            if(typeof objonkeydown=="function")objonkeydown();
-    				if(typeof objonchange=="function")objonchange();
+	                if(typeof objonkeydown=="function")objonkeydown();
 
 	                if(selected>-1){
 	                	//return killEvent(event);
@@ -151,7 +152,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
             if(wicketKeyCode(Wicket.fixEvent(event))==KEY_ENTER){
                 if(selected>-1 || hidingAutocomplete==1){
 			        hidingAutocomplete=0;
-	                return killEvent(event);
+			        return killEvent(event);
                 }
             }
 			if(typeof objonkeypress=="function")objonkeypress();
@@ -231,7 +232,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
 
     function hideAutoComplete(){
-        hidingAutocomplete=1;
         visible=0;
         selected=-1;
         if ( document.getElementById(getMenuId()) )
