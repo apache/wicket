@@ -152,6 +152,7 @@ div.wicket-modal div.w_content_2 {
 	width: 100%; 
 	background-color: white;
 	padding-top: 0.1em;
+	_overflow: auto;
 }
 
 div.wicket-modal div.w_content_3 {
