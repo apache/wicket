@@ -607,6 +607,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private static final int FLAG_RENDERING = 0x2000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
+	/**
+	 * Flag that restricts visibility of a component when set to true. This is usually used when a
+	 * component wants to restrict visibility of another component. Calling
+	 * {@link #setVisible(boolean)} on a component does not always have the desired effect because
+	 * isVisible() can be overwritten thus this flag offers an alternative that should always work.
+	 */
+	private static final int FLAG_VISIBILITY_ALLOWED = 0x40000000;
 
 	private static final int FLAG_ATTACHED = 0x20000000;
 	private static final int FLAG_DETACHING = 0x80000000;
@@ -641,7 +648,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
-		FLAG_IS_RENDER_ALLOWED;
+		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED;
 
 	/** Component id. */
 	private String id;
@@ -2068,7 +2075,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		Component component = this;
 		while (component != null)
 		{
-			if (component.isRenderAllowed() && component.isVisible())
+			if (component.determineVisibility())
 			{
 				component = component.getParent();
 			}
@@ -2286,7 +2293,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
-		if (isRenderAllowed() && isVisible())
+		if (determineVisibility())
 		{
 			setFlag(FLAG_HAS_BEEN_RENDERED, true);
 
@@ -3069,7 +3076,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 					.append(".")
 					.append(Classes.simpleName(getClass()))
 					.append(", isVisible = ")
-					.append((isRenderAllowed() && isVisible()))
+					.append((determineVisibility()))
 					.append(", isVersioned = ")
 					.append(isVersioned())
 					.append("]")
@@ -4147,5 +4154,44 @@ public abstract class Component implements IClusterable, IConverterLocator
 	void setRenderAllowed()
 	{
 		setRenderAllowed(isActionAuthorized(RENDER));
+	}
+
+	/**
+	 * Sets whether or not this component is allowed to be visible. This method is meant to be used
+	 * by components to control visibility of other components. A call to
+	 * {@link #setVisible(boolean)} will not always have a desired effect because that component may
+	 * have {@link #isVisible()} overridden. Both {@link #setVisibilityAllowed(boolean)} and
+	 * {@link #isVisibilityAllowed()} are <code>final</code> so their contract is enforced always.
+	 * 
+	 * @param allowed
+	 * @return <code>this</code> for chaining
+	 */
+	public final Component setVisibilityAllowed(boolean allowed)
+	{
+		setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+		return this;
+	}
+
+	/**
+	 * Gets whether or not visibility is allowed on this component. See
+	 * {@link #setVisibilityAllowed(boolean)} for details.
+	 * 
+	 * @return true if this component is allowed to be visible, false otherwise.
+	 */
+	public final boolean isVisibilityAllowed()
+	{
+		return getFlag(FLAG_VISIBILITY_ALLOWED);
+	}
+
+	/**
+	 * Determines whether or not a component should be visible, taking into account all the factors:
+	 * {@link #isVisible()}, {@link #isVisibilityAllowed()}, {@link #isRenderAllowed()}
+	 * 
+	 * @return <code>true</code> if the component should be visible, <code>false</code>
+	 *         otherwise
+	 */
+	public final boolean determineVisibility()
+	{
+		return isVisible() && isRenderAllowed() && isVisibilityAllowed();
 	}
 }

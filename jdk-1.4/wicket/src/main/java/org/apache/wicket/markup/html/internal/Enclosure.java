@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
+import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,46 +112,49 @@ public class Enclosure extends WebMarkupContainer
 	 * @param childId
 	 * @return Child Component
 	 */
-	private Component getChildComponent(final CharSequence childId)
+	public Component getChildComponent()
 	{
-		MarkupContainer parent = getParent();
-		while (parent != null)
+		if (childComponent == null)
 		{
-			if (parent.isTransparentResolver())
+			MarkupContainer parent = getParent();
+			while (parent != null)
 			{
-				parent = parent.getParent();
+				if (parent.isTransparentResolver())
+				{
+					parent = parent.getParent();
+				}
+				else if (parent instanceof BorderBodyContainer)
+				{
+					parent = ((BorderBodyContainer)parent).findParent(Border.class);
+				}
+				else
+				{
+					break;
+				}
 			}
-			else if (parent instanceof BorderBodyContainer)
+
+			if (parent == null)
 			{
-				parent = ((BorderBodyContainer)parent).findParent(Border.class);
+				throw new WicketRuntimeException(
+					"Unable to find parent component which is not a transparent resolver");
 			}
-			else
+
+			if (childId == null)
 			{
-				break;
+				throw new MarkupException(
+					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
 			}
-		}
 
-		if (parent == null)
-		{
-			throw new WicketRuntimeException(
-				"Unable to find parent component which is not a transparent resolver");
+			final Component child = parent.get(childId.toString());
+			if (child == null)
+			{
+				throw new MarkupException(
+					"Didn't find child component of <wicket:enclosure> with id='" + childId +
+						"'. Component: " + this.toString());
+			}
+			childComponent = child;
 		}
-
-		if (childId == null)
-		{
-			throw new MarkupException(
-				"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
-		}
-
-		final Component child = parent.get(childId.toString());
-		if (child == null)
-		{
-			throw new MarkupException(
-				"Didn't find child component of <wicket:enclosure> with id='" + childId +
-					"'. Component: " + this.toString());
-		}
-
-		return child;
+		return childComponent;
 	}
 
 	/**
@@ -159,20 +164,29 @@ public class Enclosure extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		if (childComponent == null)
-		{
-			childComponent = getChildComponent(childId);
-		}
-
-		if (childComponent == this)
+		final Component controller = getChildComponent();
+		if (controller == this)
 		{
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
 		}
-		else if (childComponent != null)
+		else if (controller != null)
 		{
-			// Delegate to child component
-			setVisible(childComponent.isVisible() && childComponent.isRenderAllowed());
+			setVisible(controller.determineVisibility());
+
+			// transfer visiblity to direct children
+			DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
+			while (it.hasNext())
+			{
+				ComponentTag t = (ComponentTag)it.next();
+				Component child = controller.getParent().get(t.getId());
+				if (child != null)
+				{
+					child.setVisibilityAllowed(isVisible());
+				}
+			}
+			it.rewind();
+
 		}
 
 		if (isVisible() == true)
@@ -182,6 +196,89 @@ public class Enclosure extends WebMarkupContainer
 		else
 		{
 			markupStream.skipToMatchingCloseTag(openTag);
+		}
+	}
+
+	/**
+	 * Iterator that iterates over direct child component tags of the given component tag
+	 * 
+	 * @author ivaynberg
+	 */
+	private static class DirectChildTagIterator extends ReadOnlyIterator
+	{
+		private final MarkupStream markupStream;
+		private final ComponentTag parent;
+		private ComponentTag next = null;
+		private final int originalIndex;
+
+		public DirectChildTagIterator(MarkupStream markupStream, ComponentTag parent)
+		{
+			super();
+			this.markupStream = markupStream;
+			this.parent = parent;
+			originalIndex = markupStream.getCurrentIndex();
+			findNext();
+		}
+
+		/**
+		 * Resets markup stream to the original position
+		 */
+		public void rewind()
+		{
+			markupStream.setCurrentIndex(originalIndex);
+		}
+
+		/**
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext()
+		{
+			return next != null;
+		}
+
+		/**
+		 * @see java.util.Iterator#next()
+		 */
+		public Object next()
+		{
+			ComponentTag ret = next;
+			findNext();
+			return ret;
+		}
+
+		private void findNext()
+		{
+			ComponentTag tag = next;
+			next = null;
+
+			if (tag != null && tag.isOpenClose())
+			{
+				// if current child tag is open-close look for next child
+				tag = null;
+			}
+
+			while (markupStream.hasMore())
+			{
+				final MarkupElement cursor = markupStream.next();
+
+				if (cursor.closes(parent))
+				{
+					// parent close tag found, we are done
+					break;
+				}
+
+				if (tag != null && cursor.closes(tag))
+				{
+					// child tag is closed, next tag is either parent-close or next direct child
+					tag = null;
+				}
+				else if (tag == null && cursor instanceof ComponentTag)
+				{
+					// found next child
+					next = (ComponentTag)cursor;
+					break;
+				}
+			}
 		}
 	}
 }

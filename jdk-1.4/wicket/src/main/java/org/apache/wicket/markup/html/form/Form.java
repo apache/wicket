@@ -1811,21 +1811,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			throw new IllegalArgumentException("Argument `fc` cannot be null");
 		}
-		Component c = fc;
-		Component last = fc;
-		while (c != null)
-		{
-			if (c.isRenderAllowed() && c.isVisible())
-			{
-				last = c;
-				c = c.getParent();
-			}
-			else
-			{
-				return false;
-			}
-		}
-		return last == findPage();
+		return fc.isVisibleInHierarchy();
 	}
 
 

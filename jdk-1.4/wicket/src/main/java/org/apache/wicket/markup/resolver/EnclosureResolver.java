@@ -56,8 +56,8 @@ public class EnclosureResolver implements IComponentResolver
 			{
 				id = "enclosure-" + container.getPage().getAutoIndex();
 			}
-			final Enclosure enclosure = new Enclosure(id,
-				tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+			final Enclosure enclosure = new Enclosure(id, tag.getString(
+				EnclosureHandler.CHILD_ATTRIBUTE).toString());
 			container.autoAdd(enclosure, markupStream);
 
 			// Yes, we handled the tag
