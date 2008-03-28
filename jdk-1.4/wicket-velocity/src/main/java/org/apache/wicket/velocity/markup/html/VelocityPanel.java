@@ -144,9 +144,17 @@ public abstract class VelocityPanel extends Panel
 		}
 		else if (!parseGeneratedMarkup())
 		{
-			// initialize evaluatedTemplate
+			// check that no components have been added in case the generated markup should not be
+			// parsed
+			if (size() > 0)
+			{
+				throw new WicketRuntimeException(
+						"Components cannot be added if the generated markup should not be parsed.");
+			}
+
 			if (evaluatedTemplate == null)
 			{
+				// initialize evaluatedTemplate
 				getMarkupResourceStream(null, null);
 			}
 			replaceComponentTagBody(markupStream, openTag, evaluatedTemplate);
@@ -155,21 +163,6 @@ public abstract class VelocityPanel extends Panel
 		{
 			super.onComponentTagBody(markupStream, openTag);
 		}
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
-	protected void onBeforeRender()
-	{
-		// check that no components have been added in case the generated markup should not be
-		// parsed
-		if (!parseGeneratedMarkup() && size() > 0)
-		{
-			throw new WicketRuntimeException(
-					"Components cannot be added if the generated markup should not be parsed.");
-		}
-		super.onBeforeRender();
 	}
 
 	/**
@@ -306,7 +299,8 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class containerClass)
+	public final IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class containerClass)
 	{
 		Reader reader = getTemplateReader();
 		if (reader == null)
@@ -326,7 +320,7 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public String getCacheKey(MarkupContainer container, Class containerClass)
+	public final String getCacheKey(MarkupContainer container, Class containerClass)
 	{
 		// don't cache the evaluated template
 		return null;
