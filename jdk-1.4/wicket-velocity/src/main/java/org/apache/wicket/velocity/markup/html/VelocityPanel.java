@@ -27,16 +27,16 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.Markup;
-import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.IMarkupCacheKeyProvider;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -56,6 +56,9 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  */
 public abstract class VelocityPanel extends Panel
+		implements
+			IMarkupResourceStreamProvider,
+			IMarkupCacheKeyProvider
 {
 	/**
 	 * Convenience factory method to create a {@link VelocityPanel} instance with a given
@@ -86,22 +89,8 @@ public abstract class VelocityPanel extends Panel
 		};
 	}
 
-	/**
-	 * Is used to cache the evaluated template and is nulled in onDetach().
-	 */
+	private transient String stackTraceAsString;
 	private transient String evaluatedTemplate;
-
-	/**
-	 * Is used to store the markupStream parameter in onComponentTagBody and is nulled in
-	 * onDetach().
-	 */
-	private transient MarkupStream currentMarkupStream;
-
-	/**
-	 * Is used to store the markupStream parameter in onComponentTagBody and is nulled in
-	 * onDetach().
-	 */
-	private transient ComponentTag currentOpenTag;
 
 	/**
 	 * Construct.
@@ -142,6 +131,44 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	{
+		if (!Strings.isEmpty(stackTraceAsString))
+		{
+			// TODO: only display the velocity error/stacktrace in development mode?
+			replaceComponentTagBody(markupStream, openTag, Strings
+					.toMultilineMarkup(stackTraceAsString));
+		}
+		else if (!parseGeneratedMarkup())
+		{
+			replaceComponentTagBody(markupStream, openTag,
+					evaluateVelocityTemplate(getTemplateReader()));
+		}
+		else
+		{
+			super.onComponentTagBody(markupStream, openTag);
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
+	protected void onBeforeRender()
+	{
+		// check that no components have been added in case the generated markup should not be
+		// parsed
+		if (!parseGeneratedMarkup() && size() > 0)
+		{
+			throw new WicketRuntimeException(
+					"Components cannot be added if the generated markup should not be parsed.");
+		}
+		super.onBeforeRender();
+	}
+
+	/**
 	 * Either print or rethrow the throwable.
 	 * 
 	 * @param exception
@@ -151,14 +178,12 @@ public abstract class VelocityPanel extends Panel
 	 * @param openTag
 	 *            the open tag
 	 */
-	private void onException(final Exception exception, final MarkupStream markupStream,
-			final ComponentTag openTag)
+	private void onException(final Exception exception)
 	{
 		if (!throwVelocityExceptions())
 		{
 			// print the exception on the panel
-			String stackTraceAsString = Strings.toString(exception);
-			replaceComponentTagBody(markupStream, openTag, stackTraceAsString);
+			stackTraceAsString = Strings.toString(exception);
 		}
 		else
 		{
@@ -183,39 +208,6 @@ public abstract class VelocityPanel extends Panel
 	 * @return The template resource
 	 */
 	protected abstract IStringResourceStream getTemplateResource();
-
-	/**
-	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		currentMarkupStream = markupStream;
-		currentOpenTag = openTag;
-
-		final Reader templateReader = getTemplateReader();
-		if (templateReader != null)
-		{
-			String result = evaluateVelocityTemplate(templateReader);
-			if (!parseGeneratedMarkup())
-			{
-				// now replace the body of the tag with the velocity merge
-				// result
-				replaceComponentTagBody(markupStream, openTag, result);
-			}
-			else
-			{
-				Markup markup = getMarkup(result);
-				markupStream.skipRawMarkup();
-				renderAll(new MarkupStream(markup));
-			}
-		}
-		else
-		{
-			replaceComponentTagBody(markupStream, openTag, ""); // just empty it
-		}
-	}
-
 
 	/**
 	 * Evaluates the template and returns the result.
@@ -246,70 +238,35 @@ public abstract class VelocityPanel extends Panel
 				Velocity.evaluate(ctx, writer, logTag, templateReader);
 
 				// replace the tag's body the Velocity output
-				String result = writer.toString();
+				evaluatedTemplate = writer.toString();
 
 				if (escapeHtml())
 				{
 					// encode the result in order to get valid html output that
 					// does not break the rest of the page
-					result = Strings.escapeMarkup(result).toString();
+					evaluatedTemplate = Strings.escapeMarkup(evaluatedTemplate).toString();
 				}
-				evaluatedTemplate = result;
 				return evaluatedTemplate;
 			}
 			catch (IOException e)
 			{
-				onException(e, currentMarkupStream, currentOpenTag);
+				onException(e);
 			}
 			catch (ParseErrorException e)
 			{
-				onException(e, currentMarkupStream, currentOpenTag);
+				onException(e);
 			}
 			catch (MethodInvocationException e)
 			{
-				onException(e, currentMarkupStream, currentOpenTag);
+				onException(e);
 			}
 			catch (ResourceNotFoundException e)
 			{
-				onException(e, currentMarkupStream, currentOpenTag);
+				onException(e);
 			}
-			return "";
+			return null;
 		}
-		else
-		{
-			return evaluatedTemplate;
-		}
-	}
-
-	/**
-	 * @param evaluatedTemplate
-	 *            the evaluated velocity template
-	 * @return the {@link Markup} of the param <code>evaluatedTemplate</code>
-	 */
-	private Markup getMarkup(String evaluatedTemplate)
-	{
-		if (!parseGeneratedMarkup())
-		{
-			return Markup.NO_MARKUP;
-		}
-		// now parse the velocity merge result
-		Markup markup = null;
-		try
-		{
-			MarkupParser parser = getApplication().getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser(
-							new MarkupResourceStream(new StringResourceStream(evaluatedTemplate)));
-			markup = parser.parse();
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			throw new RuntimeException("Could not parse resulting markup", e);
-		}
-		catch (IOException e)
-		{
-			onException(e, currentMarkupStream, currentOpenTag);
-		}
-		return markup;
+		return evaluatedTemplate;
 	}
 
 	/**
@@ -342,9 +299,10 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#getAssociatedMarkupStream(boolean)
+	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache.wicket.MarkupContainer,
+	 *      java.lang.Class)
 	 */
-	public MarkupStream getAssociatedMarkupStream(boolean throwException)
+	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class containerClass)
 	{
 		Reader reader = getTemplateReader();
 		if (reader == null)
@@ -352,24 +310,31 @@ public abstract class VelocityPanel extends Panel
 			throw new WicketRuntimeException("could not find velocity template for panel: " + this);
 		}
 
-		// evaluate the template and return a new markupstream
-		String result = evaluateVelocityTemplate(reader);
-		return new MarkupStream(getMarkup(result));
+		// evaluate the template and return a new StringResourceStream
+		StringBuffer sb = new StringBuffer();
+		sb.append("<wicket:panel>");
+		sb.append(evaluateVelocityTemplate(reader));
+		sb.append("</wicket:panel>");
+		return new StringResourceStream(sb.toString());
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#hasAssociatedMarkup()
+	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
+	 *      java.lang.Class)
 	 */
-	public boolean hasAssociatedMarkup()
+	public String getCacheKey(MarkupContainer container, Class containerClass)
 	{
-		return true;
+		// don't cache the evaluated template
+		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
 	protected void onDetach()
 	{
 		super.onDetach();
+		stackTraceAsString = null;
 		evaluatedTemplate = null;
-		currentMarkupStream = null;
-		currentOpenTag = null;
 	}
 }
