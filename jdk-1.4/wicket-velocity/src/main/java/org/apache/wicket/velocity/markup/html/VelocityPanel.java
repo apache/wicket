@@ -144,8 +144,12 @@ public abstract class VelocityPanel extends Panel
 		}
 		else if (!parseGeneratedMarkup())
 		{
-			replaceComponentTagBody(markupStream, openTag,
-					evaluateVelocityTemplate(getTemplateReader()));
+			// initialize evaluatedTemplate
+			if (evaluatedTemplate == null)
+			{
+				getMarkupResourceStream(null, null);
+			}
+			replaceComponentTagBody(markupStream, openTag, evaluatedTemplate);
 		}
 		else
 		{
