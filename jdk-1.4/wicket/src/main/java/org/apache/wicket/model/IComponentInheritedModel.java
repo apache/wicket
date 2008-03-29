@@ -27,8 +27,8 @@ import org.apache.wicket.Component;
  * created with a null model
  * 
  * <pre>
- * Form form = new Form(getPage(), &quot;form&quot;, new ModelImplementingIInheritableModel());
- * new TextField(form, &quot;textfield&quot;); // notice textfield is created with a null model
+ * Form form = new Form(&quot;form&quot;, new ModelImplementingIInheritableModel());
+ * new TextField(&quot;textfield&quot;); // notice textfield is created with a null model
  * </pre>
  * 
  * @author jcompagner
