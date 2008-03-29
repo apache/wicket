@@ -472,8 +472,8 @@ Wicket.Form.serialize = function(element, dontTryToFindRootForm) {
 			// there is not form in dom hierarchy
 			// simulate it  
 			var form = document.createElement("form");
-			parent = elementBck.parentNode;
-			
+			var parent = elementBck.parentNode;
+
 			parent.replaceChild(form, elementBck);
 			form.appendChild(elementBck);
 			var result = Wicket.Form.doSerialize(form);
