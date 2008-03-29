@@ -118,7 +118,7 @@ public abstract class NumberValidator extends AbstractValidator
 	/**
 	 * Gets an Integer range validator for checking if a number is smaller than or equal to the
 	 * given maximum value. If that is not the case, an error message will be generated with the key
-	 * "StringValidator.maximum". The message keys that can be used are:
+	 * "NumberValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
@@ -194,7 +194,7 @@ public abstract class NumberValidator extends AbstractValidator
 	/**
 	 * Gets a Double maximum validator for checking if an number is smaller than or equal to the
 	 * given maximum value. If that is not the case, an error message will be generated with the key
-	 * "StringValidator.maximum". The message keys that can be used are:
+	 * "NumberValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
