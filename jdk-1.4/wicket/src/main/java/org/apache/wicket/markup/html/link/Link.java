@@ -37,7 +37,7 @@ import org.apache.wicket.version.undo.Change;
  * <pre>
  * add(new Link(&quot;myLink&quot;)
  * {
- *     public void onClick(RequestCycle cycle)
+ *     public void onClick()
  *     {
  *         // do something here...
  *     }
@@ -66,7 +66,7 @@ import org.apache.wicket.version.undo.Change;
  *     public void onClick()
  *     {
  *         MyObject obj = (MyObject)getModelObject();
- *         setResponsePage(new MyPage(obj.getId(), ... ));
+ *         setResponsePage(new MyPage(obj));
  *     }
  * </pre>
  * 
