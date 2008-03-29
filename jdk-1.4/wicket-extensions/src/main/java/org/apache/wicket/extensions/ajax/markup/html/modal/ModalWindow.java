@@ -275,6 +275,7 @@ public class ModalWindow extends Panel
 	{
 		if (shown == false)
 		{
+			getContent().setVisible(true);
 			target.addComponent(this);
 			target.appendJavascript(getWindowOpenJavascript());
 			shown = true;
@@ -302,6 +303,7 @@ public class ModalWindow extends Panel
 	 */
 	public void close(AjaxRequestTarget target)
 	{
+		getContent().setVisible(false);
 		target.appendJavascript(getCloseJavacript());
 		shown = false;
 	}
@@ -789,6 +791,8 @@ public class ModalWindow extends Panel
 		{
 			throw new WicketRuntimeException("Modal window content id is wrong.");
 		}
+		component.setOutputMarkupPlaceholderTag(true);
+		component.setVisible(false);
 		replace(component);
 		shown = false;
 	}
