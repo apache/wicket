@@ -1091,7 +1091,7 @@ Wicket.Window.idCounter = 0;
  */
 Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idContent, idTop, idTopLeft, idTopRight, idLeft, idRight, idBottomLeft, idBottomRight, idBottom, idCaptionText, isFrame) {
 	var s =
-			"<div class=\"wicket-modal\" id=\""+idWindow+"\" style=\"top: 10px; left: 10px; width: 100px;\">"+
+			"<div class=\"wicket-modal\" id=\""+idWindow+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='padding:0px;margin:0px;border-width:0px;position:static'>"+
 			"<div id=\""+idClassElement+"\">"+
 				
 				"<div class=\"w_top_1\">"+
@@ -1153,7 +1153,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 
 
 			"</div>"+
-		"</div>";
+		"</form></div>";
 		
 		return s;
 }
