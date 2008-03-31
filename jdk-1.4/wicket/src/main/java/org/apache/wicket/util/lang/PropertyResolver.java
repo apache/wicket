@@ -487,7 +487,7 @@ public final class PropertyResolver
 				}
 				tmp = tmp.getSuperclass();
 			}
-			log.debug("Cannot find field " + clz + "." + expression, e);
+			log.debug("Cannot find field " + clz + "." + expression);
 		}
 		return field;
 	}
@@ -535,7 +535,7 @@ public final class PropertyResolver
 		}
 		catch (Exception e)
 		{
-			log.debug("Cannot find method " + clz + "." + expression, e);
+			log.debug("Cannot find method " + clz + "." + expression);
 		}
 		return method;
 	}
@@ -911,7 +911,7 @@ public final class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find setter method corresponding to " + getMethod, e);
+				log.debug("Cannot find setter method corresponding to " + getMethod);
 			}
 			return null;
 		}
@@ -1140,11 +1140,11 @@ public final class PropertyResolver
 						}
 					}
 				}
-				log.debug("Cannot find setter corresponding to " + getMethod, e);
+				log.debug("Cannot find setter corresponding to " + getMethod);
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find setter corresponding to " + getMethod, e);
+				log.debug("Cannot find setter corresponding to " + getMethod);
 			}
 			return null;
 		}
