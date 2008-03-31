@@ -172,8 +172,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
             choiceDiv.className="wicket-aa";
             choiceDiv.style.display="none";
             choiceDiv.style.position="absolute";
-            var index=getOffsetParentZIndex(elementId);
-            choiceDiv.style.zIndex=index=="auto"?index:Number(index)+1;
             
             // WICKET-1350/WICKET-1351
             choiceDiv.onmouseout=function() {mouseactive=0;};
@@ -224,7 +222,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         var position=getPosition(wicketGet(elementId));
         var menu = getAutocompleteMenu();
         var input=wicketGet(elementId);
+        var index=getOffsetParentZIndex(elementId);        
         menu.show();
+        menu.style.zIndex=index=="auto"?index:Number(index)+1;
         menu.style.left=position[0]+'px'
         menu.style.top=(input.offsetHeight+position[1])+'px';
         menu.style.width=input.offsetWidth+'px';
