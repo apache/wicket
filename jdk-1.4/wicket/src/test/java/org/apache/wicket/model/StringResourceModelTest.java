@@ -196,7 +196,7 @@ public class StringResourceModelTest extends TestCase
 	 */
 	public void testUninitialisedLocalizer()
 	{
-		StringResourceModel model = new StringResourceModel("simple.text", null, null);
+		StringResourceModel model = new StringResourceModel("simple.text", null);
 		try
 		{
 			model.getString();
