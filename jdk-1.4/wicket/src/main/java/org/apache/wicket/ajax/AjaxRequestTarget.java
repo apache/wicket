@@ -689,8 +689,13 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final Page page = component.getPage();
 		if (page == null)
 		{
-			throw new IllegalStateException(
-				"Ajax request attempted on a component that is not associated with a Page");
+			// dont throw an exception but just ignore this component, somehow it got
+			// removed from the page.
+			// throw new IllegalStateException(
+			// "Ajax request attempted on a component that is not associated with a Page");
+			LOG.debug("component: " + component + " with markupid: " + markupId +
+				" not rendered because it was already removed from page");
+			return;
 		}
 
 		page.startComponentRender(component);
