@@ -2487,7 +2487,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				}
 				else
 				{
-					// If a open-close tag has been to modified to be
+					// If a open-close tag has been modified to be
 					// open-body-close than a synthetic close tag must be
 					// rendered.
 					if (getRenderBodyOnly() == false)
@@ -2500,8 +2500,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 						if (!(openTag instanceof WicketTag) || !stripWicketTags)
 						{
-							// Close the manually opened panel tag.
-							getResponse().write(openTag.syntheticCloseTagString());
+							// Close the manually opened tag. And since the
+							// user might have changed the tag name ...
+							getResponse().write(tag.syntheticCloseTagString());
 						}
 					}
 				}
