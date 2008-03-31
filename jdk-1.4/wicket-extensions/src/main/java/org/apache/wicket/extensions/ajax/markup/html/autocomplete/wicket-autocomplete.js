@@ -164,15 +164,16 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
 
     function getAutocompleteMenu() {
-        var choiceDiv = document.getElementById(getMenuId());
-        if (choiceDiv == null) {
-            choiceDiv = document.createElement("div");
+        var choiceDiv=document.getElementById(getMenuId());
+        if (choiceDiv==null) {
+            choiceDiv=document.createElement("div");
             document.body.appendChild(choiceDiv);
-            choiceDiv.id = getMenuId();
-            choiceDiv.className = "wicket-aa";
-            choiceDiv.style.display = "none";
-            choiceDiv.style.position = "absolute";
-            choiceDiv.style.zIndex = "30000";
+            choiceDiv.id=getMenuId();
+            choiceDiv.className="wicket-aa";
+            choiceDiv.style.display="none";
+            choiceDiv.style.position="absolute";
+            var index=getOffsetParentZIndex(elementId);
+            choiceDiv.style.zIndex=index=="auto"?index:Number(index)+1;
             
             // WICKET-1350/WICKET-1351
             choiceDiv.onmouseout=function() {mouseactive=0;};
@@ -353,20 +354,39 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         }
     }
 
+    // From http://www.robertnyman.com/2006/04/24/get-the-rendered-style-of-an-element/
+    function getStyle(obj,cssRule) {
+    	var cssRuleAlt = cssRule.replace(/\-(\w)/g,function(strMatch,p1){return p1.toUpperCase();});
+        var value=obj.style[cssRuleAlt];
+        if (!value) {
+	        if (document.defaultView && document.defaultView.getComputedStyle) {
+	            value = document.defaultView.getComputedStyle(obj,"").getPropertyValue(cssRule);
+	        }
+	        else if (obj.currentStyle)
+	        {
+	            value=obj.currentStyle[cssRuleAlt];
+	        }
+        }
+        return value;
+    }
 
     function isVisible(obj) {
-		var value = obj.style.visibility;
-		if (!value) {
-			if (document.defaultView && typeof(document.defaultView.getComputedStyle)=="function") {
-				value=document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
-			} else if (obj.currentStyle) {
-				value = obj.currentStyle.visibility;
-			} else {
-				value='';
-			}
-		}
-		return value;
+		return getStyle(obj,"visibility");
 	}
+    
+    function getOffsetParentZIndex(obj) {
+    	obj=typeof obj=="string"?Wicket.$(obj):obj;
+    	obj=obj.offsetParent;
+    	var index="auto"; 
+    	do {
+    		var pos=getStyle(obj,"position");    		
+    		if(pos=="relative"||pos=="absolute"||pos=="fixed") {
+    			index=getStyle(obj,"z-index"); 
+    		}
+    		obj=obj.offsetParent;     		
+    	} while (obj && index == "auto");
+    	return index;
+    }
 
     function hideShowCovered(){
         if (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
