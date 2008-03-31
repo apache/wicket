@@ -146,6 +146,7 @@ div.wicket-modal span.w_captionText {
 	position: absolute;
 	margin-left: 3px;
 	font-weight: bold;
+	left: 0em;
 }
 
 div.wicket-modal div.w_content_2 {
