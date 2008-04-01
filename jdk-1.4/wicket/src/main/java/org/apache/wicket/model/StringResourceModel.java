@@ -226,12 +226,15 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 
 		public Object getObject()
 		{
-			// TODO: Remove this as soon as we can break binary compatibility
-			Component old = StringResourceModel.this.component;
-			StringResourceModel.this.component = this.component;
-			Object res = StringResourceModel.this.getObject();
-			StringResourceModel.this.component = old;
-			return res;
+			if (StringResourceModel.this.component != null) {
+				return StringResourceModel.this.getObject();
+			} else {
+				// TODO: Remove this as soon as we can break binary compatibility
+				StringResourceModel.this.component = this.component;
+				Object res = StringResourceModel.this.getObject();
+				StringResourceModel.this.component = null;
+				return res;
+			}
 		}
 
 		public void setObject(Object object)
