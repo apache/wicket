@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.parser.XmlTag;
 
 
 /**
@@ -34,7 +35,7 @@ public class SimplePage_16 extends WebPage
 	 */
 	public SimplePage_16()
 	{
-		add(new WebMarkupContainer("myContainer")
+		add(new WebMarkupContainer("test1")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -42,6 +43,45 @@ public class SimplePage_16 extends WebPage
 			{
 				tag.setName("test");
 
+				super.onComponentTag(tag);
+			}
+		});
+
+		add(new WebMarkupContainer("test2")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				tag.setName("test");
+
+				super.onComponentTag(tag);
+			}
+		});
+
+		add(new WebMarkupContainer("test3")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				tag.setName("test");
+
+				super.onComponentTag(tag);
+			}
+		});
+
+		add(new WebMarkupContainer("test4")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				tag.setName("test");
+				if (tag.isOpenClose())
+				{
+					tag.setType(XmlTag.OPEN);
+				}
 				super.onComponentTag(tag);
 			}
 		});
