@@ -885,8 +885,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		{
 			for (Iterator i = list.iterator(); i.hasNext();)
 			{
-				SerializedPage page = (SerializedPage)i.next();
-				getSessionEntry(sessionId, true).savePage(page);
+				try {
+					SerializedPage page = (SerializedPage)i.next();
+					getSessionEntry(sessionId, true).savePage(page);
+				} catch (Exception e) {
+					// We have to catch the exception here to process the other entries, 
+					// otherwise there would be a big memory leak
+					log.error("Error flushing page", e);
+				}
 			}
 			list.clear();
 		}
