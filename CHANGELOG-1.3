@@ -1,7 +1,61 @@
 This file contains the changes done to the 1.3.x releases sinse 1.3-final.
 
-Release Notes - Wicket - Version 1.3.1
+Release Notes - Wicket - Version 1.3.2
 
+** Bug
+    * [WICKET-1038] - Setting UnexpectedExceptionDisplay to IExceptionSettings.SHOW_NO_EXCEPTION_PAGE doesn't throw Servlet Exception
+    * [WICKET-1239] - java.lang.IllegalAccessError when changing AjaxEditableLabel 
+    * [WICKET-1278] - Uncaught checked exceptions in page constructor
+    * [WICKET-1294] - PrependingStringBuffer.hashCode() doesn't meet its contract
+    * [WICKET-1305] - AbstractTextComponent requires itself to be rendered before conversion happens
+    * [WICKET-1307] - autolinked resources have locale appended
+    * [WICKET-1308] - TextArea trims content when saved
+    * [WICKET-1314] - DateTimeField does not correct the timezone properly
+    * [WICKET-1319] - StringResourceModel incorrectly escapes ' characters in choice formats
+    * [WICKET-1321] - Javadoc error in QueryStringUrlCodingStrategy
+    * [WICKET-1323] - AbstractPageableView has transient cachedItemCount, but doesn't set it to -1 on deserialization.
+    * [WICKET-1330] - ComponentTag#setNamespace() only modifies the opening tag
+    * [WICKET-1340] - Bogus LocalizedImageResource#isStateless()
+    * [WICKET-1342] - Inline documentation
+    * [WICKET-1353] - Typo in palette.html
+    * [WICKET-1356] - When no request target is found for url we should let other filters/servers process the url instead of trying to serve the resource
+    * [WICKET-1361] - Localizer doesn't honor style when caching property lookups
+    * [WICKET-1364] - BaseWicketTester.isVisible() doesn't check Component.isRenderAllowed()
+    * [WICKET-1365] - Having instance variables referencing pages causes memory leaks, StackOverflowErrors and ClassCastExceptions
+    * [WICKET-1370] - MarkupCache can "leak" memory
+    * [WICKET-1377] - AbstractCalendar use the wrong resources path
+    * [WICKET-1383] - MiniMap IndexOutOfBoundsException when empty
+    * [WICKET-1387] - Cookie Path of persistent FormElements wrong
+    * [WICKET-1388] - "charset=UTF-8" is appended to Content-Type of  DynamicWebResources
+    * [WICKET-1395] - BigDecimalConverter does not work with space - eg, French or Russian Locales.
+    * [WICKET-1397] - AjaxSubmitLink doesn't always find enclosing form properly
+    * [WICKET-1398] - AjaxFallbackButton not getting form
+    * [WICKET-1400] - FormComponent.error(ivalidationerror) error needs to show tried resource keys
+    * [WICKET-1401] - StyleDateConverter does not use the components Locale when formatting.
+    * [WICKET-1402] - External JAvascript references not included
+
+** Improvement
+    * [WICKET-194] - Enhance CheckBoxSelector to Select CheckBox-es in CheckGroup on Server Side
+    * [WICKET-1166] - add sanity check on form submit for request method
+    * [WICKET-1269] - Page.checkRendering() should log with level info or debug instead of warn in case a transparent container was found
+    * [WICKET-1297] - PasswordTextField.onComponentTag helpful if not final
+    * [WICKET-1302] - Make substitutePropertyExpressions() in Localizer overridable
+    * [WICKET-1317] - web.xml context-param is non-unique
+    * [WICKET-1336] - NumberValidator.POSITIVE gives an intimidating error message
+    * [WICKET-1341] - Make markup id available at any point in component's lifecycle rather than only during and after first render
+    * [WICKET-1359] - org.apache.wicket.Application's javadoc refers to getSessionFactory() which is deprecated
+    * [WICKET-1363] - Support RestartResponseAtInterceptPageException/continueToOriginalDestination() with Ajax requests
+    * [WICKET-1378] - Improved Dutch IConverter strings
+    * [WICKET-1381] - Do not silently fail when ajax precondition script fails
+    * [WICKET-1396] - Add more explicit exception for NPE in HeaderResponse.java
+
+** Task
+    * [WICKET-1326] - remove final from AjaxRequestTarget.addComponent(Component)
+    * [WICKET-1334] - README in wicket-examples confusing
+
+
+
+Release Notes - Wicket - Version 1.3.1
 
 ** Bug
     * [WICKET-812] - Submit button, multipart content and UploadProgressBar
@@ -37,4 +91,3 @@ Release Notes - Wicket - Version 1.3.1
     * [WICKET-1299] - HybridUrlCodingStrategy should throw a PageExpiredException if a RequestListenerInterface is targeted on a non-existent page-id/version
     * [WICKET-1309] - Properties files translation (_es)
     * [WICKET-1313] - Created Norwegian translation of Application.properties
-
