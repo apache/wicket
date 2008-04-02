@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
@@ -71,5 +72,41 @@ public class EnclosureTest extends WicketTestCase
 	public void testRenderHomePage3() throws Exception
 	{
 		executeTest(EnclosurePage_3.class, "EnclosurePageExpectedResult_3.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage4() throws Exception
+	{
+		executeTest(EnclosurePage_4.class, new PageParameters("visible=false"),
+			"EnclosurePageExpectedResult_4.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage4_1() throws Exception
+	{
+		executeTest(EnclosurePage_4.class, new PageParameters("visible=true"),
+			"EnclosurePageExpectedResult_4-1.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage5() throws Exception
+	{
+		executeTest(EnclosurePage_5.class, new PageParameters("visible=false"),
+			"EnclosurePageExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage5_1() throws Exception
+	{
+		executeTest(EnclosurePage_5.class, new PageParameters("visible=true"),
+			"EnclosurePageExpectedResult_5-1.html");
 	}
 }

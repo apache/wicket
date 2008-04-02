@@ -116,28 +116,7 @@ public class Enclosure extends WebMarkupContainer
 	{
 		if (childComponent == null)
 		{
-			MarkupContainer parent = getParent();
-			while (parent != null)
-			{
-				if (parent.isTransparentResolver())
-				{
-					parent = parent.getParent();
-				}
-				else if (parent instanceof BorderBodyContainer)
-				{
-					parent = ((BorderBodyContainer)parent).findParent(Border.class);
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			if (parent == null)
-			{
-				throw new WicketRuntimeException(
-					"Unable to find parent component which is not a transparent resolver");
-			}
+			MarkupContainer parent = getEnclosureParent();
 
 			if (childId == null)
 			{
@@ -158,6 +137,38 @@ public class Enclosure extends WebMarkupContainer
 	}
 
 	/**
+	 * Get the real parent container
+	 * 
+	 * @return
+	 */
+	private MarkupContainer getEnclosureParent()
+	{
+		MarkupContainer parent = getParent();
+		while (parent != null)
+		{
+			if (parent.isTransparentResolver())
+			{
+				parent = parent.getParent();
+			}
+			else if (parent instanceof BorderBodyContainer)
+			{
+				parent = ((BorderBodyContainer)parent).findParent(Border.class);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (parent == null)
+		{
+			throw new WicketRuntimeException(
+				"Unable to find parent component which is not a transparent resolver");
+		}
+		return parent;
+	}
+
+	/**
 	 * 
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
@@ -170,24 +181,22 @@ public class Enclosure extends WebMarkupContainer
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
 		}
-		else if (controller != null)
+
+		setVisible(controller.determineVisibility());
+
+		// transfer visibility to direct children
+		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
+		MarkupContainer controllerParent = getEnclosureParent();
+		while (it.hasNext())
 		{
-			setVisible(controller.determineVisibility());
-
-			// transfer visiblity to direct children
-			DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
-			while (it.hasNext())
+			ComponentTag t = (ComponentTag)it.next();
+			Component child = controllerParent.get(t.getId());
+			if (child != null)
 			{
-				ComponentTag t = (ComponentTag)it.next();
-				Component child = controller.getParent().get(t.getId());
-				if (child != null)
-				{
-					child.setVisibilityAllowed(isVisible());
-				}
+				child.setVisibilityAllowed(isVisible());
 			}
-			it.rewind();
-
 		}
+		it.rewind();
 
 		if (isVisible() == true)
 		{
@@ -202,7 +211,6 @@ public class Enclosure extends WebMarkupContainer
 	/**
 	 * Iterator that iterates over direct child component tags of the given component tag
 	 * 
-	 * @author ivaynberg
 	 */
 	private static class DirectChildTagIterator extends ReadOnlyIterator
 	{
@@ -211,6 +219,12 @@ public class Enclosure extends WebMarkupContainer
 		private ComponentTag next = null;
 		private final int originalIndex;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param markupStream
+		 * @param parent
+		 */
 		public DirectChildTagIterator(MarkupStream markupStream, ComponentTag parent)
 		{
 			super();
