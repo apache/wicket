@@ -30,7 +30,8 @@ import org.apache.wicket.util.upload.FileItem;
 
 
 /**
- * Model for file uploads.
+ * Model for file uploads. Objects of this class should not be kept between requests, and should
+ * therefore be marked as <code>transient</code> if they become a property of an IModel.
  * 
  * @author Jonathan Locke
  */

@@ -28,8 +28,8 @@ import org.apache.wicket.util.upload.FileItem;
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;. When a FileInput
  * component is nested in a {@link org.apache.wicket.markup.html.form.Form}, that has multipart ==
- * true, its model is updated with the {@link org.apache.wicket.util.upload.FileItem}for this
- * component.
+ * true, its model is updated with the {@link org.apache.wicket.markup.html.form.upload.FileUpload}
+ * for this component.
  * 
  * @author Eelco Hillenius
  */
