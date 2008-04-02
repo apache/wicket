@@ -1,5 +1,65 @@
 This file contains the changes done to the 1.3.x releases sinse 1.3-final.
 
+Release Notes - Wicket - Version 1.3.3
+
+** Bug
+    * [WICKET-310] - AutoCompleteTextField does not invoke post call handlers
+    * [WICKET-860] - GoAndClearFilter doesn't reset filter form fields
+    * [WICKET-932] - BaseWicketTester support for SubmitLink
+    * [WICKET-1105] - Missing javascript header referencies when there are no body or head tags.
+    * [WICKET-1265] - Close ModalWindow in IE with scrollbars scrolls to bottom
+    * [WICKET-1268] - Form inside VelocityPanel throws WicketRuntimeException: Unable to find the markup for the component.
+    * [WICKET-1280] - Autocomplete onchange event gets fired twice when selecting with mouse click
+    * [WICKET-1329] - AutoCompleteTextField's suggestion list *disappeared* when it is used inside a ModalWindow
+    * [WICKET-1332] - AjaxFormChoiceComponentUpdatingBehavior just updates the group "grandchildren"
+    * [WICKET-1350] - AutoCompleteTextField's *scrollable* suggestion list disappeared when a mouse pointing to the scroll bar in IE6/7
+    * [WICKET-1372] - Input field with autocomplete behavior does not submit the form via enter key in some cases
+    * [WICKET-1391] - <wicket:enclosure> bug: setObject(null) called for excplicitly invisible fields in a non-visible enclosure
+    * [WICKET-1408] - ComponentFeedbackMessageFilter should use equals() method to determine equality
+    * [WICKET-1411] - FormTester doesn't initialise values for RadioGroups
+    * [WICKET-1414] - findSubmittingButton will fail when button without form is added before form
+    * [WICKET-1415] - BundleStringResourceLoader throws NPE if component is null
+    * [WICKET-1416] - WIcket Filter ignoring query parameters on redirect
+    * [WICKET-1417] - AjaxFormChoiceComponentUpdatingBehavior does not iterate over immediate children 
+    * [WICKET-1423] - AuthenticatedWebApplication uses deprecated constructor of AuthenticatedWebSession
+    * [WICKET-1430] - Form processing throws NPE if button.onsubmit() moves the button or its parents out of the component hierarchy
+    * [WICKET-1433] - MarkupCache NPEs when null (never cache) cacheKey is returned from IMarkupCacheKeyProvider
+    * [WICKET-1434] - WicketTester.startPage(Class) does not trigger WebRequestCycle.onBeginRequest
+    * [WICKET-1435] - WicketTester.clickLink(String) only triggers the WebRequestCycle.onEndRequest
+    * [WICKET-1438] - detach behavior
+    * [WICKET-1440] - AbstractDefaultAjaxBehavior doesn't work when added directly to page
+    * [WICKET-1442] - nested forms inside a multipart form can't be submitted via ajax
+    * [WICKET-1444] - AbstractDecimalConverter has a numberFormats fields that holds NumberFormats, But those are not thread save...
+    * [WICKET-1445] - StreamCorruptedException/PageStore/Serialization broken because ObjectOutputStream was not flushed
+    * [WICKET-1446] - Lazy registration in SharedResourceRequestTarget fails
+    * [WICKET-1452] - Error in javadoc class description in MySignInPage
+    * [WICKET-1454] - Enter in AutoCompleteTextField with AjaxFormSubmitBehavior on change-event submits form multiple times
+    * [WICKET-1455] - Session. requestDetached() does not replicate dirty pages to session in some situations, breaking application clustering
+    * [WICKET-1457] - modalwindow with panel doesn't resize properly on IE
+    * [WICKET-1458] - Changing tag name and expanding open-close to open-body-close prints old tag name
+    * [WICKET-1462] - Problem with ajax form submission inside model window in IE and Safari 
+    * [WICKET-1467] - StringResourceModel should implement IComponentAssignedModel
+    * [WICKET-1470] - DiskPageStore may cause memory leaks when the files can't be written
+
+** Improvement
+    * [WICKET-1288] - Make Cookie-Detection possible without JavaScript
+    * [WICKET-1338] - enclosures on nested components within wicket:extends
+    * [WICKET-1351] - AutoCompleteTextField's *scrollable* suggestion list can be better if it can be scrolled using KEY_UP and KEY_DOWN
+    * [WICKET-1406] - CheckGroupSelector should implement ILabelProvider
+    * [WICKET-1410] - WicketTester and temporary sessions
+    * [WICKET-1420] - Allow to change charset in StringRequestTarget
+    * [WICKET-1421] - DecimalConverter with grouping disabled needed
+    * [WICKET-1422] - request to make RadioChoice getPrefix() and getSuffix() non-final
+    * [WICKET-1461] - Javadoc error with parent in constructor style
+    * [WICKET-1464] - Stop dumping stack trace in PropertyResolver when a field or set method is not found
+    * [WICKET-1465] - AjaxRequestTarget shouldn't throw exception when component is already removed from page (but log warning)
+    * [WICKET-1472] - JavaDoc enhancements in FileUpload API
+
+** New Feature
+    * [WICKET-1428] - AutoLinkResolver and Parent-Relative (../) Links
+
+
+
 Release Notes - Wicket - Version 1.3.2
 
 ** Bug
