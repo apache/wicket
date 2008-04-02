@@ -1,0 +1,20 @@
+<html>
+<head>
+  <link href="../basebase.css" type="text/css" rel="stylesheet"/>
+
+  <link href="../base.css" type="text/css" rel="stylesheet"/>
+
+  <link href="../extension.css" type="text/css" rel="stylesheet"/>
+</head>  
+<body>
+    basebase
+    <wicket:child><wicket:extend>
+   base
+   <wicket:child><wicket:extend>
+   extension
+</wicket:extend></wicket:child>
+   base
+</wicket:extend></wicket:child>
+    basebase
+</body>
+</html>

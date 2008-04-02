@@ -76,11 +76,9 @@ public class MarkupInheritanceTest extends WicketTestCase
 		// Validate the document
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
 		String document = tester.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html",
-				true);
+		DiffUtil.validatePage(document, getClass(), "MarkupInheritanceExpectedResult_4.html", true);
 
-		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester
-				.getLastRenderedPage();
+		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester.getLastRenderedPage();
 
 		Link link = (Link)page.get("link");
 		tester.setupRequestAndResponse();
@@ -90,8 +88,8 @@ public class MarkupInheritanceTest extends WicketTestCase
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
 
 		document = tester.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(),
-				"MarkupInheritanceExpectedResult_4-1.html", true);
+		DiffUtil.validatePage(document, getClass(), "MarkupInheritanceExpectedResult_4-1.html",
+			true);
 	}
 
 	/**
@@ -157,5 +155,13 @@ public class MarkupInheritanceTest extends WicketTestCase
 	public void testRenderHomePage_12() throws Exception
 	{
 		executeTest(MarkupInheritanceExtension_12.class, "MarkupInheritanceExpectedResult_12.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_13() throws Exception
+	{
+		executeTest(MarkupInheritanceExtension_13.class, "MarkupInheritanceExpectedResult_13.html");
 	}
 }
