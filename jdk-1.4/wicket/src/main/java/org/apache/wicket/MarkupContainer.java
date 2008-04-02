@@ -383,7 +383,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public String getMarkupType()
 	{
-	    return getPage().getMarkupType();
+		return getPage().getMarkupType();
 	}
 
 	/**
@@ -1446,6 +1446,18 @@ public abstract class MarkupContainer extends Component
 	protected final void renderComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
+		if ((markupStream != null) && (markupStream.getCurrentIndex() > 0))
+		{
+			// If the original tag has been changed from open-close to open-body-close,
+			// than historically renderComponentTagBody gets called, but actually
+			// it shouldn't do anything since there is no body for that tag.
+			ComponentTag origOpenTag = (ComponentTag)markupStream.get(markupStream.getCurrentIndex() - 1);
+			if (origOpenTag.isOpenClose())
+			{
+				return;
+			}
+		}
+
 		// If the open tag requires a close tag
 		boolean render = openTag.requiresCloseTag();
 		if (render == false)
