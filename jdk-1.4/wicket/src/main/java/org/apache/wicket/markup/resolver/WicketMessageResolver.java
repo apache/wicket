@@ -74,7 +74,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
 		{
@@ -85,13 +85,14 @@ public class WicketMessageResolver implements IComponentResolver
 				if ((messageKey == null) || (messageKey.trim().length() == 0))
 				{
 					throw new MarkupException(
-							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
+						"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
 				MessageLabel label = new MessageLabel(id, messageKey);
-				label.setRenderBodyOnly(container.getApplication().getMarkupSettings()
-						.getStripWicketTags());
+				label.setRenderBodyOnly(container.getApplication()
+					.getMarkupSettings()
+					.getStripWicketTags());
 				container.autoAdd(label, markupStream);
 
 				// Yes, we handled the tag
@@ -104,7 +105,7 @@ public class WicketMessageResolver implements IComponentResolver
 	}
 
 	/**
-	 * A Label with expands open-close tags to open-body-close if required
+	 * A Label which expands open-close tags to open-body-close if required
 	 */
 	public static class MessageLabel extends WebComponent
 	{
