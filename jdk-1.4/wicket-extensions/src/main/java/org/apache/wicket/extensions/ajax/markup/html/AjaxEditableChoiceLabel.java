@@ -33,7 +33,7 @@ import org.apache.wicket.model.Model;
 /**
  * And inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
  * {@link DropDownChoice} is displayed.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class AjaxEditableChoiceLabel extends AjaxEditableLabel
@@ -48,7 +48,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 */
@@ -59,7 +59,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -72,7 +72,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param choices
@@ -85,7 +85,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -101,7 +101,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -120,7 +120,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -135,7 +135,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -157,7 +157,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 */
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
-		DropDownChoice editor = new DropDownChoice(componentId, model, new AbstractReadOnlyModel()
+		IModel choiceModel = new AbstractReadOnlyModel()
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -167,7 +167,22 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 				return choices.getObject();
 			}
 
-		}, renderer);
+		};
+		DropDownChoice editor = new DropDownChoice(componentId, model, choiceModel, renderer)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onModelChanged()
+			{
+				AjaxEditableChoiceLabel.this.onModelChanged();
+			}
+
+			protected void onModelChanging()
+			{
+				AjaxEditableChoiceLabel.this.onModelChanging();
+			}
+
+		};
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior()
@@ -187,5 +202,15 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 			}
 		});
 		return editor;
+	}
+
+	protected void onModelChanged()
+	{
+		super.onModelChanged();
+	}
+
+	protected void onModelChanging()
+	{
+		super.onModelChanging();
 	}
 }

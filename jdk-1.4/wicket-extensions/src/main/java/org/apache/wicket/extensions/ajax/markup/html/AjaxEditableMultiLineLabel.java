@@ -111,7 +111,20 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 */
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
-		TextArea editor = new TextArea(componentId, model);
+		TextArea editor = new TextArea(componentId, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onModelChanged()
+			{
+				AjaxEditableMultiLineLabel.this.onModelChanged();
+			}
+
+			protected void onModelChanging()
+			{
+				AjaxEditableMultiLineLabel.this.onModelChanging();
+			}
+		};
 		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
@@ -209,5 +222,15 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	protected String defaultNullLabel()
 	{
 		return "...";
+	}
+
+	protected void onModelChanged()
+	{
+		super.onModelChanged();
+	}
+
+	protected void onModelChanging()
+	{
+		super.onModelChanging();
 	}
 }
