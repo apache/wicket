@@ -181,6 +181,11 @@ public class WicketFilter implements Filter
 
 		if (isWicketRequest(relativePath))
 		{
+			Application previous = null;
+			if (Application.exists())
+			{
+				previous = Application.get();
+			}
 			try
 			{
 				// Set the webapplication for this thread
@@ -224,9 +229,16 @@ public class WicketFilter implements Filter
 			}
 			finally
 			{
-				// always unset the application thread local
-				Application.unset();
-				RequestContext.unset();
+				// unset the application thread local if it didn't exist already.
+				if (previous == null)
+				{
+					Application.unset();
+					RequestContext.unset();
+				}
+				else
+				{
+					Application.set(previous);
+				}
 			}
 		}
 		else

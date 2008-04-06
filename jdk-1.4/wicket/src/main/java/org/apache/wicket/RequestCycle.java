@@ -212,6 +212,8 @@ public abstract class RequestCycle
 		current.set(cycle);
 	}
 
+	private RequestCycle previousOne = null;
+
 	/**
 	 * True if the request cycle should automatically clear feedback messages after processing. True
 	 * by default.
@@ -285,6 +287,7 @@ public abstract class RequestCycle
 		originalResponse = response;
 		processor = safeGetRequestProcessor();
 
+		previousOne = (RequestCycle)current.get();
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
 	}
@@ -1382,7 +1385,7 @@ public abstract class RequestCycle
 
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
-		current.set(null);
+		current.set(previousOne);
 	}
 
 	/**
