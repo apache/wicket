@@ -791,15 +791,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				stateless = (Boolean)returnValue;
 			}
 
-			// TODO (matej_k): The stateless hint semantics has been changed, this warning doesn't work anymore. but we don't really have
-			// alternative to this 
+			// TODO (matej_k): The stateless hint semantics has been changed, this warning doesn't
+			// work anymore. but we don't really have
+			// alternative to this
 			/*
-			if (!stateless.booleanValue() && getStatelessHint())
-			{
-				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0] +
-					"' but the stateless hint is set to true!");
-			}
-			*/
+			 * if (!stateless.booleanValue() && getStatelessHint()) { log.warn("Page '" + this + "'
+			 * is not stateless because of '" + returnArray[0] + "' but the stateless hint is set to
+			 * true!"); }
+			 */
 		}
 
 		return stateless.booleanValue();
@@ -1275,7 +1274,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 	}
 
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	void readPageObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		int id = s.readShort();
 		String name = (String)s.readObject();
@@ -1306,7 +1305,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	void writePageObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		s.writeShort(numericId);
 		s.writeObject(pageMapName);

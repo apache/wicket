@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -4194,5 +4195,30 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final boolean determineVisibility()
 	{
 		return isVisible() && isRenderAllowed() && isVisibilityAllowed();
+	}
+
+
+	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	{
+		if (this instanceof Page)
+		{
+			((Page)this).writePageObject(s);
+		}
+		else
+		{
+			s.defaultWriteObject();
+		}
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	{
+		if (this instanceof Page)
+		{
+			((Page)this).readPageObject(s);
+		}
+		else
+		{
+			s.defaultReadObject();
+		}
 	}
 }

@@ -20,14 +20,29 @@ import junit.framework.Assert;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
+import org.apache.wicket.resource.DummyApplication;
+import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.io.PageA;
 import org.apache.wicket.util.io.PageB;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
  */
 public class FilePageStoreTest extends WicketTestCase
 {
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester(new DummyApplication()
+		{
+			protected ISessionStore newSessionStore()
+			{
+				return new SecondLevelCacheSessionStore(this, new DiskPageStore());
+			}
+		});
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -49,5 +64,19 @@ public class FilePageStoreTest extends WicketTestCase
 		Assert.assertEquals(a, a2);
 
 		Assert.assertSame(a2, a2.getB().getA());
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testCircular() throws Exception
+	{
+		executeTest(FirstPage.class, "firstpage_result.html");
+		FirstPage page = (FirstPage)tester.getLastRenderedPage();
+		executedListener(SecondPage.class, page.get("link"), "secondpage_result.html");
+
+		executeTest(FirstPage.class, "firstpage_result2.html");
+
+		executedListener(SecondPage.class, page.get("link"), "secondpage_result.html");
 	}
 }
