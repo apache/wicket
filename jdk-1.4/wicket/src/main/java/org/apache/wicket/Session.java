@@ -148,7 +148,7 @@ public abstract class Session implements IClusterable
 	}
 
 	/** a sequence used for whenever something session-specific needs a unique value */
-	public int sequence = 1;
+	private int sequence = 1;
 
 	/** meta data key for missing body tags logging. */
 	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
