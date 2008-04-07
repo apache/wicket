@@ -1442,7 +1442,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// markupId = getMarkupAttributes().getString("id");
 
 
-		String markupIdPrefix = "i";
+		String markupIdPrefix = "id";
 		if (!Application.get().getConfigurationType().equals(Application.DEPLOYMENT))
 		{
 			// in non-deployment mode we make the markup id include component id so it is easier to
