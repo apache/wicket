@@ -33,6 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * NOTE: THIS CLASS IS NOT PART OF THE WICKET PUBLIC API, DO NOT USE IT UNLESS YOU KNOW WHAT YOU ARE
+ * DOING.
+ * <p>
  * This class parses expressions to lookup or set a value on the object that is given. <br/> The
  * supported expressions are:
  * <p>
