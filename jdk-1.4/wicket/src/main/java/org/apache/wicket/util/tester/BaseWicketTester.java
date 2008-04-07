@@ -44,7 +44,6 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -1227,7 +1226,8 @@ public class BaseWicketTester extends MockWebApplication
 		{
 			public void onFormComponent(FormComponent formComponent)
 			{
-				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup) &&
+				// !(formComponent instanceof Button) &&
+				if (!(formComponent instanceof RadioGroup) &&
 					!(formComponent instanceof CheckGroup))
 				{
 					String name = formComponent.getInputName();
