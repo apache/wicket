@@ -716,7 +716,16 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		{
 			inputName.prepend(Component.PATH_SEPARATOR);
 		}
-		return inputName.toString();
+		Form form = (Form)findParent(Form.class);
+
+		if (form != null)
+		{
+			return form.getInputNamePrefix() + inputName.toString();
+		}
+		else
+		{
+			return inputName.toString();
+		}
 	}
 
 	/**

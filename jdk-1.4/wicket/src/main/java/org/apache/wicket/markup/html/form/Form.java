@@ -1265,14 +1265,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" name=\"");
-		if (submittingComponent instanceof FormComponent)
-		{
-			buffer.append(((FormComponent)submittingComponent).getInputName());
-		}
-		else
-		{
-			buffer.append(submittingComponent.getPath());
-		}
+		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=Wicket.$('");
 		buffer.append(submittingComponent.getMarkupId());
 		buffer.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
@@ -1351,7 +1344,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final String getHiddenFieldId()
 	{
-		return getJavascriptId() + "_hf_0";
+		return getInputNamePrefix() + getJavascriptId() + "_hf_0";
 	}
 
 	/**
@@ -1928,5 +1921,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			add(removed);
 		}
 
+	}
+
+	/**
+	 * Allows to customize input names of form components inside this form.
+	 * 
+	 * @return String that well be used as prefix to form component input names
+	 */
+	protected String getInputNamePrefix() {
+		return "";
 	}
 }
