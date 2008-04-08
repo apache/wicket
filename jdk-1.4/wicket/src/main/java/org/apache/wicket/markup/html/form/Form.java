@@ -529,9 +529,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
 		IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)getPage().visitChildren(
-			IFormSubmittingComponent.class, new IVisitor<Component>()
+			IFormSubmittingComponent.class, new IVisitor<Component< ? >>()
 			{
-				public Object component(final Component component)
+				public Object component(final Component< ? > component)
 				{
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
@@ -1909,9 +1909,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private void validateNestedForms()
 	{
-		visitChildren(Form.class, new IVisitor<Form>()
+		visitChildren(Form.class, new IVisitor<Form< ? >>()
 		{
-			public Object component(Form form)
+			public Object component(Form< ? > form)
 			{
 				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
 				{

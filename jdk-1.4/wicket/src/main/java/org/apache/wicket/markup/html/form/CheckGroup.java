@@ -121,10 +121,10 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 				if (value != null)
 				{
 					Check<T> checkbox = (Check<T>)visitChildren(Check.class,
-						new Component.IVisitor<Check>()
+						new Component.IVisitor<Check<T>>()
 						{
 
-							public Object component(Check check)
+							public Object component(Check<T> check)
 							{
 								if (String.valueOf(check.getValue()).equals(value))
 								{
