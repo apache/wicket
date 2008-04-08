@@ -45,7 +45,7 @@ public class DatesPage extends WicketExamplePage
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
 		/**
 		 * Constructor.
@@ -58,9 +58,8 @@ public class DatesPage extends WicketExamplePage
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
 		@Override
-		public Object getDisplayValue(Object object)
+		public Object getDisplayValue(Locale locale)
 		{
-			Locale locale = (Locale)object;
 			String enName = locale.getDisplayName(LOCALE_EN);
 			String localizedName = locale.getDisplayName(selectedLocale);
 			return localizedName + (!enName.equals(localizedName) ? (" (" + enName + ")") : "");
@@ -70,7 +69,7 @@ public class DatesPage extends WicketExamplePage
 	/**
 	 * Dropdown with Locales.
 	 */
-	private final class LocaleDropDownChoice extends DropDownChoice
+	private final class LocaleDropDownChoice extends DropDownChoice<Locale>
 	{
 		/**
 		 * Construct.
@@ -82,10 +81,10 @@ public class DatesPage extends WicketExamplePage
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel()
+			setChoices(new AbstractReadOnlyModel<List<Locale>>()
 			{
 				@Override
-				public Object getObject()
+				public List<Locale> getObject()
 				{
 					getSelectedLocale();
 					List<Locale> locales = new ArrayList<Locale>(LOCALES);
@@ -101,7 +100,7 @@ public class DatesPage extends WicketExamplePage
 				}
 			});
 			setChoiceRenderer(new LocaleChoiceRenderer());
-			setModel(new PropertyModel(DatesPage.this, "selectedLocale"));
+			setModel(new PropertyModel<Locale>(DatesPage.this, "selectedLocale"));
 		}
 
 		/**
@@ -130,7 +129,7 @@ public class DatesPage extends WicketExamplePage
 		LOCALES = Arrays.asList(Locale.getAvailableLocales());
 	}
 
-	private Date date = new Date();
+	private final Date date = new Date();
 
 	private Locale selectedLocale = LOCALE_EN;
 

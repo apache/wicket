@@ -44,9 +44,10 @@ public class LabelPage extends WicketExamplePage
 		// of Model (just because it is less work then directly implementing
 		// IModel)
 		// that returns a new java.util.Date on each invocation
-		add(new Label("dynamicLabel", new Model()
+		add(new Label("dynamicLabel", new Model<Date>()
 		{
-			public Object getObject()
+			@Override
+			public Date getObject()
 			{
 				return new Date();
 			}
@@ -59,7 +60,7 @@ public class LabelPage extends WicketExamplePage
 		// for
 		// parameter substitution.
 		StringResourceModel stringResourceModel = new StringResourceModel("label.current.locale",
-				this, null, new Object[] { getLocale() });
+			this, null, new Object[] { getLocale() });
 		add(new Label("resourceLabel", stringResourceModel));
 
 		// and here we add a label that contains markup. Normally, this markup
@@ -72,7 +73,7 @@ public class LabelPage extends WicketExamplePage
 		// escapeModelString property
 		// to false
 		Label markupLabel = new Label("markupLabel",
-				"now <i>that</i> is a pretty <b>bold</b> statement!");
+			"now <i>that</i> is a pretty <b>bold</b> statement!");
 		markupLabel.setEscapeModelStrings(false);
 		add(markupLabel);
 	}
@@ -80,12 +81,13 @@ public class LabelPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"markupLabel\" class=\"mark\">this text will be replaced</span>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label markupLabel = new Label(\"markupLabel\", \"now &lt;i&gt;that&lt;/i&gt; is a pretty &lt;b&gt;bold&lt;/b&gt; statement!\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;markupLabel.setEscapeModelStrings(false);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(markupLabel);";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;markupLabel.setEscapeModelStrings(false);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(markupLabel);";
 		add(new ExplainPanel(html, code));
 
 	}

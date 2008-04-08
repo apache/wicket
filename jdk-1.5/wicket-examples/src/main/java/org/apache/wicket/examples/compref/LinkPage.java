@@ -47,6 +47,7 @@ public class LinkPage extends WicketExamplePage
 		// when a link is clicked, its onClick method is called
 		Link link1 = new Link("link1")
 		{
+			@Override
 			public void onClick()
 			{
 				count1.clicks++;
@@ -55,9 +56,10 @@ public class LinkPage extends WicketExamplePage
 		add(link1);
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		link1.add(new Label("label1", new Model()
+		link1.add(new Label("label1", new Model<String>()
 		{
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				return Integer.toString(count1.clicks);
 			}
@@ -72,6 +74,7 @@ public class LinkPage extends WicketExamplePage
 		// ComponentModelChange).
 		Link linkWithStateChange = new Link("linkWithStateChange")
 		{
+			@Override
 			public void onClick()
 			{
 				final int count = count1.clicks;
@@ -115,6 +118,7 @@ public class LinkPage extends WicketExamplePage
 				add(new ClickCountLabel("label2", count2));
 			}
 
+			@Override
 			public void onClick()
 			{
 				count2.clicks++;
@@ -138,9 +142,10 @@ public class LinkPage extends WicketExamplePage
 			{
 				super(id);
 				count3 = new ClickCount();
-				add(new AttributeModifier("value", new Model()
+				add(new AttributeModifier("value", new Model<String>()
 				{
-					public Object getObject()
+					@Override
+					public String getObject()
 					{
 						// we just replace the whole string. You could use
 						// custom
@@ -152,6 +157,7 @@ public class LinkPage extends WicketExamplePage
 				}));
 			}
 
+			@Override
 			public void onClick()
 			{
 				count3.clicks++;
@@ -186,9 +192,10 @@ public class LinkPage extends WicketExamplePage
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks
-			super(id, new Model()
+			super(id, new Model<String>()
 			{
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 					return Integer.toString(clickCount.clicks);
 				}
@@ -201,6 +208,7 @@ public class LinkPage extends WicketExamplePage
 	final ClickCount count1 = new ClickCount(); // simple counter object
 	Link link1 = new Link("link1")
 	{
+		@Override
 		public void onClick()
 		{
 			count1.clicks++;
@@ -210,21 +218,22 @@ public class LinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<a href=\"#\" wicket:id=\"link1\">this link is clicked <span wicket:id=\"label1\">n</span> times</a>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final ClickCount count1 = new ClickCount(); // simple counter object\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link link1 = new Link(\"link1\") {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public void onClick() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count1.clicks++;\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link1.add(new Label(\"label1\", new Model() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Integer.toString(count1.clicks);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link link1 = new Link(\"link1\") {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public void onClick() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count1.clicks++;\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link1.add(new Label(\"label1\", new Model() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Integer.toString(count1.clicks);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
 		add(new ExplainPanel(html, code));
 
 	}

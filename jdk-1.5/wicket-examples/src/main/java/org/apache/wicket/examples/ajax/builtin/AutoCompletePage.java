@@ -46,16 +46,19 @@ public class AutoCompletePage extends BasePage
 		Form form = new Form("form");
 		add(form);
 
-		final AutoCompleteTextField field = new AutoCompleteTextField("ac", new Model(""))
+		final AutoCompleteTextField<String> field = new AutoCompleteTextField<String>("ac",
+			new Model<String>(""))
 		{
-			protected Iterator getChoices(String input)
+			@Override
+			protected Iterator<String> getChoices(String input)
 			{
 				if (Strings.isEmpty(input))
 				{
-					return Collections.EMPTY_LIST.iterator();
+					List<String> emptyList = Collections.emptyList();
+					return emptyList.iterator();
 				}
 
-				List choices = new ArrayList(10);
+				List<String> choices = new ArrayList<String>(10);
 
 				Locale[] locales = Locale.getAvailableLocales();
 
@@ -85,6 +88,7 @@ public class AutoCompletePage extends BasePage
 
 		field.add(new AjaxFormSubmitBehavior(form, "onchange")
 		{
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				target.addComponent(label);

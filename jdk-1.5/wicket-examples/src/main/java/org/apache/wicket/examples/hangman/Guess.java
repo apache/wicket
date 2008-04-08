@@ -42,9 +42,10 @@ public class Guess extends HangmanPage
 		add(new Label("guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("word", new Model()
+		add(new Label("word", new Model<String>()
 		{
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				return getGame().getWord().asString(true);
 			}
@@ -53,6 +54,7 @@ public class Guess extends HangmanPage
 		// Show the game's letters
 		add(new ListView("letters", getGame().getLetters())
 		{
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				final Letter letter = (Letter)listItem.getModelObject();
@@ -67,6 +69,7 @@ public class Guess extends HangmanPage
 						setEnabled(!letter.isGuessed());
 					}
 
+					@Override
 					public void onClick()
 					{
 						// Guess the letter

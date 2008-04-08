@@ -58,12 +58,13 @@ public class UnicodeConverter extends WicketExamplePage
 	 * just query this model directly or indirectly by calling {@link Component#getModelObject()} on
 	 * the component that holds it, and we would have a recent value.
 	 */
-	private final class ConverterModel extends Model
+	private final class ConverterModel extends Model<String>
 	{
 		/**
 		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
-		public Object getObject()
+		@Override
+		public String getObject()
 		{
 			String result;
 			if (TO_ESCAPED_UNICODE.equals(translationType))
@@ -80,7 +81,8 @@ public class UnicodeConverter extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Object object)
+		@Override
+		public void setObject(String object)
 		{
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like

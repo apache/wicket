@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.debug;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.wicket.Application;
@@ -55,20 +56,22 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				webApplication.getRequestLoggerSettings().setRequestsWindowSize(500);
 				boolean enabled = webApplication.getRequestLoggerSettings()
-						.isRequestLoggerEnabled();
+					.isRequestLoggerEnabled();
 				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}
 		};
-		link.add(new Label("toggletext", new Model()
+		link.add(new Label("toggletext", new Model<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				IRequestLogger requestLogger = webApplication.getRequestLogger();
@@ -83,41 +86,46 @@ public class LiveSessionsPage extends WebPage
 			}
 		}));
 		add(link);
-		add(new Label("totalSessions", new Model()
+		add(new Label("totalSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
 				return getRequestLogger().getTotalCreatedSessions();
 			}
 		}));
-		add(new Label("peakSessions", new Model()
+		add(new Label("peakSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
 				return getRequestLogger().getPeakSessions();
 			}
 		}));
-		add(new Label("liveSessions", new Model()
+		add(new Label("liveSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
 				return getRequestLogger().getPeakSessions();
 			}
 		}));
 
-		Model sessionModel = new Model()
+		Model<ArrayList<SessionData>> sessionModel = new Model<ArrayList<SessionData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public ArrayList<SessionData> getObject()
 			{
-				return Arrays.asList(getRequestLogger().getLiveSessions());
+				return new ArrayList<SessionData>(
+					Arrays.asList(getRequestLogger().getLiveSessions()));
 			}
 		};
 		PageableListView listView = new PageableListView("sessions", sessionModel, 50)
@@ -126,6 +134,7 @@ public class LiveSessionsPage extends WebPage
 
 			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
 
+			@Override
 			protected void populateItem(ListItem item)
 			{
 				final SessionData sd = (SessionData)item.getModelObject();
@@ -136,17 +145,20 @@ public class LiveSessionsPage extends WebPage
 					/**
 					 * @see org.apache.wicket.markup.html.link.Link#onClick()
 					 */
+					@Override
 					public void onClick()
 					{
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add(new Label("id", new Model(sd.getSessionId())));
+				link.add(new Label("id", new Model<String>(sd.getSessionId())));
 				item.add(link);
-				item.add(new Label("lastRequestTime", new Model(sdf.format(sd.getLastActive()))));
-				item.add(new Label("requestCount", new Model(sd.getNumberOfRequests())));
-				item.add(new Label("requestsTime", new Model(sd.getTotalTimeTaken())));
-				item.add(new Label("sessionSize", new Model(Bytes.bytes(sd.getSessionSize()))));
+				item.add(new Label("lastRequestTime", new Model<String>(
+					sdf.format(sd.getLastActive()))));
+				item.add(new Label("requestCount", new Model<Long>(sd.getNumberOfRequests())));
+				item.add(new Label("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
+				item.add(new Label("sessionSize",
+					new Model<Bytes>(Bytes.bytes(sd.getSessionSize()))));
 			}
 		};
 		add(listView);

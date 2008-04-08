@@ -23,6 +23,7 @@ import org.apache.wicket.PageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 
@@ -36,15 +37,29 @@ public class BodyFrame extends WebPage
 	/**
 	 * Model that returns the url to the bookmarkable page that is set in the current frame target.
 	 */
-	private final class FrameModel extends Model
+	private final class FrameModel implements IModel<CharSequence>
 	{
 		/**
 		 * @see org.apache.wicket.model.Model#getObject()
 		 */
-		public Object getObject()
+		public CharSequence getObject()
 		{
 			return RequestCycle.get().urlFor(PageMap.forName(RIGHT_FRAME_NAME),
-					frameTarget.getFrameClass(), null);
+				frameTarget.getFrameClass(), null);
+		}
+
+		/**
+		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
+		 */
+		public void setObject(CharSequence object)
+		{
+		}
+
+		/**
+		 * @see org.apache.wicket.model.IDetachable#detach()
+		 */
+		public void detach()
+		{
 		}
 	}
 
@@ -89,6 +104,7 @@ public class BodyFrame extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

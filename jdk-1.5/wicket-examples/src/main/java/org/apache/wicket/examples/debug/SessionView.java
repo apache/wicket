@@ -54,20 +54,22 @@ public final class SessionView extends Panel
 		add(new Label("id", session.getId()));
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label("size", new Model()
+		add(new Label("size", new Model<Bytes>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Bytes getObject()
 			{
 				return Bytes.bytes(Objects.sizeof(session));
 			}
 		}));
-		add(new Label("totalSize", new Model()
+		add(new Label("totalSize", new Model<Bytes>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Bytes getObject()
 			{
 				return Bytes.bytes(session.getSizeInBytes());
 			}
@@ -84,6 +86,7 @@ public final class SessionView extends Panel
 			/**
 			 * Populate the table with Wicket elements
 			 */
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				IPageMap p = (IPageMap)listItem.getModelObject();
