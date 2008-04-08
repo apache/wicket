@@ -51,6 +51,7 @@ var WicketAjaxDebug = {
         var c = document.createElement("div");
 
 		msg = "" + msg;		
+		msg = msg.replace(/&/g, "&amp;");
         msg = msg.replace(/</g, "&lt;");
         msg = msg.replace(/>/g, "&gt;");
         msg = msg.replace(/\n/g, "<br/>");
