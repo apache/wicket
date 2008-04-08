@@ -43,6 +43,7 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
@@ -1095,9 +1096,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
 			new FormDispatchRequest(rc.getRequest(), url));
 		IRequestTarget rt = processor.resolve(rc, requestParameters);
-		if (rt instanceof ListenerInterfaceRequestTarget)
+		if (rt instanceof IListenerInterfaceRequestTarget)
 		{
-			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
+			IListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
 			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
 		}
 		else
