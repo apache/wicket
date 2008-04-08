@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -43,7 +44,6 @@ import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.protocol.http.pagestore.SerializedPagesCache.SerializedPageWithSession;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,10 +382,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private File getSessionFolder(String sessionId, boolean create)
 	{
 		File storeFolder = getStoreFolder();
-		
+
 		sessionId = sessionId.replace('*', '_');
 		sessionId = sessionId.replace('/', '_');
-		
+
 		File sessionFolder = new File(storeFolder, sessionId);
 		if (create && sessionFolder.exists() == false)
 		{

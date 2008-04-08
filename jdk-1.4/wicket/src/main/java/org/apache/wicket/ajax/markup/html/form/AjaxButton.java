@@ -30,8 +30,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @since 1.3
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AjaxButton extends Button
+public abstract class AjaxButton<T> extends Button<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,6 +56,7 @@ public abstract class AjaxButton extends Button
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
 	 */
+	@Override
 	public Form getForm()
 	{
 		if (form != null)
@@ -81,21 +85,25 @@ public abstract class AjaxButton extends Button
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
 			}
 
+			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onError(target, AjaxButton.this.getForm());
 			}
 
+			@Override
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxButton.this.getAjaxCallDecorator();

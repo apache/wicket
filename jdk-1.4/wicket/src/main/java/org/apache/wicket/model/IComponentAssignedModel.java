@@ -45,7 +45,7 @@ import org.apache.wicket.Component;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IComponentAssignedModel extends IModel
+public interface IComponentAssignedModel<T> extends IModel<T>
 {
 	/**
 	 * This method is called when the component gets its model assigned.
@@ -56,5 +56,5 @@ public interface IComponentAssignedModel extends IModel
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	IWrapModel wrapOnAssignment(Component component);
+	IWrapModel<T> wrapOnAssignment(Component<T> component);
 }

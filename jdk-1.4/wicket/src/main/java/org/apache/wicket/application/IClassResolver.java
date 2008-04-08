@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.application;
 
+import java.util.Iterator;
+
 /**
- * An interface to code which finds classes.
+ * An interface to code which finds classes and resources
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -34,4 +36,14 @@ public interface IClassResolver
 	 * @throws ClassNotFoundException
 	 */
 	Class resolveClass(final String classname) throws ClassNotFoundException;
+
+
+	/**
+	 * Tries to load all the resources by the name that is given.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	Iterator getResources(String name);
+
 }

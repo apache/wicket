@@ -25,8 +25,10 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            Model object type
  */
-public interface IItemFactory
+public interface IItemFactory<T>
 {
 	/**
 	 * Factory method for instances of Item. Each generated item must have a unique id with respect
@@ -39,6 +41,6 @@ public interface IItemFactory
 	 * 
 	 * @return DataItem new DataItem
 	 */
-	Item newItem(final int index, final IModel model);
+	Item<T> newItem(final int index, final IModel<T> model);
 
 }

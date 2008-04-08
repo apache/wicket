@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.form.upload;
 
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Request;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -94,15 +93,17 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
-	public Component setModel(IModel model)
+	@Override
+	public FileUploadField setModel(IModel model)
 	{
 		hasExplicitModel = true;
-		return super.setModel(model);
+		return (FileUploadField)super.setModel(model);
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		// Only update the model if one was passed in
@@ -116,6 +117,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
+	@Override
 	public String[] getInputAsArray()
 	{
 		FileUpload fu = getFileUpload();
@@ -129,6 +131,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
+	@Override
 	public boolean isMultiPart()
 	{
 		return true;
@@ -137,6 +140,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// Must be attached to an input tag
@@ -154,6 +158,7 @@ public class FileUploadField extends FormComponent
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected boolean supportsPersistence()
 	{
 		return false;
@@ -165,6 +170,7 @@ public class FileUploadField extends FormComponent
 	 * 
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		if (fileUpload != null && forceCloseStreamsOnDetach())

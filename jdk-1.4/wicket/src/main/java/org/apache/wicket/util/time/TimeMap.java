@@ -18,8 +18,7 @@ package org.apache.wicket.util.time;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since values are stored
@@ -43,7 +42,7 @@ public final class TimeMap
 	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing objects to
 	 * <code>Object</code> values.
 	 */
-	private final Map sources = new ConcurrentHashMap();
+	private final Map<ITimeFrameSource, Object> sources = new ConcurrentHashMap<ITimeFrameSource, Object>();
 
 	/**
 	 * Retrieves an <code>Object</code> for the current <code>Time</code> value.
@@ -65,9 +64,9 @@ public final class TimeMap
 	 */
 	public Object get(final Time time)
 	{
-		for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
 		{
-			final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
+			final TimeFrame current = iterator.next().getTimeFrame();
 			if (current.contains(time))
 			{
 				return sources.get(current);
@@ -91,9 +90,9 @@ public final class TimeMap
 	{
 		final TimeFrame timeframe = source.getTimeFrame();
 
-		for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
 		{
-			final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
+			final TimeFrame current = iterator.next().getTimeFrame();
 
 			if (timeframe.overlaps(current))
 			{

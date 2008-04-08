@@ -47,8 +47,10 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            Model object type
  */
-public interface ICellPopulator extends IClusterable, IDetachable
+public interface ICellPopulator<T> extends IClusterable, IDetachable
 {
 	/**
 	 * Method used to populate a cell in the {@link DataGridView}
@@ -67,5 +69,6 @@ public interface ICellPopulator extends IClusterable, IDetachable
 	 * 
 	 * @see Item
 	 */
-	void populateItem(final Item cellItem, final String componentId, final IModel rowModel);
+	void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
+		final IModel<T> rowModel);
 }

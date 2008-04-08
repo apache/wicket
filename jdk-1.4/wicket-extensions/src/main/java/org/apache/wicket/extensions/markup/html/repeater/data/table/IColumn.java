@@ -25,7 +25,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public interface IColumn extends ICellPopulator
+public interface IColumn<T> extends ICellPopulator<T>
 {
 	/**
 	 * Returns the component that will be used as the header for the column.

@@ -58,6 +58,7 @@ public class UploadProgressBar extends Panel
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "Ajax UploadProgressBar initializer";
@@ -105,13 +106,14 @@ public class UploadProgressBar extends Panel
 			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}
 
-		form.add(new AttributeModifier("onsubmit", true, new Model()
+		form.add(new AttributeModifier("onsubmit", true, new Model<String>()
 		{
 
 			private static final long serialVersionUID = 1L;
 
 
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 

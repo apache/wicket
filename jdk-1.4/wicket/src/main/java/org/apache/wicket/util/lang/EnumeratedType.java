@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.string.StringValue;
 
 
@@ -41,7 +41,7 @@ public abstract class EnumeratedType extends StringValue
 	 */
 	private static final long serialVersionUID = 1L;
 	/** Map of type values by class */
-	private static final Map valueListByClass = new ConcurrentHashMap();
+	private static final Map<String, List> valueListByClass = new ConcurrentHashMap<String, List>();
 
 	/**
 	 * Constructor.
@@ -64,16 +64,16 @@ public abstract class EnumeratedType extends StringValue
 	 *            The enumerated type subclass to get values for
 	 * @return List of all values of the given subclass
 	 */
-	public static List getValues(final Class c)
+	public static List<EnumeratedType> getValues(final Class< ? extends EnumeratedType> c)
 	{
 		// Get values for class
-		List valueList = (List)valueListByClass.get(c.getName());
+		List<EnumeratedType> valueList = valueListByClass.get(c.getName());
 
 		// If no list exists
 		if (valueList == null)
 		{
 			// create lazily
-			valueList = new ArrayList();
+			valueList = new ArrayList<EnumeratedType>();
 			valueListByClass.put(c.getName(), valueList);
 		}
 
@@ -89,12 +89,12 @@ public abstract class EnumeratedType extends StringValue
 	public Object readResolve() throws java.io.ObjectStreamException
 	{
 		EnumeratedType result = this;
-		List values = getValues(getClass());
+		List<EnumeratedType> values = getValues(getClass());
 		if (values != null)
 		{
-			for (Iterator i = values.iterator(); i.hasNext();)
+			for (Iterator<EnumeratedType> i = values.iterator(); i.hasNext();)
 			{
-				EnumeratedType type = (EnumeratedType)i.next();
+				EnumeratedType type = i.next();
 				if (type.toString() != null && type.toString().equals(this.toString()))
 				{
 					result = type;

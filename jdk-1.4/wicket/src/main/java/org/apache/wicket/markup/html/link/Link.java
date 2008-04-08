@@ -73,7 +73,7 @@ import org.apache.wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends AbstractLink implements ILinkListener
+public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 {
 	/** Change record for when an anchor is changed. */
 	private final class AnchorChange extends Change
@@ -93,6 +93,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 			this.anchor = anchor;
 		}
 
+		@Override
 		public final void undo()
 		{
 			Link.this.anchor = anchor;
@@ -132,7 +133,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Link(final String id, IModel object)
+	public Link(final String id, IModel<T> object)
 	{
 		super(id, object);
 	}
@@ -171,6 +172,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	/**
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled()
 	{
 		// If we're auto-enabling
@@ -182,6 +184,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 		return super.isEnabled();
 	}
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return false;
@@ -226,7 +229,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 *            The anchor
 	 * @return this
 	 */
-	public Link setAnchor(Component anchor)
+	public Link<T> setAnchor(Component anchor)
 	{
 		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
@@ -240,7 +243,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 *            whether this link should automatically enable/disable based on current page.
 	 * @return This
 	 */
-	public final Link setAutoEnable(final boolean autoEnable)
+	public final Link<T> setAutoEnable(final boolean autoEnable)
 	{
 		this.autoEnable = autoEnable;
 		return this;
@@ -254,7 +257,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 *            the popup specification.
 	 * @return This
 	 */
-	public final Link setPopupSettings(final PopupSettings popupSettings)
+	public final Link<T> setPopupSettings(final PopupSettings popupSettings)
 	{
 		this.popupSettings = popupSettings;
 		return this;
@@ -348,6 +351,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * @deprecated this method will be removed by {@link #getOnClickScript(CharSequence)} shortly.
 	 *             Please override that method instead.
 	 */
+	@Deprecated
 	protected String getOnClickScript(final String url)
 	{
 		return null;
@@ -382,6 +386,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for tag

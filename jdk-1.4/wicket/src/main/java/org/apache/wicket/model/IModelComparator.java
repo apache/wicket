@@ -29,8 +29,11 @@ import org.apache.wicket.IClusterable;
  * 
  * @author jcompagner
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The Model Object
  */
-public interface IModelComparator extends IClusterable
+public interface IModelComparator<T> extends IClusterable
 {
 	/**
 	 * @param component
@@ -39,5 +42,5 @@ public interface IModelComparator extends IClusterable
 	 *            The newObject
 	 * @return True if the previous components object is the same as the newObject.
 	 */
-	boolean compare(Component component, Object newObject);
+	boolean compare(Component<T> component, Object newObject);
 }

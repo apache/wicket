@@ -65,8 +65,11 @@ import org.apache.wicket.model.IModel;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class SubmitLink extends AbstractSubmitLink
+public class SubmitLink<T> extends AbstractSubmitLink<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -109,7 +112,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 *            The model for this submitlink, It won't be used by the submit link itself, but it
 	 *            can be used for keeping state
 	 */
-	public SubmitLink(String id, IModel model)
+	public SubmitLink(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -130,7 +133,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, IModel model, Form form)
+	public SubmitLink(String id, IModel<T> model, Form form)
 	{
 		super(id, model, form);
 	}
@@ -150,6 +153,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * @inheritDoc
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -211,8 +215,7 @@ public class SubmitLink extends AbstractSubmitLink
 				{
 					sb.append("var ff=f;");
 				}
-				sb
-						.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
+				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
 			}
 			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();

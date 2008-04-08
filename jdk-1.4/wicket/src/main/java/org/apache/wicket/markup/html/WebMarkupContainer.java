@@ -26,8 +26,11 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class WebMarkupContainer extends MarkupContainer
+public class WebMarkupContainer<T> extends MarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,9 +55,10 @@ public class WebMarkupContainer extends MarkupContainer
 	 * 
 	 * @return Markup type of HTML
 	 */
+	@Override
 	public String getMarkupType()
 	{
-	    return getPage().getMarkupType();
+		return getPage().getMarkupType();
 	}
 
 	/**

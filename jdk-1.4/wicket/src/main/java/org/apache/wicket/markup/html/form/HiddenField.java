@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Cameron Braid
  */
-public class HiddenField extends TextField
+public class HiddenField<T> extends TextField<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class HiddenField extends TextField
 	 * @param type
 	 *            the type to use when updating the model for this text field
 	 */
-	public HiddenField(String id, Class type)
+	public HiddenField(String id, Class<T> type)
 	{
 		super(id, type);
 	}
@@ -68,7 +68,7 @@ public class HiddenField extends TextField
 	 * @param model
 	 *            the model
 	 */
-	public HiddenField(String id, IModel model)
+	public HiddenField(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -82,7 +82,7 @@ public class HiddenField extends TextField
 	 *            the type to use when updating the model for this text field
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public HiddenField(String id, IModel model, Class type)
+	public HiddenField(String id, IModel<T> model, Class<T> type)
 	{
 		super(id, model, type);
 	}
@@ -90,6 +90,7 @@ public class HiddenField extends TextField
 	/**
 	 * @see org.apache.wicket.markup.html.form.TextField#getInputType()
 	 */
+	@Override
 	protected String getInputType()
 	{
 		return "hidden";

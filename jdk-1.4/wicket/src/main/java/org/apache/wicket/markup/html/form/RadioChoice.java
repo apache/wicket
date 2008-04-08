@@ -58,8 +58,11 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -78,6 +81,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setSuffix(prevSuffix);
@@ -86,6 +90,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "SuffixChange[component: " + getPath() + ", suffix: " + prevSuffix + "]";
@@ -114,6 +119,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setPrefix(prevPrefix);
@@ -122,6 +128,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "PrefixChange[component: " + getPath() + ", prefix: " + prevPrefix + "]";
@@ -155,7 +162,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public RadioChoice(final String id, final List choices)
+	public RadioChoice(final String id, final List<T> choices)
 	{
 		super(id, choices);
 	}
@@ -173,7 +180,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	public RadioChoice(final String id, final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -190,7 +197,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public RadioChoice(final String id, IModel model, final List choices)
+	public RadioChoice(final String id, IModel<T> model, final List<T> choices)
 	{
 		super(id, model, choices);
 	}
@@ -210,8 +217,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, IModel model, final List choices,
-		final IChoiceRenderer renderer)
+	public RadioChoice(final String id, IModel<T> model, final List<T> choices,
+		final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -226,7 +233,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public RadioChoice(String id, IModel choices)
+	public RadioChoice(String id, IModel<List<T>> choices)
 	{
 		super(id, choices);
 	}
@@ -243,7 +250,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public RadioChoice(String id, IModel model, IModel choices)
+	public RadioChoice(String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -261,7 +268,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public RadioChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -282,7 +289,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(String id, IModel<T> model, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -290,6 +298,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -340,6 +349,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
@@ -362,7 +372,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            Prefix to use before choice
 	 * @return this
 	 */
-	public final RadioChoice setPrefix(String prefix)
+	public final RadioChoice<T> setPrefix(String prefix)
 	{
 		// Tell the page that this component's prefix was changed
 		addStateChange(new PrefixChange(this.prefix));
@@ -383,7 +393,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            Separator to use between radio options
 	 * @return this
 	 */
-	public final RadioChoice setSuffix(String suffix)
+	public final RadioChoice<T> setSuffix(String suffix)
 	{
 		// Tell the page that this component's suffix was changed
 		addStateChange(new SuffixChange(this.suffix));
@@ -394,11 +404,12 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List choices = getChoices();
+		final List<T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);
@@ -410,7 +421,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
-			final Object choice = choices.get(index);
+			final T choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 			Class objectClass = displayValue == null ? null : displayValue.getClass();

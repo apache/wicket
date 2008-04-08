@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -59,6 +60,7 @@ public class FilterForm extends Form
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				tag.put("id", getFocusTrackerFieldCssId());
@@ -72,11 +74,12 @@ public class FilterForm extends Form
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				AppendingStringBuffer script = new AppendingStringBuffer(
-						"<script>_filter_focus_restore('").append(getFocusTrackerFieldCssId())
-						.append("');</script>");
+					"<script>_filter_focus_restore('").append(getFocusTrackerFieldCssId()).append(
+					"');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});
@@ -112,6 +115,7 @@ public class FilterForm extends Form
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				tag.put("id", component.getMarkupId());
@@ -146,11 +150,11 @@ public class FilterForm extends Form
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class FilterStateModel extends Model
+	private static class FilterStateModel implements IModel<Object>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private IFilterStateLocator locator;
+		private final IFilterStateLocator locator;
 
 		/**
 		 * Constructor
@@ -181,6 +185,13 @@ public class FilterForm extends Form
 		public void setObject(Object object)
 		{
 			locator.setFilterState(object);
+		}
+
+		/**
+		 * @see org.apache.wicket.model.IDetachable#detach()
+		 */
+		public void detach()
+		{
 		}
 
 	}

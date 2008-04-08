@@ -24,8 +24,11 @@ package org.apache.wicket.markup.html.link;
  * This Link component is the same as a normal link with the statelesshint to true.
  * 
  * @author jcompagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class StatelessLink extends Link
+public abstract class StatelessLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +43,7 @@ public abstract class StatelessLink extends Link
 	}
 
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return true;

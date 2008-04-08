@@ -20,11 +20,11 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
 import org.slf4j.Logger;

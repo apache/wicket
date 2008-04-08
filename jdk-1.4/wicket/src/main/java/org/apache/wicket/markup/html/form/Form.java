@@ -128,8 +128,11 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  * @author David Leangen
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class Form extends WebMarkupContainer implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListener
 {
 	/**
 	 * Visitor used for validation
@@ -207,6 +210,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getLocale()
 		 */
+		@Override
 		public Locale getLocale()
 		{
 			return realRequest.getLocale();
@@ -215,6 +219,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getParameter(java.lang.String)
 		 */
+		@Override
 		public String getParameter(String key)
 		{
 			return (String)params.get(key);
@@ -223,6 +228,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getParameterMap()
 		 */
+		@Override
 		public Map getParameterMap()
 		{
 			return params;
@@ -231,6 +237,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getParameters(java.lang.String)
 		 */
+		@Override
 		public String[] getParameters(String key)
 		{
 			String param = (String)params.get(key);
@@ -244,16 +251,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getPath()
 		 */
+		@Override
 		public String getPath()
 		{
 			return realRequest.getPath();
 		}
 
+		@Override
 		public String getRelativePathPrefixToContextRoot()
 		{
 			return realRequest.getRelativePathPrefixToContextRoot();
 		}
 
+		@Override
 		public String getRelativePathPrefixToWicketHandler()
 		{
 			return realRequest.getRelativePathPrefixToWicketHandler();
@@ -262,6 +272,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		/**
 		 * @see org.apache.wicket.Request#getURL()
 		 */
+		@Override
 		public String getURL()
 		{
 			return url;
@@ -336,7 +347,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 *            See Component
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Form(final String id, IModel model)
+	public Form(final String id, IModel<T> model)
 	{
 		super(id, model);
 		setOutputMarkupId(true);
@@ -484,6 +495,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// Visit all the (visible) form components and clear the input on each.
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
@@ -517,7 +529,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
 		IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)getPage().visitChildren(
-			IFormSubmittingComponent.class, new IVisitor()
+			IFormSubmittingComponent.class, new IVisitor<Component>()
 			{
 				public Object component(final Component component)
 				{
@@ -691,6 +703,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return super.isVersioned();
@@ -706,6 +719,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				// Component must implement persister interface and
@@ -906,6 +920,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// Search for FormComponents like TextField etc.
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
@@ -979,6 +994,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see org.apache.wicket.Component#setVersioned(boolean)
 	 */
+	@Override
 	public final Component setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
@@ -986,6 +1002,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// Search for FormComponents like TextField etc.
 		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				formComponent.setVersioned(isVersioned);
@@ -1187,6 +1204,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
@@ -1216,6 +1234,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			// Search for FormComponent children. Ignore all other
 			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 			{
+				@Override
 				public void onFormComponent(final FormComponent formComponent)
 				{
 					if (formComponent.isVisibleInHierarchy())
@@ -1354,6 +1373,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @return The javascript/css id of this form.
 	 * @deprecated use {@link #getMarkupId()}
 	 */
+	@Deprecated
 	protected final String getJavascriptId()
 	{
 		return getMarkupId();
@@ -1376,6 +1396,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		return (method != null) ? method : METHOD_POST;
 	}
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return false;
@@ -1455,11 +1476,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see org.apache.wicket.Component#internalOnModelChanged()
 	 */
+	@Override
 	protected void internalOnModelChanged()
 	{
 		// Visit all the form components and validate each
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				// If form component is using form model
@@ -1479,6 +1502,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// call invalidate methods of all nested form components
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
@@ -1527,6 +1551,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// call valid methods of all nested form components
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.getForm() == Form.this && formComponent.isVisibleInHierarchy())
@@ -1540,6 +1565,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -1599,6 +1625,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @param openTag
 	 *            The open tag for the body
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if (isRootForm())
@@ -1648,6 +1675,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.internalOnDetach();
@@ -1667,11 +1695,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * @see org.apache.wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Force multi-part on if any child form component is multi-part
 		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(FormComponent formComponent)
 			{
 				if (formComponent.isVisible() && formComponent.isMultiPart())
@@ -1738,6 +1768,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
+			@Override
 			public void validate(FormComponent formComponent)
 			{
 				Form form = formComponent.getForm();
@@ -1777,6 +1808,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
+			@Override
 			public void validate(final FormComponent formComponent)
 			{
 				final Form form = formComponent.getForm();
@@ -1877,11 +1909,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void validateNestedForms()
 	{
-		visitChildren(Form.class, new IVisitor()
+		visitChildren(Form.class, new IVisitor<Form>()
 		{
-			public Object component(Component component)
+			public Object component(Form form)
 			{
-				final Form form = (Form)component;
 				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
 				{
 					form.validateComponents();
@@ -1916,6 +1947,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		}
 
 
+		@Override
 		public void undo()
 		{
 			add(removed);
@@ -1928,7 +1960,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @return String that well be used as prefix to form component input names
 	 */
-	protected String getInputNamePrefix() {
+	protected String getInputNamePrefix()
+	{
 		return "";
 	}
 }

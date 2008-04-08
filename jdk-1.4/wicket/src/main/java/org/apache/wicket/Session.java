@@ -134,7 +134,7 @@ public abstract class Session implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set pageMapNames = new HashSet(2);
+		Set<String> pageMapNames = new HashSet<String>(2);
 
 		/**
 		 * @param pagemap
@@ -151,7 +151,7 @@ public abstract class Session implements IClusterable
 	private int sequence = 1;
 
 	/** meta data key for missing body tags logging. */
-	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+	public static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>(
 		PageMapAccessMetaData.class)
 	{
 		private static final long serialVersionUID = 1L;
@@ -161,10 +161,10 @@ public abstract class Session implements IClusterable
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/** Thread-local current session. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
 
 	/** A store for dirty objects for one request */
-	private static final ThreadLocal dirtyObjects = new ThreadLocal();
+	private static final ThreadLocal<List> dirtyObjects = new ThreadLocal<List>();
 
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
@@ -175,7 +175,7 @@ public abstract class Session implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** A store for touched pages for one request */
-	private static final ThreadLocal touchedPages = new ThreadLocal();
+	private static final ThreadLocal<List> touchedPages = new ThreadLocal<List>();
 
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
@@ -244,7 +244,7 @@ public abstract class Session implements IClusterable
 	 */
 	public static Session get()
 	{
-		Session session = (Session)current.get();
+		Session session = current.get();
 		if (session == null)
 		{
 			session = findOrCreate();
@@ -317,7 +317,7 @@ public abstract class Session implements IClusterable
 		RequestCycle requestCycle;
 	};
 
-	private transient Map pageMapsUsedInRequest;
+	private transient Map<IPageMap, PageMapsUsedInRequestEntry> pageMapsUsedInRequest;
 
 	/** True, if session has been invalidated */
 	private transient boolean sessionInvalidated = false;
@@ -340,10 +340,10 @@ public abstract class Session implements IClusterable
 	 * instance).
 	 * </p>
 	 */
-	private transient Map temporarySessionAttributes;
+	private transient Map<String, Object> temporarySessionAttributes;
 
 	/** A linked list for last used pagemap queue */
-	private final LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
+	private final LinkedList/* <IPageMap> */<IPageMap>usedPageMaps = new LinkedList<IPageMap>();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -370,6 +370,7 @@ public abstract class Session implements IClusterable
 	 * @param request
 	 *            The current request
 	 */
+	@Deprecated
 	protected Session(Application application, Request request)
 	{
 		this(request);
@@ -614,9 +615,9 @@ public abstract class Session implements IClusterable
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final Serializable getMetaData(final MetaDataKey<PageMapAccessMetaData> key)
 	{
-		return (Serializable)key.get(metaData);
+		return key.get(metaData);
 	}
 
 	/**
@@ -649,9 +650,9 @@ public abstract class Session implements IClusterable
 				"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
 		}
 
-		List pageMaps = getPageMaps();
+		List<Object> pageMaps = getPageMaps();
 
-		for (Iterator i = pageMaps.iterator(); i.hasNext();)
+		for (Iterator<Object> i = pageMaps.iterator(); i.hasNext();)
 		{
 			IPageMap pm = (IPageMap)i.next();
 			if (pm.containsPage(pageId, versionNumber))
@@ -693,7 +694,7 @@ public abstract class Session implements IClusterable
 			{
 				if (pageMapsUsedInRequest == null)
 				{
-					pageMapsUsedInRequest = new HashMap(3);
+					pageMapsUsedInRequest = new HashMap<IPageMap, PageMapsUsedInRequestEntry>(3);
 				}
 			}
 			synchronized (pageMapsUsedInRequest)
@@ -705,7 +706,7 @@ public abstract class Session implements IClusterable
 				// later
 				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
 
-				PageMapsUsedInRequestEntry entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest.get(pageMap);
+				PageMapsUsedInRequestEntry entry = pageMapsUsedInRequest.get(pageMap);
 
 				// Get page entry for id and version
 				Thread t = entry != null ? entry.thread : null;
@@ -728,7 +729,7 @@ public abstract class Session implements IClusterable
 						throw new WicketRuntimeException(ex);
 					}
 
-					entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest.get(pageMap);
+					entry = pageMapsUsedInRequest.get(pageMap);
 					t = entry != null ? entry.thread : null;
 
 					if (t != null && t != Thread.currentThread() &&
@@ -791,12 +792,12 @@ public abstract class Session implements IClusterable
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */
-	public final List getPageMaps()
+	public final List<Object> getPageMaps()
 	{
-		final List list = new ArrayList();
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		final List<Object> list = new ArrayList<Object>();
+		for (final Iterator<String> iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
 				list.add(getAttribute(attribute));
@@ -811,7 +812,7 @@ public abstract class Session implements IClusterable
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		for (final Iterator<Object> iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
 			final IPageMap pageMap = (IPageMap)iterator.next();
 			size += pageMap.getSizeInBytes();
@@ -902,7 +903,7 @@ public abstract class Session implements IClusterable
 		{
 			if (usedPageMaps.size() >= maxPageMaps)
 			{
-				IPageMap pm = (IPageMap)usedPageMaps.getFirst();
+				IPageMap pm = usedPageMaps.getFirst();
 				pm.remove();
 			}
 		}
@@ -1044,10 +1045,10 @@ public abstract class Session implements IClusterable
 		// store it in a list, so that the pages are really pushed
 		// to the pagemap when the session does it update/detaches.
 		// all the pages are then detached
-		List lst = (List)touchedPages.get();
+		List<Page> lst = touchedPages.get();
 		if (lst == null)
 		{
-			lst = new ArrayList();
+			lst = new ArrayList<Page>();
 			touchedPages.set(lst);
 			lst.add(page);
 		}
@@ -1066,7 +1067,7 @@ public abstract class Session implements IClusterable
 	 */
 	public final void untouch(Page page)
 	{
-		List lst = (List)touchedPages.get();
+		List lst = touchedPages.get();
 		if (lst != null)
 		{
 			lst.remove(page);
@@ -1079,9 +1080,9 @@ public abstract class Session implements IClusterable
 	 */
 	public final void visitPageMaps(final IPageMapVisitor visitor)
 	{
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		for (final Iterator<String> iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
 				visitor.pageMap((IPageMap)getAttribute(attribute));
@@ -1180,7 +1181,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * @return List of attributes for this session
 	 */
-	protected final List getAttributeNames()
+	protected final List<String> getAttributeNames()
 	{
 		if (!isTemporary())
 		{
@@ -1194,7 +1195,7 @@ public abstract class Session implements IClusterable
 		{
 			if (temporarySessionAttributes != null)
 			{
-				return new ArrayList(temporarySessionAttributes.keySet());
+				return new ArrayList<String>(temporarySessionAttributes.keySet());
 			}
 		}
 		return Collections.EMPTY_LIST;
@@ -1286,7 +1287,7 @@ public abstract class Session implements IClusterable
 			// session instance gets shared across threads
 			if (temporarySessionAttributes == null)
 			{
-				temporarySessionAttributes = new HashMap(3);
+				temporarySessionAttributes = new HashMap<String, Object>(3);
 			}
 			temporarySessionAttributes.put(name, value);
 		}
@@ -1298,6 +1299,7 @@ public abstract class Session implements IClusterable
 	 * @deprecated obsolete method (was meant for internal book keeping really). Clients should
 	 *             override {@link #detach()} instead.
 	 */
+	@Deprecated
 	protected final void update()
 	{
 		throw new UnsupportedOperationException();
@@ -1310,7 +1312,7 @@ public abstract class Session implements IClusterable
 	 */
 	void dirtyPage(final Page page)
 	{
-		List dirtyObjects = getDirtyObjectsList();
+		List<IClusterable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(page))
 		{
 			dirtyObjects.add(page);
@@ -1331,7 +1333,7 @@ public abstract class Session implements IClusterable
 				usedPageMaps.addLast(map);
 			}
 		}
-		List dirtyObjects = getDirtyObjectsList();
+		List<IClusterable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(map))
 		{
 			dirtyObjects.add(map);
@@ -1341,12 +1343,12 @@ public abstract class Session implements IClusterable
 	/**
 	 * @return The current thread dirty objects list
 	 */
-	List getDirtyObjectsList()
+	List<IClusterable> getDirtyObjectsList()
 	{
-		List list = (List)dirtyObjects.get();
+		List<IClusterable> list = dirtyObjects.get();
 		if (list == null)
 		{
-			list = new ArrayList(4);
+			list = new ArrayList<IClusterable>(4);
 			dirtyObjects.set(list);
 		}
 		return list;
@@ -1360,7 +1362,7 @@ public abstract class Session implements IClusterable
 	 */
 	final void requestDetached()
 	{
-		List touchedPages = (List)Session.touchedPages.get();
+		List touchedPages = Session.touchedPages.get();
 		Session.touchedPages.set(null);
 		if (touchedPages != null)
 		{
@@ -1388,10 +1390,10 @@ public abstract class Session implements IClusterable
 			}
 		}
 
-		List dirtyObjects = (List)Session.dirtyObjects.get();
+		List dirtyObjects = Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 
-		Map tempMap = new HashMap();
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)

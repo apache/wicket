@@ -22,11 +22,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public final class PropertyResolver
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private final static Map applicationToClassesToGetAndSetters = new ConcurrentHashMap(2);
+	private final static Map<Object, Map> applicationToClassesToGetAndSetters = new ConcurrentHashMap<Object, Map>(2);
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
@@ -304,15 +304,15 @@ public final class PropertyResolver
 
 	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
 	{
-		Map classesToGetAndSetters = getClassesToGetAndSetters();
-		Map getAndSetters = (Map)classesToGetAndSetters.get(clz);
+		Map<Class, Map> classesToGetAndSetters = getClassesToGetAndSetters();
+		Map<String, IGetAndSet> getAndSetters = classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
-			getAndSetters = new ConcurrentHashMap(8);
+			getAndSetters = new ConcurrentHashMap<String, IGetAndSet>(8);
 			classesToGetAndSetters.put(clz, getAndSetters);
 		}
 
-		IGetAndSet getAndSetter = (IGetAndSet)getAndSetters.get(exp);
+		IGetAndSet getAndSetter = getAndSetters.get(exp);
 		if (getAndSetter == null)
 		{
 			Method method = null;
@@ -727,7 +727,7 @@ public final class PropertyResolver
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
-			((Map)object).put(key, value);
+			((Map<String, Object>)object).put(key, value);
 		}
 
 		/**
@@ -764,7 +764,7 @@ public final class PropertyResolver
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
-			List lst = (List)object;
+			List<Object> lst = (List<Object>)object;
 
 			if (lst.size() > index)
 			{
@@ -846,6 +846,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
+		@Override
 		public Class getTargetClass()
 		{
 			return clzComponentType;
@@ -886,6 +887,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
+		@Override
 		public Class getTargetClass()
 		{
 			return int.class;
@@ -985,6 +987,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
+		@Override
 		public Class getTargetClass()
 		{
 			return getMethod.getReturnType();
@@ -1180,6 +1183,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
+		@Override
 		public Class getTargetClass()
 		{
 			return getMethod.getReturnType();
@@ -1188,6 +1192,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getGetter()
 		 */
+		@Override
 		public Method getGetter()
 		{
 			return getMethod;
@@ -1196,6 +1201,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getSetter()
 		 */
+		@Override
 		public Method getSetter()
 		{
 			return setMethod;
@@ -1204,6 +1210,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getField()
 		 */
+		@Override
 		public Field getField()
 		{
 			return field;
@@ -1297,7 +1304,7 @@ public final class PropertyResolver
 		}
 	}
 
-	private static Map getClassesToGetAndSetters()
+	private static Map<Class, Map> getClassesToGetAndSetters()
 	{
 		Object key = null;
 		if (Application.exists())
@@ -1308,13 +1315,13 @@ public final class PropertyResolver
 		{
 			key = PropertyResolver.class;
 		}
-		Map result = (Map)applicationToClassesToGetAndSetters.get(key);
+		Map<Class, Map> result = applicationToClassesToGetAndSetters.get(key);
 		if (result == null)
 		{
 			// Don't synchronize this - Doesn't matter if we create two of them,
 			// as it's only a cache and the first will go out of scope and get
 			// GC'ed.
-			applicationToClassesToGetAndSetters.put(key, result = new ConcurrentHashMap(64));
+			applicationToClassesToGetAndSetters.put(key, result = new ConcurrentHashMap<Class, Map>(64));
 		}
 		return result;
 	}

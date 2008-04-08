@@ -21,12 +21,12 @@ package org.apache.wicket.model;
  * 
  * @author Matej Knopp
  */
-public interface IObjectClassAwareModel extends IModel
+public interface IObjectClassAwareModel<T> extends IModel<T>
 {
 	/**
 	 * Returns the class of model object
 	 * 
 	 * @return class of model object or null if the class couldn't be determined
 	 */
-	public Class getObjectClass();
+	public Class<T> getObjectClass();
 }

@@ -24,8 +24,11 @@ import org.apache.wicket.model.IWrapModel;
  * Default implementation of {@link ILabelProvider}.
  * 
  * @author almaw
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
+public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	implements
 		ILabelProvider
 {
@@ -39,6 +42,7 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	 */
 	private IModel labelModel = null;
 
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

@@ -30,8 +30,11 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class WebComponent extends Component
+public class WebComponent<T> extends Component<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +49,7 @@ public class WebComponent extends Component
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(final String id, final IModel model)
+	public WebComponent(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -55,6 +58,7 @@ public class WebComponent extends Component
 	 * 
 	 * @see org.apache.wicket.Component#onRender(org.apache.wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		renderComponent(markupStream);

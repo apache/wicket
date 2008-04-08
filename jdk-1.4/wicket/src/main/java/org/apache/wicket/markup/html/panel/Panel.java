@@ -54,8 +54,11 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class Panel extends WebMarkupContainerWithAssociatedMarkup
+public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,7 +82,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Panel(final String id, final IModel model)
+	public Panel(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -88,6 +91,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
@@ -106,11 +110,12 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Render the associated markup
 		renderAssociatedMarkup("panel",
-				"Markup for a panel component has to contain part '<wicket:panel>'");
+			"Markup for a panel component has to contain part '<wicket:panel>'");
 
 		if (wasOpenCloseTag == false)
 		{
@@ -119,7 +124,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 			if (markupStream.get().closes(openTag) == false)
 			{
 				throw new MarkupException("close tag not found for tag: " + openTag.toString() +
-						". Component: " + this.toString());
+					". Component: " + this.toString());
 			}
 		}
 	}
@@ -129,6 +134,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		renderHeadFromAssociatedMarkupFile(container);

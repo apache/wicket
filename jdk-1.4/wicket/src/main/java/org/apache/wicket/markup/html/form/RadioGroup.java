@@ -43,8 +43,10 @@ import org.apache.wicket.util.convert.ConversionException;
  * @author Igor Vaynberg
  * @author Sven Meier (svenmeier)
  * 
+ * @param <T>
+ *            The model object type
  */
-public class RadioGroup extends FormComponent implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,7 +62,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public RadioGroup(String id, IModel model)
+	public RadioGroup(String id, IModel<T> model)
 	{
 		super(id, model);
 		setRenderBodyOnly(true);
@@ -74,6 +76,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
@@ -87,25 +90,22 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] input) throws ConversionException
+	@Override
+	protected T convertValue(String[] input) throws ConversionException
 	{
 		if (input != null && input.length > 0)
 		{
 			final String value = input[0];
 
 			// retrieve the selected single radio choice component
-			Radio choice = (Radio)visitChildren(new Component.IVisitor()
+			Radio<T> choice = (Radio<T>)visitChildren(Radio.class, new Component.IVisitor<Radio>()
 			{
 
-				public Object component(Component component)
+				public Object component(Radio radio)
 				{
-					if (component instanceof Radio)
+					if (radio.getValue().equals(value))
 					{
-						final Radio radio = (Radio)component;
-						if (radio.getValue().equals(value))
-						{
-							return radio;
-						}
+						return radio;
 					}
 					return CONTINUE_TRAVERSAL;
 				}
@@ -115,12 +115,12 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 			if (choice == null)
 			{
 				throw new WicketRuntimeException(
-						"submitted http post value [" +
-								value +
-								"] for RadioGroup component [" +
-								getPath() +
-								"] is illegal because it does not contain relative path to a Radio componnet. " +
-								"Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+					"submitted http post value [" +
+						value +
+						"] for RadioGroup component [" +
+						getPath() +
+						"] is illegal because it does not contain relative path to a Radio componnet. " +
+						"Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 			}
 
 
@@ -133,6 +133,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -171,6 +172,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return false;

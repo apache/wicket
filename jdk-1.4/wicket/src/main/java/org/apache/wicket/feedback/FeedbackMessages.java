@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.util.concurrent.CopyOnWriteArrayList;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +49,14 @@ public final class FeedbackMessages implements IClusterable
 	/**
 	 * Holds a list of {@link org.apache.wicket.feedback.FeedbackMessage}s.
 	 */
-	private List messages = null;
+	private List<FeedbackMessage> messages = null;
 
 	/**
 	 * Construct.
 	 */
 	public FeedbackMessages()
 	{
-		messages = new CopyOnWriteArrayList();
+		messages = new CopyOnWriteArrayList<FeedbackMessage>();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public final class FeedbackMessages implements IClusterable
 			return 0;
 		}
 
-		List toDelete = messages(filter);
+		List<FeedbackMessage> toDelete = messages(filter);
 		int count = toDelete.size();
 		messages.removeAll(toDelete);
 
@@ -221,7 +221,7 @@ public final class FeedbackMessages implements IClusterable
 	 * 
 	 * @return iterator over stored messages
 	 */
-	public final Iterator iterator()
+	public final Iterator<FeedbackMessage> iterator()
 	{
 		return messages.iterator();
 	}
@@ -236,9 +236,9 @@ public final class FeedbackMessages implements IClusterable
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
-		for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+		for (Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 		{
-			FeedbackMessage message = (FeedbackMessage)iterator.next();
+			FeedbackMessage message = iterator.next();
 			if (message.getReporter() == component)
 			{
 				return message;
@@ -254,17 +254,17 @@ public final class FeedbackMessages implements IClusterable
 	 *            Filter for selecting messages. If null, all messages will be returned
 	 * @return The messages or an empty list if no messages are found
 	 */
-	public final List messages(final IFeedbackMessageFilter filter)
+	public final List<FeedbackMessage> messages(final IFeedbackMessageFilter filter)
 	{
 		if (messages.size() == 0)
 		{
 			return Collections.EMPTY_LIST;
 		}
 
-		final List list = new ArrayList();
-		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+		final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
+		for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 		{
-			final FeedbackMessage message = (FeedbackMessage)iterator.next();
+			final FeedbackMessage message = iterator.next();
 			if (filter == null || filter.accept(message))
 			{
 				list.add(message);
@@ -294,9 +294,9 @@ public final class FeedbackMessages implements IClusterable
 	public final int size(final IFeedbackMessageFilter filter)
 	{
 		int count = 0;
-		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+		for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 		{
-			final FeedbackMessage message = (FeedbackMessage)iterator.next();
+			final FeedbackMessage message = iterator.next();
 			if (filter == null || filter.accept(message))
 			{
 				count++;
@@ -308,6 +308,7 @@ public final class FeedbackMessages implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
@@ -320,7 +321,7 @@ public final class FeedbackMessages implements IClusterable
 	{
 		if (messages instanceof ArrayList)
 		{
-			((ArrayList)messages).trimToSize();
+			((ArrayList<FeedbackMessage>)messages).trimToSize();
 		}
 	}
 

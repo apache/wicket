@@ -32,8 +32,11 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AutoCompleteTextField extends TextField
+public abstract class AutoCompleteTextField<T> extends TextField<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +45,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param id
 	 * @param type
 	 */
-	public AutoCompleteTextField(String id, Class type)
+	public AutoCompleteTextField(String id, Class<T> type)
 	{
 		this(id, (IModel)null, type, false);
 	}
@@ -54,18 +57,18 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param preselect
 	 *            the first item
 	 */
-	public AutoCompleteTextField(String id, IModel model, Class type, boolean preselect)
+	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type, boolean preselect)
 	{
 		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, preselect);
 
-	} 
+	}
 
 	/**
 	 * @param id
 	 * @param object
 	 * @param preselect
 	 */
-	public AutoCompleteTextField(String id, IModel object, boolean preselect)
+	public AutoCompleteTextField(String id, IModel<T> object, boolean preselect)
 	{
 		this(id, object, (Class)null, preselect);
 	}
@@ -75,7 +78,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param id
 	 * @param object
 	 */
-	public AutoCompleteTextField(String id, IModel object)
+	public AutoCompleteTextField(String id, IModel<T> object)
 	{
 		this(id, object, (Class)null, false);
 	}
@@ -113,7 +116,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param type
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(String id, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, Class<T> type, IAutoCompleteRenderer renderer)
 	{
 		this(id, null, type, renderer, false);
 	}
@@ -123,7 +126,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param model
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(String id, IModel model, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, IModel<T> model, IAutoCompleteRenderer renderer)
 	{
 		this(id, model, (Class)null, renderer, false);
 	}
@@ -135,7 +138,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param renderer
 	 * @param preselect
 	 */
-	public AutoCompleteTextField(String id, IModel model, Class type,
+	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type,
 		IAutoCompleteRenderer renderer, boolean preselect)
 	{
 		super(id, model, type);
@@ -148,6 +151,7 @@ public abstract class AutoCompleteTextField extends TextField
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Iterator getChoices(String input)
 			{
 				return AutoCompleteTextField.this.getChoices(input);
@@ -168,7 +172,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 *            current input
 	 * @return iterator over all possible choice objects
 	 */
-	protected abstract Iterator getChoices(String input);
+	protected abstract Iterator<T> getChoices(String input);
 
 
 }

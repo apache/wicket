@@ -24,7 +24,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public class RequiredTextField extends TextField
+public class RequiredTextField<T> extends TextField<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class RequiredTextField extends TextField
 	/**
 	 * @see TextField#TextField(String, Class)
 	 */
-	public RequiredTextField(final String id, final Class type)
+	public RequiredTextField(final String id, final Class<T> type)
 	{
 		super(id, type);
 		setRequired(true);
@@ -49,7 +49,7 @@ public class RequiredTextField extends TextField
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String id, final IModel model)
+	public RequiredTextField(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		setRequired(true);
@@ -64,7 +64,7 @@ public class RequiredTextField extends TextField
 	 *            The type to use when updating the model for this text field
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String id, IModel model, Class type)
+	public RequiredTextField(final String id, IModel<T> model, Class<T> type)
 	{
 		super(id, model, type);
 		setRequired(true);

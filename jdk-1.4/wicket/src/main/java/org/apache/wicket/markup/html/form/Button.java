@@ -48,8 +48,11 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class Button extends FormComponent implements IFormSubmittingComponent
+public class Button<T> extends FormComponent<T> implements IFormSubmittingComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -84,7 +87,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 *            keep it's markup attribute value, don't provide a model, or let it return an empty
 	 *            string.
 	 */
-	public Button(final String id, final IModel model)
+	public Button(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		setVersioned(true);
@@ -97,6 +100,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 * 
 	 * @see org.apache.wicket.Component#initModel()
 	 */
+	@Override
 	protected IModel initModel()
 	{
 		return null;
@@ -148,11 +152,13 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 
 				boolean formerValue = Button.this.defaultFormProcessing;
 
+				@Override
 				public void undo()
 				{
 					Button.this.defaultFormProcessing = formerValue;
 				}
 
+				@Override
 				public String toString()
 				{
 					return "DefaultFormProcessingChange[component: " + getPath() +
@@ -171,6 +177,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 	}
@@ -200,6 +207,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for component tag

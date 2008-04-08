@@ -29,9 +29,9 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class ArrayIteratorAdapter implements Iterator
+public abstract class ArrayIteratorAdapter<T> implements Iterator<IModel<T>>
 {
-	private final Object[] array;
+	private final T[] array;
 	private int pos = 0;
 
 	/**
@@ -39,7 +39,7 @@ public abstract class ArrayIteratorAdapter implements Iterator
 	 * 
 	 * @param array
 	 */
-	public ArrayIteratorAdapter(Object[] array)
+	public ArrayIteratorAdapter(T[] array)
 	{
 		this.array = array;
 	}
@@ -63,7 +63,7 @@ public abstract class ArrayIteratorAdapter implements Iterator
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public IModel<T> next()
 	{
 		return model(array[pos++]);
 	}
@@ -84,7 +84,7 @@ public abstract class ArrayIteratorAdapter implements Iterator
 	 *            object to be wrapped
 	 * @return IModel wrapper for the object
 	 */
-	abstract protected IModel model(Object object);
+	abstract protected IModel<T> model(T object);
 
 
 }

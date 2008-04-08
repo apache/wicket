@@ -68,8 +68,10 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
+ * @param <T>
+ *            Model object type
  */
-public class RepeatingView extends AbstractRepeater
+public class RepeatingView<T> extends AbstractRepeater<T>
 {
 	/**
 	 * 
@@ -86,7 +88,7 @@ public class RepeatingView extends AbstractRepeater
 	}
 
 	/** @see Component#Component(String, IModel) */
-	public RepeatingView(String id, IModel model)
+	public RepeatingView(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -106,7 +108,8 @@ public class RepeatingView extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
-	protected Iterator renderIterator()
+	@Override
+	protected Iterator<Component> renderIterator()
 	{
 		return iterator();
 	}
@@ -114,6 +117,7 @@ public class RepeatingView extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
 	 */
+	@Override
 	protected void onPopulate()
 	{
 		// noop - population of this repeater is manual

@@ -24,10 +24,13 @@ import org.apache.wicket.model.IModel;
  * WebMarkupContainer with it's own markup and possibly <wicket:head> tag.
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
-		implements
-			IHeaderPartContainerProvider
+public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T>
+	implements
+		IHeaderPartContainerProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +48,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel model)
+	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<T> model)
 	{
 		super(id, model);
 	}

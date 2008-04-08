@@ -33,7 +33,7 @@ import org.apache.wicket.util.lang.Classes;
  * 
  * @author Jonathan Locke
  */
-public class BookmarkablePageLink extends Link
+public class BookmarkablePageLink extends Link<CharSequence>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -105,7 +105,7 @@ public class BookmarkablePageLink extends Link
 	 *            The parameters to pass to the new page when the link is clicked
 	 */
 	public BookmarkablePageLink(final String id, final Class pageClass,
-			final PageParameters parameters)
+		final PageParameters parameters)
 	{
 		super(id);
 
@@ -118,7 +118,7 @@ public class BookmarkablePageLink extends Link
 		else if (!Page.class.isAssignableFrom(pageClass))
 		{
 			throw new IllegalArgumentException("Page class must be derived from " +
-					Page.class.getName());
+				Page.class.getName());
 		}
 		pageClassName = pageClass.getName();
 	}
@@ -155,11 +155,13 @@ public class BookmarkablePageLink extends Link
 	 *            the page
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
+	@Override
 	public boolean linksTo(final Page page)
 	{
 		return page.getClass() == getPageClass();
 	}
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return true;
@@ -171,6 +173,7 @@ public class BookmarkablePageLink extends Link
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		// Bookmarkable links do not have a click handler.
@@ -243,6 +246,7 @@ public class BookmarkablePageLink extends Link
 	 * @return The URL that this link links to
 	 * @see org.apache.wicket.markup.html.link.Link#getURL()
 	 */
+	@Override
 	protected CharSequence getURL()
 	{
 		if (pageMapName != null && getPopupSettings() != null)

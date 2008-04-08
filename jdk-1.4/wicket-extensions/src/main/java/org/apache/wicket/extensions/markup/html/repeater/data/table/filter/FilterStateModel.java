@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 
 /**
  * Model that wraps filter state locator to make its use transparent to wicket components.
@@ -33,11 +33,11 @@ import org.apache.wicket.model.Model;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-class FilterStateModel extends Model
+class FilterStateModel implements IModel<Object>
 {
 	private static final long serialVersionUID = 1L;
 
-	private IFilterStateLocator locator;
+	private final IFilterStateLocator locator;
 
 	/**
 	 * Constructor
@@ -64,6 +64,13 @@ class FilterStateModel extends Model
 	public void setObject(Object object)
 	{
 		locator.setFilterState(object);
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
 	}
 
 }

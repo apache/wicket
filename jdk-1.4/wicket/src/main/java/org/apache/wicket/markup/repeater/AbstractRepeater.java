@@ -38,8 +38,12 @@ import org.slf4j.LoggerFactory;
  * <code>child.render(getMarkupStream());</code>.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            The model object type
+ * 
  */
-public abstract class AbstractRepeater extends WebMarkupContainer
+public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +67,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * @param id
 	 * @param model
 	 */
-	public AbstractRepeater(String id, IModel model)
+	public AbstractRepeater(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -74,7 +78,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * 
 	 * @return iterator over child components to be rendered
 	 */
-	protected abstract Iterator renderIterator();
+	protected abstract Iterator<Component> renderIterator();
 
 	/**
 	 * Renders all child items in no specified order
@@ -82,16 +86,17 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * @param markupStream
 	 *            The markup stream
 	 */
+	@Override
 	protected final void onRender(final MarkupStream markupStream)
 	{
 		final int markupStart = markupStream.getCurrentIndex();
 
-		Iterator it = renderIterator();
+		Iterator<Component> it = renderIterator();
 		if (it.hasNext())
 		{
 			do
 			{
-				Component child = (Component)it.next();
+				Component child = it.next();
 				if (child == null)
 				{
 					throw new IllegalStateException("the render iterator returned null for a child");
@@ -122,22 +127,23 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		onPopulate();
 
 		if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT))
 		{
-			Iterator i = iterator();
+			Iterator<Component> i = iterator();
 			while (i.hasNext())
 			{
-				Component c = (Component)i.next();
+				Component c = i.next();
 				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
 				if (!matcher.matches())
 				{
 					log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
-							" has a non-safe child id of " + c.getId() +
-							". Safe child ids must be composed of digits only.");
+						" has a non-safe child id of " + c.getId() +
+						". Safe child ids must be composed of digits only.");
 					// do not flood the log
 					break;
 				}

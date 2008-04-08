@@ -31,8 +31,11 @@ import org.slf4j.LoggerFactory;
  * Abstract base class for TextArea and TextField.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent<T> extends FormComponent<T>
 {
 	// Flag for the type resolving. FLAG_RESERVED1-3 is taken by form component
 	private static final int TYPE_RESOLVED = Component.FLAG_RESERVED4;
@@ -99,11 +102,13 @@ public abstract class AbstractTextComponent extends FormComponent
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#isInputNullable()
 	 */
+	@Override
 	public boolean isInputNullable()
 	{
 		return false;
 	}
 
+	@Override
 	protected void convertInput()
 	{
 		// Stateless forms don't have to be rendered first, convertInput could be called before
@@ -117,6 +122,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -172,7 +178,8 @@ public abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] value) throws ConversionException
+	@Override
+	protected T convertValue(String[] value) throws ConversionException
 	{
 		String tmp = value != null && value.length > 0 ? value[0] : null;
 		if (getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
@@ -185,6 +192,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected boolean supportsPersistence()
 	{
 		return true;

@@ -34,11 +34,11 @@ import org.apache.wicket.Component;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IComponentInheritedModel extends IModel
+public interface IComponentInheritedModel<T> extends IModel<T>
 {
 	/**
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	IWrapModel wrapOnInheritance(Component component);
+	<P> IWrapModel<P> wrapOnInheritance(Component<P> component);
 }

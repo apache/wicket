@@ -79,7 +79,7 @@ public class TreeTable extends DefaultAbstractTree
 		 *            The call back for rendering nodes
 		 */
 		public TreeFragment(String id, final TreeNode node, int level,
-				final IRenderNodeCallback renderNodeCallback)
+			final IRenderNodeCallback renderNodeCallback)
 		{
 			super(id, "fragment");
 
@@ -99,6 +99,7 @@ public class TreeTable extends DefaultAbstractTree
 				/**
 				 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 				 */
+				@Override
 				public Object getObject()
 				{
 					return renderNodeCallback.renderNode(node);
@@ -109,7 +110,7 @@ public class TreeTable extends DefaultAbstractTree
 
 	/** Reference to the css file. */
 	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
-			"res/tree-table.css");
+		"res/tree-table.css");
 
 	private static final long serialVersionUID = 1L;
 
@@ -138,7 +139,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @return The tree cell
 	 */
 	public static Component newTreeCell(MarkupContainer parent, String id, TreeNode node,
-			int level, IRenderNodeCallback callback, TreeTable table)
+		int level, IRenderNodeCallback callback, TreeTable table)
 	{
 		return table.newTreePanel(parent, id, node, level, callback);
 	}
@@ -214,7 +215,7 @@ public class TreeTable extends DefaultAbstractTree
 			{
 				IColumn column = columns[i];
 				if (column.getLocation().getAlignment() == Alignment.LEFT ||
-						column.getLocation().getAlignment() == Alignment.RIGHT)
+					column.getLocation().getAlignment() == Alignment.RIGHT)
 				{
 					Component component = column.newHeader(sideColumns, "" + i);
 					sideColumns.add(component);
@@ -224,7 +225,7 @@ public class TreeTable extends DefaultAbstractTree
 
 		// create the view for middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", null,
-				hasLeftColumn());
+			hasLeftColumn());
 		add(middleColumns);
 		if (columns != null)
 			for (int i = 0; i < columns.length; i++)
@@ -242,6 +243,7 @@ public class TreeTable extends DefaultAbstractTree
 	/**
 	 * @see org.apache.wicket.markup.html.tree.DefaultAbstractTree#getCSS()
 	 */
+	@Override
 	protected ResourceReference getCSS()
 	{
 		return CSS;
@@ -263,7 +265,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @return The tree panel
 	 */
 	protected Component newTreePanel(MarkupContainer parent, String id, final TreeNode node,
-			int level, IRenderNodeCallback renderNodeCallback)
+		int level, IRenderNodeCallback renderNodeCallback)
 	{
 		return new TreeFragment(id, node, level, renderNodeCallback);
 	}
@@ -271,6 +273,7 @@ public class TreeTable extends DefaultAbstractTree
 	/**
 	 * @see AbstractTree#onBeforeAttach()
 	 */
+	@Override
 	protected void onBeforeAttach()
 	{
 		// has the header been added yet?
@@ -297,6 +300,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param level
 	 *            the current level
 	 */
+	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
 		final TreeNode node = (TreeNode)item.getModelObject();
@@ -309,7 +313,7 @@ public class TreeTable extends DefaultAbstractTree
 			{
 				IColumn column = columns[i];
 				if (column.getLocation().getAlignment() == Alignment.LEFT ||
-						column.getLocation().getAlignment() == Alignment.RIGHT)
+					column.getLocation().getAlignment() == Alignment.RIGHT)
 				{
 					Component component;
 					// first try to create a renderable
@@ -333,7 +337,7 @@ public class TreeTable extends DefaultAbstractTree
 
 		// add middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", node,
-				hasLeftColumn());
+			hasLeftColumn());
 		if (columns != null)
 			for (int i = 0; i < columns.length; i++)
 			{
@@ -368,6 +372,7 @@ public class TreeTable extends DefaultAbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				super.onComponentTag(component, tag);
@@ -406,7 +411,7 @@ public class TreeTable extends DefaultAbstractTree
 		if (found == false)
 		{
 			throw new IllegalArgumentException(
-					"At least one column in TreeTable must be derived from AbstractTreeColumn.");
+				"At least one column in TreeTable must be derived from AbstractTreeColumn.");
 		}
 
 		this.columns = columns;
@@ -417,11 +422,12 @@ public class TreeTable extends DefaultAbstractTree
 		// scroll together with body. The body contains vertical scrollbar. The
 		// header width must be same as body content width, so that the columns
 		// are properly aligned.
-		add(new Label("attachJavascript", new Model()
+		add(new Label("attachJavascript", new Model<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				return "Wicket.TreeTable.attachUpdate(\"" + getMarkupId() + "\");";
 			}

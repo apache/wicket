@@ -30,12 +30,12 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public class ExternalLink extends AbstractLink
+public class ExternalLink extends AbstractLink<String>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** this links' label. */
-	private final IModel label;
+	private final IModel<String> label;
 
 	private boolean contextRelative = false;
 
@@ -59,8 +59,8 @@ public class ExternalLink extends AbstractLink
 	{
 		super(id);
 
-		setModel(href != null ? new Model(href) : null);
-		this.label = (label != null ? new Model(label) : null);
+		setModel(href != null ? new Model<String>(href) : null);
+		this.label = (label != null ? new Model<String>(label) : null);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ExternalLink extends AbstractLink
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(final String id, final IModel href, final IModel label)
+	public ExternalLink(final String id, final IModel<String> href, final IModel<String> label)
 	{
 		super(id);
 
@@ -102,7 +102,7 @@ public class ExternalLink extends AbstractLink
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(final String id, final IModel href)
+	public ExternalLink(final String id, final IModel<String> href)
 	{
 		this(id, href, null);
 	}
@@ -139,6 +139,7 @@ public class ExternalLink extends AbstractLink
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -161,12 +162,12 @@ public class ExternalLink extends AbstractLink
 						url = url.substring(1);
 					}
 					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() +
-							url;
+						url;
 				}
 
 				// if the tag is an anchor proper
 				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-						tag.getName().equalsIgnoreCase("area"))
+					tag.getName().equalsIgnoreCase("area"))
 				{
 					// generate the href attribute
 					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
@@ -217,6 +218,7 @@ public class ExternalLink extends AbstractLink
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		// Draw anything before the body?
@@ -229,7 +231,7 @@ public class ExternalLink extends AbstractLink
 		if ((label != null) && (label.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
-					getModelObjectAsString(label.getObject()));
+				getModelObjectAsString(label.getObject()));
 		}
 		else
 		{
@@ -270,7 +272,7 @@ public class ExternalLink extends AbstractLink
 	/**
 	 * @return label attribute
 	 */
-	public IModel getLabel()
+	public IModel<String> getLabel()
 	{
 		return label;
 	}

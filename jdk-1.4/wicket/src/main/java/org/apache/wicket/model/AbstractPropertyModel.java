@@ -39,11 +39,14 @@ import org.apache.wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The Model object type
  */
-public abstract class AbstractPropertyModel
+public abstract class AbstractPropertyModel<T>
 	implements
-		IChainingModel,
-		IObjectClassAwareModel,
+		IChainingModel<T>,
+		IObjectClassAwareModel<T>,
 		IPropertyReflectionAwareModel
 {
 	/**
@@ -86,11 +89,11 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel getChainedModel()
+	public IModel< ? > getChainedModel()
 	{
 		if (target instanceof IModel)
 		{
-			return (IModel)target;
+			return (IModel< ? >)target;
 		}
 		return null;
 	}
@@ -98,19 +101,20 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	@SuppressWarnings("unchecked")
+	public T getObject()
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return getTarget();
+			return (T)getTarget();
 		}
 
 		final Object target = getTarget();
 		if (target != null)
 		{
-			return PropertyResolver.getValue(expression, target);
+			return (T)PropertyResolver.getValue(expression, target);
 		}
 		return null;
 	}
@@ -128,7 +132,7 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
-	public void setChainedModel(IModel model)
+	public void setChainedModel(IModel< ? > model)
 	{
 		target = model;
 	}
@@ -168,6 +172,7 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
@@ -195,14 +200,15 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @return model object class
 	 */
-	public Class getObjectClass()
+	@SuppressWarnings("unchecked")
+	public Class<T> getObjectClass()
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
 			Object target = getTarget();
-			return target != null ? target.getClass() : null;
+			return (Class<T>)(target != null ? target.getClass() : null);
 		}
 
 		final Object target = getTarget();
@@ -300,6 +306,7 @@ public abstract class AbstractPropertyModel
 	 * @return nothing
 	 * @deprecated use {@link #getObject()} instead
 	 */
+	@Deprecated
 	protected final Object onGetObject(Component component)
 	{
 		throw new UnsupportedOperationException();
@@ -312,6 +319,7 @@ public abstract class AbstractPropertyModel
 	 * @param object
 	 * @deprecated use {@link #setObject(Object)} instead
 	 */
+	@Deprecated
 	protected final void onSetObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();

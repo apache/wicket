@@ -109,8 +109,11 @@ import org.apache.wicket.model.IModel;
  * </p>
  * 
  * @author eelcohillenius
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class FormComponentPanel extends FormComponent
+public abstract class FormComponentPanel<T> extends FormComponent<T>
 	implements
 		IHeaderPartContainerProvider
 {
@@ -144,7 +147,7 @@ public abstract class FormComponentPanel extends FormComponent
 	 * @param id
 	 * @param model
 	 */
-	public FormComponentPanel(String id, IModel model)
+	public FormComponentPanel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -152,6 +155,7 @@ public abstract class FormComponentPanel extends FormComponent
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
 	 */
+	@Override
 	public boolean checkRequired()
 	{
 		return true;
@@ -171,6 +175,7 @@ public abstract class FormComponentPanel extends FormComponent
 	 * 
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		if (markupHelper == null)
@@ -187,6 +192,7 @@ public abstract class FormComponentPanel extends FormComponent
 	 * 
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
@@ -205,6 +211,7 @@ public abstract class FormComponentPanel extends FormComponent
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Render the associated markup

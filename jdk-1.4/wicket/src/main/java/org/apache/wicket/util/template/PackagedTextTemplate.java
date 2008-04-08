@@ -19,10 +19,10 @@ package org.apache.wicket.util.template;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -70,11 +70,11 @@ public class PackagedTextTemplate extends TextTemplate
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Map cache = new ConcurrentHashMap();
+		private final Map<CachedTextTemplateKey, CachedTextTemplate> cache = new ConcurrentHashMap<CachedTextTemplateKey, CachedTextTemplate>();
 
 		CachedTextTemplate get(CachedTextTemplateKey key)
 		{
-			return (CachedTextTemplate)cache.get(key);
+			return cache.get(key);
 		}
 
 		void put(CachedTextTemplateKey key, CachedTextTemplate value)
@@ -91,8 +91,8 @@ public class PackagedTextTemplate extends TextTemplate
 	/** class loader stream locator. */
 	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();
 
-	private static final MetaDataKey TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey(
-			TextTemplateCache.class)
+	private static final MetaDataKey<TextTemplateCache> TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey<TextTemplateCache>(
+		TextTemplateCache.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -144,7 +144,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            the file's encoding, for example, "<code>UTF-8</code>"
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType,
-			final String encoding)
+		final String encoding)
 	{
 		super(contentType);
 
@@ -159,7 +159,7 @@ public class PackagedTextTemplate extends TextTemplate
 		if (stream == null)
 		{
 			throw new IllegalArgumentException("resource " + fileName + " not found for scope " +
-					clazz + " (path = " + path + ")");
+				clazz + " (path = " + path + ")");
 		}
 
 		try
@@ -197,6 +197,7 @@ public class PackagedTextTemplate extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	public String getString()
 	{
 		if (Application.get().getResourceSettings().getStripJavascriptCommentsAndWhitespace())
@@ -226,6 +227,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            a <code>Map</code> of variables to interpolate
 	 * @return this for chaining
 	 */
+	@Override
 	public final TextTemplate interpolate(Map variables)
 	{
 		if (variables != null)
@@ -240,6 +242,7 @@ public class PackagedTextTemplate extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public final long length()
 	{
 		return buffer.length();

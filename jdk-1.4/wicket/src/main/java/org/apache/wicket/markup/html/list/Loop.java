@@ -35,8 +35,9 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
  */
-public abstract class Loop extends AbstractRepeater
+public abstract class Loop extends AbstractRepeater<Integer>
 {
 	/**
 	 * 
@@ -87,7 +88,7 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	public Loop(final String id, final int iterations)
 	{
-		super(id, new Model(new Integer(iterations)));
+		super(id, new Model<Integer>(new Integer(iterations)));
 	}
 
 	/**
@@ -99,7 +100,7 @@ public abstract class Loop extends AbstractRepeater
 	 *            Must contain a Integer model object
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Loop(final String id, final IModel model)
+	public Loop(final String id, final IModel<Integer> model)
 	{
 		super(id, model);
 	}
@@ -109,12 +110,13 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	public final int getIterations()
 	{
-		return ((Integer)getModelObject()).intValue();
+		return (getModelObject()).intValue();
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected final void onPopulate()
 	{
 		// Remove any previous loop contents
@@ -153,6 +155,7 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
+	@Override
 	protected Iterator renderIterator()
 	{
 		final int iterations = size();
@@ -185,6 +188,7 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @param child
 	 */
+	@Override
 	protected final void renderChild(Component child)
 	{
 		renderItem((LoopItem)child);

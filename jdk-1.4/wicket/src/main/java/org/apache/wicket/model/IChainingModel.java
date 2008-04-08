@@ -31,23 +31,26 @@ package org.apache.wicket.model;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            The Model object type
+ * 
  * @see CompoundPropertyModel
  * @see AbstractPropertyModel
  */
-public interface IChainingModel extends IModel
+public interface IChainingModel<T> extends IModel<T>
 {
 	/**
 	 * Sets the model that is chained inside this model.
 	 * 
 	 * @param model
 	 */
-	public void setChainedModel(IModel model);
+	public void setChainedModel(IModel< ? > model);
 
 	/**
 	 * Returns the chained model if there is a chained model.
 	 * 
 	 * @return The chained model
 	 */
-	public IModel getChainedModel();
+	public IModel< ? > getChainedModel();
 
 }

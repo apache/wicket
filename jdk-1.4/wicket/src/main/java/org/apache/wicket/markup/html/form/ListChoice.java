@@ -29,8 +29,11 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class ListChoice extends DropDownChoice
+public class ListChoice<T> extends DropDownChoice<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -72,7 +75,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListChoice(final String id, final List choices)
+	public ListChoice(final String id, final List<T> choices)
 	{
 		this(id, null, choices, null, defaultMaxRows);
 	}
@@ -87,7 +90,7 @@ public class ListChoice extends DropDownChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	public ListChoice(final String id, final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		this(id, null, choices, renderer, defaultMaxRows);
 	}
@@ -102,7 +105,7 @@ public class ListChoice extends DropDownChoice
 	 *            The collection of values in the list
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final List choices)
+	public ListChoice(final String id, final IModel<T> model, final List<T> choices)
 	{
 		this(id, model, choices, null, defaultMaxRows);
 	}
@@ -118,7 +121,8 @@ public class ListChoice extends DropDownChoice
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final List choices, final int maxRows)
+	public ListChoice(final String id, final IModel<T> model, final List<T> choices,
+		final int maxRows)
 	{
 		this(id, model, choices, null, maxRows);
 	}
@@ -134,8 +138,8 @@ public class ListChoice extends DropDownChoice
 	 *            See AbstractChoice
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final List choices,
-		final IChoiceRenderer renderer)
+	public ListChoice(final String id, final IModel<T> model, final List<T> choices,
+		final IChoiceRenderer<T> renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
 	}
@@ -153,8 +157,8 @@ public class ListChoice extends DropDownChoice
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final List choices,
-		final IChoiceRenderer renderer, final int maxRows)
+	public ListChoice(final String id, final IModel<T> model, final List<T> choices,
+		final IChoiceRenderer<T> renderer, final int maxRows)
 	{
 		super(id, model, choices, renderer);
 		this.maxRows = maxRows;
@@ -163,7 +167,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public ListChoice(String id, IModel choices)
+	public ListChoice(String id, IModel<List<T>> choices)
 	{
 		this(id, null, choices, null, defaultMaxRows);
 	}
@@ -171,7 +175,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public ListChoice(String id, IModel model, IModel choices)
+	public ListChoice(String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		this(id, model, choices, null, defaultMaxRows);
 	}
@@ -180,7 +184,7 @@ public class ListChoice extends DropDownChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public ListChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		this(id, null, choices, renderer, defaultMaxRows);
 	}
@@ -190,7 +194,8 @@ public class ListChoice extends DropDownChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public ListChoice(String id, IModel<T> model, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
 	}
@@ -199,7 +204,8 @@ public class ListChoice extends DropDownChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer, int maxRows)
+	public ListChoice(String id, IModel<T> model, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer, int maxRows)
 	{
 		super(id, model, choices, renderer);
 		this.maxRows = maxRows;
@@ -222,7 +228,7 @@ public class ListChoice extends DropDownChoice
 	 *            the maximum number of rows to display
 	 * @return This
 	 */
-	public final ListChoice setMaxRows(int maxRows)
+	public final ListChoice<T> setMaxRows(int maxRows)
 	{
 		this.maxRows = maxRows;
 		return this;
@@ -231,6 +237,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -243,6 +250,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return true;

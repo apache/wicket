@@ -57,8 +57,10 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg
  * 
+ * @param <T>
+ *            The model object type
  */
-public class CheckGroup extends FormComponent implements IOnChangeListener
+public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -83,7 +85,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 *            collection to be used as the model
 	 * 
 	 */
-	public CheckGroup(String id, Collection collection)
+	public CheckGroup(String id, Collection<T> collection)
 	{
 		this(id, new Model((Serializable)collection));
 	}
@@ -91,7 +93,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public CheckGroup(String id, IModel model)
+	public CheckGroup(String id, IModel<Collection<T>> model)
 	{
 		super(id, model);
 		setRenderBodyOnly(true);
@@ -100,9 +102,10 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] values) throws ConversionException
+	@Override
+	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{
-		List collection = new ArrayList();
+		List<T> collection = new ArrayList<T>();
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already
@@ -117,35 +120,32 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 				if (value != null)
 				{
-					Check checkbox = (Check)visitChildren(new Component.IVisitor()
-					{
-
-						public Object component(Component component)
+					Check<T> checkbox = (Check<T>)visitChildren(Check.class,
+						new Component.IVisitor<Check>()
 						{
-							if (component instanceof Check)
+
+							public Object component(Check check)
 							{
-								final Check check = (Check)component;
 								if (String.valueOf(check.getValue()).equals(value))
 								{
 									return check;
 								}
+								return CONTINUE_TRAVERSAL;
 							}
-							return CONTINUE_TRAVERSAL;
-						}
 
-					});
+						});
 
 					if (checkbox == null)
 					{
 						throw new WicketRuntimeException(
-								"submitted http post value [" +
-										Strings.join(",", values) +
-										"] for CheckGroup component [" +
-										getPath() +
-										"] contains an illegal relative path " +
-										"element [" +
-										value +
-										"] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+							"submitted http post value [" +
+								Strings.join(",", values) +
+								"] for CheckGroup component [" +
+								getPath() +
+								"] contains an illegal relative path " +
+								"element [" +
+								value +
+								"] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 					}
 
 					// assign the value of the group's model
@@ -159,19 +159,20 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
-		Collection collection = (Collection)getModelObject();
+		Collection collection = getModelObject();
 		if (collection == null)
 		{
-			collection = (Collection)getConvertedInput();
+			collection = getConvertedInput();
 			setModelObject(collection);
 		}
 		else
 		{
 			modelChanging();
 			collection.clear();
-			collection.addAll((Collection)getConvertedInput());
+			collection.addAll(getConvertedInput());
 			modelChanged();
 		}
 	}
@@ -181,6 +182,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return false;
@@ -189,6 +191,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -204,7 +207,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged((Collection)getModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -237,6 +240,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())

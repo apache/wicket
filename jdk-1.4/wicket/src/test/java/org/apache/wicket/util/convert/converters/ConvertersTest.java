@@ -106,6 +106,14 @@ public final class ConvertersTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 *             WICKET-1344 public void testBigDecimalRounding() throws Exception {
+	 *             BigDecimalConverter bdc = new BigDecimalConverter(); assertEquals("123.45",
+	 *             bdc.convertToObject("123.45", Locale.ENGLISH).toString());
+	 *  }
+	 */
+
+	/**
 	 * Test boolean conversions.
 	 */
 	public void testBooleanConversions()

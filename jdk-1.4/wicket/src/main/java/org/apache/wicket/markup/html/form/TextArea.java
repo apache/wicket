@@ -24,8 +24,11 @@ import org.apache.wicket.model.IModel;
  * Multi-row text editing component.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class TextArea extends AbstractTextComponent
+public class TextArea<T> extends AbstractTextComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +43,7 @@ public class TextArea extends AbstractTextComponent
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public TextArea(final String id, final IModel model)
+	public TextArea(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -54,8 +57,9 @@ public class TextArea extends AbstractTextComponent
 	 *            The open tag for the body
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		final ComponentTag openTag)
 	{
 		checkComponentTag(openTag, "textarea");
 		replaceComponentTagBody(markupStream, openTag, getValue());

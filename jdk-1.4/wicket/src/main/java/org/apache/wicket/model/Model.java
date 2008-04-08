@@ -34,13 +34,16 @@ import org.apache.wicket.WicketRuntimeException;
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            The Model Object
  */
-public class Model implements IModel
+public class Model<T extends Serializable> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Backing object. */
-	private Serializable object;
+	private T object;
 
 	/**
 	 * Construct the model without providing an object.
@@ -55,7 +58,7 @@ public class Model implements IModel
 	 * @param object
 	 *            The model object proper
 	 */
-	public Model(final Serializable object)
+	public Model(final T object)
 	{
 		setObject(object);
 	}
@@ -65,7 +68,7 @@ public class Model implements IModel
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	public static Model valueOf(final Map map)
+	public static Model< ? > valueOf(final Map map)
 	{
 		return new Model(map instanceof Serializable ? (Serializable)map : new HashMap(map));
 	}
@@ -83,7 +86,7 @@ public class Model implements IModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	public T getObject()
 	{
 		return object;
 	}
@@ -96,7 +99,7 @@ public class Model implements IModel
 	 *            the model object
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
-	public void setObject(final Object object)
+	public void setObject(final T object)
 	{
 		if (object != null)
 		{
@@ -105,18 +108,6 @@ public class Model implements IModel
 				throw new WicketRuntimeException("Model object must be Serializable");
 			}
 		}
-		setObject((Serializable)object);
-	}
-
-	/**
-	 * Sets the model object. The model object must be serializable, as it is stored in the session
-	 * 
-	 * @param object
-	 *            The serializable model object
-	 * @see org.apache.wicket.model.IModel#setObject(Object)
-	 */
-	public void setObject(final Serializable object)
-	{
 		this.object = object;
 	}
 
@@ -130,6 +121,7 @@ public class Model implements IModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
@@ -145,6 +137,7 @@ public class Model implements IModel
 	 * @return
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
+	@Deprecated
 	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
@@ -155,6 +148,7 @@ public class Model implements IModel
 	 * @param object
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
+	@Deprecated
 	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();

@@ -19,13 +19,13 @@ package org.apache.wicket.injection;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
@@ -42,7 +42,7 @@ public class Injector
 	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying;
 	// hangs onto Class references.
 	// We need some way to clean out this hashmap when we're done.
-	private ConcurrentHashMap/* <Class, Field[]> */classToFields = new ConcurrentHashMap();
+	private ConcurrentHashMap<Class, Field[]> classToFields = new ConcurrentHashMap<Class, Field[]>();
 
 	/**
 	 * @return static instance of ProxyInjector
@@ -66,7 +66,7 @@ public class Injector
 	protected boolean isBoundaryClass(Class clazz)
 	{
 		if (clazz.equals(WebPage.class) || clazz.equals(Page.class) || clazz.equals(Panel.class) ||
-				clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
+			clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
 		{
 			return true;
 		}
@@ -116,12 +116,12 @@ public class Injector
 			catch (IllegalArgumentException e)
 			{
 				throw new RuntimeException("error while injecting object [" + object.toString() +
-						"] of type [" + object.getClass().getName() + "]", e);
+					"] of type [" + object.getClass().getName() + "]", e);
 			}
 			catch (IllegalAccessException e)
 			{
 				throw new RuntimeException("error while injecting object [" + object.toString() +
-						"] of type [" + object.getClass().getName() + "]", e);
+					"] of type [" + object.getClass().getName() + "]", e);
 			}
 		}
 

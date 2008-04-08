@@ -27,8 +27,13 @@ import org.apache.wicket.version.undo.Change;
  * Abstract class for links that are capable of submitting a form.
  * 
  * @author Matej Knopp
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
+public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
+	implements
+		IFormSubmittingComponent
 {
 	/**
 	 * 
@@ -51,7 +56,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 * @param id
 	 * @param model
 	 */
-	public AbstractSubmitLink(String id, IModel model)
+	public AbstractSubmitLink(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -74,7 +79,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 * @param model
 	 * @param form
 	 */
-	public AbstractSubmitLink(String id, IModel model, Form form)
+	public AbstractSubmitLink(String id, IModel<T> model, Form form)
 	{
 		super(id, model);
 		this.form = form;
@@ -104,7 +109,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 *            defaultFormProcessing
 	 * @return This
 	 */
-	public final AbstractSubmitLink setDefaultFormProcessing(boolean defaultFormProcessing)
+	public final AbstractSubmitLink<T> setDefaultFormProcessing(boolean defaultFormProcessing)
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
 		{
@@ -114,11 +119,13 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 
 				boolean formerValue = AbstractSubmitLink.this.defaultFormProcessing;
 
+				@Override
 				public void undo()
 				{
 					AbstractSubmitLink.this.defaultFormProcessing = formerValue;
 				}
 
+				@Override
 				public String toString()
 				{
 					return "DefaultFormProcessingChange[component: " + getPath() +

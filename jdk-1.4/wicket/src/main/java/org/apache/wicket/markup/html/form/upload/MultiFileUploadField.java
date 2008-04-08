@@ -163,6 +163,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -176,6 +177,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -208,6 +210,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
+	@Override
 	public String[] getInputAsArray()
 	{
 		// fake the input array as if it contained an array of all uploaded file
@@ -258,6 +261,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
 	 */
+	@Override
 	protected Object convertValue(String[] value) throws ConversionException
 	{
 		// convert the array of filenames into a collection of FileItems
@@ -285,6 +289,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		final Object object = getModelObject();
@@ -326,6 +331,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		// cleanup any opened filestreams
@@ -358,7 +364,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	 * 
 	 * @author ivaynberg
 	 */
-	private class CaptionModel extends AbstractReadOnlyModel
+	private class CaptionModel extends AbstractReadOnlyModel<String>
 	{
 
 		private static final long serialVersionUID = 1L;
@@ -366,7 +372,8 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		/**
 		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 		 */
-		public Object getObject()
+		@Override
+		public String getObject()
 		{
 			if (max == UNLIMITED)
 			{

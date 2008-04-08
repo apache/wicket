@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jonathan Locke
  */
-public class PasswordTextField extends TextField
+public class PasswordTextField extends TextField<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public PasswordTextField(final String id, IModel model)
+	public PasswordTextField(final String id, IModel<String> model)
 	{
 		super(id, model);
 		setRequired(true);
@@ -102,6 +102,7 @@ public class PasswordTextField extends TextField
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -114,6 +115,7 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see org.apache.wicket.markup.html.form.TextField#getInputType()
 	 */
+	@Override
 	protected String getInputType()
 	{
 		return "password";
@@ -122,6 +124,7 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent#supportsPersistence()
 	 */
+	@Override
 	protected boolean supportsPersistence()
 	{
 		return false;

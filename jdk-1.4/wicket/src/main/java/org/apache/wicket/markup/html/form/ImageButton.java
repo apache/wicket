@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Resource;
 import org.apache.wicket.ResourceReference;
@@ -93,7 +92,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            The resource parameters
 	 */
 	public ImageButton(final String id, final ResourceReference resourceReference,
-			ValueMap resourceParameters)
+		ValueMap resourceParameters)
 	{
 		super(id);
 		setImageResourceReference(resourceReference, resourceParameters);
@@ -172,7 +171,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Set the resource parameters for the resource.
 	 */
 	public void setImageResourceReference(final ResourceReference resourceReference,
-			final ValueMap parameters)
+		final ValueMap parameters)
 	{
 		localizedImageResource.setResourceReference(resourceReference, parameters);
 	}
@@ -180,13 +179,14 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
-	public Component setModel(IModel model)
+	@Override
+	public ImageButton setModel(IModel model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
 		localizedImageResource.setResourceReference(null);
 		localizedImageResource.setResource(null);
-		return super.setModel(model);
+		return (ImageButton)super.setModel(model);
 	}
 
 	/**
@@ -212,6 +212,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");
@@ -234,6 +235,7 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.Button#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return getImageResource() == null && localizedImageResource.isStateless();

@@ -35,8 +35,10 @@ import org.apache.wicket.util.lang.Objects;
  * @author Igor Vaynberg
  * @author Sven Meier (svenmeier)
  * 
+ * @param <T>
+ *            The model object type
  */
-public class Radio extends LabeledWebMarkupContainer
+public class Radio<T> extends LabeledWebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 	private static final String ATTR_DISABLED = "disabled";
@@ -58,7 +60,7 @@ public class Radio extends LabeledWebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Radio(String id, IModel model)
+	public Radio(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -85,6 +87,7 @@ public class Radio extends LabeledWebMarkupContainer
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for component tag
@@ -100,9 +103,9 @@ public class Radio extends LabeledWebMarkupContainer
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
-					"Radio component [" +
-							getPath() +
-							"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+				"Radio component [" +
+					getPath() +
+					"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 
@@ -150,8 +153,8 @@ public class Radio extends LabeledWebMarkupContainer
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
-						"=' + this.value;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+					"=' + this.value;");
 			}
 		}
 
@@ -169,7 +172,7 @@ public class Radio extends LabeledWebMarkupContainer
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public Radio setLabel(IModel labelModel)
+	public Radio<T> setLabel(IModel labelModel)
 	{
 		setLabelInternal(labelModel);
 		return this;

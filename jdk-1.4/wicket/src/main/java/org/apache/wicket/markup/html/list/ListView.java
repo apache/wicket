@@ -100,8 +100,11 @@ import org.apache.wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Johan Compagner
  * @author Eelco Hillenius
+ * 
+ * @param <T>
+ *            Model object type
  */
-public abstract class ListView extends AbstractRepeater
+public abstract class ListView<T> extends AbstractRepeater<List<T>>
 {
 	/**
 	 * 
@@ -134,7 +137,7 @@ public abstract class ListView extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel model)
+	public ListView(final String id, final IModel<List<T>> model)
 	{
 		super(id, model);
 
@@ -156,7 +159,7 @@ public abstract class ListView extends AbstractRepeater
 	 *            List to cast to Serializable
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List list)
+	public ListView(final String id, final List<T> list)
 	{
 		this(id, new Model((Serializable)list));
 	}
@@ -168,12 +171,12 @@ public abstract class ListView extends AbstractRepeater
 	 * 
 	 * @return The list of items in this list view.
 	 */
-	public final List getList()
+	public final List<T> getList()
 	{
-		final List list = (List)getModelObject();
+		final List<T> list = getModelObject();
 		if (list == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}
@@ -259,6 +262,7 @@ public abstract class ListView extends AbstractRepeater
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
@@ -270,6 +274,7 @@ public abstract class ListView extends AbstractRepeater
 
 						final int oldIndex = index;
 
+						@Override
 						public void undo()
 						{
 							Collections.swap(getList(), oldIndex + 1, oldIndex);
@@ -286,6 +291,7 @@ public abstract class ListView extends AbstractRepeater
 			/**
 			 * @see org.apache.wicket.Component#onBeforeRender()
 			 */
+			@Override
 			protected void onBeforeRender()
 			{
 				super.onBeforeRender();
@@ -315,6 +321,7 @@ public abstract class ListView extends AbstractRepeater
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
@@ -327,6 +334,7 @@ public abstract class ListView extends AbstractRepeater
 
 						final int oldIndex = index;
 
+						@Override
 						public void undo()
 						{
 							Collections.swap(getList(), oldIndex - 1, oldIndex);
@@ -343,6 +351,7 @@ public abstract class ListView extends AbstractRepeater
 			/**
 			 * @see org.apache.wicket.Component#onBeforeRender()
 			 */
+			@Override
 			protected void onBeforeRender()
 			{
 				super.onBeforeRender();
@@ -363,7 +372,7 @@ public abstract class ListView extends AbstractRepeater
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String id, final ListItem item)
+	public final Link removeLink(final String id, final ListItem<T> item)
 	{
 		return new Link(id)
 		{
@@ -372,6 +381,7 @@ public abstract class ListView extends AbstractRepeater
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				addStateChange(new Change()
@@ -379,8 +389,9 @@ public abstract class ListView extends AbstractRepeater
 					private static final long serialVersionUID = 1L;
 
 					final int oldIndex = getList().indexOf(item.getModelObject());
-					final Object removedObject = item.getModelObject();
+					final T removedObject = item.getModelObject();
 
+					@Override
 					public void undo()
 					{
 						getList().add(oldIndex, removedObject);
@@ -407,7 +418,7 @@ public abstract class ListView extends AbstractRepeater
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public Component setList(List list)
+	public ListView<T> setList(List<T> list)
 	{
 		return setModel(new Model((Serializable)list));
 	}
@@ -422,9 +433,10 @@ public abstract class ListView extends AbstractRepeater
 	 * 
 	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
 	 */
-	public Component setModel(IModel model)
+	@Override
+	public ListView<T> setModel(IModel<List<T>> model)
 	{
-		return super.setModel(model);
+		return (ListView)super.setModel(model);
 	}
 
 	/**
@@ -438,7 +450,7 @@ public abstract class ListView extends AbstractRepeater
 	 *            Whether to reuse the child items.
 	 * @return this
 	 */
-	public ListView setReuseItems(boolean reuseItems)
+	public ListView<T> setReuseItems(boolean reuseItems)
 	{
 		this.reuseItems = reuseItems;
 		return this;
@@ -451,7 +463,7 @@ public abstract class ListView extends AbstractRepeater
 	 *            First index of model object's list to display
 	 * @return This
 	 */
-	public ListView setStartIndex(final int startIndex)
+	public ListView<T> setStartIndex(final int startIndex)
 	{
 		firstIndex = startIndex;
 
@@ -474,7 +486,7 @@ public abstract class ListView extends AbstractRepeater
 	 *            Number of items to display
 	 * @return This
 	 */
-	public ListView setViewSize(final int size)
+	public ListView<T> setViewSize(final int size)
 	{
 		viewSize = size;
 
@@ -499,9 +511,9 @@ public abstract class ListView extends AbstractRepeater
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel getListItemModel(final IModel listViewModel, final int index)
+	protected IModel<T> getListItemModel(final IModel<List<T>> listViewModel, final int index)
 	{
-		return new ListItemModel(this, index);
+		return new ListItemModel<T>(this, index);
 	}
 
 	/**
@@ -510,14 +522,15 @@ public abstract class ListView extends AbstractRepeater
 	 * @param index
 	 * @return ListItem
 	 */
-	protected ListItem newItem(final int index)
+	protected ListItem<T> newItem(final int index)
 	{
-		return new ListItem(index, getListItemModel(getModel(), index));
+		return new ListItem<T>(index, getListItemModel(getModel(), index));
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
 	 */
+	@Override
 	protected final void onPopulate()
 	{
 		// Get number of items to be displayed
@@ -528,10 +541,10 @@ public abstract class ListView extends AbstractRepeater
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
-				for (final Iterator iterator = iterator(); iterator.hasNext();)
+				for (final Iterator<Component> iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
-					final ListItem child = (ListItem)iterator.next();
+					final ListItem<T> child = (ListItem<T>)iterator.next();
 					if (child != null)
 					{
 						final int index = child.getIndex();
@@ -588,7 +601,7 @@ public abstract class ListView extends AbstractRepeater
 	 * 
 	 * @param item
 	 */
-	protected void onBeginPopulateItem(final ListItem item)
+	protected void onBeginPopulateItem(final ListItem<T> item)
 	{
 	}
 
@@ -612,14 +625,15 @@ public abstract class ListView extends AbstractRepeater
 	 * @param item
 	 *            The item to populate
 	 */
-	protected abstract void populateItem(final ListItem item);
+	protected abstract void populateItem(final ListItem<T> item);
 
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
 	 */
+	@Override
 	protected final void renderChild(Component child)
 	{
-		renderItem((ListItem)child);
+		renderItem((ListItem<T>)child);
 	}
 
 
@@ -629,7 +643,7 @@ public abstract class ListView extends AbstractRepeater
 	 * @param item
 	 *            The item to be rendered
 	 */
-	protected void renderItem(final ListItem item)
+	protected void renderItem(final ListItem<T> item)
 	{
 		item.render(getMarkupStream());
 	}
@@ -637,7 +651,8 @@ public abstract class ListView extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
-	protected Iterator renderIterator()
+	@Override
+	protected Iterator<Component> renderIterator()
 	{
 
 		final int size = size();

@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import java.util.List;
-
 import org.apache.wicket.model.IModel;
 
 /**
  * Model for list items.
+ * 
+ * @param <T>
+ *            Model object type
+ * 
  */
-public class ListItemModel implements IModel
+public class ListItemModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The ListView itself */
-	private final ListView listView;
+	private final ListView<T> listView;
 
 	/** The list item's index */
 	private final int index;
@@ -41,7 +43,7 @@ public class ListItemModel implements IModel
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final ListView listView, final int index)
+	public ListItemModel(final ListView<T> listView, final int index)
 	{
 		this.listView = listView;
 		this.index = index;
@@ -50,17 +52,17 @@ public class ListItemModel implements IModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	public T getObject()
 	{
-		return ((List)listView.getModelObject()).get(index);
+		return listView.getModelObject().get(index);
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(T object)
 	{
-		((List)listView.getModelObject()).set(index, object);
+		listView.getModelObject().set(index, object);
 	}
 
 	/**

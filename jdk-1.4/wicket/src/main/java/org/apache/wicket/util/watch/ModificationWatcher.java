@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.thread.ICode;
@@ -45,7 +45,7 @@ public final class ModificationWatcher
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
 	/** maps <code>IModifiable</code> objects to <code>Entry</code> objects */
-	private final Map modifiableToEntry = new ConcurrentHashMap();
+	private final Map<IModifiable, Entry> modifiableToEntry = new ConcurrentHashMap<IModifiable, Entry>();
 
 	/** the <code>Task</code> to run */
 	private Task task;
@@ -97,7 +97,7 @@ public final class ModificationWatcher
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
-		final Entry entry = (Entry)modifiableToEntry.get(modifiable);
+		final Entry entry = modifiableToEntry.get(modifiable);
 
 		// Found it?
 		if (entry == null)
@@ -138,7 +138,7 @@ public final class ModificationWatcher
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
-		final Entry entry = (Entry)modifiableToEntry.remove(modifiable);
+		final Entry entry = modifiableToEntry.remove(modifiable);
 		if (entry != null)
 		{
 			return entry.modifiable;
@@ -165,11 +165,10 @@ public final class ModificationWatcher
 				// concurrent
 				// modification problems without the associated liveness issues
 				// of holding a lock while potentially polling file times!
-				for (final Iterator iterator = new ArrayList(modifiableToEntry.values()).iterator(); iterator
-					.hasNext();)
+				for (final Iterator<Entry> iterator = new ArrayList<Entry>(modifiableToEntry.values()).iterator(); iterator.hasNext();)
 				{
 					// Get next entry
-					final Entry entry = (Entry)iterator.next();
+					final Entry entry = iterator.next();
 
 					// If the modifiable has been modified after the last known
 					// modification time
@@ -205,7 +204,7 @@ public final class ModificationWatcher
 	 * 
 	 * @return a <code>Set</code> of all <code>IModifiable</code> entries currently maintained
 	 */
-	public final Set getEntries()
+	public final Set<IModifiable> getEntries()
 	{
 		return modifiableToEntry.keySet();
 	}

@@ -23,8 +23,11 @@ import org.apache.wicket.IClusterable;
  * values' which are the values shown to the user of components that use this renderer.
  * 
  * @author jcompagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public interface IChoiceRenderer extends IClusterable
+public interface IChoiceRenderer<T> extends IClusterable
 {
 	/**
 	 * Get the value for displaying to an end user.
@@ -33,7 +36,7 @@ public interface IChoiceRenderer extends IClusterable
 	 *            the actual object
 	 * @return the value meant for displaying to an end user
 	 */
-	Object getDisplayValue(Object object);
+	Object getDisplayValue(T object);
 
 	/**
 	 * This method is called to get the id value of an object (used as the value attribute of a
@@ -46,5 +49,5 @@ public interface IChoiceRenderer extends IClusterable
 	 *            The index of the object in the choices list.
 	 * @return String
 	 */
-	String getIdValue(Object object, int index);
+	String getIdValue(T object, int index);
 }

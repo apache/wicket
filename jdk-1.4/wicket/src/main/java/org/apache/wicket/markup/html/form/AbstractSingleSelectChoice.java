@@ -29,8 +29,11 @@ import org.apache.wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AbstractSingleSelectChoice extends AbstractChoice
+public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
 	/**
 	 * 
@@ -58,7 +61,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, final List choices)
+	public AbstractSingleSelectChoice(final String id, final List<T> choices)
 	{
 		super(id, choices);
 	}
@@ -69,8 +72,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, final List data,
-		final IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(final String id, final List<T> data,
+		final IChoiceRenderer<T> renderer)
 	{
 		super(id, data, renderer);
 	}
@@ -78,7 +81,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model, final List data)
+	public AbstractSingleSelectChoice(final String id, IModel<T> model, final List<T> data)
 	{
 		super(id, model, data);
 	}
@@ -90,8 +93,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model, final List data,
-		final IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(final String id, IModel<T> model, final List<T> data,
+		final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, data, renderer);
 	}
@@ -99,7 +102,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel choices)
+	public AbstractSingleSelectChoice(String id, IModel<List<T>> choices)
 	{
 		super(id, choices);
 	}
@@ -107,7 +110,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel model, IModel choices)
+	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -116,7 +119,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(String id, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -126,8 +130,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel model, IModel choices,
-		IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -135,9 +139,10 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
+	@Override
 	public String getModelValue()
 	{
-		final Object object = getModelObject();
+		final T object = getModelObject();
 		if (object != null)
 		{
 			int index = getChoices().indexOf(object);
@@ -169,7 +174,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 *            whether null is a valid value
 	 * @return this for chaining
 	 */
-	public AbstractSingleSelectChoice setNullValid(boolean nullValid)
+	public AbstractSingleSelectChoice<T> setNullValid(boolean nullValid)
 	{
 		this.nullValid = nullValid;
 		return this;
@@ -178,7 +183,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected final Object convertValue(final String[] value)
+	@Override
+	protected final T convertValue(final String[] value)
 	{
 		String tmp = value != null && value.length > 0 ? value[0] : null;
 		return convertChoiceIdToChoice(tmp);
@@ -191,14 +197,14 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 *            string id of one of the choice objects in the choices list. can be null.
 	 * @return choice object. null if none match the specified id.
 	 */
-	protected Object convertChoiceIdToChoice(String id)
+	protected T convertChoiceIdToChoice(String id)
 	{
-		final List choices = getChoices();
-		final IChoiceRenderer renderer = getChoiceRenderer();
+		final List<T> choices = getChoices();
+		final IChoiceRenderer<T> renderer = getChoiceRenderer();
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
-			final Object choice = choices.get(index);
+			final T choice = choices.get(index);
 			if (renderer.getIdValue(choice, index).equals(id))
 			{
 				return choice;
@@ -221,6 +227,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
+	@Override
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
 		// Is null a valid selection value?
@@ -283,7 +290,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 *            The current selected id value
 	 * @return Whether the given value represents the current selection
 	 */
-	protected boolean isSelected(final Object object, int index, String selected)
+	@Override
+	protected boolean isSelected(final T object, int index, String selected)
 	{
 		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));
 	}

@@ -24,8 +24,11 @@ import org.apache.wicket.Component;
  * and are read-only.
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * 
+ * @param <T>
+ *            The model object
  */
-public abstract class AbstractReadOnlyModel implements IModel
+public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 {
 
 	/**
@@ -36,7 +39,7 @@ public abstract class AbstractReadOnlyModel implements IModel
 	/**
 	 * @see IModel#getObject()
 	 */
-	public abstract Object getObject();
+	public abstract T getObject();
 
 	/**
 	 * This default implementation of setObject unconditionally throws an
@@ -47,15 +50,16 @@ public abstract class AbstractReadOnlyModel implements IModel
 	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
-	public final void setObject(final Object object)
+	public final void setObject(final T object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass() +
-				" does not support setObject(Object)");
+			" does not support setObject(Object)");
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
@@ -77,6 +81,7 @@ public abstract class AbstractReadOnlyModel implements IModel
 	 * @return
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
+	@Deprecated
 	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();

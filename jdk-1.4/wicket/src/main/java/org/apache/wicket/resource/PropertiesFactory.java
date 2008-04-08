@@ -23,10 +23,10 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
@@ -58,10 +58,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	/**
 	 * Listeners will be invoked after changes to property file have been detected
 	 */
-	private final List afterReloadListeners = new ArrayList();
+	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<IPropertiesChangeListener>();
 
 	/** Cache for all property files loaded */
-	private final Map propertiesCache = new ConcurrentHashMap();
+	private final Map<String, Properties> propertiesCache = new ConcurrentHashMap<String, Properties>();
 
 	/** Application */
 	private final Application application;
@@ -104,7 +104,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	public Properties load(final Class clazz, final String path)
 	{
 		// Check the cache
-		Properties properties = (Properties)propertiesCache.get(path);
+		Properties properties = propertiesCache.get(path);
 
 		if (properties == null)
 		{
@@ -155,7 +155,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		// Make sure someone else didn't load our resources while we were
 		// waiting for the synchronized lock on the method
-		Properties props = (Properties)propertiesCache.get(key);
+		Properties props = propertiesCache.get(key);
 		if (props != null)
 		{
 			return props;
@@ -267,10 +267,10 @@ public class PropertiesFactory implements IPropertiesFactory
 					application.getResourceSettings().getLocalizer().clearCache();
 
 					// Inform all listeners
-					Iterator iter = afterReloadListeners.iterator();
+					Iterator<IPropertiesChangeListener> iter = afterReloadListeners.iterator();
 					while (iter.hasNext())
 					{
-						IPropertiesChangeListener listener = (IPropertiesChangeListener)iter.next();
+						IPropertiesChangeListener listener = iter.next();
 						try
 						{
 							listener.propertiesChanged(key);
@@ -294,7 +294,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * 
 	 * @return Map
 	 */
-	protected final Map getCache()
+	protected final Map<String, Properties> getCache()
 	{
 		return propertiesCache;
 	}

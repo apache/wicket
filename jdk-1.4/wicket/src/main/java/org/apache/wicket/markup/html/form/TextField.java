@@ -23,8 +23,11 @@ import org.apache.wicket.model.IModel;
  * A simple text field.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class TextField extends AbstractTextComponent
+public class TextField<T> extends AbstractTextComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +45,7 @@ public class TextField extends AbstractTextComponent
 	 * @param type
 	 *            Type for field validation
 	 */
-	public TextField(final String id, final Class type)
+	public TextField(final String id, final Class<T> type)
 	{
 		super(id);
 		setType(type);
@@ -51,7 +54,7 @@ public class TextField extends AbstractTextComponent
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String id, final IModel object)
+	public TextField(final String id, final IModel<T> object)
 	{
 		super(id, object);
 	}
@@ -65,7 +68,7 @@ public class TextField extends AbstractTextComponent
 	 *            The type to use when updating the model for this text field
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String id, IModel model, Class type)
+	public TextField(final String id, IModel<T> model, Class<T> type)
 	{
 		super(id, model);
 		setType(type);
@@ -78,6 +81,7 @@ public class TextField extends AbstractTextComponent
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Must be attached to an input tag

@@ -24,10 +24,13 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * This enables direct usage of inherited models such as compound property models.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The Model object
  */
-public class ComponentPropertyModel extends AbstractReadOnlyModel
+public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 	implements
-		IComponentAssignedModel
+		IComponentAssignedModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +51,8 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 	 */
-	public Object getObject()
+	@Override
+	public T getObject()
 	{
 		throw new IllegalStateException("Wrapper should have been called");
 	}
@@ -56,23 +60,27 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel wrapOnAssignment(final Component component)
+	public IWrapModel<T> wrapOnAssignment(final Component<T> component)
 	{
-		return new AssignmentWrapper(component, propertyName);
+		return new AssignmentWrapper<T>(component, propertyName);
 	}
 
 	/**
 	 * Wrapper used when assigning a ComponentPropertyModel to a component.
+	 * 
+	 * @param
+	 * <P>
+	 * The Model Object
 	 */
-	private class AssignmentWrapper extends AbstractReadOnlyModel implements IWrapModel
+	private class AssignmentWrapper<P> extends AbstractReadOnlyModel<P> implements IWrapModel<P>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component component;
+		private final Component<P> component;
 
 		private final String propertyName;
 
-		AssignmentWrapper(final Component component, final String propertyName)
+		AssignmentWrapper(final Component<P> component, final String propertyName)
 		{
 			this.component = component;
 			this.propertyName = propertyName;
@@ -81,7 +89,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getWrappedModel()
+		public IModel<T> getWrappedModel()
 		{
 			return ComponentPropertyModel.this;
 		}
@@ -91,13 +99,16 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 			return propertyName;
 		}
 
-		public Object getObject()
+		@SuppressWarnings("unchecked")
+		@Override
+		public P getObject()
 		{
-			return PropertyResolver.getValue(propertyName, component.getParent()
+			return (P)PropertyResolver.getValue(propertyName, component.getParent()
 				.getInnermostModel()
 				.getObject());
 		}
 
+		@Override
 		public void detach()
 		{
 			super.detach();

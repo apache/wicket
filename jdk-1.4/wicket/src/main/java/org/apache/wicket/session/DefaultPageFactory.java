@@ -19,6 +19,7 @@ package org.apache.wicket.session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IPageFactory;
@@ -27,7 +28,6 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -42,7 +42,7 @@ import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 public final class DefaultPageFactory implements IPageFactory
 {
 	/** Map of Constructors for Page subclasses */
-	private final Map constructorForClass = new ConcurrentHashMap();
+	private final Map<Class, Constructor> constructorForClass = new ConcurrentHashMap<Class, Constructor>();
 
 	/**
 	 * @see IPageFactory#newPage(Class)
@@ -53,7 +53,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			final Constructor constructor = pageClass.getConstructor((Class[]) null);
+			final Constructor constructor = pageClass.getConstructor((Class[])null);
 
 			return newPage(constructor, null);
 		}
@@ -68,7 +68,7 @@ public final class DefaultPageFactory implements IPageFactory
 			else
 			{
 				throw new WicketRuntimeException("Unable to create page from " + pageClass +
-						". Class does not have a default contructor", e);
+					". Class does not have a default contructor", e);
 			}
 		}
 	}
@@ -102,10 +102,10 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final Constructor constructor(final Class pageClass, final Class argumentType)
+	private final Constructor constructor(final Class pageClass, final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor constructor = (Constructor)constructorForClass.get(pageClass);
+		Constructor constructor = constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -160,8 +160,8 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			// honor redirect exception contract defined in IPageFactory
 			if (e.getTargetException() instanceof AbortException ||
-					e.getTargetException() instanceof AuthorizationException ||
-					e.getTargetException() instanceof MarkupException)
+				e.getTargetException() instanceof AuthorizationException ||
+				e.getTargetException() instanceof MarkupException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
@@ -173,7 +173,7 @@ public final class DefaultPageFactory implements IPageFactory
 	{
 		if (argument != null)
 			return "Can't instantiate page using constructor " + constructor + " and argument " +
-					argument;
+				argument;
 		else
 			return "Can't instantiate page using constructor " + constructor;
 	}

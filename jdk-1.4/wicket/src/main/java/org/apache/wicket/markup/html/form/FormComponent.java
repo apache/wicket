@@ -85,8 +85,12 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            The model object type
+ * 
  */
-public abstract class FormComponent extends LabeledWebMarkupContainer
+public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	implements
 		IFormVisitorParticipant
 {
@@ -301,6 +305,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setRequired(required);
@@ -424,7 +429,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		return null;
 	}
 
-	private transient Object convertedInput;
+	private transient T convertedInput;
 
 	/**
 	 * Raw Input entered by the user or NO_RAW_INPUT if nothing is filled in.
@@ -590,7 +595,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * 
 	 * @return value of input possibly converted into an appropriate type
 	 */
-	public final Object getConvertedInput()
+	public final T getConvertedInput()
 	{
 		return convertedInput;
 	}
@@ -603,7 +608,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * @param convertedInput
 	 *            the converted input
 	 */
-	public final void setConvertedInput(Object convertedInput)
+	public final void setConvertedInput(T convertedInput)
 	{
 		this.convertedInput = convertedInput;
 	}
@@ -974,6 +979,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * 
 	 * @deprecated call or override setModelValue(String[])
 	 */
+	@Deprecated
 	public void setModelValue(final String value)
 	{
 		setModelValue(value.split(VALUE_SEPARATOR));
@@ -1208,7 +1214,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 			final IConverter converter = getConverter(getType());
 			try
 			{
-				convertedInput = converter.convertToObject(getInput(), getLocale());
+				convertedInput = (T)converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{
@@ -1262,14 +1268,15 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
-	protected Object convertValue(String[] value) throws ConversionException
+	protected T convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0 && value[0] != null ? trim(value[0]) : null;
+		return (T)(value != null && value.length > 0 && value[0] != null ? trim(value[0]) : null);
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#getBehaviors(java.lang.Class)
 	 */
+	@Override
 	protected List getBehaviors(Class type)
 	{
 		// List
@@ -1356,6 +1363,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	/**
 	 * @see org.apache.wicket.Component#internalOnModelChanged()
 	 */
+	@Override
 	protected void internalOnModelChanged()
 	{
 		// If the model for this form component changed, we should make it
@@ -1370,6 +1378,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		tag.put("name", getInputName());
@@ -1387,6 +1396,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * 
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

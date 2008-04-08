@@ -18,11 +18,9 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -443,6 +441,7 @@ public abstract class Application
 	 * @return The markup cache associated with the application
 	 * @deprecated please use {@link IMarkupSettings#getMarkupCache()} instead
 	 */
+	@Deprecated
 	public final IMarkupCache getMarkupCache()
 	{
 		return getMarkupSettings().getMarkupCache();
@@ -466,9 +465,9 @@ public abstract class Application
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
-		return (Serializable)key.get(metaData);
+		return key.get(metaData);
 	}
 
 	/**
@@ -593,15 +592,15 @@ public abstract class Application
 		try
 		{
 			// Load properties files used by all libraries
-			final Enumeration resources = Thread.currentThread()
-				.getContextClassLoader()
-				.getResources("wicket.properties");
-			while (resources.hasMoreElements())
+
+			final Iterator resources = getApplicationSettings().getClassResolver().getResources(
+				"wicket.properties");
+			while (resources.hasNext())
 			{
 				InputStream in = null;
 				try
 				{
-					final URL url = (URL)resources.nextElement();
+					final URL url = (URL)resources.next();
 					final Properties properties = new Properties();
 					in = url.openStream();
 					properties.load(in);
@@ -669,6 +668,7 @@ public abstract class Application
 	 * @deprecated Applications wishing to provide custom request cycles should override method
 	 *             {@link #newRequestCycle(Request, Response)}
 	 */
+	@Deprecated
 	public final RequestCycle newRequestCycle(Application application, Request request,
 		Response response)
 	{
@@ -740,7 +740,7 @@ public abstract class Application
 	 * @see MetaDataKey
 	 */
 	// TODO: Replace the Serializable type with Object for next wicket version
-	public final synchronized void setMetaData(final MetaDataKey key, final Serializable object)
+	public final synchronized <T> void setMetaData(final MetaDataKey<T> key, final Object object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -836,6 +836,7 @@ public abstract class Application
 	 * @deprecated use {@link #onDestroy()} instead
 	 */
 	// TODO remove after deprecation release
+	@Deprecated
 	protected final void destroy()
 	{
 	}
@@ -852,6 +853,7 @@ public abstract class Application
 	 * @deprecated replaced by {@link #newRequestCycle(Request, Response)}
 	 */
 	// TODO remove after deprecation release
+	@Deprecated
 	protected final Object getRequestCycleFactory()
 	{
 		throw new UnsupportedOperationException();
@@ -864,6 +866,7 @@ public abstract class Application
 	 * @deprecated replaced by {@link #newSession(Request, Response)}
 	 */
 	// TODO remove after deprecation release
+	@Deprecated
 	protected final Object getSessionFactory()
 	{
 		throw new UnsupportedOperationException();

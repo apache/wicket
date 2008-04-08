@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -32,8 +31,11 @@ import org.apache.wicket.model.IModel;
  * content and a {@link TextArea text area} as its editor.
  * 
  * @author eelcohillenius
+ * 
+ * @param <T>
+ *            Model object type
  */
-public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
+public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +64,7 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 * @param model
 	 *            The model
 	 */
-	public AjaxEditableMultiLineLabel(String id, IModel model)
+	public AjaxEditableMultiLineLabel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -71,12 +73,14 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
-	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
+	@Override
+	protected MultiLineLabel<T> newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		MultiLineLabel label = new MultiLineLabel(componentId, model)
+		MultiLineLabel<T> label = new MultiLineLabel<T>(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				if (getModelObject() == null)
@@ -100,6 +104,7 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 * 
 	 * @return The event name
 	 */
+	@Override
 	protected String getLabelAjaxEvent()
 	{
 		return "onclick";
@@ -109,36 +114,41 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
-	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
+	@Override
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		TextArea editor = new TextArea(componentId, model)
+		TextArea<T> editor = new TextArea<T>(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onModelChanged()
 			{
 				AjaxEditableMultiLineLabel.this.onModelChanged();
 			}
 
+			@Override
 			protected void onModelChanging()
 			{
 				AjaxEditableMultiLineLabel.this.onModelChanging();
 			}
 		};
-		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel()
+		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
 				return new Integer(rows);
 			}
 		}));
-		editor.add(new AttributeModifier("cols", new AbstractReadOnlyModel()
+		editor.add(new AttributeModifier("cols", new AbstractReadOnlyModel<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
 				return new Integer(cols);
 			}
@@ -152,6 +162,7 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 			/**
 			 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
 			 */
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -219,16 +230,19 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 * 
 	 * @return The string which should be displayed when the model object is null.
 	 */
+	@Override
 	protected String defaultNullLabel()
 	{
 		return "...";
 	}
 
+	@Override
 	protected void onModelChanged()
 	{
 		super.onModelChanged();
 	}
 
+	@Override
 	protected void onModelChanging()
 	{
 		super.onModelChanging();

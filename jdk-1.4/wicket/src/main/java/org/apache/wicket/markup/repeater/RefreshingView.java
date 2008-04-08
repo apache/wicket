@@ -18,6 +18,7 @@ package org.apache.wicket.markup.repeater;
 
 import java.util.Iterator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.version.undo.Change;
@@ -44,8 +45,10 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            Model object type
  */
-public abstract class RefreshingView extends RepeatingView
+public abstract class RefreshingView<T> extends RepeatingView<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -76,7 +79,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(String id, IModel model)
+	public RefreshingView(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -85,24 +88,25 @@ public abstract class RefreshingView extends RepeatingView
 	 * Refresh the items in the view. Delegates the creation of items to the selected item reuse
 	 * strategy
 	 */
+	@Override
 	protected final void onPopulate()
 	{
 
-		IItemFactory itemFactory = new IItemFactory()
+		IItemFactory<T> itemFactory = new IItemFactory<T>()
 		{
 
-			public Item newItem(int index, IModel model)
+			public Item<T> newItem(int index, IModel<T> model)
 			{
 				String id = RefreshingView.this.newChildId();
-				Item item = RefreshingView.this.newItem(id, index, model);
+				Item<T> item = RefreshingView.this.newItem(id, index, model);
 				RefreshingView.this.populateItem(item);
 				return item;
 			}
 
 		};
 
-		Iterator models = getItemModels();
-		Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
+		Iterator<IModel<T>> models = getItemModels();
+		Iterator<Item<T>> items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
 		removeAll();
 		addItems(items);
 	}
@@ -112,7 +116,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @return an iterator over models for items that will be added to this view
 	 */
-	protected abstract Iterator getItemModels();
+	protected abstract Iterator<IModel<T>> getItemModels();
 
 	/**
 	 * Populate the given Item container.
@@ -134,7 +138,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param item
 	 *            The item to populate
 	 */
-	protected abstract void populateItem(final Item item);
+	protected abstract void populateItem(final Item<T> item);
 
 	/**
 	 * Factory method for Item container. Item containers are simple MarkupContainer used to
@@ -150,17 +154,35 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newItem(final String id, int index, final IModel model)
+	protected Item<T> newItem(final String id, int index, final IModel<T> model)
 	{
-		return new Item(id, index, model);
+		return new Item<T>(id, index, model);
 	}
 
 	/**
 	 * @return iterator over item instances that exist as children of this view
 	 */
-	public Iterator getItems()
+	public Iterator<Item<T>> getItems()
 	{
-		return iterator();
+		return new Iterator<Item<T>>()
+		{
+			private final Iterator<Component> delegate = iterator();
+
+			public boolean hasNext()
+			{
+				return delegate.hasNext();
+			}
+
+			public Item<T> next()
+			{
+				return (Item<T>)delegate.next();
+			}
+
+			public void remove()
+			{
+				delegate.remove();
+			}
+		};
 	}
 
 	/**
@@ -170,12 +192,12 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param items
 	 *            item instances to be added to this view
 	 */
-	protected void addItems(Iterator items)
+	protected void addItems(Iterator<Item<T>> items)
 	{
 		int index = 0;
 		while (items.hasNext())
 		{
-			Item item = (Item)items.next();
+			Item<T> item = items.next();
 			item.setIndex(index);
 			add(item);
 			++index;
@@ -210,7 +232,7 @@ public abstract class RefreshingView extends RepeatingView
 	 *            item reuse strategy
 	 * @return this for chaining
 	 */
-	public RefreshingView setItemReuseStrategy(IItemReuseStrategy strategy)
+	public RefreshingView<T> setItemReuseStrategy(IItemReuseStrategy strategy)
 	{
 		if (strategy == null)
 		{
@@ -227,11 +249,13 @@ public abstract class RefreshingView extends RepeatingView
 
 					private final IItemReuseStrategy old = itemReuseStrategy;
 
+					@Override
 					public void undo()
 					{
 						itemReuseStrategy = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " +

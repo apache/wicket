@@ -46,7 +46,7 @@ public interface IApplicationSettings
 	Class getAccessDeniedPage();
 
 	/**
-	 * Gets the default resolver to use when finding classes
+	 * Gets the default resolver to use when finding classes and resources
 	 * 
 	 * @return Default class resolver
 	 */
@@ -85,7 +85,7 @@ public interface IApplicationSettings
 	void setAccessDeniedPage(final Class accessDeniedPage);
 
 	/**
-	 * Sets the default class resolver to use when finding classes.
+	 * Sets the default class resolver to use when finding classes and resources
 	 * 
 	 * @param defaultClassResolver
 	 *            The default class resolver

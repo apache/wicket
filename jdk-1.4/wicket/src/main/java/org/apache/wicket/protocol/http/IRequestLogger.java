@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.protocol.http.RequestLogger.RequestData;
 import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.session.ISessionStore;
 
@@ -48,7 +49,7 @@ public interface IRequestLogger
 	 * 
 	 * @return Collection of the current requests
 	 */
-	public abstract List getRequests();
+	public abstract List<RequestData> getRequests();
 
 
 	/**

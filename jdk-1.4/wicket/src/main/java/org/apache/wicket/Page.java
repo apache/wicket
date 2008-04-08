@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
@@ -39,7 +40,6 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
@@ -397,6 +397,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
+	@Override
 	public void detachModels()
 	{
 		// // visit all this page's children to detach the models
@@ -495,6 +496,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.Component#getId()
 	 */
+	@Override
 	public final String getId()
 	{
 		return Integer.toString(numericId);
@@ -551,6 +553,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @return Size of this page in bytes
 	 */
+	@Override
 	public final long getSizeInBytes()
 	{
 		pageMap = null;
@@ -564,6 +567,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @see org.apache.wicket.Component#getStatelessHint()
 	 */
+	@Override
 	public final boolean getStatelessHint()
 	{
 		return getFlag(FLAG_STATELESS_HINT);
@@ -1003,6 +1007,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @return String representation of this container
 	 */
+	@Override
 	public String toString()
 	{
 		if (versionManager != null)
@@ -1369,6 +1374,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @see org.apache.wicket.Component#internalOnModelChanged()
 	 */
+	@Override
 	protected final void internalOnModelChanged()
 	{
 		visitChildren(new Component.IVisitor()
@@ -1405,11 +1411,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @return Factory method that creates a version manager for this Page
 	 * @deprecated TODO Remove in 1.4
 	 */
+	@Deprecated
 	protected final IPageVersionManager newVersionManager()
 	{
 		return null;
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -1425,6 +1433,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		if (log.isDebugEnabled())
@@ -1446,6 +1455,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param markupStream
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Set page's associated markup stream

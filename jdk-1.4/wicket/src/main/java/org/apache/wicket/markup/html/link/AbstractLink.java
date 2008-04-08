@@ -26,8 +26,11 @@ import org.apache.wicket.model.IModel;
  * Base class that that contains functionality for rendering disabled links.
  * 
  * @author Matej Knopp
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AbstractLink extends WebMarkupContainer
+public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 {
 
 	/**
@@ -42,7 +45,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 * @param id
 	 * @param model
 	 */
-	public AbstractLink(String id, IModel model)
+	public AbstractLink(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -79,7 +82,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 		if (afterDisabledLink == null)
 		{
 			throw new IllegalArgumentException(
-					"Value cannot be null.  For no text, specify an empty String instead.");
+				"Value cannot be null.  For no text, specify an empty String instead.");
 		}
 		this.afterDisabledLink = afterDisabledLink;
 	}
@@ -105,11 +108,12 @@ public abstract class AbstractLink extends WebMarkupContainer
 		if (beforeDisabledLink == null)
 		{
 			throw new IllegalArgumentException(
-					"Value cannot be null.  For no text, specify an empty String instead.");
+				"Value cannot be null.  For no text, specify an empty String instead.");
 		}
 		this.beforeDisabledLink = beforeDisabledLink;
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -153,6 +157,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 *            the open part of this tag
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
@@ -183,7 +188,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	{
 		// if the tag is an anchor proper
 		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-				tag.getName().equalsIgnoreCase("area"))
+			tag.getName().equalsIgnoreCase("area"))
 		{
 			// Change anchor link to span tag
 			tag.setName("span");
@@ -195,7 +200,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 		}
 		// if the tag is a button or input
 		else if ("button".equalsIgnoreCase(tag.getName()) ||
-				"input".equalsIgnoreCase(tag.getName()))
+			"input".equalsIgnoreCase(tag.getName()))
 		{
 			tag.put("disabled", "disabled");
 		}

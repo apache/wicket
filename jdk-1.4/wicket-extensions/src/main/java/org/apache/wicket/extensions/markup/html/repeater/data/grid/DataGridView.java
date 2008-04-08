@@ -59,8 +59,10 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            Model object type
  */
-public class DataGridView extends AbstractDataGridView
+public class DataGridView<T> extends AbstractDataGridView<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -76,10 +78,9 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, List/* <ICellPopulator> */populators, IDataProvider dataProvider)
+	public DataGridView(String id, List<ICellPopulator> populators, IDataProvider<T> dataProvider)
 	{
-		super(id, (ICellPopulator[])populators.toArray(new ICellPopulator[populators.size()]),
-				dataProvider);
+		super(id, populators.toArray(new ICellPopulator[populators.size()]), dataProvider);
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, ICellPopulator[] populators, IDataProvider dataProvider)
+	public DataGridView(String id, ICellPopulator[] populators, IDataProvider<T> dataProvider)
 	{
 		super(id, populators, dataProvider);
 	}
@@ -134,7 +135,7 @@ public class DataGridView extends AbstractDataGridView
 	 * 
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider()
+	public IDataProvider<T> getDataProvider()
 	{
 		return internalGetDataProvider();
 	}

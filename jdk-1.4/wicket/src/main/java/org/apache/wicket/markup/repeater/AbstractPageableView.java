@@ -40,8 +40,10 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            Model object type
  */
-public abstract class AbstractPageableView extends RefreshingView implements IPageable
+public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageable
 
 {
 	/**
@@ -70,7 +72,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 
 	/** @see org.apache.wicket.Component#Component(String, IModel) */
-	public AbstractPageableView(String id, IModel model)
+	public AbstractPageableView(String id, IModel<T> model)
 	{
 		super(id, model);
 		clearCachedItemCount();
@@ -91,18 +93,20 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 * 
 	 * @return iterator over models for items in the current page
 	 */
-	protected Iterator getItemModels()
+	@Override
+	protected Iterator<IModel<T>> getItemModels()
 	{
 		int offset = getViewOffset();
 		int size = getViewSize();
 
-		Iterator models = getItemModels(offset, size);
+		Iterator<IModel<T>> models = getItemModels(offset, size);
 
-		models = new CappedIteratorAdapter(models, size);
+		models = new CappedIteratorAdapter<T>(models, size);
 
 		return models;
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		clearCachedItemCount();
@@ -118,7 +122,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 *            number of items that will be shown in the current page
 	 * @return an iterator over models for items in the current page
 	 */
-	protected abstract Iterator getItemModels(int offset, int size);
+	protected abstract Iterator<IModel<T>> getItemModels(int offset, int size);
 
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -184,11 +188,13 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 					final int old = itemsPerPage;
 
+					@Override
 					public void undo()
 					{
 						itemsPerPage = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " +
@@ -278,11 +284,13 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 					private final int old = currentPage;
 
+					@Override
 					public void undo()
 					{
 						currentPage = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "CurrentPageChange[component: " + getPath() + ", currentPage: " +
@@ -337,12 +345,15 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	/**
 	 * Iterator adapter that makes sure only the specified max number of items can be accessed from
 	 * its delegate.
+	 * 
+	 * @param <T>
+	 *            Model object type
 	 */
-	private static class CappedIteratorAdapter implements Iterator
+	private static class CappedIteratorAdapter<T> implements Iterator<IModel<T>>
 	{
 		private final int max;
 		private int index;
-		private final Iterator delegate;
+		private final Iterator<IModel<T>> delegate;
 
 		/**
 		 * Constructor
@@ -352,7 +363,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		 * @param max
 		 *            maximum number of items that can be accessed.
 		 */
-		public CappedIteratorAdapter(Iterator delegate, int max)
+		public CappedIteratorAdapter(Iterator<IModel<T>> delegate, int max)
 		{
 			this.delegate = delegate;
 			this.max = max;
@@ -377,7 +388,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public IModel<T> next()
 		{
 			if (index >= max)
 			{
@@ -389,6 +400,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 	};
 
+	@Override
 	protected void onDetach()
 	{
 		clearCachedItemCount();

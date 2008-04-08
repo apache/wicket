@@ -46,6 +46,7 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 		super(id);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// must be attached to <input type="checkbox" .../> tag

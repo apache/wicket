@@ -68,7 +68,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class DataTable extends Panel implements IPageable
+public class DataTable<T> extends Panel<T> implements IPageable
 {
 	static abstract class CssAttributeBehavior extends AbstractBehavior
 	{
@@ -82,6 +82,7 @@ public class DataTable extends Panel implements IPageable
 		/**
 		 * @see IBehavior#onComponentTag(Component, ComponentTag)
 		 */
+		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			String className = getCssClass();
@@ -109,7 +110,7 @@ public class DataTable extends Panel implements IPageable
 
 	private final DataGridView datagrid;
 
-	private IColumn[] columns;
+	private final IColumn<T>[] columns;
 
 	private final RepeatingView topToolbars;
 	private final RepeatingView bottomToolbars;
@@ -126,7 +127,7 @@ public class DataTable extends Panel implements IPageable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, IColumn[] columns, IDataProvider dataProvider, int rowsPerPage)
+	public DataTable(String id, IColumn<T>[] columns, IDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id);
 
@@ -137,10 +138,11 @@ public class DataTable extends Panel implements IPageable
 
 		this.columns = columns;
 
-		datagrid = new DataGridView("rows", columns, dataProvider)
+		datagrid = new DataGridView<T>("rows", columns, dataProvider)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Item newCellItem(String id, int index, IModel model)
 			{
 				Item item = DataTable.this.newCellItem(id, index, model);
@@ -151,6 +153,7 @@ public class DataTable extends Panel implements IPageable
 					{
 						private static final long serialVersionUID = 1L;
 
+						@Override
 						protected String getCssClass()
 						{
 							return ((IStyledColumn)column).getCssClass();
@@ -160,7 +163,8 @@ public class DataTable extends Panel implements IPageable
 				return item;
 			}
 
-			protected Item newRowItem(String id, int index, IModel model)
+			@Override
+			protected Item<T> newRowItem(String id, int index, IModel<T> model)
 			{
 				return DataTable.this.newRowItem(id, index, model);
 			}
@@ -172,6 +176,7 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return size() > 0;
@@ -184,6 +189,7 @@ public class DataTable extends Panel implements IPageable
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return size() > 0;
@@ -223,7 +229,7 @@ public class DataTable extends Panel implements IPageable
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final IColumn[] getColumns()
+	public final IColumn<T>[] getColumns()
 	{
 		return columns;
 	}
@@ -280,7 +286,7 @@ public class DataTable extends Panel implements IPageable
 	 *            item reuse strategy
 	 * @return this for chaining
 	 */
-	public final DataTable setItemReuseStrategy(IItemReuseStrategy strategy)
+	public final DataTable<T> setItemReuseStrategy(IItemReuseStrategy strategy)
 	{
 		datagrid.setItemReuseStrategy(strategy);
 		return this;
@@ -308,7 +314,7 @@ public class DataTable extends Panel implements IPageable
 		if (!toolbar.getId().equals(TOOLBAR_COMPONENT_ID))
 		{
 			throw new IllegalArgumentException(
-					"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
+				"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
 		}
 
 		toolbar.setRenderBodyOnly(true);
@@ -335,9 +341,9 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(final String id, final int index, final IModel model)
+	protected Item<T> newCellItem(final String id, final int index, final IModel<T> model)
 	{
-		return new Item(id, index, model);
+		return new Item<T>(id, index, model);
 	}
 
 	/**
@@ -354,14 +360,15 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newRowItem(final String id, int index, final IModel model)
+	protected Item<T> newRowItem(final String id, int index, final IModel<T> model)
 	{
-		return new Item(id, index, model);
+		return new Item<T>(id, index, model);
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

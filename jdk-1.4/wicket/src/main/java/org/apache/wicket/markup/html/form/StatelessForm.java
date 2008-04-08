@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author jcompagner
  */
-public class StatelessForm extends Form
+public class StatelessForm<T> extends Form<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,12 @@ public class StatelessForm extends Form
 	 * @param id
 	 * @param model
 	 */
-	public StatelessForm(String id, IModel model)
+	public StatelessForm(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
 
+	@Override
 	public boolean process()
 	{
 		// set redirect to true for a stateless form.
@@ -60,6 +61,7 @@ public class StatelessForm extends Form
 		return super.process();
 	}
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return true;

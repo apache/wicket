@@ -24,8 +24,11 @@ package org.apache.wicket.model;
  * The detach method calls the wrapped models detach.
  * 
  * @author jcompagner
+ * 
+ * @param <T>
+ *            The Model object type
  */
-public abstract class AbstractWrapModel implements IWrapModel
+public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 {
 	/**
 	 * 
@@ -35,7 +38,7 @@ public abstract class AbstractWrapModel implements IWrapModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	public T getObject()
 	{
 		return null;
 	}
@@ -43,7 +46,7 @@ public abstract class AbstractWrapModel implements IWrapModel
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(T object)
 	{
 	}
 

@@ -103,8 +103,11 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
+public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	implements
 		IComponentResolver
 {
@@ -155,7 +158,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Border(final String id, final IModel model)
+	public Border(final String id, final IModel<T> model)
 	{
 		super(id, model);
 
@@ -185,7 +188,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @return this for chaining
 	 * @deprecated 1.3 please use #getBodyContainer().setVisible(false) instead
 	 */
-	public Border setBorderBodyVisible(boolean bodyVisible)
+	@Deprecated
+	public Border<T> setBorderBodyVisible(boolean bodyVisible)
 	{
 		body.setVisible(false);
 		return this;
@@ -200,7 +204,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 *            true, to enable transparent resolving
 	 * @return this for chaining
 	 */
-	public final Border setTransparentResolver(final boolean enable)
+	public final Border<T> setTransparentResolver(final boolean enable)
 	{
 		transparentResolver = enable;
 		return this;
@@ -210,6 +214,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see #setTransparentResolver(boolean)
 	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return transparentResolver;
@@ -265,6 +270,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpen() == false)
@@ -280,6 +286,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
@@ -304,6 +311,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		renderHeadFromAssociatedMarkupFile(container);
@@ -333,6 +341,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		/**
 		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 		 */
+		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
 			// Convert open-close to open-body-close
@@ -350,6 +359,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 		 *      org.apache.wicket.markup.ComponentTag)
 		 */
+		@Override
 		protected void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 		{

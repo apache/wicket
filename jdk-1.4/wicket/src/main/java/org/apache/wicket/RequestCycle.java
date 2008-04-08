@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -350,6 +349,7 @@ public abstract class RequestCycle
 	 * @return whether the page for this request should be redirected
 	 * @deprecated Use {@link #isRedirect()} instead
 	 */
+	@Deprecated
 	public final boolean getRedirect()
 	{
 		return isRedirect();
@@ -713,6 +713,7 @@ public abstract class RequestCycle
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[RequestCycle" + "@" + Integer.toHexString(hashCode()) + " thread=" +
@@ -1458,8 +1459,7 @@ public abstract class RequestCycle
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	// TODO: Replace the Serializable type with Object for next wicket version
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final <T> void setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -1467,13 +1467,16 @@ public abstract class RequestCycle
 	/**
 	 * Gets metadata for this request cycle using the given key.
 	 * 
+	 * @param <T>
+	 *            The type of the metadata
+	 * 
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata or null if no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
-		return (Serializable)key.get(metaData);
+		return key.get(metaData);
 	}
 }

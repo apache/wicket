@@ -36,8 +36,11 @@ import org.apache.wicket.util.value.ValueMap;
  * @see NonCachingImage
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class Image extends WebComponent implements IResourceListener
+public class Image<T> extends WebComponent<T> implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -122,7 +125,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String id, final IModel model)
+	public Image(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -180,6 +183,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
+	@Override
 	public Component setModel(IModel model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
@@ -208,6 +212,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#initModel()
 	 */
+	@Override
 	protected IModel initModel()
 	{
 		// Images don't support Compound models. They either have a simple
@@ -219,6 +224,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "img");
@@ -239,6 +245,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		return (getImageResource() == null || getImageResource() == localizedImageResource.getResource()) &&
@@ -248,6 +255,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}

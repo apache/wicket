@@ -32,8 +32,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @see IChainingModel
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class CompoundPropertyModel implements IComponentInheritedModel, IChainingModel
+public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IChainingModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,19 +56,19 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	public T getObject()
 	{
 		if (target instanceof IModel)
 		{
-			return ((IModel)target).getObject();
+			return (T)((IModel)target).getObject();
 		}
-		return target;
+		return (T)target;
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(T object)
 	{
 		if (target instanceof IModel)
 		{
@@ -80,7 +83,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel getChainedModel()
+	public IModel< ? > getChainedModel()
 	{
 		if (target instanceof IModel)
 		{
@@ -92,7 +95,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
-	public void setChainedModel(IModel model)
+	public void setChainedModel(IModel< ? > model)
 	{
 		target = model;
 	}
@@ -114,7 +117,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
-	protected String propertyExpression(Component component)
+	protected String propertyExpression(Component< ? > component)
 	{
 		return component.getId();
 	}
@@ -122,9 +125,9 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
 	 */
-	public IWrapModel wrapOnInheritance(Component component)
+	public <C> IWrapModel<C> wrapOnInheritance(Component<C> component)
 	{
-		return new AttachedCompoundPropertyModel(component);
+		return new AttachedCompoundPropertyModel<C>(component);
 	}
 
 	/**
@@ -135,9 +138,9 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 * @param property
 	 * @return The IModel that is a wrapper around the current model and the property
 	 */
-	public IModel bind(String property)
+	public <P> IModel<P> bind(String property)
 	{
-		return new PropertyModel(this, property);
+		return new PropertyModel<P>(this, property);
 	}
 
 	/**
@@ -146,11 +149,13 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 * 
 	 * @author ivaynberg
 	 */
-	private class AttachedCompoundPropertyModel extends AbstractPropertyModel implements IWrapModel
+	private class AttachedCompoundPropertyModel<C> extends AbstractPropertyModel<C>
+		implements
+			IWrapModel<C>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component owner;
+		private final Component<C> owner;
 
 		/**
 		 * Constructor
@@ -158,7 +163,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
-		public AttachedCompoundPropertyModel(Component owner)
+		public AttachedCompoundPropertyModel(Component<C> owner)
 		{
 			super(CompoundPropertyModel.this);
 			this.owner = owner;
@@ -167,6 +172,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 		/**
 		 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression()
 		 */
+		@Override
 		protected String propertyExpression()
 		{
 			return CompoundPropertyModel.this.propertyExpression(owner);
@@ -175,7 +181,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getWrappedModel()
+		public IModel<T> getWrappedModel()
 		{
 			return CompoundPropertyModel.this;
 		}
@@ -183,6 +189,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 		/**
 		 * @see org.apache.wicket.model.AbstractPropertyModel#detach()
 		 */
+		@Override
 		public void detach()
 		{
 			super.detach();
@@ -193,10 +200,11 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" +
-				getClass().getName() + "]");
+			getClass().getName() + "]");
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}
@@ -208,6 +216,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 * @return
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
+	@Deprecated
 	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
@@ -218,6 +227,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 * @param object
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
+	@Deprecated
 	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();

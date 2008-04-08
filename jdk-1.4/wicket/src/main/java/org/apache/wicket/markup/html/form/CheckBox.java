@@ -49,8 +49,11 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class CheckBox extends FormComponent implements IOnChangeListener
+public class CheckBox extends FormComponent<Boolean> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -65,7 +68,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public CheckBox(final String id, IModel model)
+	public CheckBox(final String id, IModel<Boolean> model)
 	{
 		super(id, model);
 	}
@@ -112,6 +115,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
@@ -127,6 +131,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
+	@Override
 	public IConverter getConverter(Class type)
 	{
 		return BooleanConverter.INSTANCE;
@@ -139,6 +144,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");
@@ -203,6 +209,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return true;
@@ -212,7 +219,8 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] value)
+	@Override
+	protected Boolean convertValue(String[] value)
 	{
 		String tmp = value != null && value.length > 0 ? value[0] : null;
 		try

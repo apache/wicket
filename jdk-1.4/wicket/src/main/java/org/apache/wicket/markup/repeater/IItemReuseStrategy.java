@@ -19,6 +19,7 @@ package org.apache.wicket.markup.repeater;
 import java.util.Iterator;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -46,5 +47,6 @@ public interface IItemReuseStrategy extends IClusterable
 	 *            iterator over child items
 	 * @return iterator over items that will be added after all the old items are moved.
 	 */
-	Iterator getItems(IItemFactory factory, Iterator newModels, Iterator existingItems);
+	<T> Iterator<Item<T>> getItems(IItemFactory<T> factory, Iterator<IModel<T>> newModels,
+		Iterator<Item<T>> existingItems);
 }

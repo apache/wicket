@@ -23,8 +23,11 @@ import org.apache.wicket.model.IModel;
  * Container that holds components in a ListView.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            Model object type
  */
-public class ListItem extends WebMarkupContainer
+public class ListItem<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +43,7 @@ public class ListItem extends WebMarkupContainer
 	 * @param model
 	 *            The model object of the item
 	 */
-	public ListItem(final int index, final IModel model)
+	public ListItem(final int index, final IModel<T> model)
 	{
 		super(Integer.toString(index).intern(), model);
 		this.index = index;

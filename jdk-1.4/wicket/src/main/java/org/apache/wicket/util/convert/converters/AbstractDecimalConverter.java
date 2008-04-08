@@ -19,8 +19,7 @@ package org.apache.wicket.util.convert.converters;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Map;
-
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base class for all number converters.
@@ -32,18 +31,16 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	private static final long serialVersionUID = 1L;
 
 	/** The date format to use */
-	private final Map/* <Locale, NumberFormat> */numberFormats = new ConcurrentHashMap/*
-																					 * <Locale,
-																					 * NumberFormat>
-																					 */();
+	private final Map<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<Locale, NumberFormat>();
 
 	/**
 	 * @param locale
 	 * @return Returns the numberFormat.
 	 */
+	@Override
 	public NumberFormat getNumberFormat(Locale locale)
 	{
-		NumberFormat numberFormat = (NumberFormat)numberFormats.get(locale);
+		NumberFormat numberFormat = numberFormats.get(locale);
 		if (numberFormat == null)
 		{
 			numberFormat = NumberFormat.getInstance(locale);

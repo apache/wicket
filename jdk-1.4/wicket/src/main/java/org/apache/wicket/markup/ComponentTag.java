@@ -52,9 +52,6 @@ public class ComponentTag extends MarkupElement
 	 */
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
-	/** an empty list */
-	private static final List EMPTY_LIST = new ArrayList();
-
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes
 	 * it.
@@ -92,7 +89,7 @@ public class ComponentTag extends MarkupElement
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
 	 * information however is required.
 	 */
-	private WeakReference/* <Class> */markupClassRef = null;
+	private WeakReference<Class> markupClassRef = null;
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with some HTML tags like
@@ -101,10 +98,10 @@ public class ComponentTag extends MarkupElement
 	private boolean hasNoCloseTag = false;
 
 	/** added behaviors */
-	private List behaviors;
+	private List<IBehavior> behaviors;
 
 	/** Filters and Handlers may add their own attributes to the tag */
-	private Map userData;
+	private Map<String, Object> userData;
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and construct a ComponentTag
@@ -149,7 +146,7 @@ public class ComponentTag extends MarkupElement
 
 		if (behaviors == null)
 		{
-			behaviors = new ArrayList();
+			behaviors = new ArrayList<IBehavior>();
 		}
 		behaviors.add(behavior);
 	}
@@ -165,15 +162,15 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @return read only iterator over added behaviors
 	 */
-	public final Iterator getBehaviors()
+	public final Iterator<IBehavior> getBehaviors()
 	{
 		if (behaviors == null)
 		{
-			List empty = EMPTY_LIST;
-			return empty.iterator();
+			List<IBehavior> lst = Collections.emptyList();
+			return lst.iterator();
 		}
 
-		Collection locked = Collections.unmodifiableCollection(behaviors);
+		Collection<IBehavior> locked = Collections.unmodifiableCollection(behaviors);
 		return locked.iterator();
 	}
 
@@ -184,6 +181,7 @@ public class ComponentTag extends MarkupElement
 	 *            The open tag
 	 * @return True if this tag closes the given open tag
 	 */
+	@Override
 	public final boolean closes(final MarkupElement open)
 	{
 		if (open instanceof ComponentTag)
@@ -417,11 +415,11 @@ public class ComponentTag extends MarkupElement
 		dest.setAutoComponentTag(autoComponent);
 		if (markupClassRef != null)
 		{
-			dest.setMarkupClass((Class)markupClassRef.get());
+			dest.setMarkupClass(markupClassRef.get());
 		}
 		if (behaviors != null)
 		{
-			dest.behaviors = new ArrayList(behaviors.size());
+			dest.behaviors = new ArrayList<IBehavior>(behaviors.size());
 			dest.behaviors.addAll(behaviors);
 		}
 	}
@@ -479,7 +477,7 @@ public class ComponentTag extends MarkupElement
 	 * @param map
 	 *            a key/value map
 	 */
-	public final void putAll(final Map map)
+	public final void putAll(final Map<String, Object> map)
 	{
 		xmlTag.putAll(map);
 	}
@@ -587,6 +585,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.MarkupElement#toCharSequence()
 	 */
+	@Override
 	public CharSequence toCharSequence()
 	{
 		return xmlTag.toCharSequence();
@@ -597,6 +596,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public final String toString()
 	{
 		return toCharSequence().toString();
@@ -613,7 +613,7 @@ public class ComponentTag extends MarkupElement
 	 *            Wicket's namespace to use
 	 */
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
-			final String namespace)
+		final String namespace)
 	{
 		response.write("<");
 
@@ -678,6 +678,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public final String toUserDebugString()
 	{
 		return xmlTag.toUserDebugString();
@@ -785,6 +786,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.MarkupElement#equalTo(org.apache.wicket.markup.MarkupElement)
 	 */
+	@Override
 	public boolean equalTo(final MarkupElement element)
 	{
 		if (element instanceof ComponentTag)
@@ -862,7 +864,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (userData == null)
 		{
-			userData = new HashMap();
+			userData = new HashMap<String, Object>();
 		}
 		userData.put(key, value);
 	}

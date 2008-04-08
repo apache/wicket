@@ -80,8 +80,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @see MarkupStream
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class MarkupContainer extends Component
+public abstract class MarkupContainer<T> extends Component<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -238,6 +241,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
 	 */
+	@Deprecated
 	public final boolean autoAdd(final Component component)
 	{
 		return autoAdd(component, null);
@@ -294,6 +298,7 @@ public abstract class MarkupContainer extends Component
 	 *            Path to component
 	 * @return The component at the path
 	 */
+	@Override
 	public final Component get(final String path)
 	{
 		// Reference to this container
@@ -425,9 +430,9 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @return Iterator that iterates through children in the order they were added
 	 */
-	public final Iterator iterator()
+	public final Iterator<Component> iterator()
 	{
-		return new Iterator()
+		return new Iterator<Component>()
 		{
 			int index = 0;
 
@@ -436,7 +441,7 @@ public abstract class MarkupContainer extends Component
 				return index < children_size();
 			}
 
-			public Object next()
+			public Component next()
 			{
 				return children_get(index++);
 			}
@@ -455,19 +460,19 @@ public abstract class MarkupContainer extends Component
 	 *            The comparator
 	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
-	public final Iterator iterator(Comparator comparator)
+	public final Iterator<Component> iterator(Comparator comparator)
 	{
-		final List sorted;
+		final List<Component> sorted;
 		if (children == null)
 		{
-			sorted = Collections.EMPTY_LIST;
+			sorted = Collections.emptyList();
 		}
 		else
 		{
 			if (children instanceof Component)
 			{
-				sorted = new ArrayList(1);
-				sorted.add(children);
+				sorted = new ArrayList<Component>(1);
+				sorted.add((Component)children);
 			}
 			else if (children instanceof ChildList)
 			{
@@ -555,12 +560,14 @@ public abstract class MarkupContainer extends Component
 
 				final Object removedChildren = children;
 
+				@Override
 				public String toString()
 				{
 					return "RemoveAllChange[component: " + getPath() + ", removed Children: " +
 						removedChildren + "]";
 				}
 
+				@Override
 				public void undo()
 				{
 					children = removedChildren;
@@ -709,7 +716,8 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
-	public Component setModel(final IModel model)
+	@Override
+	public MarkupContainer<T> setModel(final IModel<T> model)
 	{
 		final IModel previous = getModelImpl();
 		super.setModel(model);
@@ -753,6 +761,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @see org.apache.wicket.Component#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(false);
@@ -763,6 +772,7 @@ public abstract class MarkupContainer extends Component
 	 *            True if a detailed string is desired
 	 * @return String representation of this container
 	 */
+	@Override
 	public String toString(final boolean detailed)
 	{
 		final StringBuffer buffer = new StringBuffer();
@@ -1365,6 +1375,7 @@ public abstract class MarkupContainer extends Component
 	 * @return The markup stream for this component, or if it doesn't have one, the markup stream
 	 *         for the nearest parent which does have one
 	 */
+	@Override
 	protected final MarkupStream findMarkupStream()
 	{
 		// Start here
@@ -1396,6 +1407,7 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag for the body
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
@@ -1406,6 +1418,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @param markupStream
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		renderComponent(markupStream);
@@ -1489,6 +1502,7 @@ public abstract class MarkupContainer extends Component
 	 * @param markupStream
 	 *            The markup stream
 	 */
+	@Override
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
 		this.markupStream = markupStream;
@@ -1504,12 +1518,14 @@ public abstract class MarkupContainer extends Component
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected void setChild(MarkupContainer parent, int index, Component child)
 		{
 			parent.children_set(index, child, false);
 		}
 	}
 
+	@Override
 	void detachChildren()
 	{
 		super.detachChildren();
@@ -1543,6 +1559,7 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
+	@Override
 	void internalMarkRendering()
 	{
 		super.internalMarkRendering();
@@ -1565,6 +1582,7 @@ public abstract class MarkupContainer extends Component
 		return result;
 	}
 
+	@Override
 	void onBeforeRenderChildren()
 	{
 		super.onBeforeRenderChildren();
@@ -1604,6 +1622,7 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
+	@Override
 	void onAfterRenderChildren()
 	{
 		// Loop through child components
@@ -1630,6 +1649,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @see org.apache.wicket.Component#setRenderAllowed()
 	 */
+	@Override
 	void setRenderAllowed()
 	{
 		super.setRenderAllowed();
@@ -1647,7 +1667,7 @@ public abstract class MarkupContainer extends Component
 		});
 	}
 
-	private static class ChildList extends AbstractList implements IClusterable
+	private static class ChildList extends AbstractList<Object> implements IClusterable
 	{
 		private static final long serialVersionUID = -7861580911447631127L;
 		private int size;
@@ -1672,16 +1692,19 @@ public abstract class MarkupContainer extends Component
 			}
 		}
 
+		@Override
 		public Object get(int index)
 		{
 			return childs[index];
 		}
 
+		@Override
 		public int size()
 		{
 			return size;
 		}
 
+		@Override
 		public boolean add(Object o)
 		{
 			ensureCapacity(size + 1);
@@ -1689,6 +1712,7 @@ public abstract class MarkupContainer extends Component
 			return true;
 		}
 
+		@Override
 		public void add(int index, Object element)
 		{
 			if (index > size || index < 0)
@@ -1700,6 +1724,7 @@ public abstract class MarkupContainer extends Component
 			size++;
 		}
 
+		@Override
 		public Object set(int index, Object element)
 		{
 			if (index >= size)
@@ -1710,6 +1735,7 @@ public abstract class MarkupContainer extends Component
 			return oldValue;
 		}
 
+		@Override
 		public Object remove(int index)
 		{
 			if (index >= size)

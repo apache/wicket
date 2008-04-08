@@ -37,8 +37,10 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * 
  * @author Igor Vaynberg
  * 
+ * @param <T>
+ *            The model object type
  */
-public class Check extends LabeledWebMarkupContainer
+public class Check<T> extends LabeledWebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,7 +63,7 @@ public class Check extends LabeledWebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Check(String id, IModel model)
+	public Check(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -88,6 +90,7 @@ public class Check extends LabeledWebMarkupContainer
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for component tag
@@ -97,11 +100,11 @@ public class Check extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
+		CheckGroup<T> group = (CheckGroup)findParent(CheckGroup.class);
 		if (group == null)
 		{
 			throw new WicketRuntimeException("Check component [" + getPath() +
-					"] cannot find its parent CheckGroup");
+				"] cannot find its parent CheckGroup");
 		}
 
 		final String uuid = getValue();
@@ -112,13 +115,13 @@ public class Check extends LabeledWebMarkupContainer
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
-		Collection collection = (Collection)group.getModelObject();
+		Collection<T> collection = group.getModelObject();
 
 		// check for npe in group's model object
 		if (collection == null)
 		{
 			throw new WicketRuntimeException("CheckGroup [" + group.getPath() +
-					"] contains a null model object, must be an object of type java.util.Collection");
+				"] contains a null model object, must be an object of type java.util.Collection");
 		}
 
 		if (group.hasRawInput())
@@ -166,8 +169,8 @@ public class Check extends LabeledWebMarkupContainer
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
-						"=' + this.value;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+					"=' + this.value;");
 			}
 		}
 
@@ -186,7 +189,7 @@ public class Check extends LabeledWebMarkupContainer
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public Check setLabel(IModel labelModel)
+	public Check<T> setLabel(IModel labelModel)
 	{
 		setLabelInternal(labelModel);
 		return this;

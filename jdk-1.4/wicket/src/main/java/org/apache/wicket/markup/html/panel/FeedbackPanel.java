@@ -65,11 +65,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
 		 */
+		@Override
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
 			message.markRendered();
-			final IModel replacementModel = new Model()
+			final IModel<String> replacementModel = new Model<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -79,7 +80,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 * 
 				 * @see org.apache.wicket.model.IModel#getObject()
 				 */
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 					return getCSSClass(message);
 				}
@@ -119,6 +121,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return anyMessage();
@@ -188,6 +191,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @deprecated use {@link #getEscapeModelStrings()} instead
 	 */
+	@Deprecated
 	public final boolean getEscapeMessages()
 	{
 		return getEscapeModelStrings();
@@ -220,6 +224,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -233,6 +238,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
 	 */
+	@Deprecated
 	public final void setEscapeMessages(boolean escapeMessages)
 	{
 		setEscapeModelStrings(escapeMessages);

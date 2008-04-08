@@ -25,10 +25,13 @@ import org.apache.wicket.util.lang.Classes;
  * subtype. That subtype is used to test for identity when looking for the metadata because actual
  * object identity would suffer from problems under serialization. So, the correct way to declare a
  * MetaDataKey is like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
- *
+ * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The object that is stored
  */
-public abstract class MetaDataKey implements IClusterable
+public abstract class MetaDataKey<T> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,11 +40,11 @@ public abstract class MetaDataKey implements IClusterable
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param type
 	 *            The type of value stored under this key
 	 */
-	public MetaDataKey(final Class type)
+	public MetaDataKey(final Class< ? super T> type)
 	{
 		typeName = type.getName();
 	}
@@ -49,6 +52,7 @@ public abstract class MetaDataKey implements IClusterable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		return obj != null && getClass().isInstance(obj);
@@ -59,7 +63,8 @@ public abstract class MetaDataKey implements IClusterable
 	 *            Array of metadata to search
 	 * @return The entry value
 	 */
-	Object get(MetaDataEntry[] metaData)
+	@SuppressWarnings("unchecked")
+	T get(MetaDataEntry[] metaData)
 	{
 		if (metaData != null)
 		{
@@ -68,7 +73,7 @@ public abstract class MetaDataKey implements IClusterable
 				MetaDataEntry m = metaData[i];
 				if (equals(m.key))
 				{
-					return m.object;
+					return (T)m.object;
 				}
 			}
 		}
@@ -140,15 +145,16 @@ public abstract class MetaDataKey implements IClusterable
 
 	/**
 	 * Checks the type of the given object against the type for this metadata key.
-	 *
+	 * 
 	 * @param object
 	 *            The object to check
 	 * @throws IllegalArgumentException
 	 *             Thrown if the type of the given object does not match the type for this key.
 	 */
+	@SuppressWarnings("unchecked")
 	void checkType(final Object object)
 	{
-		Class clazz = Classes.resolveClass(typeName);
+		Class<T> clazz = Classes.resolveClass(typeName);
 		if (object != null && !clazz.isAssignableFrom(object.getClass()))
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass() +
@@ -159,6 +165,7 @@ public abstract class MetaDataKey implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return getClass() + "[type=" + typeName + "]";

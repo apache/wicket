@@ -27,13 +27,16 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * An ajax submit button that will degrade to a normal request if ajax is not available or
  * javascript is disabled.
- *
+ * 
  * @since 1.3
- *
+ * 
  * @author Jeremy Thomerson (jthomerson)
  * @author Alastair Maw
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AjaxFallbackButton extends Button
+public abstract class AjaxFallbackButton<T> extends Button<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +45,7 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 * @param form
 	 */
@@ -53,12 +56,12 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 * @param model
 	 * @param form
 	 */
-	public AjaxFallbackButton(String id, IModel model, Form form)
+	public AjaxFallbackButton(String id, IModel<T> model, Form form)
 	{
 		super(id, model);
 		mForm = form;
@@ -67,21 +70,25 @@ public abstract class AjaxFallbackButton extends Button
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
 			}
 
+			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
 			}
 
+			@Override
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxFallbackButton.this.getAjaxCallDecorator();
@@ -92,10 +99,10 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Listener method invoked on form submit with errors
-	 *
+	 * 
 	 * @param target
 	 * @param form
-	 *
+	 * 
 	 * TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form form)
@@ -106,6 +113,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
+	@Override
 	public final void onSubmit()
 	{
 		if (!(getRequestCycle().getRequestTarget() instanceof AjaxRequestTarget))
@@ -114,6 +122,7 @@ public abstract class AjaxFallbackButton extends Button
 		}
 	}
 
+	@Override
 	public Form getForm()
 	{
 		return mForm == null ? super.getForm() : mForm;
@@ -122,7 +131,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
 	 * submission, the target argument will be null
-	 *
+	 * 
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
@@ -137,7 +146,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * Helper methods that both checks whether the link is enabled and whether the action ENABLE is
 	 * allowed.
-	 *
+	 * 
 	 * @return whether the link should be rendered as enabled
 	 */
 	protected final boolean isButtonEnabled()

@@ -36,10 +36,10 @@ public class OrderByLink extends Link
 	private static final long serialVersionUID = 1L;
 
 	/** sortable property */
-	private String property;
+	private final String property;
 
 	/** locator for sort state object */
-	private ISortStateLocator stateLocator;
+	private final ISortStateLocator stateLocator;
 
 	/**
 	 * Constructor.
@@ -100,6 +100,7 @@ public class OrderByLink extends Link
 	/**
 	 * @see org.apache.wicket.markup.html.link.Link
 	 */
+	@Override
 	public final void onClick()
 	{
 		sort();
@@ -153,6 +154,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			stateLocator.setSortState(old);
@@ -161,6 +163,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "[StateOrderChange old=" + old.toString() + "]";
@@ -187,18 +190,20 @@ public class OrderByLink extends Link
 		 */
 		public CssModifier(final OrderByLink link, final ICssProvider provider)
 		{
-			super("class", true, new Model()
+			super("class", true, new Model<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 
 					final ISortState sortState = link.stateLocator.getSortState();
 					return provider.getClassAttributeValue(sortState, link.property);
 				}
 
-				public void setObject(Object object)
+				@Override
+				public void setObject(String object)
 				{
 					throw new UnsupportedOperationException();
 				}
@@ -209,6 +214,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see org.apache.wicket.AttributeModifier#isEnabled(Component)
 		 */
+		@Override
 		public boolean isEnabled(Component component)
 		{
 			return getReplaceModel().getObject() != null;
@@ -246,11 +252,11 @@ public class OrderByLink extends Link
 	{
 		private static final long serialVersionUID = 1L;
 
-		private String ascending;
+		private final String ascending;
 
-		private String descending;
+		private final String descending;
 
-		private String none;
+		private final String none;
 
 		/**
 		 * @param ascending

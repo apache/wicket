@@ -60,8 +60,11 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
+public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -76,7 +79,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final List choices)
+	public DropDownChoice(final String id, final List<T> choices)
 	{
 		super(id, choices);
 	}
@@ -85,7 +88,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final List data, final IChoiceRenderer renderer)
+	public DropDownChoice(final String id, final List<T> data, final IChoiceRenderer<T> renderer)
 	{
 		super(id, data, renderer);
 	}
@@ -93,7 +96,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel model, final List choices)
+	public DropDownChoice(final String id, IModel<T> model, final List<T> choices)
 	{
 		super(id, model, choices);
 	}
@@ -102,8 +105,8 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,
 	 *      IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel model, final List data,
-			final IChoiceRenderer renderer)
+	public DropDownChoice(final String id, IModel<T> model, final List<T> data,
+		final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, data, renderer);
 	}
@@ -111,7 +114,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(String id, IModel choices)
+	public DropDownChoice(String id, IModel<List<T>> choices)
 	{
 		super(id, choices);
 	}
@@ -119,7 +122,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(String id, IModel model, IModel choices)
+	public DropDownChoice(String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -128,7 +131,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public DropDownChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -138,7 +141,8 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public DropDownChoice(String id, IModel<T> model, IModel<List<T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -160,6 +164,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
@@ -189,8 +194,8 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 				// form
 				// with an ActionURL or something
 				tag.put("onchange", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
-						"=' + this.options[this.selectedIndex].value;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
+					"=' + this.options[this.selectedIndex].value;");
 			}
 		}
 
@@ -232,6 +237,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
+	@Override
 	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())

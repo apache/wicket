@@ -25,7 +25,7 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractCheckBoxModel implements IModel
+public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,15 +57,15 @@ public abstract class AbstractCheckBoxModel implements IModel
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public final Object getObject()
+	public final Boolean getObject()
 	{
 		return Boolean.valueOf(isSelected());
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
+	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
-	public final void setObject(Object object)
+	public final void setObject(Boolean object)
 	{
 		if (Boolean.TRUE.equals(object))
 		{
@@ -81,24 +81,28 @@ public abstract class AbstractCheckBoxModel implements IModel
 	// TODO Remove methods after deprecation release is done
 
 	/** @deprecated replaced by {@link #getObject()} */
+	@Deprecated
 	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #isSelected()} */
+	@Deprecated
 	public final boolean isSelected(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #setObject(Object)} */
+	@Deprecated
 	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #select()} */
+	@Deprecated
 	public final void setSelected(Component component, boolean sel)
 	{
 		throw new UnsupportedOperationException();

@@ -16,9 +16,17 @@
  */
 package org.apache.wicket.application;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.util.concurrent.ConcurrentReaderHashMap;
+import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
@@ -41,7 +49,7 @@ public final class DefaultClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private final ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
+	private final ConcurrentHashMap<String, WeakReference<Class>> classes = new ConcurrentHashMap<String, WeakReference<Class>>();
 
 	/**
 	 * @see org.apache.wicket.application.IClassResolver#resolveClass(java.lang.String)
@@ -49,7 +57,7 @@ public final class DefaultClassResolver implements IClassResolver
 	public final Class resolveClass(final String classname) throws ClassNotFoundException
 	{
 		Class clazz = null;
-		WeakReference ref = (WeakReference)classes.get(classname);
+		WeakReference ref = classes.get(classname);
 
 		// Might be garbage-collected between getting the WeakRef and retrieving
 		// the Class from it.
@@ -102,9 +110,53 @@ public final class DefaultClassResolver implements IClassResolver
 					}
 					clazz = loader.loadClass(classname);
 				}
-				classes.put(classname, new WeakReference(clazz));
+				classes.put(classname, new WeakReference<Class>(clazz));
 			}
 		}
 		return clazz;
 	}
+
+	public Iterator<URL> getResources(String name)
+	{
+		HashSet<URL> loadedFiles = new HashSet<URL>();
+		try
+		{
+			// Try the classloader for the wicket jar/bundle
+			Enumeration resources = Application.class.getClassLoader().getResources(
+				"wicket.properties");
+			loadResources(resources, loadedFiles);
+
+			// Try the classloader for the user's application jar/bundle
+			resources = Application.get().getClass().getClassLoader().getResources(
+				"wicket.properties");
+			loadResources(resources, loadedFiles);
+
+			// Try the context class loader
+			resources = Thread.currentThread().getContextClassLoader().getResources(
+				"wicket.properties");
+			loadResources(resources, loadedFiles);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+
+		return loadedFiles.iterator();
+	}
+
+	private void loadResources(Enumeration resources, Set<URL> loadedFiles)
+	{
+		if (resources != null)
+		{
+			while (resources.hasMoreElements())
+			{
+				final URL url = (URL)resources.nextElement();
+				if (!loadedFiles.contains(url))
+				{
+					loadedFiles.add(url);
+				}
+			}
+		}
+	}
+
 }

@@ -60,7 +60,7 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IDataProvider extends IDetachable
+public interface IDataProvider<T> extends IDetachable
 {
 	/**
 	 * Gets an iterator for the subset of total data
@@ -72,7 +72,7 @@ public interface IDataProvider extends IDetachable
 	 * 
 	 * @return iterator capable of iterating over {first, first+count} items
 	 */
-	Iterator iterator(int first, int count);
+	Iterator<T> iterator(int first, int count);
 
 	/**
 	 * Gets total number of items in the collection represented by the DataProvider
@@ -90,6 +90,6 @@ public interface IDataProvider extends IDetachable
 	 * 
 	 * @return the model representation of the object
 	 */
-	IModel model(Object object);
+	IModel<T> model(Object object);
 
 }

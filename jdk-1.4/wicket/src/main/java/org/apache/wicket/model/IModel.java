@@ -52,15 +52,18 @@ package org.apache.wicket.model;
  * @author Jonathan Locke
  * 
  * TODO 3.0: Vote on renaming get/setObject to get/setValue
+ * 
+ * @param <T>
+ *            Model object.
  */
-public interface IModel extends IDetachable
+public interface IModel<T> extends IDetachable
 {
 	/**
 	 * Gets the model object.
 	 * 
 	 * @return The model object
 	 */
-	Object getObject();
+	T getObject();
 
 	/**
 	 * Sets the model object.
@@ -68,5 +71,5 @@ public interface IModel extends IDetachable
 	 * @param object
 	 *            The model object
 	 */
-	void setObject(final Object object);
+	void setObject(final T object);
 }

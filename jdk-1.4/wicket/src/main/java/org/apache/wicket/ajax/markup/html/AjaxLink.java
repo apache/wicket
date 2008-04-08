@@ -31,8 +31,10 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AjaxLink extends AbstractLink implements IAjaxLink
+public abstract class AjaxLink<T> extends AbstractLink<T> implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +54,7 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 	 * @param id
 	 * @param model
 	 */
-	public AjaxLink(final String id, final IModel model)
+	public AjaxLink(final String id, final IModel<T> model)
 	{
 		super(id, model);
 
@@ -60,16 +62,19 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				onClick(target);
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new CancelEventIfNoAjaxDecorator(AjaxLink.this.getAjaxCallDecorator());
 			}
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// add the onclick handler only if link is enabled
@@ -81,6 +86,7 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 		});
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -89,7 +95,7 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 		{
 			// disable any href attr in markup
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-					tag.getName().equalsIgnoreCase("area"))
+				tag.getName().equalsIgnoreCase("area"))
 			{
 				tag.put("href", "#");
 			}

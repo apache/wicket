@@ -47,8 +47,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg
+ * 
+ * @param <T>
+ *            The Model Object type
  */
-public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
+public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T>
 {
 	/**
 	 * 
@@ -62,7 +65,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	private transient boolean attached = false;
 
 	/** temporary, transient object. */
-	private transient Object transientModelObject;
+	private transient T transientModelObject;
 
 	/**
 	 * Construct.
@@ -78,7 +81,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * @param object
 	 *            retrieved instance of the detachable object
 	 */
-	public LoadableDetachableModel(Object object)
+	public LoadableDetachableModel(T object)
 	{
 		this.transientModelObject = object;
 		attached = true;
@@ -87,6 +90,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		if (attached)
@@ -97,7 +101,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 			if (log.isDebugEnabled())
 			{
 				log.debug("removed transient object for " + this + ", requestCycle " +
-						RequestCycle.get());
+					RequestCycle.get());
 			}
 			onDetach();
 		}
@@ -106,7 +110,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	@Override
+	public T getObject()
 	{
 		if (!attached)
 		{
@@ -116,7 +121,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 			if (log.isDebugEnabled())
 			{
 				log.debug("loaded transient object " + transientModelObject + " for " + this +
-						", requestCycle " + RequestCycle.get());
+					", requestCycle " + RequestCycle.get());
 			}
 
 			onAttach();
@@ -137,11 +142,12 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
 		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-				this.transientModelObject).append("]");
+			this.transientModelObject).append("]");
 		return sb.toString();
 	}
 
@@ -150,7 +156,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * 
 	 * @return the (temporary) model object
 	 */
-	protected abstract Object load();
+	protected abstract T load();
 
 	/**
 	 * Attaches to the current request. Implement this method with custom behavior, such as loading

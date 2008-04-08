@@ -31,8 +31,11 @@ import org.apache.wicket.version.undo.Change;
  * @see RefreshingView
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T>
+ *            Model object type
  */
-public class Item extends WebMarkupContainer
+public class Item<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +50,7 @@ public class Item extends WebMarkupContainer
 	 * @param model
 	 *            model for this item
 	 */
-	public Item(final String id, int index, final IModel model)
+	public Item(final String id, int index, final IModel<T> model)
 	{
 		super(id.intern(), model);
 		this.index = index;
@@ -70,11 +73,13 @@ public class Item extends WebMarkupContainer
 					final int oldIndex = Item.this.index;
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public void undo()
 					{
 						Item.this.index = oldIndex;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
@@ -108,14 +113,14 @@ public class Item extends WebMarkupContainer
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class IndexComparator implements Comparator
+	public static class IndexComparator implements Comparator<Item>
 	{
-		private static final Comparator instance = new IndexComparator();
+		private static final Comparator<Item> instance = new IndexComparator();
 
 		/**
 		 * @return static instance of the comparator
 		 */
-		public static final Comparator getInstance()
+		public static final Comparator<Item> getInstance()
 		{
 			return instance;
 		}
@@ -123,10 +128,8 @@ public class Item extends WebMarkupContainer
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
-		public int compare(Object o1, Object o2)
+		public int compare(Item lhs, Item rhs)
 		{
-			Item lhs = (Item)o1;
-			Item rhs = (Item)o2;
 			return lhs.getIndex() - rhs.getIndex();
 		}
 

@@ -24,8 +24,11 @@ import org.apache.wicket.Component;
  * methods when the component is needed in a detachable model.
  * 
  * @author jcompagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class ComponentDetachableModel implements IModel, IComponentAssignedModel
+public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssignedModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +43,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public final Object getObject()
+	public final T getObject()
 	{
 		throw new RuntimeException("get object call not expected on a IComponentAssignedModel");
 	}
@@ -48,7 +51,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public final void setObject(Object object)
+	public final void setObject(T object)
 	{
 		throw new RuntimeException("set object call not expected on a IComponentAssignedModel");
 	}
@@ -97,7 +100,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected Object getObject(Component component)
+	protected T getObject(Component<T> component)
 	{
 		return null;
 	}
@@ -111,28 +114,28 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	 * @param object
 	 *            The new model object
 	 */
-	protected void setObject(Component component, Object object)
+	protected void setObject(Component<T> component, T object)
 	{
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel wrapOnAssignment(Component comp)
+	public IWrapModel<T> wrapOnAssignment(Component<T> comp)
 	{
-		return new WrapModel(comp);
+		return new WrapModel<T>(comp);
 	}
 
-	private class WrapModel implements IWrapModel
+	private class WrapModel<P> implements IWrapModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component component;
+		private final Component<T> component;
 
 		/**
 		 * @param comp
 		 */
-		public WrapModel(Component comp)
+		public WrapModel(Component<T> comp)
 		{
 			component = comp;
 		}
@@ -140,7 +143,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getWrappedModel()
+		public IModel<T> getWrappedModel()
 		{
 			return ComponentDetachableModel.this;
 		}
@@ -160,7 +163,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 		/**
 		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
-		public Object getObject()
+		public T getObject()
 		{
 			attach();
 			return ComponentDetachableModel.this.getObject(component);
@@ -169,7 +172,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Object object)
+		public void setObject(T object)
 		{
 			attach();
 			ComponentDetachableModel.this.setObject(component, object);
