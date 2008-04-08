@@ -123,7 +123,7 @@ public class StringValue implements IClusterable
 		else
 		{
 			final DecimalFormat format = new DecimalFormat("#." + repeat(places, '#'),
-					new DecimalFormatSymbols(locale));
+				new DecimalFormatSymbols(locale));
 			return valueOf(format.format(value));
 		}
 	}
@@ -290,7 +290,7 @@ public class StringValue implements IClusterable
 	 * @return This string value with searchFor replaces with replaceWith
 	 */
 	public final CharSequence replaceAll(final CharSequence searchFor,
-			final CharSequence replaceWith)
+		final CharSequence replaceWith)
 	{
 		return Strings.replaceAll(text, searchFor, replaceWith);
 	}
@@ -346,7 +346,7 @@ public class StringValue implements IClusterable
 		}
 
 		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
-				type);
+			type);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class StringValue implements IClusterable
 	 * @throws StringValueConversionException
 	 */
 	public final boolean toBoolean(final boolean defaultValue)
-			throws StringValueConversionException
+		throws StringValueConversionException
 	{
 		return (text == null) ? defaultValue : toBoolean();
 	}
@@ -435,7 +435,7 @@ public class StringValue implements IClusterable
 		catch (ParseException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to a double value", e);
+				"' to a double value", e);
 		}
 	}
 
@@ -483,7 +483,7 @@ public class StringValue implements IClusterable
 	 * @throws StringValueConversionException
 	 */
 	public final Duration toDuration(final Duration defaultValue)
-			throws StringValueConversionException
+		throws StringValueConversionException
 	{
 		return (text == null) ? defaultValue : toDuration();
 	}
@@ -503,7 +503,7 @@ public class StringValue implements IClusterable
 		catch (NumberFormatException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to an int value", e);
+				"' to an int value", e);
 		}
 	}
 
@@ -535,7 +535,7 @@ public class StringValue implements IClusterable
 		catch (NumberFormatException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to an Integer value", e);
+				"' to an Integer value", e);
 		}
 	}
 
@@ -554,7 +554,7 @@ public class StringValue implements IClusterable
 		catch (NumberFormatException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to a long value", e);
+				"' to a long value", e);
 		}
 	}
 
@@ -586,7 +586,7 @@ public class StringValue implements IClusterable
 		catch (NumberFormatException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to a Long value", e);
+				"' to a Long value", e);
 		}
 	}
 
@@ -712,7 +712,7 @@ public class StringValue implements IClusterable
 		catch (ParseException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text +
-					"' to a Time value", e);
+				"' to a Time value", e);
 		}
 	}
 
@@ -728,12 +728,27 @@ public class StringValue implements IClusterable
 	{
 		return (text == null) ? defaultValue : toTime();
 	}
-	
+
 	/**
 	 * Returns whether the text is null.
-	 * @return <code>true</code> if the text is <code>null</code>, <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if the text is <code>null</code>, <code>false</code>
+	 *         otherwise.
 	 */
-	public boolean isNull() {
+	public boolean isNull()
+	{
 		return text == null;
 	}
+
+	/**
+	 * Returns whether the text is null or empty
+	 * 
+	 * @return <code>true</code> if the text is <code>null</code> or
+	 *         <code>.trim().length()==0</code>, <code>false</code> otherwise.
+	 */
+	public boolean isEmpty()
+	{
+		return Strings.isEmpty(text);
+	}
+
 }
