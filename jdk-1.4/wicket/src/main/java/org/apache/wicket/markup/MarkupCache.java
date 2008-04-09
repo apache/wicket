@@ -437,8 +437,9 @@ public class MarkupCache implements IMarkupCache
 			{
 				// add the markup to the cache.
 				markupKeyCache.put(cacheKey, locationString);
+				return putIntoCache(locationString, markup);
 			}
-			return putIntoCache(locationString, markup);
+			return markup;
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
