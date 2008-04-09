@@ -76,8 +76,9 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 	 * 
 	 * @param afterDisabledLink
 	 *            The insertion string
+	 * @return this
 	 */
-	public void setAfterDisabledLink(final String afterDisabledLink)
+	public AbstractLink<T> setAfterDisabledLink(final String afterDisabledLink)
 	{
 		if (afterDisabledLink == null)
 		{
@@ -85,6 +86,7 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 				"Value cannot be null.  For no text, specify an empty String instead.");
 		}
 		this.afterDisabledLink = afterDisabledLink;
+		return this;
 	}
 
 	/**
@@ -102,8 +104,9 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 	 * 
 	 * @param beforeDisabledLink
 	 *            The insertion string
+	 * @return this
 	 */
-	public void setBeforeDisabledLink(final String beforeDisabledLink)
+	public AbstractLink<T> setBeforeDisabledLink(final String beforeDisabledLink)
 	{
 		if (beforeDisabledLink == null)
 		{
@@ -111,6 +114,7 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 				"Value cannot be null.  For no text, specify an empty String instead.");
 		}
 		this.beforeDisabledLink = beforeDisabledLink;
+		return this;
 	}
 
 	@Override
