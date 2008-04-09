@@ -51,8 +51,8 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		// It must be <wicket:...>
 		if (tag instanceof WicketTag)
@@ -81,7 +81,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	/**
 	 * This is a WebMarkupContainer, except that it is transparent for it child components.
 	 */
-	private static class TransparentWebMarkupContainer extends WebMarkupContainer
+	private static class TransparentWebMarkupContainer extends WebMarkupContainer<Object>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -96,6 +96,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		/**
 		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 		 */
+		@Override
 		public boolean isTransparentResolver()
 		{
 			return true;

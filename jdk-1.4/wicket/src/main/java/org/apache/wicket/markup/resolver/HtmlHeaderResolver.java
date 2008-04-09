@@ -65,16 +65,16 @@ public class HtmlHeaderResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		// Only <head> component tags have the id == "_header"
 		if (tag.getId().equals(HtmlHeaderSectionHandler.HEADER_ID))
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
-			final WebMarkupContainer header = new HtmlHeaderContainer(
-					HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
+			final WebMarkupContainer< ? > header = new HtmlHeaderContainer(
+				HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
 			container.autoAdd(header, markupStream);
 
 			// Yes, we handled the tag
@@ -89,18 +89,19 @@ public class HtmlHeaderResolver implements IComponentResolver
 			{
 				// Create a special header component which will gather
 				// additional input the <head> from 'contributors'.
-				final MarkupContainer header = new HtmlHeaderContainer(
-						HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
+				final MarkupContainer< ? > header = new HtmlHeaderContainer(
+					HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
 
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header2 = new WebMarkupContainer(
-						HtmlHeaderSectionHandler.HEADER_ID)
+				final WebMarkupContainer< ? > header2 = new WebMarkupContainer<Object>(
+					HtmlHeaderSectionHandler.HEADER_ID)
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public boolean isTransparentResolver()
 					{
 						return true;
@@ -119,11 +120,12 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// additional functionality there are merely a means of surrounding
 				// relevant markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header = new WebMarkupContainer(
-						HtmlHeaderSectionHandler.HEADER_ID)
+				final WebMarkupContainer< ? > header = new WebMarkupContainer<Object>(
+					HtmlHeaderSectionHandler.HEADER_ID)
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public boolean isTransparentResolver()
 					{
 						return true;
@@ -138,15 +140,15 @@ public class HtmlHeaderResolver implements IComponentResolver
 				catch (IllegalArgumentException ex)
 				{
 					throw new WicketRuntimeException("If the root exception says something like "
-							+ "\"A child with id '_header' already exists\" "
-							+ "then you most likely forgot to override autoAdd() "
-							+ "in your bordered page component.", ex);
+						+ "\"A child with id '_header' already exists\" "
+						+ "then you most likely forgot to override autoAdd() "
+						+ "in your bordered page component.", ex);
 				}
 			}
 			else
 			{
 				throw new MarkupException(
-						"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel> and <wicket:border>");
+					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel> and <wicket:border>");
 			}
 
 			// Yes, we handled the tag

@@ -37,8 +37,10 @@ import org.apache.wicket.model.Model;
  * @see org.apache.wicket.markup.transformer.XsltTransformerBehavior
  * 
  * @author Juergen Donnerstag
+ * @param <T>
+ *            The model data type
  */
-public class XsltOutputTransformerContainer extends AbstractOutputTransformerContainer
+public class XsltOutputTransformerContainer<T> extends AbstractOutputTransformerContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,8 +60,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @param xslFilePath
 	 *            XSL input file path
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel model,
-			final String xslFilePath)
+	public XsltOutputTransformerContainer(final String id, final IModel<T> model,
+		final String xslFilePath)
 	{
 		super(id);
 
@@ -72,7 +74,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 
 		// Make the XSLT processor happy and allow him to handle the wicket
 		// tags and attributes which are in the wicket namespace
-		add(new AttributeModifier("xmlns:wicket", true, new Model("http://wicket.apache.org")));
+		add(new AttributeModifier("xmlns:wicket", true, new Model<String>(
+			"http://wicket.apache.org")));
 	}
 
 	/**
@@ -84,7 +87,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 *            the model (unused)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel model)
+	public XsltOutputTransformerContainer(final String id, final IModel<T> model)
 	{
 		this(id, model, null);
 	}
@@ -105,6 +108,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xsl";
@@ -115,8 +119,9 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final CharSequence output)
-			throws Exception
+	@Override
+	public CharSequence transform(final Component< ? > component, final CharSequence output)
+		throws Exception
 	{
 		return new XsltTransformer(this.xslFile).transform(component, output);
 	}

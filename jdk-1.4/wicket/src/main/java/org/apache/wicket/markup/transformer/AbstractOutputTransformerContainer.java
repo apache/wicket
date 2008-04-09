@@ -35,10 +35,13 @@ import org.apache.wicket.response.StringResponse;
  * @see org.apache.wicket.markup.transformer.ITransformer
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            The model data type
  */
-public abstract class AbstractOutputTransformerContainer extends MarkupContainer
-		implements
-			ITransformer
+public abstract class AbstractOutputTransformerContainer<T> extends MarkupContainer<T>
+	implements
+		ITransformer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,7 +63,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractOutputTransformerContainer(final String id, final IModel model)
+	public AbstractOutputTransformerContainer(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -73,7 +76,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 *            If true, only the body is applied to transformation.
 	 * @return this
 	 */
-	public MarkupContainer setTransformBodyOnly(final boolean value)
+	public MarkupContainer<T> setTransformBodyOnly(final boolean value)
 	{
 		transformBodyOnly = value;
 		return this;
@@ -95,15 +98,16 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public abstract CharSequence transform(final Component component, final CharSequence output)
-			throws Exception;
+	public abstract CharSequence transform(final Component< ? > component, final CharSequence output)
+		throws Exception;
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		final ComponentTag openTag)
 	{
 		if (transformBodyOnly == true)
 		{
@@ -113,7 +117,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 				{
 					// Invoke default execution
 					AbstractOutputTransformerContainer.super.onComponentTagBody(markupStream,
-							openTag);
+						openTag);
 				}
 			});
 		}
@@ -126,6 +130,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	/**
 	 * @see org.apache.wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected final void onRender(final MarkupStream markupStream)
 	{
 		if (transformBodyOnly == false)

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -223,7 +224,8 @@ public final class MarkupStream
 	 * 
 	 * @return The component's class
 	 */
-	public final Class getContainerClass()
+	@SuppressWarnings("unchecked")
+	public final Class< ? extends Component< ? >> getContainerClass()
 	{
 		return markup.getMarkupResourceData().getResource().getMarkupClass();
 	}
@@ -415,7 +417,7 @@ public final class MarkupStream
 		while (true)
 		{
 			if ((current instanceof WicketTag) &&
-					((WicketTag)current).getName().equals(wicketTagName))
+				((WicketTag)current).getName().equals(wicketTagName))
 			{
 				return;
 			}
@@ -494,9 +496,10 @@ public final class MarkupStream
 	/**
 	 * @return String representation of markup stream
 	 */
+	@Override
 	public String toString()
 	{
 		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex +
-				", current = " + ((current == null) ? "null" : current.toUserDebugString()) + "]";
+			", current = " + ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }

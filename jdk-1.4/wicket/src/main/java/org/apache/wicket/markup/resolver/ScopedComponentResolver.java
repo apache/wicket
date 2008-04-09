@@ -96,12 +96,12 @@ public class ScopedComponentResolver implements IComponentResolver
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		// Try to find the component with the parent component.
 		final String id = tag.getId();
-		MarkupContainer parent = container;
+		MarkupContainer< ? > parent = container;
 
 		while (!(parent instanceof Page) && !(parent instanceof Panel) && (parent != null))
 		{
@@ -111,7 +111,7 @@ public class ScopedComponentResolver implements IComponentResolver
 				return false;
 			}
 
-			final Component component = parent.get(id);
+			final Component< ? > component = parent.get(id);
 			if ((component != null) && (component instanceof IScopedComponent))
 			{
 				IScopedComponent sc = (IScopedComponent)component;

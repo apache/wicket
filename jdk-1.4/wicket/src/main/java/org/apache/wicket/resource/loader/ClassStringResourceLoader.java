@@ -19,6 +19,7 @@ package org.apache.wicket.resource.loader;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 
@@ -37,7 +38,7 @@ import org.apache.wicket.Session;
 public class ClassStringResourceLoader extends ComponentStringResourceLoader
 {
 	/** The application we are loading for. */
-	private final WeakReference/* <Class<? extends Application>> */clazzRef;
+	private final WeakReference<Class< ? extends Application>> clazzRef;
 
 	/**
 	 * Create and initialize the resource loader.
@@ -45,35 +46,37 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 * @param clazz
 	 *            The class that this resource loader is associated with
 	 */
-	public ClassStringResourceLoader(final Class/* <? extends Application> */clazz)
+	public ClassStringResourceLoader(final Class< ? extends Application> clazz)
 	{
 		if (clazz == null)
 		{
 			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
 		}
-		clazzRef = new WeakReference(clazz);
+		clazzRef = new WeakReference<Class< ? extends Application>>(clazz);
 	}
 
 	/**
 	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public String loadStringResource(final Class clazz, final String key, final Locale locale,
-			final String style)
+	@Override
+	public String loadStringResource(final Class< ? > clazz, final String key, final Locale locale,
+		final String style)
 	{
-		return super.loadStringResource((Class)clazzRef.get(), key, locale, style);
+		return super.loadStringResource(clazzRef.get(), key, locale, style);
 	}
 
 	/**
 	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
-	public String loadStringResource(Component component, String key)
+	@Override
+	public String loadStringResource(Component< ? > component, String key)
 	{
 		if (component == null)
 		{
 			return loadStringResource(null, key, Session.get().getLocale(), Session.get()
-					.getStyle());
+				.getStyle());
 		}
 		return super.loadStringResource(component, key);
 	}

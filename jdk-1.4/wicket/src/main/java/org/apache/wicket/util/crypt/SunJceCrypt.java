@@ -66,7 +66,7 @@ public class SunJceCrypt extends AbstractCrypt
 		try
 		{
 			// Initialize and add a security provider required for encryption
-			final Class clazz = Classes.resolveClass("com.sun.crypto.provider.SunJCE");
+			final Class< ? > clazz = Classes.resolveClass("com.sun.crypto.provider.SunJCE");
 
 			Security.addProvider((Provider)clazz.newInstance());
 		}
@@ -90,8 +90,9 @@ public class SunJceCrypt extends AbstractCrypt
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
+	@Override
 	protected final byte[] crypt(final byte[] input, final int mode)
-			throws GeneralSecurityException
+		throws GeneralSecurityException
 	{
 		SecretKey key = generateSecretKey();
 		PBEParameterSpec spec = new PBEParameterSpec(salt, COUNT);
@@ -113,7 +114,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 *             invalid encryption key
 	 */
 	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException,
-			InvalidKeySpecException
+		InvalidKeySpecException
 	{
 		final PBEKeySpec spec = new PBEKeySpec(getKey().toCharArray());
 		return SecretKeyFactory.getInstance(CRYPT_METHOD).generateSecret(spec);

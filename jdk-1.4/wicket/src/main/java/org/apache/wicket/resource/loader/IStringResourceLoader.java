@@ -63,7 +63,7 @@ public interface IStringResourceLoader
 	 *            {@link org.apache.wicket.Session})
 	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
-	String loadStringResource(Class clazz, String key, Locale locale, String style);
+	String loadStringResource(Class< ? > clazz, String key, Locale locale, String style);
 
 	/**
 	 * Get the string resource for the given combination of component and resource key. The
@@ -77,5 +77,5 @@ public interface IStringResourceLoader
 	 *            The key should be a String containing a lookup key into a resource bundle
 	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
-	String loadStringResource(Component component, String key);
+	String loadStringResource(Component< ? > component, String key);
 }

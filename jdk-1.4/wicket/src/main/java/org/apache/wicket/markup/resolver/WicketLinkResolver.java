@@ -48,8 +48,8 @@ public class WicketLinkResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
 		{
@@ -57,13 +57,14 @@ public class WicketLinkResolver implements IComponentResolver
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
 				final String id = tag.getId() + container.getPage().getAutoIndex();
-				final Component component = new WebMarkupContainer(id)
+				final Component< ? > component = new WebMarkupContainer<Object>(id)
 				{
 					private static final long serialVersionUID = 1L;
 
 					/**
 					 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 					 */
+					@Override
 					public boolean isTransparentResolver()
 					{
 						return true;

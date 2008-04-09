@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.application;
 
+import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -35,7 +36,7 @@ public interface IClassResolver
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	Class resolveClass(final String classname) throws ClassNotFoundException;
+	Class< ? > resolveClass(final String classname) throws ClassNotFoundException;
 
 
 	/**
@@ -44,6 +45,6 @@ public interface IClassResolver
 	 * @param name
 	 * @return
 	 */
-	Iterator getResources(String name);
+	Iterator<URL> getResources(String name);
 
 }

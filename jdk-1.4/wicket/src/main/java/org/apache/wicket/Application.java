@@ -593,14 +593,14 @@ public abstract class Application
 		{
 			// Load properties files used by all libraries
 
-			final Iterator resources = getApplicationSettings().getClassResolver().getResources(
-				"wicket.properties");
+			final Iterator<URL> resources = getApplicationSettings().getClassResolver()
+				.getResources("wicket.properties");
 			while (resources.hasNext())
 			{
 				InputStream in = null;
 				try
 				{
-					final URL url = (URL)resources.next();
+					final URL url = resources.next();
 					final Properties properties = new Properties();
 					in = url.openStream();
 					properties.load(in);

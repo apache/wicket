@@ -45,7 +45,7 @@ public interface IPageSettings
 	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
-	List getComponentResolvers();
+	List<IComponentResolver> getComponentResolvers();
 
 	/**
 	 * Gets whether Wicket should try to support opening multiple windows for the same session

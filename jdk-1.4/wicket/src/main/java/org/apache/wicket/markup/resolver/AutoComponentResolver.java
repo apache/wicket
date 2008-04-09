@@ -65,7 +65,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	 * the children are nested inside <wicket:component>, their respective Java components are not.
 	 * They must be added to the parent container of <wicket:component>.
 	 */
-	private final Map nestedComponents = new HashMap();
+	private final Map<Component< ? >, MarkupContainer< ? >> nestedComponents = new HashMap<Component< ? >, MarkupContainer< ? >>();
 
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
@@ -78,8 +78,8 @@ public final class AutoComponentResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public final boolean resolve(final MarkupContainer< ? > container,
+		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// It must be <wicket:...>
 		if (tag instanceof WicketTag)
@@ -89,13 +89,13 @@ public final class AutoComponentResolver implements IComponentResolver
 			if (wicketTag.isComponentTag())
 			{
 				// Create and initialize the component
-				final Component component = createComponent(container, wicketTag);
+				final Component< ? > component = createComponent(container, wicketTag);
 				if (component != null)
 				{
 					// 1. push the current component onto the stack
 					if (component instanceof Border)
 					{
-						nestedComponents.put(((Border)component).getBodyContainer(), container);
+						nestedComponents.put(((Border< ? >)component).getBodyContainer(), container);
 					}
 					else
 					{
@@ -122,10 +122,10 @@ public final class AutoComponentResolver implements IComponentResolver
 		if ((tag.getId() != null) && nestedComponents.containsKey(container))
 		{
 			// Make sure you handle nested auto-components properly
-			MarkupContainer parent = (MarkupContainer)nestedComponents.get(container);
+			MarkupContainer< ? > parent = nestedComponents.get(container);
 			while (parent != null)
 			{
-				Component component = parent.get(tag.getId());
+				Component< ? > component = parent.get(tag.getId());
 				if (component != null)
 				{
 					component.render(markupStream);
@@ -135,7 +135,7 @@ public final class AutoComponentResolver implements IComponentResolver
 				parent = parent.getParent();
 				if (nestedComponents.containsKey(parent))
 				{
-					parent = (MarkupContainer)nestedComponents.get(parent);
+					parent = nestedComponents.get(parent);
 				}
 			}
 		}
@@ -156,7 +156,8 @@ public final class AutoComponentResolver implements IComponentResolver
 	 *             in case the component could not be created
 	 */
 	// Wicket is current not using any bean util jar, which is why ...
-	private final Component createComponent(final MarkupContainer container, final WicketTag tag)
+	private final Component< ? > createComponent(final MarkupContainer< ? > container,
+		final WicketTag tag)
 	{
 		// If no component name is given, create a page-unique one yourself.
 		String componentId = tag.getNameAttribute();
@@ -174,63 +175,63 @@ public final class AutoComponentResolver implements IComponentResolver
 
 		// construct the component. It must have a constructor with a single
 		// String (componentId) parameter.
-		final Component component;
+		final Component< ? > component;
 		try
 		{
 			// Load the class. In case a Groovy Class Resolver has been provided,
 			// the name might be a Groovy file.
 			// Note: Spring based components are not supported this way. May be we
 			// should provide a ComponentFactory like we provide a PageFactory.
-			final Class componentClass = container.getSession().getClassResolver().resolveClass(
-					classname);
+			final Class< ? > componentClass = container.getSession()
+				.getClassResolver()
+				.resolveClass(classname);
 
-			final Constructor constructor = componentClass
-					.getConstructor(new Class[] { String.class });
-			component = (Component)constructor.newInstance(new Object[] { componentId });
+			final Constructor< ? > constructor = componentClass.getConstructor(new Class[] { String.class });
+			component = (Component< ? >)constructor.newInstance(new Object[] { componentId });
 		}
 		catch (ClassNotFoundException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (IllegalAccessException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (InstantiationException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (ClassCastException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 		catch (SecurityException e)
 		{
 			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
-					e.getMessage());
+				e.getMessage());
 		}
 
 		// Get all remaining attributes and invoke the component's setters
-		Iterator iter = tag.getAttributes().entrySet().iterator();
+		Iterator<Map.Entry<String, String>> iter = tag.getAttributes().entrySet().iterator();
 		while (iter.hasNext())
 		{
-			final Map.Entry entry = (Map.Entry)iter.next();
-			final String key = (String)entry.getKey();
-			final String value = (String)entry.getValue();
+			final Map.Entry<String, String> entry = iter.next();
+			final String key = entry.getKey();
+			final String value = entry.getValue();
 
 			// Ignore attributes 'name' and 'class'
 			if ("name".equalsIgnoreCase(key) || ("class".equalsIgnoreCase(key)))
@@ -253,7 +254,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	 * @param locale
 	 */
 	private final void invokeSetter(final Object object, final String name, final String value,
-			final Locale locale)
+		final Locale locale)
 	{
 		// Note: tag attributes are maintained in a LowerCaseKeyValueMap, thus
 		// 'name' will be all lowercase.
@@ -278,49 +279,49 @@ public final class AutoComponentResolver implements IComponentResolver
 		if (method == null)
 		{
 			throw new MarkupException("Unable to initialize Component. Method with name " +
-					methodName + " not found");
+				methodName + " not found");
 		}
 
 		// The method must have a single parameter
-		final Class[] parameterClasses = method.getParameterTypes();
+		final Class< ? >[] parameterClasses = method.getParameterTypes();
 		if (parameterClasses.length != 1)
 		{
 			throw new MarkupException("Unable to initialize Component. Method with name " +
-					methodName + " must have one and only one parameter");
+				methodName + " must have one and only one parameter");
 		}
 
 		// Convert the parameter if necessary, depending on the setter's
 		// attribute
-		final Class paramClass = parameterClasses[0];
+		final Class< ? > paramClass = parameterClasses[0];
 		try
 		{
 			final IConverter converter = Application.get().getConverterLocator().getConverter(
-					paramClass);
+				paramClass);
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{
 				throw new MarkupException("Unable to convert value '" + value + "' into " +
-						paramClass + ". May be there is no converter for that type registered?");
+					paramClass + ". May be there is no converter for that type registered?");
 			}
 			method.invoke(object, new Object[] { param });
 		}
 		catch (IllegalAccessException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName +
-							". Cause: " + ex);
+				"Unable to initialize Component. Failure while invoking method " + methodName +
+					". Cause: " + ex);
 		}
 		catch (InvocationTargetException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName +
-							". Cause: " + ex);
+				"Unable to initialize Component. Failure while invoking method " + methodName +
+					". Cause: " + ex);
 		}
 		catch (NumberFormatException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName +
-							". Cause: " + ex);
+				"Unable to initialize Component. Failure while invoking method " + methodName +
+					". Cause: " + ex);
 		}
 	}
 }

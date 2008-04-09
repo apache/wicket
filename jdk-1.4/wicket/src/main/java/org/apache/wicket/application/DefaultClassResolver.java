@@ -49,21 +49,21 @@ public final class DefaultClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private final ConcurrentHashMap<String, WeakReference<Class>> classes = new ConcurrentHashMap<String, WeakReference<Class>>();
+	private final ConcurrentHashMap<String, WeakReference<Class< ? >>> classes = new ConcurrentHashMap<String, WeakReference<Class< ? >>>();
 
 	/**
 	 * @see org.apache.wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public final Class resolveClass(final String classname) throws ClassNotFoundException
+	public final Class< ? > resolveClass(final String classname) throws ClassNotFoundException
 	{
-		Class clazz = null;
-		WeakReference ref = classes.get(classname);
+		Class< ? > clazz = null;
+		WeakReference<Class< ? >> ref = classes.get(classname);
 
 		// Might be garbage-collected between getting the WeakRef and retrieving
 		// the Class from it.
 		if (ref != null)
 		{
-			clazz = (Class)ref.get();
+			clazz = ref.get();
 		}
 		if (clazz == null)
 		{
@@ -110,30 +110,31 @@ public final class DefaultClassResolver implements IClassResolver
 					}
 					clazz = loader.loadClass(classname);
 				}
-				classes.put(classname, new WeakReference<Class>(clazz));
+				classes.put(classname, new WeakReference<Class< ? >>(clazz));
 			}
 		}
 		return clazz;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.application.IClassResolver#getResources(java.lang.String)
+	 */
 	public Iterator<URL> getResources(String name)
 	{
 		HashSet<URL> loadedFiles = new HashSet<URL>();
 		try
 		{
 			// Try the classloader for the wicket jar/bundle
-			Enumeration resources = Application.class.getClassLoader().getResources(
-				"wicket.properties");
+			Enumeration<URL> resources = Application.class.getClassLoader().getResources(name);
 			loadResources(resources, loadedFiles);
 
 			// Try the classloader for the user's application jar/bundle
-			resources = Application.get().getClass().getClassLoader().getResources(
-				"wicket.properties");
+			resources = Application.get().getClass().getClassLoader().getResources(name);
 			loadResources(resources, loadedFiles);
 
 			// Try the context class loader
-			resources = Thread.currentThread().getContextClassLoader().getResources(
-				"wicket.properties");
+			resources = Thread.currentThread().getContextClassLoader().getResources(name);
 			loadResources(resources, loadedFiles);
 		}
 		catch (IOException e)
@@ -144,13 +145,18 @@ public final class DefaultClassResolver implements IClassResolver
 		return loadedFiles.iterator();
 	}
 
-	private void loadResources(Enumeration resources, Set<URL> loadedFiles)
+	/**
+	 * 
+	 * @param resources
+	 * @param loadedFiles
+	 */
+	private void loadResources(Enumeration<URL> resources, Set<URL> loadedFiles)
 	{
 		if (resources != null)
 		{
 			while (resources.hasMoreElements())
 			{
-				final URL url = (URL)resources.nextElement();
+				final URL url = resources.nextElement();
 				if (!loadedFiles.contains(url))
 				{
 					loadedFiles.add(url);
@@ -158,5 +164,4 @@ public final class DefaultClassResolver implements IClassResolver
 			}
 		}
 	}
-
 }

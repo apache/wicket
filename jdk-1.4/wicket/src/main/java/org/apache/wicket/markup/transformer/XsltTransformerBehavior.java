@@ -54,7 +54,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 */
 	public XsltTransformerBehavior()
 	{
-		this.xslFile = null;
+		xslFile = null;
 	}
 
 	/**
@@ -63,14 +63,15 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 */
 	public XsltTransformerBehavior(final String xslFilePath)
 	{
-		this.xslFile = xslFilePath;
+		xslFile = xslFilePath;
 	}
 
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	public void onComponentTag(final Component component, final ComponentTag tag)
+	@Override
+	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
 
@@ -83,21 +84,23 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final CharSequence output)
-			throws Exception
+	@Override
+	public CharSequence transform(final Component< ? > component, final CharSequence output)
+		throws Exception
 	{
-		return new XsltTransformer(this.xslFile).transform(component, output);
+		return new XsltTransformer(xslFile).transform(component, output);
 	}
 
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
-	public void bind(final Component component)
+	@Override
+	public void bind(final Component< ? > component)
 	{
 		if (component instanceof Page)
 		{
 			throw new WicketRuntimeException(
-					"You can not attach a XstlTransformerBehavior to a Page. It can be attached to any other component.");
+				"You can not attach a XstlTransformerBehavior to a Page. It can be attached to any other component.");
 		}
 		super.bind(component);
 	}

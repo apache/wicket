@@ -84,8 +84,8 @@ public class WicketContainerResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		// this is only here so we register wicket:container tag, this resolver
 		// does not actually do anything special to the tag

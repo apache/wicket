@@ -58,8 +58,8 @@ public class BorderBodyResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		// Must be wicket:body
 		if (tag instanceof WicketTag)
@@ -69,7 +69,7 @@ public class BorderBodyResolver implements IComponentResolver
 			{
 				// Find the border parent. There must not be a body container in
 				// between
-				MarkupContainer parent = container.getParent();
+				MarkupContainer< ? > parent = container.getParent();
 				while (parent != null)
 				{
 					if (parent instanceof Border.BorderBodyContainer)
@@ -78,20 +78,20 @@ public class BorderBodyResolver implements IComponentResolver
 					}
 					else if (parent instanceof Border)
 					{
-						Component component = parent.get(tag.getId());
+						Component< ? > component = parent.get(tag.getId());
 						if (component != null)
 						{
 							component.render(markupStream);
 
 							log.warn("Please consider to change your java code to " +
-									"something like: " + container.getId() +
-									".add(getBodyContainer()); for the component hierarchy to " +
-									"better reflect the markup hierarchy. For example, say that " +
-									"you have a border class in which you do: " +
-									"\'WebMarkupContainer div = new " +
-									"WebMarkupContainer(\"roundDiv\"); add(div);\' you should " +
-									"now do \'add(div); div.add(getBodyContainer());\'. " +
-									"Please fix this before Wicket 1.4");
+								"something like: " + container.getId() +
+								".add(getBodyContainer()); for the component hierarchy to " +
+								"better reflect the markup hierarchy. For example, say that " +
+								"you have a border class in which you do: " +
+								"\'WebMarkupContainer div = new " +
+								"WebMarkupContainer(\"roundDiv\"); add(div);\' you should " +
+								"now do \'add(div); div.add(getBodyContainer());\'. " +
+								"Please fix this before Wicket 1.4");
 						}
 
 						return true;

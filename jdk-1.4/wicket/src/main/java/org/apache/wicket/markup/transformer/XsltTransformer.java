@@ -51,7 +51,7 @@ public class XsltTransformer implements ITransformer
 	 */
 	public XsltTransformer()
 	{
-		this.xslFile = null;
+		xslFile = null;
 	}
 
 	/**
@@ -85,15 +85,15 @@ public class XsltTransformer implements ITransformer
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final CharSequence output)
-			throws Exception
+	public CharSequence transform(final Component< ? > component, final CharSequence output)
+		throws Exception
 	{
 		IResourceStream resourceStream = getResourceStream(component);
 
 		if (resourceStream == null)
 		{
 			throw new FileNotFoundException("Unable to find XSLT resource for " +
-					component.toString());
+				component.toString());
 		}
 
 		try
@@ -104,14 +104,14 @@ public class XsltTransformer implements ITransformer
 			// 2. Use the TransformerFactory to process the stylesheet Source
 			// and
 			// generate a Transformer.
-			Transformer transformer = tFactory.newTransformer(new StreamSource(resourceStream
-					.getInputStream()));
+			Transformer transformer = tFactory.newTransformer(new StreamSource(
+				resourceStream.getInputStream()));
 
 			// 3. Use the Transformer to transform an XML Source and send the
 			// output to a Result object.
 			StringWriter writer = new StringWriter();
 			transformer.transform(new StreamSource(new StringReader(output.toString())),
-					new StreamResult(writer));
+				new StreamResult(writer));
 
 			return writer.getBuffer();
 		}
@@ -128,21 +128,24 @@ public class XsltTransformer implements ITransformer
 	 * 
 	 * @return The XSLT file resource stream
 	 */
-	private IResourceStream getResourceStream(final Component component)
+	private IResourceStream getResourceStream(final Component< ? > component)
 	{
 		final IResourceStream resourceStream;
 
-		String filePath = this.xslFile;
+		String filePath = xslFile;
 		if (filePath == null)
 		{
-			filePath = component.findParentWithAssociatedMarkup().getClass().getPackage().getName()
-					.replace('.', '/') +
-					"/" + component.getId();
+			filePath = component.findParentWithAssociatedMarkup()
+				.getClass()
+				.getPackage()
+				.getName()
+				.replace('.', '/') +
+				"/" + component.getId();
 		}
 
 		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-				getClass(), filePath, component.getStyle(), component.getLocale(),
-				XsltTransformer.extension);
+			getClass(), filePath, component.getStyle(), component.getLocale(),
+			XsltTransformer.extension);
 
 		return resourceStream;
 	}
