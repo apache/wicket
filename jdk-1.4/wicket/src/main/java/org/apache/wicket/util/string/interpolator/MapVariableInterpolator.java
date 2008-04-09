@@ -60,7 +60,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            multiple interpolators can be chained
 	 */
 	public MapVariableInterpolator(String string, final Map variables,
-			boolean exceptionOnNullVarValue)
+		boolean exceptionOnNullVarValue)
 	{
 		super(string, exceptionOnNullVarValue);
 		this.variables = variables;
@@ -84,7 +84,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            the variable name
 	 * @return the value
 	 */
-	protected final String getValue(final String variableName)
+	protected String getValue(final String variableName)
 	{
 		return Strings.toString(variables.get(variableName));
 	}

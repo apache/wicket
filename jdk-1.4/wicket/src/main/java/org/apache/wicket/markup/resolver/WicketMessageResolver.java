@@ -16,32 +16,90 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Response;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * This is a tag resolver which handles &lt;wicket:message key="myKey"&gt;Default
  * Text&lt;/wicket:message&gt;. The resolver will replace the whole tag with the message found in
  * the properties file associated with the Page. If no message is found, the default body text will
  * remain.
+ * <p>
+ * You can also nest child components inside a wicket:message and then reference them from the
+ * properties file. For example in the html
+ * 
+ * <pre>
+ *     &lt;wicket:message key=&quot;myKey&quot;&gt;
+ *        This text will be replaced with text from the properties file.
+ *        &lt;span wicket:id=&quot;amount&quot;&gt;[amount]&lt;/span&gt;.
+ *        &lt;a wicket:id=&quot;link&quot;&gt;
+ *            &lt;wicket:message key=&quot;linkText&quot;/&gt;
+ *        &lt;/a&gt;
+ *     &lt;/wicket:message&gt;
+ * </pre>
+ * 
+ * Then in the properties file have a variable with a name that matches the wicket:id for each child
+ * component. The variables can be in any order, they do NOT have to match the order in the HTML
+ * file.
+ * 
+ * <pre>
+ *     myKey=Your balance is ${amount}. Click ${link} to view the details.
+ *     linkText=here
+ * </pre>
+ * 
+ * And in the java
+ * 
+ * <pre>
+ * add(new Label(&quot;amount&quot;, new Model(&quot;$5.00&quot;)));
+ * add(new BookmarkablePageLink(&quot;link&quot;, DetailsPage.class));
+ * </pre>
+ * 
+ * This will output
+ * 
+ * <pre>
+ * Your balance is $5.00. Click &lt;a href=&quot;#&quot;&gt;here&lt;/a&gt; to view the details.
+ * </pre>
+ * 
+ * If variables are not found via child component, the search will continue with the parents
+ * container model object and if still not found with the parent container itself.
+ * 
+ * It is possible to switch between logging a warning and throwing an exception if either the
+ * property key/value or any of the variables can not be found.
  * 
  * @author Juergen Donnerstag
+ * @author John Ray
  */
 public class WicketMessageResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger log = LoggerFactory.getLogger(WicketMessageResolver.class);
+
+	static
+	{
+		// register "wicket:message"
+		WicketTagIdentifier.registerWellKnownTagName("message");
+	}
 
 	/**
 	 * If the key can't be resolved and the default is null, an exception will be thrown. Instead,
@@ -50,14 +108,8 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
-	static
-	{
-		// register "wicket:message"
-		WicketTagIdentifier.registerWellKnownTagName("message");
-	}
-
-
-	private static final long serialVersionUID = 1L;
+	/** If true, than throw an exception if the property key was not found */
+	private static boolean throwExceptionIfPropertyNotFound = false;
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container and render it.
@@ -73,7 +125,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
@@ -89,10 +141,11 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
-				MessageLabel label = new MessageLabel(id, messageKey);
+				MessageContainer label = new MessageContainer(id, messageKey);
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());
+
 				container.autoAdd(label, markupStream);
 
 				// Yes, we handled the tag
@@ -105,9 +158,35 @@ public class WicketMessageResolver implements IComponentResolver
 	}
 
 	/**
-	 * A Label which expands open-close tags to open-body-close if required
+	 * If true, than throw an exception if a property key is not found. If false, just a warning is
+	 * issued in the logged.
+	 * 
+	 * @return throwExceptionIfPropertyNotFound
 	 */
-	public static class MessageLabel extends WebComponent
+	public static boolean isThrowExceptionIfPropertyNotFound()
+	{
+		return throwExceptionIfPropertyNotFound;
+	}
+
+	/**
+	 * If true, than throw an exception if a property key is not found. If false, just a warning is
+	 * issued in the logged.
+	 * 
+	 * @param throwExceptionIfPropertyNotFound
+	 *            throwExceptionIfPropertyNotFound
+	 */
+	public static void setThrowExceptionIfPropertyNotFound(boolean throwExceptionIfPropertyNotFound)
+	{
+		WicketMessageResolver.throwExceptionIfPropertyNotFound = throwExceptionIfPropertyNotFound;
+	}
+
+	/**
+	 * A Container which expands open-close tags to open-body-close if required. It gets a
+	 * properties value and replaces variable such as ${myVar} with the rendered output of its child
+	 * tags.
+	 * 
+	 */
+	private static class MessageContainer extends MarkupContainer<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -117,47 +196,220 @@ public class WicketMessageResolver implements IComponentResolver
 		 * @param id
 		 * @param messageKey
 		 */
-		public MessageLabel(final String id, final String messageKey)
+		public MessageContainer(final String id, final String messageKey)
 		{
-			super(id, new Model(messageKey));
+			// The message key becomes the model
+			super(id, new Model<String>(messageKey));
+
 			setEscapeModelStrings(false);
 		}
 
-		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		/**
+		 * 
+		 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+		 *      org.apache.wicket.markup.ComponentTag)
+		 */
+		@Override
+		protected void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 		{
+			// Get the value from the properties file
 			final String key = getModelObjectAsString();
 			final String value = getLocalizer().getString(key, getParent(), DEFAULT_VALUE);
-			if (value != null && !DEFAULT_VALUE.equals(value))
+
+			// if found, than render it after replacing the variables
+			if ((value != null) && !DEFAULT_VALUE.equals(value))
 			{
-				replaceComponentTagBody(markupStream, openTag, value.trim());
+				renderMessage(markupStream, openTag, key, value);
 			}
 			else
 			{
-				log.debug("No value found for wicket:message tag with key: {}", key);
-
-				// get original tag from markup because we modified this one to always be open
-				markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
-				ComponentTag tag = markupStream.getTag();
-				markupStream.next();
-
-				// if the tag is of form <wicket:message>{foo}</wicket:message> use {foo} as
-				// default value for the message, otherwise do nothing
-				if (!tag.isOpenClose())
+				if (isThrowExceptionIfPropertyNotFound() == true)
 				{
-					MarkupElement body = markupStream.get();
-					if (body instanceof RawMarkup)
+					throw new WicketRuntimeException("Property '" + key +
+						"' not found in property files. Markup: " + markupStream.toString());
+				}
+
+				log.warn("No value found for wicket:message tag with key: {}", key);
+				renderComponentTagBody(markupStream, openTag);
+			}
+		}
+
+		/**
+		 * A property key has been found. Now render the property value.
+		 * 
+		 * @param markupStream
+		 * @param openTag
+		 * @param key
+		 * @param value
+		 */
+		private void renderMessage(final MarkupStream markupStream, final ComponentTag openTag,
+			final String key, final String value)
+		{
+			// Find all direct child tags, render them separately into a String, and remember them
+			// in a hash map associated with the wicket id
+			final Map<String, CharSequence> childTags = findAndRenderChildWicketTags(markupStream,
+				openTag);
+
+			final Map<String, Object> variablesReplaced = new HashMap<String, Object>();
+
+			// Replace all ${var} within the property value with real values
+			String text = new MapVariableInterpolator(value, childTags)
+			{
+				/**
+				 * @see org.apache.wicket.util.string.interpolator.MapVariableInterpolator#getValue(java.lang.String)
+				 */
+				@Override
+				protected String getValue(final String variableName)
+				{
+					// First check if a child tag with the same id exists.
+					String value = super.getValue(variableName);
+
+					// Remember that we successfully used the tag
+					if (value != null)
 					{
-						replaceComponentTagBody(markupStream, openTag, body.toCharSequence());
+						variablesReplaced.put(variableName, null);
+					}
+
+					// If not, try to resolve the name with containers model data
+					if (value == null)
+					{
+						value = Strings.toString(PropertyResolver.getValue(variableName,
+							getParent().getModelObject()));
+					}
+
+					// If still not found, try the component itself
+					if (value == null)
+					{
+						value = Strings.toString(PropertyResolver.getValue(variableName,
+							getParent()));
+					}
+
+					// If still not found, don't know what to do
+					if (value == null)
+					{
+						String msg = "The localized text for <wicket:message key=\"" + key +
+							"\"> has a variable ${" + variableName +
+							"}. However the wicket:message element does not have a child " +
+							"element with a wicket:id=\"" + variableName + "\".";
+
+						if (isThrowExceptionIfPropertyNotFound() == true)
+						{
+							markupStream.throwMarkupException(msg);
+						}
+						else
+						{
+							log.warn(msg);
+							value = "### VARIABLE NOT FOUND: " + variableName + " ###";
+						}
+					}
+
+					return value;
+				}
+			}.toString();
+
+			getResponse().write(text);
+
+			// Make sure all of the children were rendered
+			Iterator<String> iter = childTags.keySet().iterator();
+			while (iter.hasNext())
+			{
+				String id = iter.next();
+				if (variablesReplaced.containsKey(id) == false)
+				{
+					String msg = "The <wicket:message key=\"" + key +
+						"\"> has a child element with wicket:id=\"" + id +
+						"\". You must add the variable ${" + id +
+						"} to the localized text for the wicket:message.";
+
+					if (isThrowExceptionIfPropertyNotFound() == true)
+					{
+						markupStream.throwMarkupException(msg);
+					}
+					else
+					{
+						log.warn(msg);
 					}
 				}
 			}
 		}
 
 		/**
+		 * If the tag is of form <wicket:message>{foo}</wicket:message> then scan for any child
+		 * wicket component and save their tag index
 		 * 
+		 * @param markupStream
+		 * @param openTag
+		 * @return
+		 */
+		private Map<String, CharSequence> findAndRenderChildWicketTags(
+			final MarkupStream markupStream, final ComponentTag openTag)
+		{
+			Map<String, CharSequence> childTags = new HashMap<String, CharSequence>();
+
+			// get original tag from markup because we modified openTag to always be open
+			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
+			ComponentTag tag = markupStream.getTag();
+			markupStream.next();
+
+			// if the tag is of form <wicket:message>{foo}</wicket:message> then scan for any
+			// child component and save their tag index
+			if (!tag.isOpenClose())
+			{
+				while (markupStream.hasMore() && !markupStream.get().closes(openTag))
+				{
+					MarkupElement element = markupStream.get();
+					// If it a tag like <wicket..> or <span wicket:id="..." >
+					if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
+					{
+						String id = ((ComponentTag)element).getId();
+
+						// Temporarily replace the web response with a String response
+						final Response webResponse = getResponse();
+
+						try
+						{
+							final StringResponse response = new StringResponse();
+							getRequestCycle().setResponse(response);
+
+							Component< ? > component = getParent().get(id);
+							if (component != null)
+							{
+								component.render(markupStream);
+							}
+							childTags.put(id, response.getBuffer());
+						}
+						finally
+						{
+							// Restore the original response
+							getRequestCycle().setResponse(webResponse);
+						}
+					}
+					else
+					{
+						markupStream.next();
+					}
+				}
+			}
+
+			return childTags;
+		}
+
+		/**
+		 * 
+		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+		 */
+		@Override
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
+
+		/**
 		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 		 */
-		protected void onComponentTag(ComponentTag tag)
+		@Override
+		protected void onComponentTag(final ComponentTag tag)
 		{
 			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
