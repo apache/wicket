@@ -385,7 +385,16 @@ public class WicketFilter implements Filter
 			{
 				// Close response
 				if (response != null)
-					response.close();
+				{
+					try
+					{
+						response.close();
+					}
+					catch (Exception e)
+					{
+						log.error("closing the buffer error", e);
+					}
+				}
 
 				// Clean up thread local session
 				Session.unset();
