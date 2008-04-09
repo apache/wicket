@@ -31,7 +31,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
+ * An inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
  * {@link DropDownChoice} is displayed.
  * 
  * @author Eelco Hillenius
