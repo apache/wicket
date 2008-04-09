@@ -83,7 +83,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				if (getModelObject() == null)
+				Object modelObject = getModelObject();
+				if (modelObject == null || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
@@ -170,7 +171,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 					"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
 				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
-					"&save=false'); return false;}";
+					"&save=false');this.onblur='';return false;}";
 
 				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
 					"; ";
