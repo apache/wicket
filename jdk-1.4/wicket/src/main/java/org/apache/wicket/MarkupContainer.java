@@ -111,7 +111,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(final String id, IModel model)
+	public MarkupContainer(final String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -125,7 +125,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public final MarkupContainer add(final Component child)
+	public final MarkupContainer<T> add(final Component child)
 	{
 		checkHierarchyChange(child);
 
@@ -158,7 +158,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The child
 	 * @return This
 	 */
-	public final MarkupContainer addOrReplace(final Component child)
+	public final MarkupContainer<T> addOrReplace(final Component child)
 	{
 		checkHierarchyChange(child);
 
@@ -670,7 +670,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public final MarkupContainer replace(final Component child)
+	public final MarkupContainer<T> replace(final Component child)
 	{
 		checkHierarchyChange(child);
 

@@ -480,7 +480,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @see IValidator
 	 * @see IValidatorAddListener
 	 */
-	public final FormComponent add(final IValidator validator)
+	public final FormComponent<T> add(final IValidator validator)
 	{
 		if (validator == null)
 		{
@@ -771,16 +771,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * 
 	 * @return List of validators
 	 */
-	public final List getValidators()
+	public final List<IValidator> getValidators()
 	{
 		final int size = validators_size();
 		if (size == 0)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		else
 		{
-			final List list = new ArrayList(size);
+			final List<IValidator> list = new ArrayList<IValidator>(size);
 			for (int i = 0; i < size; i++)
 			{
 				list.add(validators_get(i));
@@ -964,7 +964,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public FormComponent setLabel(IModel labelModel)
+	public FormComponent<T> setLabel(IModel labelModel)
 	{
 		setLabelInternal(labelModel);
 		return this;
@@ -1004,7 +1004,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 *            True if this component is to be persisted.
 	 * @return this for chaining
 	 */
-	public final FormComponent setPersistent(final boolean persistent)
+	public final FormComponent<T> setPersistent(final boolean persistent)
 	{
 		if (supportsPersistence())
 		{
@@ -1024,7 +1024,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param required
 	 * @return this for chaining
 	 */
-	public final FormComponent setRequired(final boolean required)
+	public final FormComponent<T> setRequired(final boolean required)
 	{
 		if (!required && getType() != null && getType().isPrimitive())
 		{
@@ -1046,7 +1046,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final FormComponent setType(Class type)
+	public final FormComponent<T> setType(Class type)
 	{
 		typeName = type == null ? null : type.getName();
 		if (type != null && type.isPrimitive())
@@ -1271,16 +1271,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	protected T convertValue(String[] value) throws ConversionException
 	{
 		return (T)(value != null && value.length > 0 && value[0] != null ? trim(value[0]) : null);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#getBehaviors(java.lang.Class)
-	 */
-	@Override
-	protected List getBehaviors(Class type)
-	{
-		// List
-		return super.getBehaviors(type);
 	}
 
 	/**
