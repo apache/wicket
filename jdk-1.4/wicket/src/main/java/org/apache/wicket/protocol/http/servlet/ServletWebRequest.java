@@ -491,4 +491,10 @@ public class ServletWebRequest extends WebRequest
 		}
 
 	}
+	
+	@Override
+	public String getQueryString()
+	{
+		return httpServletRequest.getQueryString();
+	}
 }

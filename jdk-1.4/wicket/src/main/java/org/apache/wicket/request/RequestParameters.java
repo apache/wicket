@@ -83,6 +83,9 @@ public class RequestParameters implements IClusterable
 
 	/** depth of the page for relative URLs. */
 	private int urlDepth = -1;
+	
+	/* the request query string */
+	private String queryString;
 
 	/**
 	 * Construct.
@@ -427,6 +430,22 @@ public class RequestParameters implements IClusterable
 
 		b.append("]");
 		return b.toString();
+	}
+	
+	/**
+	 * @return request query string
+	 */
+	public String getQueryString()
+	{
+		return queryString;
+	}
+	
+	/**
+	 * @param queryString
+	 */
+	public void setQueryString(String queryString)
+	{
+		this.queryString = queryString;
 	}
 
 }

@@ -224,4 +224,11 @@ public abstract class Request
 	{
 		return "Request[url=" + getURL() + "]";
 	}
+	
+	/**
+	 * Returns the query string (part after ?) of this request.
+	 * 
+	 * @return request query string 
+	 */
+	public abstract String getQueryString(); 
 }
