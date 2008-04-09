@@ -104,6 +104,18 @@ public interface IResourceSettings
 	void addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
+	 * Add a string resource loader to the chain of loaders. If this is the first call to this
+	 * method since the creation of the application settings then the existing chain is cleared
+	 * before the new loader is added.
+	 * 
+	 * @param index
+	 *            The position within the array to insert the loader
+	 * @param loader
+	 *            The loader to be added
+	 */
+	void addStringResourceLoader(final int index, final IStringResourceLoader loader);
+
+	/**
 	 * Whether to disable gzip compression for resources. You need this on SAP, which gzips things
 	 * twice.
 	 * 
@@ -174,7 +186,7 @@ public interface IResourceSettings
 	/**
 	 * @return an unmodifiable list of all available string resource loaders
 	 */
-	List getStringResourceLoaders();
+	List<IStringResourceLoader> getStringResourceLoaders();
 
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()

@@ -103,7 +103,7 @@ public interface IRequestCycleSettings
 	 * </p>
 	 */
 	public static final IRequestCycleSettings.RenderStrategy ONE_PASS_RENDER = new IRequestCycleSettings.RenderStrategy(
-			"ONE_PASS_RENDER");
+		"ONE_PASS_RENDER");
 
 	/**
 	 * All logical parts of a request (the action and render part) are handled within the same
@@ -112,7 +112,7 @@ public interface IRequestCycleSettings
 	 * render this request.
 	 */
 	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_BUFFER = new IRequestCycleSettings.RenderStrategy(
-			"REDIRECT_BUFFER");
+		"REDIRECT_BUFFER");
 
 	/**
 	 * The render part of a request (opposed to the 'action part' which is either the construction
@@ -141,7 +141,7 @@ public interface IRequestCycleSettings
 	 * </p>
 	 */
 	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_RENDER = new IRequestCycleSettings.RenderStrategy(
-			"CLIENT_SIDE_REDIRECT");
+		"CLIENT_SIDE_REDIRECT");
 
 	/**
 	 * Adds a response filter to the list. Filters are evaluated in the order they have been added.
@@ -176,7 +176,7 @@ public interface IRequestCycleSettings
 	/**
 	 * @return an unmodifiable list of added response filters, null if none
 	 */
-	List getResponseFilters();
+	List<IResponseFilter> getResponseFilters();
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the response and the

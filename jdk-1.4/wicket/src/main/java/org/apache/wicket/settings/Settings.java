@@ -49,6 +49,7 @@ import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
@@ -92,7 +93,7 @@ public final class Settings
 		IRequestLoggerSettings
 {
 	/** Class of access denied page. */
-	private WeakReference/* <Class<? extends Page> */accessDeniedPage;
+	private WeakReference<Class< ? extends Page>> accessDeniedPage;
 
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
@@ -118,7 +119,7 @@ public final class Settings
 	private IClassResolver classResolver = new DefaultClassResolver();
 
 	/** List of (static) ComponentResolvers */
-	private final List componentResolvers = new ArrayList();
+	private final List<IComponentResolver> componentResolvers = new ArrayList<IComponentResolver>();
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -160,7 +161,7 @@ public final class Settings
 	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Class of internal error page. */
-	private WeakReference/* <Class<? extends Page> */internalErrorPage;
+	private WeakReference<Class< ? extends Page>> internalErrorPage;
 
 	/**
 	 * whether wicket should track line precise additions of components for error reporting.
@@ -188,16 +189,13 @@ public final class Settings
 	private int maxPageMaps = 5;
 
 	/** Map to look up resource factories by name */
-	private final Map nameToResourceFactory = new HashMap();
-
-	/** True if string resource loaders have been overridden */
-	private boolean overriddenStringResourceLoaders = false;
+	private final Map<String, IResourceFactory> nameToResourceFactory = new HashMap<String, IResourceFactory>();
 
 	/** The package resource guard. */
 	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
 
 	/** The error page displayed when an expired page is accessed. */
-	private WeakReference/* <Class<? extends Page> */pageExpiredErrorPage;
+	private WeakReference<Class< ? extends Page>> pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -229,7 +227,7 @@ public final class Settings
 	private ModificationWatcher resourceWatcher;
 
 	/** List of {@link IResponseFilter}s. */
-	private List responseFilters;
+	private List<IResponseFilter> responseFilters;
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the response and the
@@ -239,7 +237,8 @@ public final class Settings
 	private String responseRequestEncoding = "UTF-8";
 
 	/** Chain of string resource loaders to use */
-	private final List stringResourceLoaders = new ArrayList(4);
+	private final List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(
+		4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
@@ -277,7 +276,7 @@ public final class Settings
 		 * @param component
 		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
-		public void onUnauthorizedInstantiation(final Component component)
+		public void onUnauthorizedInstantiation(final Component< ? > component)
 		{
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
@@ -310,6 +309,9 @@ public final class Settings
 
 	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
 
+	/** */
+	private Bytes defaultMaximumUploadSize = Bytes.MAX;
+
 	/**
 	 * Create the application settings, carrying out any necessary initializations.
 	 * 
@@ -320,6 +322,7 @@ public final class Settings
 	{
 		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
+		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
 	}
 
@@ -363,11 +366,11 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(org.apache.wicket.IResponseFilter)
 	 */
-	public void addResponseFilter(IResponseFilter responseFilter)
+	public void addResponseFilter(final IResponseFilter responseFilter)
 	{
 		if (responseFilters == null)
 		{
-			responseFilters = new ArrayList(3);
+			responseFilters = new ArrayList<IResponseFilter>(4);
 		}
 		responseFilters.add(responseFilter);
 	}
@@ -377,20 +380,23 @@ public final class Settings
 	 */
 	public void addStringResourceLoader(final IStringResourceLoader loader)
 	{
-		if (!overriddenStringResourceLoaders)
-		{
-			stringResourceLoaders.clear();
-			overriddenStringResourceLoaders = true;
-		}
 		stringResourceLoaders.add(loader);
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#addStringResourceLoader(org.apache.wicket.resource.loader.IStringResourceLoader)
+	 */
+	public void addStringResourceLoader(int index, final IStringResourceLoader loader)
+	{
+		stringResourceLoaders.add(index, loader);
 	}
 
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
 	 */
-	public Class getAccessDeniedPage()
+	public Class< ? extends Page> getAccessDeniedPage()
 	{
-		return (Class)accessDeniedPage.get();
+		return accessDeniedPage.get();
 	}
 
 	/**
@@ -439,7 +445,7 @@ public final class Settings
 	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
-	public List getComponentResolvers()
+	public List<IComponentResolver> getComponentResolvers()
 	{
 		return componentResolvers;
 	}
@@ -531,9 +537,9 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getInternalErrorPage()
 	 */
-	public Class getInternalErrorPage()
+	public Class< ? extends Page> getInternalErrorPage()
 	{
-		return (Class)internalErrorPage.get();
+		return internalErrorPage.get();
 	}
 
 	/**
@@ -587,9 +593,9 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
 	 */
-	public Class getPageExpiredErrorPage()
+	public Class< ? extends Page> getPageExpiredErrorPage()
 	{
-		return (Class)pageExpiredErrorPage.get();
+		return pageExpiredErrorPage.get();
 	}
 
 	/**
@@ -633,7 +639,7 @@ public final class Settings
 	 */
 	public IResourceFactory getResourceFactory(final String name)
 	{
-		return (IResourceFactory)nameToResourceFactory.get(name);
+		return nameToResourceFactory.get(name);
 	}
 
 	/**
@@ -685,7 +691,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getResponseFilters()
 	 */
-	public List getResponseFilters()
+	public List<IResponseFilter> getResponseFilters()
 	{
 		if (responseFilters == null)
 		{
@@ -708,9 +714,9 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
-	public List getStringResourceLoaders()
+	public List<IStringResourceLoader> getStringResourceLoaders()
 	{
-		return Collections.unmodifiableList(stringResourceLoaders);
+		return stringResourceLoaders;
 	}
 
 	/**
@@ -811,7 +817,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
-	public void setAccessDeniedPage(Class accessDeniedPage)
+	public void setAccessDeniedPage(Class< ? extends Page> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
 		{
@@ -819,7 +825,7 @@ public final class Settings
 		}
 		checkPageClass(accessDeniedPage);
 
-		this.accessDeniedPage = new WeakReference(accessDeniedPage);
+		this.accessDeniedPage = new WeakReference<Class< ? extends Page>>(accessDeniedPage);
 	}
 
 	/**
@@ -962,7 +968,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
-	public void setInternalErrorPage(final Class internalErrorPage)
+	public void setInternalErrorPage(final Class< ? extends Page> internalErrorPage)
 	{
 		if (internalErrorPage == null)
 		{
@@ -970,7 +976,7 @@ public final class Settings
 		}
 		checkPageClass(internalErrorPage);
 
-		this.internalErrorPage = new WeakReference(internalErrorPage);
+		this.internalErrorPage = new WeakReference<Class< ? extends Page>>(internalErrorPage);
 	}
 
 	/**
@@ -1009,7 +1015,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
-	public void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
+	public void setPageExpiredErrorPage(final Class< ? extends Page> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{
@@ -1017,7 +1023,7 @@ public final class Settings
 		}
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = new WeakReference(pageExpiredErrorPage);
+		this.pageExpiredErrorPage = new WeakReference<Class< ? extends Page>>(pageExpiredErrorPage);
 	}
 
 	/**
@@ -1171,7 +1177,7 @@ public final class Settings
 	 * @param pageClass
 	 *            the page class to check
 	 */
-	private void checkPageClass(final Class pageClass)
+	private void checkPageClass(final Class< ? extends Page> pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
 		// here, as - though the default is that a bookmarkable page must
@@ -1287,53 +1293,91 @@ public final class Settings
 		this.markupCache = markupCache;
 	}
 
-	private Bytes defaultMaximumUploadSize = Bytes.MAX;
-
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IApplicationSettings#getDefaultMaximumUploadSize()
+	 */
 	public Bytes getDefaultMaximumUploadSize()
 	{
 		return defaultMaximumUploadSize;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IApplicationSettings#setDefaultMaximumUploadSize(org.apache.wicket.util.lang.Bytes)
+	 */
 	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
 	{
 		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.ISessionSettings#setPageIdUniquePerSession(boolean)
+	 */
 	public void setPageIdUniquePerSession(boolean value)
 	{
 		pageIdUniquePerSession = value;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.ISessionSettings#isPageIdUniquePerSession()
+	 */
 	public boolean isPageIdUniquePerSession()
 	{
 		return pageIdUniquePerSession;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnAddComponentEnabled()
+	 */
 	public boolean isLinePreciseReportingOnAddComponentEnabled()
 	{
 		return linePreciseReportingOnAddComponentEnabled;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnNewComponentEnabled()
+	 */
 	public boolean isLinePreciseReportingOnNewComponentEnabled()
 	{
 		return linePreciseReportingOnNewComponentEnabled;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IDebugSettings#setLinePreciseReportingOnAddComponentEnabled(boolean)
+	 */
 	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnAddComponentEnabled = enable;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IDebugSettings#setLinePreciseReportingOnNewComponentEnabled(boolean)
+	 */
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IResourceSettings#setAddLastModifiedTimeToResourceReferenceUrl(boolean)
+	 */
 	public void setAddLastModifiedTimeToResourceReferenceUrl(boolean value)
 	{
 		addLastModifiedTimeToResourceReferenceUrl = value;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.settings.IResourceSettings#getAddLastModifiedTimeToResourceReferenceUrl()
+	 */
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl()
 	{
 		return addLastModifiedTimeToResourceReferenceUrl;

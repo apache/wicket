@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.lang.Bytes;
@@ -43,7 +44,7 @@ public interface IApplicationSettings
 	 * @return Returns the accessDeniedPage.
 	 * @see IApplicationSettings#setAccessDeniedPage(Class)
 	 */
-	Class getAccessDeniedPage();
+	Class< ? extends Page> getAccessDeniedPage();
 
 	/**
 	 * Gets the default resolver to use when finding classes and resources
@@ -66,7 +67,7 @@ public interface IApplicationSettings
 	 * @return Returns the internalErrorPage.
 	 * @see IApplicationSettings#setInternalErrorPage(Class)
 	 */
-	Class getInternalErrorPage();
+	Class< ? extends Page> getInternalErrorPage();
 
 	/**
 	 * Gets the page expired page class.
@@ -74,7 +75,7 @@ public interface IApplicationSettings
 	 * @return Returns the pageExpiredErrorPage.
 	 * @see IApplicationSettings#setPageExpiredErrorPage(Class)
 	 */
-	Class getPageExpiredErrorPage();
+	Class< ? extends Page> getPageExpiredErrorPage();
 
 	/**
 	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
@@ -82,7 +83,7 @@ public interface IApplicationSettings
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
 	 */
-	void setAccessDeniedPage(final Class accessDeniedPage);
+	void setAccessDeniedPage(final Class< ? extends Page> accessDeniedPage);
 
 	/**
 	 * Sets the default class resolver to use when finding classes and resources
@@ -107,7 +108,7 @@ public interface IApplicationSettings
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
 	 */
-	void setInternalErrorPage(final Class internalErrorPage);
+	void setInternalErrorPage(final Class< ? extends Page> internalErrorPage);
 
 	/**
 	 * Sets the page expired page class. The class must be bookmarkable and must extend Page.
@@ -115,5 +116,5 @@ public interface IApplicationSettings
 	 * @param pageExpiredErrorPage
 	 *            The pageExpiredErrorPage to set.
 	 */
-	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
+	void setPageExpiredErrorPage(final Class< ? extends Page> pageExpiredErrorPage);
 }
