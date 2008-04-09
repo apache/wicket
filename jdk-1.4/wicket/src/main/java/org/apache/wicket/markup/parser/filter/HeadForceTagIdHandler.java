@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
@@ -53,7 +54,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * @param markupFileClass
 	 *            Used to generated the a common prefix for the id
 	 */
-	public HeadForceTagIdHandler(final Class markupFileClass)
+	public HeadForceTagIdHandler(final Class< ? extends Component< ? >> markupFileClass)
 	{
 		// generate the prefix from class name
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(markupFileClass.getName());
@@ -88,7 +89,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 			{
 				// is the tag open and has empty wicket:id?
 				if ((tag instanceof WicketTag == false) && (tag.getId() == null) &&
-						(tag.isOpen() || tag.isOpenClose()) && needId(tag))
+					(tag.isOpen() || tag.isOpenClose()) && needId(tag))
 				{
 					if (tag.getAttributes().get("id") == null)
 					{

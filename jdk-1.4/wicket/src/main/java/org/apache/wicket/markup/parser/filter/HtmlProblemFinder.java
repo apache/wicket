@@ -105,18 +105,17 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 
 		// Some people are using a dot "wicket.xxx" instead of a colon
 		// "wicket:xxx"
-		Iterator iter = tag.getAttributes().keySet().iterator();
+		Iterator<String> iter = tag.getAttributes().keySet().iterator();
 		while (iter.hasNext())
 		{
-			String key = (String)iter.next();
+			String key = iter.next();
 			if (key != null)
 			{
 				key = key.toLowerCase();
 				if (key.startsWith("wicket."))
 				{
 					escalateWarning(
-							"You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ",
-							tag);
+						"You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ", tag);
 				}
 			}
 		}

@@ -127,6 +127,7 @@ public class XmlTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.MarkupElement#equalTo(org.apache.wicket.markup.MarkupElement)
 	 */
+	@Override
 	public final boolean equalTo(final MarkupElement element)
 	{
 		if (element instanceof XmlTag)
@@ -475,19 +476,19 @@ public class XmlTag extends MarkupElement
 	 * @param map
 	 *            A key/value map
 	 */
-	public void putAll(final Map map)
+	public void putAll(final Map<String, Object> map)
 	{
-		for (final Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
+		for (final Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator(); iterator.hasNext();)
 		{
-			final Map.Entry entry = (Map.Entry) iterator.next();
+			final Map.Entry<String, Object> entry = iterator.next();
 			Object value = entry.getValue();
-			put((String) entry.getKey(), (value != null) ? value.toString() : null);
+			put(entry.getKey(), (value != null) ? value.toString() : null);
 		}
 	}
 
 	/**
 	 * Removes an attribute.
-	 *
+	 * 
 	 * @param key
 	 *            The key to remove
 	 */
@@ -507,7 +508,7 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			this.name = name;
-			this.nameChanged = true;
+			nameChanged = true;
 		}
 		else
 		{
@@ -526,7 +527,7 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			this.namespace = namespace;
-			this.nameChanged = true;
+			nameChanged = true;
 		}
 		else
 		{
@@ -544,7 +545,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public void setOpenTag(final XmlTag tag)
 	{
-		this.closes = tag;
+		closes = tag;
 	}
 
 	/**
@@ -573,7 +574,7 @@ public class XmlTag extends MarkupElement
 	public String toDebugString()
 	{
 		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = " +
-				length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
+			length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
 	/**
@@ -581,6 +582,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public String toString()
 	{
 		return toCharSequence().toString();
@@ -589,6 +591,7 @@ public class XmlTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.MarkupElement#toCharSequence()
 	 */
+	@Override
 	public CharSequence toCharSequence()
 	{
 		if (!isMutable && (text != null))
@@ -604,6 +607,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public String toUserDebugString()
 	{
 		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
@@ -638,13 +642,12 @@ public class XmlTag extends MarkupElement
 		final IValueMap attributes = getAttributes();
 		if (attributes.size() > 0)
 		{
-			final Iterator iterator = attributes.keySet().iterator();
+			final Iterator<String> iterator = attributes.keySet().iterator();
 			for (; iterator.hasNext();)
 			{
-				final String key = (String)iterator.next();
+				final String key = iterator.next();
 				if ((key != null) &&
-						((attributeToBeIgnored == null) || !key
-								.equalsIgnoreCase(attributeToBeIgnored)))
+					((attributeToBeIgnored == null) || !key.equalsIgnoreCase(attributeToBeIgnored)))
 				{
 					buffer.append(" ");
 					buffer.append(key);

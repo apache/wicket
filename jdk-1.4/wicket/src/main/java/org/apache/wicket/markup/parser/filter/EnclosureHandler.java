@@ -54,7 +54,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 	}
 
 	/** Stack of <wicket:enclosure> tags */
-	private Stack/* <ComponentTag> */stack;
+	private Stack<ComponentTag> stack;
 
 	/** The id of the first wicket tag inside the enclosure */
 	private String childId;
@@ -90,7 +90,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 			{
 				if (stack == null)
 				{
-					stack = new Stack/* <ComponentTag> */();
+					stack = new Stack<ComponentTag>();
 				}
 				stack.push(tag);
 			}
@@ -101,11 +101,11 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 				if (stack == null)
 				{
 					throw new ParseException("Missing open tag for Enclosure: " + tag.toString(),
-							tag.getPos());
+						tag.getPos());
 				}
 
 				// Remove the open tag from the stack
-				ComponentTag lastEnclosure = (ComponentTag)stack.pop();
+				ComponentTag lastEnclosure = stack.pop();
 
 				// If the child attribute has not been given by the user,
 				// than ...
@@ -124,13 +124,13 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 			else
 			{
 				throw new ParseException("Open-close tag not allowed for Enclosure: " +
-						tag.toString(), tag.getPos());
+					tag.toString(), tag.getPos());
 			}
 		}
 		// Are we inside a wicket:enclosure tag?
 		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null))
 		{
-			ComponentTag lastEnclosure = (ComponentTag)stack.lastElement();
+			ComponentTag lastEnclosure = stack.lastElement();
 
 			// If the enclosure tag has NO child attribute, than ...
 			if (lastEnclosure.getString(CHILD_ATTRIBUTE) == null)
@@ -142,8 +142,8 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 				if (childId != null)
 				{
 					throw new ParseException(
-							"Use <wicket:enclosure child='xxx'> to name the child component", tag
-									.getPos());
+						"Use <wicket:enclosure child='xxx'> to name the child component",
+						tag.getPos());
 				}
 				// Remember the child id. The open tag will be updated
 				// once the close tag is found. See above.

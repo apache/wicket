@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupResourceData;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceData;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.util.value.IValueMap;
 
@@ -97,20 +97,20 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	{
 		// For all tags attributes
 		final IValueMap attributes = tag.getAttributes();
-		final Iterator it = attributes.entrySet().iterator();
+		final Iterator<Map.Entry<String, Object>> it = attributes.entrySet().iterator();
 		while (it.hasNext())
 		{
-			final Map.Entry entry = (Map.Entry)it.next();
+			final Map.Entry<String, Object> entry = it.next();
 
 			// Find attributes with namespace "xmlns"
-			final String attributeName = (String)entry.getKey();
+			final String attributeName = entry.getKey();
 			if (attributeName.startsWith(XMLNS))
 			{
 				final String xmlnsUrl = (String)entry.getValue();
 
 				// If Wicket relevant ...
 				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0) ||
-						xmlnsUrl.startsWith(WICKET_URI))
+					xmlnsUrl.startsWith(WICKET_URI))
 				{
 					// Set the Wicket namespace for wicket tags (e.g.
 					// <wicket:panel>) and attributes (e.g. wicket:id)

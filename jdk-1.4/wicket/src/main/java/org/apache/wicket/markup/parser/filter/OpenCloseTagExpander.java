@@ -34,10 +34,15 @@ import org.apache.wicket.markup.parser.XmlTag;
  */
 public class OpenCloseTagExpander extends AbstractMarkupFilter
 {
-	ComponentTag next = null;
-	private static final List replaceForTags = Arrays.asList(new String[] { "div", "span", "p",
-			"strong", "b", "e" });
+	private static final List<String> replaceForTags = Arrays.asList(new String[] { "div", "span",
+			"p", "strong", "b", "e" });
 
+	private ComponentTag next = null;
+
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
+	 */
 	public MarkupElement nextTag() throws ParseException
 	{
 		if (next != null)

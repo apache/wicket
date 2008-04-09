@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Response;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -89,7 +90,7 @@ public class ComponentTag extends MarkupElement
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
 	 * information however is required.
 	 */
-	private WeakReference<Class> markupClassRef = null;
+	private WeakReference<Class< ? extends Component< ? >>> markupClassRef = null;
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with some HTML tags like
@@ -638,10 +639,10 @@ public class ComponentTag extends MarkupElement
 
 		if (getAttributes().size() > 0)
 		{
-			final Iterator iterator = getAttributes().keySet().iterator();
+			final Iterator<String> iterator = getAttributes().keySet().iterator();
 			while (iterator.hasNext())
 			{
-				final String key = (String)iterator.next();
+				final String key = iterator.next();
 				if (key == null)
 				{
 					continue;
@@ -760,9 +761,10 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return wicketHeaderClass
 	 */
-	public Class getMarkupClass()
+	@SuppressWarnings("unchecked")
+	public Class< ? extends Component< ? >> getMarkupClass()
 	{
-		return (markupClassRef == null ? null : (Class)markupClassRef.get());
+		return (markupClassRef == null ? null : markupClassRef.get());
 	}
 
 	/**
@@ -771,7 +773,7 @@ public class ComponentTag extends MarkupElement
 	 * @param wicketHeaderClass
 	 *            wicketHeaderClass
 	 */
-	public void setMarkupClass(Class wicketHeaderClass)
+	public void setMarkupClass(Class< ? extends Component< ? >> wicketHeaderClass)
 	{
 		if (wicketHeaderClass == null)
 		{
@@ -779,7 +781,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			markupClassRef = new WeakReference(wicketHeaderClass);
+			markupClassRef = new WeakReference<Class< ? extends Component< ? >>>(wicketHeaderClass);
 		}
 	}
 

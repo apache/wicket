@@ -39,7 +39,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	final private ArrayListStack stack = new ArrayListStack();
 
 	/** Map of simple tags. */
-	private static final Map requireOpenBodyCloseTag = new HashMap();
+	private static final Map<String, Boolean> requireOpenBodyCloseTag = new HashMap<String, Boolean>();
 
 	static
 	{

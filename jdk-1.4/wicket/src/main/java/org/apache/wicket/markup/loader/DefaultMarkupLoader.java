@@ -47,12 +47,12 @@ public class DefaultMarkupLoader implements IMarkupLoader
 	 *      org.apache.wicket.markup.MarkupResourceStream,
 	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
-	public final Markup loadMarkup(final MarkupContainer container,
-			final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
-			final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
+	public final Markup loadMarkup(final MarkupContainer< ? > container,
+		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
+		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
 	{
 		IMarkupLoader loader = new InheritedMarkupMarkupLoader();
 		return loader.loadMarkup(container, markupResourceStream, new SimpleMarkupLoader(),
-				enforceReload);
+			enforceReload);
 	}
 }

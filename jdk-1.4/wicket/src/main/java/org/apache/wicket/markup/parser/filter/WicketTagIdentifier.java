@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupResourceData;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceData;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -43,7 +43,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag names */
-	private static List wellKnownTagNames;
+	private static List<String> wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
 	private final MarkupResourceData markup;
@@ -99,8 +99,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			{
 				// give up
 				throw new ParseException("Unknown tag name with Wicket namespace: '" +
-						xmlTag.getName() +
-						"'. Might be you haven't installed the appropriate resolver?", tag.getPos());
+					xmlTag.getName() +
+					"'. Might be you haven't installed the appropriate resolver?", tag.getPos());
 			}
 		}
 		else
@@ -116,8 +116,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			if (value.trim().length() == 0)
 			{
 				throw new ParseException(
-						"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
-						tag.getPos());
+					"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
+					tag.getPos());
 			}
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(value);
@@ -135,7 +135,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		if (wellKnownTagNames == null)
 		{
-			wellKnownTagNames = new ArrayList();
+			wellKnownTagNames = new ArrayList<String>();
 		}
 
 		if (wellKnownTagNames.contains(name) == false)
@@ -146,10 +146,10 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 	private boolean isWellKnown(final XmlTag xmlTag)
 	{
-		final Iterator iterator = wellKnownTagNames.iterator();
+		final Iterator<String> iterator = wellKnownTagNames.iterator();
 		while (iterator.hasNext())
 		{
-			final String name = (String)iterator.next();
+			final String name = iterator.next();
 			if (xmlTag.getName().equalsIgnoreCase(name))
 			{
 				return true;

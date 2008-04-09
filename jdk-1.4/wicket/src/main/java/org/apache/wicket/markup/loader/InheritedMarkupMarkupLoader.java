@@ -54,9 +54,9 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 *      org.apache.wicket.markup.MarkupResourceStream,
 	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
-	public final Markup loadMarkup(final MarkupContainer container,
-			final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
-			final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
+	public final Markup loadMarkup(final MarkupContainer< ? > container,
+		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
+		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
 	{
 		// read and parse the markup
 		Markup markup = baseLoader.loadMarkup(container, markupResourceStream, null, enforceReload);
@@ -79,8 +79,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * @return A markup object with the the base markup elements resolved.
 	 * @TODO move into IMarkupLoader
 	 */
-	private Markup checkForMarkupInheritance(final MarkupContainer container, final Markup markup,
-			final boolean enforceReload)
+	private Markup checkForMarkupInheritance(final MarkupContainer< ? > container,
+		final Markup markup, final boolean enforceReload)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
@@ -91,23 +91,41 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 			return markup;
 		}
 
-		// get the base markup
-		final Markup baseMarkup = Application.get().getMarkupSettings().getMarkupCache().getMarkup(
-				container,
-				markup.getMarkupResourceData().getResource().getMarkupClass().getSuperclass(),
-				enforceReload);
+		final Markup baseMarkup = getBaseMarkup(container, markup, enforceReload);
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
-					"Base markup of inherited markup not found. Component class: " +
-							markup.getMarkupResourceData().getResource().getContainerInfo()
-									.getContainerClass().getName() +
-							" Enable debug messages for org.apache.wicket.util.resource.Resource to get a list of all filenames tried.");
+				"Base markup of inherited markup not found. Component class: " +
+					markup.getMarkupResourceData()
+						.getResource()
+						.getContainerInfo()
+						.getContainerClass()
+						.getName() +
+					" Enable debug messages for org.apache.wicket.util.resource.Resource to get a list of all filenames tried.");
 		}
 
 		// Merge base and derived markup
 		return new MergedMarkup(markup, baseMarkup, extendIndex);
+	}
+
+	/**
+	 * @param container
+	 * @param markup
+	 * @param enforceReload
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Markup getBaseMarkup(final MarkupContainer< ? > container, final Markup markup,
+		final boolean enforceReload)
+	{
+		// get the base markup
+		Markup baseMarkup = Application.get().getMarkupSettings().getMarkupCache().getMarkup(
+			container,
+			markup.getMarkupResourceData().getResource().getMarkupClass().getSuperclass(),
+			enforceReload);
+
+		return baseMarkup;
 	}
 
 	/**

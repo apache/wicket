@@ -119,7 +119,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
 		 *      org.apache.wicket.markup.ComponentTag)
 		 */
-		public void onComponentTag(final Component component, final ComponentTag tag)
+		@Override
+		public void onComponentTag(final Component< ? > component, final ComponentTag tag)
 		{
 			String expr = tag.getAttributes().getString(WICKET_MESSAGE_ATTRIBUTE_NAME);
 			if (!Strings.isEmpty(expr))
@@ -165,21 +166,22 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	public boolean resolve(MarkupContainer< ? > container, MarkupStream markupStream,
+		ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs
 
 		if (WICKET_MESSAGE_CONTAINER_ID.equals(tag.getId()))
 		{
-			Component wc = null;
+			Component<Object> wc = null;
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID +
+				wc = new WebComponent<Object>(WICKET_MESSAGE_CONTAINER_ID +
 					container.getPage().getAutoIndex());
 			}
 			else
 			{
-				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID +
+				wc = new WebMarkupContainer<Object>(WICKET_MESSAGE_CONTAINER_ID +
 					container.getPage().getAutoIndex());
 			}
 

@@ -52,8 +52,8 @@ import org.slf4j.LoggerFactory;
  * @author Al Maw
  */
 public final class RelativePathPrefixHandler extends AbstractMarkupFilter
-		implements
-			IComponentResolver
+	implements
+		IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	{
 		private static final long serialVersionUID = 1L;
 
-		public void onComponentTag(Component component, ComponentTag tag)
+		@Override
+		public void onComponentTag(Component< ? > component, ComponentTag tag)
 		{
 			String prefix = null;
 
@@ -88,12 +89,13 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 				String attrValue = tag.getAttributes().getString(attrName);
 
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-						(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
 					if (prefix == null)
 					{
-						prefix = RequestCycle.get().getRequest()
-								.getRelativePathPrefixToContextRoot();
+						prefix = RequestCycle.get()
+							.getRequest()
+							.getRelativePathPrefixToContextRoot();
 					}
 					attrValue = prefix + attrValue;
 					tag.getAttributes().put(attrName, attrValue);
@@ -121,7 +123,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 		// Don't touch any wicket:id component and any auto-components
 		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true) ||
-				(tag.getAttributes().get("wicket:id") != null))
+			(tag.getAttributes().get("wicket:id") != null))
 		{
 			return tag;
 		}
@@ -133,7 +135,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			String attrName = attributeNames[i];
 			String attrValue = tag.getAttributes().getString(attrName);
 			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+				(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 			{
 				if (tag.getId() == null)
 				{
@@ -154,26 +156,28 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	public boolean resolve(MarkupContainer< ? > container, MarkupStream markupStream,
+		ComponentTag tag)
 	{
 		if (WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID.equals(tag.getId()))
 		{
-			final Component wc;
+			final Component< ? > wc;
 			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
-					container.getPage().getAutoIndex();
+				container.getPage().getAutoIndex();
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent(id);
+				wc = new WebComponent<Object>(id);
 			}
 			else
 			{
 				// we do not want to mess with the hierarchy, so the container has to be
 				// transparent as it may have wicket components inside. for example a raw anchor tag
 				// that contains a label.
-				wc = new WebMarkupContainer(id)
+				wc = new WebMarkupContainer<Object>(id)
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public boolean isTransparentResolver()
 					{
 						return true;
