@@ -62,7 +62,7 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Form for collecting input.
 	 */
-	private class InputForm extends Form
+	private class InputForm extends Form<FormInputModel>
 	{
 		/**
 		 * Construct.
@@ -72,7 +72,7 @@ public class FormInput extends WicketExamplePage
 		 */
 		public InputForm(String name)
 		{
-			super(name, new CompoundPropertyModel(new FormInputModel()));
+			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 
 			// Dropdown for selecting locale
 			add(new LocaleDropDownChoice("localeSelect"));
@@ -80,6 +80,7 @@ public class FormInput extends WicketExamplePage
 			// Link to return to default locale
 			add(new Link("defaultLocaleLink")
 			{
+				@Override
 				public void onClick()
 				{
 					WebRequest request = (WebRequest)getRequest();
@@ -87,19 +88,22 @@ public class FormInput extends WicketExamplePage
 				}
 			});
 
-			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
-			stringTextField.setLabel(new Model("String"));
+			RequiredTextField<String> stringTextField = new RequiredTextField<String>(
+				"stringProperty");
+			stringTextField.setLabel(new Model<String>("String"));
 			add(stringTextField);
-			RequiredTextField integerTextField = new RequiredTextField("integerProperty");
+			RequiredTextField<Integer> integerTextField = new RequiredTextField<Integer>(
+				"integerProperty");
 			add(integerTextField.add(NumberValidator.POSITIVE));
-			add(new RequiredTextField("doubleProperty"));
+			add(new RequiredTextField<Double>("doubleProperty"));
 
-			add(new RequiredTextField("integerInRangeProperty").add(NumberValidator.range(0, 100)));
+			add(new RequiredTextField<Integer>("integerInRangeProperty").add(NumberValidator.range(
+				0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
 			// display the multiply result
 			Label multiplyLabel = new Label("multiplyLabel", new PropertyModel(getModel(),
-					"multiply"));
+				"multiply"));
 			// just for fun, add a border so that our result will be displayed
 			// as '[ x ]'
 			multiplyLabel.setComponentBorder(new BeforeAndAfterBorder());
@@ -113,6 +117,7 @@ public class FormInput extends WicketExamplePage
 			add(group);
 			ListView persons = new ListView("numbers", NUMBERS)
 			{
+				@Override
 				protected void populateItem(ListItem item)
 				{
 					item.add(new Radio("radio", item.getModel()));
@@ -125,6 +130,7 @@ public class FormInput extends WicketExamplePage
 			add(checks);
 			ListView checksList = new ListView("numbers", NUMBERS)
 			{
+				@Override
 				protected void populateItem(ListItem item)
 				{
 					item.add(new Check("check", item.getModel()));
@@ -138,6 +144,7 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField("urlProperty", URL.class)
 			{
+				@Override
 				public IConverter getConverter(final Class type)
 				{
 					return new IConverter()
@@ -165,6 +172,7 @@ public class FormInput extends WicketExamplePage
 			// TextField using a mask converter
 			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
 			{
+				@Override
 				public IConverter getConverter(final Class/* <?> */type)
 				{
 					// US telephone number mask
@@ -179,6 +187,7 @@ public class FormInput extends WicketExamplePage
 
 			add(new Button("resetButton")
 			{
+				@Override
 				public void onSubmit()
 				{
 					// just set a new instance of the page
@@ -190,6 +199,7 @@ public class FormInput extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
@@ -198,7 +208,7 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/** list view to be nested in the form. */
-	private static final class LinesListView extends ListView
+	private static final class LinesListView extends ListView<String>
 	{
 
 		/**
@@ -213,19 +223,21 @@ public class FormInput extends WicketExamplePage
 			setReuseItems(true);
 		}
 
-		protected void populateItem(ListItem item)
+		@Override
+		protected void populateItem(ListItem<String> item)
 		{
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
+			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(item.getModel(),
+				"text")));
 		}
 	}
 
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
 		/**
 		 * Constructor.
@@ -237,9 +249,9 @@ public class FormInput extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
-		public Object getDisplayValue(Object object)
+		@Override
+		public Object getDisplayValue(Locale locale)
 		{
-			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale());
 			return display;
 		}
@@ -248,7 +260,7 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Dropdown with Locales.
 	 */
-	private final class LocaleDropDownChoice extends DropDownChoice
+	private final class LocaleDropDownChoice extends DropDownChoice<Locale>
 	{
 		/**
 		 * Construct.
@@ -268,6 +280,7 @@ public class FormInput extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
+		@Override
 		public void onSelectionChanged(Object newSelection)
 		{
 			// note that we don't have to do anything here, as our property
@@ -283,6 +296,7 @@ public class FormInput extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 		 */
+		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
 			// we want roundtrips when a the user selects another item
