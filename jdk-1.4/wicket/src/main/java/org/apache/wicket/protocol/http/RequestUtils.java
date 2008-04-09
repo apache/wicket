@@ -21,7 +21,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,6 +70,48 @@ public final class RequestUtils
 				// Should never happen
 			}
 		}
+	}
+
+	public static void decodeUrlParameters(String queryString, Map<String, String[]> parameters)
+	{
+		Map<String, List<String>> temp = new HashMap<String, List<String>>();
+		final String[] paramTuples = queryString.split("&");
+		for (int t = 0; t < paramTuples.length; t++)
+		{
+			final String[] bits = paramTuples[t].split("=");
+			final String key;
+			final String value;
+			try
+			{
+				key = URLDecoder.decode(bits[0], "UTF-8");
+				if (bits.length == 2)
+				{
+					value = URLDecoder.decode(bits[1], "UTF-8");
+				}
+				else
+				{
+					value = "";
+				}
+				List<String> l = temp.get(key);
+				if (l == null)
+				{
+					l = new ArrayList<String>();
+					temp.put(key, l);
+				}
+				l.add(value);
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				// Should never happen
+			}
+		}
+	
+		for (Map.Entry<String, List<String>> entry : temp.entrySet())
+		{
+			String s[] = new String[entry.getValue().size()];
+			entry.getValue().toArray(s);
+			parameters.put(entry.getKey(), s);
+		}	
 	}
 
 	/**

@@ -215,6 +215,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 		}
 		parameters.setParameters(map);
+		parameters.setQueryString(request.getQueryString());
 		return parameters;
 	}
 

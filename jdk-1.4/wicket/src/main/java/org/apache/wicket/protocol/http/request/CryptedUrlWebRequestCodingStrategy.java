@@ -530,6 +530,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		{
 			return url;
 		}
+		
+		@Override
+		public String getQueryString()
+		{
+			return request.getQueryString();
+		}
 	}
 
 	/**

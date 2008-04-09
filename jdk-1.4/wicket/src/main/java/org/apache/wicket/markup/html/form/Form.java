@@ -186,7 +186,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	class FormDispatchRequest extends Request
 	{
-		private final ValueMap params = new ValueMap();
+		private final Map params = new HashMap();
 
 		private final Request realRequest;
 
@@ -204,7 +204,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			this.url = realRequest.decodeURL(url);
 
 			String queryString = this.url.substring(this.url.indexOf("?") + 1);
-			RequestUtils.decodeParameters(queryString, params);
+			RequestUtils.decodeUrlParameters(queryString, params);
 		}
 
 		/**
@@ -276,6 +276,12 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		public String getURL()
 		{
 			return url;
+		}
+		
+		@Override
+		public String getQueryString()
+		{
+			return realRequest.getQueryString();
 		}
 	}
 
@@ -1577,7 +1583,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			String method = getMethod().toLowerCase();
 			tag.put("method", method);
 			String url = urlFor(IFormSubmitListener.INTERFACE).toString();
-			if (method.equals("get"))
+			if (encodeUrlInHiddenFields())
 			{
 				int i = url.indexOf('?');
 				String action = (i > -1) ? url.substring(0, i) : "";
@@ -1617,6 +1623,12 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		}
 	}
 
+	protected boolean encodeUrlInHiddenFields()
+	{
+		String method = getMethod().toLowerCase();
+		return method.equals("get");
+	}
+
 	/**
 	 * Append an additional hidden input tag to support anchor tags that can submit a form.
 	 * 
@@ -1639,20 +1651,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				.append("\" id=\"")
 				.append(nameAndId)
 				.append("\" />");
-			String method = getMethod().toLowerCase();
+
 			// if it's a get, did put the parameters in the action attribute,
 			// and have to write the url parameters as hidden fields
-			if (method.equals("get"))
+			if (encodeUrlInHiddenFields())
 			{
 				String url = urlFor(IFormSubmitListener.INTERFACE).toString();
 				int i = url.indexOf('?');
 				String[] params = ((i > -1) ? url.substring(i + 1) : url).split("&");
-				for (int j = 0; j < params.length; j++)
-				{
-					String[] pair = params[j].split("=");
-					buffer.append("<input type=\"hidden\" name=\"").append(pair[0]).append(
-						"\" value=\"").append(pair.length > 1 ? pair[1] : "").append("\" />");
-				}
+
+				writeParamsAsHiddenFields(params, buffer);
 			}
 			buffer.append("</div>");
 			getResponse().write(buffer);
@@ -1670,6 +1678,17 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 
 		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
+	}
+
+	protected void writeParamsAsHiddenFields(String[] params, AppendingStringBuffer buffer)
+	{
+		for (int j = 0; j < params.length; j++)
+		{
+			String[] pair = params[j].split("=");
+
+			buffer.append("<input type=\"hidden\" name=\"").append(pair[0]).append(
+				"\" value=\"").append(pair.length > 1 ? pair[1] : "").append("\" />");
+		}
 	}
 
 	/**
