@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converters;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Map;
@@ -44,6 +45,9 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 		if (numberFormat == null)
 		{
 			numberFormat = NumberFormat.getInstance(locale);
+			if (numberFormat instanceof DecimalFormat)
+				((DecimalFormat)numberFormat).setParseBigDecimal(true);
+
 			numberFormats.put(locale, numberFormat);
 		}
 		return (NumberFormat)numberFormat.clone();
