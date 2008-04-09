@@ -31,7 +31,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
+ * An inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
  * {@link DropDownChoice} is displayed.
  * 
  * @author Eelco Hillenius
@@ -155,6 +155,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
+	@Override
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
 		IModel choiceModel = new AbstractReadOnlyModel()
@@ -162,6 +163,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Object getObject()
 			{
 				return choices.getObject();
@@ -172,11 +174,13 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onModelChanged()
 			{
 				AjaxEditableChoiceLabel.this.onModelChanged();
 			}
 
+			@Override
 			protected void onModelChanging()
 			{
 				AjaxEditableChoiceLabel.this.onModelChanging();
@@ -189,6 +193,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -204,11 +209,13 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 		return editor;
 	}
 
+	@Override
 	protected void onModelChanged()
 	{
 		super.onModelChanged();
 	}
 
+	@Override
 	protected void onModelChanging()
 	{
 		super.onModelChanging();

@@ -27,7 +27,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
+ * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
  * content and a {@link TextArea text area} as its editor.
  * 
  * @author eelcohillenius
