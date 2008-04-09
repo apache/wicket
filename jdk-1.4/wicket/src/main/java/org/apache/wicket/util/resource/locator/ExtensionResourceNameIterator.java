@@ -62,13 +62,13 @@ public class ExtensionResourceNameIterator implements Iterator
 	 */
 	public ExtensionResourceNameIterator(String path, final String extension)
 	{
-		if (extension == null)
+		if ((extension == null) && (path.indexOf('.') != -1))
 		{
 			// Get the extension from the path provided
 			extensions = new String[] { "." + Strings.lastPathComponent(path, '.') };
 			path = Strings.beforeLastPathComponent(path, '.');
 		}
-		else
+		else if (extension != null)
 		{
 			// Extension can be a comma separated list
 			extensions = Strings.split(extension, ',');
@@ -81,9 +81,14 @@ public class ExtensionResourceNameIterator implements Iterator
 				}
 			}
 		}
+		else
+		{
+			extensions = new String[1];
+			extensions[0] = ".";
+		}
 
 		this.path = path;
-		this.index = 0;
+		index = 0;
 	}
 
 	/**
@@ -92,7 +97,7 @@ public class ExtensionResourceNameIterator implements Iterator
 	 */
 	public boolean hasNext()
 	{
-		return (this.index < this.extensions.length);
+		return (index < extensions.length);
 	}
 
 	/**
@@ -101,7 +106,7 @@ public class ExtensionResourceNameIterator implements Iterator
 	 */
 	public Object next()
 	{
-		return path + this.extensions[this.index++];
+		return path + extensions[index++];
 	}
 
 	/**

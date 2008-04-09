@@ -1,0 +1,156 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.resource.loader;
+
+import java.util.Locale;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.resource.IPropertiesFactory;
+import org.apache.wicket.resource.Properties;
+import org.apache.wicket.util.resource.locator.ResourceNameIterator;
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * This is one of Wicket's default string resource loaders.
+ * <p>
+ * The package based string resource loader attempts to find the resource from a bundle that
+ * corresponds to the supplied component objects package or one of its parent packages.
+ * <p>
+ * The search order for resources is component object package towards root package.
+ * <p>
+ * This implementation is fully aware of both locale and style values when trying to obtain the
+ * appropriate resources.
+ * <p>
+ * 
+ * @author Juergen Donnerstag
+ */
+public class PackageStringResourceLoader implements IStringResourceLoader
+{
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(PackageStringResourceLoader.class);
+
+	/** The name (without extension) of the properties file */
+	private String filename = "package";
+
+	/**
+	 * Create and initialize the resource loader.
+	 */
+	public PackageStringResourceLoader()
+	{
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
+	 *      java.lang.String, java.util.Locale, java.lang.String)
+	 */
+	public String loadStringResource(final Class clazz, final String key, final Locale locale,
+		final String style)
+	{
+		if (clazz == null)
+		{
+			return null;
+		}
+
+		String packageName = clazz.getPackage().getName();
+		packageName = packageName.replace('.', '/');
+
+		// Load the properties associated with the path
+		IPropertiesFactory propertiesFactory = Application.get()
+			.getResourceSettings()
+			.getPropertiesFactory();
+
+		while (packageName.length() > 0)
+		{
+			// Create the base path
+			String path = packageName + "/" + filename;
+
+			// Iterator over all the combinations
+			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
+			while (iter.hasNext())
+			{
+				String newPath = (String)iter.next();
+
+				final Properties props = propertiesFactory.load(clazz, newPath);
+				if (props != null)
+				{
+					// Lookup the value
+					String value = props.getString(key);
+					if (value != null)
+					{
+						if (log.isDebugEnabled())
+						{
+							log.debug("Found resource from: " + props + "; key: " + key);
+						}
+
+						return value;
+					}
+				}
+			}
+
+			// Didn't find the key yet, continue searching if possible
+			packageName = Strings.beforeLast(packageName, '/');
+		}
+
+		// not found
+		return null;
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
+	 *      java.lang.String)
+	 */
+	public String loadStringResource(final Component component, final String key)
+	{
+		if (component == null)
+		{
+			return null;
+		}
+
+		// The return value
+		Locale locale = component.getLocale();
+		String style = component.getStyle();
+
+		return loadStringResource(component.getClass(), key, locale, style);
+	}
+
+	/**
+	 * Gets the properties file filename (without extension)
+	 * 
+	 * @return filename
+	 */
+	public String getFilename()
+	{
+		return filename;
+	}
+
+	/**
+	 * Sets the properties filename (without extension)
+	 * 
+	 * @param filename
+	 *            filename
+	 */
+	public void setFilename(String filename)
+	{
+		this.filename = filename;
+	}
+}

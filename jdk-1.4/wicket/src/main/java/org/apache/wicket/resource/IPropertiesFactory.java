@@ -60,5 +60,5 @@ public interface IPropertiesFactory
 	 *            The path to identify the resource
 	 * @return The properties
 	 */
-	Properties load(final Class clazz, final String path);
+	Properties load(final Class< ? > clazz, final String path);
 }

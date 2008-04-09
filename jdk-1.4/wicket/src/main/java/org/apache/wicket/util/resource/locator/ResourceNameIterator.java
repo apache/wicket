@@ -74,13 +74,13 @@ public class ResourceNameIterator implements Iterator
 	 * @param locale
 	 *            The Locale to apply
 	 * @param extensions
-	 *            the filname's extensions (comma separated)
+	 *            the filname's extensions (comma separated). Null permitted
 	 */
 	public ResourceNameIterator(String path, final String style, final Locale locale,
-			final String extensions)
+		final String extensions)
 	{
 		this.locale = locale;
-		if (extensions == null)
+		if ((extensions == null) && (path.indexOf('.') != -1))
 		{
 			this.extensions = Strings.afterLast(path, '.');
 			path = Strings.beforeLast(path, '.');
@@ -90,7 +90,7 @@ public class ResourceNameIterator implements Iterator
 			this.extensions = extensions;
 		}
 
-		this.styleIterator = new StyleAndVariationResourceNameIterator(path, style, null);
+		styleIterator = new StyleAndVariationResourceNameIterator(path, style, null);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class ResourceNameIterator implements Iterator
 	 */
 	public final Locale getLocale()
 	{
-		return this.currentLocale;
+		return currentLocale;
 	}
 
 	/**
@@ -109,9 +109,9 @@ public class ResourceNameIterator implements Iterator
 	public boolean hasNext()
 	{
 		// Most inner loop. Loop through all extensions provided
-		if (this.extenstionsIterator != null)
+		if (extenstionsIterator != null)
 		{
-			if (this.extenstionsIterator.hasNext() == true)
+			if (extenstionsIterator.hasNext() == true)
 			{
 				return true;
 			}
@@ -123,38 +123,36 @@ public class ResourceNameIterator implements Iterator
 		}
 
 		// 2nd inner loop: Loop through all Locale combinations
-		if (this.localeIterator != null)
+		if (localeIterator != null)
 		{
-			while (this.localeIterator.hasNext())
+			while (localeIterator.hasNext())
 			{
 				// Get the next Locale from the iterator and start the next
 				// inner iterator over again.
-				String newPath = (String)this.localeIterator.next();
-				this.currentLocale = this.localeIterator.getLocale();
-				this.extenstionsIterator = new ExtensionResourceNameIterator(newPath,
-						this.extensions);
-				if (this.extenstionsIterator.hasNext() == true)
+				String newPath = (String)localeIterator.next();
+				currentLocale = localeIterator.getLocale();
+				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
+				if (extenstionsIterator.hasNext() == true)
 				{
 					return true;
 				}
 			}
-			this.localeIterator = null;
+			localeIterator = null;
 		}
 
 		// Most outer loop: Loop through all combinations of styles and
 		// variations
-		while (this.styleIterator.hasNext())
+		while (styleIterator.hasNext())
 		{
-			String newPath = (String)this.styleIterator.next();
+			String newPath = (String)styleIterator.next();
 
-			this.localeIterator = new LocaleResourceNameIterator(newPath, this.locale);
-			while (this.localeIterator.hasNext())
+			localeIterator = new LocaleResourceNameIterator(newPath, locale);
+			while (localeIterator.hasNext())
 			{
-				newPath = (String)this.localeIterator.next();
-				this.currentLocale = this.localeIterator.getLocale();
-				this.extenstionsIterator = new ExtensionResourceNameIterator(newPath,
-						this.extensions);
-				if (this.extenstionsIterator.hasNext() == true)
+				newPath = (String)localeIterator.next();
+				currentLocale = localeIterator.getLocale();
+				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
+				if (extenstionsIterator.hasNext() == true)
 				{
 					return true;
 				}
@@ -175,7 +173,7 @@ public class ResourceNameIterator implements Iterator
 			return extenstionsIterator.next();
 		}
 		throw new WicketRuntimeException(
-				"Illegal call of next(). Iterator not properly initialized");
+			"Illegal call of next(). Iterator not properly initialized");
 	}
 
 	/**

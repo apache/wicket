@@ -29,11 +29,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.listener.IChangeListener;
-import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -66,6 +64,9 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Application */
 	private final Application application;
 
+	/** LIst of Properties Loader */
+	private final List<IPropertiesLoader> propertiesLoader;
+
 	/**
 	 * Construct.
 	 * 
@@ -75,6 +76,20 @@ public class PropertiesFactory implements IPropertiesFactory
 	public PropertiesFactory(Application application)
 	{
 		this.application = application;
+
+		propertiesLoader = new ArrayList<IPropertiesLoader>();
+		propertiesLoader.add(new PropertiesFilePropertiesLoader());
+		propertiesLoader.add(new XmlFilePropertiesLoader());
+	}
+
+	/**
+	 * Gets the list of properties loader. You may add or remove properties loaders at your will.
+	 * 
+	 * @return
+	 */
+	public List<IPropertiesLoader> getPropertiesLoaders()
+	{
+		return propertiesLoader;
 	}
 
 	/**
@@ -95,29 +110,28 @@ public class PropertiesFactory implements IPropertiesFactory
 	public final void clearCache()
 	{
 		propertiesCache.clear();
+
+		// clear the localizer cache as well
+		application.getResourceSettings().getLocalizer().clearCache();
 	}
 
 	/**
 	 * 
 	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
 	 */
-	public Properties load(final Class clazz, final String path)
+	public Properties load(final Class< ? > clazz, final String path)
 	{
 		// Check the cache
 		Properties properties = propertiesCache.get(path);
 
 		if (properties == null)
 		{
-			// If not in the cache than try to load properties
-			IResourceStream stream = application.getResourceSettings()
-				.getResourceStreamLocator()
-				.locate(clazz, path);
-			if (stream != null)
+			Iterator<IPropertiesLoader> iter = propertiesLoader.iterator();
+			while ((properties == null) && iter.hasNext())
 			{
-				// Load the properties from the stream
-				properties = loadPropertiesFileAndWatchForChanges(path, stream);
+				IPropertiesLoader loader = iter.next();
+				properties = loader.load(clazz, path);
 			}
-
 
 			// Cache the lookup
 			if (properties == null)
@@ -129,7 +143,6 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				propertiesCache.put(path, properties);
 			}
-
 		}
 
 		if (properties == Properties.EMPTY_PROPERTIES)
@@ -142,78 +155,141 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * Helper method to do the actual loading of resources if required.
+	 * For subclasses to get access to the cache
 	 * 
-	 * @param key
-	 *            The key for the resource
-	 * @param resourceStream
-	 *            The properties file stream to load and begin to watch
-	 * @return The map of loaded resources
+	 * @return Map
 	 */
-	private synchronized Properties loadPropertiesFile(final String key,
-		final IResourceStream resourceStream)
+	protected final Map<String, Properties> getCache()
 	{
-		// Make sure someone else didn't load our resources while we were
-		// waiting for the synchronized lock on the method
-		Properties props = propertiesCache.get(key);
-		if (props != null)
+		return propertiesCache;
+	}
+
+	/**
+	 * 
+	 */
+	public interface IPropertiesLoader
+	{
+		/**
+		 * 
+		 * @param clazz
+		 * @param path
+		 * @return
+		 */
+		Properties load(final Class< ? > clazz, final String path);
+	}
+
+	/**
+	 * 
+	 */
+	public abstract class AbstractPropertiesLoader implements IPropertiesLoader
+	{
+		/**
+		 * Construct.
+		 */
+		public AbstractPropertiesLoader()
 		{
-			return props;
 		}
 
-		if (resourceStream == null)
+		/**
+		 * 
+		 * @return
+		 */
+		abstract protected String getFileExtension();
+
+		/**
+		 * 
+		 * @param in
+		 * @return
+		 * @throws IOException
+		 */
+		abstract protected java.util.Properties loadProperties(BufferedInputStream in)
+			throws IOException;
+
+		/**
+		 * 
+		 * @see org.apache.wicket.resource.PropertiesFactory.IPropertiesLoader#load(java.lang.Class,
+		 *      java.lang.String)
+		 */
+		public Properties load(final Class< ? > clazz, final String path)
 		{
-			props = new Properties(key, ValueMap.EMPTY_MAP);
-		}
-		else
-		{
+			String fullPath = path + getFileExtension();
+
+			// If not in the cache than try to load properties
+			final IResourceStream resourceStream = application.getResourceSettings()
+				.getResourceStreamLocator()
+				.locate(clazz, fullPath);
+
+			if (resourceStream == null)
+			{
+				return null;
+			}
+
+			// Watch file modifications
+			final ModificationWatcher watcher = application.getResourceSettings()
+				.getResourceWatcher(true);
+			if (watcher != null)
+			{
+				watcher.add(resourceStream, new IChangeListener()
+				{
+					public void onChange()
+					{
+						log.info("A properties files has changed. Removing all entries " +
+							"from the cache. Resource: " + resourceStream);
+
+						// Clear the whole cache as associated localized files may
+						// be affected and may need reloading as well.
+						clearCache();
+
+						// Inform all listeners
+						Iterator<IPropertiesChangeListener> iter = afterReloadListeners.iterator();
+						while (iter.hasNext())
+						{
+							IPropertiesChangeListener listener = iter.next();
+							try
+							{
+								listener.propertiesChanged(path);
+							}
+							catch (Throwable ex)
+							{
+								log.error("PropertiesReloadListener has thrown an exception: " +
+									ex.getMessage());
+							}
+						}
+					}
+				});
+			}
+
+			log.info("Loading properties files from " + resourceStream);
 			ValueMap strings = null;
 
 			try
 			{
+				BufferedInputStream in = null;
+
 				try
 				{
 					// Get the InputStream
-					BufferedInputStream in = new BufferedInputStream(
-						resourceStream.getInputStream());
+					in = new BufferedInputStream(resourceStream.getInputStream());
 
-					// Determine if resource is a XML File
-					boolean loadAsXml = false;
-					if (resourceStream instanceof IFixedLocationResourceStream)
-					{
-						String location = ((IFixedLocationResourceStream)resourceStream).locationAsString();
-						if (location != null)
-						{
-							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
-							if ("xml".equals(ext))
-							{
-								loadAsXml = true;
-							}
-						}
-					}
-
-					// Load the properties
-					java.util.Properties properties = new java.util.Properties();
-					if (loadAsXml)
-					{
-						Streams.loadFromXml(properties, in);
-					}
-					else
-					{
-						properties.load(in);
-					}
+					java.util.Properties properties = loadProperties(in);
 
 					// Copy the properties into the ValueMap
 					strings = new ValueMap();
-					Enumeration enumeration = properties.propertyNames();
+					Enumeration< ? > enumeration = properties.propertyNames();
 					while (enumeration.hasMoreElements())
 					{
 						String property = (String)enumeration.nextElement();
 						strings.put(property, properties.getProperty(property));
 					}
+
+					return new Properties(path, strings);
 				}
 				finally
 				{
+					if (in != null)
+					{
+						in.close();
+					}
 					resourceStream.close();
 				}
 			}
@@ -228,74 +304,81 @@ public class PropertiesFactory implements IPropertiesFactory
 				strings = ValueMap.EMPTY_MAP;
 			}
 
-			props = new Properties(key, strings);
+			return null;
 		}
-
-		return props;
 	}
 
 	/**
-	 * Load properties file from an IResourceStream and add an {@link IChangeListener}to the
-	 * {@link ModificationWatcher} so that if the resource changes, we can reload it automatically.
 	 * 
-	 * @param key
-	 *            The key for the resource
-	 * @param resourceStream
-	 *            The properties file stream to load and begin to watch
-	 * @return The map of loaded resources
 	 */
-	private final Properties loadPropertiesFileAndWatchForChanges(final String key,
-		final IResourceStream resourceStream)
+	public class PropertiesFilePropertiesLoader extends AbstractPropertiesLoader
 	{
-		// Watch file modifications
-		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
-			true);
-		if (watcher != null)
+		/**
+		 * Construct.
+		 */
+		public PropertiesFilePropertiesLoader()
 		{
-			watcher.add(resourceStream, new IChangeListener()
-			{
-				public void onChange()
-				{
-					log.info("A properties files has changed. Removing all entries " +
-						"from the cache. Resource: " + resourceStream);
-
-					// Clear the whole cache as associated localized files may
-					// be affected and may need reloading as well.
-					clearCache();
-
-					// clear the localizer cache as well
-					application.getResourceSettings().getLocalizer().clearCache();
-
-					// Inform all listeners
-					Iterator<IPropertiesChangeListener> iter = afterReloadListeners.iterator();
-					while (iter.hasNext())
-					{
-						IPropertiesChangeListener listener = iter.next();
-						try
-						{
-							listener.propertiesChanged(key);
-						}
-						catch (Throwable ex)
-						{
-							log.error("PropertiesReloadListener has thrown an exception: " +
-								ex.getMessage());
-						}
-					}
-				}
-			});
 		}
 
-		log.info("Loading properties files from " + resourceStream);
-		return loadPropertiesFile(key, resourceStream);
+		/**
+		 * 
+		 * @see org.apache.wicket.resource.PropertiesFactory.AbstractPropertiesLoader#getFileExtension()
+		 */
+		@Override
+		protected String getFileExtension()
+		{
+			return "properties";
+		}
+
+		/**
+		 * 
+		 * @param in
+		 * @return
+		 * @throws IOException
+		 */
+		@Override
+		protected java.util.Properties loadProperties(BufferedInputStream in) throws IOException
+		{
+			java.util.Properties properties = new java.util.Properties();
+			properties.load(in);
+			return properties;
+		}
 	}
 
 	/**
-	 * For subclasses to get access to the cache
 	 * 
-	 * @return Map
 	 */
-	protected final Map<String, Properties> getCache()
+	public class XmlFilePropertiesLoader extends AbstractPropertiesLoader
 	{
-		return propertiesCache;
+		/**
+		 * Construct.
+		 */
+		public XmlFilePropertiesLoader()
+		{
+		}
+
+		/**
+		 * 
+		 * @see org.apache.wicket.resource.PropertiesFactory.AbstractPropertiesLoader#getFileExtension()
+		 */
+		@Override
+		protected String getFileExtension()
+		{
+			return "xml";
+		}
+
+		/**
+		 * 
+		 * @param in
+		 * @return
+		 * @throws IOException
+		 */
+		@Override
+		protected java.util.Properties loadProperties(BufferedInputStream in) throws IOException
+		{
+			java.util.Properties properties = new java.util.Properties();
+			Streams.loadFromXml(properties, in);
+			return properties;
+		}
 	}
 }

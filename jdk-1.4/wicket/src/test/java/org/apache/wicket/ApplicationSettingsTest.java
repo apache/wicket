@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
+import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -61,8 +62,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(tester.getApplication());
-		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
-				.getThrowExceptionOnMissingResource());
+		Assert.assertTrue("exceptionOnMissingResource should default to true",
+			settings.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -72,8 +73,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(tester.getApplication());
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
-				.getThrowExceptionOnMissingResource());
+		Assert.assertFalse("exceptionOnMissingResource should have been set to false",
+			settings.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -82,8 +83,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		Settings settings = new Settings(tester.getApplication());
-		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
-				.getUseDefaultOnMissingResource());
+		Assert.assertTrue("useDefaultOnMissingResource should default to true",
+			settings.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -93,8 +94,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(tester.getApplication());
 		settings.setUseDefaultOnMissingResource(false);
-		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
-				.getUseDefaultOnMissingResource());
+		Assert.assertFalse("useDefaultOnMissingResource should have been set to false",
+			settings.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -104,11 +105,13 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(tester.getApplication());
 		List loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
+		Assert.assertEquals("There should be 3 default loaders", 3, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
-				loaders.get(0) instanceof ComponentStringResourceLoader);
+			loaders.get(0) instanceof ComponentStringResourceLoader);
 		Assert.assertTrue("Second loader should be the application one",
-				loaders.get(1) instanceof ClassStringResourceLoader);
+			loaders.get(1) instanceof PackageStringResourceLoader);
+		Assert.assertTrue("Third loader should be the application one",
+			loaders.get(2) instanceof ClassStringResourceLoader);
 	}
 
 	/**
@@ -118,15 +121,16 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Application dummy = tester.getApplication();
 		Settings settings = new Settings(dummy);
+		settings.getStringResourceLoaders().clear();
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
-				"org.apache.wicket.resource.DummyResources"));
+			"org.apache.wicket.resource.DummyResources"));
 		settings.addStringResourceLoader(new ComponentStringResourceLoader());
 		List loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the bundle one",
-				loaders.get(0) instanceof BundleStringResourceLoader);
+			loaders.get(0) instanceof BundleStringResourceLoader);
 		Assert.assertTrue("Second loader should be the component one",
-				loaders.get(1) instanceof ComponentStringResourceLoader);
+			loaders.get(1) instanceof ComponentStringResourceLoader);
 	}
 
 	/**
@@ -136,6 +140,6 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Application dummy = tester.getApplication();
 		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings()
-				.getLocalizer());
+			.getLocalizer());
 	}
 }

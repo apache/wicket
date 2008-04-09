@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is Wicket's default string resource loader.
+ * This is one of Wicket's default string resource loaders.
  * <p>
  * The component based string resource loader attempts to find the resource from a bundle that
  * corresponds to the supplied component object or one of its parent containers.
@@ -106,23 +106,12 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Get the string resource for the given combination of class, key, locale and style. The
-	 * information is obtained from a resource bundle associated with the provided Class (or one of
-	 * its super classes).
 	 * 
-	 * @param clazz
-	 *            The Class to find resources to be loaded
-	 * @param key
-	 *            The key to obtain the string for
-	 * @param locale
-	 *            The locale identifying the resource set to select the strings from
-	 * @param style
-	 *            The (optional) style identifying the resource set to select the strings from (see
-	 *            {@link org.apache.wicket.Session})
-	 * @return The string resource value or null if resource not found
+	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
+	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
 	public String loadStringResource(Class clazz, final String key, final Locale locale,
-			final String style)
+		final String style)
 	{
 		if (clazz == null)
 		{
@@ -130,8 +119,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		}
 
 		// Load the properties associated with the path
-		IPropertiesFactory propertiesFactory = Application.get().getResourceSettings()
-				.getPropertiesFactory();
+		IPropertiesFactory propertiesFactory = Application.get()
+			.getResourceSettings()
+			.getPropertiesFactory();
 
 		while (true)
 		{
@@ -139,8 +129,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			String path = clazz.getName().replace('.', '/');
 
 			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale,
-					"properties,xml");
+			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
 			while (iter.hasNext())
 			{
 				String newPath = (String)iter.next();
@@ -278,13 +267,13 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// Stop at all html markup base classes
 		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class) ||
-				clazz.equals(WebComponent.class))
+			clazz.equals(WebComponent.class))
 		{
 			return true;
 		}
 
 		// Stop at all wicket base classes
 		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class) ||
-				clazz.equals(Component.class);
+			clazz.equals(Component.class);
 	}
 }
