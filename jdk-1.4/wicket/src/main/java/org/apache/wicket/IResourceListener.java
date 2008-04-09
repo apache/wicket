@@ -37,10 +37,10 @@ public interface IResourceListener extends IRequestListener
 {
 	/** Resource listener interface object */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			IResourceListener.class)
+		IResourceListener.class)
 	{
-		public IRequestTarget newRequestTarget(Page page, Component component,
-				RequestListenerInterface listener, RequestParameters requestParameters)
+		public IRequestTarget newRequestTarget(Page page, Component< ? > component,
+			RequestListenerInterface listener, RequestParameters requestParameters)
 		{
 			return new ComponentResourceRequestTarget(page, component, listener);
 		}

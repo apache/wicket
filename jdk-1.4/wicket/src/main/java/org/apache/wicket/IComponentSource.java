@@ -39,5 +39,5 @@ public interface IComponentSource extends Serializable
 	 * @param id
 	 * @return
 	 */
-	public Component restoreComponent(String id);
+	public Component< ? > restoreComponent(String id);
 }

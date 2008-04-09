@@ -44,10 +44,10 @@ final class MarkupFragmentFinder
 	 * @param component
 	 * @return A MarkupStream which is positioned at the component
 	 */
-	final MarkupStream find(final Component component)
+	final MarkupStream find(final Component< ? > component)
 	{
 		// Get the parent's associated markup stream.
-		MarkupContainer parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
+		MarkupContainer< ? > parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
 		MarkupStream markupStream = null;
 
 		// Might be that we have to walk up the component hierarchy
@@ -100,8 +100,7 @@ final class MarkupFragmentFinder
 
 			if (parentWithAssociatedMarkup instanceof Fragment)
 			{
-				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component
-						.getId());
+				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component.getId());
 				return markupStream;
 			}
 
@@ -110,14 +109,13 @@ final class MarkupFragmentFinder
 			// ...
 			if (parentWithAssociatedMarkup instanceof Border)
 			{
-				parentWithAssociatedMarkup = parentWithAssociatedMarkup
-						.findParentWithAssociatedMarkup();
+				parentWithAssociatedMarkup = parentWithAssociatedMarkup.findParentWithAssociatedMarkup();
 			}
 			else
 			{
 				throw new WicketRuntimeException(
-						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: " +
-								component.toString());
+					"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: " +
+						component.toString());
 			}
 
 			// Not found, reset the stream
@@ -132,12 +130,11 @@ final class MarkupFragmentFinder
 	 * @param parentWithAssociatedMarkup
 	 * @return the relative path
 	 */
-	private String getComponentRelativePath(final Component component,
-			final MarkupContainer parentWithAssociatedMarkup)
+	private String getComponentRelativePath(final Component< ? > component,
+		final MarkupContainer< ? > parentWithAssociatedMarkup)
 	{
 		final String componentPath = component.getParent().getPageRelativePath();
-		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
-				.getPageRelativePath();
+		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
 		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
 		if (relativePath.startsWith(":"))
 		{

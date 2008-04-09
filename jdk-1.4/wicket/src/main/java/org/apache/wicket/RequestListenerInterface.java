@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class RequestListenerInterface
 {
 	/** Map from name to request listener interface */
-	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
+	private static final Map<String, RequestListenerInterface> interfaces = Collections.synchronizedMap(new HashMap<String, RequestListenerInterface>());
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(RequestListenerInterface.class);
@@ -53,7 +53,7 @@ public class RequestListenerInterface
 	 */
 	public static final RequestListenerInterface forName(final String interfaceName)
 	{
-		return (RequestListenerInterface)interfaces.get(interfaceName);
+		return interfaces.get(interfaceName);
 	}
 
 	/** The listener interface method */
@@ -69,18 +69,16 @@ public class RequestListenerInterface
 	 */
 	private boolean recordsPageVersion = true;
 
-
 	/**
 	 * Constructor that creates listener interfaces which record the page version.
 	 * 
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
 	 */
-	public RequestListenerInterface(final Class listenerInterfaceClass)
+	public RequestListenerInterface(final Class< ? extends IRequestListener> listenerInterfaceClass)
 	{
 		this(listenerInterfaceClass, true);
 	}
-
 
 	/**
 	 * Constructor.
@@ -91,13 +89,14 @@ public class RequestListenerInterface
 	 *            Whether or not urls encoded for this interface contain the page version. If set to
 	 *            false the latest page version is always used.
 	 */
-	public RequestListenerInterface(final Class listenerInterfaceClass, boolean recordsPageVersion)
+	public RequestListenerInterface(
+		final Class< ? extends IRequestListener> listenerInterfaceClass, boolean recordsPageVersion)
 	{
 		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
 		{
 			throw new IllegalArgumentException("Class " + listenerInterfaceClass +
-					" must extend IRequestListener");
+				" must extend IRequestListener");
 		}
 
 		this.recordsPageVersion = recordsPageVersion;
@@ -116,13 +115,13 @@ public class RequestListenerInterface
 			else
 			{
 				throw new IllegalArgumentException("Method " + methods[0] + " in interface " +
-						listenerInterfaceClass + " cannot take any arguments");
+					listenerInterfaceClass + " cannot take any arguments");
 			}
 		}
 		else
 		{
 			throw new IllegalArgumentException("Interface " + listenerInterfaceClass +
-					" can have only one method");
+				" can have only one method");
 		}
 
 		// Save short class name
@@ -165,7 +164,7 @@ public class RequestListenerInterface
 	 * @param component
 	 *            The component
 	 */
-	public final void invoke(final Page page, final Component component)
+	public final void invoke(final Page page, final Component< ? > component)
 	{
 		if (!component.isEnabled() || !component.isVisibleInHierarchy())
 		{
@@ -186,20 +185,20 @@ public class RequestListenerInterface
 		{
 			// Honor redirect exception contract defined in IPageFactory
 			if (e.getTargetException() instanceof AbstractRestartResponseException ||
-					e.getTargetException() instanceof AuthorizationException ||
-					e.getTargetException() instanceof WicketRuntimeException)
+				e.getTargetException() instanceof AuthorizationException ||
+				e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-					method.getDeclaringClass() + " targeted at component " + component +
-					" threw an exception", e);
+				method.getDeclaringClass() + " targeted at component " + component +
+				" threw an exception", e);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-					method.getDeclaringClass() + " targeted at component " + component +
-					" threw an exception", e);
+				method.getDeclaringClass() + " targeted at component " + component +
+				" threw an exception", e);
 		}
 		finally
 		{
@@ -220,8 +219,8 @@ public class RequestListenerInterface
 	 *            Request parameters
 	 * @return The request target
 	 */
-	public IRequestTarget newRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener, final RequestParameters requestParameters)
+	public IRequestTarget newRequestTarget(final Page page, final Component< ? > component,
+		final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);
 	}
@@ -238,6 +237,7 @@ public class RequestListenerInterface
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
@@ -257,19 +257,17 @@ public class RequestListenerInterface
 	 *            The request listener interface object
 	 */
 	private final void registerRequestListenerInterface(
-			final RequestListenerInterface requestListenerInterface)
+		final RequestListenerInterface requestListenerInterface)
 	{
 		// Check that a different interface method with the same name has not
 		// already been registered
-		final RequestListenerInterface existingInterface = RequestListenerInterface
-				.forName(requestListenerInterface.getName());
+		final RequestListenerInterface existingInterface = RequestListenerInterface.forName(requestListenerInterface.getName());
 		if (existingInterface != null &&
-				existingInterface.getMethod() != requestListenerInterface.getMethod())
+			existingInterface.getMethod() != requestListenerInterface.getMethod())
 		{
 			throw new IllegalStateException("Cannot register listener interface " +
-					requestListenerInterface +
-					" because it conflicts with the already registered interface " +
-					existingInterface);
+				requestListenerInterface +
+				" because it conflicts with the already registered interface " + existingInterface);
 		}
 
 		// Save this interface method by the non-qualified class name

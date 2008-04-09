@@ -55,7 +55,7 @@ public class Localizer
 	private static final String NULL_VALUE = "<null-value>";
 
 	/** Cache properties */
-	private Map cache = newCache();
+	private Map<String, String> cache = newCache();
 
 	/**
 	 * Create the utils instance class backed by the configuration information contained within the
@@ -72,7 +72,7 @@ public class Localizer
 	{
 		if (cache != null)
 		{
-			cache = new ConcurrentHashMap();
+			cache = newCache();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component)
+	public String getString(final String key, final Component< ? > component)
 		throws MissingResourceException
 	{
 		return getString(key, component, null, null);
@@ -106,8 +106,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component, final IModel model)
-		throws MissingResourceException
+	public String getString(final String key, final Component< ? > component,
+		final IModel< ? > model) throws MissingResourceException
 	{
 		return getString(key, component, model, null);
 	}
@@ -125,8 +125,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component, final String defaultValue)
-		throws MissingResourceException
+	public String getString(final String key, final Component< ? > component,
+		final String defaultValue) throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
 	}
@@ -145,8 +145,8 @@ public class Localizer
 	 * 
 	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
-	public String getString(final String key, final Component component, final IModel model,
-		final Locale locale, final String style, final String defaultValue)
+	public String getString(final String key, final Component< ? > component,
+		final IModel< ? > model, final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
 		return getString(key, component, model, defaultValue);
@@ -170,8 +170,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component, final IModel model,
-		final String defaultValue) throws MissingResourceException
+	public String getString(final String key, final Component< ? > component,
+		final IModel< ? > model, final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
@@ -214,10 +214,11 @@ public class Localizer
 			// Iterate over all registered string resource loaders until the
 			// property has been found
 
-			Iterator iter = resourceSettings.getStringResourceLoaders().iterator();
+			Iterator<IStringResourceLoader> iter = resourceSettings.getStringResourceLoaders()
+				.iterator();
 			while (iter.hasNext())
 			{
-				IStringResourceLoader loader = (IStringResourceLoader)iter.next();
+				IStringResourceLoader loader = iter.next();
 				string = loader.loadStringResource(component, key);
 				if (string != null)
 				{
@@ -293,7 +294,7 @@ public class Localizer
 	 */
 	protected String getFromCache(final String cacheKey)
 	{
-		final String value = (String)cache.get(cacheKey);
+		final String value = cache.get(cacheKey);
 
 		// ConcurrentHashMap does not allow null values
 		if (value == NULL_VALUE)
@@ -313,14 +314,14 @@ public class Localizer
 	 * @param component
 	 * @return The value of the key
 	 */
-	protected String getCacheKey(final String key, final Component component)
+	protected String getCacheKey(final String key, final Component< ? > component)
 	{
 		String cacheKey = key;
 		if (component != null)
 		{
 			AppendingStringBuffer buffer = new AppendingStringBuffer(key);
 
-			Component cursor = component;
+			Component< ? > cursor = component;
 			while (cursor != null)
 			{
 				buffer.append("-").append(cursor.getClass().getName());
@@ -349,8 +350,8 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	public String substitutePropertyExpressions(final Component component, final String string,
-		final IModel model)
+	public String substitutePropertyExpressions(final Component< ? > component,
+		final String string, final IModel< ? > model)
 	{
 		if ((string != null) && (model != null))
 		{
@@ -381,8 +382,8 @@ public class Localizer
 	 * 
 	 * @return cache
 	 */
-	private Map newCache()
+	private Map<String, String> newCache()
 	{
-		return new ConcurrentHashMap();
+		return new ConcurrentHashMap<String, String>();
 	}
 }
