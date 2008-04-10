@@ -38,7 +38,8 @@ public class GuiceApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}

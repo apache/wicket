@@ -64,7 +64,8 @@ public class HelloWorldApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<HelloWorld> getHomePage()
 	{
 		return HelloWorld.class;
 	}

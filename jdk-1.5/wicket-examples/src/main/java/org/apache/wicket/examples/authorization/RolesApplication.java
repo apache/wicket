@@ -24,6 +24,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
 import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -54,7 +55,7 @@ public class RolesApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}
@@ -63,6 +64,7 @@ public class RolesApplication extends WebApplication
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
+	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new RolesSession(this, request);
@@ -72,7 +74,7 @@ public class RolesApplication extends WebApplication
 	protected void init()
 	{
 		getSecuritySettings().setAuthorizationStrategy(
-				new RoleAuthorizationStrategy(new UserRolesAuthorizer()));
+			new RoleAuthorizationStrategy(new UserRolesAuthorizer()));
 		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
 		MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
 	}

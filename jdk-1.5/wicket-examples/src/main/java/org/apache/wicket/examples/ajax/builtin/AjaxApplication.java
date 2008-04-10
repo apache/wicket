@@ -40,6 +40,7 @@ public class AjaxApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -70,7 +71,8 @@ public class AjaxApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}

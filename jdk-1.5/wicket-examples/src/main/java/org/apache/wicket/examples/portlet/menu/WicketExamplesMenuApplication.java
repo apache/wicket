@@ -23,6 +23,7 @@ import javax.portlet.PortletMode;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.RequestContext;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 
@@ -47,7 +48,7 @@ public class WicketExamplesMenuApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends WebPage> getHomePage()
 	{
 		PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
 		if (PortletMode.EDIT.equals(prc.getPortletRequest().getPortletMode()))

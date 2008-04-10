@@ -36,7 +36,8 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<HelloBrowser> getHomePage()
 	{
 		return HelloBrowser.class;
 	}
@@ -44,6 +45,7 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);

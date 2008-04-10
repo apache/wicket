@@ -35,7 +35,8 @@ public class FramesApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}

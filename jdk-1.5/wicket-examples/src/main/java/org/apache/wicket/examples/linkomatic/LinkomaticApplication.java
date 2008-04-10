@@ -38,7 +38,8 @@ public class LinkomaticApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}
@@ -46,6 +47,7 @@ public class LinkomaticApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// log host name and server time in the browser's status bar

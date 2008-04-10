@@ -35,6 +35,7 @@ public class NestedApplication extends WicketExampleApplication
 	/**
 	 * Initialize the application
 	 */
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -45,7 +46,8 @@ public class NestedApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}

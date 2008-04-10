@@ -35,7 +35,8 @@ public class NavomaticApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Page1> getHomePage()
 	{
 		return Page1.class;
 	}

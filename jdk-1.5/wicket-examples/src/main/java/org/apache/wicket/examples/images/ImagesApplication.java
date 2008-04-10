@@ -41,7 +41,8 @@ public class ImagesApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}
@@ -49,6 +50,7 @@ public class ImagesApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
@@ -60,6 +62,7 @@ public class ImagesApplication extends WicketExampleApplication
 	 * @see UrlCompressor
 	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new UrlCompressingWebRequestProcessor();

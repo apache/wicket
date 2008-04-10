@@ -36,7 +36,8 @@ public class GuestBookApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<GuestBook> getHomePage()
 	{
 		return GuestBook.class;
 	}

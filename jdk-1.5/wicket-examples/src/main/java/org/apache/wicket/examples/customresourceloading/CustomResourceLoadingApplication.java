@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
@@ -50,13 +51,14 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 		 * @see org.apache.wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
+		@Override
 		public IResourceStream locate(Class clazz, String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())
 			{
 				log.debug("Attempting to locate resource '" + path +
-						"' using classloader the servlet context");
+					"' using classloader the servlet context");
 			}
 
 			String location;
@@ -105,7 +107,8 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}
@@ -113,6 +116,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	/**
 	 * @see WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// instruct the application to use our custom resource stream locator

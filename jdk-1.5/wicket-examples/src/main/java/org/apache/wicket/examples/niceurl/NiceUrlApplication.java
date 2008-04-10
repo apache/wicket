@@ -44,7 +44,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}
@@ -57,6 +58,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// Disable creation of javascript which jWebUnit (test only)
@@ -85,10 +87,12 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 * 
 	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new WebRequestCycleProcessor()
 		{
+			@Override
 			protected IRequestCodingStrategy newRequestCodingStrategy()
 			{
 				WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();

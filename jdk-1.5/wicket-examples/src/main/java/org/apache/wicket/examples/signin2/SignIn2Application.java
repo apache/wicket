@@ -48,7 +48,8 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Home> getHomePage()
 	{
 		return Home.class;
 	}
@@ -57,6 +58,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
 	 *      Response)
 	 */
+	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new SignIn2Session(SignIn2Application.this, request);
@@ -65,6 +67,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -98,10 +101,12 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new WebRequestCycleProcessor()
 		{
+			@Override
 			protected IRequestCodingStrategy newRequestCodingStrategy()
 			{
 				return new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy());

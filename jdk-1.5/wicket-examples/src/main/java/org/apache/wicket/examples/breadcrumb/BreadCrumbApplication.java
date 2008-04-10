@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.breadcrumb;
 
+import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -28,7 +29,8 @@ public class BreadCrumbApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}

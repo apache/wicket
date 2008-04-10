@@ -35,7 +35,8 @@ public class CaptchaApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Captcha> getHomePage()
 	{
 		return Captcha.class;
 	}

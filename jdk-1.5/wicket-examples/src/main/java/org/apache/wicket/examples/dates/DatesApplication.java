@@ -33,7 +33,8 @@ public class DatesApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class< ? > getHomePage()
+	@Override
+	public Class<DatesPage> getHomePage()
 	{
 		return DatesPage.class;
 	}
