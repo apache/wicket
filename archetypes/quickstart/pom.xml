@@ -4,7 +4,7 @@
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-jdk14</artifactId>
 		<version>1.4-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../../jdk14/pom.xml</relativePath>
   </parent>
   
   <artifactId>wicket-archetype-quickstart</artifactId>
