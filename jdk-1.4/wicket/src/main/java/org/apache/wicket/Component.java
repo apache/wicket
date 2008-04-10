@@ -1026,8 +1026,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
-			onBeforeRender();
-			getApplication().notifyComponentOnBeforeRenderListeners(this);
+			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
+			onBeforeRender();			
+			getApplication().notifyPostComponentOnBeforeRenderListeners(this); 
+			
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +

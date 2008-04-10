@@ -142,7 +142,10 @@ public abstract class Application
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	/** */
-	private List<IComponentOnBeforeRenderListener> componentOnBeforeRenderListeners;
+	private List<IComponentOnBeforeRenderListener> componentPreOnBeforeRenderListeners;
+	
+	/** */
+	private List<IComponentOnBeforeRenderListener> componentPostOnBeforeRenderListeners;
 
 	/** */
 	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
@@ -996,17 +999,17 @@ public abstract class Application
 	 * 
 	 * @param listener
 	 */
-	final public void addComponentOnBeforeRenderListener(
+	final public void addPreComponentOnBeforeRenderListener(
 		final IComponentOnBeforeRenderListener listener)
 	{
-		if (componentOnBeforeRenderListeners == null)
+		if (componentPreOnBeforeRenderListeners == null)
 		{
-			componentOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
+			componentPreOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
 		}
 
-		if (componentOnBeforeRenderListeners.contains(listener) == false)
+		if (componentPreOnBeforeRenderListeners.contains(listener) == false)
 		{
-			componentOnBeforeRenderListeners.add(listener);
+			componentPreOnBeforeRenderListeners.add(listener);
 		}
 	}
 
@@ -1015,15 +1018,15 @@ public abstract class Application
 	 * 
 	 * @param listener
 	 */
-	final public void removeComponentOnBeforeRenderListener(
+	final public void removePreComponentOnBeforeRenderListener(
 		final IComponentOnBeforeRenderListener listener)
 	{
-		if (componentOnBeforeRenderListeners != null)
+		if (componentPreOnBeforeRenderListeners != null)
 		{
-			componentOnBeforeRenderListeners.remove(listener);
-			if (componentOnBeforeRenderListeners.isEmpty())
+			componentPreOnBeforeRenderListeners.remove(listener);
+			if (componentPreOnBeforeRenderListeners.isEmpty())
 			{
-				componentOnBeforeRenderListeners = null;
+				componentPreOnBeforeRenderListeners = null;
 			}
 		}
 	}
@@ -1033,11 +1036,11 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnBeforeRenderListeners(final Component< ? > component)
+	final void notifyPreComponentOnBeforeRenderListeners(final Component< ? > component)
 	{
-		if (componentOnBeforeRenderListeners != null)
+		if (componentPreOnBeforeRenderListeners != null)
 		{
-			for (Iterator<IComponentOnBeforeRenderListener> iter = componentOnBeforeRenderListeners.iterator(); iter.hasNext();)
+			for (Iterator<IComponentOnBeforeRenderListener> iter = componentPreOnBeforeRenderListeners.iterator(); iter.hasNext();)
 			{
 				IComponentOnBeforeRenderListener listener = iter.next();
 				listener.onBeforeRender(component);
@@ -1045,6 +1048,61 @@ public abstract class Application
 		}
 	}
 
+	/**
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be
+	 * called during application startup; it is not thread safe.
+	 * 
+	 * @param listener
+	 */
+	final public void addPostComponentOnBeforeRenderListener(
+		final IComponentOnBeforeRenderListener listener)
+	{
+		if (componentPostOnBeforeRenderListeners == null)
+		{
+			componentPostOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
+		}
+
+		if (componentPostOnBeforeRenderListeners.contains(listener) == false)
+		{
+			componentPostOnBeforeRenderListeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes an {@link IComponentOnBeforeRenderListener}.
+	 * 
+	 * @param listener
+	 */
+	final public void removePostComponentOnBeforeRenderListener(
+		final IComponentOnBeforeRenderListener listener)
+	{
+		if (componentPostOnBeforeRenderListeners != null)
+		{
+			componentPostOnBeforeRenderListeners.remove(listener);
+			if (componentPostOnBeforeRenderListeners.isEmpty())
+			{
+				componentPostOnBeforeRenderListeners = null;
+			}
+		}
+	}
+
+	/**
+	 * Notifies the {@link IComponentOnBeforeRenderListener}s.
+	 * 
+	 * @param component
+	 */
+	final void notifyPostComponentOnBeforeRenderListeners(final Component< ? > component)
+	{
+		if (componentPostOnBeforeRenderListeners != null)
+		{
+			for (Iterator<IComponentOnBeforeRenderListener> iter = componentPostOnBeforeRenderListeners.iterator(); iter.hasNext();)
+			{
+				IComponentOnBeforeRenderListener listener = iter.next();
+				listener.onBeforeRender(component);
+			}
+		}
+	}
+	
 	/**
 	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typically only be called
 	 * during application startup; it is not thread safe.
