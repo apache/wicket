@@ -31,6 +31,7 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
@@ -101,6 +102,24 @@ public abstract class WebApplication extends Application
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
 	/**
+	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
+	 * it.
+	 */
+	public static WebApplication get()
+	{
+		Application application = Application.get();
+
+		if (application instanceof WebApplication == false)
+		{
+			throw new WicketRuntimeException(
+				"The application attached to the current thread is not a " +
+					WebApplication.class.getSimpleName());
+		}
+
+		return (WebApplication)application;
+	}
+
+	/**
 	 * The cached application key. Will be set in {@link #setWicketFilter(WicketFilter)} based on
 	 * the filter name.
 	 */
@@ -135,6 +154,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#getApplicationKey()
 	 */
+	@Override
 	public final String getApplicationKey()
 	{
 		if (applicationKey == null)
@@ -229,6 +249,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#logEventTarget(org.apache.wicket.IRequestTarget)
 	 */
+	@Override
 	public void logEventTarget(IRequestTarget target)
 	{
 		super.logEventTarget(target);
@@ -242,6 +263,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#logResponseTarget(org.apache.wicket.IRequestTarget)
 	 */
+	@Override
 	public void logResponseTarget(IRequestTarget target)
 	{
 		super.logResponseTarget(target);
@@ -333,6 +355,7 @@ public abstract class WebApplication extends Application
 	 * @see org.apache.wicket.Application#newRequestCycle(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
+	@Override
 	public RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return new WebRequestCycle(this, (WebRequest)request, (WebResponse)response);
@@ -346,6 +369,7 @@ public abstract class WebApplication extends Application
 	 * @deprecated see {@link WebApplication#newSession(Request, Response)}.
 	 */
 	// FIXME remove this method after 1.3.0
+	@Deprecated
 	public final Session newSession()
 	{
 		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
@@ -360,6 +384,7 @@ public abstract class WebApplication extends Application
 	 * @deprecated {@link WebApplication#newSession(Request, Response)}.
 	 */
 	// FIXME remove this method after 1.3.0
+	@Deprecated
 	public final Session newSession(Request request)
 	{
 		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
@@ -369,6 +394,7 @@ public abstract class WebApplication extends Application
 	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
+	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new WebSession(request);
@@ -417,6 +443,7 @@ public abstract class WebApplication extends Application
 	 * @deprecated Replaced by {@link #newRequestCycle(Request, Response)}
 	 */
 	// TODO remove after compatibility release.
+	@Deprecated
 	protected final Object getDefaultRequestCycleFactory()
 	{
 		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
@@ -429,6 +456,7 @@ public abstract class WebApplication extends Application
 	 * after this application class is constructed, and the wicket servlet is set. <strong>Use this
 	 * method for any application setup instead of the constructor.</strong>
 	 */
+	@Override
 	protected void init()
 	{
 	}
@@ -436,6 +464,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
+	@Override
 	protected void internalDestroy()
 	{
 		// destroy the resource watcher
@@ -463,6 +492,7 @@ public abstract class WebApplication extends Application
 	 * "sourceFolder" init parameter is also set, then resources in that folder will be polled for
 	 * changes.
 	 */
+	@Override
 	protected void internalInit()
 	{
 		super.internalInit();
@@ -492,6 +522,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#getConfigurationType()
 	 */
+	@Override
 	public String getConfigurationType()
 	{
 		String result = null;
@@ -564,6 +595,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#newSessionStore()
 	 */
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		return new SecondLevelCacheSessionStore(this, new DiskPageStore());

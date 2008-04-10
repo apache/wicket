@@ -135,7 +135,7 @@ public abstract class Application
 	private static final Map applicationKeyToApplication = new HashMap(1);
 
 	/** Thread local holder of the application object. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -158,7 +158,7 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		final Application application = (Application)current.get();
+		final Application application = current.get();
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread " +
