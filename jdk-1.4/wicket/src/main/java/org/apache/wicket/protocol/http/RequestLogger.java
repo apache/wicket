@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
@@ -93,7 +94,7 @@ public class RequestLogger implements IRequestLogger
 
 	private final ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
 
-	private int active;
+	private AtomicInteger active;
 
 	/**
 	 * Construct.
@@ -141,7 +142,7 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public int getCurrentActiveRequestCount()
 	{
-		return active;
+		return active.get();
 	}
 
 	/**
@@ -188,10 +189,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			rd = new RequestData();
 			currentRequest.set(rd);
-			synchronized (this)
-			{
-				active++;
-			}
+			active.incrementAndGet();
 		}
 		return rd;
 	}
@@ -204,12 +202,9 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = currentRequest.get();
 		if (rd != null)
 		{
-			synchronized (this)
+			if (active.get() > 0)
 			{
-				if (active > 0)
-				{
-					rd.setActiveRequest(active--);
-				}
+				rd.setActiveRequest(active.decrementAndGet());
 			}
 			Session session = Session.get();
 			String sessionId = session.getId();
