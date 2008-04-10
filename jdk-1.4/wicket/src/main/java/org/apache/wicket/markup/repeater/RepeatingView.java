@@ -109,7 +109,7 @@ public class RepeatingView<T> extends AbstractRepeater<T>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	@Override
-	protected Iterator<Component> renderIterator()
+	protected Iterator<Component< ? >> renderIterator()
 	{
 		return iterator();
 	}

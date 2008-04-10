@@ -541,7 +541,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
-				for (final Iterator<Component> iterator = iterator(); iterator.hasNext();)
+				for (final Iterator<Component< ? >> iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
 					final ListItem<T> child = (ListItem<T>)iterator.next();
@@ -652,11 +652,11 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	@Override
-	protected Iterator<Component> renderIterator()
+	protected Iterator<Component< ? >> renderIterator()
 	{
 
 		final int size = size();
-		return new ReadOnlyIterator()
+		return new ReadOnlyIterator<Component< ? >>()
 		{
 			private int index = 0;
 
@@ -665,11 +665,11 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				return index < size;
 			}
 
-			public Object next()
+			public Component< ? > next()
 			{
 				final String id = Integer.toString(firstIndex + index);
 				index++;
-				Component c = get(id);
+				Component< ? > c = get(id);
 				return c;
 			}
 		};

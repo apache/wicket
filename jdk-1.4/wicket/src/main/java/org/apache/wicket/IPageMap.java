@@ -100,7 +100,7 @@ public interface IPageMap extends IClusterable
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	void redirectToInterceptPage(final Class pageClazz);
+	void redirectToInterceptPage(final Class< ? extends Page> pageClazz);
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's url

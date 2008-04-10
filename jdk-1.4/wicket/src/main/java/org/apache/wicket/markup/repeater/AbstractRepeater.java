@@ -78,7 +78,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * 
 	 * @return iterator over child components to be rendered
 	 */
-	protected abstract Iterator<Component> renderIterator();
+	protected abstract Iterator<Component< ? >> renderIterator();
 
 	/**
 	 * Renders all child items in no specified order
@@ -91,7 +91,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	{
 		final int markupStart = markupStream.getCurrentIndex();
 
-		Iterator<Component> it = renderIterator();
+		Iterator<Component< ? >> it = renderIterator();
 		if (it.hasNext())
 		{
 			do
@@ -134,7 +134,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 
 		if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT))
 		{
-			Iterator<Component> i = iterator();
+			Iterator<Component< ? >> i = iterator();
 			while (i.hasNext())
 			{
 				Component c = i.next();

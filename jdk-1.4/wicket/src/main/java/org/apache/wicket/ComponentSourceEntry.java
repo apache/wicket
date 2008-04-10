@@ -51,10 +51,10 @@ abstract class ComponentSourceEntry implements Serializable
 	private final void checkId(String name, String id)
 	{
 		if (id.indexOf('(') != -1 || id.indexOf('(') != -1 || id.indexOf(' ') != -1 ||
-				id.indexOf(',') != -1)
+			id.indexOf(',') != -1)
 		{
 			throw new IllegalStateException(name + "'" + id +
-					"' is not valid, it may not contain any of the ' ', '(', ')', ',' characters");
+				"' is not valid, it may not contain any of the ' ', '(', ')', ',' characters");
 		}
 	}
 
@@ -64,7 +64,7 @@ abstract class ComponentSourceEntry implements Serializable
 	 * @param buffer
 	 * @param component
 	 */
-	private final void appendComponent(AppendingStringBuffer buffer, Component component)
+	private final void appendComponent(AppendingStringBuffer buffer, Component< ? > component)
 	{
 		checkId("Component id", component.getId());
 		buffer.append(component.getId());
@@ -89,14 +89,14 @@ abstract class ComponentSourceEntry implements Serializable
 		buffer.append(component.markupIndex);
 
 		if (component instanceof MarkupContainer &&
-				((MarkupContainer)component).iterator().hasNext())
+			((MarkupContainer< ? >)component).iterator().hasNext())
 		{
 			buffer.append('(');
 
-			Iterator i = ((MarkupContainer)component).iterator();
+			Iterator<Component< ? >> i = ((MarkupContainer)component).iterator();
 			while (i.hasNext())
 			{
-				Component child = (Component)i.next();
+				Component< ? > child = i.next();
 				appendComponent(buffer, child);
 				if (i.hasNext())
 				{
@@ -115,8 +115,8 @@ abstract class ComponentSourceEntry implements Serializable
 	 * @param component
 	 * @param componentSource
 	 */
-	ComponentSourceEntry(MarkupContainer container, Component component,
-			IComponentSource componentSource)
+	ComponentSourceEntry(MarkupContainer< ? > container, Component< ? > component,
+		IComponentSource componentSource)
 	{
 		id = component.getId();
 
@@ -136,7 +136,7 @@ abstract class ComponentSourceEntry implements Serializable
 	 * @param index
 	 * @param child
 	 */
-	protected abstract void setChild(MarkupContainer parent, int index, Component child);
+	protected abstract void setChild(MarkupContainer< ? > parent, int index, Component< ? > child);
 
 	/**
 	 * Reconstructs the component
@@ -147,9 +147,9 @@ abstract class ComponentSourceEntry implements Serializable
 	 *            position in parent's children
 	 * @return
 	 */
-	Component reconstruct(MarkupContainer parent, int index)
+	Component< ? > reconstruct(MarkupContainer< ? > parent, int index)
 	{
-		Component component = componentSource.restoreComponent(id);
+		Component< ? > component = componentSource.restoreComponent(id);
 
 		if (parent != null)
 		{
@@ -204,8 +204,8 @@ abstract class ComponentSourceEntry implements Serializable
 	 * @param component
 	 * @return
 	 */
-	private static MarkupContainer applyComponentInfo(MarkupContainer parent, String info,
-			Component component)
+	private static MarkupContainer< ? > applyComponentInfo(MarkupContainer< ? > parent,
+		String info, Component< ? > component)
 	{
 		if (parent == null)
 		{
@@ -248,9 +248,8 @@ abstract class ComponentSourceEntry implements Serializable
 
 		if (component == null)
 		{
-			logger
-					.warn("Couldn't find component with id '" + id +
-							"'. This means that the component was not properly reconstructed from ComponentSource.");
+			logger.warn("Couldn't find component with id '" + id +
+				"'. This means that the component was not properly reconstructed from ComponentSource.");
 		}
 		else
 		{
@@ -260,7 +259,7 @@ abstract class ComponentSourceEntry implements Serializable
 			}
 			component.markupIndex = (short)markupIndex;
 		}
-		return component instanceof MarkupContainer ? (MarkupContainer)component : null;
+		return component instanceof MarkupContainer ? (MarkupContainer< ? >)component : null;
 	}
 
 	/**
@@ -275,7 +274,8 @@ abstract class ComponentSourceEntry implements Serializable
 	 * @param info
 	 * @return
 	 */
-	private static int parseComponentInfo(MarkupContainer parent, String info, Component component)
+	private static int parseComponentInfo(MarkupContainer< ? > parent, String info,
+		Component< ? > component)
 	{
 		// find the first part for the component
 		final String substring = getComponentSubString(info);
@@ -289,7 +289,7 @@ abstract class ComponentSourceEntry implements Serializable
 			++len; // skip the '('
 		}
 
-		final MarkupContainer child = applyComponentInfo(parent, substring, component);
+		final MarkupContainer< ? > child = applyComponentInfo(parent, substring, component);
 
 		if (hasChildren)
 		{

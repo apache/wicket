@@ -23,12 +23,13 @@ import java.util.Iterator;
  * {@link UnsupportedOperationException}
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  */
-public abstract class ReadOnlyIterator implements Iterator
+public abstract class ReadOnlyIterator<T> implements Iterator<T>
 {
 	public final void remove()
 	{
 		throw new UnsupportedOperationException("Iterator " + getClass().getName() +
-				" is a read-only iterator. Calls to remove() are not allowed");
+			" is a read-only iterator. Calls to remove() are not allowed");
 	}
 }

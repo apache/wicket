@@ -132,13 +132,23 @@ public abstract class Application
 	 * without being in a request/ being set in the thread local (we need that e.g. for when we are
 	 * in a destruction thread).
 	 */
-	private static final Map applicationKeyToApplication = new HashMap(1);
+	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(
+		1);
 
 	/** Thread local holder of the application object. */
 	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+	/** */
+	private List<IComponentOnBeforeRenderListener> componentOnBeforeRenderListeners;
+
+	/** */
+	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
+
+	/** */
+	private List<IHeaderContributor> renderHeadListeners;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -180,7 +190,7 @@ public abstract class Application
 	 */
 	public static Application get(String applicationKey)
 	{
-		Application application = (Application)applicationKeyToApplication.get(applicationKey);
+		Application application = applicationKeyToApplication.get(applicationKey);
 		return application;
 	}
 
@@ -191,7 +201,7 @@ public abstract class Application
 	 * @return unmodifiable set with keys that correspond with {@link #getApplicationKey()}. Never
 	 *         null, but possibly empty
 	 */
-	public static Set/* <String> */getApplicationKeys()
+	public static Set<String> getApplicationKeys()
 	{
 		return Collections.unmodifiableSet(applicationKeyToApplication.keySet());
 	}
@@ -226,7 +236,7 @@ public abstract class Application
 	private IConverterLocator converterLocator;
 
 	/** list of initializers. */
-	private final List initializers = new ArrayList();
+	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
 
 	/** Application level meta data. */
 	private MetaDataEntry[] metaData;
@@ -268,7 +278,7 @@ public abstract class Application
 			/**
 			 * @see org.apache.wicket.application.IComponentInstantiationListener#onInstantiation(org.apache.wicket.Component)
 			 */
-			public void onInstantiation(final Component component)
+			public void onInstantiation(final Component< ? > component)
 			{
 				// If component instantiation is not authorized
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
@@ -433,7 +443,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class<? extends Page> getHomePage();
+	public abstract Class< ? extends Page> getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
@@ -460,6 +470,7 @@ public abstract class Application
 	/**
 	 * Gets metadata for this application using the given key.
 	 * 
+	 * @param <T>
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata
@@ -732,6 +743,7 @@ public abstract class Application
 	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
 	 * 
+	 * @param <T>
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -765,9 +777,9 @@ public abstract class Application
 	 */
 	private final void callDestroyers()
 	{
-		for (Iterator i = initializers.iterator(); i.hasNext();)
+		for (Iterator<IInitializer> iter = initializers.iterator(); iter.hasNext();)
 		{
-			IInitializer initializer = (IInitializer)i.next();
+			IInitializer initializer = iter.next();
 			if (initializer instanceof IDestroyer)
 			{
 				log.info("[" + getName() + "] destroy: " + initializer);
@@ -781,9 +793,9 @@ public abstract class Application
 	 */
 	private final void callInitializers()
 	{
-		for (Iterator i = initializers.iterator(); i.hasNext();)
+		for (Iterator<IInitializer> iter = initializers.iterator(); iter.hasNext();)
 		{
-			IInitializer initializer = (IInitializer)i.next();
+			IInitializer initializer = iter.next();
 			log.info("[" + getName() + "] init: " + initializer);
 			initializer.init(this);
 		}
@@ -969,7 +981,7 @@ public abstract class Application
 	 * @param component
 	 *            the component that is being instantiated
 	 */
-	final void notifyComponentInstantiationListeners(final Component component)
+	final void notifyComponentInstantiationListeners(final Component< ? > component)
 	{
 		final int len = componentInstantiationListeners.length;
 		for (int i = 0; i < len; i++)
@@ -978,19 +990,18 @@ public abstract class Application
 		}
 	}
 
-	private List componentOnBeforeRenderListeners = null;
-
 	/**
 	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be
 	 * called during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 */
-	final public void addComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener)
+	final public void addComponentOnBeforeRenderListener(
+		final IComponentOnBeforeRenderListener listener)
 	{
 		if (componentOnBeforeRenderListeners == null)
 		{
-			componentOnBeforeRenderListeners = new ArrayList();
+			componentOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
 		}
 
 		if (componentOnBeforeRenderListeners.contains(listener) == false)
@@ -1005,7 +1016,7 @@ public abstract class Application
 	 * @param listener
 	 */
 	final public void removeComponentOnBeforeRenderListener(
-		IComponentOnBeforeRenderListener listener)
+		final IComponentOnBeforeRenderListener listener)
 	{
 		if (componentOnBeforeRenderListeners != null)
 		{
@@ -1022,19 +1033,17 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnBeforeRenderListeners(Component component)
+	final void notifyComponentOnBeforeRenderListeners(final Component< ? > component)
 	{
 		if (componentOnBeforeRenderListeners != null)
 		{
-			for (Iterator i = componentOnBeforeRenderListeners.iterator(); i.hasNext();)
+			for (Iterator<IComponentOnBeforeRenderListener> iter = componentOnBeforeRenderListeners.iterator(); iter.hasNext();)
 			{
-				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener)i.next();
+				IComponentOnBeforeRenderListener listener = iter.next();
 				listener.onBeforeRender(component);
 			}
 		}
 	}
-
-	private List componentOnAfterRenderListeners = null;
 
 	/**
 	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typically only be called
@@ -1042,11 +1051,12 @@ public abstract class Application
 	 * 
 	 * @param listener
 	 */
-	final public void addComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener)
+	final public void addComponentOnAfterRenderListener(
+		final IComponentOnAfterRenderListener listener)
 	{
 		if (componentOnAfterRenderListeners == null)
 		{
-			componentOnAfterRenderListeners = new ArrayList();
+			componentOnAfterRenderListeners = new ArrayList<IComponentOnAfterRenderListener>();
 		}
 
 		if (componentOnAfterRenderListeners.contains(listener) == false)
@@ -1060,7 +1070,8 @@ public abstract class Application
 	 * 
 	 * @param listener
 	 */
-	final public void removeComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener)
+	final public void removeComponentOnAfterRenderListener(
+		final IComponentOnAfterRenderListener listener)
 	{
 		if (componentOnAfterRenderListeners != null)
 		{
@@ -1077,30 +1088,28 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnAfterRenderListeners(Component component)
+	final void notifyComponentOnAfterRenderListeners(final Component< ? > component)
 	{
 		if (componentOnAfterRenderListeners != null)
 		{
-			for (Iterator i = componentOnAfterRenderListeners.iterator(); i.hasNext();)
+			for (Iterator<IComponentOnAfterRenderListener> iter = componentOnAfterRenderListeners.iterator(); iter.hasNext();)
 			{
-				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener)i.next();
+				IComponentOnAfterRenderListener listener = iter.next();
 				listener.onAfterRender(component);
 			}
 		}
 	}
-
-	private List renderHeadListeners = null;
 
 	/**
 	 * Adds a listener that will be invoked for every header response
 	 * 
 	 * @param listener
 	 */
-	public final void addRenderHeadListener(IHeaderContributor listener)
+	public final void addRenderHeadListener(final IHeaderContributor listener)
 	{
 		if (renderHeadListeners == null)
 		{
-			renderHeadListeners = new ArrayList();
+			renderHeadListeners = new ArrayList<IHeaderContributor>();
 		}
 		renderHeadListeners.add(listener);
 	}
@@ -1109,7 +1118,7 @@ public abstract class Application
 	 * 
 	 * @param listener
 	 */
-	public void removeRenderHeadListener(IHeaderContributor listener)
+	public void removeRenderHeadListener(final IHeaderContributor listener)
 	{
 		if (renderHeadListeners != null)
 		{
@@ -1126,13 +1135,13 @@ public abstract class Application
 	 * 
 	 * @param response
 	 */
-	public void notifyRenderHeadListener(IHeaderResponse response)
+	public void notifyRenderHeadListener(final IHeaderResponse response)
 	{
 		if (renderHeadListeners != null)
 		{
-			for (Iterator i = renderHeadListeners.iterator(); i.hasNext();)
+			for (Iterator<IHeaderContributor> iter = renderHeadListeners.iterator(); iter.hasNext();)
 			{
-				IHeaderContributor listener = (IHeaderContributor)i.next();
+				IHeaderContributor listener = iter.next();
 				listener.renderHead(response);
 			}
 		}

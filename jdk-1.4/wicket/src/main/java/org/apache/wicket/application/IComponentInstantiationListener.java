@@ -37,5 +37,5 @@ public interface IComponentInstantiationListener
 	 * @param component
 	 *            the component that is being instantiated.
 	 */
-	void onInstantiation(Component component);
+	void onInstantiation(Component< ? > component);
 }

@@ -44,6 +44,8 @@ import org.apache.wicket.Component;
  * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model data type
  */
 public interface IComponentAssignedModel<T> extends IModel<T>
 {

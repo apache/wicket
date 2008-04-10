@@ -673,7 +673,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	private String id;
 
 	/** Any parent container. */
-	private MarkupContainer parent;
+	private MarkupContainer< ? > parent;
 
 	/**
 	 * I really dislike it, but for now we need it. Reason: due to transparent containers and
@@ -950,11 +950,19 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return this;
 	}
 
+	/**
+	 * 
+	 * @param behavior
+	 */
 	private void addBehavior(final IBehavior behavior)
 	{
 		data_add(behavior);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private List<IBehavior> getBehaviorsImpl()
 	{
 		if (data != null)
@@ -1204,10 +1212,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @return First container parent that is an instance of the given class, or null if none can be
 	 *         found
 	 */
-	public final MarkupContainer findParent(final Class< ? extends MarkupContainer> c)
+	public final MarkupContainer< ? > findParent(final Class< ? extends MarkupContainer> c)
 	{
 		// Start with immediate parent
-		MarkupContainer current = parent;
+		MarkupContainer< ? > current = parent;
 
 		// Walk up containment hierarchy
 		while (current != null)
@@ -1229,9 +1237,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	/**
 	 * @return The nearest markup container with associated markup
 	 */
-	public final MarkupContainer findParentWithAssociatedMarkup()
+	public final MarkupContainer< ? > findParentWithAssociatedMarkup()
 	{
-		MarkupContainer container = parent;
+		MarkupContainer< ? > container = parent;
 		while (container != null)
 		{
 			if (container.hasAssociatedMarkup())
@@ -1708,7 +1716,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * 
 	 * @return Any parent container, or null if there is none
 	 */
-	public final MarkupContainer getParent()
+	public final MarkupContainer< ? > getParent()
 	{
 		return parent;
 	}
@@ -1791,7 +1799,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 */
 	public long getSizeInBytes()
 	{
-		final MarkupContainer originalParent = parent;
+		final MarkupContainer< ? > originalParent = parent;
 		parent = null;
 		long size = -1;
 		try
@@ -2431,7 +2439,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		else
 		{
 			// Save the parent's markup stream to re-assign it at the end
-			MarkupContainer parent = getParent();
+			MarkupContainer< ? > parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
 			MarkupStream markupStream = locateMarkupStream();
 
@@ -2851,6 +2859,11 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return this;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	IModel<T> getModelImpl()
 	{
@@ -2864,6 +2877,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		}
 	}
 
+	/**
+	 * 
+	 * @param model
+	 */
 	void setModelImpl(IModel<T> model)
 	{
 		if (getFlag(FLAG_MODEL_SET))
@@ -2886,8 +2903,6 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 				setFlag(FLAG_MODEL_SET, true);
 			}
 		}
-
-
 	}
 
 	/**
@@ -3233,7 +3248,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final Object visitParents(final Class< ? extends MarkupContainer> c,
+	public final Object visitParents(final Class< ? extends MarkupContainer< ? >> c,
 		final IVisitor<Component< ? >> visitor)
 	{
 		// Start here
@@ -4005,17 +4020,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 *            The model to wrap if need be
 	 * @return The wrapped model
 	 */
-	@SuppressWarnings("unchecked")
-	protected final IModel wrap(final IModel model)
+	protected final IModel wrap(final IModel< ? > model)
 	{
 		if (model instanceof IComponentAssignedModel)
 		{
 			return ((IComponentAssignedModel)model).wrapOnAssignment(this);
 		}
-		else
-		{
-			return model;
-		}
+		return model;
 	}
 
 	/**
@@ -4032,7 +4043,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 *            Path to component
 	 * @return The component at the path
 	 */
-	Component<T> get(final String path)
+	Component< ? > get(final String path)
 	{
 		// Path to this component is an empty path
 		if (path.equals(""))
@@ -4055,6 +4066,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return getMarkupId() != null;
 	}
 
+	/**
+	 * 
+	 */
 	void internalMarkRendering()
 	{
 		setFlag(FLAG_PREPARED_FOR_RENDER, false);
@@ -4077,11 +4091,18 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	boolean isPreparedForRender()
 	{
 		return getFlag(FLAG_PREPARED_FOR_RENDER);
 	}
 
+	/**
+	 * 
+	 */
 	void onAfterRenderChildren()
 	{
 	}
@@ -4167,7 +4188,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @param parent
 	 *            The parent container
 	 */
-	final void setParent(final MarkupContainer parent)
+	final void setParent(final MarkupContainer< ? > parent)
 	{
 		if (this.parent != null && log.isDebugEnabled())
 		{
@@ -4209,7 +4230,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @param allowed
 	 * @return <code>this</code> for chaining
 	 */
-	public final Component setVisibilityAllowed(boolean allowed)
+	public final Component<T> setVisibilityAllowed(boolean allowed)
 	{
 		setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
 		return this;
@@ -4238,7 +4259,11 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return isVisible() && isRenderAllowed() && isVisibilityAllowed();
 	}
 
-
+	/**
+	 * 
+	 * @param s
+	 * @throws IOException
+	 */
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		if (this instanceof Page)
@@ -4251,6 +4276,12 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		}
 	}
 
+	/**
+	 * 
+	 * @param s
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		if (this instanceof Page)
