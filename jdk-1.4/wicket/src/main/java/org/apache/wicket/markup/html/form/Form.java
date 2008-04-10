@@ -222,7 +222,8 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		@Override
 		public String getParameter(String key)
 		{
-			return (String)params.get(key);
+			String p[] = (String[])params.get(key); 
+			return p != null && p.length > 0 ? p[0] : null; 
 		}
 
 		/**
