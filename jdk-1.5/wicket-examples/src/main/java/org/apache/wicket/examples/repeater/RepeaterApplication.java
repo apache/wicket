@@ -27,7 +27,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  */
 public class RepeaterApplication extends WebApplication
 {
-	private ContactsDatabase contactsDB = new ContactsDatabase(50);
+	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
 
 	/**
@@ -40,6 +40,7 @@ public class RepeaterApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
@@ -56,7 +57,8 @@ public class RepeaterApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}
