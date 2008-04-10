@@ -168,9 +168,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
-		return (Class)pageClassRef.get();
+		return (Class<? extends Page>)pageClassRef.get();
 	}
 
 	/**

@@ -1175,7 +1175,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{
-			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
+			final Class<? extends Page> clazz = ((BookmarkablePageLink)component).getPageClass();
 			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
 				':' + clazz.getName());
 		}

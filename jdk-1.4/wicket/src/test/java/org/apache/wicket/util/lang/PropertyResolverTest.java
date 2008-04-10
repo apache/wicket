@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockWebApplication;
@@ -56,7 +57,7 @@ public class PropertyResolverTest extends TestCase
 		app = new MockWebApplication(new WebApplication()
 		{
 
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return null;
 			}

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -161,7 +162,7 @@ public class InterceptTest extends TestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public Class getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return MockHomePage.class;
 		}
@@ -175,7 +176,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @return Class
 		 */
-		public Class getLoginPage()
+		public Class<? extends Page> getLoginPage()
 		{
 			return MockLoginPage.class;
 		}

@@ -128,7 +128,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * 
 	 * @return Page class
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return Classes.resolveClass(pageClassName);
 	}

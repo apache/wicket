@@ -476,7 +476,7 @@ public class MockWebApplication
 					// create a new request cycle for the newPage call
 					createRequestCycle();
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
-					Class pageClass = pageClassRequestTarget.getPageClass();
+					Class<? extends Page> pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{

@@ -116,7 +116,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public static class DummyWebApplication extends WebApplication
 	{
-		public Class getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
@@ -156,7 +156,7 @@ public class BaseWicketTester extends MockWebApplication
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return homePage;
 			}

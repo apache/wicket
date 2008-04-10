@@ -716,7 +716,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 
 		// Get page Class
-		final Class pageClass = requestTarget.getPageClass();
+		final Class<? extends Page> pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
 		// Find pagemap name

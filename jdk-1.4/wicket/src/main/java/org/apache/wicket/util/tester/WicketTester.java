@@ -160,7 +160,7 @@ public class WicketTester extends BaseWicketTester
 		/**
 		 * @see org.apache.wicket.Application#getHomePage()
 		 */
-		public Class getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
@@ -256,7 +256,7 @@ public class WicketTester extends BaseWicketTester
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return homePage;
 			}

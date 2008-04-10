@@ -317,7 +317,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		try
 		{
 			// Get the home page class
-			Class homePageClass = application.getHomePage();
+			Class<? extends Page> homePageClass = application.getHomePage();
 
 			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			// and create a dummy target for looking up whether the home page is

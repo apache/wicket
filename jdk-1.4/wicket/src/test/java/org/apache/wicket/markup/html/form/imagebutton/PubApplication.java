@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form.imagebutton;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -35,7 +36,7 @@ public class PubApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

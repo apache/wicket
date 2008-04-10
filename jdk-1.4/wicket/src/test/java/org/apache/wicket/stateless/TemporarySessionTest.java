@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.stateless;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -43,7 +44,7 @@ public class TemporarySessionTest extends WicketTestCase
 		tester = new WicketTester(new WebApplication()
 		{
 
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return HomePage.class;
 			}

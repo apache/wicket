@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.header.inheritance;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
@@ -72,7 +73,7 @@ public class InheritanceHeadTest extends WicketTestCase
 				return new WebSession(request).setStyle("myStyle");
 			}
 
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return ConcretePage2.class;
 			}

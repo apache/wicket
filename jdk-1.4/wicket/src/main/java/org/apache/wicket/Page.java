@@ -513,7 +513,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return getClass();
 	}

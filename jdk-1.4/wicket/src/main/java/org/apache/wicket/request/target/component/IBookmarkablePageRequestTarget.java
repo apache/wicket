@@ -17,6 +17,7 @@
 package org.apache.wicket.request.target.component;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.target.IEventProcessor;
 
@@ -33,7 +34,7 @@ public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventPr
 	 * 
 	 * @return the page class
 	 */
-	Class getPageClass();
+	Class<? extends Page> getPageClass();
 
 	/**
 	 * Gets the optional page parameters.

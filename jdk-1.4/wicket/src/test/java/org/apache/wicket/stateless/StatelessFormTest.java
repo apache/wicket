@@ -18,6 +18,7 @@ package org.apache.wicket.stateless;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
@@ -40,15 +41,15 @@ public class StatelessFormTest extends TestCase
 
 	private WebApplication application;
 
-	private Class homePage = HomePage.class;
-	private Class loginPage = LoginPage.class;
+	private Class<? extends Page> homePage = HomePage.class;
+	private Class<? extends Page> loginPage = LoginPage.class;
 
 
 	protected void setUp() throws Exception
 	{
 		mock = new WicketTester(application = new WebApplication()
 		{
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return StatelessFormTest.this.getHomePage();
 			}
@@ -82,7 +83,7 @@ public class StatelessFormTest extends TestCase
 	/**
 	 * @return Returns the homePage.
 	 */
-	public Class getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return homePage;
 	}
@@ -91,7 +92,7 @@ public class StatelessFormTest extends TestCase
 	 * @param homePage
 	 *            The homePage to set.
 	 */
-	public void setHomePage(Class homePage)
+	public void setHomePage(Class<? extends Page> homePage)
 	{
 		this.homePage = homePage;
 	}
@@ -99,7 +100,7 @@ public class StatelessFormTest extends TestCase
 	/**
 	 * @return Returns the loginPage.
 	 */
-	public Class getLoginPage()
+	public Class<? extends Page> getLoginPage()
 	{
 		return loginPage;
 	}
@@ -108,7 +109,7 @@ public class StatelessFormTest extends TestCase
 	 * @param loginPage
 	 *            The loginPage to set.
 	 */
-	public void setLoginPage(Class loginPage)
+	public void setLoginPage(Class<? extends Page> loginPage)
 	{
 		this.loginPage = loginPage;
 	}

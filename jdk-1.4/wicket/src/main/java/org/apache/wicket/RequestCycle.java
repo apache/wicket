@@ -411,7 +411,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page class or null
 	 */
-	public final Class getResponsePageClass()
+	public final Class<? extends Page> getResponsePageClass()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))

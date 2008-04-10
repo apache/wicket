@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.HttpSessionStore;
@@ -79,7 +80,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 	{
 		WebApplication app = new WebApplication()
 		{
-			public Class getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return null;
 			}

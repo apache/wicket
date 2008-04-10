@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.properties;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
@@ -28,7 +29,7 @@ public class MyApplication extends WebApplication
 {
 	private static final long serialVersionUID = 1L;
 
-	public Class getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return null;
 	}

@@ -52,7 +52,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	 * 
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	public Class getPageClass()
+	public Class<? extends Page> getPageClass()
 	{
 		return getPage().getClass();
 	}
