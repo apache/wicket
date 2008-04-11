@@ -40,7 +40,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
+	private Form< ? > form;
 
 	/**
 	 * Constructor. This constructor can only be used when the component this behavior is attached
@@ -62,7 +62,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param event
 	 *            javascript event this behavior is attached to, like onclick
 	 */
-	public AjaxFormSubmitBehavior(Form form, String event)
+	public AjaxFormSubmitBehavior(Form< ? > form, String event)
 	{
 		super(event);
 		this.form = form;
@@ -73,13 +73,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		}
 	}
 
-	protected Form getForm()
+	/**
+	 * 
+	 * @return
+	 */
+	protected Form< ? > getForm()
 	{
 		if (form == null)
 		{
 			// try to find form in the hierarchy of owning component
-			Component component = getComponent();
-			form = (Form)component.findParent(Form.class);
+			Component< ? > component = getComponent();
+			form = (Form< ? >)component.findParent(Form.class);
 			if (form == null)
 			{
 				throw new IllegalStateException(
@@ -91,12 +95,15 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		return form;
 	}
 
-
+	/**
+	 * 
+	 * @see org.apache.wicket.ajax.AjaxEventBehavior#getEventHandler()
+	 */
+	@Override
 	protected CharSequence getEventHandler()
 	{
 		final String formId = getForm().getMarkupId();
 		final CharSequence url = getCallbackUrl();
-
 
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
 			formId).append("', '").append(url).append("', ");
@@ -115,6 +122,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		return generateCallbackScript(call) + ";";
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
+	 */
+	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		getForm().getRootForm().onFormSubmitted();
@@ -157,6 +169,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 */
 	protected abstract void onError(AjaxRequestTarget target);
 
+	/**
+	 * 
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
+	 */
+	@Override
 	protected CharSequence getPreconditionScript()
 	{
 		return "return Wicket.$$(this)&amp;&amp;Wicket.$$('" + getForm().getMarkupId() + "')";

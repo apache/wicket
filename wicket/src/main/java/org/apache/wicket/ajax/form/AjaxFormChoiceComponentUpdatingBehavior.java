@@ -56,6 +56,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
@@ -106,15 +107,14 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		}
 	}
 
-
 	/**
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		super.onBind();
-
 
 		if (!(getComponent() instanceof RadioChoice) &&
 			!(getComponent() instanceof CheckBoxMultipleChoice) &&
@@ -134,9 +134,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * 
 	 * @return FormComponent
 	 */
-	protected final FormComponent getFormComponent()
+	protected final FormComponent< ? > getFormComponent()
 	{
-		return (FormComponent)getComponent();
+		return (FormComponent< ? >)getComponent();
 	}
 
 	/**
@@ -154,9 +154,10 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		final FormComponent formComponent = getFormComponent();
+		final FormComponent< ? > formComponent = getFormComponent();
 
 		try
 		{

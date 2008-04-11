@@ -48,7 +48,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * @param id
 	 * @param model
 	 */
-	public AjaxCheckBox(final String id, final IModel model)
+	public AjaxCheckBox(final String id, final IModel<Boolean> model)
 	{
 		super(id, model);
 
@@ -58,6 +58,7 @@ public abstract class AjaxCheckBox extends CheckBox
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				AjaxCheckBox.this.onUpdate(target);

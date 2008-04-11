@@ -71,7 +71,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            The label provider for the link text.
 	 */
 	public AjaxPagingNavigator(final String id, final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
 		super(id, pageable, labelProvider);
 		this.pageable = pageable;
@@ -90,7 +90,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	@Override
+	protected Link< ? > newPagingNavigationIncrementLink(String id, IPageable pageable,
+		int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
 	}
@@ -107,7 +109,8 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	@Override
+	protected Link< ? > newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
 	}
@@ -121,8 +124,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            The label provider for the link text.
 	 * @return the navigation object
 	 */
+	@Override
 	protected PagingNavigation newNavigation(final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
 		return new AjaxPagingNavigation("navigation", pageable, labelProvider);
 	}
@@ -142,7 +146,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 		// the pageable is a component, and that it is a child of a web
 		// markup container.
 
-		Component container = ((Component)pageable);
+		Component< ? > container = ((Component< ? >)pageable);
 		// no need for a nullcheck as there is bound to be a non-repeater
 		// somewhere higher in the hierarchy
 		while (container instanceof AbstractRepeater)
@@ -153,7 +157,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 
 		// in case the navigator is not contained by the container, we have
 		// to add it to the response
-		if (((MarkupContainer)container).contains(this, true) == false)
+		if (((MarkupContainer< ? >)container).contains(this, true) == false)
 		{
 			target.addComponent(this);
 		}

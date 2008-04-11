@@ -65,6 +65,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		super.onBind();
@@ -80,14 +81,15 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @return FormComponent
 	 */
-	protected final FormComponent getFormComponent()
+	protected final FormComponent< ? > getFormComponent()
 	{
-		return (FormComponent)getComponent();
+		return (FormComponent< ? >)getComponent();
 	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#getEventHandler()
 	 */
+	@Override
 	protected final CharSequence getEventHandler()
 	{
 		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
@@ -98,6 +100,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
 	 */
+	@Override
 	protected void onCheckEvent(String event)
 	{
 		if ("href".equalsIgnoreCase(event))
@@ -111,9 +114,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
-		final FormComponent formComponent = getFormComponent();
+		final FormComponent< ? > formComponent = getFormComponent();
 
 		if (getEvent().toLowerCase().equals("onblur") && disableFocusOnBlur())
 		{

@@ -38,10 +38,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public abstract class AjaxFallbackButton<T> extends Button<T>
 {
-
 	private static final long serialVersionUID = 1L;
 
-	private final Form mForm;
+	private final Form< ? > mForm;
 
 	/**
 	 * Construct.
@@ -49,7 +48,7 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 	 * @param id
 	 * @param form
 	 */
-	public AjaxFallbackButton(String id, Form form)
+	public AjaxFallbackButton(String id, Form< ? > form)
 	{
 		this(id, null, form);
 	}
@@ -61,7 +60,7 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 	 * @param model
 	 * @param form
 	 */
-	public AjaxFallbackButton(String id, IModel<T> model, Form form)
+	public AjaxFallbackButton(String id, IModel<T> model, Form< ? > form)
 	{
 		super(id, model);
 		mForm = form;
@@ -93,7 +92,6 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 			{
 				return AjaxFallbackButton.this.getAjaxCallDecorator();
 			}
-
 		});
 	}
 
@@ -105,7 +103,7 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 	 * 
 	 * TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
-	protected void onError(AjaxRequestTarget target, Form form)
+	protected void onError(AjaxRequestTarget target, Form< ? > form)
 	{
 		// created to override
 	}
@@ -122,8 +120,12 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 		}
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.Button#getForm()
+	 */
 	@Override
-	public Form getForm()
+	public Form< ? > getForm()
 	{
 		return mForm == null ? super.getForm() : mForm;
 	}
@@ -136,8 +138,12 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected abstract void onSubmit(final AjaxRequestTarget target, final Form form);
+	protected abstract void onSubmit(final AjaxRequestTarget target, final Form< ? > form);
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;

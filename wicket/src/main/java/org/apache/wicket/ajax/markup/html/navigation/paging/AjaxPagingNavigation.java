@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.markup.html.navigation.paging;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 
 /**
  * An ajaxified navigation for a PageableListView that holds links to other pages of the
@@ -32,9 +33,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
  * 
  * @author Martijn Dashorst
  */
-public class AjaxPagingNavigation
-		extends
-			org.apache.wicket.markup.html.navigation.paging.PagingNavigation
+public class AjaxPagingNavigation extends PagingNavigation
 {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +61,7 @@ public class AjaxPagingNavigation
 	 *            The label provider for the text that the links should be displaying.
 	 */
 	public AjaxPagingNavigation(final String id, final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
 		super(id, pageable, labelProvider);
 	}
@@ -78,7 +77,8 @@ public class AjaxPagingNavigation
 	 *            the index the link points to
 	 * @return the ajaxified page number link.
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	@Override
+	protected Link< ? > newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
 	}

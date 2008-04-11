@@ -38,7 +38,7 @@ public abstract class AjaxButton<T> extends Button<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Form form;
+	private final Form< ? > form;
 
 	/**
 	 * Construct.
@@ -57,7 +57,7 @@ public abstract class AjaxButton<T> extends Button<T>
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
 	 */
 	@Override
-	public Form getForm()
+	public Form< ? > getForm()
 	{
 		if (form != null)
 		{
@@ -75,42 +75,55 @@ public abstract class AjaxButton<T> extends Button<T>
 	 * @param id
 	 * @param form
 	 */
-	public AjaxButton(String id, final Form form)
+	public AjaxButton(String id, final Form< ? > form)
 	{
 		super(id);
 		this.form = form;
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
-
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+			 */
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
 			}
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget)
+			 */
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxButton.this.onError(target, AjaxButton.this.getForm());
 			}
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#getEventHandler()
+			 */
 			@Override
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
+			 */
 			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxButton.this.getAjaxCallDecorator();
 			}
-
 		});
-
 	}
 
 	/**
@@ -130,7 +143,7 @@ public abstract class AjaxButton<T> extends Button<T>
 	 * @param target
 	 * @param form
 	 */
-	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
+	protected abstract void onSubmit(AjaxRequestTarget target, Form< ? > form);
 
 	/**
 	 * Listener method invoked on form submit with errors
@@ -140,9 +153,7 @@ public abstract class AjaxButton<T> extends Button<T>
 	 * 
 	 * TODO 1.3: Make abstract to be consistent with onSubmit()
 	 */
-	protected void onError(AjaxRequestTarget target, Form form)
+	protected void onError(AjaxRequestTarget target, Form< ? > form)
 	{
-
 	}
-
 }

@@ -31,9 +31,10 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class AjaxFallbackLink extends Link implements IAjaxLink
+public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -54,7 +55,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 * @param id
 	 * @param model
 	 */
-	public AjaxFallbackLink(final String id, final IModel model)
+	public AjaxFallbackLink(final String id, final IModel<T> model)
 	{
 		super(id, model);
 
@@ -62,17 +63,32 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
+			 */
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				onClick(target);
 			}
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
+			 */
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
-				return new CancelEventIfNoAjaxDecorator(AjaxFallbackLink.this
-						.getAjaxCallDecorator());
+				return new CancelEventIfNoAjaxDecorator(
+					AjaxFallbackLink.this.getAjaxCallDecorator());
 			}
 
+			/**
+			 * 
+			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
+			 */
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// only render handler if link is enabled
@@ -84,6 +100,10 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 		});
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return null;
@@ -93,6 +113,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		onClick(null);

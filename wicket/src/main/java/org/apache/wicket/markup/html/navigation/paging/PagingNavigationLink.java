@@ -25,8 +25,10 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Martijn Dashorst
+ * @param <T>
+ *            The model data type
  */
-public class PagingNavigationLink extends Link
+public class PagingNavigationLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,6 +60,7 @@ public class PagingNavigationLink extends Link
 	/**
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		pageable.setCurrentPage(getPageNumber());
@@ -113,6 +116,7 @@ public class PagingNavigationLink extends Link
 	 * @return True if this link links to the given page
 	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
 	 */
+	@Override
 	public final boolean linksTo(final Page page)
 	{
 		return getPageNumber() == pageable.getCurrentPage();

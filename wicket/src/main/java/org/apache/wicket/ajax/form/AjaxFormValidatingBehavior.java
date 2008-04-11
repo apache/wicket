@@ -45,16 +45,26 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param event
 	 *            javascript event this behavior will be invoked on, like onclick
 	 */
-	public AjaxFormValidatingBehavior(Form form, String event)
+	public AjaxFormValidatingBehavior(Form< ? > form, String event)
 	{
 		super(form, event);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+	 */
+	@Override
 	protected void onSubmit(final AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.ajax.form.AjaxFormSubmitBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget)
+	 */
+	@Override
 	protected void onError(AjaxRequestTarget target)
 	{
 		addFeedbackPanels(target);
@@ -67,14 +77,13 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 */
 	private void addFeedbackPanels(final AjaxRequestTarget target)
 	{
-		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor()
+		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component< ? >>()
 		{
-			public Object component(Component component)
+			public Object component(Component< ? > component)
 			{
 				target.addComponent(component);
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
-
 		});
 	}
 
@@ -84,7 +93,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param form
 	 * @param event
 	 */
-	public static void addToAllFormComponents(final Form form, final String event)
+	public static void addToAllFormComponents(final Form< ? > form, final String event)
 	{
 		addToAllFormComponents(form, event, null);
 	}
@@ -96,12 +105,12 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param event
 	 * @param throttleDelay
 	 */
-	public static void addToAllFormComponents(final Form form, final String event,
-			final Duration throttleDelay)
+	public static void addToAllFormComponents(final Form< ? > form, final String event,
+		final Duration throttleDelay)
 	{
-		form.visitChildren(FormComponent.class, new IVisitor()
+		form.visitChildren(FormComponent.class, new IVisitor<Component< ? >>()
 		{
-			public Object component(Component component)
+			public Object component(Component< ? > component)
 			{
 				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);
 				if (throttleDelay != null)
@@ -111,8 +120,6 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 				component.add(behavior);
 				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
-
 		});
 	}
-
 }

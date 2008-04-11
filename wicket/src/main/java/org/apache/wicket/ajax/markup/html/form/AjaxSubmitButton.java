@@ -26,9 +26,12 @@ import org.apache.wicket.markup.html.form.Form;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model object type
  * @deprecated Use {@link AjaxButton} instead.
  */
-public abstract class AjaxSubmitButton extends AjaxButton
+@Deprecated
+public abstract class AjaxSubmitButton<T> extends AjaxButton<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +41,7 @@ public abstract class AjaxSubmitButton extends AjaxButton
 	 * @param id
 	 * @deprecated Use {@link AjaxButton} instead.
 	 */
+	@Deprecated
 	public AjaxSubmitButton(String id)
 	{
 		super(id);
@@ -50,7 +54,8 @@ public abstract class AjaxSubmitButton extends AjaxButton
 	 * @param form
 	 * @deprecated Use {@link AjaxButton} instead.
 	 */
-	public AjaxSubmitButton(String id, final Form form)
+	@Deprecated
+	public AjaxSubmitButton(String id, final Form< ? > form)
 	{
 		super(id, form);
 	}

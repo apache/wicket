@@ -69,19 +69,18 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * 
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		// handle the event
 		owner.onClick(target);
 
 		// find the PagingNavigator parent of this link
-		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component)owner)
-				.findParent(AjaxPagingNavigator.class);
+		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component< ? >)owner).findParent(AjaxPagingNavigator.class);
 		if (navigator == null)
 		{
 			throw new WicketRuntimeException(
-					"Unable to find AjaxPagingNavigator component in hierarchy starting from " +
-							owner);
+				"Unable to find AjaxPagingNavigator component in hierarchy starting from " + owner);
 		}
 
 		// tell the PagingNavigator to update the IPageable
@@ -92,6 +91,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
 	 */
+	@Override
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return new CancelEventIfNoAjaxDecorator();
@@ -100,6 +100,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	/**
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		if (getComponent().isEnabled() && getComponent().isEnableAllowed())
