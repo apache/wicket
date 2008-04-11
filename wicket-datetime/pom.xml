@@ -22,19 +22,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-jdk14</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket-velocity</artifactId>
+	<artifactId>wicket-datetime</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Wicket Velocity</name>
-	<description>
-		Provides a specialized panel and some related utilities that enables users 
-		to work with Velocity and Wicket. Particularly useful for simple CMS like applications
-	</description>
+	<name>Wicket Date/Time</name>
+	<description>Date/Time components and utilities for Wicket</description>
 
 	<dependencies>
 		<dependency>
@@ -42,9 +39,8 @@
 			<artifactId>wicket</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.4</version>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 </project>

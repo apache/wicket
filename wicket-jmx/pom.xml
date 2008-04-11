@@ -22,45 +22,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-jdk14</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket-quickstart</artifactId>
-	<packaging>war</packaging>
+	<artifactId>wicket-jmx</artifactId>
+	<packaging>jar</packaging>
 
-	<name>Wicket Quickstart</name>
-	<description>Wicket Quickstart is designed to get you up and coding your Wicket applications within minutes. No more creating your own project and having to download dependencies yourself. This is an all-in-one package allowing you to concentrate on your application, and Quickstart on the project structure.</description>
+	<name>Wicket JMX</name>
+	<description>Wicket Java Management Extensions</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

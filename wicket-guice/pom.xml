@@ -22,23 +22,29 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-jdk15</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket-auth-roles</artifactId>
+	<artifactId>wicket-guice</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Wicket Auth Roles</name>
-	<description>
-		Wicket Authorization Integration Based on roles, metadata and annotations. This project requires Java 5.
-	</description>
+	<name>Wicket Guice Integration</name>
+	<description>Google Guice integration in your Wicket web applications. Requires Java 5. See the examples project for usecases.</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-ioc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.guice</groupId>
+			<artifactId>guice</artifactId>
 		</dependency>
 	</dependencies>
 </project>

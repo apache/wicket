@@ -22,21 +22,37 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-jdk15</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket-spring-annot</artifactId>
+	<artifactId>wicket-spring</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Wicket Spring Integration through Annotations</name>
-	<description>Spring integration in your Wicket web applications using annotations. Requires Java 5. See the examples project for usecases.</description>
+	<name>Wicket Spring Integration</name>
+	<description>Integration project to use Spring injection in your Wicket applications. See the wicket-spring-examples for integration patterns.</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-spring</artifactId>
+			<artifactId>wicket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-ioc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 </project>

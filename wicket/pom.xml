@@ -20,57 +20,57 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>org.apache.wicket</groupId>
-	<artifactId>wicket-parent</artifactId>
-	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<name>Wicket JDK 1.5 modules</name>
-	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<profiles>
-		<profile>
-			<id>all</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
-				<module>wicket-auth-roles</module>
-				<module>wicket-guice</module>
-				<module>wicket-jmx</module>
-				<module>wicket-objectssizeof-agent</module>
-				<module>wicket-spring-annot</module>
-				<module>wicket-examples</module>
-			</modules>
-		</profile>
-		<!--
-			release profile remains empty because the release moduleset is 
-			determined at the parent pom -->
-		<profile>
-			<id>release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-			</modules>
-		</profile>
-	</profiles>
+	<artifactId>wicket</artifactId>
+	<packaging>jar</packaging>
+	<name>Wicket</name>
+	<description>
+		Wicket is a Java web application framework that takes simplicity, 
+		separation of concerns and ease of development to a whole new level. 
+		Wicket pages can be mocked up, previewed and later revised using 
+		standard WYSIWYG HTML design tools. Dynamic content processing and 
+		form handling is all handled in Java code using a first-class 
+		component model backed by POJO data beans that can easily be 
+		persisted using your favorite technology.
+	</description>
+	<dependencies>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.portals.bridges</groupId>
+			<artifactId>portals-bridges-common</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<optimise>true</optimise>
-					<debug>true</debug>
+					<licenseLocation>${basedir}/../../../common/lib/clover.license</licenseLocation>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

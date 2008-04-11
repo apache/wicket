@@ -22,37 +22,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-jdk14</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket-spring</artifactId>
+	<artifactId>wicket-auth-roles</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Wicket Spring Integration</name>
-	<description>Integration project to use Spring injection in your Wicket applications. See the wicket-spring-examples for integration patterns.</description>
+	<name>Wicket Auth Roles</name>
+	<description>
+		Wicket Authorization Integration Based on roles, metadata and annotations. This project requires Java 5.
+	</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-ioc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>easymock</groupId>
-			<artifactId>easymock</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 </project>

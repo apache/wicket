@@ -31,27 +31,6 @@
 
 	<profiles>
 		<profile>
-			<id>jdk-1.4</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-				<jdk>1.4</jdk>
-			</activation>
-			<modules>
-				<module>jdk-1.4</module>
-				<module>archetypes/quickstart</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>jdk-1.5</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>jdk-1.5</module>
-				<module>archetypes/quickstart</module>
-			</modules>
-		</profile>
-		<profile>
 			<id>bamboo</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -71,26 +50,24 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<!-- 
-				modules jdk-1.4 and jdk-1.5 are defined not to process their
+				modules parent and parent are defined not to process their
 				submodules: their release profile is empty. This way we can
 				define which projects to release with a Wicket release from
 				the parent. 
 			-->
 			<modules>
-				<module>jdk-1.4</module>
-				<module>jdk-1.4/wicket</module>
-				<module>jdk-1.4/wicket-datetime</module>
-				<module>jdk-1.4/wicket-extensions</module>
-				<module>jdk-1.4/wicket-ioc</module>
-				<module>jdk-1.4/wicket-spring</module>
-				<module>jdk-1.4/wicket-velocity</module>
-				<module>jdk-1.5</module>
-				<module>jdk-1.5/wicket-spring-annot</module>
-				<module>jdk-1.5/wicket-auth-roles</module>
-				<module>jdk-1.5/wicket-guice</module>
-				<module>jdk-1.5/wicket-jmx</module>
-				<module>jdk-1.5/wicket-objectssizeof-agent</module>
-				<module>jdk-1.5/wicket-examples</module>
+				<module>wicket</module>
+				<module>wicket-datetime</module>
+				<module>wicket-extensions</module>
+				<module>wicket-ioc</module>
+				<module>wicket-spring</module>
+				<module>wicket-velocity</module>
+				<module>wicket-spring-annot</module>
+				<module>wicket-auth-roles</module>
+				<module>wicket-guice</module>
+				<module>wicket-jmx</module>
+				<module>wicket-objectssizeof-agent</module>
+				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
 			</modules>
 			<build>
@@ -143,8 +120,18 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
-				<module>jdk-1.4</module>
-				<module>jdk-1.5</module>
+				<module>wicket</module>
+				<module>wicket-datetime</module>
+				<module>wicket-extensions</module>
+				<module>wicket-ioc</module>
+				<module>wicket-spring</module>
+				<module>wicket-velocity</module>
+				<module>wicket-spring-annot</module>
+				<module>wicket-auth-roles</module>
+				<module>wicket-guice</module>
+				<module>wicket-jmx</module>
+				<module>wicket-objectssizeof-agent</module>
+				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
 			</modules>
@@ -554,6 +541,17 @@
 							<descriptor>wicket-assembly-all.xml</descriptor>
 						</descriptors>
 						<finalName>apache-wicket-${project.version}</finalName>
+					</configuration>
+				</plugin>
+				<plugin>
+					<inherited>true</inherited>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+						<optimise>true</optimise>
+						<debug>true</debug>
 					</configuration>
 				</plugin>
 				<plugin>

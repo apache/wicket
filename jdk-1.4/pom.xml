@@ -28,7 +28,7 @@
 	</parent>
 
 	<groupId>org.apache.wicket</groupId>
-	<artifactId>wicket-jdk14</artifactId>
+	<artifactId>wicket-parent</artifactId>
 	<packaging>pom</packaging>
 
 	<name>Wicket JDK 1.4 modules</name>
