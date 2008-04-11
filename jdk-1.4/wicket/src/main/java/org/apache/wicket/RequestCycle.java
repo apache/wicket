@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
@@ -161,7 +160,7 @@ import org.slf4j.LoggerFactory;
 public abstract class RequestCycle
 {
 	/** Thread-local that holds the current request cycle. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<RequestCycle> current = new ThreadLocal<RequestCycle>();
 
 	/** Cleaning up after responding to a request. */
 	private static final int DETACH_REQUEST = 5;
@@ -187,6 +186,9 @@ public abstract class RequestCycle
 	/** Responding using the currently set {@link IRequestTarget}. */
 	private static final int RESPOND = 4;
 
+	/** MetaDataEntry array. */
+	private MetaDataEntry< ? >[] metaData;
+
 	/**
 	 * Gets request cycle for calling thread.
 	 * 
@@ -194,7 +196,7 @@ public abstract class RequestCycle
 	 */
 	public static RequestCycle get()
 	{
-		return (RequestCycle)current.get();
+		return current.get();
 	}
 
 	/**
@@ -234,7 +236,8 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
+	private transient final ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
+		3);
 
 	/**
 	 * Any page parameters. Only set when the request is resolving and the parameters are passed
@@ -286,7 +289,7 @@ public abstract class RequestCycle
 		originalResponse = response;
 		processor = safeGetRequestProcessor();
 
-		previousOne = (RequestCycle)current.get();
+		previousOne = current.get();
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
 	}
@@ -411,7 +414,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page class or null
 	 */
-	public final Class<? extends Page> getResponsePageClass()
+	public final Class< ? extends Page> getResponsePageClass()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
@@ -508,7 +511,7 @@ public abstract class RequestCycle
 	 * @param component
 	 *            to be re-rendered
 	 */
-	public final void request(final Component component)
+	public final void request(final Component< ? > component)
 	{
 		checkReuse();
 
@@ -588,7 +591,7 @@ public abstract class RequestCycle
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				IRequestTarget former = requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
@@ -661,7 +664,7 @@ public abstract class RequestCycle
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
-	public final void setResponsePage(final Class pageClass)
+	public final void setResponsePage(final Class< ? extends Page> pageClass)
 	{
 		setResponsePage(pageClass, null);
 	}
@@ -674,7 +677,8 @@ public abstract class RequestCycle
 	 * @param pageParameters
 	 *            The page parameters that gets appended to the bookmarkable url,
 	 */
-	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
+	public final void setResponsePage(final Class< ? extends Page> pageClass,
+		final PageParameters pageParameters)
 	{
 		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
 	}
@@ -690,8 +694,8 @@ public abstract class RequestCycle
 	 * @param pageMapName
 	 *            The pagemap in which the response page should be created
 	 */
-	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters,
-		final String pageMapName)
+	public final void setResponsePage(final Class< ? extends Page> pageClass,
+		final PageParameters pageParameters, final String pageMapName)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
 			pageParameters);
@@ -765,7 +769,8 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
+	public final CharSequence urlFor(final Class< ? extends Page> pageClass,
+		final PageParameters parameters)
 	{
 		return urlFor(null, pageClass, parameters);
 	}
@@ -784,7 +789,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component, behavior and interface to call
 	 */
-	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
+	public final CharSequence urlFor(final Component< ? > component, final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
 		int index = component.getBehaviors().indexOf(behaviour);
@@ -825,7 +830,7 @@ public abstract class RequestCycle
 	 *            Additional parameters to pass to the page
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component component,
+	public final CharSequence urlFor(final Component< ? > component,
 		final RequestListenerInterface listener, ValueMap params)
 	{
 		// Get Page holding component and mark it as stateful.
@@ -842,10 +847,10 @@ public abstract class RequestCycle
 
 			if (params != null)
 			{
-				Iterator it = params.entrySet().iterator();
+				Iterator<Map.Entry> it = params.entrySet().iterator();
 				while (it.hasNext())
 				{
-					final Map.Entry entry = (Entry)it.next();
+					final Map.Entry entry = it.next();
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
 					pageParameters.add(encode(key), encode(value));
@@ -875,10 +880,10 @@ public abstract class RequestCycle
 			if (params != null)
 			{
 				AppendingStringBuffer buff = new AppendingStringBuffer(url);
-				Iterator it = params.entrySet().iterator();
+				Iterator<Map.Entry> it = params.entrySet().iterator();
 				while (it.hasNext())
 				{
-					final Map.Entry entry = (Entry)it.next();
+					final Map.Entry entry = it.next();
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
 					buff.append("&");
@@ -892,7 +897,6 @@ public abstract class RequestCycle
 			}
 			return url;
 		}
-
 	}
 
 	/**
@@ -918,7 +922,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component component,
+	public final CharSequence urlFor(final Component< ? > component,
 		final RequestListenerInterface listener)
 	{
 		return urlFor(component, listener, null);
@@ -937,8 +941,8 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
-		final PageParameters parameters)
+	public final CharSequence urlFor(final IPageMap pageMap,
+		final Class< ? extends Page> pageClass, final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 			? PageMap.DEFAULT_NAME : pageMap.getName(), pageClass, parameters);
@@ -1042,7 +1046,7 @@ public abstract class RequestCycle
 		// furthermore, the targets will be gc-ed with this cycle too
 		for (int i = 0; i < requestTargets.size(); i++)
 		{
-			IRequestTarget target = (IRequestTarget)requestTargets.get(i);
+			IRequestTarget target = requestTargets.get(i);
 			if (target != null)
 			{
 				try
@@ -1443,11 +1447,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * MetaDataEntry array.
-	 */
-	private MetaDataEntry[] metaData;
-
-	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
@@ -1456,6 +1455,7 @@ public abstract class RequestCycle
 	 *            The singleton key for the metadata
 	 * @param object
 	 *            The metadata object
+	 * @param <T>
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */

@@ -87,7 +87,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	MetaDataEntry[] set(MetaDataEntry[] metaData, final Object object)
+	MetaDataEntry< ? >[] set(MetaDataEntry< ? >[] metaData, final Object object)
 	{
 		checkType(object);
 		boolean set = false;
@@ -95,7 +95,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 		{
 			for (int i = 0; i < metaData.length; i++)
 			{
-				MetaDataEntry m = metaData[i];
+				MetaDataEntry< ? > m = metaData[i];
 				if (equals(m.key))
 				{
 					if (object != null)
@@ -109,7 +109,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 						if (metaData.length > 1)
 						{
 							int l = metaData.length - 1;
-							MetaDataEntry[] newMetaData = new MetaDataEntry[l];
+							MetaDataEntry< ? >[] newMetaData = new MetaDataEntry[l];
 							System.arraycopy(metaData, 0, newMetaData, 0, i);
 							System.arraycopy(metaData, i + 1, newMetaData, i, l - i);
 							metaData = newMetaData;
@@ -126,7 +126,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 		}
 		if (!set && object != null)
 		{
-			MetaDataEntry m = new MetaDataEntry(this, object);
+			MetaDataEntry<T> m = new MetaDataEntry<T>(this, object);
 			if (metaData == null)
 			{
 				metaData = new MetaDataEntry[1];
@@ -134,7 +134,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 			}
 			else
 			{
-				final MetaDataEntry[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				final MetaDataEntry< ? >[] newMetaData = new MetaDataEntry[metaData.length + 1];
 				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
 				newMetaData[metaData.length] = m;
 				metaData = newMetaData;

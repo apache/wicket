@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * ThreadLocal to keep any parameters associated with the request for this resource
 	 */
-	private static final ThreadLocal parameters = new ThreadLocal();
+	private static final ThreadLocal<IValueMap> parameters = new ThreadLocal<IValueMap>();
 
 	/**
 	 * Constructor
@@ -147,7 +148,7 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that parameterize this resource
 	 */
-	public final void setParameters(final Map parameters)
+	public final void setParameters(final Map< ? , ? > parameters)
 	{
 		if (parameters == null)
 		{
@@ -176,8 +177,10 @@ public abstract class Resource implements IResourceListener
 	{
 		if (parameters.get() == null)
 		{
-			return new ValueMap(RequestCycle.get().getRequest().getRequestParameters()
-					.getParameters());
+			return new ValueMap(RequestCycle.get()
+				.getRequest()
+				.getRequestParameters()
+				.getParameters());
 		}
 		return (ValueMap)parameters.get();
 	}

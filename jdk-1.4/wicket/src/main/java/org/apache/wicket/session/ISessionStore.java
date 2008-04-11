@@ -52,7 +52,7 @@ public interface ISessionStore
 	 * 
 	 * @return List of attributes for this session
 	 */
-	List getAttributeNames(Request request);
+	List<String> getAttributeNames(Request request);
 
 
 	/**

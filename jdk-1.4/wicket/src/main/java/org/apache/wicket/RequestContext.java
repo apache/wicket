@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 public class RequestContext
 {
 	/** Thread-local that holds the current request context. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<RequestContext> current = new ThreadLocal<RequestContext>();
 
 	/**
 	 * Construct.
@@ -39,7 +39,7 @@ public class RequestContext
 	 */
 	public static final RequestContext get()
 	{
-		RequestContext context = (RequestContext)current.get();
+		RequestContext context = current.get();
 		if (context == null)
 		{
 			context = new RequestContext();
@@ -55,6 +55,10 @@ public class RequestContext
 		current.set(null);
 	}
 
+	/**
+	 * 
+	 * @param context
+	 */
 	protected static final void set(RequestContext context)
 	{
 		current.set(context);

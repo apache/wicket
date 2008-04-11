@@ -46,11 +46,16 @@ public abstract class PageMap implements IClusterable, IPageMap
 		public void entry(final IPageMapEntry entry);
 	}
 
-
 	/** Name of default pagemap */
 	public static final String DEFAULT_NAME = null;
 
+	/** */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * MetaDataEntry array.
+	 */
+	private MetaDataEntry< ? >[] metaData;
 
 	/**
 	 * Gets a page map for a page map name, automatically creating the page map if it does not
@@ -175,10 +180,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		Iterator it = getEntries().iterator();
+		Iterator<IPageMapEntry> it = getEntries().iterator();
 		while (it.hasNext())
 		{
-			IPageMapEntry entry = (IPageMapEntry)it.next();
+			IPageMapEntry entry = it.next();
 			if (entry instanceof Page)
 			{
 				size += ((Page)entry).getSizeInBytes();
@@ -222,7 +227,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	public final void redirectToInterceptPage(final Class pageClazz)
+	public final void redirectToInterceptPage(final Class< ? extends Page> pageClazz)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);
@@ -304,6 +309,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[PageMap name=" + name + "]";
@@ -312,22 +318,25 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @return List of entries in this page map
 	 */
-	private final List getEntries()
+	private final List<IPageMapEntry> getEntries()
 	{
 		final Session session = Session.get();
-		final List attributes = session.getAttributeNames();
-		final List list = new ArrayList();
-		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		final List<String> attributes = session.getAttributeNames();
+		final List<IPageMapEntry> list = new ArrayList<IPageMapEntry>();
+		for (final Iterator<String> iterator = attributes.iterator(); iterator.hasNext();)
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				list.add(session.getAttribute(attribute));
+				list.add((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
 		return list;
 	}
 
+	/**
+	 * 
+	 */
 	protected final void dirty()
 	{
 		Session.get().dirtyPageMap(this);
@@ -340,21 +349,16 @@ public abstract class PageMap implements IClusterable, IPageMap
 	protected final void visitEntries(final IVisitor visitor)
 	{
 		final Session session = Session.get();
-		final List attributes = session.getAttributeNames();
-		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		final List<String> attributes = session.getAttributeNames();
+		for (final Iterator<String> iterator = attributes.iterator(); iterator.hasNext();)
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
 				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
 	}
-
-	/**
-	 * MetaDataEntry array.
-	 */
-	private MetaDataEntry[] metaData;
 
 	/**
 	 * Sets the metadata for this PageMap using the given key. If the metadata object is not of the
@@ -368,7 +372,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final void setMetaData(final MetaDataKey< ? > key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -381,7 +385,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final Serializable getMetaData(final MetaDataKey< ? > key)
 	{
 		return (Serializable)key.get(metaData);
 	}

@@ -164,7 +164,7 @@ public abstract class Session implements IClusterable
 	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
 
 	/** A store for dirty objects for one request */
-	private static final ThreadLocal<List> dirtyObjects = new ThreadLocal<List>();
+	private static final ThreadLocal<List<IClusterable>> dirtyObjects = new ThreadLocal<List<IClusterable>>();
 
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
@@ -175,10 +175,13 @@ public abstract class Session implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** A store for touched pages for one request */
-	private static final ThreadLocal<List> touchedPages = new ThreadLocal<List>();
+	private static final ThreadLocal<List<Page>> touchedPages = new ThreadLocal<List<Page>>();
 
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
+
+	/** */
+	private int pageIdCounter = 0;
 
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
@@ -306,7 +309,7 @@ public abstract class Session implements IClusterable
 	private Locale locale;
 
 	/** Application level meta data. */
-	private MetaDataEntry[] metaData;
+	private MetaDataEntry< ? >[] metaData;
 
 	/**
 	 * We need to know both thread that keeps the pagemap lock and the RequestCycle
@@ -343,7 +346,7 @@ public abstract class Session implements IClusterable
 	private transient Map<String, Object> temporarySessionAttributes;
 
 	/** A linked list for last used pagemap queue */
-	private final LinkedList/* <IPageMap> */<IPageMap>usedPageMaps = new LinkedList<IPageMap>();
+	private final LinkedList/* <IPageMap> */<IPageMap> usedPageMaps = new LinkedList<IPageMap>();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -1011,7 +1014,7 @@ public abstract class Session implements IClusterable
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final void setMetaData(final MetaDataKey< ? > key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -1067,7 +1070,7 @@ public abstract class Session implements IClusterable
 	 */
 	public final void untouch(Page page)
 	{
-		List lst = touchedPages.get();
+		List<Page> lst = touchedPages.get();
 		if (lst != null)
 		{
 			lst.remove(page);
@@ -1362,13 +1365,13 @@ public abstract class Session implements IClusterable
 	 */
 	final void requestDetached()
 	{
-		List touchedPages = Session.touchedPages.get();
+		List<Page> touchedPages = Session.touchedPages.get();
 		Session.touchedPages.set(null);
 		if (touchedPages != null)
 		{
 			for (int i = 0; i < touchedPages.size(); i++)
 			{
-				Page page = (Page)touchedPages.get(i);
+				Page page = touchedPages.get(i);
 				page.getPageMap().put(page);
 			}
 		}
@@ -1390,7 +1393,7 @@ public abstract class Session implements IClusterable
 			}
 		}
 
-		List dirtyObjects = Session.dirtyObjects.get();
+		List<IClusterable> dirtyObjects = Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 
 		Map<String, Object> tempMap = new HashMap<String, Object>();
@@ -1398,7 +1401,7 @@ public abstract class Session implements IClusterable
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
 		{
-			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
+			for (final Iterator<IClusterable> iterator = dirtyObjects.iterator(); iterator.hasNext();)
 			{
 				String attribute = null;
 				Object object = iterator.next();
@@ -1460,8 +1463,10 @@ public abstract class Session implements IClusterable
 		}
 	}
 
-	private int pageIdCounter = 0;
-
+	/**
+	 * 
+	 * @return
+	 */
 	synchronized protected int nextPageId()
 	{
 		return pageIdCounter++;

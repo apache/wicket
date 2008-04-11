@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,25 +37,28 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author marrink
- * 
+ * @param <T>
+ *            The model object type
  */
-public class UsernamePasswordSignInPanel extends Panel
+public class UsernamePasswordSignInPanel<T> extends Panel<T>
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
+
+	/** */
 	private static final Logger log = LoggerFactory.getLogger(UsernamePasswordSignInPanel.class);
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param id
 	 */
 	public UsernamePasswordSignInPanel(final String id)
 	{
 		super(id);
 
 		add(new FeedbackPanel("feedback"));
-		add(new Label("naam"));
+		add(new Label<Object>("naam"));
 		add(new SignInForm("signInForm"));
 	}
 
@@ -72,7 +76,7 @@ public class UsernamePasswordSignInPanel extends Panel
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends StatelessForm
+	public final class SignInForm extends StatelessForm<IValueMap>
 	{
 		/** Voor serializatie. */
 		private static final long serialVersionUID = 1L;
@@ -88,22 +92,25 @@ public class UsernamePasswordSignInPanel extends Panel
 		 */
 		public SignInForm(final String id)
 		{
-			super(id, new CompoundPropertyModel(new ValueMap()));
+			super(id, new CompoundPropertyModel<IValueMap>(new ValueMap()));
 
 			// only save username, not passwords
-			add(new TextField("username").setPersistent(rememberMe));
+			add(new TextField<String>("username").setPersistent(rememberMe));
 			add(new PasswordTextField("password"));
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
+			WebMarkupContainer<Boolean> rememberMeRow = new WebMarkupContainer<Boolean>(
+				"rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(this, "rememberMe")));
+			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel<Boolean>(this,
+				"rememberMe")));
 		}
 
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			if (!rememberMe)
@@ -128,12 +135,14 @@ public class UsernamePasswordSignInPanel extends Panel
 				// Try the component based localizer first. If not found try the
 				// application localizer. Else use the default
 				error(getLocalizer().getString("exception.login", this,
-						"Illegal username password combo"));
+					"Illegal username password combo"));
 			}
 		}
 
 		/**
 		 * Geeft terug of de waarden van het formulier bewaard moeten worden of niet.
+		 * 
+		 * @return
 		 */
 		public boolean getRememberMe()
 		{
@@ -142,11 +151,13 @@ public class UsernamePasswordSignInPanel extends Panel
 
 		/**
 		 * Zet of de waarden van het formulier bewaard moeten worden of niet.
+		 * 
+		 * @param rememberMe
 		 */
 		public void setRememberMe(boolean rememberMe)
 		{
 			this.rememberMe = rememberMe;
-			((FormComponent)get("username")).setPersistent(rememberMe);
+			((FormComponent< ? >)get("username")).setPersistent(rememberMe);
 		}
 	}
 }

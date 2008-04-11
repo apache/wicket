@@ -120,7 +120,10 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
+public abstract class Page extends MarkupContainer<Object>
+	implements
+		IRedirectListener,
+		IPageMapEntry
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -178,7 +181,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * {@link IPageSerializer} which can be set by the outside world to do the serialization of this
 	 * page.
 	 */
-	public static final ThreadLocal serializer = new ThreadLocal();
+	public static final ThreadLocal<IPageSerializer> serializer = new ThreadLocal<IPageSerializer>();
 
 	/** True if a new version was created for this request. */
 	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
@@ -195,7 +198,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * {@link #isBookmarkable()} is expensive, we cache the result here
 	 */
-	private static final ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
+	private static final ConcurrentHashMap<String, Boolean> pageClassToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
 
 	private static final long serialVersionUID = 1L;
 
@@ -212,7 +215,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private String pageMapName;
 
 	/** Set of components that rendered if component use checking is enabled */
-	private transient Set renderedComponents;
+	private transient Set<Component< ? >> renderedComponents;
 
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page map, will be set in
@@ -244,7 +247,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IModel model)
+	protected Page(final IModel<Object> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -275,7 +278,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IPageMap pageMap, final IModel model)
+	protected Page(final IPageMap pageMap, final IModel<Object> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -341,7 +344,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// IComponentInstantiationListener
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
-	public void afterCallComponent(final Component component,
+	public void afterCallComponent(final Component< ? > component,
 		final RequestListenerInterface listener)
 	{
 	}
@@ -362,7 +365,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// IComponentInstantiationListener
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
-	public void beforeCallComponent(final Component component,
+	public void beforeCallComponent(final Component< ? > component,
 		final RequestListenerInterface listener)
 	{
 	}
@@ -373,14 +376,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 *            The component that was rendered
 	 */
-	public final void componentRendered(final Component component)
+	public final void componentRendered(final Component< ? > component)
 	{
 		// Inform the page that this component rendered
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
-				renderedComponents = new HashSet();
+				renderedComponents = new HashSet<Component< ? >>();
 			}
 			if (renderedComponents.add(component) == false)
 			{
@@ -400,25 +403,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	public void detachModels()
 	{
-		// // visit all this page's children to detach the models
-		// visitChildren(new IVisitor()
-		// {
-		// public Object component(Component component)
-		// {
-		// try
-		// {
-		// // detach any models of the component
-		// component.detachModels();
-		// }
-		// catch (Exception e) // catch anything; we MUST detach all models
-		// {
-		// log.error("detaching models of component " + component + " failed:",
-		// e);
-		// }
-		// return IVisitor.CONTINUE_TRAVERSAL;
-		// }
-		// });
-
 		super.detachModels();
 	}
 
@@ -440,11 +424,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 * 
 	 */
-	public final void endComponentRender(Component component)
+	public final void endComponentRender(Component< ? > component)
 	{
 		if (component instanceof MarkupContainer)
 		{
-			checkRendering((MarkupContainer)component);
+			checkRendering((MarkupContainer< ? >)component);
 		}
 		else
 		{
@@ -513,7 +497,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	public final Class<? extends Page> getPageClass()
+	public final Class< ? extends Page> getPageClass()
 	{
 		return getClass();
 	}
@@ -654,12 +638,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
-		visitChildren(new IVisitor()
+		visitChildren(new IVisitor<Component< ? >>()
 		{
-			public Object component(Component component)
+			public Object component(Component< ? > component)
 			{
 				int levels = 0;
-				for (Component current = component; current != null; current = current.getParent())
+				for (Component< ? > current = component; current != null; current = current.getParent())
 				{
 					levels++;
 				}
@@ -699,7 +683,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public boolean isBookmarkable()
 	{
-		Boolean bookmarkable = (Boolean)pageClassToBookmarkableCache.get(getClass().getName());
+		Boolean bookmarkable = pageClassToBookmarkableCache.get(getClass().getName());
 		if (bookmarkable == null)
 		{
 			try
@@ -773,9 +757,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (stateless == null)
 		{
 			final Object[] returnArray = new Object[1];
-			Object returnValue = visitChildren(Component.class, new IVisitor()
+			Object returnValue = visitChildren(Component.class, new IVisitor<Component< ? >>()
 			{
-				public Object component(Component component)
+				public Object component(Component< ? > component)
 				{
 					if (!component.isStateless())
 					{
@@ -829,7 +813,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
 	 */
-	public final void removePersistedFormData(final Class formClass,
+	public final void removePersistedFormData(final Class< ? extends Form< ? >> formClass,
 		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
@@ -840,16 +824,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		// Visit all children which are an instance of formClass
-		visitChildren(formClass, new IVisitor()
+		visitChildren(formClass, new IVisitor<Component< ? >>()
 		{
-			public Object component(final Component component)
+			public Object component(final Component< ? > component)
 			{
 				// They must be of type Form as well
 				if (component instanceof Form)
 				{
 					// Delete persistent FormComponent data and disable
 					// persistence
-					((Form)component).removePersistentFormComponentValues(disablePersistence);
+					((Form< ? >)component).removePersistentFormComponentValues(disablePersistence);
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -919,9 +903,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// clean up debug meta data if component check is on
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
-			visitChildren(new IVisitor()
+			visitChildren(new IVisitor<Component< ? >>()
 			{
-				public Object component(Component component)
+				public Object component(Component< ? > component)
 				{
 					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
 					component.setMetaData(Component.ADDED_AT_KEY, null);
@@ -997,7 +981,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 * 
 	 */
-	public final void startComponentRender(Component component)
+	public final void startComponentRender(Component< ? > component)
 	{
 		renderedComponents = null;
 	}
@@ -1030,18 +1014,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            The page itself if it was a full page render or the container that was rendered
 	 *            standalone
 	 */
-	private final void checkRendering(final MarkupContainer renderedContainer)
+	private final void checkRendering(final MarkupContainer< ? > renderedContainer)
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
-			final List unrenderedComponents = new ArrayList();
+			final List<Component< ? >> unrenderedComponents = new ArrayList<Component< ? >>();
 			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor()
+			renderedContainer.visitChildren(new IVisitor<Component< ? >>()
 			{
-				public Object component(final Component component)
+				public Object component(final Component< ? > component)
 				{
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
@@ -1055,12 +1039,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.size()) + ". " +
 								component + "\n");
-							String metadata = (String)component.getMetaData(Component.CONSTRUCTED_AT_KEY);
+							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
 								buffer.append(metadata);
 							}
-							metadata = (String)component.getMetaData(Component.ADDED_AT_KEY);
+							metadata = component.getMetaData(Component.ADDED_AT_KEY);
 							if (metadata != null)
 							{
 								buffer.append(metadata);
@@ -1084,21 +1068,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				// Get rid of set
 				renderedComponents = null;
 
-				Iterator iterator = unrenderedComponents.iterator();
+				Iterator<Component< ? >> iterator = unrenderedComponents.iterator();
 
 				while (iterator.hasNext())
 				{
-					Component component = (Component)iterator.next();
+					Component< ? > component = iterator.next();
 					// Now first test if the component has a sibling that is a transparent resolver.
 
-					Iterator iterator2 = component.getParent().iterator();
+					Iterator<Component< ? >> iterator2 = component.getParent().iterator();
 					while (iterator2.hasNext())
 					{
-						Component sibling = (Component)iterator2.next();
+						Component< ? > sibling = iterator2.next();
 						if (!sibling.isVisible())
 						{
 							boolean isTransparentMarkupContainer = sibling instanceof MarkupContainer &&
-								((MarkupContainer)sibling).isTransparentResolver();
+								((MarkupContainer< ? >)sibling).isTransparentResolver();
 							boolean isComponentResolver = sibling instanceof IComponentResolver;
 							if (isTransparentMarkupContainer || isComponentResolver)
 							{
@@ -1204,6 +1188,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		dirty();
 	}
 
+	/**
+	 * 
+	 */
 	private void setNextAvailableId()
 	{
 		if (getApplication().getSessionSettings().isPageIdUniquePerSession())
@@ -1225,7 +1212,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param parent
 	 * @return True if the change is okay to report
 	 */
-	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
+	private final boolean mayTrackChangesFor(final Component< ? > component,
+		MarkupContainer< ? > parent)
 	{
 		// first call the method so that people can track dirty components
 		componentChanged(component, parent);
@@ -1275,16 +1263,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 * @param parent
 	 */
-	protected void componentChanged(Component component, MarkupContainer parent)
+	protected void componentChanged(Component< ? > component, MarkupContainer< ? > parent)
 	{
 	}
 
+	/**
+	 * 
+	 * @param s
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	void readPageObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		int id = s.readShort();
 		String name = (String)s.readObject();
 
-		IPageSerializer ps = (IPageSerializer)serializer.get();
+		IPageSerializer ps = serializer.get();
 		if (ps != null)
 		{
 			ps.deserializePage(id, name, this, s);
@@ -1295,10 +1289,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws ObjectStreamException
+	 */
 	protected Object writeReplace() throws ObjectStreamException
 	{
 
-		IPageSerializer ps = (IPageSerializer)serializer.get();
+		IPageSerializer ps = serializer.get();
 
 		if (ps != null)
 		{
@@ -1310,12 +1309,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
+	/**
+	 * 
+	 * @param s
+	 * @throws IOException
+	 */
 	void writePageObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		s.writeShort(numericId);
 		s.writeObject(pageMapName);
 
-		IPageSerializer ps = (IPageSerializer)serializer.get();
+		IPageSerializer ps = serializer.get();
 
 		if (ps != null)
 		{
@@ -1326,7 +1330,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			s.defaultWriteObject();
 		}
 	}
-
 
 	/**
 	 * Set-up response with appropriate content type, locale and encoding. The locale is set equal
@@ -1377,9 +1380,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor()
+		visitChildren(new Component.IVisitor<Component< ? >>()
 		{
-			public Object component(final Component component)
+			public Object component(final Component< ? > component)
 			{
 				// If form component is using form model
 				if (component.sameInnermostModel(Page.this))
@@ -1417,6 +1420,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return null;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -1446,9 +1453,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		dirty();
 
 		super.onDetach();
-
 	}
-
 
 	/**
 	 * Renders this container to the given response object.
@@ -1475,7 +1480,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 *            The component that was added
 	 */
-	final void componentAdded(final Component component)
+	final void componentAdded(final Component< ? > component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
@@ -1490,7 +1495,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	final void componentModelChanging(final Component component)
+	final void componentModelChanging(final Component< ? > component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, null))
@@ -1510,7 +1515,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 *            The component that was removed
 	 */
-	final void componentRemoved(final Component component)
+	final void componentRemoved(final Component< ? > component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
@@ -1519,7 +1524,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	final void componentStateChanging(final Component component, Change change)
+	/**
+	 * 
+	 * @param component
+	 * @param change
+	 */
+	final void componentStateChanging(final Component< ? > component, Change change)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, null))
@@ -1535,12 +1545,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final void setFormComponentValuesFromCookies()
 	{
 		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor()
+		visitChildren(Form.class, new Component.IVisitor<Component< ? >>()
 		{
 			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
+			public Object component(final Component< ? > component)
 			{
-				((Form)component).loadPersistentFormComponentValues();
+				((Form< ? >)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1575,6 +1585,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void onPageAttached()
 	{
-
 	}
 }

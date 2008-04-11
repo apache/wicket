@@ -58,7 +58,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPageClass
 	 *            Class of intercept page to instantiate
 	 */
-	public RestartResponseAtInterceptPageException(final Class interceptPageClass)
+	public RestartResponseAtInterceptPageException(final Class< ? extends Page> interceptPageClass)
 	{
 		if (interceptPageClass == null)
 		{
@@ -101,7 +101,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPageClass
 	 *            The intercept page class to redirect to
 	 */
-	private void redirectToInterceptPage(final Class interceptPageClass)
+	private void redirectToInterceptPage(final Class< ? extends Page> interceptPageClass)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		final Page requestPage = cycle.getRequest().getPage();

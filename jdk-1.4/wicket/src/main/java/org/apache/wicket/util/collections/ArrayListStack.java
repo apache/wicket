@@ -26,8 +26,9 @@ import java.util.EmptyStackException;
  * ArrayListStack(int) constructor.
  * 
  * @author Jonathan Locke
+ * @param <T>
  */
-public final class ArrayListStack extends ArrayList
+public final class ArrayListStack<T> extends ArrayList<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +57,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param collection
 	 *            The collection to add
 	 */
-	public ArrayListStack(final Collection collection)
+	public ArrayListStack(final Collection<T> collection)
 	{
 		super(collection);
 	}
@@ -67,7 +68,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param item
 	 *            the item to be pushed onto this stack.
 	 */
-	public final void push(final Object item)
+	public final void push(final T item)
 	{
 		add(item);
 	}
@@ -79,9 +80,9 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object pop()
+	public final T pop()
 	{
-		final Object top = peek();
+		final T top = peek();
 		remove(size() - 1);
 		return top;
 	}
@@ -93,7 +94,7 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object peek()
+	public final T peek()
 	{
 		int size = size();
 		if (size == 0)
@@ -126,7 +127,7 @@ public final class ArrayListStack extends ArrayList
 	 * @return the 1-based position from the top of the stack where the object is located; the
 	 *         return value <code>-1</code> indicates that the object is not on the stack.
 	 */
-	public final int search(final Object o)
+	public final int search(final T o)
 	{
 		int i = lastIndexOf(o);
 		if (i >= 0)

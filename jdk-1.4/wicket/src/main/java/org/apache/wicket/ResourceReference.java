@@ -80,7 +80,7 @@ public class ResourceReference implements IClusterable
 	 * @param name
 	 *            The name of the resource
 	 */
-	public ResourceReference(final Class scope, final String name)
+	public ResourceReference(final Class< ? > scope, final String name)
 	{
 		this(scope, name, null, null);
 	}
@@ -100,7 +100,7 @@ public class ResourceReference implements IClusterable
 	 * @param style
 	 *            The Style of the PackageResource
 	 */
-	public ResourceReference(final Class scope, final String name, Locale locale, String style)
+	public ResourceReference(final Class< ? > scope, final String name, Locale locale, String style)
 	{
 		scopeName = scope.getName();
 		this.name = name;
@@ -167,14 +167,15 @@ public class ResourceReference implements IClusterable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof ResourceReference)
 		{
 			ResourceReference that = (ResourceReference)obj;
 			return Objects.equal(getScope().getName(), that.getScope().getName()) &&
-					Objects.equal(name, that.name) && Objects.equal(locale, that.locale) &&
-					Objects.equal(style, that.style);
+				Objects.equal(name, that.name) && Objects.equal(locale, that.locale) &&
+				Objects.equal(style, that.style);
 		}
 		return false;
 	}
@@ -210,7 +211,7 @@ public class ResourceReference implements IClusterable
 	/**
 	 * @return Scope
 	 */
-	public final Class getScope()
+	public final Class< ? > getScope()
 	{
 		return Classes.resolveClass(scopeName);
 	}
@@ -236,6 +237,7 @@ public class ResourceReference implements IClusterable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = 17;
@@ -277,10 +279,11 @@ public class ResourceReference implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[ResourceReference name = " + name + ", scope = " + scopeName + ", locale = " +
-				locale + ", style = " + style + "]";
+			locale + ", style = " + style + "]";
 	}
 
 	/**
@@ -291,7 +294,7 @@ public class ResourceReference implements IClusterable
 	protected Resource newResource()
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
-				getStyle());
+			getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -299,7 +302,7 @@ public class ResourceReference implements IClusterable
 		else
 		{
 			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
-					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+				getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}

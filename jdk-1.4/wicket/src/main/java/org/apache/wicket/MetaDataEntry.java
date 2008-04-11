@@ -19,25 +19,27 @@ package org.apache.wicket;
 
 /**
  * Class used for holding meta data entries.
- *
+ * 
  * @author Jonathan Locke
+ * @param <T>
+ *            The meta data key type
  */
-final class MetaDataEntry implements IClusterable
+final class MetaDataEntry<T> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	final MetaDataKey key;
+	final MetaDataKey<T> key;
 
 	Object object;
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param key
 	 *            meta data key
 	 * @param object
 	 */
-	public MetaDataEntry(MetaDataKey key, Object object)
+	public MetaDataEntry(MetaDataKey<T> key, Object object)
 	{
 		this.key = key;
 		this.object = object;
@@ -46,6 +48,7 @@ final class MetaDataEntry implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return key + "=" + object.getClass().getName() + "@" +

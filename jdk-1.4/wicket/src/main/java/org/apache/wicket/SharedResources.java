@@ -92,13 +92,13 @@ public class SharedResources
 	}
 
 	/** Map of Class to alias String */
-	private final Map/* <Class, String> */classAliasMap = new WeakHashMap();
+	private final Map<Class< ? >, String> classAliasMap = new WeakHashMap<Class< ? >, String>();
 
 	/** Map of alias String to WeakReference(Class) */
-	private final Map/* <String, WeakReference<Class>> */aliasClassMap = new HashMap();
+	private final Map<String, WeakReference<Class< ? >>> aliasClassMap = new HashMap<String, WeakReference<Class< ? >>>();
 
 	/** Map of shared resources states */
-	private final Map/* <String, Resource> */resourceMap = new HashMap();
+	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
 
 	/**
 	 * Construct.
@@ -124,14 +124,14 @@ public class SharedResources
 	 * @param resource
 	 *            Resource to store
 	 */
-	public final void add(final Class scope, final String name, final Locale locale,
-			final String style, final Resource resource)
+	public final void add(final Class< ? > scope, final String name, final Locale locale,
+		final String style, final Resource resource)
 	{
 		// Store resource
 		final String key = resourceKey(scope, name, locale, style);
 		synchronized (resourceMap)
 		{
-			Resource value = (Resource)resourceMap.get(key);
+			Resource value = resourceMap.get(key);
 			if (value == null)
 			{
 				resourceMap.put(key, resource);
@@ -186,8 +186,8 @@ public class SharedResources
 	 * 
 	 * @return The logical resource
 	 */
-	public final Resource get(final Class scope, final String name, final Locale locale,
-			final String style, boolean exact)
+	public final Resource get(final Class< ? > scope, final String name, final Locale locale,
+		final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
@@ -250,7 +250,7 @@ public class SharedResources
 	{
 		synchronized (resourceMap)
 		{
-			return (Resource)resourceMap.get(key);
+			return resourceMap.get(key);
 		}
 	}
 
@@ -263,10 +263,10 @@ public class SharedResources
 	 * @param alias
 	 *            The alias string.
 	 */
-	public final void putClassAlias(Class clz, String alias)
+	public final void putClassAlias(Class< ? > clz, String alias)
 	{
 		classAliasMap.put(clz, alias);
-		aliasClassMap.put(alias, new WeakReference(clz));
+		aliasClassMap.put(alias, new WeakReference<Class< ? >>(clz));
 	}
 
 	/**
@@ -276,14 +276,14 @@ public class SharedResources
 	 * @return The class this is an alias for.
 	 * @see #putClassAlias(Class, String)
 	 */
-	public final Class getAliasClass(String alias)
+	public final Class< ? > getAliasClass(String alias)
 	{
-		Object classRef = aliasClassMap.get(alias);
+		WeakReference<Class< ? >> classRef = aliasClassMap.get(alias);
 		if (classRef == null)
 		{
 			return null;
 		}
-		return (Class)((WeakReference)classRef).get();
+		return classRef.get();
 	}
 
 	/**
@@ -313,10 +313,10 @@ public class SharedResources
 	 *            The style (see {@link org.apache.wicket.Session})
 	 * @return The localized path
 	 */
-	public String resourceKey(final Class scope, final String path, final Locale locale,
-			final String style)
+	public String resourceKey(final Class< ? > scope, final String path, final Locale locale,
+		final String style)
 	{
-		String alias = (String)classAliasMap.get(scope);
+		String alias = classAliasMap.get(scope);
 		if (alias == null)
 		{
 			alias = scope.getName();
