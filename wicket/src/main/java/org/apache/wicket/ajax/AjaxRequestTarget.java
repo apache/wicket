@@ -25,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -47,7 +46,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -96,7 +94,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 *            javascript
 		 * 
 		 */
-		public void onBeforeRespond(Map map, AjaxRequestTarget target);
+		public void onBeforeRespond(Map<String, Component< ? >> map, AjaxRequestTarget target);
 
 		/**
 		 * Triggered after ajax request target is done with its response cycle. At this point only
@@ -111,7 +109,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 * @param response
 		 *            response object that can be used to output javascript
 		 */
-		public void onAfterRespond(Map map, IJavascriptResponse response);
+		public void onAfterRespond(Map<String, Component< ? >> map, IJavascriptResponse response);
 	}
 
 	/**
@@ -159,6 +157,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		/**
 		 * @see org.apache.wicket.Response#encodeURL(CharSequence)
 		 */
+		@Override
 		public CharSequence encodeURL(CharSequence url)
 		{
 			return originalResponse.encodeURL(url);
@@ -177,6 +176,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 * 
 		 * @see org.apache.wicket.Response#getOutputStream()
 		 */
+		@Override
 		public OutputStream getOutputStream()
 		{
 			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
@@ -193,6 +193,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		/**
 		 * Resets the response to a clean state so it can be reused to save on garbage.
 		 */
+		@Override
 		public void reset()
 		{
 			buffer.clear();
@@ -203,6 +204,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		/**
 		 * @see org.apache.wicket.Response#write(CharSequence)
 		 */
+		@Override
 		public void write(CharSequence cs)
 		{
 			String string = cs.toString();
@@ -222,9 +224,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
-	private final List/* <String> */appendJavascripts = new ArrayList();
+	private final List<String> appendJavascripts = new ArrayList<String>();
 
-	private final List/* <String> */domReadyJavascripts = new ArrayList();
+	private final List<String> domReadyJavascripts = new ArrayList<String>();
 
 	/**
 	 * Create a response for component body and javascript that will escape output to make it safe
@@ -238,17 +240,20 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	private final AjaxResponse encodingHeaderResponse;
 
-
 	/** the component instances that will be rendered */
-	private final Map/* <String,Component> */markupIdToComponent = new LinkedHashMap();
+	private final Map<String, Component< ? >> markupIdToComponent = new LinkedHashMap<String, Component< ? >>();
 
-	private final List/* <String> */prependJavascripts = new ArrayList();
+	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/** a list of listeners */
-	private List listeners = null;
+	private List<IListener> listeners = null;
 
 	private final Page page;
 
+	/**
+	 * 
+	 * @see org.apache.wicket.request.target.component.IPageRequestTarget#getPage()
+	 */
 	public Page getPage()
 	{
 		return page;
@@ -281,7 +286,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		if (listeners == null)
 		{
-			listeners = new LinkedList();
+			listeners = new LinkedList<IListener>();
 		}
 
 		if (!listeners.contains(listener))
@@ -297,7 +302,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param parent
 	 * @param childCriteria
 	 */
-	public final void addChildren(MarkupContainer parent, Class childCriteria)
+	public final void addChildren(MarkupContainer< ? > parent, Class< ? > childCriteria)
 	{
 		if (parent == null)
 		{
@@ -310,16 +315,14 @@ public class AjaxRequestTarget implements IPageRequestTarget
 					Component.class.getName() + ".class` as the value for this argument");
 		}
 
-
-		parent.visitChildren(childCriteria, new Component.IVisitor()
+		parent.visitChildren(childCriteria, new Component.IVisitor<Component< ? >>()
 		{
 
-			public Object component(Component component)
+			public Object component(Component< ? > component)
 			{
 				addComponent(component);
 				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
-
 		});
 	}
 
@@ -329,7 +332,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public void addComponent(Component component)
+	public void addComponent(Component< ? > component)
 	{
 		if (component == null)
 		{
@@ -353,7 +356,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public final void addComponent(Component component, String markupId)
+	public final void addComponent(Component< ? > component, String markupId)
 	{
 		if (Strings.isEmpty(markupId))
 		{
@@ -384,6 +387,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @deprecated use appendJavascript(String javascript) instead
 	 * @param javascript
 	 */
+	@Deprecated
 	public final void addJavascript(String javascript)
 	{
 		appendJavascript(javascript);
@@ -396,7 +400,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            The component to get the focus or null.
 	 */
-	public final void focusComponent(Component component)
+	public final void focusComponent(Component< ? > component)
 	{
 		if (component != null && component.getOutputMarkupId() == false)
 		{
@@ -407,7 +411,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
 		appendJavascript("Wicket.Focus.setFocusOnId(" + id + ");");
 	}
-
 
 	/**
 	 * Adds javascript that will be evaluated on the client side after components are replaced
@@ -424,7 +427,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		appendJavascripts.add(javascript);
 	}
 
-
 	/**
 	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
 	 */
@@ -433,7 +435,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		// detach the page if it was updated
 		if (markupIdToComponent.size() > 0)
 		{
-			final Component component = (Component)markupIdToComponent.values().iterator().next();
+			final Component< ? > component = markupIdToComponent.values().iterator().next();
 			component.getPage().detach();
 		}
 	}
@@ -441,6 +443,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if (obj instanceof AjaxRequestTarget)
@@ -456,6 +459,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "AjaxRequestTarget".hashCode();
@@ -509,10 +513,10 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		fireOnBeforeRespondListeners();
 
 		// normal behavior
-		Iterator it = prependJavascripts.iterator();
+		Iterator<String> it = prependJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = (String)it.next();
+			String js = it.next();
 			respondInvocation(response, js);
 		}
 
@@ -526,40 +530,46 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		it = domReadyJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = (String)it.next();
+			String js = it.next();
 			respondInvocation(response, js);
 		}
 		it = appendJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = (String)it.next();
+			String js = it.next();
 			respondInvocation(response, js);
 		}
 
 		response.write("</ajax-response>");
 	}
 
+	/**
+	 * 
+	 */
 	private void fireOnBeforeRespondListeners()
 	{
 		if (listeners != null)
 		{
-			final Map components = Collections.unmodifiableMap(markupIdToComponent);
+			final Map<String, Component< ? >> components = Collections.unmodifiableMap(markupIdToComponent);
 
-			Iterator it = listeners.iterator();
+			Iterator<IListener> it = listeners.iterator();
 			while (it.hasNext())
 			{
-				((IListener)it.next()).onBeforeRespond(components, this);
+				(it.next()).onBeforeRespond(components, this);
 			}
 		}
 	}
 
+	/**
+	 * 
+	 * @param response
+	 */
 	private void fireOnAfterRespondListeners(final WebResponse response)
 	{
-		Iterator it;
 		// invoke onafterresponse event on listeners
 		if (listeners != null)
 		{
-			final Map components = Collections.unmodifiableMap(markupIdToComponent);
+			final Map<String, Component< ? >> components = Collections.unmodifiableMap(markupIdToComponent);
 
 			// create response that will be used by listeners to append
 			// javascript
@@ -570,13 +580,12 @@ public class AjaxRequestTarget implements IPageRequestTarget
 				{
 					respondInvocation(response, script);
 				}
-
 			};
 
-			it = listeners.iterator();
+			Iterator<IListener> it = listeners.iterator();
 			while (it.hasNext())
 			{
-				((IListener)it.next()).onAfterRespond(components, jsresponse);
+				(it.next()).onAfterRespond(components, jsresponse);
 			}
 		}
 	}
@@ -589,18 +598,16 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	private void respondComponents(WebResponse response)
 	{
-		Iterator it;
 
 		// TODO: We might need to call prepareRender on all components upfront
 
-
 		// process component markup
-		it = markupIdToComponent.entrySet().iterator();
+		Iterator<Map.Entry<String, Component< ? >>> it = markupIdToComponent.entrySet().iterator();
 		while (it.hasNext())
 		{
-			final Map.Entry entry = (Entry)it.next();
-			final Component component = (Component)entry.getValue();
-			final String markupId = (String)entry.getKey();
+			final Map.Entry<String, Component< ? >> entry = it.next();
+			final Component< ? > component = entry.getValue();
+			final String markupId = entry.getKey();
 
 			respondComponent(response, markupId, component);
 		}
@@ -609,6 +616,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent +
@@ -668,7 +676,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 *            component to render
 	 */
 	private void respondComponent(final Response response, final String markupId,
-		final Component component)
+		final Component< ? > component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
@@ -689,10 +697,12 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final Page page = component.getPage();
 		if (page == null)
 		{
-			// dont throw an exception but just ignore this component, somehow it got
+			// dont throw an exception but just ignore this component, somehow
+			// it got
 			// removed from the page.
 			// throw new IllegalStateException(
-			// "Ajax request attempted on a component that is not associated with a Page");
+			// "Ajax request attempted on a component that is not associated
+			// with a Page");
 			LOG.debug("component: " + component + " with markupid: " + markupId +
 				" not rendered because it was already removed from page");
 			return;
@@ -747,60 +757,70 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			}
 		}
 
+		@Override
 		public void renderCSSReference(ResourceReference reference, String media)
 		{
 			checkHeaderRendering();
 			super.renderCSSReference(reference, media);
 		}
 
+		@Override
 		public void renderCSSReference(String url)
 		{
 			checkHeaderRendering();
 			super.renderCSSReference(url);
 		}
 
+		@Override
 		public void renderCSSReference(String url, String media)
 		{
 			checkHeaderRendering();
 			super.renderCSSReference(url, media);
 		}
 
+		@Override
 		public void renderJavascript(CharSequence javascript, String id)
 		{
 			checkHeaderRendering();
 			super.renderJavascript(javascript, id);
 		}
 
+		@Override
 		public void renderCSSReference(ResourceReference reference)
 		{
 			checkHeaderRendering();
 			super.renderCSSReference(reference);
 		}
 
+		@Override
 		public void renderJavascriptReference(ResourceReference reference)
 		{
 			checkHeaderRendering();
 			super.renderJavascriptReference(reference);
 		}
 
+		@Override
 		public void renderJavascriptReference(ResourceReference reference, String id)
 		{
 			checkHeaderRendering();
 			super.renderJavascriptReference(reference, id);
 		}
 
+		@Override
 		public void renderJavascriptReference(String url)
 		{
 			checkHeaderRendering();
 			super.renderJavascriptReference(url);
 		}
 
+		@Override
 		public void renderJavascriptReference(String url, String id)
 		{
 			checkHeaderRendering();
 			super.renderJavascriptReference(url, id);
 		}
 
+		@Override
 		public void renderString(CharSequence string)
 		{
 			checkHeaderRendering();
@@ -815,10 +835,15 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		}
 
+		/**
+		 * 
+		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnDomReadyJavascript(java.lang.String)
+		 */
+		@Override
 		public void renderOnDomReadyJavascript(String javascript)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", "window", "domready",
-					javascript });
+			List<String> token = Arrays.asList(new String[] { "javascript-event", "window",
+					"domready", javascript });
 			if (wasRendered(token) == false)
 			{
 				domReadyJavascripts.add(javascript);
@@ -826,9 +851,14 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			}
 		}
 
+		/**
+		 * 
+		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnLoadJavascript(java.lang.String)
+		 */
+		@Override
 		public void renderOnLoadJavascript(String javascript)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", "window", "load",
+			List<String> token = Arrays.asList(new String[] { "javascript-event", "window", "load",
 					javascript });
 			if (wasRendered(token) == false)
 			{
@@ -838,6 +868,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			}
 		}
 
+		/**
+		 * 
+		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#getRealResponse()
+		 */
+		@Override
 		protected Response getRealResponse()
 		{
 			return RequestCycle.get().getResponse();
@@ -889,6 +924,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			this.target = target;
 		}
 
+		/**
+		 * 
+		 * @see org.apache.wicket.markup.html.internal.HtmlHeaderContainer#newHeaderResponse()
+		 */
+		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
 			return target.getHeaderResponse();
@@ -902,7 +942,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param response
 	 * @param component
 	 */
-	private void respondHeaderContribution(final Response response, final Component component)
+	private void respondHeaderContribution(final Response response, final Component< ? > component)
 	{
 		headerRendering = true;
 
@@ -910,7 +950,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (header == null)
 		{
 			header = new AjaxHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID, this);
-			Component oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
+			Component< ? > oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
 
 			// add or replace the container to page
 
@@ -935,9 +975,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor()
+			((MarkupContainer< ? >)component).visitChildren(new Component.IVisitor<Component< ? >>()
 			{
-				public Object component(Component component)
+				public Object component(Component< ? > component)
 				{
 					if (component.isVisible())
 					{

@@ -57,6 +57,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		getComponent().setOutputMarkupId(true);
@@ -65,6 +66,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
@@ -123,9 +125,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getPreconditionScript()
 	{
-		if (getComponent() instanceof Page) {
-			return "return true;";			
-		} else {
+		if (getComponent() instanceof Page)
+		{
+			return "return true;";
+		}
+		else
+		{
 			return "return Wicket.$('" + getComponent().getMarkupId() + "') != null;";
 		}
 	}
@@ -270,7 +275,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			return ((IAjaxIndicatorAware)this).getAjaxIndicatorMarkupId();
 		}
 
-		Component parent = getComponent().getParent();
+		Component< ? > parent = getComponent().getParent();
 		while (parent != null)
 		{
 			if (parent instanceof IAjaxIndicatorAware)
