@@ -813,7 +813,7 @@ public abstract class Page extends MarkupContainer<Object>
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
 	 */
-	public final void removePersistedFormData(final Class< ? extends Form< ? >> formClass,
+	public final void removePersistedFormData(final Class< ? extends Form> formClass,
 		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
