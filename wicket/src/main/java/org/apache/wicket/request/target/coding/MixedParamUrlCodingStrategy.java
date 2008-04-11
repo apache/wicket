@@ -30,36 +30,36 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * 
+ *
  * Url coding strategy for bookmarkable pages that encodes a set of given parameters
- * 
+ *
  * in the url's path path and the rest in the querystring.
- * 
+ *
  * <p>
  * Strategy looks for path-parameters whose name is read from an array of
- * 
+ *
  * names e.g. ["param0", "param1"]. Found parameters will be appended to the url in
- * 
+ *
  * the form <code>/mount-path/paramvalue0/paramvalue1</code>.
  * </p>
- * 
+ *
  * <p>
  * All other parameters are added as parameter in the form:
- * 
+ *
  * <code>/mount-path/paramvalue0?otherparam0=otherparamvalue0&otherparam1=otherparamvalue1</code>.
  * </p>
- * 
+ *
  * <p>
  * Decode is symmetric except for when a path parameter that is not at the end has no value during
  * encode.
- * 
+ *
  * For example, the names for the path parameters are: "a", "b" and "c". When "b" is
- * 
+ *
  * not specified upon encoding, but "c" is, upon a decode "b" will get the empty string
- * 
+ *
  * as value. When both "b" and "c" are missing on encode, the will not get a value during decode.
  * </p>
- * 
+ *
  * @author erik.van.oosten
  */
 public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
@@ -68,7 +68,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param mountPath
 	 *            mount path
 	 * @param bookmarkablePageClass
@@ -79,7 +79,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *            the parameter names (not null)
 	 */
 	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-			String pageMapName, String[] parameterNames)
+		String pageMapName, String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 		this.parameterNames = parameterNames;
@@ -87,7 +87,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param mountPath
 	 *            mount path (not empty)
 	 * @param bookmarkablePageClass
@@ -96,13 +96,14 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *            the parameter names (not null)
 	 */
 	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-			String[] parameterNames)
+		String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 		this.parameterNames = parameterNames;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		if (!url.endsWith("/"))
@@ -124,7 +125,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			for (int i = 0; i <= lastSpecifiedParameter; i++)
 			{
 				String parameterName = parameterNames[i];
-				String value = (String)parameters.get(parameterName);
+				final Object param = parameters.get(parameterName);
+				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
 				if (value == null)
 				{
 					value = "";
@@ -150,7 +152,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			{
 				url.append(first ? '?' : '&');
 				String parameterName = (String)iterator.next();
-				String value = (String)parameters.get(parameterName);
+				final Object param = parameters.get(parameterName);
+				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
 				url.append(urlEncode(parameterName)).append("=").append(urlEncode(value));
 				first = false;
 			}
@@ -158,6 +161,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		PageParameters params = new PageParameters();
@@ -175,7 +179,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			if (pathParts.length > parameterNames.length)
 			{
 				throw new IllegalArgumentException(
-						"Too many path parts, please provide sufficient number of path parameter names");
+					"Too many path parts, please provide sufficient number of path parameter names");
 			}
 
 			for (int i = 0; i < pathParts.length; i++)
