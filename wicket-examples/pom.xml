@@ -15,10 +15,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
@@ -26,13 +24,11 @@
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
-
 	<name>Wicket Examples</name>
-	<description>Examples displaying a component reference and several components in action.</description>
-
+	<description>Examples displaying a component reference and
+		several components in action.</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -63,6 +59,10 @@
 			<artifactId>wicket-velocity</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 		</dependency>
@@ -70,7 +70,7 @@
 			<groupId>velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.4</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>com.uwyn</groupId>
 			<artifactId>jhighlight</artifactId>
