@@ -60,7 +60,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class DataView extends DataViewBase
+public abstract class DataView<T> extends DataViewBase<T>
 {
 
 	/**
@@ -74,7 +74,7 @@ public abstract class DataView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataView(String id, IDataProvider dataProvider)
+  protected DataView(String id, IDataProvider<T> dataProvider)
 	{
 		super(id, dataProvider);
 	}
@@ -87,7 +87,7 @@ public abstract class DataView extends DataViewBase
 	 * @param itemsPerPage
 	 *            items per page
 	 */
-	public DataView(String id, IDataProvider dataProvider, int itemsPerPage)
+  protected DataView(String id, IDataProvider<T> dataProvider, int itemsPerPage)
 	{
 		super(id, dataProvider);
 		setItemsPerPage(itemsPerPage);
@@ -115,7 +115,7 @@ public abstract class DataView extends DataViewBase
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider()
+	public IDataProvider<T> getDataProvider()
 	{
 		return internalGetDataProvider();
 	}
