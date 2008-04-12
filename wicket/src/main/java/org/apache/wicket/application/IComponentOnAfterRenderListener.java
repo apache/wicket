@@ -31,5 +31,5 @@ public interface IComponentOnAfterRenderListener
 	 * @param component
 	 *            the component that was just rendered
 	 */
-	public void onAfterRender(Component component);
+	public void onAfterRender(Component< ? > component);
 }

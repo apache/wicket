@@ -17,6 +17,7 @@
 package org.apache.wicket.authorization.strategies;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
@@ -32,7 +33,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
-	private final ArrayList strategies = new ArrayList();
+	private final List<IAuthorizationStrategy> strategies = new ArrayList<IAuthorizationStrategy>();
 
 	/**
 	 * Adds a strategy to the chain
@@ -52,12 +53,12 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean isInstantiationAuthorized(Class componentClass)
+	public final boolean isInstantiationAuthorized(Class< ? extends Component> componentClass)
 	{
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)
 		{
-			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isInstantiationAuthorized(componentClass))
 			{
 				return false;
@@ -70,12 +71,12 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public final boolean isActionAuthorized(Component component, Action action)
+	public final boolean isActionAuthorized(Component< ? > component, Action action)
 	{
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)
 		{
-			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isActionAuthorized(component, action))
 			{
 				return false;

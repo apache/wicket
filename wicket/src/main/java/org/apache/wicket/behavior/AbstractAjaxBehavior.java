@@ -40,8 +40,9 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
 	/** the component that this handler is bound to. */
-	private Component component;
+	private Component< ? > component;
 
 	/**
 	 * Construct.
@@ -56,7 +57,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @param hostComponent
 	 *            the component to bind to
 	 */
-	public final void bind(final Component hostComponent)
+	@Override
+	public final void bind(final Component< ? > hostComponent)
 	{
 		if (hostComponent == null)
 		{
@@ -68,7 +70,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			throw new IllegalStateException("this kind of handler cannot be attached to " +
 				"multiple components; it is already attached to component " + component +
 				", but component " + hostComponent + " wants to be attached too");
-
 		}
 
 		component = hostComponent;
@@ -127,7 +128,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	public final void onComponentTag(final Component component, final ComponentTag tag)
+	@Override
+	public final void onComponentTag(final Component< ? > component, final ComponentTag tag)
 	{
 		onComponentTag(tag);
 	}
@@ -135,7 +137,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
-	public final void onRendered(final Component hostComponent)
+	@Override
+	public final void onRendered(final Component< ? > hostComponent)
 	{
 		onComponentRendered();
 	}
@@ -143,6 +146,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
 	}
@@ -152,7 +156,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the component that this handler is bound to
 	 */
-	protected final Component getComponent()
+	protected final Component< ? > getComponent()
 	{
 		return component;
 	}
@@ -187,24 +191,36 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#getStatelessHint(Component)
 	 */
-	public boolean getStatelessHint(Component component)
+	@Override
+	public boolean getStatelessHint(Component< ? > component)
 	{
 		return false;
 	}
 
-
 	// TODO the next three methods will be removed with next commit. Here as
 	// final to help with refactoring
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected final String getImplementationId()
 	{
 		return "foo";
 	}
 
+	/**
+	 * 
+	 * @param response
+	 */
 	protected final void onRenderHeadContribution(final Response response)
 	{
 	}
 
+	/**
+	 * 
+	 * @param response
+	 */
 	protected final void onRenderHeadInitContribution(final Response response)
 	{
 	}

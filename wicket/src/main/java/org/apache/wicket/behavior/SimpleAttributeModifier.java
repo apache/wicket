@@ -79,6 +79,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 * @return true
 	 * @deprecated use isEnabled(Component) now.
 	 */
+	@Deprecated
 	public final boolean isEnabled()
 	{
 		return true;
@@ -88,7 +89,8 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	public void onComponentTag(final Component component, final ComponentTag tag)
+	@Override
+	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
 	{
 		if (isEnabled(component))
 		{

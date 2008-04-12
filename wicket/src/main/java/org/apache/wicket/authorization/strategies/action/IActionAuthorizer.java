@@ -42,5 +42,5 @@ public interface IActionAuthorizer extends IClusterable
 	 *            The component to authorize this action on
 	 * @return True if this action is authorized
 	 */
-	boolean authorizeAction(Component component);
+	boolean authorizeAction(Component< ? > component);
 }

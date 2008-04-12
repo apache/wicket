@@ -56,7 +56,7 @@ public class FeedbackMessage implements IClusterable
 	public static final int WARNING = 300;
 
 	/** Levels as strings for debugging. */
-	private static final Map levelStrings = new HashMap();
+	private static final Map<Integer, String> levelStrings = new HashMap<Integer, String>();
 
 	static
 	{
@@ -79,7 +79,7 @@ public class FeedbackMessage implements IClusterable
 	private final Serializable message;
 
 	/** The reporting component. */
-	private final Component reporter;
+	private final Component< ? > reporter;
 
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
@@ -94,7 +94,8 @@ public class FeedbackMessage implements IClusterable
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
+	public FeedbackMessage(final Component< ? > reporter, final Serializable message,
+		final int level)
 	{
 		this.reporter = reporter;
 		this.message = message;
@@ -139,7 +140,7 @@ public class FeedbackMessage implements IClusterable
 	 */
 	public String getLevelAsString()
 	{
-		return (String)levelStrings.get(new Integer(getLevel()));
+		return levelStrings.get(new Integer(getLevel()));
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class FeedbackMessage implements IClusterable
 	 * 
 	 * @return the reporting component.
 	 */
-	public final Component getReporter()
+	public final Component< ? > getReporter()
 	{
 		return reporter;
 	}
@@ -237,10 +238,11 @@ public class FeedbackMessage implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = " +
-				((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
-				getLevelAsString() + "]";
+			((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
+			getLevelAsString() + "]";
 	}
 }

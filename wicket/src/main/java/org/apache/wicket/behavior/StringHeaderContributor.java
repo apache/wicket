@@ -45,7 +45,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		private static final long serialVersionUID = 1L;
 
 		/** The contribution as a model that returns a plain string. */
-		private final IModel contribution;
+		private final IModel< ? > contribution;
 
 		/**
 		 * Construct.
@@ -60,7 +60,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 				throw new IllegalArgumentException("argument contribition must be not null");
 			}
 
-			this.contribution = new Model(contribution);
+			this.contribution = new Model<String>(contribution);
 		}
 
 		/**
@@ -69,7 +69,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		 * @param contribution
 		 *            The contribution as a model that returns a plain string
 		 */
-		public StringContributor(IModel contribution)
+		public StringContributor(IModel< ? > contribution)
 		{
 			if (contribution == null)
 			{
@@ -94,6 +94,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			Object object = contribution.getObject();
@@ -103,6 +104,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof StringContributor)
@@ -117,6 +119,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "StringContributor[contribution=" + contribution + "]";
@@ -140,7 +143,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	 * @param contribution
 	 *            header contribution as a model that returns a plain string
 	 */
-	public StringHeaderContributor(IModel contribution)
+	public StringHeaderContributor(IModel< ? > contribution)
 	{
 		contributor = new StringContributor(contribution);
 	}
@@ -148,6 +151,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
 	 */
+	@Override
 	public final IHeaderContributor[] getHeaderContributors()
 	{
 		return new IHeaderContributor[] { contributor };
@@ -156,7 +160,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
-	public void detach(Component component)
+	@Override
+	public void detach(Component< ? > component)
 	{
 		contributor.contribution.detach();
 	}
@@ -164,6 +169,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		Object string = contributor.contribution.getObject();

@@ -34,7 +34,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** Map from Action keys to IActionAuthorizer implementations. */
-	private final Map actionAuthorizerForAction = new HashMap();
+	private final Map<Action, IActionAuthorizer> actionAuthorizerForAction = new HashMap<Action, IActionAuthorizer>();
 
 	/**
 	 * Adds an action authorizer.
@@ -50,7 +50,7 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public boolean isInstantiationAuthorized(Class componentClass)
+	public boolean isInstantiationAuthorized(Class< ? extends Component> componentClass)
 	{
 		return true;
 	}
@@ -59,9 +59,9 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(Component component, Action action)
+	public boolean isActionAuthorized(Component< ? > component, Action action)
 	{
-		IActionAuthorizer authorizer = (IActionAuthorizer)actionAuthorizerForAction.get(action);
+		IActionAuthorizer authorizer = actionAuthorizerForAction.get(action);
 		if (authorizer != null)
 		{
 			return authorizer.authorizeAction(component);

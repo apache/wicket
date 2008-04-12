@@ -33,11 +33,19 @@ import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget
  */
 public interface IActivePageBehaviorListener extends IBehaviorListener
 {
+	/** */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			IActivePageBehaviorListener.class)
+		IActivePageBehaviorListener.class)
 	{
-		public IRequestTarget newRequestTarget(Page page, Component component,
-				RequestListenerInterface listener, RequestParameters requestParameters)
+		/**
+		 * 
+		 * @see org.apache.wicket.RequestListenerInterface#newRequestTarget(org.apache.wicket.Page,
+		 *      org.apache.wicket.Component, org.apache.wicket.RequestListenerInterface,
+		 *      org.apache.wicket.request.RequestParameters)
+		 */
+		@Override
+		public IRequestTarget newRequestTarget(Page page, Component< ? > component,
+			RequestListenerInterface listener, RequestParameters requestParameters)
 		{
 			return new BehaviorRequestTarget(page, component, listener, requestParameters);
 		}

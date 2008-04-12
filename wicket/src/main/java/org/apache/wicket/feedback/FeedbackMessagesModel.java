@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public class FeedbackMessagesModel implements IModel
+public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,10 +40,10 @@ public class FeedbackMessagesModel implements IModel
 	private IFeedbackMessageFilter filter;
 
 	/** Lazy loaded, temporary list. */
-	private transient List messages;
+	private transient List<FeedbackMessage> messages;
 
 	/** Comparator used for sorting the messages. */
-	private Comparator sortingComparator;
+	private Comparator<FeedbackMessage> sortingComparator;
 
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
@@ -52,7 +52,7 @@ public class FeedbackMessagesModel implements IModel
 	 *            The component where the page will be get from for which messages will be displayed
 	 *            usually the same page as the one feedbackpanel is attached to
 	 */
-	public FeedbackMessagesModel(Component component)
+	public FeedbackMessagesModel(Component< ? > component)
 	{
 		if (component == null)
 		{
@@ -87,7 +87,7 @@ public class FeedbackMessagesModel implements IModel
 	/**
 	 * @return The current sorting comparator
 	 */
-	public final Comparator getSortingComparator()
+	public final Comparator<FeedbackMessage> getSortingComparator()
 	{
 		return sortingComparator;
 	}
@@ -95,7 +95,7 @@ public class FeedbackMessagesModel implements IModel
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public final Object getObject()
+	public final List<FeedbackMessage> getObject()
 	{
 		if (messages == null)
 		{
@@ -136,7 +136,8 @@ public class FeedbackMessagesModel implements IModel
 	 *            comparator used for sorting the messages
 	 * @return this
 	 */
-	public final FeedbackMessagesModel setSortingComparator(Comparator sortingComparator)
+	public final FeedbackMessagesModel setSortingComparator(
+		Comparator<FeedbackMessage> sortingComparator)
 	{
 		if (!(sortingComparator instanceof Serializable))
 		{
@@ -153,7 +154,7 @@ public class FeedbackMessagesModel implements IModel
 	 *            List of sorted and filtered FeedbackMessages for further processing
 	 * @return The processed FeedbackMessage list
 	 */
-	protected List processMessages(final List messages)
+	protected List<FeedbackMessage> processMessages(final List<FeedbackMessage> messages)
 	{
 		return messages;
 	}
@@ -162,7 +163,7 @@ public class FeedbackMessagesModel implements IModel
 	 * 
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(List<FeedbackMessage> object)
 	{
 	}
 

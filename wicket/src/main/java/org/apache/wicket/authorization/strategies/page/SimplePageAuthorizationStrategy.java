@@ -37,7 +37,7 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
  * 
  * <pre>
  * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
- * 		MySecureWebPage.class, MySignInPage.class)
+ * 	MySecureWebPage.class, MySignInPage.class)
  * {
  * 	protected boolean isAuthorized()
  * 	{
@@ -57,7 +57,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * The supertype (class or interface) of Pages that require authorization to be instantiated.
 	 */
-	private final WeakReference/* <Class> */securePageSuperTypeRef;
+	private final WeakReference<Class< ? extends Component>> securePageSuperTypeRef;
 
 	/**
 	 * Construct.
@@ -68,45 +68,46 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
-	public SimplePageAuthorizationStrategy(final Class securePageSuperType,
-			final Class signInPageClass)
+	public SimplePageAuthorizationStrategy(final Class< ? extends Component> securePageSuperType,
+		final Class< ? extends Page> signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{
 			throw new IllegalArgumentException("Secure page super type must not be null");
 		}
 
-		this.securePageSuperTypeRef = new WeakReference(securePageSuperType);
+		securePageSuperTypeRef = new WeakReference<Class< ? extends Component>>(securePageSuperType);
 
 		// Handle unauthorized access to pages
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
-				new IUnauthorizedComponentInstantiationListener()
+			new IUnauthorizedComponentInstantiationListener()
+			{
+				public void onUnauthorizedInstantiation(final Component< ? > component)
 				{
-					public void onUnauthorizedInstantiation(final Component component)
+					// If there is a sign in page class declared, and the
+					// unauthorized component is a page, but it's not the
+					// sign in page
+					if (component instanceof Page)
 					{
-						// If there is a sign in page class declared, and the
-						// unauthorized component is a page, but it's not the
-						// sign in page
-						if (component instanceof Page)
-						{
-							// Redirect to page to let the user sign in
-							throw new RestartResponseAtInterceptPageException(signInPageClass);
-						}
-						else
-						{
-							// The component was not a page, so throw exception
-							throw new UnauthorizedInstantiationException(component.getClass());
-						}
+						// Redirect to page to let the user sign in
+						throw new RestartResponseAtInterceptPageException(signInPageClass);
 					}
-				});
+					else
+					{
+						// The component was not a page, so throw exception
+						throw new UnauthorizedInstantiationException(component.getClass());
+					}
+				}
+			});
 	}
 
 	/**
 	 * @see org.apache.wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isPageAuthorized(java.lang.Class)
 	 */
-	protected boolean isPageAuthorized(final Class pageClass)
+	@Override
+	protected boolean isPageAuthorized(final Class< ? extends Page> pageClass)
 	{
-		if (instanceOf(pageClass, (Class)securePageSuperTypeRef.get()))
+		if (instanceOf(pageClass, securePageSuperTypeRef.get()))
 		{
 			return isAuthorized();
 		}

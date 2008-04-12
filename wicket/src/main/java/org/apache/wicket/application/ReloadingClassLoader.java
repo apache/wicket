@@ -44,9 +44,28 @@ public class ReloadingClassLoader extends URLClassLoader
 {
 	private static final Logger log = LoggerFactory.getLogger(ReloadingClassLoader.class);
 
-	private static final Set urls = new HashSet();
-	private static final List patterns = new ArrayList();
+	private static final Set<URL> urls = new HashSet<URL>();
 
+	private static final List<String> patterns = new ArrayList<String>();
+
+	private IChangeListener listener;
+
+	private final Duration pollFrequency = Duration.seconds(3);
+
+	private final ModificationWatcher watcher;
+
+	static
+	{
+		addClassLoaderUrls(ReloadingClassLoader.class.getClassLoader());
+		excludePattern("org.apache.wicket.*");
+		includePattern("org.apache.wicket.examples.*");
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	protected boolean tryClassHere(String name)
 	{
 		// don't include classes in the java or javax.servlet package
@@ -66,10 +85,10 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			// See if it matches include patterns
 			tryHere = false;
-			Iterator includesIterator = patterns.iterator();
+			Iterator<String> includesIterator = patterns.iterator();
 			while (includesIterator.hasNext())
 			{
-				String rawpattern = (String)includesIterator.next();
+				String rawpattern = includesIterator.next();
 				if (rawpattern.length() <= 1)
 				{
 					continue;
@@ -113,7 +132,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * 
 	 * @return list of patterns as String
 	 */
-	public static List getPatterns()
+	public static List<String> getPatterns()
 	{
 		return patterns;
 	}
@@ -134,7 +153,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * 
 	 * @return list of locations as URL
 	 */
-	public static Set getLocations()
+	public static Set<URL> getLocations()
 	{
 		return urls;
 	}
@@ -166,19 +185,6 @@ public class ReloadingClassLoader extends URLClassLoader
 		}
 	}
 
-	private IChangeListener listener;
-
-	private final Duration pollFrequency = Duration.seconds(3);
-
-	private final ModificationWatcher watcher;
-
-	static
-	{
-		addClassLoaderUrls(ReloadingClassLoader.class.getClassLoader());
-		excludePattern("org.apache.wicket.*");
-		includePattern("org.apache.wicket.examples.*");
-	}
-
 	/**
 	 * Create a new reloading ClassLoader from a list of URLs, and initialize the
 	 * ModificationWatcher to detect class file modifications
@@ -193,9 +199,9 @@ public class ReloadingClassLoader extends URLClassLoader
 		// probably doubles from this class, but just in case
 		addClassLoaderUrls(parent);
 
-		for (Iterator i = urls.iterator(); i.hasNext();)
+		for (Iterator<URL> iter = urls.iterator(); iter.hasNext();)
 		{
-			addURL((URL)i.next());
+			addURL(iter.next());
 		}
 		watcher = new ModificationWatcher(pollFrequency);
 	}
@@ -209,6 +215,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 *
 	 * @param name of resource
 	 */
+	@Override
 	public final URL getResource(final String name)
 	{
 		URL resource = findResource(name);
@@ -234,10 +241,11 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @return    the resulting <code>Class</code> object
 	 * @exception ClassNotFoundException if the class could not be found
 	 */
-	public final Class loadClass(String name, boolean resolve) throws ClassNotFoundException
+	@Override
+	public final Class< ? > loadClass(String name, boolean resolve) throws ClassNotFoundException
 	{
 		// First check if it's already loaded
-		Class clazz = findLoadedClass(name);
+		Class< ? > clazz = findLoadedClass(name);
 
 		if (clazz == null)
 		{
@@ -300,18 +308,18 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param clz
 	 *            the class to watch
 	 */
-	private void watchForModifications(Class clz)
+	private void watchForModifications(Class< ? > clz)
 	{
 		// Watch class in the future
-		Iterator locationsIterator = urls.iterator();
+		Iterator<URL> locationsIterator = urls.iterator();
 		File clzFile = null;
 		while (locationsIterator.hasNext())
 		{
 			// FIXME only works for directories, but JARs etc could be checked
 			// as well
-			URL location = (URL)locationsIterator.next();
+			URL location = locationsIterator.next();
 			String clzLocation = location.getFile() + clz.getName().replaceAll("\\.", "/") +
-					".class";
+				".class";
 			log.debug("clzLocation=" + clzLocation);
 			clzFile = new File(clzLocation);
 			final File finalClzFile = clzFile;

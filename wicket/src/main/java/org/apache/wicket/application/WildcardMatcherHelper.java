@@ -80,7 +80,7 @@ public class WildcardMatcherHelper
 	 *         with "1" for the left most, "2" for the next, a.s.o. The key "0" is the string
 	 *         itself. If the return value is null, string does not match to the pattern .
 	 */
-	public static Map match(final String pat, final String str)
+	public static Map<String, String> match(final String pat, final String str)
 	{
 		final Matcher map = new Matcher(pat, str);
 
@@ -116,7 +116,7 @@ public class WildcardMatcherHelper
 		private final int lstr;
 
 		/** The <code>Map</code> to be filled */
-		private final Map map = new HashMap();
+		private final Map<String, String> map = new HashMap<String, String>();
 
 		/** Whether string matched to pattern */
 		private final boolean matched;
@@ -159,7 +159,7 @@ public class WildcardMatcherHelper
 		 * 
 		 * @return DOCUMENT ME!
 		 */
-		public Map getMap()
+		public Map<String, String> getMap()
 		{
 			return map;
 		}
@@ -325,8 +325,8 @@ public class WildcardMatcherHelper
 				final int sipat = ipat;
 
 				while (ipat < lpat && apat[ipat] != STAR &&
-						(apat[ipat] != ESC || ipat < lpat - 1 && apat[ipat + 1] != STAR) &&
-						apat[ipat] != PATHSEP)
+					(apat[ipat] != ESC || ipat < lpat - 1 && apat[ipat + 1] != STAR) &&
+					apat[ipat] != PATHSEP)
 				{
 					ipat++;
 				}
@@ -376,10 +376,9 @@ public class WildcardMatcherHelper
 		{
 			// scan a common literal suffix
 			while (ipat < lpat &&
-					istr < lstr &&
-					(apat[ipat] == ESC && ipat < lpat - 1 && apat[ipat + 1] == STAR &&
-							apat[++ipat] == astr[istr] || apat[ipat] != STAR &&
-							apat[ipat] == astr[istr]))
+				istr < lstr &&
+				(apat[ipat] == ESC && ipat < lpat - 1 && apat[ipat + 1] == STAR &&
+					apat[++ipat] == astr[istr] || apat[ipat] != STAR && apat[ipat] == astr[istr]))
 			{
 				ipat++;
 				istr++;
@@ -403,7 +402,7 @@ public class WildcardMatcherHelper
 		 * @return Whether the all the mentioned characters match each other
 		 */
 		private final boolean strncmp(final char[] a1, final int o1, final char[] a2, final int o2,
-				final int l)
+			final int l)
 		{
 			int i = 0;
 
