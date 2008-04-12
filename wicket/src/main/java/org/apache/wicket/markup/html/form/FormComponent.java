@@ -472,28 +472,35 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	/**
 	 * Adds a validator to this form component.
 	 * 
-	 * @param validator
-	 *            The validator
+	 * @param validators
+	 *            The validator(s) to be added
 	 * @return This
 	 * @throws IllegalArgumentException
 	 *             if validator is null
 	 * @see IValidator
 	 * @see IValidatorAddListener
 	 */
-	public final FormComponent<T> add(final IValidator validator)
+	public final FormComponent<T> add(final IValidator... validators)
 	{
-		if (validator == null)
+		if (validators == null)
 		{
 			throw new IllegalArgumentException("validator argument cannot be null");
 		}
 
-		// add the validator
-		validators_add(validator);
-
-		// see whether the validator listens for add events
-		if (validator instanceof IValidatorAddListener)
+		for (IValidator validator : validators)
 		{
-			((IValidatorAddListener)validator).onAdded(this);
+			if (validator == null)
+			{
+				throw new IllegalArgumentException("validator argument cannot be null");
+			}
+			// add the validator
+			validators_add(validator);
+
+			// see whether the validator listens for add events
+			if (validator instanceof IValidatorAddListener)
+			{
+				((IValidatorAddListener)validator).onAdded(this);
+			}
 		}
 
 		// return this for chaining

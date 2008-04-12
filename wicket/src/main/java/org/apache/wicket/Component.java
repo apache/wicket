@@ -926,27 +926,34 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * thread</a>.
 	 * </p>
 	 * 
-	 * @param behavior
-	 *            The behavior modifier to be added
+	 * @param behaviors
+	 *            The behavior modifier(s) to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public Component<T> add(final IBehavior behavior)
+	public Component<T> add(final IBehavior... behaviors)
 	{
-		if (behavior == null)
+		if (behaviors == null)
 		{
 			throw new IllegalArgumentException("Argument may not be null");
 		}
 
-		addBehavior(behavior);
-
-		if (!behavior.isTemporary())
+		for (IBehavior behavior : behaviors)
 		{
-			addStateChange(new AddedBehaviorChange(behavior));
+			if (behavior == null)
+			{
+				throw new IllegalArgumentException("Argument may not be null");
+			}
+
+			addBehavior(behavior);
+
+			if (!behavior.isTemporary())
+			{
+				addStateChange(new AddedBehaviorChange(behavior));
+			}
+
+			// Give handler the opportunity to bind this component
+			behavior.bind(this);
 		}
-
-		// Give handler the opportunity to bind this component
-		behavior.bind(this);
-
 		return this;
 	}
 
@@ -1027,9 +1034,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
 			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
-			onBeforeRender();			
-			getApplication().notifyPostComponentOnBeforeRenderListeners(this); 
-			
+			onBeforeRender();
+			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
+
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +
@@ -4018,11 +4025,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @param <V>
+	 *            The model type
 	 * @param model
 	 *            The model to wrap if need be
 	 * @return The wrapped model
 	 */
-	protected final IModel wrap(final IModel< ? > model)
+	protected final <V> IModel<V> wrap(final IModel<V> model)
 	{
 		if (model instanceof IComponentAssignedModel)
 		{

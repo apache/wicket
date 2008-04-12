@@ -32,12 +32,15 @@ import java.util.Set;
  * that the key is directly an integer. So no hash is calculated or key object is stored.
  * 
  * @author jcompagner
+ * 
+ * @param <V>
+ *            The value in the map
  */
-public class IntHashMap implements Cloneable, Serializable
+public class IntHashMap<V> implements Cloneable, Serializable
 {
-	transient volatile Set keySet = null;
+	transient volatile Set<Integer> keySet = null;
 
-	transient volatile Collection values = null;
+	transient volatile Collection<V> values = null;
 
 	/**
 	 * The default initial capacity - MUST be a power of two.
@@ -58,7 +61,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * The table, resized as necessary. Length MUST Always be a power of two.
 	 */
-	transient Entry[] table;
+	transient Entry<V>[] table;
 
 	/**
 	 * The number of key-value mappings contained in this identity hash map.
@@ -102,7 +105,7 @@ public class IntHashMap implements Cloneable, Serializable
 		if (initialCapacity < 0)
 		{
 			throw new IllegalArgumentException("Illegal initial capacity: " + //$NON-NLS-1$
-					initialCapacity);
+				initialCapacity);
 		}
 		if (initialCapacity > MAXIMUM_CAPACITY)
 		{
@@ -111,7 +114,7 @@ public class IntHashMap implements Cloneable, Serializable
 		if (loadFactor <= 0 || Float.isNaN(loadFactor))
 		{
 			throw new IllegalArgumentException("Illegal load factor: " + //$NON-NLS-1$
-					loadFactor);
+				loadFactor);
 		}
 
 		// Find a power of 2 >= initialCapacity
@@ -213,7 +216,7 @@ public class IntHashMap implements Cloneable, Serializable
 	public Object get(int key)
 	{
 		int i = indexFor(key, table.length);
-		Entry e = table[i];
+		Entry<V> e = table[i];
 		while (true)
 		{
 			if (e == null)
@@ -238,7 +241,7 @@ public class IntHashMap implements Cloneable, Serializable
 	public boolean containsKey(int key)
 	{
 		int i = indexFor(key, table.length);
-		Entry e = table[i];
+		Entry<V> e = table[i];
 		while (e != null)
 		{
 			if (key == e.key)
@@ -257,10 +260,10 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param key
 	 * @return The Entry object for the given hash key
 	 */
-	Entry getEntry(int key)
+	Entry<V> getEntry(int key)
 	{
 		int i = indexFor(key, table.length);
-		Entry e = table[i];
+		Entry<V> e = table[i];
 		while (e != null && !(key == e.key))
 		{
 			e = e.next;
@@ -280,15 +283,15 @@ public class IntHashMap implements Cloneable, Serializable
 	 *         mapping for key. A <tt>null</tt> return can also indicate that the HashMap
 	 *         previously associated <tt>null</tt> with the specified key.
 	 */
-	public Object put(int key, Object value)
+	public Object put(int key, V value)
 	{
 		int i = indexFor(key, table.length);
 
-		for (Entry e = table[i]; e != null; e = e.next)
+		for (Entry<V> e = table[i]; e != null; e = e.next)
 		{
 			if (key == e.key)
 			{
-				Object oldValue = e.value;
+				V oldValue = e.value;
 				e.value = value;
 				return oldValue;
 			}
@@ -307,7 +310,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param key
 	 * @param value
 	 */
-	private void putForCreate(int key, Object value)
+	private void putForCreate(int key, V value)
 	{
 		int i = indexFor(key, table.length);
 
@@ -316,7 +319,7 @@ public class IntHashMap implements Cloneable, Serializable
 		 * will only happen for construction if the input Map is a sorted map whose ordering is
 		 * inconsistent w/ equals.
 		 */
-		for (Entry e = table[i]; e != null; e = e.next)
+		for (Entry<V> e = table[i]; e != null; e = e.next)
 		{
 			if (key == e.key)
 			{
@@ -328,11 +331,11 @@ public class IntHashMap implements Cloneable, Serializable
 		createEntry(key, value, i);
 	}
 
-	void putAllForCreate(IntHashMap m)
+	void putAllForCreate(IntHashMap<V> m)
 	{
-		for (Iterator i = m.entrySet().iterator(); i.hasNext();)
+		for (Iterator<Entry<V>> i = m.entrySet().iterator(); i.hasNext();)
 		{
-			Entry e = (Entry)i.next();
+			Entry<V> e = i.next();
 			putForCreate(e.getKey(), e.getValue());
 		}
 	}
@@ -350,7 +353,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 */
 	void resize(int newCapacity)
 	{
-		Entry[] oldTable = table;
+		Entry<V>[] oldTable = table;
 		int oldCapacity = oldTable.length;
 		if (oldCapacity == MAXIMUM_CAPACITY)
 		{
@@ -358,7 +361,7 @@ public class IntHashMap implements Cloneable, Serializable
 			return;
 		}
 
-		Entry[] newTable = new Entry[newCapacity];
+		Entry<V>[] newTable = new Entry[newCapacity];
 		transfer(newTable);
 		table = newTable;
 		threshold = (int)(newCapacity * loadFactor);
@@ -369,19 +372,19 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @param newTable
 	 */
-	void transfer(Entry[] newTable)
+	void transfer(Entry<V>[] newTable)
 	{
-		Entry[] src = table;
+		Entry<V>[] src = table;
 		int newCapacity = newTable.length;
 		for (int j = 0; j < src.length; j++)
 		{
-			Entry e = src[j];
+			Entry<V> e = src[j];
 			if (e != null)
 			{
 				src[j] = null;
 				do
 				{
-					Entry next = e.next;
+					Entry<V> next = e.next;
 					int i = indexFor(e.key, newCapacity);
 					e.next = newTable[i];
 					newTable[i] = e;
@@ -401,7 +404,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @throws NullPointerException
 	 *             if the specified map is null.
 	 */
-	public void putAll(IntHashMap m)
+	public void putAll(IntHashMap<V> m)
 	{
 		int numKeysToBeAdded = m.size();
 		if (numKeysToBeAdded == 0)
@@ -434,9 +437,9 @@ public class IntHashMap implements Cloneable, Serializable
 			}
 		}
 
-		for (Iterator i = m.entrySet().iterator(); i.hasNext();)
+		for (Iterator<Entry<V>> i = m.entrySet().iterator(); i.hasNext();)
 		{
-			Entry e = (Entry)i.next();
+			Entry<V> e = i.next();
 			put(e.getKey(), e.getValue());
 		}
 	}
@@ -452,7 +455,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 */
 	public Object remove(int key)
 	{
-		Entry e = removeEntryForKey(key);
+		Entry<V> e = removeEntryForKey(key);
 		return (e == null ? e : e.value);
 	}
 
@@ -463,15 +466,15 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param key
 	 * @return The Entry object that was removed
 	 */
-	Entry removeEntryForKey(int key)
+	Entry<V> removeEntryForKey(int key)
 	{
 		int i = indexFor(key, table.length);
-		Entry prev = table[i];
-		Entry e = prev;
+		Entry<V> prev = table[i];
+		Entry<V> e = prev;
 
 		while (e != null)
 		{
-			Entry next = e.next;
+			Entry<V> next = e.next;
 			if (key == e.key)
 			{
 				modCount++;
@@ -499,22 +502,22 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param o
 	 * @return The entry that was removed
 	 */
-	Entry removeMapping(Object o)
+	Entry<V> removeMapping(Object o)
 	{
 		if (!(o instanceof Entry))
 		{
 			return null;
 		}
 
-		Entry entry = (Entry)o;
+		Entry<V> entry = (Entry)o;
 		int key = entry.getKey();
 		int i = indexFor(key, table.length);
-		Entry prev = table[i];
-		Entry e = prev;
+		Entry<V> prev = table[i];
+		Entry<V> e = prev;
 
 		while (e != null)
 		{
-			Entry next = e.next;
+			Entry<V> next = e.next;
 			if (e.key == key && e.equals(entry))
 			{
 				modCount++;
@@ -542,7 +545,7 @@ public class IntHashMap implements Cloneable, Serializable
 	public void clear()
 	{
 		modCount++;
-		Entry tab[] = table;
+		Entry<V> tab[] = table;
 		for (int i = 0; i < tab.length; i++)
 		{
 			tab[i] = null;
@@ -564,10 +567,10 @@ public class IntHashMap implements Cloneable, Serializable
 			return containsNullValue();
 		}
 
-		Entry tab[] = table;
+		Entry<V> tab[] = table;
 		for (int i = 0; i < tab.length; i++)
 		{
-			for (Entry e = tab[i]; e != null; e = e.next)
+			for (Entry<V> e = tab[i]; e != null; e = e.next)
 			{
 				if (value.equals(e.value))
 				{
@@ -585,10 +588,10 @@ public class IntHashMap implements Cloneable, Serializable
 	 */
 	private boolean containsNullValue()
 	{
-		Entry tab[] = table;
+		Entry<V> tab[] = table;
 		for (int i = 0; i < tab.length; i++)
 		{
-			for (Entry e = tab[i]; e != null; e = e.next)
+			for (Entry<V> e = tab[i]; e != null; e = e.next)
 			{
 				if (e.value == null)
 				{
@@ -605,9 +608,10 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a shallow copy of this map.
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
-		IntHashMap result = null;
+		IntHashMap<V> result = null;
 		try
 		{
 			result = (IntHashMap)super.clone();
@@ -628,11 +632,11 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * @author jcompagner
 	 */
-	public static class Entry
+	public static class Entry<V>
 	{
 		final int key;
-		Object value;
-		Entry next;
+		V value;
+		Entry<V> next;
 
 		/**
 		 * Create new entry.
@@ -641,7 +645,7 @@ public class IntHashMap implements Cloneable, Serializable
 		 * @param v
 		 * @param n
 		 */
-		Entry(int k, Object v, Entry n)
+		Entry(int k, V v, Entry<V> n)
 		{
 			value = v;
 			next = n;
@@ -659,7 +663,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @return Gets the value object of this entry
 		 */
-		public Object getValue()
+		public V getValue()
 		{
 			return value;
 		}
@@ -668,9 +672,9 @@ public class IntHashMap implements Cloneable, Serializable
 		 * @param newValue
 		 * @return The previous value
 		 */
-		public Object setValue(Object newValue)
+		public V setValue(V newValue)
 		{
-			Object oldValue = value;
+			V oldValue = value;
 			value = newValue;
 			return oldValue;
 		}
@@ -678,13 +682,14 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Entry))
 			{
 				return false;
 			}
-			Entry e = (Entry)o;
+			Entry<V> e = (Entry<V>)o;
 			int k1 = getKey();
 			int k2 = e.getKey();
 			if (k1 == k2)
@@ -702,6 +707,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return key ^ (value == null ? 0 : value.hashCode());
@@ -710,6 +716,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return getKey() + "=" + getValue(); //$NON-NLS-1$
@@ -726,9 +733,9 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param value
 	 * @param bucketIndex
 	 */
-	void addEntry(int key, Object value, int bucketIndex)
+	void addEntry(int key, V value, int bucketIndex)
 	{
-		table[bucketIndex] = new Entry(key, value, table[bucketIndex]);
+		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
 		if (size++ >= threshold)
 		{
 			resize(2 * table.length);
@@ -746,25 +753,25 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @param value
 	 * @param bucketIndex
 	 */
-	void createEntry(int key, Object value, int bucketIndex)
+	void createEntry(int key, V value, int bucketIndex)
 	{
-		table[bucketIndex] = new Entry(key, value, table[bucketIndex]);
+		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
 		size++;
 	}
 
-	private abstract class HashIterator implements Iterator
+	private abstract class HashIterator<H> implements Iterator<H>
 	{
-		Entry next; // next entry to return
+		Entry<V> next; // next entry to return
 		int expectedModCount; // For fast-fail
 		int index; // current slot
-		Entry current; // current entry
+		Entry<V> current; // current entry
 
 		HashIterator()
 		{
 			expectedModCount = modCount;
-			Entry[] t = table;
+			Entry<V>[] t = table;
 			int i = t.length;
-			Entry n = null;
+			Entry<V> n = null;
 			if (size != 0)
 			{ // advance to first entry
 				while (i > 0 && (n = t[--i]) == null)
@@ -784,20 +791,20 @@ public class IntHashMap implements Cloneable, Serializable
 			return next != null;
 		}
 
-		Entry nextEntry()
+		Entry<V> nextEntry()
 		{
 			if (modCount != expectedModCount)
 			{
 				throw new ConcurrentModificationException();
 			}
-			Entry e = next;
+			Entry<V> e = next;
 			if (e == null)
 			{
 				throw new NoSuchElementException();
 			}
 
-			Entry n = e.next;
-			Entry[] t = table;
+			Entry<V> n = e.next;
+			Entry<V>[] t = table;
 			int i = index;
 			while (n == null && i > 0)
 			{
@@ -829,58 +836,59 @@ public class IntHashMap implements Cloneable, Serializable
 
 	}
 
-	private class ValueIterator extends HashIterator
+	private class ValueIterator extends HashIterator<V>
 	{
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public V next()
 		{
 			return nextEntry().value;
 		}
 	}
 
-	private class KeyIterator extends HashIterator
+	private class KeyIterator extends HashIterator<Integer>
 	{
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public Integer next()
 		{
 			return new Integer(nextEntry().getKey());
 		}
 	}
 
-	private class EntryIterator extends HashIterator
+	private class EntryIterator extends HashIterator<Entry<V>>
 	{
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public Entry<V> next()
 		{
-			return nextEntry();
+			Entry<V> nextEntry = nextEntry();
+			return nextEntry;
 		}
 	}
 
 	// Subclass overrides these to alter behavior of views' iterator() method
-	Iterator newKeyIterator()
+	Iterator<Integer> newKeyIterator()
 	{
 		return new KeyIterator();
 	}
 
-	Iterator newValueIterator()
+	Iterator<V> newValueIterator()
 	{
 		return new ValueIterator();
 	}
 
-	Iterator newEntryIterator()
+	Iterator<Entry<V>> newEntryIterator()
 	{
 		return new EntryIterator();
 	}
 
 	// Views
 
-	private transient Set entrySet = null;
+	private transient Set<Entry<V>> entrySet = null;
 
 	/**
 	 * Returns a set view of the keys contained in this map. The set is backed by the map, so
@@ -892,18 +900,19 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 */
-	public Set keySet()
+	public Set<Integer> keySet()
 	{
-		Set ks = keySet;
+		Set<Integer> ks = keySet;
 		return (ks != null ? ks : (keySet = new KeySet()));
 	}
 
-	private class KeySet extends AbstractSet
+	private class KeySet extends AbstractSet<Integer>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
-		public Iterator iterator()
+		@Override
+		public Iterator<Integer> iterator()
 		{
 			return newKeyIterator();
 		}
@@ -911,6 +920,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -919,6 +929,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			if (o instanceof Number)
@@ -931,6 +942,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
+		@Override
 		public boolean remove(Object o)
 		{
 			if (o instanceof Number)
@@ -943,6 +955,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();
@@ -959,18 +972,19 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
-	public Collection values()
+	public Collection<V> values()
 	{
-		Collection vs = values;
+		Collection<V> vs = values;
 		return (vs != null ? vs : (values = new Values()));
 	}
 
-	private class Values extends AbstractCollection
+	private class Values extends AbstractCollection<V>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
-		public Iterator iterator()
+		@Override
+		public Iterator<V> iterator()
 		{
 			return newValueIterator();
 		}
@@ -978,6 +992,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -986,6 +1001,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			return containsValue(o);
@@ -994,6 +1010,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();
@@ -1012,18 +1029,19 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @return a collection view of the mappings contained in this map.
 	 * @see Map.Entry
 	 */
-	public Set entrySet()
+	public Set<Entry<V>> entrySet()
 	{
-		Set es = entrySet;
+		Set<Entry<V>> es = entrySet;
 		return (es != null ? es : (entrySet = new EntrySet()));
 	}
 
-	private class EntrySet extends AbstractSet
+	private class EntrySet extends AbstractSet<Entry<V>>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
-		public Iterator iterator()
+		@Override
+		public Iterator<Entry<V>> iterator()
 		{
 			return newEntryIterator();
 		}
@@ -1031,20 +1049,22 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Entry))
 			{
 				return false;
 			}
-			Entry e = (Entry)o;
-			Entry candidate = getEntry(e.getKey());
+			Entry<V> e = (Entry)o;
+			Entry<V> candidate = getEntry(e.getKey());
 			return candidate != null && candidate.equals(e);
 		}
 
 		/**
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
+		@Override
 		public boolean remove(Object o)
 		{
 			return removeMapping(o) != null;
@@ -1053,6 +1073,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -1061,6 +1082,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();
@@ -1093,9 +1115,9 @@ public class IntHashMap implements Cloneable, Serializable
 		s.writeInt(size);
 
 		// Write out keys and values (alternating)
-		for (Iterator i = entrySet().iterator(); i.hasNext();)
+		for (Iterator<Entry<V>> i = entrySet().iterator(); i.hasNext();)
 		{
-			Entry e = (Entry)i.next();
+			Entry<V> e = i.next();
 			s.writeInt(e.getKey());
 			s.writeObject(e.getValue());
 		}
@@ -1128,7 +1150,7 @@ public class IntHashMap implements Cloneable, Serializable
 		for (int i = 0; i < size; i++)
 		{
 			int key = s.readInt();
-			Object value = s.readObject();
+			V value = (V)s.readObject();
 			putForCreate(key, value);
 		}
 	}

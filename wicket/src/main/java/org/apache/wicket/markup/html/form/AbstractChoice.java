@@ -64,7 +64,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new Model(new ArrayList()), new ChoiceRenderer());
+		this(id, new Model(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -78,7 +78,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final List<E> choices)
 	{
-		this(id, new Model((Serializable)choices), new ChoiceRenderer());
+		this(id, new Model((Serializable)choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -110,7 +110,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<E> choices)
 	{
-		this(id, model, new Model((Serializable)choices), new ChoiceRenderer());
+		this(id, model, new Model((Serializable)choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -143,7 +143,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final IModel<List<E>> choices)
 	{
-		this(id, choices, new ChoiceRenderer());
+		this(id, choices, new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -178,7 +178,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final IModel<List<E>> choices)
 	{
-		this(id, model, choices, new ChoiceRenderer());
+		this(id, model, choices, new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -276,7 +276,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		if (renderer == null)
 		{
-			renderer = new ChoiceRenderer();
+			renderer = new ChoiceRenderer<E>();
 		}
 		this.renderer = renderer;
 		return this;
@@ -381,7 +381,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 		String selected)
 	{
 		Object objectValue = renderer.getDisplayValue(choice);
-		Class objectClass = objectValue == null ? null : objectValue.getClass();
+		Class< ? extends Object> objectClass = objectValue == null ? null : objectValue.getClass();
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
@@ -459,7 +459,7 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final IModel oldChoices;
+		private final IModel<List<E>> oldChoices;
 
 		/**
 		 * Construct.

@@ -125,28 +125,32 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public final MarkupContainer<T> add(final Component< ? > child)
+	public final MarkupContainer<T> add(final Component< ? >... childs)
 	{
-		checkHierarchyChange(child);
-
-		if (child == null)
+		for (Component< ? > child : childs)
 		{
-			throw new IllegalArgumentException("argument child may not be null");
-		}
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("Add " + child.getId() + " to " + this);
-		}
+			checkHierarchyChange(child);
 
-		// Add to map
-		addedComponent(child);
-		if (put(child) != null)
-		{
-			throw new IllegalArgumentException(exceptionMessage("A child with id '" +
-				child.getId() + "' already exists"));
-		}
+			if (child == null)
+			{
+				throw new IllegalArgumentException("argument child may not be null");
+			}
 
+			if (log.isDebugEnabled())
+			{
+				log.debug("Add " + child.getId() + " to " + this);
+			}
+
+			// Add to map
+			addedComponent(child);
+			if (put(child) != null)
+			{
+				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
+					child.getId() + "' already exists"));
+			}
+
+		}
 		return this;
 	}
 
@@ -154,26 +158,30 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * Replaces a child component of this container with another or just adds it in case no child
 	 * with the same id existed yet.
 	 * 
-	 * @param child
-	 *            The child
+	 * @param childs
+	 *            The child(s) to be added or replaced
 	 * @return This
 	 */
-	public final MarkupContainer<T> addOrReplace(final Component< ? > child)
+	public final MarkupContainer<T> addOrReplace(final Component< ? >... childs)
 	{
-		checkHierarchyChange(child);
+		for (Component< ? > child : childs)
+		{
 
-		if (child == null)
-		{
-			throw new IllegalArgumentException("argument child must be not null");
-		}
+			checkHierarchyChange(child);
 
-		if (get(child.getId()) == null)
-		{
-			add(child);
-		}
-		else
-		{
-			replace(child);
+			if (child == null)
+			{
+				throw new IllegalArgumentException("argument child must be not null");
+			}
+
+			if (get(child.getId()) == null)
+			{
+				add(child);
+			}
+			else
+			{
+				replace(child);
+			}
 		}
 
 		return this;

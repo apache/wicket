@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -116,16 +117,19 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public static class DummyWebApplication extends WebApplication
 	{
-		public Class<? extends Page> getHomePage()
+		@Override
+		public Class< ? extends Page> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
 
+		@Override
 		protected void outputDevelopmentModeWarning()
 		{
 			// Do nothing.
 		}
 
+		@Override
 		protected ISessionStore newSessionStore()
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes
@@ -156,16 +160,19 @@ public class BaseWicketTester extends MockWebApplication
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
-			public Class<? extends Page> getHomePage()
+			@Override
+			public Class< ? extends Page> getHomePage()
 			{
 				return homePage;
 			}
 
+			@Override
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
 
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
@@ -737,7 +744,7 @@ public class BaseWicketTester extends MockWebApplication
 		 */
 		else if (linkComponent instanceof SubmitLink)
 		{
-			SubmitLink submitLink = (SubmitLink)linkComponent;
+			SubmitLink< ? > submitLink = (SubmitLink)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
 			getParametersForNextRequest().put(pageRelativePath, "x");
@@ -746,7 +753,7 @@ public class BaseWicketTester extends MockWebApplication
 		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof AbstractLink)
 		{
-			AbstractLink link = (AbstractLink)linkComponent;
+			AbstractLink< ? > link = (AbstractLink)linkComponent;
 
 			/*
 			 * If the link is a bookmarkable link, then we need to transfer the parameters to the
@@ -759,11 +766,11 @@ public class BaseWicketTester extends MockWebApplication
 				{
 					Field parametersField = BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
-						"getPageParameters", null);
+						"getPageParameters", (Class[])null);
 					getParametersMethod.setAccessible(true);
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
-						bookmarkablePageLink, null);
+						bookmarkablePageLink, (Class[])null);
 					setParametersForNextRequest(parameters);
 				}
 				catch (Exception e)
@@ -897,7 +904,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public Result hasNoErrorMessage()
 	{
-		List messages = getMessages(FeedbackMessage.ERROR);
+		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
 		return isTrue("expect no error message, but contains\n" +
 			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -909,7 +916,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public Result hasNoInfoMessage()
 	{
-		List messages = getMessages(FeedbackMessage.INFO);
+		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
 		return isTrue("expect no info message, but contains\n" +
 			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -923,7 +930,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * @return <code>List</code> of messages (as <code>String</code>s)
 	 * @see FeedbackMessage
 	 */
-	public List getMessages(final int level)
+	public List<Serializable> getMessages(final int level)
 	{
 		FeedbackMessages feedbackMessages = Session.get().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
@@ -935,7 +942,7 @@ public class BaseWicketTester extends MockWebApplication
 				return message.getLevel() == level;
 			}
 		});
-		List actualMessages = new ArrayList();
+		List<Serializable> actualMessages = new ArrayList<Serializable>();
 		for (Iterator iter = allMessages.iterator(); iter.hasNext();)
 		{
 			actualMessages.add(((FeedbackMessage)iter.next()).getMessage());
@@ -1224,6 +1231,7 @@ public class BaseWicketTester extends MockWebApplication
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(FormComponent formComponent)
 			{
 				// !(formComponent instanceof Button) &&
