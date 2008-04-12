@@ -21,6 +21,7 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -32,8 +33,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * create lazy init proxies based on spring beans, as well as an implementation of
  * {@link ISpringContextLocator}.
  * 
+ * @deprecated when using java5 it is preferrable to use {@link SpringBean} annotations for
+ *             injection rather then this spring-specific application subclass with its helpers. To
+ *             setup {@link SpringBean} add the following line to your {@link WebApplication}
+ *             subclass init method <code>add(new SpringComponentInjector(this));</code>
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@Deprecated
 public abstract class SpringWebApplication extends WebApplication
 		implements
 			ApplicationContextAware
@@ -64,6 +71,7 @@ public abstract class SpringWebApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#internalInit()
 	 */
+	@Override
 	protected void internalInit()
 	{
 		super.internalInit();
