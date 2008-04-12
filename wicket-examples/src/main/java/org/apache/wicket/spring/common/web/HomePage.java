@@ -17,10 +17,7 @@
 package org.apache.wicket.spring.common.web;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-
 import org.apache.wicket.spring.annot.web.AnnotPage;
-import org.apache.wicket.spring.direct.web.DirectPage;
-import org.apache.wicket.spring.proxy.web.ProxyPage;
 
 /**
  * Home Page
@@ -32,8 +29,6 @@ public class HomePage extends BasePage
 {
 	public HomePage()
 	{
-		add(new BookmarkablePageLink("direct-link", DirectPage.class));
-		add(new BookmarkablePageLink("proxy-link", ProxyPage.class));
 		add(new BookmarkablePageLink("annot-link", AnnotPage.class));
 	}
 }

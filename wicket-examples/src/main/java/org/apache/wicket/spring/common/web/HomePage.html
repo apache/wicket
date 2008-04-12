@@ -15,15 +15,7 @@
    limitations under the License.
 -->
 <wicket:extend>
-This examples project demonstrates two jdk 1.4 compliant ways to integrate wicket and spring.
-<br/><br/>
-<a href="#" wicket:id="direct-link">direct approach</a>
-<br/>
-This is the simplest of approaches. All necessary spring beans are looked up via static lookups into the ExampleApplication class.
-<br/><br/>
-<a href="#" wicket:id="proxy-link">proxy approach</a>
-<br/>
-This approach wraps the static lookups for dependencies inside dynamic proxies. This allows the code to be decoupled from the application and easy to unit test.
+This examples project demonstrates how to easily integrate Wicket with Spring framework
 <br/><br/>
 <a href="#" wicket:id="annot-link">jdk5 annotations approach</a><br/>
 This approach allows us to annotate any component with SpringBean annotations, and have wicket initialize those fields with spring bean proxies

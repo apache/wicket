@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring.common.web;
 
-import org.apache.wicket.spring.SpringWebApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
@@ -26,7 +26,7 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ExampleApplication extends SpringWebApplication
+public class ExampleApplication extends WebApplication
 {
 
 	/**
@@ -49,49 +49,7 @@ public class ExampleApplication extends SpringWebApplication
 		addComponentInstantiationListener(new SpringComponentInjector(this));
 	}
 
-	/**
-	 * Retrieves contact dao bean. This bean should not be serialized so BE CAREFUL when using it.
-	 * 
-	 * @return contact dao bean
-	 */
-	public ContactDao getContactDao()
-	{
-		if (contactDao == null)
-		{
-			synchronized (this)
-			{
-				if (contactDao == null)
-				{
-					contactDao = (ContactDao)internalGetApplicationContext().getBean("contactDao",
-							ContactDao.class);
-				}
-			}
-		}
-		return contactDao;
-	}
-
-	/**
-	 * Returns a lazy init proxy for the dao bean. This proxy is safe to serialize and will take up
-	 * very little space when serialized.
-	 * 
-	 * @return a lazy init proxy for the dao bean
-	 */
-	public ContactDao getContactDaoProxy()
-	{
-		if (contactDaoProxy == null)
-		{
-			synchronized (this)
-			{
-				if (contactDaoProxy == null)
-				{
-					contactDaoProxy = (ContactDao)createSpringBeanProxy(ContactDao.class,
-							"contactDao");
-				}
-			}
-		}
-		return contactDaoProxy;
-	}
-
+	@Override
 	public Class getHomePage()
 	{
 		return HomePage.class;
