@@ -17,8 +17,8 @@ echo "Apache Wicket Release script"
 echo "----------------------------"
 echo "Building a release for Apache Wicket. We will need the passphrase for"
 echo "GPG to sign the release."
-echo "This program assumes you have a 'mvn4' script that starts Maven 2 using"
-echo "a Java 1.4 development kit to compile the projects that are JDK-1.4 based."
+echo "This program assumes you use a jdk 1.5 explicitly configured when"
+echo "invoking the 'mvn' Maven 2 command."
 echo ""
 
 echo "Enter your GPG passphrase (input will be hidden)"
@@ -28,10 +28,12 @@ read passphrase
 stty $stty_orig
 
 # Clear the current NOTICE.txt file
+echo "Creating notice file."
+
 NOTICE=NOTICE
 > $NOTICE 
 echo "Apache Wicket" >> $NOTICE
-echo "Copyright 2007 The Apache Software Foundation" >> $NOTICE
+echo "Copyright 2008 The Apache Software Foundation" >> $NOTICE
 echo "" >> $NOTICE
 echo "This product includes software developed at" >> $NOTICE
 echo "The Apache Software Foundation (http://www.apache.org/)." >> $NOTICE
@@ -45,7 +47,7 @@ echo "    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE." >> $NOTICE
 echo "" >> $NOTICE
 
 # next concatenate all NOTICE files from sub projects to the root file
-for i in `find jdk* -name "NOTICE" -not -regex ".*/target/.*"`
+for i in `find . -name "NOTICE" -not -regex ".*/target/.*" -not -regex "./NOTICE"`
 do
 	echo "---------------------------------------------------------------------------" >> $NOTICE
 	echo "src/"$i | sed -e "s/\/src.*//g" >> $NOTICE
@@ -55,12 +57,11 @@ do
 done
 
 # clean all projects
+echo "Clean all projects"
 mvn clean -Pall
 
-# compile the JDK-1.4 projects
-mvn4 -ff -Pjdk-1.4 test $1
-
 # package and assemble the release
+echo "Package and assemble the release"
 mvn -ff -Dgpg.passphrase=$passphrase -Prelease deploy assembly:attached $1
 
 filename=`ls target/dist/apache-wicket*gz`

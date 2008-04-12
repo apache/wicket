@@ -139,11 +139,11 @@
 			<distributionManagement>
 				<site>
 					<id>local</id>
-					<url>file:target/site/</url>
+					<url>file:target/site</url>
 				</site>
 				<repository>
 					<id>local</id>
-					<url>file:target/m2-repo/</url>
+					<url>file:target/m2-repo</url>
 				</repository>
 			</distributionManagement>
 		</profile>

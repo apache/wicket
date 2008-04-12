@@ -28,43 +28,12 @@
 			<outputDirectory>src/archetypes</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
-				<exclude>**/quickstart/target</exclude>
-				<exclude>**/quickstart/target/**</exclude>
-			</excludes>
-		</fileSet>
-		<fileSet>
-			<directory>jdk-1.4</directory>
-			<outputDirectory>src/jdk-1.4</outputDirectory>
-			<useDefaultExcludes>true</useDefaultExcludes>
-			<excludes>
-				<exclude>**/wicket/target</exclude>
-				<exclude>**/wicket-*/target</exclude>
-				<exclude>**/wicket/target/**</exclude>
-				<exclude>**/wicket-*/target/**</exclude>
-				<exclude>**/*gz</exclude>
-				<exclude>**/*zip</exclude>
-				<exclude>**/archive-tmp</exclude>
-				<exclude>**/sessions</exclude>
-				<exclude>target</exclude>
 				<exclude>target/**</exclude>
-				<exclude>${basedir}/target</exclude>
-			</excludes>
-		</fileSet>
-		<fileSet>
-			<directory>jdk-1.5</directory>
-			<outputDirectory>src/jdk-1.5</outputDirectory>
-			<useDefaultExcludes>true</useDefaultExcludes>
-			<excludes>
-				<exclude>**/wicket/target</exclude>
-				<exclude>**/wicket-*/target</exclude>
-				<exclude>**/wicket/target/**</exclude>
-				<exclude>**/wicket-*/target/**</exclude>
-				<exclude>**/*gz</exclude>
-				<exclude>**/*zip</exclude>
-				<exclude>**/archive-tmp</exclude>
-				<exclude>**/sessions</exclude>
-				<exclude>${basedir}/target</exclude>
-				<exclude>target/**</exclude>
+				<exclude>**/.classpath/**</exclude>
+				<exclude>**/.project/**</exclude>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/.amateras/**</exclude>
+				<exclude>**/.tomcatplugin/**</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -72,16 +41,12 @@
 			<outputDirectory>src/testing</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
-				<exclude>**/wicket/target</exclude>
-				<exclude>**/wicket-*/target</exclude>
-				<exclude>**/wicket/target/**</exclude>
-				<exclude>**/wicket-*/target/**</exclude>
-				<exclude>**/*gz</exclude>
-				<exclude>**/*zip</exclude>
-				<exclude>**/archive-tmp</exclude>
-				<exclude>**/sessions</exclude>
-				<exclude>**/sessions/*</exclude>
-				<exclude>${basedir}/target</exclude>
+				<exclude>target/**</exclude>
+				<exclude>**/.classpath/**</exclude>
+				<exclude>**/.project/**</exclude>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/.amateras/**</exclude>
+				<exclude>**/.tomcatplugin/**</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -90,8 +55,28 @@
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<includes>
 				<include>*.xml</include>
-				<include>eclipse.sh</include>
+				<include>wicket/**</include>
+				<include>wicket-auth-roles/**</include>
+				<include>wicket-datetime/**</include>
+				<include>wicket-examples/**</include>
+				<include>wicket-extensions/**</include>
+				<include>wicket-jmx/**</include>
+				<include>wicket-objectssizeof-agent/**</include>
+				<include>wicket-ioc/**</include>
+				<include>wicket-guice/**</include>
+				<include>wicket-spring/**</include>
+				<include>wicket-spring-annot/**</include>
+				<include>wicket-velocity/**</include>
 			</includes>
+			<excludes>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/.classpath/**</exclude>
+				<exclude>**/.project/**</exclude>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/.amateras/**</exclude>
+				<exclude>**/.tomcatplugin/**</exclude>
+			</excludes>
 		</fileSet>
 		<fileSet>
 			<directory>${basedir}</directory>
@@ -101,9 +86,8 @@
 				<include>LICENSE</include>
 				<include>NOTICE</include>
 				<include>README</include>
-				<include>migrate-13.html</include>
-				<include>CHANGELOG-1.3</include>
-				<include>DISCLAIMER</include>
+				<include>migrate-14.html</include>
+				<include>CHANGELOG-1.4</include>
 				<include>licenses/**</include>
 			</includes>
 		</fileSet>
