@@ -57,7 +57,6 @@ You will find the source code here:
    - wicket-quickstart
    - wicket-examples
    - wicket-auth-roles
-   - wicket-spring-annot
    - wicket-guice
    - wicket-jmx
    - wicket-objectssizeof-agent
@@ -74,9 +73,8 @@ Here is a list of projects in this distribution and what they do.
 		sizes in the JVM - most people probably never need this;
  - wicket-ioc: base project for IoC (aka DI) implementations such as 
 		Spring and Guice;
- - wicket-spring: support project for using Spring with Wicket;
- - wicket-spring-annot: supports including Spring managed dependencies 
-		through using @SpringBean annotations
+ - wicket-spring: support project for using Spring with Wicket and including 
+        Spring managed dependencies through using @SpringBean annotations;
  - wicket-guice: support project for using Google Guice with Wicket;
  - wicket-velocity: contains special components for rendering Velocity templates 
 		using Wicket components - most people probably don't need this, but it 
@@ -160,10 +158,6 @@ If you do not want to use maven, here is a break down of the dependencies you ne
 
  	wicket-ioc and Spring (http://www.springframework.org/) and
  	it's dependencies
-
- - wicket-spring-annots:
-	
-	wicket-spring
 
  - wicket-guice:
 

@@ -65,7 +65,6 @@
 				<include>wicket-ioc/**</include>
 				<include>wicket-guice/**</include>
 				<include>wicket-spring/**</include>
-				<include>wicket-spring-annot/**</include>
 				<include>wicket-velocity/**</include>
 			</includes>
 			<excludes>
@@ -105,7 +104,6 @@
 				<include>org.apache.wicket:wicket-ioc</include>
 				<include>org.apache.wicket:wicket-guice</include>
 				<include>org.apache.wicket:wicket-spring</include>
-				<include>org.apache.wicket:wicket-spring-annot</include>
 				<include>org.apache.wicket:wicket-velocity</include>
 			</includes>
 			<binaries>
