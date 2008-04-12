@@ -23,8 +23,9 @@ import org.apache.wicket.model.Model;
  * A column that does not have a header
  * 
  * @author Igor Vaynberg
+ * @param <T>
  */
-public abstract class HeaderlessColumn extends AbstractColumn
+public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
 {
 	/**
 	 * 
@@ -36,15 +37,16 @@ public abstract class HeaderlessColumn extends AbstractColumn
 	 */
 	public HeaderlessColumn()
 	{
-		super(new Model("&nbsp;"));
+		super(new Model<String>("&nbsp;"));
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn#getHeader(java.lang.String)
 	 */
-	public Component getHeader(String componentId)
+	@Override
+	public Component< ? > getHeader(String componentId)
 	{
-		Component header = super.getHeader(componentId);
+		Component< ? > header = super.getHeader(componentId);
 		return header.setEscapeModelStrings(false);
 	}
 }

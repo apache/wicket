@@ -24,9 +24,10 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * Data provider that can hold sort state
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
+ * @param <T>
  * 
  */
-public interface ISortableDataProvider extends IDataProvider, ISortStateLocator
+public interface ISortableDataProvider<T> extends IDataProvider<T>, ISortStateLocator
 {
 
 

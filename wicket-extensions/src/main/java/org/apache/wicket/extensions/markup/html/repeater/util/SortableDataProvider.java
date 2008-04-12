@@ -28,8 +28,9 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  * implementation because it makes that information easy to access within the data provider.
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
+ * @param <T>
  */
-public abstract class SortableDataProvider implements ISortableDataProvider
+public abstract class SortableDataProvider<T> implements ISortableDataProvider<T>
 {
 	/**
 	 * 
@@ -53,8 +54,8 @@ public abstract class SortableDataProvider implements ISortableDataProvider
 		if (!(state instanceof SingleSortState))
 		{
 			throw new IllegalArgumentException(
-					"argument [state] must be an instance of SingleSortState, but it is [" +
-							state.getClass().getName() + "]:[" + state.toString() + "]");
+				"argument [state] must be an instance of SingleSortState, but it is [" +
+					state.getClass().getName() + "]:[" + state.toString() + "]");
 		}
 		this.state = (SingleSortState)state;
 	}

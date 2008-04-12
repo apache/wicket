@@ -24,14 +24,15 @@ import org.apache.wicket.model.IModel;
  * A helper implementation for the IColumn interface
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
  */
-public abstract class AbstractColumn implements IStyledColumn
+public abstract class AbstractColumn<T> implements IStyledColumn<T>
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private IModel displayModel;
+	private IModel<String> displayModel;
 	private String sortProperty;
 
 	/**
@@ -40,7 +41,7 @@ public abstract class AbstractColumn implements IStyledColumn
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public AbstractColumn(IModel displayModel, String sortProperty)
+	public AbstractColumn(IModel<String> displayModel, String sortProperty)
 	{
 		this.displayModel = displayModel;
 		this.sortProperty = sortProperty;
@@ -50,7 +51,7 @@ public abstract class AbstractColumn implements IStyledColumn
 	 * @param displayModel
 	 *            model used to generate header text
 	 */
-	public AbstractColumn(IModel displayModel)
+	public AbstractColumn(IModel<String> displayModel)
 	{
 		this(displayModel, null);
 	}
@@ -58,7 +59,7 @@ public abstract class AbstractColumn implements IStyledColumn
 	/**
 	 * @return returns display model to be used for the header component
 	 */
-	public IModel getDisplayModel()
+	public IModel<String> getDisplayModel()
 	{
 		return displayModel;
 	}
@@ -82,9 +83,9 @@ public abstract class AbstractColumn implements IStyledColumn
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
 	 */
-	public Component getHeader(String componentId)
+	public Component< ? > getHeader(String componentId)
 	{
-		return new Label(componentId, getDisplayModel());
+		return new Label<String>(componentId, getDisplayModel());
 	}
 
 	/**

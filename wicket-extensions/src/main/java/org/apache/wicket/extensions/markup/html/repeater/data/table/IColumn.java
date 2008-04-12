@@ -24,6 +24,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
  * An interface that represents a column in the {@link DefaultDataTable}
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
  */
 public interface IColumn<T> extends ICellPopulator<T>
 {
@@ -37,7 +38,7 @@ public interface IColumn<T> extends ICellPopulator<T>
 	 * 
 	 * @return component that will be used as the header for the column
 	 */
-	Component getHeader(String componentId);
+	Component< ? > getHeader(String componentId);
 
 	/**
 	 * Returns the name of the property that this header sorts. If null is returned the header will

@@ -58,6 +58,7 @@ import org.apache.wicket.model.IModel;
  * @see GridView
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
 public interface IDataProvider<T> extends IDetachable

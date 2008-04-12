@@ -21,8 +21,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
  * Interface that allows styling individuals DataTable columns
  * 
  * @author Matej Knopp
+ * @param <T>
  */
-public interface IStyledColumn extends IColumn
+public interface IStyledColumn<T> extends IColumn<T>
 {
 	/**
 	 * Returns the css class for this column.
