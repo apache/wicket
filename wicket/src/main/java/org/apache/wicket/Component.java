@@ -2195,10 +2195,12 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
 	 */
-	public void prepareForRender()
+	public final void prepareForRender()
 	{
 		beforeRender();
 		List<Component< ? >> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
