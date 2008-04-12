@@ -95,7 +95,6 @@
 				<module>wicket-ioc</module>
 				<module>wicket-spring</module>
 				<module>wicket-velocity</module>
-				<module>wicket-spring-annot</module>
 				<module>wicket-auth-roles</module>
 				<module>wicket-guice</module>
 				<module>wicket-jmx</module>
@@ -159,7 +158,6 @@
 				<module>wicket-ioc</module>
 				<module>wicket-spring</module>
 				<module>wicket-velocity</module>
-				<module>wicket-spring-annot</module>
 				<module>wicket-auth-roles</module>
 				<module>wicket-guice</module>
 				<module>wicket-jmx</module>
@@ -275,12 +273,6 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>${project.version}</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-spring-annot</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
 			</dependency>
