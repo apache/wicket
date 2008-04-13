@@ -1262,6 +1262,19 @@ public abstract class RequestCycle
 		}
 		catch (RuntimeException e)
 		{
+			/*
+			 * check if the raised exception wraps an abort exception. if so, it is probably wise to
+			 * unwrap and rethrow the abort exception
+			 */
+			Throwable cause = e.getCause();
+			while (cause != null)
+			{
+				if (cause instanceof AbortException)
+				{
+					throw ((AbortException)cause);
+				}
+				cause = cause.getCause();
+			}
 			if (!handlingException)
 			{
 				// set step manually to handle exception
