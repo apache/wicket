@@ -63,23 +63,22 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
 			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
-					"\nvar clientTimeVariable = new Date().getTime();\n" +
-					JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+				"\nvar clientTimeVariable = new Date().getTime();\n" +
+				JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		else if (ajaxStart != -1 && ajaxEnd != -1)
 		{
 			AppendingStringBuffer startScript = new AppendingStringBuffer(250);
 			startScript.append("<evaluate><![CDATA[window.defaultStatus='");
 			startScript.append(getStatusString(timeTaken,
-					"ajax.ServerAndClientTimeFilter.statustext"));
+				"ajax.ServerAndClientTimeFilter.statustext"));
 			startScript.append("';]]></evaluate>");
 			responseBuffer.insert(ajaxEnd, startScript.toString());
 			responseBuffer.insert(ajaxStart + 15,
-					"<evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></evaluate>");
+				"<evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></evaluate>");
 		}
 		log.info(timeTaken + "ms server time taken for request " +
-				RequestCycle.get().getRequest().getURL() + " response size: " +
-				responseBuffer.length());
+			RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
 		return responseBuffer;
 	}
 
@@ -95,9 +94,8 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	private String getStatusString(long timeTaken, String resourceKey)
 	{
 		final String txt = Application.get().getResourceSettings().getLocalizer().getString(
-				resourceKey, null,
-				"Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
-		final Map map = new HashMap(4);
+			resourceKey, null, "Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
+		final Map<String, String> map = new HashMap<String, String>(4);
 		map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 		map.put("servertime", ((double)timeTaken) / 1000 + "s");
 		return MapVariableInterpolator.interpolate(txt, map);

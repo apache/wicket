@@ -49,15 +49,13 @@ public class Markup
 	public static final Markup NO_MARKUP = new Markup(MarkupResourceData.NO_MARKUP_RESOURCE_DATA);
 
 	/** The list of markup elements */
-	private/* final */List markupElements;
+	private/* final */List<MarkupElement> markupElements;
 
 	/** The associated markup */
 	private final MarkupResourceData markupResourceData;
 
-	/**
-	 * A cache which maps (componentPath + id) to the componentTags index in the markup
-	 */
-	private Map componentMap;
+	/** A cache which maps (componentPath + id) to the componentTags index in the markup */
+	private Map<String, Integer> componentMap;
 
 	/**
 	 * Used at markup load time to maintain the current component path (not id) while adding markup
@@ -74,7 +72,7 @@ public class Markup
 	Markup(final MarkupResourceData markupResourceData)
 	{
 		this.markupResourceData = markupResourceData;
-		markupElements = new ArrayList();
+		markupElements = new ArrayList<MarkupElement>();
 	}
 
 	/**
@@ -87,7 +85,7 @@ public class Markup
 	 */
 	public final MarkupElement get(final int index)
 	{
-		return (MarkupElement)markupElements.get(index);
+		return markupElements.get(index);
 	}
 
 	/**
@@ -139,7 +137,7 @@ public class Markup
 	{
 		for (int i = 0; i < markupElements.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement)markupElements.get(i);
+			MarkupElement elem = markupElements.get(i);
 			if (elem instanceof ComponentTag)
 			{
 				// Make the tag immutable
@@ -161,12 +159,12 @@ public class Markup
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) &&
-				tag.getAttributes().containsKey(getMarkupResourceData().getWicketId()))
+			tag.getAttributes().containsKey(getMarkupResourceData().getWicketId()))
 		{
 			// Add the tag to the cache
 			if (componentMap == null)
 			{
-				componentMap = new HashMap();
+				componentMap = new HashMap<String, Integer>();
 			}
 
 			/*
@@ -197,11 +195,11 @@ public class Markup
 	 * @return componentPath
 	 */
 	private StringBuffer setComponentPathForTag(final StringBuffer componentPath,
-			final ComponentTag tag)
+		final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) &&
-				tag.getAttributes().containsKey(markupResourceData.getWicketId()))
+			tag.getAttributes().containsKey(markupResourceData.getWicketId()))
 		{
 			// With open-close the path does not change. It can/will not have
 			// children. The same is true for HTML tags like <br> or <img>
@@ -236,7 +234,7 @@ public class Markup
 		{
 			// For example <wicket:message> does not have an id
 			if ((tag.getOpenTag() == null) ||
-					tag.getOpenTag().getAttributes().containsKey(markupResourceData.getWicketId()))
+				tag.getOpenTag().getAttributes().containsKey(markupResourceData.getWicketId()))
 			{
 				// Remove the last element from the component path
 				int index = currentPath.lastIndexOf(":");
@@ -292,7 +290,7 @@ public class Markup
 			return -1;
 		}
 
-		final Integer value = (Integer)componentMap.get(completePath);
+		final Integer value = componentMap.get(completePath);
 		if (value == null)
 		{
 			// not found
@@ -356,13 +354,14 @@ public class Markup
 	/**
 	 * @return String representation of markup list
 	 */
+	@Override
 	public final String toString()
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
 		buf.append(markupResourceData.toString());
 		buf.append("\n");
 
-		final Iterator iter = markupElements.iterator();
+		final Iterator<MarkupElement> iter = markupElements.iterator();
 		while (iter.hasNext())
 		{
 			buf.append(iter.next());

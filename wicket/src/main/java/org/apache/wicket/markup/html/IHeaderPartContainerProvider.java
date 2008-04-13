@@ -34,5 +34,5 @@ public interface IHeaderPartContainerProvider
 	 *            The default scope of the header
 	 * @return The new HeaderPartContainer
 	 */
-	HeaderPartContainer newHeaderPartContainer(String id, String scope);
+	HeaderPartContainer< ? > newHeaderPartContainer(String id, String scope);
 }

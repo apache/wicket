@@ -90,6 +90,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		/**
 		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 		 */
+		@Override
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
 			Response response = headResponse.getResponse();
@@ -264,6 +265,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * 
 	 * @return Markup type for HTML
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "html";
@@ -331,6 +333,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see org.apache.wicket.Page#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -384,14 +387,15 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		return new BookmarkablePageLink(id, getApplication().getHomePage());
 	}
 
+	@Override
 	protected void onAfterRender()
 	{
 		super.onAfterRender();
 		if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
 		{
-			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor()
+			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component< ? >>()
 			{
-				public Object component(Component component)
+				public Object component(Component< ? > component)
 				{
 					if (component instanceof HtmlHeaderContainer)
 					{
@@ -421,12 +425,12 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					// Make sure all Components interested in contributing to the header
 					// and there attached behaviors are asked.
 					final HtmlHeaderContainer finalHeader = header;
-					visitChildren(new IVisitor()
+					visitChildren(new IVisitor<Component< ? >>()
 					{
 						/**
 						 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 						 */
-						public Object component(Component component)
+						public Object component(Component< ? > component)
 						{
 							component.renderHead(finalHeader);
 							return CONTINUE_TRAVERSAL;

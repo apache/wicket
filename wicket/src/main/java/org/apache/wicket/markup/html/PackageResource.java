@@ -92,6 +92,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * 
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
+	@Deprecated
 	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
 
 	/**
@@ -99,6 +100,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * 
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
+	@Deprecated
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
 
 	/** log. */
@@ -124,7 +126,8 @@ public class PackageResource extends WebResource implements IModifiable
 	 *             shared resources so that they don't have to be pre-registered anymore. Will be
 	 *             removed in 2.0
 	 */
-	public static void bind(Application application, Class scope, Pattern pattern)
+	@Deprecated
+	public static void bind(Application application, Class< ? > scope, Pattern pattern)
 	{
 	}
 
@@ -150,7 +153,9 @@ public class PackageResource extends WebResource implements IModifiable
 	 *             shared resources so that they don't have to be pre-registered anymore. Will be
 	 *             removed in 2.0
 	 */
-	public static void bind(Application application, Class scope, Pattern pattern, boolean recurse)
+	@Deprecated
+	public static void bind(Application application, Class< ? > scope, Pattern pattern,
+		boolean recurse)
 	{
 	}
 
@@ -166,7 +171,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The name of the resource (like &quot;myfile.js&quot;)
 	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
-	public static void bind(Application application, Class scope, String name)
+	public static void bind(Application application, Class< ? > scope, String name)
 	{
 		bind(application, scope, name, null, null);
 	}
@@ -185,7 +190,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The locale of the resource.
 	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
-	public static void bind(Application application, Class scope, String name, Locale locale)
+	public static void bind(Application application, Class< ? > scope, String name, Locale locale)
 	{
 		bind(application, scope, name, locale, null);
 	}
@@ -206,7 +211,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The style of the resource.
 	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
-	public static void bind(Application application, Class scope, String name, Locale locale,
+	public static void bind(Application application, Class< ? > scope, String name, Locale locale,
 		String style)
 	{
 		if (name == null)
@@ -246,7 +251,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return true if a resource could be loaded, false otherwise
 	 */
-	public static boolean exists(final Class scope, final String path, final Locale locale,
+	public static boolean exists(final Class< ? > scope, final String path, final Locale locale,
 		final String style)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
@@ -268,7 +273,8 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @return The resources, never null but may be empty
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
-	public static PackageResource[] get(Class scope, Pattern pattern)
+	@Deprecated
+	public static PackageResource[] get(Class< ? > scope, Pattern pattern)
 	{
 		return get(scope, pattern, false);
 	}
@@ -289,7 +295,8 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @return The resources, never null but may be empty
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
-	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
+	@Deprecated
+	public static PackageResource[] get(Class< ? > scope, Pattern pattern, boolean recurse)
 	{
 		final List resources = new ArrayList();
 		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
@@ -379,7 +386,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The path to the resource
 	 * @return The resource
 	 */
-	public static PackageResource get(final Class scope, final String path)
+	public static PackageResource get(final Class< ? > scope, final String path)
 	{
 		return get(scope, path, null, null);
 	}
@@ -400,8 +407,8 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return The resource
 	 */
-	public static PackageResource get(final Class scope, final String path, final Locale locale,
-		final String style)
+	public static PackageResource get(final Class< ? > scope, final String path,
+		final Locale locale, final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
@@ -414,7 +421,7 @@ public class PackageResource extends WebResource implements IModifiable
 	}
 
 	/* removed in 2.0 */
-	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse,
+	private static void scanJarFile(Class< ? > scope, Pattern pattern, boolean recurse,
 		final List resources, String packageRef, JarFile jf)
 	{
 		Enumeration enumeration = jf.entries();
@@ -462,7 +469,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @param style
 	 *            The style of the resource
 	 */
-	protected PackageResource(final Class scope, final String path, final Locale locale,
+	protected PackageResource(final Class< ? > scope, final String path, final Locale locale,
 		final String style)
 	{
 		// Convert resource path to absolute path relative to base package
@@ -528,6 +535,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * @return Gets the resource for the component.
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return getResourceStream(true);
@@ -584,7 +592,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * 
 	 * @return the scoping class
 	 */
-	public final Class getScope()
+	public final Class< ? > getScope()
 	{
 		return Classes.resolveClass(scopeName);
 	}

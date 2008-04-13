@@ -47,8 +47,8 @@ public interface IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return Markup resource
 	 */
-	Markup getMarkup(final MarkupContainer< ? > container,
-		final Class< ? extends MarkupContainer< ? >> clazz, final boolean enforceReload);
+	Markup getMarkup(final MarkupContainer< ? > container, final Class< ? > clazz,
+		final boolean enforceReload);
 
 	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.

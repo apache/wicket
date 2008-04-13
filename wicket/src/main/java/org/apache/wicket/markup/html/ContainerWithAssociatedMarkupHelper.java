@@ -43,14 +43,14 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
 	/** The markup container the helper is associated with */
-	private final WebMarkupContainer container;
+	private final WebMarkupContainer< ? > container;
 
 	/**
 	 * @param container
 	 */
 	public ContainerWithAssociatedMarkupHelper(final IHeaderPartContainerProvider container)
 	{
-		this.container = (WebMarkupContainer)container;
+		this.container = (WebMarkupContainer< ? >)container;
 	}
 
 	/**
@@ -65,7 +65,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	public final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
+	public final void renderHeadFromAssociatedMarkupFile(
+		final HtmlHeaderContainer< ? > htmlContainer)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -81,14 +82,14 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		noMoreWicketHeadTagsAllowed = false;
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
-			Class markupClass = ((WicketTag)markupStream.getTag()).getMarkupClass();
+			Class< ? > markupClass = ((WicketTag)markupStream.getTag()).getMarkupClass();
 			if (markupClass == null)
 			{
 				markupClass = markupStream.getContainerClass();
 			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupClass, markupStream
-					.getCurrentIndex());
+			final HeaderPartContainer headerPart = getHeaderPart(markupClass,
+				markupStream.getCurrentIndex());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
@@ -131,7 +132,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 *            The java class the wicket:head tag is directly associated with
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final Class markupClass, final int index)
+	private final HeaderPartContainer getHeaderPart(final Class< ? > markupClass, final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -151,14 +152,14 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
 				final String headerId = "_" + Classes.simpleName(markupClass) +
-						container.getVariation() + "Header" + index;
+					container.getVariation() + "Header" + index;
 
 				// Create the header container and associate the markup with
 				// it
 				String scope = wTag.getAttributes().getString(
-						markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container)
-						.newHeaderPartContainer(headerId, scope);
+					markupStream.getWicketNamespace() + ":scope");
+				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
+					headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 
@@ -168,7 +169,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		}
 
 		throw new WicketRuntimeException("Programming error: expected a WicketTag: " +
-				markupStream.toString());
+			markupStream.toString());
 	}
 
 	/**
@@ -197,13 +198,13 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					if (noMoreWicketHeadTagsAllowed == true)
 					{
 						throw new MarkupException(
-								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
+							"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
 					}
 					return associatedMarkupStream.getCurrentIndex();
 				}
 				// wicket:head must be before border, panel or extend
 				else if (tag.isOpen() &&
-						(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
+					(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
 					noMoreWicketHeadTagsAllowed = true;
 				}

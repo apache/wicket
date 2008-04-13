@@ -45,7 +45,7 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainer(final String id, IModel model)
+	public WebMarkupContainer(final String id, IModel<T> model)
 	{
 		super(id, model);
 	}

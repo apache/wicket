@@ -36,5 +36,5 @@ public interface IPackageResourceGuard
 	 * 
 	 * @return True if access is permitted, false otherwise
 	 */
-	boolean accept(final Class scope, final String path);
+	boolean accept(final Class< ? > scope, final String path);
 }

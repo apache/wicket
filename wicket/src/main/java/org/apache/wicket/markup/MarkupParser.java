@@ -195,6 +195,7 @@ public class MarkupParser
 	 * @see #appendMarkupFilter(IMarkupFilter)
 	 * @deprecated since 1.3
 	 */
+	@Deprecated
 	protected void initFilterChain()
 	{
 		throw new WicketRuntimeException("This method is no longer suppoert: since 1.3");
@@ -221,7 +222,8 @@ public class MarkupParser
 	 *            The filter will be added before the beforeFilter. If beforeFilter == null or
 	 *            beforeFilter not found than append to the end
 	 */
-	public final void appendMarkupFilter(final IMarkupFilter filter, final Class beforeFilter)
+	public final void appendMarkupFilter(final IMarkupFilter filter,
+		final Class< ? extends IMarkupFilter> beforeFilter)
 	{
 		if ((beforeFilter == null) || (markupFilterChain == null))
 		{

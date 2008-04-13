@@ -62,8 +62,10 @@ import org.apache.wicket.response.StringResponse;
  * </ul>
  * 
  * @author Juergen Donnerstag
+ * @param <T>
+ *            The model object type
  */
-public class HtmlHeaderContainer extends WebMarkupContainer
+public class HtmlHeaderContainer<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -73,7 +75,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * name directly associated with the markup which contains the wicket:head. It can be modified
 	 * by means of the scope attribute.
 	 */
-	private transient Map renderedComponentsPerScope;
+	private transient Map<String, List<String>> renderedComponentsPerScope;
 
 	/**
 	 * Header response that is responsible for filtering duplicate contributions.
@@ -106,6 +108,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		// We are able to automatically add <head> to the page if it is
@@ -170,9 +173,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			{
 				if (renderOpenAndCloseTags())
 					webResponse.write("<head>");
-				
+
 				webResponse.write(output);
-				
+
 				if (renderOpenAndCloseTags())
 					webResponse.write("</head>");
 			}
@@ -184,10 +187,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		}
 	}
 
-	protected boolean renderOpenAndCloseTags() {
+	protected boolean renderOpenAndCloseTags()
+	{
 		return true;
 	}
-	
+
 	/**
 	 * Ask all child components of the Page if they have something to contribute to the &lt;head&gt;
 	 * section of the HTML output. Every component interested must implement IHeaderContributor.
@@ -202,18 +206,18 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * @param container
 	 *            The header component container
 	 */
-	private final void renderHeaderSections(final MarkupContainer page,
-			final HtmlHeaderContainer container)
+	private final void renderHeaderSections(final MarkupContainer< ? > page,
+		final HtmlHeaderContainer< ? > container)
 	{
 		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header
 		// and there attached behaviors are asked.
-		page.visitChildren(new IVisitor()
+		page.visitChildren(new IVisitor<Component< ? >>()
 		{
 			/**
 			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 			 */
-			public Object component(Component component)
+			public Object component(Component< ? > component)
 			{
 				if (component.isVisible())
 				{
@@ -231,6 +235,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return true;
@@ -249,18 +254,13 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		if (renderedComponentsPerScope == null)
 		{
-			renderedComponentsPerScope = new HashMap();
+			renderedComponentsPerScope = new HashMap<String, List<String>>();
 		}
 
-		// if (scope == null)
-		// {
-		// scope = header.getMarkupStream().getContainerClass().getName();
-		// }
-
-		List componentScope = (List)renderedComponentsPerScope.get(scope);
+		List<String> componentScope = renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{
-			componentScope = new ArrayList();
+			componentScope = new ArrayList<String>();
 			renderedComponentsPerScope.put(scope, componentScope);
 		}
 
@@ -272,6 +272,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		return true;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
@@ -293,6 +298,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// no (portlet) headerResponse override, create a default one
 			headerResponse = new HeaderResponse()
 			{
+				@Override
 				protected Response getRealResponse()
 				{
 					return HtmlHeaderContainer.this.getResponse();

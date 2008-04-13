@@ -36,8 +36,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory
-			.getLogger(DefaultMarkupResourceStreamProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupResourceStreamProvider.class);
 
 	/**
 	 * Constructor.
@@ -62,12 +61,13 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
-			Class containerClass)
+	public IResourceStream getMarkupResourceStream(final MarkupContainer< ? > container,
+		Class< ? > containerClass)
 	{
 		// Get locator to search for the resource
-		final IResourceStreamLocator locator = Application.get().getResourceSettings()
-				.getResourceStreamLocator();
+		final IResourceStreamLocator locator = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator();
 
 		String style = container.getStyle();
 		Locale locale = container.getLocale();
@@ -80,13 +80,13 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 		{
 			String path = containerClass.getName().replace('.', '/');
 			IResourceStream resourceStream = locator.locate(container.getClass(), path, style,
-					locale, ext);
+				locale, ext);
 
 			// Did we find it already?
 			if (resourceStream != null)
 			{
 				return new MarkupResourceStream(resourceStream, new ContainerInfo(container),
-						containerClass);
+					containerClass);
 			}
 
 			// Walk up the class hierarchy one level, if markup has not

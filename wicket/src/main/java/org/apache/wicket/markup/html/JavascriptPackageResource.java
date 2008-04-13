@@ -42,6 +42,10 @@ import org.slf4j.LoggerFactory;
  */
 public class JavascriptPackageResource extends CompressedPackageResource
 {
+	private static final long serialVersionUID = 1L;;
+
+	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
+
 	/**
 	 * Resource Stream that caches the stripped content.
 	 * 
@@ -52,7 +56,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 		private static final long serialVersionUID = 1L;
 
 		/** Cache for compressed data */
-		private SoftReference cache = new SoftReference(null);
+		private SoftReference<byte[]> cache = new SoftReference<byte[]>(null);
 
 		/** Timestamp of the cache */
 		private Time timeStamp = null;
@@ -120,7 +124,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			IResourceStream stream = getOriginalResourceStream();
 			try
 			{
-				byte ret[] = (byte[])cache.get();
+				byte ret[] = cache.get();
 				if (ret != null && timeStamp != null)
 				{
 					if (timeStamp.equals(stream.lastModifiedTime()))
@@ -135,7 +139,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 				stream.close();
 				ret = filterContent(out.toByteArray());
 				timeStamp = stream.lastModifiedTime();
-				cache = new SoftReference(ret);
+				cache = new SoftReference<byte[]>(ret);
 				return ret;
 			}
 			catch (IOException e)
@@ -152,10 +156,6 @@ public class JavascriptPackageResource extends CompressedPackageResource
 
 		protected abstract IResourceStream getOriginalResourceStream();
 	}
-
-	private static final long serialVersionUID = 1L;;
-
-	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
 
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
@@ -176,13 +176,13 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 *             when the target resource is not accepted by
 	 *             {@link IPackageResourceGuard the package resource guard}.
 	 */
-	public static PackageResource get(final Class scope, final String path, final Locale locale,
-			final String style)
+	public static PackageResource get(final Class< ? > scope, final String path,
+		final Locale locale, final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
+			true);
 
 		if (resource == null)
 		{
@@ -200,7 +200,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 * @param locale
 	 * @param style
 	 */
-	public JavascriptPackageResource(Class scope, String path, Locale locale, String style)
+	public JavascriptPackageResource(Class< ? > scope, String path, Locale locale, String style)
 	{
 		super(scope, path, locale, style);
 	}
@@ -208,18 +208,21 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	/**
 	 * @see org.apache.wicket.markup.html.CompressedPackageResource#newResourceStream()
 	 */
+	@Override
 	protected IResourceStream newResourceStream()
 	{
 		final FilteringResourceStream filteringStream = new FilteringResourceStream()
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected byte[] filterContent(byte[] input)
 			{
 				try
 				{
-					if (Application.get().getResourceSettings()
-							.getStripJavascriptCommentsAndWhitespace())
+					if (Application.get()
+						.getResourceSettings()
+						.getStripJavascriptCommentsAndWhitespace())
 					{
 						String s = new String(input, "UTF-8");
 						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("UTF-8");
@@ -237,6 +240,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 				}
 			}
 
+			@Override
 			protected IResourceStream getOriginalResourceStream()
 			{
 				return getPackageResourceStream();
@@ -247,6 +251,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected IResourceStream getOriginalResourceStream()
 			{
 				return filteringStream;

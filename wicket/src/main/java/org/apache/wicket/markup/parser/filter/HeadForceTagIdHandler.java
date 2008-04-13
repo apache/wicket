@@ -54,7 +54,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * @param markupFileClass
 	 *            Used to generated the a common prefix for the id
 	 */
-	public HeadForceTagIdHandler(final Class< ? extends Component< ? >> markupFileClass)
+	public HeadForceTagIdHandler(final Class< ? extends Component> markupFileClass)
 	{
 		// generate the prefix from class name
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(markupFileClass.getName());

@@ -48,5 +48,5 @@ public interface IMarkupResourceStreamProvider
 	 * @return A IResourceStream if the resource was found
 	 */
 	IResourceStream getMarkupResourceStream(final MarkupContainer< ? > container,
-		Class< ? extends MarkupContainer< ? >> containerClass);
+		Class< ? > containerClass);
 }

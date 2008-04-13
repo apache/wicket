@@ -19,6 +19,7 @@ package org.apache.wicket.markup;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 
 /**
@@ -31,7 +32,7 @@ import org.apache.wicket.MarkupContainer;
  */
 public class ContainerInfo
 {
-	private final WeakReference/* <Class> */containerClassRef;
+	private final WeakReference<Class< ? extends Component>> containerClassRef;
 	private final Locale locale;
 	private final String style;
 	private final String variation;
@@ -43,10 +44,10 @@ public class ContainerInfo
 	 * @param container
 	 *            The container to create the information from
 	 */
-	public ContainerInfo(final MarkupContainer container)
+	public ContainerInfo(final MarkupContainer< ? > container)
 	{
-		this(container.getClass(), container.getLocale(), container.getStyle(), null, container
-				.getMarkupType());
+		this(container.getClass(), container.getLocale(), container.getStyle(), null,
+			container.getMarkupType());
 	}
 
 	/**
@@ -58,11 +59,11 @@ public class ContainerInfo
 	 * @param variation
 	 * @param fileExtension
 	 */
-	public ContainerInfo(final Class containerClass, final Locale locale, final String style,
-			final String variation, final String fileExtension)
+	public ContainerInfo(final Class< ? extends Component> containerClass, final Locale locale,
+		final String style, final String variation, final String fileExtension)
 	{
 		super();
-		this.containerClassRef = new WeakReference(containerClass);
+		containerClassRef = new WeakReference<Class< ? extends Component>>(containerClass);
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
@@ -73,9 +74,9 @@ public class ContainerInfo
 	 * 
 	 * @return The container class
 	 */
-	public Class getContainerClass()
+	public Class< ? extends Component> getContainerClass()
 	{
-		return (Class)containerClassRef.get();
+		return containerClassRef.get();
 	}
 
 	/**
@@ -118,9 +119,9 @@ public class ContainerInfo
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
-		return ((Class)containerClassRef.get()).getName() + ":" + locale + ":" + style + ":" +
-				fileExtension;
+		return containerClassRef.get().getName() + ":" + locale + ":" + style + ":" + fileExtension;
 	}
 }

@@ -27,13 +27,17 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
  * which has been added to the Page.
  * 
  * @author Juergen Donnerstag
+ * @param <T>
+ *            The model object type
  */
-public final class HeaderPartContainer extends WebMarkupContainer implements IComponentResolver
+public final class HeaderPartContainer<T> extends WebMarkupContainer<T>
+	implements
+		IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The panel or bordered page the header part is associated with */
-	private final MarkupContainer container;
+	private final MarkupContainer< ? > container;
 
 	/** <wicket:head scope="...">. A kind of namespace */
 	private final String scope;
@@ -46,7 +50,8 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	 * @param scope
 	 *            The scope of the wicket:head tag
 	 */
-	public HeaderPartContainer(final String id, final MarkupContainer container, final String scope)
+	public HeaderPartContainer(final String id, final MarkupContainer< ? > container,
+		final String scope)
 	{
 		super(id);
 		this.container = container;
@@ -66,12 +71,12 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	/**
 	 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
 	 */
-	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	public final boolean resolve(final MarkupContainer< ? > container,
+		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// The tag must be resolved against the panel and not against the
 		// page
-		Component component = this.container.get(tag.getId());
+		Component< ? > component = this.container.get(tag.getId());
 		if (component != null)
 		{
 			component.render(markupStream);
