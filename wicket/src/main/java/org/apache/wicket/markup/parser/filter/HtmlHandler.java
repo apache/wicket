@@ -131,6 +131,10 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						top.setHasNoCloseTag(true);
 
 						// Pop simple tag
+						if (stack.isEmpty())
+						{
+							break;
+						}
 						top = (ComponentTag)stack.pop();
 
 						// Does new top of stack mismatch too?
