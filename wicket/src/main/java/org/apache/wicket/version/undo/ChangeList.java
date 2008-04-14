@@ -39,7 +39,7 @@ class ChangeList implements IClusterable
 	private static final Logger log = LoggerFactory.getLogger(ChangeList.class);
 
 	/** the list of changes */
-	private final List changes = new ArrayList();
+	private final List<Change> changes = new ArrayList<Change>();
 
 	/**
 	 * A <code>Component</code> was added.
@@ -109,7 +109,7 @@ class ChangeList implements IClusterable
 		// Go through changes in reverse time order to undo.
 		for (int i = changes.size() - 1; i >= 0; i--)
 		{
-			((Change)changes.get(i)).undo();
+			changes.get(i).undo();
 		}
 	}
 

@@ -119,8 +119,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * Adds a child component to this container.
 	 * 
-	 * @param child
-	 *            The child
+	 * @param childs
+	 *            The child(s)
 	 * @throws IllegalArgumentException
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
@@ -468,6 +468,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The comparator
 	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
+	@SuppressWarnings("unchecked")
 	public final Iterator<Component< ? >> iterator(Comparator<Component< ? >> comparator)
 	{
 		final List<Component< ? >> sorted;
@@ -827,7 +828,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final Object visitChildren(final Class< ? > clazz, final IVisitor visitor)
+	public final Object visitChildren(final Class< ? > clazz,
+		final IVisitor< ? extends Component< ? >> visitor)
 	{
 		if (visitor == null)
 		{
@@ -841,11 +843,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 			final Component< ? > child = children_get(i);
 			Object value = null;
 
+			IVisitor vis = visitor;
+
 			// Is the child of the correct class (or was no class specified)?
 			if (clazz == null || clazz.isInstance(child))
 			{
 				// Call visitor
-				value = visitor.component(child);
+				value = vis.component(child);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
@@ -883,7 +887,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor< ? > visitor)
+	public final Object visitChildren(final IVisitor<Component< ? >> visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -956,7 +960,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * 
 	 * @param index
-	 * @return
+	 * @return The child component
 	 */
 	private final Component< ? > children_get(int index)
 	{
@@ -972,7 +976,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param reconstruct
 	 * @param parent
 	 * @param index
-	 * @return
+	 * @return The object directly or the reconstructed component
 	 */
 	private final Object postprocess(Object object, boolean reconstruct,
 		MarkupContainer< ? > parent, int index)
@@ -988,7 +992,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * 
 	 * @param index
 	 * @param reconstruct
-	 * @return
+	 * @return the child component
 	 */
 	private final Object children_get(int index, boolean reconstruct)
 	{
@@ -1034,7 +1038,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * {@link ComponentSourceEntry}
 	 * 
 	 * @param object
-	 * @return
+	 * @return The id of the object (object can be component or componentsourcentry)
 	 */
 	private final String getId(Object object)
 	{
@@ -1055,7 +1059,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * 
 	 * @param id
-	 * @return
+	 * @return The child component
 	 */
 	private final Component< ? > children_get(final String id)
 	{
@@ -1108,7 +1112,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * 
 	 * @param child
-	 * @return
+	 * @return The index of the given child component
 	 */
 	private final int children_indexOf(Component< ? > child)
 	{
@@ -1152,7 +1156,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * 
 	 * @param component
-	 * @return
+	 * @return The component that is removed.
 	 */
 	private final Component< ? > children_remove(Component< ? > component)
 	{
@@ -1167,7 +1171,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * 
 	 * @param index
-	 * @return
+	 * @return The component that is removed
 	 */
 	private final Component< ? > children_remove(int index)
 	{
@@ -1227,7 +1231,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param index
 	 * @param child
 	 * @param reconstruct
-	 * @return
+	 * @return The replaced child
 	 */
 	private final Object children_set(int index, Object child, boolean reconstruct)
 	{
@@ -1264,7 +1268,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * 
 	 * @param index
 	 * @param child
-	 * @return
+	 * @return The component that is replaced
 	 */
 	private final Component< ? > children_set(int index, Component< ? > child)
 	{
@@ -1273,7 +1277,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 	/**
 	 * 
-	 * @return
+	 * @return The size of the children
 	 */
 	private final int children_size()
 	{
@@ -1640,8 +1644,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return a copy of the children array.
 	 */
 	private Component< ? >[] copyChildren()
 	{

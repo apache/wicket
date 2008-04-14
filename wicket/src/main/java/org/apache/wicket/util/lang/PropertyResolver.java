@@ -1009,7 +1009,7 @@ public final class PropertyResolver
 				return null;
 			}
 
-			Class clz = getMethod.getReturnType();
+			Class<?> clz = getMethod.getReturnType();
 			Object value = null;
 			try
 			{

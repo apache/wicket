@@ -42,6 +42,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
+import org.apache.wicket.protocol.http.pagestore.AbstractPageStore.SerializedPage;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.protocol.http.pagestore.SerializedPagesCache.SerializedPageWithSession;
 import org.apache.wicket.util.lang.Bytes;
@@ -110,7 +111,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		private static final long serialVersionUID = 1L;
 
 		private String sessionId;
-		private final List pageMapEntryList = new ArrayList();
+		private final List<PageMapEntry> pageMapEntryList = new ArrayList<PageMapEntry>();
 		private transient DiskPageStore diskPageStore;
 
 		protected SessionEntry(DiskPageStore diskPageStore)
@@ -132,9 +133,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public int getTotalSize()
 		{
 			int result = 0;
-			for (Iterator i = pageMapEntryList.iterator(); i.hasNext();)
+			for (Iterator<PageMapEntry> i = pageMapEntryList.iterator(); i.hasNext();)
 			{
-				PageMapEntry entry = (PageMapEntry)i.next();
+				PageMapEntry entry = i.next();
 				if (entry.manager != null)
 				{
 					result += entry.manager.getTotalSize();
@@ -146,7 +147,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		/**
 		 * @return list of {@link PageMapEntry} for this session
 		 */
-		public List /* <PageMapEntry> */getPageMapEntryList()
+		public List /* <PageMapEntry> */<PageMapEntry>getPageMapEntryList()
 		{
 			return Collections.unmodifiableList(pageMapEntryList);
 		}
@@ -162,9 +163,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public PageMapEntry getPageMapEntry(String pageMapName, boolean create)
 		{
 			PageMapEntry result = null;
-			for (Iterator i = pageMapEntryList.iterator(); i.hasNext();)
+			for (Iterator<PageMapEntry> i = pageMapEntryList.iterator(); i.hasNext();)
 			{
-				PageMapEntry entry = (PageMapEntry)i.next();
+				PageMapEntry entry = i.next();
 				if (entry.pageMapName == pageMapName ||
 					(entry.pageMapName != null && entry.pageMapName.equals(pageMapName)))
 				{
@@ -234,7 +235,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				while (getTotalSize() > diskPageStore.getMaxSizePerSession() &&
 					pageMapEntryList.size() > 1)
 				{
-					removePageMapEntry((PageMapEntry)pageMapEntryList.get(0));
+					removePageMapEntry(pageMapEntryList.get(0));
 				}
 
 				// take the filechannel from the pool
@@ -340,7 +341,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		{
 			while (pageMapEntryList.size() > 0)
 			{
-				removePageMapEntry((PageMapEntry)pageMapEntryList.get(pageMapEntryList.size() - 1));
+				removePageMapEntry(pageMapEntryList.get(pageMapEntryList.size() - 1));
 			}
 			File sessionFolder = diskPageStore.getSessionFolder(sessionId, false);
 			if (sessionFolder.exists())
@@ -526,7 +527,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				InputStream stream = new FileInputStream(index);
 				ObjectInputStream ois = new ObjectInputStream(stream);
 				Map map = (Map)ois.readObject();
-				sessionIdToEntryMap = new ConcurrentHashMap(map);
+				sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>(map);
 				for (Iterator entries = sessionIdToEntryMap.entrySet().iterator(); entries.hasNext();)
 				{
 					// initialize the diskPageStore reference
@@ -644,7 +645,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 	}
 
-	private Map /* <String, SessionEntry> */sessionIdToEntryMap = new ConcurrentHashMap();
+	private Map /* <String, SessionEntry> */<String, SessionEntry>sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
 	/**
 	 * Returns the SessionEntry for session with given id. If the entry does not yet exist and the
@@ -656,12 +657,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	protected SessionEntry getSessionEntry(String sessionId, boolean createIfDoesNotExist)
 	{
-		SessionEntry entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
+		SessionEntry entry = sessionIdToEntryMap.get(sessionId);
 		if (entry == null && createIfDoesNotExist)
 		{
 			synchronized (sessionIdToEntryMap)
 			{
-				entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
+				entry = sessionIdToEntryMap.get(sessionId);
 				if (entry == null)
 				{
 					entry = new SessionEntry(this);
@@ -821,7 +822,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	public void unbind(String sessionId)
 	{
-		SessionEntry entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
+		SessionEntry entry = sessionIdToEntryMap.get(sessionId);
 		if (entry != null)
 		{
 			if (isSynchronous())
@@ -843,10 +844,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	// map from session id to serialized page list
 	// this contains lists for all active sessions
-	private final Map /* <String, List<SerializedPage>> */pagesToSaveAll = new ConcurrentHashMap();
+	private final Map /* <String, List<SerializedPage>> */<String, List>pagesToSaveAll = new ConcurrentHashMap<String, List>();
 
 	// contains list of serialized pages to be saved - only non empty lists
-	private final Map /* <String, List<SerializedPage>> */pagesToSaveActive = new ConcurrentHashMap();
+	private final Map /* <String, List<SerializedPage>> */<String, List>pagesToSaveActive = new ConcurrentHashMap<String, List>();
 
 	/**
 	 * Returns the list of pages to be saved for the specified session id. If the list is not found,
@@ -857,12 +858,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	protected List getPagesToSaveList(String sessionId)
 	{
-		List list = (List)pagesToSaveAll.get(sessionId);
+		List list = pagesToSaveAll.get(sessionId);
 		if (list == null)
 		{
 			synchronized (pagesToSaveAll)
 			{
-				list = (List)pagesToSaveAll.get(sessionId);
+				list = pagesToSaveAll.get(sessionId);
 				if (list == null)
 				{
 					list = new ArrayList();
@@ -1065,7 +1066,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	private SerializedPageWithSession stripSerializedPage(SerializedPageWithSession page)
 	{
-		List pages = new ArrayList(page.pages.size());
+		List<SerializedPage> pages = new ArrayList<SerializedPage>(page.pages.size());
 		for (Iterator i = page.pages.iterator(); i.hasNext();)
 		{
 			SerializedPage sp = (SerializedPage)i.next();
@@ -1116,7 +1117,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	private SerializedPageWithSession restoreStrippedSerializedPage(SerializedPageWithSession page)
 	{
-		List pages = new ArrayList(page.pages.size());
+		List<SerializedPage> pages = new ArrayList<SerializedPage>(page.pages.size());
 		for (Iterator i = page.pages.iterator(); i.hasNext();)
 		{
 			SerializedPage sp = (SerializedPage)i.next();
