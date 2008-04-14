@@ -224,7 +224,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         var input=wicketGet(elementId);
         var index=getOffsetParentZIndex(elementId);        
         menu.show();
-        menu.style.zIndex=index=="auto"?index:Number(index)+1;
+        menu.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
         menu.style.left=position[0]+'px'
         menu.style.top=(input.offsetHeight+position[1])+'px';
         menu.style.width=input.offsetWidth+'px';
