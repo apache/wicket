@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -72,7 +73,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 
 
 	/** @see org.apache.wicket.Component#Component(String, IModel) */
-	public AbstractPageableView(String id, IModel<T> model)
+	public AbstractPageableView(String id, IModel<Collection<T>> model)
 	{
 		super(id, model);
 		clearCachedItemCount();
