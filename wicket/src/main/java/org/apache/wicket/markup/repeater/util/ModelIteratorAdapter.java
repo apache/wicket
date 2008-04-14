@@ -27,11 +27,12 @@ import org.apache.wicket.model.IModel;
  * {@link RefreshingView}.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
-public abstract class ModelIteratorAdapter implements Iterator
+public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 {
-	private final Iterator delegate;
+	private final Iterator<T> delegate;
 
 	/**
 	 * Constructor
@@ -39,7 +40,7 @@ public abstract class ModelIteratorAdapter implements Iterator
 	 * @param delegate
 	 *            iterator that will be wrapped
 	 */
-	public ModelIteratorAdapter(Iterator delegate)
+	public ModelIteratorAdapter(Iterator<T> delegate)
 	{
 		this.delegate = delegate;
 	}
@@ -55,7 +56,7 @@ public abstract class ModelIteratorAdapter implements Iterator
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public IModel<T> next()
 	{
 		return model(delegate.next());
 	}
@@ -76,5 +77,5 @@ public abstract class ModelIteratorAdapter implements Iterator
 	 *            object to be wrapped
 	 * @return IModel wrapper for the object
 	 */
-	abstract protected IModel model(Object object);
+	abstract protected IModel<T> model(Object object);
 }
