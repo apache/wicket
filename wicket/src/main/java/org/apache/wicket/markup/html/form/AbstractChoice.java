@@ -24,6 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
@@ -385,7 +386,8 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
-			displayValue = getConverter(objectClass).convertToString(objectValue, getLocale());
+			displayValue = ((IConverter<Object>)this.getConverter(objectClass)).convertToString(
+				objectValue, getLocale());
 		}
 		else if (objectValue != null)
 		{

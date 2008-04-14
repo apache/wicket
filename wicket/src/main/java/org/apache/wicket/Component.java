@@ -1319,7 +1319,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter(Class< ? > type)
+	public <T> IConverter<T> getConverter(Class<T> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
@@ -1635,12 +1635,12 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 *            Model object to convert to string
 	 * @return The string
 	 */
-	public final String getModelObjectAsString(final Object modelObject)
+	public final String getModelObjectAsString(final T modelObject)
 	{
 		if (modelObject != null)
 		{
 			// Get converter
-			final IConverter converter = getConverter(modelObject.getClass());
+			final IConverter<T> converter = getConverter((Class<T>)modelObject.getClass());
 
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());

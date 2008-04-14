@@ -621,7 +621,7 @@ public final class Objects
 	 * @return converted value of the type given, or value if the value cannot be converted to the
 	 *         given type.
 	 */
-	public static Object convertValue(Object value, Class toType)
+	public static<T> T convertValue(Object value, Class<T> toType)
 	{
 		Object result = null;
 
@@ -630,7 +630,7 @@ public final class Objects
 			/* If array -> array then convert components of array individually */
 			if (value.getClass().isArray() && toType.isArray())
 			{
-				Class componentType = toType.getComponentType();
+				Class<?> componentType = toType.getComponentType();
 
 				result = Array.newInstance(componentType, Array.getLength(value));
 				for (int i = 0, icount = Array.getLength(value); i < icount; i++)
@@ -693,7 +693,7 @@ public final class Objects
 				result = primitiveDefaults.get(toType);
 			}
 		}
-		return result;
+    return toType.cast( result );
 	}
 
 	/**

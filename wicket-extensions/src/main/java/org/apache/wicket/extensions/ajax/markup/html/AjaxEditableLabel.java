@@ -213,7 +213,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	public IConverter getConverter(Class< ? > type)
+	public <T> IConverter<T> getConverter(Class<T> type)
 	{
 		return null;
 	}
@@ -286,9 +286,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter getConverter(Class< ? > type)
+			public <T> IConverter<T> getConverter(Class<T> type)
 			{
-				IConverter c = AjaxEditableLabel.this.getConverter(type);
+				IConverter<T> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 
@@ -330,9 +330,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter getConverter(Class< ? > type)
+			public <T> IConverter<T> getConverter(Class<T> type)
 			{
-				IConverter c = AjaxEditableLabel.this.getConverter(type);
+				IConverter<T> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 

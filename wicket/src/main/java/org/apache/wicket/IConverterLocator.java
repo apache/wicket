@@ -39,5 +39,5 @@ public interface IConverterLocator extends IClusterable
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public IConverter getConverter(Class< ? > type);
+	public<T> IConverter<T> getConverter(Class< T > type);
 }
