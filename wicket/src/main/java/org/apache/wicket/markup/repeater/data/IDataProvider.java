@@ -91,6 +91,6 @@ public interface IDataProvider<T> extends IDetachable
 	 * 
 	 * @return the model representation of the object
 	 */
-	IModel<T> model(Object object);
+	IModel<T> model(T object);
 
 }
