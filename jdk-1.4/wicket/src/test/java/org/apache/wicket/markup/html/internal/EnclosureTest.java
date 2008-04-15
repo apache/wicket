@@ -109,4 +109,30 @@ public class EnclosureTest extends WicketTestCase
 		executeTest(EnclosurePage_5.class, new PageParameters("visible=true"),
 			"EnclosurePageExpectedResult_5-1.html");
 	}
+
+	/**
+	 * Tests visibility of children after enclosure has been made hidden and visible again
+	 * 
+	 * @throws Exception
+	 */
+	public void testVisibilityOfChildren() throws Exception
+	{
+		// render with enclosure initally visible
+		tester.startPage(EnclosurePage_6.class);
+		String doc = tester.getServletResponse().getDocument();
+		assertTrue(doc.contains("content1"));
+		assertTrue(doc.contains("content2"));
+
+		// render with enclosure hidden
+		tester.clickLink("link");
+		doc = tester.getServletResponse().getDocument();
+		assertFalse(doc.contains("content1"));
+		assertFalse(doc.contains("content2"));
+
+		// render with enclosure visible again
+		tester.clickLink("link");
+		doc = tester.getServletResponse().getDocument();
+		assertTrue(doc.contains("content1"));
+		assertTrue(doc.contains("content2"));
+	}
 }

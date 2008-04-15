@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -85,6 +90,9 @@ public class Enclosure extends WebMarkupContainer
 
 	/** Id of the child component that will control visibility of the enclosure */
 	private final CharSequence childId;
+
+	/** Map of component->boolean that tracks original visibility allowed flag values */
+	private transient Map originalVisibilityStatus;
 
 	/**
 	 * Construct.
@@ -185,6 +193,7 @@ public class Enclosure extends WebMarkupContainer
 		setVisible(controller.determineVisibility());
 
 		// transfer visibility to direct children
+		originalVisibilityStatus = new HashMap();
 		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
 		MarkupContainer controllerParent = getEnclosureParent();
 		while (it.hasNext())
@@ -193,6 +202,7 @@ public class Enclosure extends WebMarkupContainer
 			Component child = controllerParent.get(t.getId());
 			if (child != null)
 			{
+				originalVisibilityStatus.put(child, Boolean.valueOf(child.isVisibilityAllowed()));
 				child.setVisibilityAllowed(isVisible());
 			}
 		}
@@ -206,6 +216,24 @@ public class Enclosure extends WebMarkupContainer
 		{
 			markupStream.skipToMatchingCloseTag(openTag);
 		}
+	}
+
+	protected void onDetach()
+	{
+		if (originalVisibilityStatus != null)
+		{
+			// restore original visibility statuses
+			Iterator it = originalVisibilityStatus.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final Component c = (Component)entry.getKey();
+				final boolean vis = ((Boolean)entry.getValue()).booleanValue();
+				c.setVisibilityAllowed(vis);
+			}
+			originalVisibilityStatus = null;
+		}
+		super.onDetach();
 	}
 
 	/**
