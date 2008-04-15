@@ -79,7 +79,7 @@ public class SelectOption extends WebMarkupContainer
 
 		if (select.isSelected(this))
 		{
-			tag.put("selected", "true");
+			tag.put("selected", "selected");
 		}
 
 		// Default handling for component tag
