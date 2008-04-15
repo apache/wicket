@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -74,17 +77,19 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @since 1.3
  */
-public class Enclosure extends WebMarkupContainer
+public class Enclosure extends WebMarkupContainer<Object>
 {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(Enclosure.class);
 
 	/** The child component to delegate the isVisible() call to */
-	private Component childComponent;
+	private Component< ? > childComponent;
 
 	/** Id of the child component that will control visibility of the enclosure */
 	private final CharSequence childId;
+
+	private transient Map<Component< ? >, Boolean> originalVisibilityStatus;
 
 	/**
 	 * Construct.
@@ -102,6 +107,7 @@ public class Enclosure extends WebMarkupContainer
 	 * 
 	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return true;
@@ -112,11 +118,11 @@ public class Enclosure extends WebMarkupContainer
 	 * @param childId
 	 * @return Child Component
 	 */
-	public Component getChildComponent()
+	public Component< ? > getChildComponent()
 	{
 		if (childComponent == null)
 		{
-			MarkupContainer parent = getEnclosureParent();
+			MarkupContainer< ? > parent = getEnclosureParent();
 
 			if (childId == null)
 			{
@@ -124,7 +130,7 @@ public class Enclosure extends WebMarkupContainer
 					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
 			}
 
-			final Component child = parent.get(childId.toString());
+			final Component< ? > child = parent.get(childId.toString());
 			if (child == null)
 			{
 				throw new MarkupException(
@@ -139,11 +145,11 @@ public class Enclosure extends WebMarkupContainer
 	/**
 	 * Get the real parent container
 	 * 
-	 * @return
+	 * @return enclosure's parent markup container
 	 */
-	private MarkupContainer getEnclosureParent()
+	private MarkupContainer< ? > getEnclosureParent()
 	{
-		MarkupContainer parent = getParent();
+		MarkupContainer< ? > parent = getParent();
 		while (parent != null)
 		{
 			if (parent.isTransparentResolver())
@@ -152,7 +158,7 @@ public class Enclosure extends WebMarkupContainer
 			}
 			else if (parent instanceof BorderBodyContainer)
 			{
-				parent = ((BorderBodyContainer)parent).findParent(Border.class);
+				parent = ((Border< ? >.BorderBodyContainer)parent).findParent(Border.class);
 			}
 			else
 			{
@@ -173,9 +179,10 @@ public class Enclosure extends WebMarkupContainer
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		final Component controller = getChildComponent();
+		final Component< ? > controller = getChildComponent();
 		if (controller == this)
 		{
 			throw new WicketRuntimeException(
@@ -185,15 +192,19 @@ public class Enclosure extends WebMarkupContainer
 		setVisible(controller.determineVisibility());
 
 		// transfer visibility to direct children
+		originalVisibilityStatus = new HashMap<Component< ? >, Boolean>();
 		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
-		MarkupContainer controllerParent = getEnclosureParent();
+		MarkupContainer< ? > controllerParent = getEnclosureParent();
 		while (it.hasNext())
 		{
-			ComponentTag t = (ComponentTag)it.next();
-			Component child = controllerParent.get(t.getId());
+			ComponentTag t = it.next();
+			Component< ? > child = controllerParent.get(t.getId());
 			if (child != null)
 			{
+				// record original visiblity allowed value, will restore later
+				originalVisibilityStatus.put(child, child.isVisibilityAllowed());
 				child.setVisibilityAllowed(isVisible());
+
 			}
 		}
 		it.rewind();
@@ -208,11 +219,26 @@ public class Enclosure extends WebMarkupContainer
 		}
 	}
 
+	@Override
+	protected void onDetach()
+	{
+		if (originalVisibilityStatus != null)
+		{
+			// restore original visibility statuses
+			for (Map.Entry<Component< ? >, Boolean> entry : originalVisibilityStatus.entrySet())
+			{
+				entry.getKey().setVisibilityAllowed(entry.getValue());
+			}
+			originalVisibilityStatus = null;
+		}
+		super.onDetach();
+	}
+
 	/**
 	 * Iterator that iterates over direct child component tags of the given component tag
 	 * 
 	 */
-	private static class DirectChildTagIterator extends ReadOnlyIterator
+	private static class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 	{
 		private final MarkupStream markupStream;
 		private final ComponentTag parent;
@@ -253,7 +279,7 @@ public class Enclosure extends WebMarkupContainer
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public ComponentTag next()
 		{
 			ComponentTag ret = next;
 			findNext();
