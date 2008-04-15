@@ -1306,7 +1306,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @deprecated To be removed. Please use/ override {@link #getConverter(Class)} instead.
 	 */
 	@Deprecated
-	public final IConverter getConverter()
+	public final IConverter< ? > getConverter()
 	{
 		throw new UnsupportedOperationException("use #getConverter(Class) instead");
 	}
@@ -1319,7 +1319,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public <T> IConverter<T> getConverter(Class<T> type)
+	public <Z> IConverter<Z> getConverter(Class<Z> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
