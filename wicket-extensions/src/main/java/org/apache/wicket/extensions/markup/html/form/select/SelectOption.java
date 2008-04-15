@@ -57,6 +57,7 @@ public class SelectOption extends WebMarkupContainer
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 
@@ -67,9 +68,9 @@ public class SelectOption extends WebMarkupContainer
 		if (select == null)
 		{
 			throw new WicketRuntimeException(
-					"SelectOption component [" +
-							getPath() +
-							"] cannot find its parent Select. All SelectOption components must be a child of or below in the hierarchy of a Select component.");
+				"SelectOption component [" +
+					getPath() +
+					"] cannot find its parent Select. All SelectOption components must be a child of or below in the hierarchy of a Select component.");
 		}
 
 		// assign name and value
@@ -79,7 +80,7 @@ public class SelectOption extends WebMarkupContainer
 
 		if (select.isSelected(this))
 		{
-			tag.put("selected", "true");
+			tag.put("selected", "selected");
 		}
 
 		// Default handling for component tag
