@@ -321,7 +321,9 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends WebMarkupContainer implements IComponentResolver
+	public class BorderBodyContainer extends WebMarkupContainer<Object>
+		implements
+			IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -386,15 +388,15 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
-		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+		public boolean resolve(final MarkupContainer< ? > container,
+			final MarkupStream markupStream, final ComponentTag tag)
 		{
 			// Usually you add child components to Border instead of Body. Hence
 			// we need to help Body to properly resolve the children.
 			String id = tag.getId();
 			if (!id.equals(BODY_ID))
 			{
-				Component component = Border.this.get(id);
+				Component< ? > component = Border.this.get(id);
 				if (component != null)
 				{
 					component.render(markupStream);
