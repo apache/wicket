@@ -147,6 +147,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 	 * 
 	 * @return enclosure's parent markup container
 	 */
+	@SuppressWarnings("unchecked")
 	private MarkupContainer< ? > getEnclosureParent()
 	{
 		MarkupContainer< ? > parent = getParent();
@@ -158,7 +159,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 			}
 			else if (parent instanceof BorderBodyContainer)
 			{
-				parent = ((Border< ? >.BorderBodyContainer)parent).findParent(Border.class);
+				parent = ((BorderBodyContainer)parent).findParent(Border.class);
 			}
 			else
 			{
