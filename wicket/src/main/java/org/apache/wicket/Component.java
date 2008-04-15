@@ -1216,12 +1216,16 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	/**
 	 * Finds the first container parent of this component of the given class.
 	 * 
+	 * @param <Z>
+	 *            <code>class</code> of parent component
+	 * 
 	 * @param c
 	 *            MarkupContainer class to search for
 	 * @return First container parent that is an instance of the given class, or null if none can be
 	 *         found
 	 */
-	public final MarkupContainer< ? > findParent(final Class< ? extends MarkupContainer> c)
+	@SuppressWarnings("unchecked")
+	public final <Z extends MarkupContainer< ? >> Z findParent(final Class<Z> c)
 	{
 		// Start with immediate parent
 		MarkupContainer< ? > current = parent;
@@ -1232,7 +1236,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 			// Is current an instance of this class?
 			if (c.isInstance(current))
 			{
-				return current;
+				return (Z)current;
 			}
 
 			// Check parent
