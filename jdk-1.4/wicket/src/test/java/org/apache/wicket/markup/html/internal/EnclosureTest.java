@@ -120,19 +120,19 @@ public class EnclosureTest extends WicketTestCase
 		// render with enclosure initally visible
 		tester.startPage(EnclosurePage_6.class);
 		String doc = tester.getServletResponse().getDocument();
-		assertTrue(doc.contains("content1"));
-		assertTrue(doc.contains("content2"));
+		assertTrue(doc.indexOf("content1") != -1);
+		assertTrue(doc.indexOf("content2") != -1);
 
 		// render with enclosure hidden
 		tester.clickLink("link");
 		doc = tester.getServletResponse().getDocument();
-		assertFalse(doc.contains("content1"));
-		assertFalse(doc.contains("content2"));
+		assertFalse(doc.indexOf("content1") != -1);
+		assertFalse(doc.indexOf("content2") != -1);
 
 		// render with enclosure visible again
 		tester.clickLink("link");
 		doc = tester.getServletResponse().getDocument();
-		assertTrue(doc.contains("content1"));
-		assertTrue(doc.contains("content2"));
+		assertTrue(doc.indexOf("content1") != -1);
+		assertTrue(doc.indexOf("content2") != -1);
 	}
 }
