@@ -107,7 +107,7 @@ public class DatesPage extends WicketExamplePage
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(Object newSelection)
+		public void onSelectionChanged(Locale newSelection)
 		{
 		}
 

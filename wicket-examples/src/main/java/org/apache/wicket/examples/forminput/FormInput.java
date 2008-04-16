@@ -281,7 +281,7 @@ public class FormInput extends WicketExamplePage
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(Object newSelection)
+		public void onSelectionChanged(Locale newSelection)
 		{
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
