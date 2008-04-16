@@ -48,7 +48,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	/**
 	 * Make sure we don't keep a reference to the component longer than really needed.
 	 */
-	private transient WeakReference componentReference;
+	private transient WeakReference<Component< ? >> componentReference;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model to replace with. The
@@ -64,7 +64,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-			final IModel replaceModel, final Component behaviorOwner)
+		final IModel< ? > replaceModel, final Component< ? > behaviorOwner)
 	{
 		super(attribute, addAttributeIfNotPresent, replaceModel);
 		init(behaviorOwner);
@@ -81,8 +81,8 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * @param behaviorOwner
 	 *            The component which created (owns) the modifier
 	 */
-	public BodyTagAttributeModifier(final String attribute, final IModel replaceModel,
-			final Component behaviorOwner)
+	public BodyTagAttributeModifier(final String attribute, final IModel< ? > replaceModel,
+		final Component< ? > behaviorOwner)
 	{
 		super(attribute, replaceModel);
 		init(behaviorOwner);
@@ -107,8 +107,8 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final String pattern,
-			final boolean addAttributeIfNotPresent, final IModel replaceModel,
-			final Component behaviorOwner)
+		final boolean addAttributeIfNotPresent, final IModel< ? > replaceModel,
+		final Component< ? > behaviorOwner)
 	{
 		super(attribute, pattern, addAttributeIfNotPresent, replaceModel);
 		init(behaviorOwner);
@@ -129,7 +129,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final String pattern,
-			final IModel replaceModel, final Component behaviorOwner)
+		final IModel< ? > replaceModel, final Component< ? > behaviorOwner)
 	{
 		super(attribute, pattern, replaceModel);
 		init(behaviorOwner);
@@ -141,17 +141,18 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * @param behaviorOwner
 	 *            The component which creates (owns) the modifier
 	 */
-	private void init(final Component behaviorOwner)
+	private void init(final Component< ? > behaviorOwner)
 	{
 		if (behaviorOwner != null)
 		{
-			componentReference = new WeakReference(behaviorOwner);
+			componentReference = new WeakReference<Component< ? >>(behaviorOwner);
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String, java.lang.String)
 	 */
+	@Override
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		// If no behavior owner has been provided, than behave as if this
@@ -160,7 +161,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 		{
 			// Get the owner of the attribute modifier (e.g. the Panel, not the
 			// Body)
-			final Component behaviorOwner = (Component)componentReference.get();
+			final Component< ? > behaviorOwner = componentReference.get();
 
 			// If case the components memory has been GCed already, than disable
 			// the attribute modifier and return the attribute value unchanged.
@@ -208,14 +209,14 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * @throws ClassNotFoundException
 	 */
 	private void readObject(final ObjectInputStream inputStream) throws IOException,
-			ClassNotFoundException
+		ClassNotFoundException
 	{
 		inputStream.defaultReadObject();
 
 		final Object object = inputStream.readObject();
 		if (object != null)
 		{
-			componentReference = new WeakReference(object);
+			componentReference = new WeakReference<Component< ? >>((Component< ? >)object);
 		}
 	}
 

@@ -49,8 +49,10 @@ import org.apache.wicket.util.string.Strings;
  * </pre>
  * 
  * @author Juergen Donnerstag
+ * @param <T>
+ *            The model object type
  */
-public final class PageView extends Panel
+public final class PageView<T> extends Panel<T>
 {
 	/**
 	 * El cheapo data holder.
@@ -97,10 +99,10 @@ public final class PageView extends Panel
 		super(id);
 
 		// Create an empty list. It'll be filled later
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
-		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
+		add(new Label<String>("info", page == null ? "[Stateless Page]" : page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -108,31 +110,32 @@ public final class PageView extends Panel
 		{
 			data.addAll(getComponentData(page));
 		}
-		Collections.sort(data, new Comparator()
+		Collections.sort(data, new Comparator<ComponentData>()
 		{
-			public int compare(Object o1, Object o2)
+			public int compare(ComponentData o1, ComponentData o2)
 			{
-				return ((ComponentData)o1).path.compareTo(((ComponentData)o2).path);
+				return (o1).path.compareTo((o2).path);
 			}
 		});
 
 		// Create the table containing the list the components
-		add(new ListView("components", data)
+		add(new ListView<ComponentData>("components", data)
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * Populate the table with Wicket elements
 			 */
-			protected void populateItem(final ListItem listItem)
+			@Override
+			protected void populateItem(final ListItem<ComponentData> listItem)
 			{
-				final ComponentData componentData = (ComponentData)listItem.getModelObject();
+				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label("path", componentData.path));
-				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
-				listItem.add(new Label("type", componentData.type));
-				listItem.add(new Label("model", componentData.value));
+				listItem.add(new Label<String>("row", Integer.toString(listItem.getIndex() + 1)));
+				listItem.add(new Label<String>("path", componentData.path));
+				listItem.add(new Label<String>("size", Bytes.bytes(componentData.size).toString()));
+				listItem.add(new Label<String>("type", componentData.type));
+				listItem.add(new Label<String>("model", componentData.value));
 			}
 		});
 	}
@@ -144,13 +147,13 @@ public final class PageView extends Panel
 	 * @param page
 	 * @return List of component data objects
 	 */
-	private List getComponentData(final Page page)
+	private List<ComponentData> getComponentData(final Page page)
 	{
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
-		page.visitChildren(new IVisitor()
+		page.visitChildren(new IVisitor<Component< ? >>()
 		{
-			public Object component(final Component component)
+			public Object component(final Component< ? > component)
 			{
 				if (!component.getPath().startsWith(PageView.this.getPath()))
 				{
@@ -167,7 +170,7 @@ public final class PageView extends Panel
 					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
 
 					componentData = new ComponentData(component.getPageRelativePath(), name,
-							component.getSizeInBytes());
+						component.getSizeInBytes());
 
 					try
 					{

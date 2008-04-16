@@ -63,6 +63,8 @@ import org.apache.wicket.model.Model;
  * </pre>
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            The model object type
  */
 public class Label<T> extends WebComponent<T>
 {
