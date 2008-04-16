@@ -101,12 +101,17 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
-	protected IModel initModel()
+	protected IModel<T> initModel()
 	{
 		return null;
 	}
 
-	public Form getForm()
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
+	 */
+	@Override
+	public Form< ? > getForm()
 	{
 		try
 		{
@@ -142,7 +147,7 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	 *            defaultFormProcessing
 	 * @return This
 	 */
-	public final Button setDefaultFormProcessing(boolean defaultFormProcessing)
+	public final Button< ? > setDefaultFormProcessing(boolean defaultFormProcessing)
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
 		{

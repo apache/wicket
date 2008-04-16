@@ -176,7 +176,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			// url that points to this components IOnChangeListener method
 			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			Form form = (Form)findParent(Form.class);
+			Form< ? > form = (Form< ? >)findParent(Form.class);
 			if (form != null)
 			{
 				RequestContext rc = RequestContext.get();

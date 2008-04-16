@@ -108,12 +108,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		{
 			if (component instanceof FormComponent)
 			{
-				onFormComponent((FormComponent)component);
+				onFormComponent((FormComponent< ? >)component);
 			}
 			return Component.IVisitor.CONTINUE_TRAVERSAL;
 		}
 
-		protected abstract void onFormComponent(FormComponent formComponent);
+		protected abstract void onFormComponent(FormComponent< ? > formComponent);
 	}
 
 	/**

@@ -49,9 +49,6 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  * 
  * @author Jonathan Locke
- * 
- * @param <T>
- *            The model object type
  */
 public class CheckBox extends FormComponent<Boolean> implements IOnChangeListener
 {
@@ -132,7 +129,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	public IConverter getConverter(Class type)
+	public <Z> IConverter<Z> getConverter(Class<Z> type)
 	{
 		return BooleanConverter.INSTANCE;
 	}
@@ -177,7 +174,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		{
 			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			Form form = (Form)findParent(Form.class);
+			Form< ? > form = findParent(Form.class);
 			if (form != null)
 			{
 				RequestContext rc = RequestContext.get();

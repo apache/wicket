@@ -32,9 +32,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  */
 public class CheckGroupSelector extends LabeledWebMarkupContainer
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
 
@@ -46,6 +44,10 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 		super(id);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
@@ -70,6 +72,4 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 
 		super.onComponentTag(tag);
 	}
-
-
 }

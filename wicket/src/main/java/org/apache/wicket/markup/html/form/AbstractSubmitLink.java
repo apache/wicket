@@ -43,7 +43,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	/**
 	 * Target form or null if the form is parent of the link.
 	 */
-	private Form form;
+	private Form< ? > form;
 
 	/**
 	 * If false, all standard processing like validating and model updating is skipped.
@@ -79,7 +79,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	 * @param model
 	 * @param form
 	 */
-	public AbstractSubmitLink(String id, IModel<T> model, Form form)
+	public AbstractSubmitLink(String id, IModel<T> model, Form< ? > form)
 	{
 		super(id, model);
 		this.form = form;
@@ -91,7 +91,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	 * @param id
 	 * @param form
 	 */
-	public AbstractSubmitLink(String id, Form form)
+	public AbstractSubmitLink(String id, Form< ? > form)
 	{
 		super(id);
 		this.form = form;
@@ -149,7 +149,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#getForm()
 	 */
-	public Form getForm()
+	public Form< ? > getForm()
 	{
 		if (form != null)
 		{
@@ -157,7 +157,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 		}
 		else
 		{
-			return (Form)findParent(Form.class);
+			return (Form< ? >)findParent(Form.class);
 		}
 	}
 
@@ -169,12 +169,13 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 		// TODO: This is a copy & paste from the FormComponent class.
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
-		Component c = this;
+		Component< ? > c = this;
 		while (true)
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form && ((Form)c).isRootForm()) || c instanceof Page)
+			if (c == null || (c instanceof Form && ((Form< ? >)c).isRootForm()) ||
+				c instanceof Page)
 			{
 				break;
 			}

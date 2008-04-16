@@ -43,7 +43,6 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractTextComponent.class);
 
-
 	/**
 	 * 
 	 */
@@ -57,7 +56,6 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 */
 	public static interface ITextFormatProvider
 	{
-
 		/**
 		 * Gets the pattern for printing output and parsing input.
 		 * 
@@ -79,7 +77,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractTextComponent(final String id, final IModel model)
+	public AbstractTextComponent(final String id, final IModel< ? > model)
 	{
 		super(id, model);
 		setConvertEmptyInputStringToNull(true);
@@ -108,6 +106,10 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		return false;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
+	 */
 	@Override
 	protected void convertInput()
 	{
@@ -129,13 +131,16 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		resolveType();
 	}
 
+	/**
+	 * 
+	 */
 	private void resolveType()
 	{
 		if (!getFlag(TYPE_RESOLVED) && getType() == null)
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
 			// Otherwise, getConvertEmptyInputStringToNull() won't work.
-			Class type = getModelType(getModel());
+			Class< ? > type = getModelType(getModel());
 			if (!String.class.equals(type))
 			{
 				setType(type);
@@ -144,11 +149,16 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		}
 	}
 
-	private Class getModelType(IModel model)
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private Class< ? > getModelType(IModel< ? > model)
 	{
 		if (model instanceof IObjectClassAwareModel)
 		{
-			Class objectClass = ((IObjectClassAwareModel)model).getObjectClass();
+			Class< ? > objectClass = ((IObjectClassAwareModel< ? >)model).getObjectClass();
 			if (objectClass == null)
 			{
 				log.warn("Couldn't resolve model type of " + model + " for " + this +
@@ -169,7 +179,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 *            the value to set this flag.
 	 * @return this
 	 */
-	public final FormComponent setConvertEmptyInputStringToNull(boolean flag)
+	public final FormComponent< ? > setConvertEmptyInputStringToNull(boolean flag)
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;

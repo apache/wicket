@@ -224,14 +224,14 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// In case of nested Borders, the outer border is no longer able to find
 		// its body container easily. Thus we need to help resolve it.
 
 		// The container is the body component. Get the Border component.
-		MarkupContainer border = container.getParent();
+		MarkupContainer< ? > border = container.getParent();
 		while ((border != null) && !(border instanceof Border))
 		{
 			border = border.getParent();
@@ -312,7 +312,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void renderHead(HtmlHeaderContainer< ? > container)
 	{
 		renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);

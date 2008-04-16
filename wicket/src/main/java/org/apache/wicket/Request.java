@@ -88,7 +88,7 @@ public abstract class Request
 	 * 
 	 * @return Map of parameters
 	 */
-	public abstract Map getParameterMap();
+	public abstract Map<String, String[]> getParameterMap();
 
 	/**
 	 * Gets an array of multiple parameters by name.
@@ -136,6 +136,7 @@ public abstract class Request
 	 * @return Request URL
 	 * @deprecated Use {@link #getURL()} instead.
 	 */
+	@Deprecated
 	public String getRelativeURL()
 	{
 		return getURL();
@@ -161,7 +162,7 @@ public abstract class Request
 		if (encoder == null)
 		{
 			throw new WicketRuntimeException("request encoder must be not-null (provided by " +
-					processor + ")");
+				processor + ")");
 		}
 
 		// decode the request parameters into a strongly typed parameters
@@ -181,7 +182,7 @@ public abstract class Request
 		if (requestParameters == null)
 		{
 			throw new WicketRuntimeException("request parameters must be not-null (provided by " +
-					encoder + ")");
+				encoder + ")");
 		}
 		return requestParameters;
 	}
@@ -220,15 +221,16 @@ public abstract class Request
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Request[url=" + getURL() + "]";
 	}
-	
+
 	/**
 	 * Returns the query string (part after ?) of this request.
 	 * 
-	 * @return request query string 
+	 * @return request query string
 	 */
-	public abstract String getQueryString(); 
+	public abstract String getQueryString();
 }

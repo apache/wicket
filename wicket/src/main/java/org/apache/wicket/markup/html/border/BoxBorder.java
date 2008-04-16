@@ -20,8 +20,10 @@ package org.apache.wicket.markup.html.border;
  * A very simple border component that draws a thin black line around its children.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            The model object type
  */
-public final class BoxBorder extends Border
+public final class BoxBorder<T> extends Border<T>
 {
 	private static final long serialVersionUID = 1L;
 
