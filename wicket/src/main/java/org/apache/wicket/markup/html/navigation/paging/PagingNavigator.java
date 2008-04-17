@@ -32,7 +32,9 @@ public class PagingNavigator extends Panel
 	private static final long serialVersionUID = 1L;
 
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
-	private final PagingNavigation pagingNavigation;
+	private PagingNavigation pagingNavigation;
+	private final IPageable pageable;
+	private final IPagingLabelProvider labelProvider;
 
 	/**
 	 * Constructor.
@@ -58,20 +60,30 @@ public class PagingNavigator extends Panel
 	 *            The label provider for the link text.
 	 */
 	public PagingNavigator(final String id, final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
 		super(id);
+		this.pageable = pageable;
+		this.labelProvider = labelProvider;
+	}
 
+	@Override
+	protected void onBeforeRender()
+	{
 
-		// Get the navigation bar and add it to the hierarchy
-		this.pagingNavigation = newNavigation(pageable, labelProvider);
-		add(pagingNavigation);
+		if (get("first") == null)
+		{
+			// Get the navigation bar and add it to the hierarchy
+			pagingNavigation = newNavigation(pageable, labelProvider);
+			add(pagingNavigation);
 
-		// Add additional page links
-		add(newPagingNavigationLink("first", pageable, 0));
-		add(newPagingNavigationIncrementLink("prev", pageable, -1));
-		add(newPagingNavigationIncrementLink("next", pageable, 1));
-		add(newPagingNavigationLink("last", pageable, -1));
+			// Add additional page links
+			add(newPagingNavigationLink("first", pageable, 0));
+			add(newPagingNavigationIncrementLink("prev", pageable, -1));
+			add(newPagingNavigationIncrementLink("next", pageable, 1));
+			add(newPagingNavigationLink("last", pageable, -1));
+		}
+		super.onBeforeRender();
 	}
 
 	/**
@@ -118,7 +130,7 @@ public class PagingNavigator extends Panel
 	 * @return the navigation object
 	 */
 	protected PagingNavigation newNavigation(final IPageable pageable,
-			final IPagingLabelProvider labelProvider)
+		final IPagingLabelProvider labelProvider)
 	{
 		return new PagingNavigation("navigation", pageable, labelProvider);
 	}
