@@ -141,7 +141,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public ListMultipleChoice(String id, IModel<List<T>> choices)
+	public ListMultipleChoice(String id, IModel<List< ? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -149,7 +149,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public ListMultipleChoice(String id, IModel<Collection<T>> model, IModel<List<T>> choices)
+	public ListMultipleChoice(String id, IModel<Collection<T>> model,
+		IModel<List< ? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -158,7 +159,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public ListMultipleChoice(String id, IModel<List< ? extends T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -168,8 +170,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(String id, IModel<Collection<T>> model, IModel<List<T>> choices,
-		IChoiceRenderer<T> renderer)
+	public ListMultipleChoice(String id, IModel<Collection<T>> model,
+		IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -206,7 +208,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
-			final List<T> choices = getChoices();
+			final List< ? extends T> choices = getChoices();
 			for (final Iterator<T> iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
 				final T object = iterator.next();
@@ -288,7 +290,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final List<T> choices = getChoices();
+			final List< ? extends T> choices = getChoices();
 
 			// Loop through selected indices
 			for (int i = 0; i < ids.length; i++)

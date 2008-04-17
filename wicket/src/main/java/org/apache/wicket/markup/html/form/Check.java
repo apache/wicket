@@ -115,7 +115,7 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
-		Collection<T> collection = group.getModelObject();
+		Collection<? extends T> collection = group.getModelObject();
 
 		// check for npe in group's model object
 		if (collection == null)

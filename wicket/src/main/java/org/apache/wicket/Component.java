@@ -3891,7 +3891,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
-				Iterator<IBehavior> tagBehaviors = tag.getBehaviors();
+				Iterator< ? extends IBehavior> tagBehaviors = tag.getBehaviors();
 				while (tagBehaviors.hasNext())
 				{
 					final IBehavior behavior = tagBehaviors.next();

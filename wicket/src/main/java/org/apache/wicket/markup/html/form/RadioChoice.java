@@ -233,7 +233,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public RadioChoice(String id, IModel<List<T>> choices)
+	public RadioChoice(String id, IModel<List< ? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -250,7 +250,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public RadioChoice(String id, IModel<T> model, IModel<List<T>> choices)
+	public RadioChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -268,7 +268,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      IModel,IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public RadioChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public RadioChoice(String id, IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -289,7 +289,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(String id, IModel<T> model, IModel<List<T>> choices,
+	public RadioChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
@@ -409,7 +409,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 		final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List<T> choices = getChoices();
+		final List< ? extends T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);

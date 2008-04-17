@@ -79,7 +79,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final List<T> choices)
+	public DropDownChoice(final String id, final List< ? extends T> choices)
 	{
 		super(id, choices);
 	}
@@ -88,7 +88,8 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final List<T> data, final IChoiceRenderer<T> renderer)
+	public DropDownChoice(final String id, final List< ? extends T> data,
+		final IChoiceRenderer<T> renderer)
 	{
 		super(id, data, renderer);
 	}
@@ -96,7 +97,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel<T> model, final List<T> choices)
+	public DropDownChoice(final String id, IModel<T> model, final List< ? extends T> choices)
 	{
 		super(id, model, choices);
 	}
@@ -105,7 +106,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,
 	 *      IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel<T> model, final List<T> data,
+	public DropDownChoice(final String id, IModel<T> model, final List< ? extends T> data,
 		final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, data, renderer);
@@ -114,7 +115,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(String id, IModel<List<T>> choices)
+	public DropDownChoice(String id, IModel<List< ? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -122,7 +123,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(String id, IModel<T> model, IModel<List<T>> choices)
+	public DropDownChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -131,7 +132,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public DropDownChoice(String id, IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -141,7 +142,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<T> model, IModel<List<T>> choices,
+	public DropDownChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);

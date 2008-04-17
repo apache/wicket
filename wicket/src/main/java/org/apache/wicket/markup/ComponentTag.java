@@ -163,7 +163,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @return read only iterator over added behaviors
 	 */
-	public final Iterator<IBehavior> getBehaviors()
+	public final Iterator<? extends IBehavior> getBehaviors()
 	{
 		if (behaviors == null)
 		{
@@ -171,8 +171,7 @@ public class ComponentTag extends MarkupElement
 			return lst.iterator();
 		}
 
-		Collection<IBehavior> locked = Collections.unmodifiableCollection(behaviors);
-		return locked.iterator();
+    return Collections.unmodifiableCollection(behaviors).iterator();
 	}
 
 	/**

@@ -232,7 +232,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List<T>> choices)
+	public CheckBoxMultipleChoice(String id, IModel<List< ? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -250,7 +250,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.model.IModel)
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model, IModel<List<T>> choices)
+	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
+		IModel<List< ? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -268,7 +269,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public CheckBoxMultipleChoice(String id, IModel<List< ? extends T>> choices,
+		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -289,8 +291,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model, IModel<List<T>> choices,
-		IChoiceRenderer<T> renderer)
+	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
+		IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -370,7 +372,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List<T> choices = getChoices();
+		final List< ? extends T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(70 * (choices.size() + 1));
