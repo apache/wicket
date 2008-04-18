@@ -48,8 +48,10 @@ import org.apache.wicket.version.undo.Change;
  * </pre>
  * 
  * @author Juergen Donnerstag
+ * @param <T>
+ *            model object type
  */
-public class Fragment extends WebMarkupContainerWithAssociatedMarkup
+public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +59,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	private String markupId;
 
 	/** The container providing the inline markup */
-	private final MarkupContainer markupProvider;
+	private final MarkupContainer< ? > markupProvider;
 
 	/**
 	 * Constructor.
@@ -71,6 +73,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @deprecated use {@link #Fragment(String, String, MarkupContainer)}
 	 */
+	@Deprecated
 	public Fragment(final String id, final String markupId)
 	{
 		this(id, markupId, null, null);
@@ -90,7 +93,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @deprecated use {@link #Fragment(String, String, MarkupContainer, IModel)}
 	 */
-	public Fragment(final String id, final String markupId, final IModel model)
+	@Deprecated
+	public Fragment(final String id, final String markupId, final IModel<T> model)
 	{
 		this(id, markupId, null, model);
 	}
@@ -107,7 +111,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
+	public Fragment(final String id, final String markupId,
+		final MarkupContainer< ? > markupProvider)
 	{
 		this(id, markupId, markupProvider, null);
 	}
@@ -126,8 +131,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
-		final IModel model)
+	public Fragment(final String id, final String markupId,
+		final MarkupContainer< ? > markupProvider, final IModel<T> model)
 	{
 		super(id, model);
 
@@ -158,6 +163,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 				private static final long serialVersionUID = 1L;
 				private final String oldMarkupId = Fragment.this.markupId;
 
+				@Override
 				public void undo()
 				{
 					Fragment.this.markupId = oldMarkupId;
@@ -173,6 +179,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
@@ -187,6 +194,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Skip the components body. It will be replaced by the fragment
@@ -310,6 +318,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.MarkupContainer#hasAssociatedMarkup()
 	 */
+	@Override
 	public boolean hasAssociatedMarkup()
 	{
 		return true;
@@ -318,6 +327,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getAssociatedMarkupStream(boolean)
 	 */
+	@Override
 	public MarkupStream getAssociatedMarkupStream(boolean throwException)
 	{
 		MarkupStream stream = null;
@@ -362,7 +372,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @return markup provider
 	 */
-	public final MarkupContainer getMarkupProvider()
+	public final MarkupContainer< ? > getMarkupProvider()
 	{
 		return markupProvider;
 	}
