@@ -73,7 +73,7 @@ public interface IDataProvider<T> extends IDetachable
 	 * 
 	 * @return iterator capable of iterating over {first, first+count} items
 	 */
-	Iterator<T> iterator(int first, int count);
+	Iterator< ? extends T> iterator(int first, int count);
 
 	/**
 	 * Gets total number of items in the collection represented by the DataProvider

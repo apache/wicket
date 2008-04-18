@@ -32,6 +32,12 @@ import org.apache.wicket.model.Model;
 /**
  * Component that makes it easy to produce a list of SelectOption components
  * 
+ * Example markup:
+ * 
+ * <pre><code>
+ * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:contaner&gt;
+ * </code></pre>
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
@@ -82,6 +88,7 @@ public class SelectOptions extends RepeatingView
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected final void onPopulate()
 	{
 		if (size() == 0 || recreateChoices)
@@ -148,6 +155,7 @@ public class SelectOptions extends RepeatingView
 			this.text = text;
 		}
 
+		@Override
 		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, text);

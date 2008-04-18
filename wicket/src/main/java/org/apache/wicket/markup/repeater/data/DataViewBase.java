@@ -89,7 +89,7 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 	 */
 	private static final class ModelIterator<T> implements Iterator<IModel<T>>
 	{
-		private final Iterator<T> items;
+		private final Iterator< ? extends T> items;
 		private final IDataProvider<T> dataProvider;
 		private final int max;
 		private int index;
