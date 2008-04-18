@@ -899,6 +899,7 @@ Wicket.Ajax.Request.prototype = {
 	// Method that processes the request states
 	stateChangeCallback: function() {	
 		var t = this.transport;
+		var status;
 
 		if (t != null && t.readyState == 4) {
 			try {
