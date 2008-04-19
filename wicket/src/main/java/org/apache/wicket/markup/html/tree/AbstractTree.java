@@ -156,7 +156,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		 */
 		public TreeItem getParentItem()
 		{
-			return (TreeItem)nodeToItemMap.get(((TreeNode)getModelObject()).getParent());
+			return (TreeItem)nodeToItemMap.get(getParentNode((TreeNode)getModelObject()));
 		}
 
 		/**
@@ -778,6 +778,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		if (isNodeVisible(parent) && isNodeExpanded(parent))
 		{
 			TreeItem parentItem = (TreeItem)nodeToItemMap.get(parent);
+			
+			if (parentItem.getChildren().isEmpty()) 
+			{
+				invalidateNode(parent, true);
+			}
+			
 			for (int i = 0; i < e.getChildren().length; ++i)
 			{
 				TreeNode node = (TreeNode)e.getChildren()[i];
@@ -805,7 +811,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		if (isNodeVisible(parent) && isNodeExpanded(parent))
 		{
-
+			boolean nonEmpty = !parentItem.getChildren().isEmpty();
 			for (int i = 0; i < e.getChildren().length; ++i)
 			{
 				TreeNode node = (TreeNode)e.getChildren()[i];
@@ -831,6 +837,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 					removeItem(item);
 				}
+			}
+			if (nonEmpty && parentItem.getChildren().isEmpty())
+			{
+				invalidateNode(parent, true);
 			}
 		}
 	}
@@ -1333,7 +1343,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final boolean isNodeVisible(TreeNode node)
 	{
-		while (node.getParent() != null)
+		while (getParentNode(node) != null)
 		{
 			if (isNodeExpanded(node.getParent()) == false)
 			{
@@ -1342,6 +1352,16 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			node = node.getParent();
 		}
 		return true;
+	}
+	
+	/**
+	 * Returns parent node of given node.
+	 * @param node
+	 * @return
+	 */
+	protected TreeNode getParentNode(TreeNode node)
+	{
+		return node.getParent();
 	}
 
 	/**
