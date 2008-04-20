@@ -1225,7 +1225,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 *         found
 	 */
 	@SuppressWarnings("unchecked")
-	public final <Z> Z findParent(final Class< ? extends Z> c)
+	public final <Z> Z findParent(final Class< ? super Z> c)
 	{
 		// Start with immediate parent
 		MarkupContainer< ? > current = parent;
