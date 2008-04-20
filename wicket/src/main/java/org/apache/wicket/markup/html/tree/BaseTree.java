@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import javax.swing.tree.TreeNode;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IComponentBorder;
@@ -98,10 +96,11 @@ public abstract class BaseTree extends AbstractTree
 	 * @see org.apache.wicket.markup.html.tree.AbstractTree#populateTreeItem(org.apache.wicket.markup.html.WebMarkupContainer,
 	 *      int)
 	 */
+	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
 		// add junction link
-		TreeNode node = (TreeNode)item.getModelObject();
+		Object node = item.getModelObject();
 		Component junctionLink = newJunctionLink(item, JUNCTION_LINK_ID, node);
 		junctionLink.setComponentBorder(new JunctionBorder(node, level));
 		item.add(junctionLink);
@@ -115,9 +114,10 @@ public abstract class BaseTree extends AbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
-				TreeNode node = (TreeNode)component.getModelObject();
+				Object node = component.getModelObject();
 				if (getTreeState().isNodeSelected(node))
 				{
 					CharSequence oldClass = tag.getString("class");
@@ -162,16 +162,16 @@ public abstract class BaseTree extends AbstractTree
 	 *            The node
 	 * @return whether the provided node is the last child
 	 */
-	private static boolean isNodeLast(TreeNode node)
+	private boolean isNodeLast(Object node)
 	{
-		TreeNode parent = node.getParent();
+		Object parent = getParentNode(node);
 		if (parent == null)
 		{
 			return true;
 		}
 		else
 		{
-			return parent.getChildAt(parent.getChildCount() - 1).equals(node);
+			return getChildAt(parent, getChildCount(parent) - 1).equals(node);
 		}
 	}
 
@@ -180,11 +180,11 @@ public abstract class BaseTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static class JunctionBorder implements IComponentBorder
+	private class JunctionBorder implements IComponentBorder
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final TreeNode node;
+		private final Object node;
 		private final int level;
 
 		/**
@@ -193,7 +193,7 @@ public abstract class BaseTree extends AbstractTree
 		 * @param node
 		 * @param level
 		 */
-		public JunctionBorder(TreeNode node, int level)
+		public JunctionBorder(Object node, int level)
 		{
 			this.node = node;
 			this.level = level;
@@ -207,7 +207,7 @@ public abstract class BaseTree extends AbstractTree
 		public void renderBefore(Component component)
 		{
 			Response response = RequestCycle.get().getResponse();
-			TreeNode parent = node.getParent();
+			Object parent = getParentNode(node);
 
 			CharSequence classes[] = new CharSequence[level];
 			for (int i = 0; i < level; ++i)
@@ -221,7 +221,7 @@ public abstract class BaseTree extends AbstractTree
 					classes[i] = "line";
 				}
 
-				parent = parent.getParent();
+				parent = getParentNode(parent);
 			}
 
 			for (int i = level - 1; i >= 0; --i)
@@ -252,11 +252,11 @@ public abstract class BaseTree extends AbstractTree
 	 *            tree node for which the link should be created.
 	 * @return The link component
 	 */
-	protected Component newJunctionLink(MarkupContainer parent, final String id, final TreeNode node)
+	protected Component newJunctionLink(MarkupContainer parent, final String id, final Object node)
 	{
 		final MarkupContainer junctionLink;
 
-		if (node.isLeaf() == false)
+		if (isLeaf(node) == false)
 		{
 			junctionLink = newLink(id, new ILinkCallback()
 			{
@@ -280,6 +280,7 @@ public abstract class BaseTree extends AbstractTree
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onComponentTag(Component component, ComponentTag tag)
 				{
 					if (isNodeExpanded(node))
@@ -302,6 +303,7 @@ public abstract class BaseTree extends AbstractTree
 				/**
 				 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 				 */
+				@Override
 				protected void onComponentTag(ComponentTag tag)
 				{
 					super.onComponentTag(tag);
@@ -325,7 +327,7 @@ public abstract class BaseTree extends AbstractTree
 	 * @param node
 	 *            Node for which this callback is relevant
 	 */
-	protected void onJunctionLinkClicked(AjaxRequestTarget target, TreeNode node)
+	protected void onJunctionLinkClicked(AjaxRequestTarget target, Object node)
 	{
 	}
 
@@ -409,6 +411,7 @@ public abstract class BaseTree extends AbstractTree
 				/**
 				 * @see org.apache.wicket.markup.html.link.Link#onClick()
 				 */
+				@Override
 				public void onClick()
 				{
 					callback.onClick(null);
@@ -424,6 +427,7 @@ public abstract class BaseTree extends AbstractTree
 				/**
 				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 				 */
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					callback.onClick(target);
@@ -439,6 +443,7 @@ public abstract class BaseTree extends AbstractTree
 				/**
 				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 				 */
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					callback.onClick(target);
@@ -458,8 +463,8 @@ public abstract class BaseTree extends AbstractTree
 	}
 
 	/**
-	 * Sets the type of links on tree items. After the link type is changed, the whole tree is
-	 * rebuild and re-rendered.
+	 * Sets the type of links on tree items. After the link type is changed, the whole tree must be
+	 * rebuilt (call invalidateAll).
 	 * 
 	 * @param linkType
 	 *            type of links
@@ -469,13 +474,13 @@ public abstract class BaseTree extends AbstractTree
 		if (this.linkType != linkType)
 		{
 			this.linkType = linkType;
-			invalidateAll();
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.tree.AbstractTree#isForceRebuildOnSelectionChange()
 	 */
+	@Override
 	protected boolean isForceRebuildOnSelectionChange()
 	{
 		return false;

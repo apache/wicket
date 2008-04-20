@@ -24,9 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.tree.TreeNode;
-
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.model.IDetachable;
 
 /**
  * Default implementation of TreeState.
@@ -35,7 +34,7 @@ import org.apache.wicket.IClusterable;
  * 
  * @author Matej Knopp
  */
-public class DefaultTreeState implements ITreeState, IClusterable
+public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -91,10 +90,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#collapseNode(javax.swing.tree.TreeNode)
-	 */
-	public void collapseNode(TreeNode node)
+	public void collapseNode(Object node)
 	{
 		if (nodesCollapsed == true)
 		{
@@ -137,10 +133,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#expandNode(javax.swing.tree.TreeNode)
-	 */
-	public void expandNode(TreeNode node)
+	public void expandNode(Object node)
 	{
 		if (nodesCollapsed == false)
 		{
@@ -175,10 +168,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		return allowSelectMultiple;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#isNodeExpanded(javax.swing.tree.TreeNode)
-	 */
-	public boolean isNodeExpanded(TreeNode node)
+	public boolean isNodeExpanded(Object node)
 	{
 		if (nodesCollapsed == false)
 		{
@@ -190,10 +180,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#isNodeSelected(javax.swing.tree.TreeNode)
-	 */
-	public boolean isNodeSelected(TreeNode node)
+	public boolean isNodeSelected(Object node)
 	{
 		return selectedNodes.contains(node);
 	}
@@ -206,17 +193,13 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		listeners.remove(l);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeState#selectNode(javax.swing.tree.TreeNode,
-	 *      boolean)
-	 */
-	public void selectNode(TreeNode node, boolean selected)
+	public void selectNode(Object node, boolean selected)
 	{
 		if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 		{
 			for (Iterator i = selectedNodes.iterator(); i.hasNext();)
 			{
-				TreeNode current = (TreeNode)i.next();
+				Object current = i.next();
 				if (current.equals(node) == false)
 				{
 					i.remove();
@@ -259,5 +242,23 @@ public class DefaultTreeState implements ITreeState, IClusterable
 	public void setAllowSelectMultiple(boolean value)
 	{
 		allowSelectMultiple = value;
+	}
+
+	public void detach()
+	{
+		for (Object node : nodes)
+		{
+			if (node instanceof IDetachable)
+			{
+				((IDetachable)node).detach();
+			}
+		}
+		for (Object node : selectedNodes)
+		{
+			if (node instanceof IDetachable)
+			{
+				((IDetachable)node).detach();
+			}
+		}
 	}
 }

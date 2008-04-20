@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.tree;
 
 import java.util.Collection;
 
-import javax.swing.tree.TreeNode;
-
 /**
  * Tree state holds information about a tree such as which nodes are expanded / collapsed and which
  * nodes are selected, It can also fire callbacks on listener in case any of the information
@@ -48,7 +46,7 @@ public interface ITreeState
 	 * @param node
 	 *            Node to collapse
 	 */
-	void collapseNode(TreeNode node);
+	void collapseNode(Object node);
 
 	/**
 	 * Expands all nodes of the tree.
@@ -61,7 +59,7 @@ public interface ITreeState
 	 * @param node
 	 *            Node to expand
 	 */
-	void expandNode(TreeNode node);
+	void expandNode(Object node);
 
 	/**
 	 * Returns the collection of all selected nodes.
@@ -84,7 +82,7 @@ public interface ITreeState
 	 *            The node to inspect
 	 * @return True if the node is expanded
 	 */
-	boolean isNodeExpanded(TreeNode node);
+	boolean isNodeExpanded(Object node);
 
 	/**
 	 * Returns true if the given node is selected, false otherwise.
@@ -93,7 +91,7 @@ public interface ITreeState
 	 *            The node to inspect
 	 * @return True if the node is selected
 	 */
-	boolean isNodeSelected(TreeNode node);
+	boolean isNodeSelected(Object node);
 
 	/**
 	 * Removes a tree state listener.
@@ -115,7 +113,7 @@ public interface ITreeState
 	 * @param selected
 	 *            If true, the node will be selected, otherwise, the node will be unselected
 	 */
-	void selectNode(TreeNode node, boolean selected);
+	void selectNode(Object node, boolean selected);
 
 	/**
 	 * Sets whether multiple nodes can be selected.

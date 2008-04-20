@@ -16,52 +16,20 @@
  */
 package org.apache.wicket.markup.html.tree;
 
+import javax.swing.tree.TreeModel;
 
 /**
- * Methods this interface are called when tree state is changing.
- *
+ * Tree model that can provide parent for a tree node.
+ * 
  * @author Matej Knopp
  */
-public interface ITreeStateListener
+public interface ExtendedTreeModel extends TreeModel
 {
 	/**
-	 * Fired when all nodes are collapsed.
-	 */
-	void allNodesCollapsed();
-
-	/**
-	 * Fired when all nodes are expanded.
-	 */
-	void allNodesExpanded();
-
-	/**
-	 * Fired when given node is collapsed.
-	 *
+	 * Returns parent of the given node or <code>null</code> if the node is a root node.
+	 * 
 	 * @param node
-	 *            The node that was collapsed
+	 * @return node parent or <code>null</code>
 	 */
-	void nodeCollapsed(Object node);
-
-	/**
-	 * Fired when given node is expanded.
-	 *
-	 * @param node
-	 */
-	void nodeExpanded(Object node);
-
-	/**
-	 * Fired when given node gets selected.
-	 *
-	 * @param node
-	 *            The node that was selected
-	 */
-	void nodeSelected(Object node);
-
-	/**
-	 * Fired when given node gets unselected.
-	 *
-	 * @param node
-	 *            The node that was unselected
-	 */
-	void nodeUnselected(Object node);
+	public Object getParent(Object node);
 }
