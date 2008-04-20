@@ -40,40 +40,38 @@ import org.slf4j.LoggerFactory;
  * An Enclosure are automatically created by Wicket. Do not create it yourself. An Enclosure
  * container is created if &lt;wicket:enclosure&gt; is found in the markup. It is meant to solve the
  * following situation. Instead of
- * 
+ *
  * <pre>
- *    &lt;table wicket:id=&quot;label-container&quot; class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; 
- *  
- *    WebMarkupContainer container=new WebMarkupContainer(&quot;label-container&quot;) 
+ *    &lt;table wicket:id=&quot;label-container&quot; class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+ *    WebMarkupContainer container=new WebMarkupContainer(&quot;label-container&quot;)
  *    {
- *       public boolean isVisible() 
+ *       public boolean isVisible()
  *       {
  *           return hasNotification();
  *       }
  *    };
  *    add(container);
- *     container.add(new Label(&quot;label&quot;, notificationModel)); 
+ *     container.add(new Label(&quot;label&quot;, notificationModel));
  * </pre>
- * 
+ *
  * with Enclosure you are able to do the following:
- * 
+ *
  * <pre>
- *    &lt;wicket:enclosure&gt; 
+ *    &lt;wicket:enclosure&gt;
  *      &lt;table class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
  *    &lt;/wicket:enclosure&gt;
- * 
- *    add(new Label(&quot;label&quot;, notificationModel)) 
+ *    add(new Label(&quot;label&quot;, notificationModel))
  *    {
- *       public boolean isVisible() 
+ *       public boolean isVisible()
  *       {
  *           return hasNotification();
  *       }
  *    }
  * </pre>
- * 
+ *
  * @see EnclosureResolver
  * @see EnclosureHandler
- * 
+ *
  * @author Juergen Donnerstag
  * @since 1.3
  */
@@ -93,7 +91,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param childId
 	 */
@@ -104,7 +102,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
 	 */
 	@Override
@@ -114,7 +112,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 	}
 
 	/**
-	 * 
+	 *
 	 * @param childId
 	 * @return Child Component
 	 */
@@ -144,7 +142,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 
 	/**
 	 * Get the real parent container
-	 * 
+	 *
 	 * @return enclosure's parent markup container
 	 */
 	@SuppressWarnings("unchecked")
@@ -159,7 +157,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 			}
 			else if (parent instanceof BorderBodyContainer)
 			{
-				parent = ((BorderBodyContainer)parent).findParent(Border.class);
+				parent = parent.findParent(Border.class);
 			}
 			else
 			{
@@ -176,7 +174,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
@@ -237,7 +235,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 
 	/**
 	 * Iterator that iterates over direct child component tags of the given component tag
-	 * 
+	 *
 	 */
 	private static class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 	{
@@ -248,7 +246,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param markupStream
 		 * @param parent
 		 */
