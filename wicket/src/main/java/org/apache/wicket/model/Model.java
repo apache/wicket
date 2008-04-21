@@ -116,6 +116,10 @@ public class Model<T extends Serializable> implements IModel<T>
 	 */
 	public void detach()
 	{
+		if (object instanceof IDetachable)
+		{
+			((IDetachable)object).detach();
+		}
 	}
 
 	/**
