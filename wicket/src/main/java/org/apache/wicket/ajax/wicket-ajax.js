@@ -197,7 +197,11 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		var script = tempDiv.childNodes[0].childNodes[0].innerHTML;
 		
 		element.outerHtml = text;
-		eval(script);
+		try {
+			eval(script);
+		} catch (e) {
+			Wicket.Log.error(e);
+		}
 		return;
 	}  
 	
@@ -290,7 +294,6 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// if we are replacing a single <script> element
 	if (element.tagName == "SCRIPT") {
-
 		// create temporal div and add script as inner HTML		
 		var tempDiv = document.createElement("div");
 		tempDiv.innerHTML = text;
@@ -302,10 +305,14 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 		}
 		
 		element.outerHTML = text;
-		eval(script);
+		try {
+			eval(script);
+		} catch (e) {
+			Wicket.Log.error(e);
+		}
 		return;
 	}
-	var parent = element.parentNode;	
+	var parent = element.parentNode;
 	var next = element.nextSibling;
 	
 	var index = 0;
@@ -320,9 +327,9 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// go through newly added elements and try to find javascripts that 
 	// need to be executed	
 	while (element != next) {
-		Wicket.Head.addJavascripts(element);
+	//	Wicket.Head.addJavascripts(element);
 		element = element.nextSibling;
-	}
+	}	
 }
 
 /**
