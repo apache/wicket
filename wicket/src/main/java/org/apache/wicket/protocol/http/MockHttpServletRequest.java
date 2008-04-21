@@ -481,6 +481,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 			return new ServletInputStream()
 			{
+				@Override
 				public int read()
 				{
 					return bais.read();
@@ -491,6 +492,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return new ServletInputStream()
 			{
+				@Override
 				public int read()
 				{
 					return -1;
@@ -687,9 +689,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 				{
 					final String name = (String)iterator.next();
 					final String value = parameters.getString(name);
-					buf.append(URLEncoder.encode(name, "UTF-8"));
+					if (name != null)
+						buf.append(URLEncoder.encode(name, "UTF-8"));
 					buf.append('=');
-					buf.append(URLEncoder.encode(value, "UTF-8"));
+					if (value != null)
+						buf.append(URLEncoder.encode(value, "UTF-8"));
 					if (iterator.hasNext())
 					{
 						buf.append('&');
@@ -725,6 +729,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @return The path
 	 * @deprecated Use ServletContext.getRealPath(String) instead.
 	 */
+	@Deprecated
 	public String getRealPath(String name)
 	{
 		return context.getRealPath(name);
@@ -1175,7 +1180,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{
-			final Class<? extends Page> clazz = ((BookmarkablePageLink)component).getPageClass();
+			final Class< ? extends Page> clazz = ((BookmarkablePageLink)component).getPageClass();
 			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
 				':' + clazz.getName());
 		}

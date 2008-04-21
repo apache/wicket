@@ -86,7 +86,7 @@ public class WebRequestTest extends WicketTestCase
 		mockRequest.setRequestToRedirectString("?a=1&a=2");
 		Object obj = mockRequest.getParameterMap().get("a");
 		assertTrue("Expected " + new String[0].getClass() + ", got " + obj.getClass(),
-				obj instanceof String[]);
+			obj instanceof String[]);
 	}
 
 	/**
@@ -108,5 +108,29 @@ public class WebRequestTest extends WicketTestCase
 		WebRequest webRequest = new ServletWebRequest(mockRequest);
 
 		assertEquals(isAjax, webRequest.isAjax());
+	}
+
+	/**
+	 * Test handling of null parameter values.
+	 */
+	public void testNullHandling()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setParameter("a", null);
+		assertNull(mockRequest.getAttribute("a"));
+		assertEquals("a=", mockRequest.getQueryString());
+	}
+
+	/**
+	 * Test handling of null parameter keys.
+	 */
+	public void testNullHandling2()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setRequestToRedirectString("?=m"); // key is encoded as empty string
+		assertEquals("=m", mockRequest.getQueryString());
+		mockRequest.setParameter(null, "m2"); // force null string
+		assertEquals("=m2&=m", mockRequest.getQueryString());
+
 	}
 }
