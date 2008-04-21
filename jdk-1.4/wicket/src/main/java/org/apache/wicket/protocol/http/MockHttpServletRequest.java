@@ -687,9 +687,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 				{
 					final String name = (String)iterator.next();
 					final String value = parameters.getString(name);
-					buf.append(URLEncoder.encode(name, "UTF-8"));
+					if (name != null)
+						buf.append(URLEncoder.encode(name, "UTF-8"));
 					buf.append('=');
-					buf.append(URLEncoder.encode(value, "UTF-8"));
+					if (value != null)
+						buf.append(URLEncoder.encode(value, "UTF-8"));
 					if (iterator.hasNext())
 					{
 						buf.append('&');
