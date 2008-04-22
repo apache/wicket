@@ -61,28 +61,34 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Gwyn Evans
+ * 
+ * @param <T>
+ *            The model object type
  */
-public class WebPage extends Page implements INewBrowserWindowListener
+public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 {
 	/**
 	 * Tries to determine whether this page was opened in a new window or tab. If it is (and this
 	 * checker were able to recognize that), a new page map is created for this page instance, so
 	 * that it will start using it's own history in sync with the browser window or tab.
+	 * 
+	 * @param <T>
+	 *            The model object type
 	 */
-	private static final class PageMapChecker extends AbstractBehavior
+	private static final class PageMapChecker<T> extends AbstractBehavior
 		implements
 			IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WebPage webPage;
+		private final WebPage<T> webPage;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param webPage
 		 */
-		PageMapChecker(WebPage webPage)
+		PageMapChecker(WebPage<T> webPage)
 		{
 			this.webPage = webPage;
 		}
@@ -189,7 +195,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(IModel)
 	 */
-	protected WebPage(final IModel model)
+	protected WebPage(final IModel<T> model)
 	{
 		super(model);
 		commonInit();
@@ -207,7 +213,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(org.apache.wicket.IPageMap, org.apache.wicket.model.IModel)
 	 */
-	protected WebPage(final IPageMap pageMap, final IModel model)
+	protected WebPage(final IPageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
 		commonInit();
@@ -326,7 +332,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
-			add(new PageMapChecker(this));
+			add(new PageMapChecker<T>(this));
 		}
 	}
 

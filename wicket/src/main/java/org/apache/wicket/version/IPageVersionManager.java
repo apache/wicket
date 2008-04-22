@@ -66,7 +66,7 @@ public interface IPageVersionManager extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was added
 	 */
-	void componentAdded(Component component);
+	void componentAdded(Component< ? > component);
 
 	/**
 	 * Indicates that the model for the given <code>Component</code> is about to change.
@@ -74,7 +74,7 @@ public interface IPageVersionManager extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> whose model is about to change
 	 */
-	void componentModelChanging(Component component);
+	void componentModelChanging(Component< ? > component);
 
 	/**
 	 * Indicates an internal state for the given <code>Component</code> is about to change.
@@ -90,7 +90,7 @@ public interface IPageVersionManager extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was removed
 	 */
-	void componentRemoved(Component component);
+	void componentRemoved(Component< ? > component);
 
 	/**
 	 * Called when changes to the <code>Page</code> have ended.
@@ -110,23 +110,29 @@ public interface IPageVersionManager extends IClusterable
 	 * Retrieves a given <code>Page</code> version. This method does not include the Ajax
 	 * versions.
 	 * 
+	 * @param <T>
+	 *            Model Object of the page
+	 * 
 	 * @param versionNumber
 	 *            the version of the page to get
 	 * @return the <code>Page</code>, or <code>null</code> if the version requested is not
 	 *         available
 	 */
-	Page getVersion(int versionNumber);
+	<T> Page<T> getVersion(int versionNumber);
 
 
 	/**
 	 * Rolls back the <code>Page</code> by the number of versions specified, including the Ajax
 	 * versions.
 	 * 
+	 * @param <T>
+	 *            Model Object of the page
+	 * 
 	 * @param numberOfVersions
 	 *            the number of versions to roll back
 	 * @return the rolled-back <code>Page</code>
 	 */
-	Page rollbackPage(int numberOfVersions);
+	<T> Page<T> rollbackPage(int numberOfVersions);
 
 	/**
 	 * Retrieves the number of versions stored in this page version manager.

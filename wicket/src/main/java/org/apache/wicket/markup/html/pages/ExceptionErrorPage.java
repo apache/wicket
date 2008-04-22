@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class ExceptionErrorPage extends WebPage
+public class ExceptionErrorPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,12 +51,12 @@ public class ExceptionErrorPage extends WebPage
 	 * @param page
 	 *            The page being rendered when the exception was thrown
 	 */
-	public ExceptionErrorPage(final Throwable throwable, final Page page)
+	public ExceptionErrorPage(final Throwable throwable, final Page< ? > page)
 	{
 		this.throwable = throwable;
 
 		// Add exception label
-		add(new MultiLineLabel("exception", Strings.toString(throwable)));
+		add(new MultiLineLabel<String>("exception", Strings.toString(throwable)));
 
 		// Get values
 		String resource = "";
@@ -75,24 +75,26 @@ public class ExceptionErrorPage extends WebPage
 		}
 
 		// Create markup label
-		final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
+		final MultiLineLabel<String> markupLabel = new MultiLineLabel<String>("markup", markup);
 
 		markupLabel.setEscapeModelStrings(false);
 
 		// Add container with markup highlighted
-		final WebMarkupContainer markupHighlight = new WebMarkupContainer("markupHighlight");
+		final WebMarkupContainer<String> markupHighlight = new WebMarkupContainer<String>(
+			"markupHighlight");
 
 		markupHighlight.add(markupLabel);
-		markupHighlight.add(new Label("resource", resource));
+		markupHighlight.add(new Label<String>("resource", resource));
 		add(markupHighlight);
 
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
 
-		add(new Link("displayPageViewLink")
+		add(new Link<Object>("displayPageViewLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				ExceptionErrorPage.this.replace(new PageView("componentTree", page));
@@ -100,12 +102,13 @@ public class ExceptionErrorPage extends WebPage
 			}
 		});
 
-		add(new Label("componentTree", ""));
+		add(new Label<String>("componentTree", ""));
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -113,7 +116,7 @@ public class ExceptionErrorPage extends WebPage
 		if (getWebRequestCycle().getResponse() instanceof WebResponse)
 		{
 			getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-					HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -130,6 +133,7 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;
@@ -138,6 +142,7 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

@@ -49,10 +49,8 @@ import org.apache.wicket.util.string.Strings;
  * </pre>
  * 
  * @author Juergen Donnerstag
- * @param <T>
- *            The model object type
  */
-public final class PageView<T> extends Panel<T>
+public final class PageView extends Panel<Object>
 {
 	/**
 	 * El cheapo data holder.
@@ -94,7 +92,7 @@ public final class PageView<T> extends Panel<T>
 	 *            The page to be analyzed
 	 * @see Component#Component(String)
 	 */
-	public PageView(final String id, final Page page)
+	public PageView(final String id, final Page< ? > page)
 	{
 		super(id);
 
@@ -147,7 +145,7 @@ public final class PageView<T> extends Panel<T>
 	 * @param page
 	 * @return List of component data objects
 	 */
-	private List<ComponentData> getComponentData(final Page page)
+	private List<ComponentData> getComponentData(final Page< ? > page)
 	{
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 

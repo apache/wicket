@@ -119,8 +119,11 @@ import org.slf4j.LoggerFactory;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * 
+ * @param <T>
+ *            The model object type
  */
-public abstract class Page extends MarkupContainer<Object>
+public abstract class Page<T> extends MarkupContainer<T>
 	implements
 		IRedirectListener,
 		IPageMapEntry
@@ -247,7 +250,7 @@ public abstract class Page extends MarkupContainer<Object>
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IModel<Object> model)
+	protected Page(final IModel<T> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -278,7 +281,7 @@ public abstract class Page extends MarkupContainer<Object>
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IPageMap pageMap, final IModel<Object> model)
+	protected Page(final IPageMap pageMap, final IModel<T> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -566,7 +569,7 @@ public abstract class Page extends MarkupContainer<Object>
 	 * @return A Page object with the component/model hierarchy that was attached to this page at
 	 *         the time represented by the requested version.
 	 */
-	public Page getVersion(final int versionNumber)
+	public Page<T> getVersion(final int versionNumber)
 	{
 		// If we're still the original Page and that's what's desired
 		if (versionManager == null)
@@ -595,7 +598,7 @@ public abstract class Page extends MarkupContainer<Object>
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page page;
+				final Page<T> page;
 				if (versionNumber != LATEST_VERSION)
 				{
 					page = versionManager.getVersion(versionNumber);

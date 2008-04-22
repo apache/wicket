@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Jonathan Locke
  */
-public class InternalErrorPage extends WebPage
+public class InternalErrorPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,16 +41,18 @@ public class InternalErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
 		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -59,6 +61,7 @@ public class InternalErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;

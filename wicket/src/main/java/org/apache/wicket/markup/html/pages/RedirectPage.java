@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class RedirectPage extends WebPage
+public class RedirectPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,9 +55,9 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final CharSequence url, final int waitBeforeRedirectInSeconds)
 	{
-		final WebMarkupContainer redirect = new WebMarkupContainer("redirect");
+		final WebMarkupContainer<Object> redirect = new WebMarkupContainer<Object>("redirect");
 		final String content = waitBeforeRedirectInSeconds + ";URL=" + url;
-		redirect.add(new AttributeModifier("content", new Model(content)));
+		redirect.add(new AttributeModifier("content", new Model<String>(content)));
 		add(redirect);
 	}
 
@@ -67,7 +67,7 @@ public class RedirectPage extends WebPage
 	 * @param page
 	 *            The page to redirect to.
 	 */
-	public RedirectPage(final Page page)
+	public RedirectPage(final Page< ? > page)
 	{
 		this(page.urlFor(IRedirectListener.INTERFACE), 0);
 	}
@@ -81,7 +81,7 @@ public class RedirectPage extends WebPage
 	 * @param waitBeforeRedirectInSeconds
 	 *            The number of seconds the browser should wait before redirecting
 	 */
-	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
+	public RedirectPage(final Page< ? > page, final int waitBeforeRedirectInSeconds)
 	{
 		this(page.urlFor(IRedirectListener.INTERFACE), waitBeforeRedirectInSeconds);
 	}
@@ -89,6 +89,7 @@ public class RedirectPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

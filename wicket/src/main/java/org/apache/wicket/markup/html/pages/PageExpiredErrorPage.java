@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Jonathan Locke
  */
-public class PageExpiredErrorPage extends WebPage
+public class PageExpiredErrorPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,16 +41,18 @@ public class PageExpiredErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
 		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-				HttpServletResponse.SC_NOT_FOUND);
+			HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -59,6 +61,7 @@ public class PageExpiredErrorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;

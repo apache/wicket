@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Form for posting JavaScript properties.
  */
-public class BrowserInfoForm extends Panel
+public class BrowserInfoForm extends Panel<Object>
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BrowserInfoForm.class);
@@ -49,16 +49,18 @@ public class BrowserInfoForm extends Panel
 	{
 		super(id);
 
-		Form form = new Form("postback", new CompoundPropertyModel(new ClientPropertiesBean()))
+		Form<ClientPropertiesBean> form = new Form<ClientPropertiesBean>("postback",
+			new CompoundPropertyModel<ClientPropertiesBean>(new ClientPropertiesBean()))
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
-				ClientPropertiesBean propertiesBean = (ClientPropertiesBean)getModelObject();
+				ClientPropertiesBean propertiesBean = getModelObject();
 
 				WebRequestCycle requestCycle = (WebRequestCycle)getRequestCycle();
 				WebSession session = (WebSession)getSession();
@@ -84,21 +86,21 @@ public class BrowserInfoForm extends Panel
 				afterSubmit();
 			}
 		};
-		form.add(new TextField("navigatorAppName"));
-		form.add(new TextField("navigatorAppVersion"));
-		form.add(new TextField("navigatorAppCodeName"));
-		form.add(new TextField("navigatorCookieEnabled"));
-		form.add(new TextField("navigatorJavaEnabled"));
-		form.add(new TextField("navigatorLanguage"));
-		form.add(new TextField("navigatorPlatform"));
-		form.add(new TextField("navigatorUserAgent"));
-		form.add(new TextField("screenWidth"));
-		form.add(new TextField("screenHeight"));
-		form.add(new TextField("screenColorDepth"));
-		form.add(new TextField("utcOffset"));
-		form.add(new TextField("utcDSTOffset"));
-		form.add(new TextField("browserWidth"));
-		form.add(new TextField("browserHeight"));
+		form.add(new TextField<String>("navigatorAppName"));
+		form.add(new TextField<String>("navigatorAppVersion"));
+		form.add(new TextField<String>("navigatorAppCodeName"));
+		form.add(new TextField<Boolean>("navigatorCookieEnabled"));
+		form.add(new TextField<Boolean>("navigatorJavaEnabled"));
+		form.add(new TextField<String>("navigatorLanguage"));
+		form.add(new TextField<String>("navigatorPlatform"));
+		form.add(new TextField<String>("navigatorUserAgent"));
+		form.add(new TextField<String>("screenWidth"));
+		form.add(new TextField<String>("screenHeight"));
+		form.add(new TextField<String>("screenColorDepth"));
+		form.add(new TextField<String>("utcOffset"));
+		form.add(new TextField<String>("utcDSTOffset"));
+		form.add(new TextField<String>("browserWidth"));
+		form.add(new TextField<String>("browserHeight"));
 		add(form);
 	}
 
@@ -113,8 +115,8 @@ public class BrowserInfoForm extends Panel
 	void warnNotUsingWebClientInfo(ClientInfo clientInfo)
 	{
 		log.warn("using " + getClass().getName() + " makes no sense if you are not using " +
-				WebClientInfo.class.getName() + " (you are using " +
-				clientInfo.getClass().getName() + " instead)");
+			WebClientInfo.class.getName() + " (you are using " + clientInfo.getClass().getName() +
+			" instead)");
 	}
 
 	protected void afterSubmit()
@@ -296,10 +298,10 @@ public class BrowserInfoForm extends Panel
 			properties.setNavigatorAppName(navigatorAppName);
 			properties.setNavigatorAppVersion(navigatorAppVersion);
 			properties.setNavigatorAppCodeName(navigatorAppCodeName);
-			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled
-					.booleanValue() : false);
-			properties.setJavaEnabled((navigatorJavaEnabled != null) ? navigatorJavaEnabled
-					.booleanValue() : false);
+			properties.setCookiesEnabled((navigatorCookieEnabled != null)
+				? navigatorCookieEnabled.booleanValue() : false);
+			properties.setJavaEnabled((navigatorJavaEnabled != null)
+				? navigatorJavaEnabled.booleanValue() : false);
 			properties.setNavigatorLanguage(navigatorLanguage);
 			properties.setNavigatorPlatform(navigatorPlatform);
 			properties.setNavigatorUserAgent(navigatorUserAgent);

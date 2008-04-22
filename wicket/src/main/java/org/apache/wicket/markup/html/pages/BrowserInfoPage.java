@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Eelco Hillenius
  */
-public class BrowserInfoPage extends WebPage
+public class BrowserInfoPage extends WebPage<Object>
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
@@ -121,6 +121,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -131,15 +132,15 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private final void initComps()
 	{
-		WebComponent meta = new WebComponent("meta");
+		WebComponent<Object> meta = new WebComponent<Object>("meta");
 		PageParameters parameters = new PageParameters();
 		parameters.put("cto", continueTo);
 		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
-				parameters));
-		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));
+			parameters));
+		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
 		add(meta);
-		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(new AttributeModifier("href", true, new Model((Serializable)url)));
+		WebMarkupContainer<Object> link = new WebMarkupContainer<Object>("link");
+		link.add(new AttributeModifier("href", true, new Model<Serializable>((Serializable)url)));
 		add(link);
 		add(new BrowserInfoForm("postback")
 		{
@@ -148,6 +149,7 @@ public class BrowserInfoPage extends WebPage
 			/**
 			 * @see org.apache.wicket.markup.html.pages.BrowserInfoForm#afterSubmit()
 			 */
+			@Override
 			protected void afterSubmit()
 			{
 				continueToPrevious();
@@ -174,8 +176,8 @@ public class BrowserInfoPage extends WebPage
 	void warnNotUsingWebClientInfo(ClientInfo clientInfo)
 	{
 		log.warn("using " + getClass().getName() + " makes no sense if you are not using " +
-				WebClientInfo.class.getName() + " (you are using " +
-				clientInfo.getClass().getName() + " instead)");
+			WebClientInfo.class.getName() + " (you are using " + clientInfo.getClass().getName() +
+			" instead)");
 	}
 
 	/**

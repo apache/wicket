@@ -17,6 +17,7 @@
 package org.apache.wicket.redirect.abort;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
@@ -31,7 +32,7 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
  * 
  * @author Peter Ertl
  */
-public class AbortExceptionPage extends WebPage
+public class AbortExceptionPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = -5906071716129043859L;
 
@@ -42,17 +43,18 @@ public class AbortExceptionPage extends WebPage
 		if (!triggerError)
 			throw new AbortWithWebErrorCodeException(1234, "this error will be rendered");
 
-		IModel model = new LoadableDetachableModel()
+		IModel<List<Object>> model = new LoadableDetachableModel<List<Object>>()
 		{
 			private static final long serialVersionUID = -1285116295157071919L;
 
-			protected Object load()
+			@Override
+			protected List<Object> load()
 			{
 				if (triggerError)
 					throw new AbortWithWebErrorCodeException(1234,
 						"this error will NOT be rendered");
 				else
-					return Collections.EMPTY_LIST;
+					return Collections.emptyList();
 			}
 		};
 
@@ -60,6 +62,7 @@ public class AbortExceptionPage extends WebPage
 		{
 			private static final long serialVersionUID = -4176346513350288174L;
 
+			@Override
 			protected void populateItem(final ListItem item)
 			{
 				// not used
