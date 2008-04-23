@@ -29,8 +29,10 @@ import org.apache.wicket.version.undo.Change;
  * either one at a time or many at a time.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            Model object type
  */
-public abstract class PageableListView extends ListView implements IPageable
+public abstract class PageableListView<T> extends ListView<T> implements IPageable
 {
 	/**
 	 * 
@@ -53,7 +55,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(final String id, final IModel model, int rowsPerPage)
+	public PageableListView(final String id, final IModel<List<T>> model, int rowsPerPage)
 	{
 		super(id, model);
 		this.rowsPerPage = rowsPerPage;
@@ -71,7 +73,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(final String id, final List list, final int rowsPerPage)
+	public PageableListView(final String id, final List<T> list, final int rowsPerPage)
 	{
 		super(id, list);
 		this.rowsPerPage = rowsPerPage;
@@ -133,6 +135,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	/**
 	 * @see org.apache.wicket.markup.html.list.ListView#getViewSize()
 	 */
+	@Override
 	public int getViewSize()
 	{
 		if (getModelObject() != null)
@@ -175,10 +178,11 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @throws UnsupportedOperationException
 	 *             always
 	 */
-	public ListView setStartIndex(int startIndex) throws UnsupportedOperationException
+	@Override
+	public ListView<T> setStartIndex(int startIndex) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
-				"You must not use setStartIndex() with PageableListView");
+			"You must not use setStartIndex() with PageableListView");
 	}
 
 	/**
@@ -191,10 +195,11 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *             always
 	 * @see org.apache.wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
-	public ListView setViewSize(int size) throws UnsupportedOperationException
+	@Override
+	public ListView<T> setViewSize(int size) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
-				"You must not use setViewSize() with PageableListView");
+			"You must not use setViewSize() with PageableListView");
 	}
 
 	/**
@@ -221,6 +226,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setCurrentPage(currentPage);
@@ -229,6 +235,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "CurrentPageChange[currentPage: " + currentPage + "]";
@@ -259,6 +266,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setRowsPerPage(rowsPerPage);
@@ -267,6 +275,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "RowsPerPageChange[component: " + getPath() + ", prefix: " + rowsPerPage + "]";

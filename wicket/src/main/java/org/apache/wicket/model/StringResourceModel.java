@@ -175,7 +175,9 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends LoadableDetachableModel implements IComponentAssignedModel
+public class StringResourceModel extends LoadableDetachableModel<String>
+	implements
+		IComponentAssignedModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -208,7 +210,7 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 		return new AssignmentWrapper(component);
 	}
 
-	private class AssignmentWrapper implements IWrapModel
+	private class AssignmentWrapper implements IWrapModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -224,25 +226,28 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 			StringResourceModel.this.detach();
 		}
 
-		public Object getObject()
+		public String getObject()
 		{
-			if (StringResourceModel.this.component != null) {
+			if (StringResourceModel.this.component != null)
+			{
 				return StringResourceModel.this.getObject();
-			} else {
+			}
+			else
+			{
 				// TODO: Remove this as soon as we can break binary compatibility
-				StringResourceModel.this.component = this.component;
-				Object res = StringResourceModel.this.getObject();
+				StringResourceModel.this.component = component;
+				String res = StringResourceModel.this.getObject();
 				StringResourceModel.this.component = null;
 				return res;
 			}
 		}
 
-		public void setObject(Object object)
+		public void setObject(String object)
 		{
 			StringResourceModel.this.setObject(object);
 		}
 
-		public IModel getWrappedModel()
+		public IModel<String> getWrappedModel()
 		{
 			return StringResourceModel.this;
 		}
@@ -546,6 +551,7 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 	 * 
 	 * @return The string for this model object
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer("StringResourceModel[");
@@ -596,7 +602,8 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 	 * as an object to allow it to be used generically within components.
 	 * 
 	 */
-	protected Object load()
+	@Override
+	protected String load()
 	{
 		// Initialize information that we need to work successfully
 		final Session session = Session.get();
@@ -616,6 +623,7 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 	/**
 	 * Detaches from the given session
 	 */
+	@Override
 	protected final void onDetach()
 	{
 		// Detach any model
