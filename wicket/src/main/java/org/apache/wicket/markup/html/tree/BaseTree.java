@@ -118,20 +118,33 @@ public abstract class BaseTree extends AbstractTree
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				Object node = component.getModelObject();
-				if (getTreeState().isNodeSelected(node))
+				String klass = getItemClass(node);
+				if (!Strings.isEmpty(klass))
 				{
 					CharSequence oldClass = tag.getString("class");
 					if (Strings.isEmpty(oldClass))
 					{
-						tag.put("class", getSelectedClass());
+						tag.put("class", klass);
 					}
 					else
 					{
-						tag.put("class", oldClass + " " + getSelectedClass());
+						tag.put("class", oldClass + " " + klass);
 					}
 				}
 			}
 		});
+	}
+
+	protected String getItemClass(Object node)
+	{
+		if (getTreeState().isNodeSelected(node))
+		{
+			return getSelectedClass();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
