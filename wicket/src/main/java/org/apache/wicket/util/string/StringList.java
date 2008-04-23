@@ -56,7 +56,7 @@ public final class StringList extends AbstractStringList
 	private static final long serialVersionUID = 1L;
 
 	// The underlying list of strings
-	private final List strings;
+	private final List<String> strings;
 
 	// The total length of all strings in the list
 	private int totalLength;
@@ -124,15 +124,15 @@ public final class StringList extends AbstractStringList
 	 *            The collection to add as strings
 	 * @return The list
 	 */
-	public static StringList valueOf(final Collection collection)
+	public static StringList valueOf(final Collection< ? > collection)
 	{
 		if (collection != null)
 		{
 			final StringList strings = new StringList(collection.size());
 
-			for (final Iterator iterator = collection.iterator(); iterator.hasNext();)
+			for (Object object : collection)
 			{
-				strings.add(StringValue.valueOf(iterator.next()));
+				strings.add(StringValue.valueOf(object));
 			}
 
 			return strings;
@@ -209,7 +209,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList()
 	{
-		this.strings = new ArrayList();
+		strings = new ArrayList<String>();
 	}
 
 	/**
@@ -220,7 +220,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList(final int size)
 	{
-		this.strings = new ArrayList(size);
+		strings = new ArrayList<String>(size);
 	}
 
 	/**
@@ -280,15 +280,16 @@ public final class StringList extends AbstractStringList
 	 * @return The string at the index
 	 * @throws IndexOutOfBoundsException
 	 */
+	@Override
 	public String get(final int index)
 	{
-		return (String)strings.get(index);
+		return strings.get(index);
 	}
 
 	/**
 	 * @return List value (not a copy of this list)
 	 */
-	public List getList()
+	public List<String> getList()
 	{
 		return strings;
 	}
@@ -298,11 +299,12 @@ public final class StringList extends AbstractStringList
 	 * 
 	 * @return Typesafe string iterator
 	 */
+	@Override
 	public IStringIterator iterator()
 	{
 		return new IStringIterator()
 		{
-			private final Iterator iterator = strings.iterator();
+			private final Iterator<String> iterator = strings.iterator();
 
 			public boolean hasNext()
 			{
@@ -311,7 +313,7 @@ public final class StringList extends AbstractStringList
 
 			public String next()
 			{
-				return (String)iterator.next();
+				return iterator.next();
 			}
 		};
 	}
@@ -335,7 +337,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public void remove(final int index)
 	{
-		String string = (String)strings.remove(index);
+		String string = strings.remove(index);
 		totalLength = totalLength - string.length();
 	}
 
@@ -350,6 +352,7 @@ public final class StringList extends AbstractStringList
 	/**
 	 * @return The number of strings in this list.
 	 */
+	@Override
 	public int size()
 	{
 		return strings.size();
@@ -368,14 +371,16 @@ public final class StringList extends AbstractStringList
 	 * 
 	 * @return The string array
 	 */
+	@Override
 	public String[] toArray()
 	{
-		return (String[])strings.toArray(new String[size()]);
+		return strings.toArray(new String[size()]);
 	}
 
 	/**
 	 * @return The total length of all strings in this list.
 	 */
+	@Override
 	public int totalLength()
 	{
 		return totalLength;

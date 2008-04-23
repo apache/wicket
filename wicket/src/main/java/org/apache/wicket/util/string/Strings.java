@@ -281,7 +281,7 @@ public final class Strings
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
-			final boolean convertToHtmlUnicodeEscapes)
+		final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
 		{
@@ -592,13 +592,13 @@ public final class Strings
 			}
 
 			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y") ||
-					s.equalsIgnoreCase("1"))
+				s.equalsIgnoreCase("1"))
 			{
 				return true;
 			}
 
 			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n") ||
-					s.equalsIgnoreCase("0"))
+				s.equalsIgnoreCase("0"))
 			{
 				return false;
 			}
@@ -707,7 +707,7 @@ public final class Strings
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
 	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
-			CharSequence replaceWith)
+		CharSequence replaceWith)
 	{
 		if (s == null)
 		{
@@ -815,7 +815,7 @@ public final class Strings
 		{
 			return new String[0];
 		}
-		final List strings = new ArrayList();
+		final List<String> strings = new ArrayList<String>();
 		int pos = 0;
 		while (true)
 		{
@@ -942,7 +942,7 @@ public final class Strings
 			else
 			{
 				throw new StringValueConversionException("Expected single character, not \"" + s +
-						"\"");
+					"\"");
 			}
 		}
 
@@ -1138,7 +1138,7 @@ public final class Strings
 	 *            the location where the component was created or added in the java code.
 	 * @return a string giving the line precise location where the component was added or created.
 	 */
-	public static String toString(final Component component, final Throwable location)
+	public static String toString(final Component< ? > component, final Throwable location)
 	{
 		Class componentClass = component.getClass();
 
@@ -1156,8 +1156,8 @@ public final class Strings
 		// differentiator for the message (e.g. "component foo was ***added***"
 		// or "component foo was ***created***")
 		AppendingStringBuffer sb = new AppendingStringBuffer("The " + componentType.toLowerCase() +
-				" with id '" + component.getId() + "' that failed to render was " +
-				location.getMessage() + "\n");
+			" with id '" + component.getId() + "' that failed to render was " +
+			location.getMessage() + "\n");
 
 		// a list of stacktrace elements that need to be skipped in the location
 		// stack trace
@@ -1221,7 +1221,7 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			ArrayList al = new ArrayList();
+			List<Throwable> al = new ArrayList<Throwable>();
 			Throwable cause = throwable;
 			al.add(cause);
 			while (cause.getCause() != null && cause != cause.getCause())
@@ -1233,7 +1233,7 @@ public final class Strings
 			AppendingStringBuffer sb = new AppendingStringBuffer(256);
 			// first print the last cause
 			int length = al.size() - 1;
-			cause = (Throwable)al.get(length);
+			cause = al.get(length);
 			if (throwable instanceof WicketRuntimeException)
 			{
 				sb.append("WicketMessage: ");
@@ -1248,7 +1248,7 @@ public final class Strings
 				sb.append("\n\nComplete stack:\n\n");
 				for (int i = 0; i < length; i++)
 				{
-					outputThrowable((Throwable)al.get(i), sb, true);
+					outputThrowable(al.get(i), sb, true);
 					sb.append("\n");
 				}
 			}
@@ -1287,7 +1287,7 @@ public final class Strings
 	 * @param stopAtWicketServlet
 	 */
 	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
-			boolean stopAtWicketServlet)
+		boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
@@ -1301,8 +1301,7 @@ public final class Strings
 				sb.append(traceString);
 				sb.append("\n");
 				if (stopAtWicketServlet &&
-						(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString
-								.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
+					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
 				{
 					return;
 				}

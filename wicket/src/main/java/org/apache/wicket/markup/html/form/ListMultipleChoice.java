@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -196,23 +195,13 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	@Override
 	public final String getModelValue()
 	{
-		// Get the list of selected values
-		Object modelObject = getModelObject();
-		if (modelObject != null && !(modelObject instanceof Collection))
-		{
-			throw new WicketRuntimeException(
-				"Model object for a ListMultipleChoice must be a Collection (found " +
-					modelObject.getClass() + ")");
-		}
-		final Collection<T> selectedValues = (Collection)modelObject;
+		final Collection<T> selectedValues = getModelObject();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
 			final List< ? extends T> choices = getChoices();
-			for (final Iterator<T> iterator = selectedValues.iterator(); iterator.hasNext();)
+			for (T object : selectedValues)
 			{
-				final T object = iterator.next();
-
 				int index = choices.indexOf(object);
 				buffer.append(getChoiceRenderer().getIdValue(object, index));
 				buffer.append(VALUE_SEPARATOR);
@@ -271,7 +260,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		else
 		{
 			// TODO 1.3: check if its safe to return Collections.EMPTY_LIST here
-			return new ArrayList();
+			return new ArrayList<T>();
 		}
 	}
 
