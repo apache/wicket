@@ -65,4 +65,45 @@ public class ActionPermissionsTest extends TestCase
 		permissions.authorizeAll(mambo);
 		assertEquals(null, permissions.rolesFor(mambo));
 	}
+
+	/**
+	 * Test adding roles.
+	 * 
+	 * @throws Exception
+	 */
+	public void testRemove1() throws Exception
+	{
+		ActionPermissions permissions = new ActionPermissions();
+		Action mambo = new Action("mambo");
+		assertEquals(null, permissions.rolesFor(mambo));
+		permissions.unauthorize(mambo, new Roles("maurice"));
+		assertEquals(null, permissions.rolesFor(mambo));
+	}
+
+	/**
+	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
+	 * Temporarily disabled until we can decide what to do with it.
+	 */
+// public void testRemove2()
+// {
+// WicketTester tester = new WicketTester();
+// tester.setupRequestAndResponse();
+// Label label = new Label("label", "text");
+// Action mambo = new Action("mambo");
+// MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
+// new IRoleCheckingStrategy()
+// {
+//
+// public boolean hasAnyRole(Roles roles)
+// {
+// return false;
+// }
+// });
+// label.setMetaData(MetaDataRoleAuthorizationStrategy.ACTION_PERMISSIONS,
+// new ActionPermissions());
+// MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
+// assertFalse(strategy.isActionAuthorized(label, mambo));
+// tester.processRequestCycle();
+// tester.destroy();
+// }
 }

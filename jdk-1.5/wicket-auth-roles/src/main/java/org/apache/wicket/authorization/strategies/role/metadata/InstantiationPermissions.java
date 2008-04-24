@@ -134,7 +134,7 @@ public class InstantiationPermissions implements IClusterable
 		// If we removed the last authorized role, we authorize the empty role
 		// so that removing authorization can't suddenly open something up to
 		// everyone.
-		if (roles.size() == 0)
+		if (roles != null && roles.size() == 0)
 		{
 			roles.add(MetaDataRoleAuthorizationStrategy.NO_ROLE);
 		}
