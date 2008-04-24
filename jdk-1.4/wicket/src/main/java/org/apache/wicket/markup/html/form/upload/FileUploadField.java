@@ -30,7 +30,9 @@ import org.apache.wicket.util.upload.FileItem;
  * component is nested in a {@link org.apache.wicket.markup.html.form.Form}, that has multipart ==
  * true, its model is updated with the {@link org.apache.wicket.markup.html.form.upload.FileUpload}
  * for this component.
- * 
+ * <p>
+ * FILE UPLOADS ARE NOT SUPPORTED BY AJAX. USE GOOGLE TO LEARN MORE ABOUT THIS.
+ *
  * @author Eelco Hillenius
  */
 public class FileUploadField extends FormComponent
