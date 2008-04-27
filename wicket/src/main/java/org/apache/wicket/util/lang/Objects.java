@@ -115,6 +115,7 @@ public final class Objects
 		// This override is required to resolve classes inside in different
 		// bundle, i.e.
 		// The classes can be resolved by OSGI classresolver implementation
+		@Override
 		protected Class resolveClass(ObjectStreamClass desc) throws IOException,
 			ClassNotFoundException
 		{
@@ -153,6 +154,7 @@ public final class Objects
 			return candidate;
 		}
 
+		@Override
 		protected Object resolveObject(Object obj) throws IOException
 		{
 			Object replaced = replacedComponents.get(obj);
@@ -176,6 +178,7 @@ public final class Objects
 			enableReplaceObject(true);
 		}
 
+		@Override
 		protected Object replaceObject(Object obj) throws IOException
 		{
 			if (obj instanceof Component)
@@ -478,6 +481,7 @@ public final class Objects
 				{
 					// This override is required to resolve classes inside in different bundle, i.e.
 					// The classes can be resolved by OSGI classresolver implementation
+					@Override
 					protected Class resolveClass(ObjectStreamClass desc) throws IOException,
 						ClassNotFoundException
 					{
@@ -621,7 +625,7 @@ public final class Objects
 	 * @return converted value of the type given, or value if the value cannot be converted to the
 	 *         given type.
 	 */
-	public static<T> T convertValue(Object value, Class<T> toType)
+	public static <T> T convertValue(Object value, Class<T> toType)
 	{
 		Object result = null;
 
@@ -630,7 +634,7 @@ public final class Objects
 			/* If array -> array then convert components of array individually */
 			if (value.getClass().isArray() && toType.isArray())
 			{
-				Class<?> componentType = toType.getComponentType();
+				Class< ? > componentType = toType.getComponentType();
 
 				result = Array.newInstance(componentType, Array.getLength(value));
 				for (int i = 0, icount = Array.getLength(value); i < icount; i++)
@@ -693,7 +697,7 @@ public final class Objects
 				result = primitiveDefaults.get(toType);
 			}
 		}
-    return toType.cast( result );
+		return toType.cast(result);
 	}
 
 	/**
@@ -1179,8 +1183,7 @@ public final class Objects
 	 * @param obj
 	 * @return hashcode of the object or 0 if obj is null
 	 */
-	// TODO when on Java 5, we can use Object... obj
-	public static int hashCode(final Object[] obj)
+	public static int hashCode(final Object... obj)
 	{
 		if (obj == null || obj.length == 0)
 		{
