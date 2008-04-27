@@ -19,9 +19,9 @@ package org.apache.wicket.markup.repeater;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -165,25 +165,7 @@ public abstract class RefreshingView<T> extends RepeatingView<Collection<T>>
 	 */
 	public Iterator<Item<T>> getItems()
 	{
-		return new Iterator<Item<T>>()
-		{
-			private final Iterator<Component< ? >> delegate = iterator();
-
-			public boolean hasNext()
-			{
-				return delegate.hasNext();
-			}
-
-			public Item<T> next()
-			{
-				return (Item<T>)delegate.next();
-			}
-
-			public void remove()
-			{
-				delegate.remove();
-			}
-		};
+		return Generics.iterator(iterator());
 	}
 
 	/**

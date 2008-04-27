@@ -18,7 +18,6 @@ package org.apache.wicket.markup.repeater;
 
 import java.util.Iterator;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 
 
@@ -45,13 +44,14 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory,
+	 * 
+	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(org.apache.wicket.markup.repeater.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
-			final Iterator existingItems)
+	public <T> Iterator<Item<T>> getItems(final IItemFactory<T> factory,
+		final Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems)
 	{
-		return new Iterator()
+		return new Iterator<Item<T>>()
 		{
 			private int index = 0;
 
@@ -65,19 +65,11 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 				return newModels.hasNext();
 			}
 
-			public Object next()
+			public Item<T> next()
 			{
-				Object next = newModels.next();
-				if (next != null && !(next instanceof IModel))
-				{
-					throw new WicketRuntimeException("Expecting an instance of " +
-							IModel.class.getName() + ", got " + next.getClass().getName());
-				}
-				final IModel model = (IModel)next;
-
-				Item item = factory.newItem(index, model);
+				IModel<T> model = newModels.next();
+				Item<T> item = factory.newItem(index, model);
 				index++;
-
 				return item;
 			}
 

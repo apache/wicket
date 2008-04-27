@@ -23,9 +23,11 @@ import org.apache.wicket.model.IModel;
  * Item that sets class="even" or class="odd" attributes based on its index
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of Item's model object
  * 
  */
-public class OddEvenItem extends Item
+public class OddEvenItem<T> extends Item<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,11 +44,12 @@ public class OddEvenItem extends Item
 	 * @param model
 	 *            item model
 	 */
-	public OddEvenItem(String id, int index, IModel model)
+	public OddEvenItem(String id, int index, IModel<T> model)
 	{
 		super(id, index, model);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);

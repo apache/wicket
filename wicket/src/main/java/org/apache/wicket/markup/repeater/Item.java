@@ -113,14 +113,14 @@ public class Item<T> extends WebMarkupContainer<T>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class IndexComparator implements Comparator<Item>
+	public static class IndexComparator implements Comparator<Item< ? >>
 	{
-		private static final Comparator<Item> instance = new IndexComparator();
+		private static final Comparator<Item< ? >> instance = new IndexComparator();
 
 		/**
 		 * @return static instance of the comparator
 		 */
-		public static final Comparator<Item> getInstance()
+		public static final Comparator<Item< ? >> getInstance()
 		{
 			return instance;
 		}
@@ -128,7 +128,7 @@ public class Item<T> extends WebMarkupContainer<T>
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
-		public int compare(Item lhs, Item rhs)
+		public int compare(Item< ? > lhs, Item< ? > rhs)
 		{
 			return lhs.getIndex() - rhs.getIndex();
 		}

@@ -96,7 +96,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 		{
 			do
 			{
-				Component child = it.next();
+				Component< ? > child = it.next();
 				if (child == null)
 				{
 					throw new IllegalStateException("the render iterator returned null for a child");
@@ -119,7 +119,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * @param child
 	 *            Child component to be rendered
 	 */
-	protected void renderChild(final Component child)
+	protected void renderChild(final Component< ? > child)
 	{
 		child.render(getMarkupStream());
 	}
@@ -137,7 +137,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 			Iterator<Component< ? >> i = iterator();
 			while (i.hasNext())
 			{
-				Component c = i.next();
+				Component< ? > c = i.next();
 				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
 				if (!matcher.matches())
 				{
