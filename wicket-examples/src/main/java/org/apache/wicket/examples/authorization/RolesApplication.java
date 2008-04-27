@@ -24,7 +24,6 @@ import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
-import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
 import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -32,7 +31,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Application object for this example.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class RolesApplication extends WebApplication

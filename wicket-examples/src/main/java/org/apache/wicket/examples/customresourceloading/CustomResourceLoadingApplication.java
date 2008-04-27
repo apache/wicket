@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
@@ -34,7 +33,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Application class for the custom resource loading example.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class CustomResourceLoadingApplication extends WicketExampleApplication
