@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.examples.ajax.prototype.Index;
 
 
 /**
  * Application class for the component reference.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class ComponentReferenceApplication extends WicketExampleApplication
