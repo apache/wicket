@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.examples.breadcrumb;
 
-import org.apache.wicket.examples.ajax.prototype.Index;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Application class for the bread crumb example.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class BreadCrumbApplication extends WebApplication
