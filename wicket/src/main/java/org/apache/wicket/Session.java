@@ -1373,6 +1373,7 @@ public abstract class Session implements IClusterable
 			{
 				Page page = touchedPages.get(i);
 				page.getPageMap().put(page);
+				dirty = true;
 			}
 		}
 
