@@ -42,7 +42,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
-import org.apache.wicket.protocol.http.pagestore.AbstractPageStore.SerializedPage;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.protocol.http.pagestore.SerializedPagesCache.SerializedPageWithSession;
 import org.apache.wicket.util.lang.Bytes;
@@ -147,7 +146,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		/**
 		 * @return list of {@link PageMapEntry} for this session
 		 */
-		public List /* <PageMapEntry> */<PageMapEntry>getPageMapEntryList()
+		public List /* <PageMapEntry> */<PageMapEntry> getPageMapEntryList()
 		{
 			return Collections.unmodifiableList(pageMapEntryList);
 		}
@@ -645,7 +644,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 	}
 
-	private Map /* <String, SessionEntry> */<String, SessionEntry>sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>();
+	private Map /* <String, SessionEntry> */<String, SessionEntry> sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
 	/**
 	 * Returns the SessionEntry for session with given id. If the entry does not yet exist and the
@@ -844,10 +843,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	// map from session id to serialized page list
 	// this contains lists for all active sessions
-	private final Map /* <String, List<SerializedPage>> */<String, List>pagesToSaveAll = new ConcurrentHashMap<String, List>();
+	private final Map /* <String, List<SerializedPage>> */<String, List> pagesToSaveAll = new ConcurrentHashMap<String, List>();
 
 	// contains list of serialized pages to be saved - only non empty lists
-	private final Map /* <String, List<SerializedPage>> */<String, List>pagesToSaveActive = new ConcurrentHashMap<String, List>();
+	private final Map /* <String, List<SerializedPage>> */<String, List> pagesToSaveActive = new ConcurrentHashMap<String, List>();
 
 	/**
 	 * Returns the list of pages to be saved for the specified session id. If the list is not found,
@@ -886,11 +885,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		{
 			for (Iterator i = list.iterator(); i.hasNext();)
 			{
-				try {
+				try
+				{
 					SerializedPage page = (SerializedPage)i.next();
 					getSessionEntry(sessionId, true).savePage(page);
-				} catch (Exception e) {
-					// We have to catch the exception here to process the other entries, 
+				}
+				catch (Exception e)
+				{
+					// We have to catch the exception here to process the other entries,
 					// otherwise there would be a big memory leak
 					log.error("Error flushing page", e);
 				}
