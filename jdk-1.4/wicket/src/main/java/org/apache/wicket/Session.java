@@ -1368,6 +1368,7 @@ public abstract class Session implements IClusterable
 			{
 				Page page = (Page)touchedPages.get(i);
 				page.getPageMap().put(page);
+				dirty = true;
 			}
 		}
 
