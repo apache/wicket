@@ -18,9 +18,11 @@ package org.apache.wicket.markup.repeater.data;
 
 import java.util.Iterator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -50,15 +52,13 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg
  * @author Christian Essl
+ * @param <T>
  * 
  */
-public abstract class GridView extends DataViewBase
+public abstract class GridView<T> extends DataViewBase<T>
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private int columns = 1;
 	private int rows = Integer.MAX_VALUE;
 
@@ -69,7 +69,7 @@ public abstract class GridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public GridView(String id, IDataProvider dataProvider)
+	public GridView(String id, IDataProvider<T> dataProvider)
 	{
 		super(id, dataProvider);
 	}
@@ -90,7 +90,7 @@ public abstract class GridView extends DataViewBase
 	 *            number of columns
 	 * @return this for chaining
 	 */
-	public GridView setColumns(int cols)
+	public GridView<T> setColumns(int cols)
 	{
 		if (cols < 1)
 		{
@@ -107,11 +107,13 @@ public abstract class GridView extends DataViewBase
 
 					final int old = columns;
 
+					@Override
 					public void undo()
 					{
 						columns = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "GridViewColumnsChange[component: " + getPath() +
@@ -140,7 +142,7 @@ public abstract class GridView extends DataViewBase
 	 *            number of rows
 	 * @return this for chaining
 	 */
-	public GridView setRows(int rows)
+	public GridView<T> setRows(int rows)
 	{
 		if (rows < 1)
 		{
@@ -157,11 +159,13 @@ public abstract class GridView extends DataViewBase
 
 					final int old = GridView.this.rows;
 
+					@Override
 					public void undo()
 					{
 						GridView.this.rows = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "GridViewRowsChange[component: " + getPath() + ", removed rows: " +
@@ -198,7 +202,8 @@ public abstract class GridView extends DataViewBase
 	}
 
 
-	protected void addItems(Iterator items)
+	@Override
+	protected void addItems(Iterator<Item<T>> items)
 	{
 		if (items.hasNext())
 		{
@@ -209,18 +214,18 @@ public abstract class GridView extends DataViewBase
 			do
 			{
 				// Build a row
-				Item rowItem = newRowItem(newChildId(), row);
-				RepeatingView rowView = new RepeatingView("cols");
+				Item< ? > rowItem = newRowItem(newChildId(), row);
+				RepeatingView< ? > rowView = new RepeatingView<Void>("cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
 				// Populate the row
 				for (int index = 0; index < cols; index++)
 				{
-					final Item cellItem;
+					final Item<T> cellItem;
 					if (items.hasNext())
 					{
-						cellItem = (Item)items.next();
+						cellItem = items.next();
 					}
 					else
 					{
@@ -242,7 +247,7 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider()
+	public IDataProvider<T> getDataProvider()
 	{
 		return internalGetDataProvider();
 	}
@@ -250,9 +255,11 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractPageableView#getItems()
 	 */
-	public Iterator getItems()
+	@Override
+	public Iterator<Item<T>> getItems()
 	{
-		return new ItemsIterator(iterator());
+		Iterator<MarkupContainer< ? >> rows = Generics.iterator(iterator());
+		return new ItemsIterator<T>(rows);
 	}
 
 	/**
@@ -261,7 +268,7 @@ public abstract class GridView extends DataViewBase
 	 * @param item
 	 *            Item object
 	 */
-	abstract protected void populateEmptyItem(Item item);
+	abstract protected void populateEmptyItem(Item<T> item);
 
 	/**
 	 * Create a Item which represents an empty cell (there is no model for it in the DataProvider)
@@ -270,9 +277,9 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created item
 	 */
-	protected Item newEmptyItem(String id, int index)
+	protected Item<T> newEmptyItem(String id, int index)
 	{
-		return new Item(id, index, null);
+		return new Item<T>(id, index, null);
 	}
 
 	/**
@@ -282,29 +289,30 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created Item
 	 */
-	protected Item newRowItem(String id, int index)
+	protected Item< ? > newRowItem(String id, int index)
 	{
-		return new Item(id, index, null);
+		return new Item<Void>(id, index, null);
 	}
 
 	/**
 	 * Iterator that iterates over all items in the cells
 	 * 
 	 * @author igor
+	 * @param <T>
 	 * 
 	 */
-	private static class ItemsIterator implements Iterator
+	private static class ItemsIterator<T> implements Iterator<Item<T>>
 	{
-		private final Iterator rows;
-		private Iterator cells;
+		private final Iterator<MarkupContainer< ? >> rows;
+		private Iterator<Item<T>> cells;
 
-		private Item next;
+		private Item<T> next;
 
 		/**
 		 * @param rows
 		 *            iterator over child row views
 		 */
-		public ItemsIterator(Iterator rows)
+		public ItemsIterator(Iterator<MarkupContainer< ? >> rows)
 		{
 			this.rows = rows;
 			findNext();
@@ -329,9 +337,9 @@ public abstract class GridView extends DataViewBase
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public Item<T> next()
 		{
-			Item item = next;
+			Item<T> item = next;
 			findNext();
 			return item;
 		}
@@ -342,17 +350,20 @@ public abstract class GridView extends DataViewBase
 
 			if (cells != null && cells.hasNext())
 			{
-				next = (Item)cells.next();
+				next = cells.next();
 			}
 			else
 			{
 				while (rows.hasNext())
 				{
-					MarkupContainer row = (MarkupContainer)rows.next();
-					cells = ((MarkupContainer)row.iterator().next()).iterator();
+					MarkupContainer< ? > row = rows.next();
+
+					final Iterator<Component< ? >> rawCells;
+					rawCells = ((MarkupContainer< ? >)row.iterator().next()).iterator();
+					cells = Generics.iterator(rawCells);
 					if (cells.hasNext())
 					{
-						next = (Item)cells.next();
+						next = cells.next();
 						break;
 					}
 				}

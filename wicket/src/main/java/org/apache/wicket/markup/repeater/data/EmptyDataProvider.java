@@ -18,6 +18,7 @@ package org.apache.wicket.markup.repeater.data;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.wicket.model.IModel;
 
@@ -26,27 +27,31 @@ import org.apache.wicket.model.IModel;
  * A convenience class to represent an empty data provider.
  * 
  * @author Phil Kulak
+ * @param <T>
  */
-public class EmptyDataProvider implements IDataProvider
+public class EmptyDataProvider<T> implements IDataProvider<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static EmptyDataProvider INSTANCE = new EmptyDataProvider();
+	private static EmptyDataProvider< ? > INSTANCE = new EmptyDataProvider<Void>();
 
 	/**
+	 * @param <T>
 	 * @return the singleton instance of this class
 	 */
-	public static EmptyDataProvider getInstance()
+	@SuppressWarnings("unchecked")
+	public static <T> EmptyDataProvider<T> getInstance()
 	{
-		return INSTANCE;
+		return (EmptyDataProvider<T>)INSTANCE;
 	}
 
 	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
-	public Iterator iterator(int first, int count)
+	public Iterator<T> iterator(int first, int count)
 	{
-		return Collections.EMPTY_LIST.iterator();
+		List<T> list = Collections.emptyList();
+		return list.iterator();
 	}
 
 	/**
@@ -60,7 +65,7 @@ public class EmptyDataProvider implements IDataProvider
 	/**
 	 * @see IDataProvider#model(Object)
 	 */
-	public IModel model(Object object)
+	public IModel<T> model(Object object)
 	{
 		return null;
 	}

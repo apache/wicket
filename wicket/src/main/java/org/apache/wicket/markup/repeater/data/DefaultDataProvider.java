@@ -17,11 +17,17 @@
 package org.apache.wicket.markup.repeater.data;
 
 
-public abstract class DefaultDataProvider implements IDataProvider
+/**
+ * Base class for nondetachable data providers
+ * 
+ * @param <T>
+ * 
+ * @deprecated not very useful
+ */
+@Deprecated
+public abstract class DefaultDataProvider<T> implements IDataProvider<T>
 {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void detach()

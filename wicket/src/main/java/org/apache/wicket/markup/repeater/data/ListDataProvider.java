@@ -29,21 +29,22 @@ import org.apache.wicket.model.Model;
  * serializable or model(Object) needs to be overridden to provide the proper model implementation.
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
  * 
  */
-public class ListDataProvider implements IDataProvider
+public class ListDataProvider<T extends Serializable> implements IDataProvider<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the list used as dataprovider for the dataview */
-	private final List list;
+	private final List<T> list;
 
 	/**
 	 * 
 	 * @param list
 	 *            the list used as dataprovider for the dataview
 	 */
-	public ListDataProvider(List list)
+	public ListDataProvider(List<T> list)
 	{
 		if (list == null)
 		{
@@ -56,7 +57,7 @@ public class ListDataProvider implements IDataProvider
 	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
-	public Iterator iterator(final int first, final int count)
+	public Iterator< ? extends T> iterator(final int first, final int count)
 	{
 		int toIndex = first + count;
 		if (toIndex > list.size())
@@ -77,9 +78,9 @@ public class ListDataProvider implements IDataProvider
 	/**
 	 * @see IDataProvider#model(Object)
 	 */
-	public IModel model(Object object)
+	public IModel<T> model(T object)
 	{
-		return new Model((Serializable)object);
+		return new Model<T>(object);
 	}
 
 	/**
