@@ -312,7 +312,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer< ? > container)
+	public void renderHead(HtmlHeaderContainer container)
 	{
 		renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);

@@ -65,8 +65,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	public final void renderHeadFromAssociatedMarkupFile(
-		final HtmlHeaderContainer< ? > htmlContainer)
+	public final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found

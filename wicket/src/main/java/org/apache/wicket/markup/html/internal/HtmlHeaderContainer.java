@@ -62,10 +62,9 @@ import org.apache.wicket.response.StringResponse;
  * </ul>
  * 
  * @author Juergen Donnerstag
- * @param <T>
- *            The model object type
+ * 
  */
-public class HtmlHeaderContainer<T> extends WebMarkupContainer<T>
+public class HtmlHeaderContainer extends WebMarkupContainer<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -207,7 +206,7 @@ public class HtmlHeaderContainer<T> extends WebMarkupContainer<T>
 	 *            The header component container
 	 */
 	private final void renderHeaderSections(final MarkupContainer< ? > page,
-		final HtmlHeaderContainer< ? > container)
+		final HtmlHeaderContainer container)
 	{
 		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header

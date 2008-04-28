@@ -65,7 +65,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	 * @param container
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer< ? > container)
+	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
 	{
 		if (markupHelper == null)
 		{

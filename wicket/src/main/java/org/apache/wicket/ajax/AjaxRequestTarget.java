@@ -248,13 +248,13 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/** a list of listeners */
 	private List<IListener> listeners = null;
 
-	private final Page page;
+	private final Page< ? > page;
 
 	/**
 	 * 
 	 * @see org.apache.wicket.request.target.component.IPageRequestTarget#getPage()
 	 */
-	public Page getPage()
+	public Page< ? > getPage()
 	{
 		return page;
 	}
@@ -264,7 +264,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * @param page
 	 */
-	public AjaxRequestTarget(Page page)
+	public AjaxRequestTarget(Page< ? > page)
 	{
 		this.page = page;
 		Response response = RequestCycle.get().getResponse();
@@ -694,7 +694,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
-		final Page page = component.getPage();
+		final Page< ? > page = component.getPage();
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
@@ -950,18 +950,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (header == null)
 		{
 			header = new AjaxHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID, this);
-			Component< ? > oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
-
-			// add or replace the container to page
-
-			if (oldHeader != null)
-			{
-				component.getPage().replace(header);
-			}
-			else
-			{
-				component.getPage().add(header);
-			}
+			final Page< ? > page = component.getPage();
+			page.addOrReplace(header);
 		}
 
 		// save old response, set new
@@ -1078,7 +1068,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/**
 	 * Returns the HTML id of the last focused element.
 	 * 
-	 * @return
+	 * @return markup id of last focused element, <code>null</code> if none
 	 */
 	public String getLastFocusedElementId()
 	{

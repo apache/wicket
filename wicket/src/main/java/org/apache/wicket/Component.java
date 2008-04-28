@@ -2594,7 +2594,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer< ? > container)
+	public void renderHead(final HtmlHeaderContainer container)
 	{
 		if (isVisible())
 		{
