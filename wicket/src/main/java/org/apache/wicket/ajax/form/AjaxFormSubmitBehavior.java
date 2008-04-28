@@ -75,7 +75,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	/**
 	 * 
-	 * @return
+	 * @return Form that will be submitted by this behavior
 	 */
 	protected Form< ? > getForm()
 	{
@@ -83,7 +83,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			// try to find form in the hierarchy of owning component
 			Component< ? > component = getComponent();
-			form = (Form< ? >)component.findParent(Form.class);
+			form = component.findParent(Form.class);
 			if (form == null)
 			{
 				throw new IllegalStateException(

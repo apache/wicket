@@ -164,7 +164,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * Determines whether the focus will not be restored when the event is blur. By default this is
 	 * true, as we don't want to re-focus component on blur event.
 	 * 
-	 * @return
+	 * @return <code>true</code> if refocusing should be disabled, <code>false</code> otherwise
 	 */
 	protected boolean disableFocusOnBlur()
 	{
