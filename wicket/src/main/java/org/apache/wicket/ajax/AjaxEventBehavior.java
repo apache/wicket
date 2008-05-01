@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.string.Strings;
@@ -98,12 +99,14 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 
 		// only add the event handler when the component is enabled.
-		if (getComponent().isEnabled())
+		Component< ? > myComponent = getComponent();
+		if (myComponent.isEnabled() && myComponent.isEnableAllowed())
 		{
 			tag.put(event, getEventHandler());
 		}
@@ -123,6 +126,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
+	@Override
 	protected CharSequence generateCallbackScript(CharSequence partialCall)
 	{
 		CharSequence script = super.generateCallbackScript(partialCall);
@@ -156,6 +160,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onEvent(target);
