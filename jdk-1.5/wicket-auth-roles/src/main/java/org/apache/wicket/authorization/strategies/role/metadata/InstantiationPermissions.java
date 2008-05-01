@@ -105,7 +105,10 @@ public class InstantiationPermissions implements IClusterable
 	}
 
 	/**
-	 * Removes permission for the given role to instantiate the given class.
+	 * Removes permission for the given role to instantiate the given class. Note that this is only
+	 * relevant if a role was previously authorized for that class. If no roles where previously
+	 * authorized the effect of the unauthorize call is that no roles at all will be authorized for
+	 * that class.
 	 * 
 	 * @param componentClass
 	 *            The class
@@ -125,16 +128,21 @@ public class InstantiationPermissions implements IClusterable
 			throw new IllegalArgumentException("Argument rolesToRemove cannot be null");
 		}
 
-		final Roles roles = rolesForComponentClass.get(componentClass);
+		Roles roles = rolesForComponentClass.get(componentClass);
 		if (roles != null)
 		{
 			roles.removeAll(rolesToRemove);
+		}
+		else
+		{
+			roles = new Roles();
+			rolesForComponentClass.put(componentClass, roles);
 		}
 
 		// If we removed the last authorized role, we authorize the empty role
 		// so that removing authorization can't suddenly open something up to
 		// everyone.
-		if (roles != null && roles.size() == 0)
+		if (roles.size() == 0)
 		{
 			roles.add(MetaDataRoleAuthorizationStrategy.NO_ROLE);
 		}

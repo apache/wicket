@@ -102,7 +102,9 @@ final class ActionPermissions implements IClusterable
 	}
 
 	/**
-	 * Remove the given authorized role from an action.
+	 * Remove the given authorized role from an action. Note that this is only relevant if a role
+	 * was previously authorized for that action. If no roles where previously authorized the effect
+	 * of the unauthorize call is that no roles at all will be authorized for that action.
 	 * 
 	 * @param action
 	 *            The action
@@ -126,11 +128,16 @@ final class ActionPermissions implements IClusterable
 		{
 			roles.removeAll(rolesToRemove);
 		}
+		else
+		{
+			roles = new Roles();
+			rolesForAction.put(action, roles);
+		}
 
 		// If we removed the last authorized role, we authorize the empty role
 		// so that removing authorization can't suddenly open something up to
 		// everyone.
-		if (roles != null && roles.size() == 0)
+		if (roles.size() == 0)
 		{
 			roles.add(MetaDataRoleAuthorizationStrategy.NO_ROLE);
 		}

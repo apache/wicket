@@ -19,7 +19,9 @@ package org.apache.wicket.authorization.strategies.role.metadata;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test case for
@@ -67,7 +69,7 @@ public class InstantiationPermissionsTest extends TestCase
 	}
 
 	/**
-	 * Test adding roles.
+	 * Test removing roles.
 	 * 
 	 * @throws Exception
 	 */
@@ -76,32 +78,60 @@ public class InstantiationPermissionsTest extends TestCase
 		InstantiationPermissions permissions = new InstantiationPermissions();
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
 		permissions.unauthorize(Page.class, new Roles("eelco"));
-		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
+		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE), permissions
+				.getRolesForComponentClass().get(Page.class));
 	}
 
 	/**
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
-	 * Temporarily disabled until we can decide what to do with it.
+	 * 
 	 */
-// public void testRemove2()
-// {
-// WicketTester tester = new WicketTester();
-// tester.setupRequestAndResponse();
-// MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-// new IRoleCheckingStrategy()
-// {
-//
-// public boolean hasAnyRole(Roles roles)
-// {
-// return false;
-// }
-// });
-// tester.getApplication().setMetaData(
-// MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
-// new InstantiationPermissions());
-// MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
-// assertFalse(strategy.isInstantiationAuthorized(Page.class));
-// tester.processRequestCycle();
-// tester.destroy();
-// }
+	public void testRemove2()
+	{
+		WicketTester tester = new WicketTester();
+		tester.setupRequestAndResponse();
+		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
+				new IRoleCheckingStrategy()
+				{
+
+					public boolean hasAnyRole(Roles roles)
+					{
+						return false;
+					}
+				});
+		tester.getApplication().setMetaData(
+				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+				new InstantiationPermissions());
+		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
+		assertFalse(strategy.isInstantiationAuthorized(Page.class));
+		tester.processRequestCycle();
+		tester.destroy();
+	}
+
+	/**
+	 * Test consistency in behavior between authorizing a role for a class and then unauthorizing it
+	 * with {@link #testRemove2()}.
+	 */
+	public void testRemove3()
+	{
+		WicketTester tester = new WicketTester();
+		tester.setupRequestAndResponse();
+		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
+				new IRoleCheckingStrategy()
+				{
+
+					public boolean hasAnyRole(Roles roles)
+					{
+						return false;
+					}
+				});
+		tester.getApplication().setMetaData(
+				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+				new InstantiationPermissions());
+		MetaDataRoleAuthorizationStrategy.authorize(Page.class, "martijn");
+		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
+		assertFalse(strategy.isInstantiationAuthorized(Page.class));
+		tester.processRequestCycle();
+		tester.destroy();
+	}
 }
