@@ -19,7 +19,10 @@ package org.apache.wicket.authorization.strategies.role.metadata;
 import junit.framework.TestCase;
 
 import org.apache.wicket.authorization.Action;
+import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test case for {@link org.apache.wicket.authorization.strategies.role.metadata.ActionPermissions}.
@@ -64,5 +67,75 @@ public class ActionPermissionsTest extends TestCase
 		assertEquals(3, permissions.rolesFor(mambo).size());
 		permissions.authorizeAll(mambo);
 		assertEquals(null, permissions.rolesFor(mambo));
+	}
+
+	/**
+	 * Test removing roles.
+	 * 
+	 * @throws Exception
+	 */
+	public void testRemove1() throws Exception
+	{
+		ActionPermissions permissions = new ActionPermissions();
+		Action mambo = new Action("mambo");
+		assertEquals(null, permissions.rolesFor(mambo));
+		permissions.unauthorize(mambo, new Roles("maurice"));
+		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE), permissions
+				.rolesFor(mambo));
+	}
+
+	/**
+	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
+	 * 
+	 */
+	public void testRemove2()
+	{
+		WicketTester tester = new WicketTester();
+		tester.setupRequestAndResponse();
+		Label label = new Label("label", "text");
+		Action mambo = new Action("mambo");
+		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
+				new IRoleCheckingStrategy()
+				{
+
+					public boolean hasAnyRole(Roles roles)
+					{
+						return false;
+					}
+				});
+		label.setMetaData(MetaDataRoleAuthorizationStrategy.ACTION_PERMISSIONS,
+				new ActionPermissions());
+		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
+		assertFalse(strategy.isActionAuthorized(label, mambo));
+		tester.processRequestCycle();
+		tester.destroy();
+	}
+
+	/**
+	 * Test consistency in behavior between authorizing a role for an action and then unauthorizing
+	 * it with {@link #testRemove2()}.
+	 */
+	public void testRemove3()
+	{
+		WicketTester tester = new WicketTester();
+		tester.setupRequestAndResponse();
+		Label label = new Label("label", "text");
+		Action mambo = new Action("mambo");
+		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
+				new IRoleCheckingStrategy()
+				{
+
+					public boolean hasAnyRole(Roles roles)
+					{
+						return false;
+					}
+				});
+		label.setMetaData(MetaDataRoleAuthorizationStrategy.ACTION_PERMISSIONS,
+				new ActionPermissions());
+		MetaDataRoleAuthorizationStrategy.authorize(label, mambo, "johan");
+		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
+		assertFalse(strategy.isActionAuthorized(label, mambo));
+		tester.processRequestCycle();
+		tester.destroy();
 	}
 }

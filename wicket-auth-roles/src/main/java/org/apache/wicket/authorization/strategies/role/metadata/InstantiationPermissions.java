@@ -71,7 +71,9 @@ public class InstantiationPermissions implements IClusterable
 	}
 
 	/**
-	 * Gives all roles permission to instantiate the given class.
+	 * Gives all roles permission to instantiate the given class. Note that this is only relevant if
+	 * a role was previously authorized for that class. If no roles where previously authorized the
+	 * effect of the unauthorize call is that no roles at all will be authorized for that class.
 	 * 
 	 * @param componentClass
 	 *            The component class
@@ -125,10 +127,15 @@ public class InstantiationPermissions implements IClusterable
 			throw new IllegalArgumentException("Argument rolesToRemove cannot be null");
 		}
 
-		final Roles roles = rolesForComponentClass.get(componentClass);
+		Roles roles = rolesForComponentClass.get(componentClass);
 		if (roles != null)
 		{
 			roles.removeAll(rolesToRemove);
+		}
+		else
+		{
+			roles = new Roles();
+			rolesForComponentClass.put(componentClass, roles);
 		}
 
 		// If we removed the last authorized role, we authorize the empty role
