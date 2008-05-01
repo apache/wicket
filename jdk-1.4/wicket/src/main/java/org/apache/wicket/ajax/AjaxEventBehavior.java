@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.string.Strings;
@@ -103,7 +104,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		super.onComponentTag(tag);
 
 		// only add the event handler when the component is enabled.
-		if (getComponent().isEnabled())
+		Component myComponent = getComponent();
+		if (myComponent.isEnabled() && myComponent.isEnableAllowed())
 		{
 			tag.put(event, getEventHandler());
 		}
