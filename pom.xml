@@ -35,6 +35,20 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<modules>
+				<module>wicket</module>
+				<module>wicket-datetime</module>
+				<module>wicket-extensions</module>
+				<module>wicket-ioc</module>
+				<module>wicket-spring</module>
+				<module>wicket-velocity</module>
+				<module>wicket-auth-roles</module>
+				<module>wicket-guice</module>
+				<module>wicket-jmx</module>
+				<module>wicket-objectssizeof-agent</module>
+				<module>wicket-examples</module>
+				<module>archetypes/quickstart</module>
+			</modules>
 			<distributionManagement>
 			  <snapshotRepository>
 			    <id>repo</id>
