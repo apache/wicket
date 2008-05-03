@@ -128,7 +128,7 @@ public abstract class SpringWebApplication extends WebApplication
 	 *            name of spring bean
 	 * @return proxy representing the spring bean
 	 */
-	protected Object createSpringBeanProxy(Class clazz, String beanName)
+	protected Object createSpringBeanProxy(Class< ? > clazz, String beanName)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName, clazz,
 				getSpringContextLocator()));
@@ -141,7 +141,7 @@ public abstract class SpringWebApplication extends WebApplication
 	 *            class of spring bean
 	 * @return proxy representing the spring bean
 	 */
-	protected Object createSpringBeanProxy(Class clazz)
+	protected Object createSpringBeanProxy(Class< ? > clazz)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(clazz,
 				getSpringContextLocator()));

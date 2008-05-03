@@ -47,9 +47,10 @@ import org.springframework.core.io.Resource;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
+@SuppressWarnings("unchecked")
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
-	private Map beans = new HashMap();
+	private final Map beans = new HashMap();
 
 	/**
 	 * puts bean with the given name into the context

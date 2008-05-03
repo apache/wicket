@@ -37,9 +37,9 @@ import org.springframework.context.ApplicationContext;
 public class SpringBeanLocator implements IProxyTargetLocator
 {
 	// Weak reference so we don't hold up WebApp classloader garbage collection.
-	private transient WeakReference/* <Class> */beanTypeCache;
+	private transient WeakReference<Class< ? >> beanTypeCache;
 
-	private String beanTypeName;
+	private final String beanTypeName;
 
 	private String beanName;
 
@@ -55,7 +55,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(Class beanType, ISpringContextLocator locator)
+	public SpringBeanLocator(Class< ? > beanType, ISpringContextLocator locator)
 	{
 		this(null, beanType, locator);
 	}
@@ -70,7 +70,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(String beanName, Class beanType, ISpringContextLocator locator)
+	public SpringBeanLocator(String beanName, Class< ? > beanType, ISpringContextLocator locator)
 	{
 		if (locator == null)
 		{
@@ -81,11 +81,11 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			throw new IllegalArgumentException("[beanType] argument cannot be null");
 		}
 
-		this.beanTypeCache = new WeakReference(beanType);
-		this.beanTypeName = beanType.getName();
-		this.springContextLocator = locator;
+		beanTypeCache = new WeakReference<Class< ? >>(beanType);
+		beanTypeName = beanType.getName();
+		springContextLocator = locator;
 		this.beanName = beanName;
-		this.springContextLocator = locator;
+		springContextLocator = locator;
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(ApplicationContext ctx, Class clazz)
+	private final String getBeanNameOfClass(ApplicationContext ctx, Class< ? > clazz)
 	{
 		String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz);
 		if (names.length == 0)
@@ -138,12 +138,13 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @return bean class this locator is configured with
 	 */
-	public Class getBeanType()
+	public Class< ? > getBeanType()
 	{
-		Class clazz = beanTypeCache == null ? null : (Class)beanTypeCache.get();
+		Class< ? > clazz = beanTypeCache == null ? null : (Class< ? >)beanTypeCache.get();
 		if (clazz == null)
 		{
-			beanTypeCache = new WeakReference(clazz = Classes.resolveClass(beanTypeName));
+			beanTypeCache = new WeakReference<Class< ? >>(clazz = Classes
+					.resolveClass(beanTypeName));
 			if (clazz == null)
 			{
 				throw new RuntimeException("SpringBeanLocator could not find class [" +
@@ -215,7 +216,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private final Object lookupSpringBean(ApplicationContext ctx, Class clazz)
+	private final Object lookupSpringBean(ApplicationContext ctx, Class< ? > clazz)
 	{
 		return lookupSpringBean(ctx, getBeanNameOfClass(ctx, clazz), clazz);
 	}
@@ -233,7 +234,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class clazz)
+	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class< ? > clazz)
 	{
 		try
 		{
@@ -249,6 +250,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof SpringBeanLocator)
@@ -263,6 +265,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int hashcode = beanTypeName.hashCode();

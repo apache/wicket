@@ -100,8 +100,8 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		}
 		else
 		{
-			Map beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac, WebApplication.class,
-					false, false);
+			Map< ? , ? > beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac,
+					WebApplication.class, false, false);
 			if (beans.size() == 0)
 			{
 				throw new IllegalStateException("bean of type [" + WebApplication.class.getName() +

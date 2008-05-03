@@ -118,6 +118,9 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testFailsIfBeanWithIdIsNotFound() throws Exception
 	{
 		InjectableWithReferenceToNonexistingBean obj = new InjectableWithReferenceToNonexistingBean();
@@ -135,7 +138,6 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 	static class InjectableWithReferenceToNonexistingBean
 	{
 		@SpringBean(name = "nonExisting")
-		@SuppressWarnings("unused")
 		private Bean nonExisting;
 	}
 }
