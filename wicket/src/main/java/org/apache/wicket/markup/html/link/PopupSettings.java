@@ -176,7 +176,7 @@ public class PopupSettings implements IClusterable
 		}
 
 		StringBuffer script = new StringBuffer("var w = window.open(" + target + ", '").append(
-				windowTitle).append("', '");
+			windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
 		script.append(",location=").append(flagToString(LOCATION_BAR));
@@ -293,8 +293,8 @@ public class PopupSettings implements IClusterable
 			if (pageMapName != null && (!pageMapName.equals(popupWindowName)))
 			{
 				log.warn("the page map and window name should be the same. The page map was " +
-						pageMapName + ", and the requested window name is " + popupWindowName +
-						"; changing the page map to " + popupWindowName);
+					pageMapName + ", and the requested window name is " + popupWindowName +
+					"; changing the page map to " + popupWindowName);
 			}
 			pageMapName = popupWindowName;
 		}
@@ -317,6 +317,7 @@ public class PopupSettings implements IClusterable
 	 * @return The pagemap where the popup page must be created in
 	 * @deprecated will be removed in Wicket 2.0; use {@link #getPageMap(Component)} instead
 	 */
+	@Deprecated
 	public IPageMap getPageMap()
 	{
 		if (pageMapName != null)
@@ -326,8 +327,8 @@ public class PopupSettings implements IClusterable
 		else
 		{
 			throw new UnsupportedOperationException(
-					"this method can only work when a page map is set. Either call"
-							+ " getPageMap(Component) or set the page map");
+				"this method can only work when a page map is set. Either call"
+					+ " getPageMap(Component) or set the page map");
 		}
 	}
 
@@ -338,7 +339,7 @@ public class PopupSettings implements IClusterable
 	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
 	 */
-	public IPageMap getPageMap(Component callee)
+	public IPageMap getPageMap(Component< ? > callee)
 	{
 		if (pageMapName != null)
 		{
@@ -349,15 +350,15 @@ public class PopupSettings implements IClusterable
 			if (callee == null)
 			{
 				throw new IllegalArgumentException(
-						"when the page map is not set, argument callee may not be null");
+					"when the page map is not set, argument callee may not be null");
 			}
-			Page page = callee.getPage();
+			Page< ? > page = callee.getPage();
 			if (page == null)
 			{
 				throw new IllegalStateException(callee +
-						" is not yet set on a page; if you want to use this method " +
-						"without a page map being set, argument callee must be not null " +
-						"and added to a page");
+					" is not yet set on a page; if you want to use this method " +
+					"without a page map being set, argument callee must be not null " +
+					"and added to a page");
 			}
 			return page.getPageMap();
 		}

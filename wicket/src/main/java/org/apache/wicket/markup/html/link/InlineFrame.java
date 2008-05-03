@@ -34,9 +34,11 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Sven Meier
  * @author Ralf Ebert
+ * @param <T>
+ *            type of model object
  */
 
-public class InlineFrame extends WebMarkupContainer implements ILinkListener
+public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +61,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param c
 	 *            Page class
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Class c)
+	public InlineFrame(final String id, final IPageMap pageMap, final Class< ? extends Page< ? >> c)
 	{
 		this(id, pageMap, c, null);
 	}
@@ -77,14 +79,14 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param params
 	 *            Page parameters
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Class c,
-			final PageParameters params)
+	public InlineFrame(final String id, final IPageMap pageMap,
+		final Class< ? extends Page< ? >> c, final PageParameters params)
 	{
 		this(id, pageMap, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getPage()
+			public Page< ? > getPage()
 			{
 				if (params == null)
 				{
@@ -97,7 +99,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				}
 			}
 
-			public Class getPageIdentity()
+			public Class< ? > getPageIdentity()
 			{
 				return c;
 			}
@@ -119,22 +121,23 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param page
 	 *            The page
 	 */
-	public InlineFrame(final String id, final Page page)
+	public InlineFrame(final String id, final Page< ? > page)
 	{
 		this(id, page.getPageMap(), new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getPage()
+			public Page< ? > getPage()
 			{
 				// use given page
 				return page;
 			}
 
-			public Class getPageIdentity()
+			public Class< ? > getPageIdentity()
 			{
 				return page.getClass();
 			}
+
 		});
 	}
 
@@ -179,6 +182,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "iframe");
@@ -223,6 +227,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		return PageMap.forName(pageMapName);
 	}
 
+	@Override
 	protected boolean getStatelessHint()
 	{
 		/*

@@ -27,8 +27,10 @@ import org.apache.wicket.Page;
  * 
  * @see IPageLink
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  */
-public class PageLink extends Link
+public class PageLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +46,7 @@ public class PageLink extends Link
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(final String id, final Class c)
+	public PageLink(final String id, final Class< ? extends Page< ? >> c)
 	{
 		super(id);
 
@@ -58,13 +60,13 @@ public class PageLink extends Link
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getPage()
+			public Page< ? > getPage()
 			{
 				// Create page using page factory
 				return PageLink.this.getPage().getPageFactory().newPage(c);
 			}
 
-			public Class getPageIdentity()
+			public Class< ? > getPageIdentity()
 			{
 				return c;
 			}
@@ -103,7 +105,8 @@ public class PageLink extends Link
 	 * @deprecated rather than using this class/ constructor, use normal {@link Link links} and call
 	 *             setResponsePage in their {@link Link#onClick() onClick} methods.
 	 */
-	public PageLink(final String id, final Page page)
+	@Deprecated
+	public PageLink(final String id, final Page< ? > page)
 	{
 		super(id);
 
@@ -111,13 +114,13 @@ public class PageLink extends Link
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getPage()
+			public Page< ? > getPage()
 			{
 				// Create page using page factory
 				return page;
 			}
 
-			public Class getPageIdentity()
+			public Class< ? > getPageIdentity()
 			{
 				return page.getClass();
 			}
@@ -130,7 +133,8 @@ public class PageLink extends Link
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
-	public boolean linksTo(final Page page)
+	@Override
+	public boolean linksTo(final Page< ? > page)
 	{
 		return page.getClass() == pageLink.getPageIdentity();
 	}
@@ -141,6 +145,7 @@ public class PageLink extends Link
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Set page source's page as response page

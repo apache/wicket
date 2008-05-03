@@ -35,6 +35,8 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @deprecated will be replaced by {@link InlineFrame} in Wicket 2.0 as that's a better name for it.
  */
+@Deprecated
+@SuppressWarnings("unchecked")
 public class InternalFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
@@ -132,7 +134,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	{
 		super(id);
 
-		this.pageMapName = pageMap.getName();
+		pageMapName = pageMap.getName();
 
 		this.pageLink = pageLink;
 	}
@@ -154,6 +156,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "iframe");
@@ -184,6 +187,6 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public final IPageMap getPageMap()
 	{
-		return PageMap.forName(this.pageMapName);
+		return PageMap.forName(pageMapName);
 	}
 }

@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Alastair Maw
  */
-public class ContextImage extends WebComponent
+public class ContextImage extends WebComponent<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +44,7 @@ public class ContextImage extends WebComponent
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public ContextImage(String id, IModel model)
+	public ContextImage(String id, IModel<String> model)
 	{
 		super(id, model);
 	}
@@ -52,12 +52,11 @@ public class ContextImage extends WebComponent
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
-		tag
-				.put("src", getRequest().getRelativePathPrefixToContextRoot() +
-						getModelObjectAsString());
+		tag.put("src", getRequest().getRelativePathPrefixToContextRoot() + getModelObjectAsString());
 	}
 }

@@ -72,6 +72,8 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @param <T>
+ *            type of model object
  */
 public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 {
@@ -81,14 +83,14 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 		private static final long serialVersionUID = 1L;
 
 		/** the old anchor. */
-		private final Component anchor;
+		private final Component< ? > anchor;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param anchor
 		 */
-		public AnchorChange(Component anchor)
+		public AnchorChange(Component< ? > anchor)
 		{
 			this.anchor = anchor;
 		}
@@ -109,7 +111,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	 * must be attached to a &lt;a tag with a href attribute of more than one character starting
 	 * with '#' ('&lt;a href="#someAnchor" ... ').
 	 */
-	private Component anchor;
+	private Component< ? > anchor;
 
 	/**
 	 * True if link should automatically enable/disable based on current page; false by default.
@@ -143,7 +145,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	 * 
 	 * @return Any anchor component to jump to, might be null
 	 */
-	public Component getAnchor()
+	public Component< ? > getAnchor()
 	{
 		return anchor;
 	}
@@ -229,7 +231,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	 *            The anchor
 	 * @return this
 	 */
-	public Link<T> setAnchor(Component anchor)
+	public Link<T> setAnchor(Component< ? > anchor)
 	{
 		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
@@ -289,7 +291,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	{
 		if (url != null)
 		{
-			Component anchor = getAnchor();
+			Component< ? > anchor = getAnchor();
 			if (anchor != null)
 			{
 				if (url.toString().indexOf('#') == -1)
@@ -339,6 +341,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
 	 */
+	@SuppressWarnings("deprecation")
 	protected CharSequence getOnClickScript(final CharSequence url)
 	{
 		return getOnClickScript(url.toString());
@@ -374,7 +377,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 	 *            A page
 	 * @return True if this link goes to the given page
 	 */
-	protected boolean linksTo(final Page page)
+	protected boolean linksTo(final Page< ? > page)
 	{
 		return false;
 	}

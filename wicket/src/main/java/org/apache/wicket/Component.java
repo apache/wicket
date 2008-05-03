@@ -1691,10 +1691,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
 	 */
-	public final Page getPage()
+	public final Page< ? > getPage()
 	{
 		// Search for nearest Page
-		final Page page = findPage();
+		final Page< ? > page = findPage();
 
 		// If no Page was found
 		if (page == null)

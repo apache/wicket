@@ -42,7 +42,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Set rendered = new HashSet();
+	private final Set<Object> rendered = new HashSet<Object>();
 
 	private boolean closed;
 
@@ -125,7 +125,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List token = Arrays.asList(new Object[] { "css", url, media });
+			List<Object> token = Arrays.asList(new Object[] { "css", url, media });
 			if (wasRendered(token) == false)
 			{
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
@@ -187,7 +187,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List token = Arrays.asList(new Object[] { "javascript", url });
+			List<Object> token = Arrays.asList(new Object[] { "javascript", url });
 			if (wasRendered(token) == false)
 			{
 				JavascriptUtils.writeJavascriptUrl(getResponse(), url);
@@ -208,8 +208,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List token1 = Arrays.asList(new Object[] { "javascript", url });
-			List token2 = Arrays.asList(new Object[] { "javascript", id });
+			List<Object> token1 = Arrays.asList(new Object[] { "javascript", url });
+			List<Object> token2 = Arrays.asList(new Object[] { "javascript", id });
 			if (wasRendered(token1) == false && wasRendered(token2) == false)
 			{
 				JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
@@ -231,7 +231,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List token = Arrays.asList(new Object[] { javascript.toString(), id });
+			List<Object> token = Arrays.asList(new Object[] { javascript.toString(), id });
 			if (wasRendered(token) == false)
 			{
 				JavascriptUtils.writeJavascript(getResponse(), javascript, id);
@@ -307,7 +307,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (!closed)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
+			List<Object> token = Arrays.asList(new Object[] { "javascript-event", target, event,
+					javascript });
 			if (wasRendered(token) == false)
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);

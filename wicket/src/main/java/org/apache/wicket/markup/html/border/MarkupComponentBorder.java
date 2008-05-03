@@ -152,7 +152,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	/**
 	 * 
 	 * @param component
-	 * @return
+	 * @return markup stream
 	 */
 	private MarkupStream getMarkupStream(Component< ? > component)
 	{
@@ -166,7 +166,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	/**
 	 * 
 	 * @param owner
-	 * @return
+	 * @return markup stream
 	 */
 	private MarkupStream findMarkupStream(Component< ? > owner)
 	{
@@ -234,7 +234,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	/**
 	 * 
 	 * @param component
-	 * @return
+	 * @return markup type
 	 */
 	private String getMarkupType(Component< ? > component)
 	{

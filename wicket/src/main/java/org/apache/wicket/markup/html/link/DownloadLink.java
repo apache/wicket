@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class DownloadLink extends Link
+public class DownloadLink extends Link<File>
 {
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class DownloadLink extends Link
 		{
 			throw new IllegalArgumentException("file cannot be null");
 		}
-		setModel(new Model(file));
+		setModel(new Model<File>(file));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class DownloadLink extends Link
 	 * @param model
 	 *            model that contains the file object
 	 */
-	public DownloadLink(String id, IModel model)
+	public DownloadLink(String id, IModel<File> model)
 	{
 		super(id, model);
 	}
@@ -94,7 +94,7 @@ public class DownloadLink extends Link
 	 * @param fileName
 	 *            name of the file
 	 */
-	public DownloadLink(String id, IModel model, String fileName)
+	public DownloadLink(String id, IModel<File> model, String fileName)
 	{
 		super(id, model);
 		this.fileName = fileName;
@@ -122,7 +122,7 @@ public class DownloadLink extends Link
 		{
 			throw new IllegalArgumentException("fileName cannot be an empty string");
 		}
-		setModel(new Model(file));
+		setModel(new Model<File>(file));
 		this.fileName = fileName;
 	}
 
@@ -131,25 +131,28 @@ public class DownloadLink extends Link
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
-		final File file = (File)getModelObject();
+		final File file = getModelObject();
 		if (file == null)
 		{
 			throw new IllegalStateException(getClass().getName() +
-					" failed to retrieve a File object from model");
+				" failed to retrieve a File object from model");
 		}
 		final String fn = (fileName != null) ? fileName : file.getName();
 
 		IResourceStream resourceStream = new FileResourceStream(
-				new org.apache.wicket.util.file.File(file));
+			new org.apache.wicket.util.file.File(file));
 		getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(resourceStream)
 		{
+			@Override
 			public String getFileName()
 			{
 				return fn;
 			}
 
+			@Override
 			public void respond(RequestCycle requestCycle)
 			{
 				super.respond(requestCycle);

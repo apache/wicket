@@ -50,7 +50,8 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * FIXME 2.0: remove asap
 	 */
-	protected final Map messageModel()
+	@Deprecated
+	protected final Map< ? , ? > messageModel()
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -64,7 +65,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 *            form component against which the error is reported
 	 * 
 	 */
-	public void error(FormComponent fc)
+	public void error(FormComponent< ? > fc)
 	{
 		error(fc, resourceKey(), variablesMap());
 	}
@@ -77,7 +78,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param resourceKey
 	 *            The message resource key to use
 	 */
-	public void error(FormComponent fc, final String resourceKey)
+	public void error(FormComponent< ? > fc, final String resourceKey)
 	{
 		if (resourceKey == null)
 		{
@@ -95,7 +96,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param vars
 	 *            variables for variable interpolation
 	 */
-	public void error(FormComponent fc, final Map vars)
+	public void error(FormComponent< ? > fc, final Map< ? , ? > vars)
 	{
 		if (vars == null)
 		{
@@ -114,7 +115,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param vars
 	 *            The model for variable interpolation
 	 */
-	public void error(FormComponent fc, final String resourceKey, Map vars)
+	public void error(FormComponent< ? > fc, final String resourceKey, Map< ? , ? > vars)
 	{
 		if (fc == null)
 		{
@@ -152,19 +153,19 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map variablesMap()
+	protected Map<String, Object> variablesMap()
 	{
-		FormComponent[] formComponents = getDependentFormComponents();
+		FormComponent< ? >[] formComponents = getDependentFormComponents();
 
 		if (formComponents != null && formComponents.length > 0)
 		{
-			Map args = new HashMap(formComponents.length * 3);
+			Map<String, Object> args = new HashMap<String, Object>(formComponents.length * 3);
 			for (int i = 0; i < formComponents.length; i++)
 			{
-				final FormComponent formComponent = formComponents[i];
+				final FormComponent< ? > formComponent = formComponents[i];
 
 				String arg = "label" + i;
-				IModel label = formComponent.getLabel();
+				IModel< ? > label = formComponent.getLabel();
 				if (label != null)
 				{
 					args.put(arg, label.getObject());
@@ -172,7 +173,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 				else
 				{
 					args.put(arg, formComponent.getLocalizer().getString(formComponent.getId(),
-							formComponent.getParent(), formComponent.getId()));
+						formComponent.getParent(), formComponent.getId()));
 				}
 
 				args.put("input" + i, formComponent.getInput());
@@ -182,7 +183,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 		}
 		else
 		{
-			return new HashMap(2);
+			return new HashMap<String, Object>(2);
 		}
 	}
 

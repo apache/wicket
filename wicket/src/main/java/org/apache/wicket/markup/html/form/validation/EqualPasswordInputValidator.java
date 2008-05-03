@@ -27,24 +27,25 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * <li>${label(n)}: the label of the component - either comes from FormComponent.labelModel or
  * resource key [form-id].[form-component-id] in that order</li>
  * </ul>
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class EqualPasswordInputValidator extends EqualInputValidator
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param formComponent1
 	 * @param formComponent2
 	 */
-	public EqualPasswordInputValidator(FormComponent formComponent1, FormComponent formComponent2)
+	public EqualPasswordInputValidator(FormComponent< ? > formComponent1,
+		FormComponent< ? > formComponent2)
 	{
 		super(formComponent1, formComponent2);
 	}

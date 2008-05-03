@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class FormComponentFeedbackBorder extends Border implements IFeedback
+public class FormComponentFeedbackBorder extends Border<Void> implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	 * Error indicator that will be shown whenever there is an error-level message for the
 	 * collecting component.
 	 */
-	private final class ErrorIndicator extends WebMarkupContainer
+	private final class ErrorIndicator extends WebMarkupContainer<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -64,6 +64,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		/**
 		 * @see org.apache.wicket.Component#isVisible()
 		 */
+		@Override
 		public boolean isVisible()
 		{
 			return visible;
@@ -85,6 +86,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	/**
 	 * Update the 'visible' flag to indicate the existence (or lack thereof) of feedback messages
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();

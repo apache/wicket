@@ -76,7 +76,7 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * 
  * @author Eelco Hillenius
  */
-public class Include extends WebComponent
+public class Include extends WebComponent<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -116,7 +116,7 @@ public class Include extends WebComponent
 	 * @param model
 	 *            the model
 	 */
-	public Include(String id, IModel model)
+	public Include(String id, IModel<String> model)
 	{
 		super(id, model);
 	}
@@ -131,7 +131,7 @@ public class Include extends WebComponent
 	 */
 	public Include(String id, String modelObject)
 	{
-		super(id, new Model(modelObject));
+		super(id, new Model<String>(modelObject));
 	}
 
 	/**
@@ -159,6 +159,7 @@ public class Include extends WebComponent
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		String content = importAsString();

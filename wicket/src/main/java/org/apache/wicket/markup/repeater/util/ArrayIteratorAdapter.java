@@ -27,6 +27,8 @@ import org.apache.wicket.model.IModel;
  * {@link ArrayIteratorAdapter#next() } method.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of array element
  * 
  */
 public abstract class ArrayIteratorAdapter<T> implements Iterator<IModel<T>>

@@ -137,6 +137,7 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	 *            Name of image
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public Image(final String id, final String string)
 	{
 		this(id, new Model(string));
@@ -184,7 +185,7 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public Component setModel(IModel model)
+	public Component<T> setModel(IModel<T> model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
@@ -213,7 +214,7 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
-	protected IModel initModel()
+	protected IModel<T> initModel()
 	{
 		// Images don't support Compound models. They either have a simple
 		// model, explicitly set, or they use their tag's src or value

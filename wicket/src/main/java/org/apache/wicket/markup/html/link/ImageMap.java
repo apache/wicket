@@ -30,13 +30,15 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * An image map holds links with different hot-area shapes.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  */
-public final class ImageMap extends WebMarkupContainer
+public final class ImageMap<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** list of shape links. */
-	private final List shapeLinks = new ArrayList();
+	private final List<ShapeLink> shapeLinks = new ArrayList<ShapeLink>();
 
 	/**
 	 * A shape that has a circle form.
@@ -66,7 +68,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public CircleLink(final int x, final int y, final int radius, final Link link)
+		public CircleLink(final int x, final int y, final int radius, final Link< ? > link)
 		{
 			super(link);
 			this.x = x;
@@ -77,6 +79,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			return x + "," + y + "," + radius;
@@ -85,6 +88,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "circle";
@@ -109,7 +113,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public PolygonLink(final int[] coordinates, final Link link)
+		public PolygonLink(final int[] coordinates, final Link< ? > link)
 		{
 			super(link);
 			this.coordinates = coordinates;
@@ -118,6 +122,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			final StringBuffer buffer = new StringBuffer();
@@ -136,6 +141,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "polygon";
@@ -175,7 +181,8 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public RectangleLink(final int x1, final int y1, final int x2, final int y2, final Link link)
+		public RectangleLink(final int x1, final int y1, final int x2, final int y2,
+			final Link< ? > link)
 		{
 			super(link);
 			this.x1 = x1;
@@ -187,6 +194,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			return x1 + "," + y1 + "," + x2 + "," + y2;
@@ -195,6 +203,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see org.apache.wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "rectangle";
@@ -211,7 +220,7 @@ public final class ImageMap extends WebMarkupContainer
 		 */
 		private static final long serialVersionUID = 1L;
 		/** The link. */
-		private final Link link;
+		private final Link< ? > link;
 
 		/**
 		 * Constructor.
@@ -219,7 +228,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            The link
 		 */
-		public ShapeLink(final Link link)
+		public ShapeLink(final Link< ? > link)
 		{
 			this.link = link;
 		}
@@ -229,6 +238,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * 
 		 * @return The shape as a string
 		 */
+		@Override
 		public String toString()
 		{
 			// Add any popup script
@@ -243,17 +253,14 @@ public final class ImageMap extends WebMarkupContainer
 				popupJavaScript = null;
 			}
 
-			return "<area shape=\"" + getType() + "\"" + " coords=\"" +
-					getCoordinates() +
-					"\"" +
-					" href=\"" +
-					link.getURL() +
-					"\""
-					// Output the markup ID if that was specified, so we can link tooltips, etc. to
-					// it.
-					+ (link.getOutputMarkupId() ? " id=\"" + link.getMarkupId() + "\"" : "") +
-					((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\"")) +
-					">";
+			return "<area shape=\"" + getType() + "\"" + " coords=\"" + getCoordinates() + "\"" +
+				" href=\"" +
+				link.getURL() +
+				"\""
+				// Output the markup ID if that was specified, so we can link tooltips, etc. to
+				// it.
+				+ (link.getOutputMarkupId() ? " id=\"" + link.getMarkupId() + "\"" : "") +
+				((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\"")) + ">";
 		}
 
 		/**
@@ -295,7 +302,8 @@ public final class ImageMap extends WebMarkupContainer
 	 *            the link
 	 * @return This
 	 */
-	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link link)
+	public ImageMap<T> addCircleLink(final int x1, final int y1, final int radius,
+		final Link<T> link)
 	{
 		add(link);
 		shapeLinks.add(new CircleLink(x1, y1, radius, link));
@@ -311,7 +319,7 @@ public final class ImageMap extends WebMarkupContainer
 	 *            the link
 	 * @return This
 	 */
-	public ImageMap addPolygonLink(final int[] coordinates, final Link link)
+	public ImageMap<T> addPolygonLink(final int[] coordinates, final Link<T> link)
 	{
 		add(link);
 		shapeLinks.add(new PolygonLink(coordinates, link));
@@ -332,8 +340,8 @@ public final class ImageMap extends WebMarkupContainer
 	 * @param link
 	 * @return This
 	 */
-	public ImageMap addRectangleLink(final int x1, final int y1, final int x2, final int y2,
-			final Link link)
+	public ImageMap<T> addRectangleLink(final int x1, final int y1, final int x2, final int y2,
+		final Link< ? > link)
 	{
 		add(link);
 		shapeLinks.add(new RectangleLink(x1, y1, x2, y2, link));
@@ -345,6 +353,7 @@ public final class ImageMap extends WebMarkupContainer
 	 * 
 	 * @see org.apache.wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Get mutable copy of next tag
@@ -365,9 +374,9 @@ public final class ImageMap extends WebMarkupContainer
 
 		imageMap.append("\n<map name=\"").append(getPath()).append("\"> ");
 
-		for (Iterator iterator = shapeLinks.iterator(); iterator.hasNext();)
+		for (Iterator<ShapeLink> iterator = shapeLinks.iterator(); iterator.hasNext();)
 		{
-			final ShapeLink shapeLink = (ShapeLink)iterator.next();
+			final ShapeLink shapeLink = iterator.next();
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
 

@@ -23,15 +23,17 @@ import org.apache.wicket.model.IModel;
  * Closes a popup window and cleans up any related session page map for the popup.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  */
-public class PopupCloseLink extends Link
+public class PopupCloseLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ClosePopupPage closes the popup window.
 	 */
-	public static final class ClosePopupPage extends WebPage
+	public static final class ClosePopupPage extends WebPage<Void>
 	{
 		private static final long serialVersionUID = 1L;
 	}
@@ -52,7 +54,7 @@ public class PopupCloseLink extends Link
 	 * @param id
 	 * @param object
 	 */
-	public PopupCloseLink(String id, IModel object)
+	public PopupCloseLink(String id, IModel<T> object)
 	{
 		super(id, object);
 	}
@@ -60,6 +62,7 @@ public class PopupCloseLink extends Link
 	/**
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Remove the popup's page map from the session
