@@ -78,7 +78,6 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getUnexpectedExceptionDisplay()
 	 */
-	@SuppressWarnings("deprecation")
 	public String getUnexpectedExceptionDisplay()
 	{
 		return application.getExceptionSettings().getUnexpectedExceptionDisplay().toString();
