@@ -47,7 +47,7 @@ public class ComponentInjector implements IComponentInstantiationListener
 	/**
 	 * @see org.apache.wicket.application.IComponentInstantiationListener#onInstantiation(org.apache.wicket.Component)
 	 */
-	public void onInstantiation(Component component)
+	public void onInstantiation(Component< ? > component)
 	{
 		getInjector().inject(component);
 	}

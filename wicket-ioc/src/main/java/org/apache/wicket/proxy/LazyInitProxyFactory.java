@@ -103,10 +103,10 @@ public class LazyInitProxyFactory
 	/**
 	 * Primitive java types and their object wrappers
 	 */
-	private static final List PRIMITIVES = Arrays.asList(new Class[] { String.class, byte.class,
-			Byte.class, short.class, Short.class, int.class, Integer.class, long.class, Long.class,
-			float.class, Float.class, double.class, Double.class, char.class, Character.class,
-			boolean.class, Boolean.class });
+	private static final List< ? > PRIMITIVES = Arrays.asList(new Class[] { String.class,
+			byte.class, Byte.class, short.class, Short.class, int.class, Integer.class, long.class,
+			Long.class, float.class, Float.class, double.class, Double.class, char.class,
+			Character.class, boolean.class, Boolean.class });
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -120,7 +120,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @return lazily initializable proxy
 	 */
-	public static Object createProxy(Class type, IProxyTargetLocator locator)
+	public static Object createProxy(Class< ? > type, IProxyTargetLocator locator)
 	{
 		if (PRIMITIVES.contains(type))
 		{
@@ -163,6 +163,7 @@ public class LazyInitProxyFactory
 			e.setCallback(handler);
 			e.setNamingPolicy(new DefaultNamingPolicy()
 			{
+				@Override
 				public String getClassName(final String prefix, final String source,
 					final Object key, final Predicate names)
 				{
@@ -225,7 +226,7 @@ public class LazyInitProxyFactory
 
 		private Object readResolve() throws ObjectStreamException
 		{
-			Class clazz;
+			Class< ? > clazz;
 			try
 			{
 				clazz = Class.forName(type);
@@ -271,7 +272,7 @@ public class LazyInitProxyFactory
 		 * @param locator
 		 *            object locator used to locate the object this proxy represents
 		 */
-		public CGLibInterceptor(Class type, IProxyTargetLocator locator)
+		public CGLibInterceptor(Class< ? > type, IProxyTargetLocator locator)
 		{
 			super();
 			typeName = type.getName();
@@ -366,12 +367,11 @@ public class LazyInitProxyFactory
 		 * @param locator
 		 *            object locator used to locate the object this proxy represents
 		 */
-		public JdkHandler(Class type, IProxyTargetLocator locator)
+		public JdkHandler(Class< ? > type, IProxyTargetLocator locator)
 		{
 			super();
 			this.locator = locator;
 			typeName = type.getName();
-
 		}
 
 		/**

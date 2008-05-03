@@ -42,7 +42,7 @@ public class Injector
 	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying;
 	// hangs onto Class references.
 	// We need some way to clean out this hashmap when we're done.
-	private ConcurrentHashMap<Class, Field[]> classToFields = new ConcurrentHashMap<Class, Field[]>();
+	private final ConcurrentHashMap<Class< ? >, Field[]> classToFields = new ConcurrentHashMap<Class< ? >, Field[]>();
 
 	/**
 	 * @return static instance of ProxyInjector
@@ -63,7 +63,7 @@ public class Injector
 	 *            class to be tested for being a boundary class
 	 * @return true if the class is a boundary class, false otherwise
 	 */
-	protected boolean isBoundaryClass(Class clazz)
+	protected boolean isBoundaryClass(Class< ? > clazz)
 	{
 		if (clazz.equals(WebPage.class) || clazz.equals(Page.class) || clazz.equals(Panel.class) ||
 			clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
@@ -83,8 +83,8 @@ public class Injector
 	 */
 	public Object inject(Object object, IFieldValueFactory factory)
 	{
-		Class clazz = object.getClass();
-		Field[] fields = (Field[])classToFields.get(clazz);
+		Class< ? > clazz = object.getClass();
+		Field[] fields = classToFields.get(clazz);
 		if (fields == null)
 		{
 			fields = findFields(clazz, factory);
@@ -135,9 +135,9 @@ public class Injector
 	 * @param factory
 	 * @return an array of fields that can be injected using the given field value factory
 	 */
-	private Field[] findFields(Class clazz, IFieldValueFactory factory)
+	private Field[] findFields(Class< ? > clazz, IFieldValueFactory factory)
 	{
-		List/* <Field> */matched = new ArrayList();
+		List<Field> matched = new ArrayList<Field>();
 
 		while (clazz != null && !isBoundaryClass(clazz))
 		{
@@ -154,7 +154,7 @@ public class Injector
 			clazz = clazz.getSuperclass();
 		}
 
-		return (Field[])matched.toArray(new Field[matched.size()]);
+		return matched.toArray(new Field[matched.size()]);
 	}
 
 }
