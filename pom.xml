@@ -52,13 +52,12 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>bamboo</id>
+			<id>bamboo-jdk-1.4</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
 				<module>jdk-1.4</module>
-				<module>jdk-1.5</module>
 				<module>archetypes/quickstart</module>
 			</modules>
 			<distributionManagement>
@@ -105,6 +104,58 @@
 				</plugins>
 			</build>
 		</profile>
+				<profile>
+					<id>bamboo-jdk-1.5</id>
+					<activation>
+						<activeByDefault>false</activeByDefault>
+					</activation>
+					<modules>
+						<module>jdk-1.5</module>
+					</modules>
+					<distributionManagement>
+					  <snapshotRepository>
+					    <id>repo</id>
+					    <name>Local Bamboo/Tomcat repository</name>
+					    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+					    <uniqueVersion>false</uniqueVersion>
+					  </snapshotRepository>
+					</distributionManagement>			
+					<build>
+						<plugins>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-assembly-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+		<!--
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-gpg-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+		-->
+							<plugin>
+								<artifactId>maven-remote-resources-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-javadoc-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-source-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-surefire-plugin</artifactId>
+								<inherited>true</inherited>
+							</plugin>
+						</plugins>
+					</build>
+				</profile>
 		<profile>
 			<id>release</id>
 			<activation>
