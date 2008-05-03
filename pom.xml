@@ -57,17 +57,20 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
-				<module>wicket</module>
-				<module>wicket-datetime</module>
-				<module>wicket-extensions</module>
-				<module>wicket-ioc</module>
-				<module>wicket-spring</module>
-				<module>wicket-velocity</module>
-				<module>wicket-auth-roles</module>
-				<module>wicket-guice</module>
-				<module>wicket-jmx</module>
-				<module>wicket-objectssizeof-agent</module>
-				<module>wicket-examples</module>
+				<module>jdk-1.4</module>
+				<module>jdk-1.4/wicket</module>
+				<module>jdk-1.4/wicket-datetime</module>
+				<module>jdk-1.4/wicket-extensions</module>
+				<module>jdk-1.4/wicket-ioc</module>
+				<module>jdk-1.4/wicket-spring</module>
+				<module>jdk-1.4/wicket-velocity</module>
+				<module>jdk-1.5</module>
+				<module>jdk-1.5/wicket-spring-annot</module>
+				<module>jdk-1.5/wicket-auth-roles</module>
+				<module>jdk-1.5/wicket-guice</module>
+				<module>jdk-1.5/wicket-jmx</module>
+				<module>jdk-1.5/wicket-objectssizeof-agent</module>
+				<module>jdk-1.5/wicket-examples</module>
 				<module>archetypes/quickstart</module>
 			</modules>
 			<distributionManagement>
