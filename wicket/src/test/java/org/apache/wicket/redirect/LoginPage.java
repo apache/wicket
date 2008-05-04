@@ -18,7 +18,7 @@ package org.apache.wicket.redirect;
 
 import org.apache.wicket.markup.html.WebPage;
 
-public class LoginPage extends WebPage
+public class LoginPage extends WebPage<Void>
 {
 	/**
 	 * 

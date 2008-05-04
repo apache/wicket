@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
 
 /**
  * Interface for objects that are capable of reconstructing a component. The component and it's
@@ -30,14 +29,14 @@ import java.io.Serializable;
  * 
  * @author Matej Knopp
  */
-public interface IComponentSource extends Serializable
+public interface IComponentSource extends IClusterable
 {
 	/**
 	 * This method must reconstruct the component as it was before "dehydrating" it. Also it's
 	 * children must be reconstructed
 	 * 
 	 * @param id
-	 * @return
+	 * @return reconstructed component
 	 */
 	public Component< ? > restoreComponent(String id);
 }

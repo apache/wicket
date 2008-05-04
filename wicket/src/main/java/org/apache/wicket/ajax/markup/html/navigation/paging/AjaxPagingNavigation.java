@@ -80,6 +80,6 @@ public class AjaxPagingNavigation extends PagingNavigation
 	@Override
 	protected Link< ? > newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
-		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
+		return new AjaxPagingNavigationLink<Void>(id, pageable, pageIndex);
 	}
 }

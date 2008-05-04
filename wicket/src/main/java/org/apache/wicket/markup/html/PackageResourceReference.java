@@ -31,6 +31,8 @@ import org.apache.wicket.ResourceReference;
  * 
  * @deprecated Use {@link ResourceReference} instead. This class will be removed in Wicket 2.0
  */
+@Deprecated
+@SuppressWarnings("unchecked")
 public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
@@ -57,7 +59,7 @@ public class PackageResourceReference extends ResourceReference
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Application application, Class scope, String name,
-			Locale locale, String style)
+		Locale locale, String style)
 	{
 		super(scope, name);
 		checkExists(scope, name, locale, style);
@@ -132,6 +134,7 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return hash;
@@ -140,15 +143,16 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PackageResourceReference)
 		{
 			PackageResourceReference that = (PackageResourceReference)obj;
 			return checkEquals(getScope(), that.getScope()) &&
-					checkEquals(getName(), that.getName()) &&
-					checkEquals(getLocale(), that.getLocale()) &&
-					checkEquals(getStyle(), that.getStyle());
+				checkEquals(getName(), that.getName()) &&
+				checkEquals(getLocale(), that.getLocale()) &&
+				checkEquals(getStyle(), that.getStyle());
 		}
 		return false;
 	}
@@ -156,10 +160,11 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see org.apache.wicket.ResourceReference#newResource()
 	 */
+	@Override
 	protected Resource newResource()
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
-				getStyle());
+			getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -167,7 +172,7 @@ public class PackageResourceReference extends ResourceReference
 		else
 		{
 			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
-					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+				getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}
@@ -190,7 +195,7 @@ public class PackageResourceReference extends ResourceReference
 		if (!PackageResource.exists(scope, name, locale, style))
 		{
 			throw new IllegalArgumentException("package resource [scope=" + scope + ",name=" +
-					name + ",locale=" + locale + "style=" + style + "] not found");
+				name + ",locale=" + locale + "style=" + style + "] not found");
 		}
 	}
 

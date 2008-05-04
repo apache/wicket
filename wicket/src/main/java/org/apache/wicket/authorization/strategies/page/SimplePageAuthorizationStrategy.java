@@ -69,7 +69,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 *            The sign in page class
 	 */
 	public SimplePageAuthorizationStrategy(final Class< ? extends Component> securePageSuperType,
-		final Class< ? extends Page> signInPageClass)
+		final Class< ? extends Page< ? >> signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{

@@ -70,7 +70,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 *            feedbackpanel is attached to
 	 * 
 	 */
-	public FeedbackMessagesModel(Page page, IFeedbackMessageFilter filter)
+	public FeedbackMessagesModel(Page< ? > page, IFeedbackMessageFilter filter)
 	{
 		this(page);
 		setFilter(filter);

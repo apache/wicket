@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author marrink
  */
-public class MockLoginPage extends WebPage
+public class MockLoginPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,6 +52,7 @@ public class MockLoginPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				login(get("username").getModelObjectAsString().toString());

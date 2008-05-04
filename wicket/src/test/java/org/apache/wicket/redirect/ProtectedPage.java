@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * The page that is protected and needs to redirect to the login page.
  */
-public class ProtectedPage extends WebPage
+public class ProtectedPage extends WebPage<Void>
 {
 	/**
 	 * 

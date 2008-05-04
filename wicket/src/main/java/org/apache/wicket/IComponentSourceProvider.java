@@ -30,7 +30,7 @@ public interface IComponentSourceProvider
 	/**
 	 * Returns an {@link IComponentSource} instance
 	 * 
-	 * @return
+	 * @return component source
 	 */
 	public IComponentSource getComponentSource();
 }

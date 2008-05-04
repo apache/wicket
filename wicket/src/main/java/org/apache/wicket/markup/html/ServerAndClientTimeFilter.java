@@ -54,19 +54,18 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if (headIndex != -1 && bodyIndex != -1)
 		{
-			Map map = new HashMap(4);
+			Map<String, String> map = new HashMap<String, String>(4);
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken) / 1000 + "s");
 
 			AppendingStringBuffer defaultValue = new AppendingStringBuffer(128);
 			defaultValue.append("Server parsetime: ");
 			defaultValue.append(((double)timeTaken) / 1000);
-			defaultValue
-					.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
+			defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 
 			String txt = Application.get().getResourceSettings().getLocalizer().getString(
-					"ServerAndClientTimeFilter.statustext", null, Model.valueOf(map),
-					defaultValue.toString());
+				"ServerAndClientTimeFilter.statustext", null, Model.valueOf(map),
+				defaultValue.toString());
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
 			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);
 			endScript.append("\nwindow.defaultStatus='");
@@ -74,12 +73,11 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
 			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
-					"\nvar clientTimeVariable = new Date().getTime();\n" +
-					JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+				"\nvar clientTimeVariable = new Date().getTime();\n" +
+				JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		log.info(timeTaken + "ms server time taken for request " +
-				RequestCycle.get().getRequest().getURL() + " response size: " +
-				responseBuffer.length());
+			RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
 		return responseBuffer;
 	}
 }

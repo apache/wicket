@@ -224,7 +224,6 @@ public final class MarkupStream
 	 * 
 	 * @return The component's class
 	 */
-	@SuppressWarnings("unchecked")
 	public final Class< ? extends Component< ? >> getContainerClass()
 	{
 		return markup.getMarkupResourceData().getResource().getMarkupClass();

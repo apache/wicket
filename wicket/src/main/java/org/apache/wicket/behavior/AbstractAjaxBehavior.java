@@ -202,7 +202,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 
 	/**
 	 * 
-	 * @return
+	 * @return unique implementation id
 	 */
 	protected final String getImplementationId()
 	{

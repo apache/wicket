@@ -258,7 +258,7 @@ public final class FeedbackMessages implements IClusterable
 	{
 		if (messages.size() == 0)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();

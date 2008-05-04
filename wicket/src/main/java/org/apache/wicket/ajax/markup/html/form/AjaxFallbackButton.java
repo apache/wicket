@@ -142,7 +142,7 @@ public abstract class AjaxFallbackButton<T> extends Button<T>
 
 	/**
 	 * 
-	 * @return
+	 * @return call decorator to use or null if none
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{

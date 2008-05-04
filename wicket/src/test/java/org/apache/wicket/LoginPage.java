@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class LoginPage extends WebPage
+public class LoginPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

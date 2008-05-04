@@ -36,7 +36,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	}
 
 	@Override
-	protected Class< ? extends WebPage> getSignInPageClass()
+	protected Class< ? extends WebPage< ? >> getSignInPageClass()
 	{
 		return MySignInPage.class;
 	}

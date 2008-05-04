@@ -112,7 +112,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	@Override
 	protected Link< ? > newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
-		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
+		return new AjaxPagingNavigationLink<Void>(id, pageable, pageNumber);
 	}
 
 	/**

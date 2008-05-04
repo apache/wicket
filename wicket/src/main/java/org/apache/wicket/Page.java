@@ -150,7 +150,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @throws ClassNotFoundException
 		 * 
 		 */
-		public void deserializePage(int id, String name, Page page, ObjectInputStream stream)
+		public void deserializePage(int id, String name, Page< ? > page, ObjectInputStream stream)
 			throws IOException, ClassNotFoundException;
 
 		/**
@@ -163,7 +163,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @throws IOException
 		 */
 
-		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
+		public void serializePage(Page< ? > page, ObjectOutputStream stream) throws IOException;
 
 		/**
 		 * Returns object to be serialized instead of given page (called from writeReplace).
@@ -171,7 +171,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @param serializedPage
 		 * @return object to be serialized instead of page (or the page instance itself)
 		 */
-		public Object getPageReplacementObject(Page serializedPage);
+		public Object getPageReplacementObject(Page< ? > serializedPage);
 	}
 
 	/**
@@ -816,7 +816,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
 	 */
-	public final void removePersistedFormData(final Class< ? extends Form> formClass,
+	public final void removePersistedFormData(final Class< ? extends Form< ? >> formClass,
 		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
@@ -936,9 +936,13 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            to rollback
 	 * @return rollbacked page instance
 	 */
-	public final Page rollbackPage(int numberOfVersions)
+	public final Page<T> rollbackPage(int numberOfVersions)
 	{
-		Page page = versionManager == null ? this : versionManager.rollbackPage(numberOfVersions);
+		Page<T> page = this;
+		if (versionManager != null)
+		{
+			page = versionManager.rollbackPage(numberOfVersions);
+		}
 		getSession().touch(page);
 		return page;
 	}
@@ -1294,7 +1298,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 	/**
 	 * 
-	 * @return
+	 * @return serialized version of page
 	 * @throws ObjectStreamException
 	 */
 	protected Object writeReplace() throws ObjectStreamException

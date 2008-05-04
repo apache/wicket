@@ -164,7 +164,7 @@ public class RequestListenerInterface
 	 * @param component
 	 *            The component
 	 */
-	public final void invoke(final Page page, final Component< ? > component)
+	public final void invoke(final Page< ? > page, final Component< ? > component)
 	{
 		if (!component.isEnabled() || !component.isVisibleInHierarchy())
 		{
@@ -219,7 +219,7 @@ public class RequestListenerInterface
 	 *            Request parameters
 	 * @return The request target
 	 */
-	public IRequestTarget newRequestTarget(final Page page, final Component< ? > component,
+	public IRequestTarget newRequestTarget(final Page< ? > page, final Component< ? > component,
 		final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);

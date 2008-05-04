@@ -295,6 +295,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @return The resources, never null but may be empty
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static PackageResource[] get(Class< ? > scope, Pattern pattern, boolean recurse)
 	{

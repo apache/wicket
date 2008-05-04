@@ -133,6 +133,7 @@ public class PagingNavigation extends Loop
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public final void undo()
 		{
 			PagingNavigation.this.startIndex = startIndex;
@@ -141,6 +142,7 @@ public class PagingNavigation extends Loop
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "StartIndexChange[component: " + getPath() + ", prefix: " + startIndex + "]";
@@ -270,9 +272,10 @@ public class PagingNavigation extends Loop
 	}
 
 
+	@Override
 	protected void onBeforeRender()
 	{
-		setModel(new Model(new Integer(pageable.getPageCount())));
+		setModel(new Model<Integer>(new Integer(pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -299,13 +302,14 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
 	 */
+	@Override
 	protected void populateItem(final Loop.LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final Link link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		final Link< ? > link = newPagingNavigationLink("pageLink", pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -342,6 +346,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @see Loop#renderItem(Loop.LoopItem)
 	 */
+	@Override
 	protected void renderItem(final Loop.LoopItem loopItem)
 	{
 		// Call default implementation

@@ -26,7 +26,7 @@ import org.apache.wicket.examples.panels.signin.SignInPanel;
  * 
  * @author Jonathan Locke
  */
-public final class SignIn extends WicketExamplePage
+public final class SignIn extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -38,6 +38,7 @@ public final class SignIn extends WicketExamplePage
 	{
 		add(new SignInPanel("signInPanel")
 		{
+			@Override
 			public boolean signIn(final String username, final String password)
 			{
 				// Sign the user in

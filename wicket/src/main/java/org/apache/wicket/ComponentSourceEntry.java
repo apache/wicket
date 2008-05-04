@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * (not {@link IComponentSource} implementation to reconstruct that transparently for the user.
  * These information are encoded as one string to minimize object overhead.
  */
-abstract class ComponentSourceEntry implements Serializable
+abstract class ComponentSourceEntry implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +92,7 @@ abstract class ComponentSourceEntry implements Serializable
 		{
 			buffer.append('(');
 
-			Iterator<Component< ? >> i = ((MarkupContainer)component).iterator();
+			Iterator<Component< ? >> i = ((MarkupContainer< ? >)component).iterator();
 			while (i.hasNext())
 			{
 				Component< ? > child = i.next();
@@ -145,7 +144,7 @@ abstract class ComponentSourceEntry implements Serializable
 	 *            parent of the component
 	 * @param index
 	 *            position in parent's children
-	 * @return
+	 * @return reconstructed component
 	 */
 	Component< ? > reconstruct(MarkupContainer< ? > parent, int index)
 	{
@@ -167,7 +166,7 @@ abstract class ComponentSourceEntry implements Serializable
 	 * Returns the first part of string that belongs to a single component
 	 * 
 	 * @param string
-	 * @return
+	 * @return first part of string that belongs to a single component
 	 */
 	private static String getComponentSubString(String string)
 	{

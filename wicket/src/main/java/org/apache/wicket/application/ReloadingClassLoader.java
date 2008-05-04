@@ -64,7 +64,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	/**
 	 * 
 	 * @param name
-	 * @return
+	 * @return true if class if found, false otherwise
 	 */
 	protected boolean tryClassHere(String name)
 	{
@@ -168,7 +168,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	{
 		if (loader != null)
 		{
-			final Enumeration resources;
+			final Enumeration<URL> resources;
 			try
 			{
 				resources = loader.getResources("");
@@ -179,7 +179,7 @@ public class ReloadingClassLoader extends URLClassLoader
 			}
 			while (resources.hasMoreElements())
 			{
-				URL location = (URL)resources.nextElement();
+				URL location = resources.nextElement();
 				ReloadingClassLoader.addLocation(location);
 			}
 		}

@@ -39,7 +39,7 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class c)
+	public static String name(final Class< ? > c)
 	{
 		return (c != null) ? c.getName() : null;
 	}
@@ -56,18 +56,21 @@ public final class Classes
 	 * @return The class
 	 * @throws ClassNotFoundException
 	 */
-	public static Class relativeClass(final Class scope, final String path)
-			throws ClassNotFoundException
+	public static Class< ? > relativeClass(final Class< ? > scope, final String path)
+		throws ClassNotFoundException
 	{
 		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
 	}
 
 	/**
+	 * @param <T>
+	 *            class type
 	 * @param className
 	 *            Class to resolve
 	 * @return Resolved class
 	 */
-	public static Class resolveClass(final String className)
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> resolveClass(final String className)
 	{
 		if (className == null)
 		{
@@ -77,10 +80,12 @@ public final class Classes
 		{
 			if (Application.exists())
 			{
-				return Application.get().getApplicationSettings().getClassResolver().resolveClass(
-						className);
+				return (Class<T>)Application.get()
+					.getApplicationSettings()
+					.getClassResolver()
+					.resolveClass(className);
 			}
-			return Class.forName(className);
+			return (Class<T>)Class.forName(className);
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -96,7 +101,7 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String simpleName(final Class c)
+	public static String simpleName(final Class< ? > c)
 	{
 		return Strings.lastPathComponent(c.getName(), '.');
 	}

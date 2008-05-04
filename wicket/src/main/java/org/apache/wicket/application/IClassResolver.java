@@ -43,7 +43,7 @@ public interface IClassResolver
 	 * Tries to load all the resources by the name that is given.
 	 * 
 	 * @param name
-	 * @return
+	 * @return iterator over matching resources
 	 */
 	Iterator<URL> getResources(String name);
 

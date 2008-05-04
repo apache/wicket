@@ -31,7 +31,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-public final class SignIn extends WicketExamplePage
+public final class SignIn extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -87,14 +87,15 @@ public final class SignIn extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			// Get session info
 			SignInSession session = (SignInSession)getSession();
 
 			// Sign the user in
-			if (session.authenticate(properties.getString("username"), properties
-					.getString("password")))
+			if (session.authenticate(properties.getString("username"),
+				properties.getString("password")))
 			{
 				if (!continueToOriginalDestination())
 				{
@@ -107,7 +108,7 @@ public final class SignIn extends WicketExamplePage
 				// Try the component based localizer first. If not found try the
 				// application localizer. Else use the default
 				final String errmsg = getLocalizer().getString("loginError", this,
-						"Unable to sign you in");
+					"Unable to sign you in");
 				error(errmsg);
 			}
 		}

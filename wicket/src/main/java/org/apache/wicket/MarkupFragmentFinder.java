@@ -100,7 +100,7 @@ final class MarkupFragmentFinder
 
 			if (parentWithAssociatedMarkup instanceof Fragment)
 			{
-				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component.getId());
+				markupStream = ((Fragment< ? >)parentWithAssociatedMarkup).findComponentIndex(component.getId());
 				return markupStream;
 			}
 

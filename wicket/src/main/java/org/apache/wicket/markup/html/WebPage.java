@@ -310,10 +310,10 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	public void onNewBrowserWindow()
 	{
 		// if the browser reports a history of 0 then make a new webpage
-		WebPage clonedPage = this;
+		WebPage< ? > clonedPage = this;
 		try
 		{
-			clonedPage = (WebPage)Objects.cloneObject(this);
+			clonedPage = (WebPage< ? >)Objects.cloneObject(this);
 		}
 		catch (Exception e)
 		{

@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Packages;
 public class PackageResourceGuard implements IPackageResourceGuard
 {
 	/** Set of extensions that are not allowed access. */
-	private Set blockedExtensions = new HashSet(4);
+	private Set<String> blockedExtensions = new HashSet<String>(4);
 
 	/**
 	 * Construct.
@@ -47,7 +47,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public boolean accept(Class scope, String path)
+	public boolean accept(Class< ? > scope, String path)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		return acceptAbsolutePath(absolutePath);
@@ -75,7 +75,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			ext = path.substring(ixExtension + 1).toLowerCase();
 		}
 		if ("html".equals(ext) &&
-				getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
+			getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
 		{
 			return false;
 		}
@@ -100,7 +100,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * 
 	 * @return The set of extensions that are not allowed access
 	 */
-	protected final Set getBlockedExtensions()
+	protected final Set<String> getBlockedExtensions()
 	{
 		return blockedExtensions;
 	}
@@ -111,7 +111,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * @param blockedExtensions
 	 *            Set of extensions that are not allowed access
 	 */
-	protected final void setBlockedExtensions(Set blockedExtensions)
+	protected final void setBlockedExtensions(Set<String> blockedExtensions)
 	{
 		this.blockedExtensions = blockedExtensions;
 	}

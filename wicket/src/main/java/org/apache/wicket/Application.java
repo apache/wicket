@@ -283,9 +283,9 @@ public abstract class Application
 			 */
 			public void onInstantiation(final Component< ? > component)
 			{
+				final Class< ? extends Component< ? >> cl = (Class< ? extends Component< ? >>)component.getClass();
 				// If component instantiation is not authorized
-				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
-					component.getClass()))
+				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(cl))
 				{
 					// then call any unauthorized component instantiation
 					// listener

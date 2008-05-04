@@ -102,7 +102,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 
 	/**
 	 * 
-	 * @return
+	 * @return call decorator to use or null if none
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{

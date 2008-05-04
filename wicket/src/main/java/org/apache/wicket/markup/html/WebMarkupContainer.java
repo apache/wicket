@@ -66,8 +66,8 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	 * 
 	 * @return WebPage
 	 */
-	public final WebPage getWebPage()
+	public final WebPage< ? > getWebPage()
 	{
-		return (WebPage)getPage();
+		return (WebPage< ? >)getPage();
 	}
 }

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Jonathan Locke
  */
-public class SignInPage extends WebPage
+public class SignInPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

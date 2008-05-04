@@ -91,6 +91,7 @@ public class Label<T> extends WebComponent<T>
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public Label(final String id, String label)
 	{
 		this(id, new Model(label));

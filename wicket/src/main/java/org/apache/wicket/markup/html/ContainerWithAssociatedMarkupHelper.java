@@ -87,7 +87,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				markupClass = markupStream.getContainerClass();
 			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupClass,
+			final HeaderPartContainer< ? > headerPart = getHeaderPart(markupClass,
 				markupStream.getCurrentIndex());
 			if (headerPart != null)
 			{
@@ -131,7 +131,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 *            The java class the wicket:head tag is directly associated with
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final Class< ? > markupClass, final int index)
+	private final HeaderPartContainer< ? > getHeaderPart(final Class< ? > markupClass,
+		final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -157,7 +158,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// it
 				String scope = wTag.getAttributes().getString(
 					markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
+				final HeaderPartContainer< ? > headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
 					headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);

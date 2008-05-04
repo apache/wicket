@@ -296,9 +296,11 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
+	 * Checks if <code>value</code> represents a path and if it does transforms it into a relative
+	 * path
 	 * 
 	 * @param value
-	 * @return
+	 * @return value as a relative path or untouched if not a path
 	 */
 	protected String getContextRelativeValue(String value)
 	{

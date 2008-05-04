@@ -913,7 +913,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// Set child's parent
 		component.setParent(this);
 
-		final Page page = findPage();
+		final Page< ? > page = findPage();
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
@@ -1327,7 +1327,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	private final void removedComponent(final Component< ? > component)
 	{
 		// Notify Page that component is being removed
-		final Page page = component.findPage();
+		final Page< ? > page = component.findPage();
 		if (page != null)
 		{
 			page.componentRemoved(component);

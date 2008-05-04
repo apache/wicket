@@ -61,6 +61,7 @@ public class MultiLineLabel<T> extends WebComponent<T>
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public MultiLineLabel(final String id, String label)
 	{
 		this(id, new Model(label));

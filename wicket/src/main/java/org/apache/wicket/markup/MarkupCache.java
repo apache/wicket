@@ -127,7 +127,7 @@ public class MarkupCache implements IMarkupCache
 		// Remove the markup and any other markup which depends on it
 		// (inheritance)
 		String locationString = (String)markupKeyCache.get(cacheKey);
-		Markup markup = (Markup)markupCache.get(locationString);
+		Markup markup = markupCache.get(locationString);
 		if (markup != null)
 		{
 			markupCache.remove(locationString);
@@ -146,7 +146,7 @@ public class MarkupCache implements IMarkupCache
 				Iterator<CharSequence> iter = markupCache.getKeys().iterator();
 				while (iter.hasNext())
 				{
-					Markup cacheMarkup = (Markup)markupCache.get(iter.next());
+					Markup cacheMarkup = markupCache.get(iter.next());
 					MarkupResourceData resourceData = cacheMarkup.getMarkupResourceData()
 						.getBaseMarkupResourceData();
 					if (resourceData != null)
@@ -251,7 +251,7 @@ public class MarkupCache implements IMarkupCache
 	 * Get a unmodifiable map which contains the cached data. The map key is of type String and the
 	 * value is of type Markup.
 	 * 
-	 * @return
+	 * @return cache implementation
 	 */
 	protected final ICache<CharSequence, Markup> getMarkupCache()
 	{
@@ -376,7 +376,7 @@ public class MarkupCache implements IMarkupCache
 				// loading in avg takes less than 100ms, it is not really an
 				// issue. For consistency reasons however, we should always use
 				// the markup loaded first which is why it gets returned.
-				markup = (Markup)markupCache.get(locationString);
+				markup = markupCache.get(locationString);
 			}
 		}
 		return markup;
@@ -400,7 +400,7 @@ public class MarkupCache implements IMarkupCache
 			String locationString = (String)markupKeyCache.get(cacheKey);
 			if (locationString != null)
 			{
-				return (Markup)markupCache.get(locationString);
+				return markupCache.get(locationString);
 			}
 		}
 		return null;
@@ -488,7 +488,7 @@ public class MarkupCache implements IMarkupCache
 				// couldn't be resolved.
 				locationString = cacheKey;
 			}
-			Markup markup = (Markup)markupCache.get(locationString);
+			Markup markup = markupCache.get(locationString);
 			if (markup != null)
 			{
 				markupKeyCache.put(cacheKey, locationString);
@@ -589,7 +589,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param <K>
 	 * @param <V>
 	 * 
-	 * @return
+	 * @return new instance of cache implementation
 	 */
 	protected <K, V> ICache<K, V> newCacheImplementation()
 	{
@@ -626,14 +626,14 @@ public class MarkupCache implements IMarkupCache
 		 * Get the cache element associated with the key
 		 * 
 		 * @param key
-		 * @return
+		 * @return cached object for key <code>key</code> or null if no matches
 		 */
-		Object get(K key);
+		V get(K key);
 
 		/**
 		 * Get all the keys referencing cache entries
 		 * 
-		 * @return
+		 * @return collection of cached keys
 		 */
 		Collection<K> getKeys();
 
@@ -641,14 +641,14 @@ public class MarkupCache implements IMarkupCache
 		 * Check if key is in the cache
 		 * 
 		 * @param key
-		 * @return
+		 * @return true if cache contains key <code>key</code>
 		 */
 		boolean containsKey(K key);
 
 		/**
 		 * Get the number of cache entries
 		 * 
-		 * @return
+		 * @return number of cache entries
 		 */
 		int size();
 
@@ -705,7 +705,7 @@ public class MarkupCache implements IMarkupCache
 		/**
 		 * @see org.apache.wicket.markup.MarkupCache.ICache#get(java.lang.Object)
 		 */
-		public Object get(Object key)
+		public V get(Object key)
 		{
 			return cache.get(key);
 		}

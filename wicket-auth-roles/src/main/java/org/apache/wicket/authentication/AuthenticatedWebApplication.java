@@ -129,7 +129,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class< ? extends WebPage> getSignInPageClass();
+	protected abstract Class< ? extends WebPage< ? >> getSignInPageClass();
 
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they are not authorized to
