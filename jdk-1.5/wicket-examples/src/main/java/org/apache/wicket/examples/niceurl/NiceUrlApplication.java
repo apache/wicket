@@ -44,6 +44,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;
@@ -57,6 +58,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// Disable creation of javascript which jWebUnit (test only)
@@ -68,7 +70,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
 
-		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded/", Page2QP.class);
+		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded", Page2QP.class);
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
@@ -85,10 +87,12 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 * 
 	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new WebRequestCycleProcessor()
 		{
+			@Override
 			protected IRequestCodingStrategy newRequestCodingStrategy()
 			{
 				WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
