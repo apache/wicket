@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.guice;
 
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.IClusterable;
-
 import java.lang.reflect.Type;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.wicket.IClusterable;
+import org.apache.wicket.MetaDataKey;
 
 /**
  * This is a holder, of sorts, for a type store of runtime generified types. The reason this exists
@@ -37,7 +37,8 @@ public class GuiceTypeStore implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	public static MetaDataKey TYPESTORE_KEY = new MetaDataKey(GuiceTypeStore.class)
+	public static MetaDataKey<GuiceTypeStore> TYPESTORE_KEY = new MetaDataKey<GuiceTypeStore>(
+			GuiceTypeStore.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};

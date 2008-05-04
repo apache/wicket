@@ -188,7 +188,7 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		while (current != null && current != Object.class);
 	}
 
-	public void onInstantiation(Component component)
+	public void onInstantiation(Component< ? > component)
 	{
 		inject(component);
 	}

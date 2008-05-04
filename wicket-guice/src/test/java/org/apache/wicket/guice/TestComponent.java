@@ -24,7 +24,7 @@ import org.apache.wicket.markup.MarkupStream;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class TestComponent extends Component
+public class TestComponent extends Component<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -119,15 +119,13 @@ public class TestComponent extends Component
 	}
 
 	@Inject
-	public void injectServiceBlue(@Blue
-	ITestService service)
+	public void injectServiceBlue(@Blue ITestService service)
 	{
 		injectedMethodBlue = service;
 	}
 
 	@Inject
-	public void injectServiceRed(@Red
-	ITestService service)
+	public void injectServiceRed(@Red ITestService service)
 	{
 		injectedMethodRed = service;
 	}
