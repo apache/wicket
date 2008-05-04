@@ -147,12 +147,15 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					}
 					String path = resourceKey.substring(ix + 1);
 
-					PackageResource packageResource = PackageResource.get(scope, path);
-					if (sharedResources.get(resourceKey) == null)
+					if (PackageResource.exists(scope, path, null, null))
 					{
-						sharedResources.add(scope, path, null, null, packageResource);
+						PackageResource packageResource = PackageResource.get(scope, path);
+						if (sharedResources.get(resourceKey) == null)
+						{
+							sharedResources.add(scope, path, null, null, packageResource);
+						}
+						resource = packageResource;
 					}
-					resource = packageResource;
 				}
 				catch (Exception e)
 				{
