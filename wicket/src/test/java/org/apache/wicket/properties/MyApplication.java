@@ -29,11 +29,13 @@ public class MyApplication extends WebApplication
 {
 	private static final long serialVersionUID = 1L;
 
-	public Class<? extends Page> getHomePage()
+	@Override
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return null;
 	}
 
+	@Override
 	protected void outputDevelopmentModeWarning()
 	{
 		// Do nothing.
@@ -42,6 +44,7 @@ public class MyApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSessionStore()
 	 */
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		return new HttpSessionStore(this);

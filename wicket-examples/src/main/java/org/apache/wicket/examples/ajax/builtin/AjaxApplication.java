@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
@@ -72,7 +73,7 @@ public class AjaxApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Index> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Index.class;
 	}

@@ -33,7 +33,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Joshua Perlow
  */
-public class Captcha extends WicketExamplePage
+public class Captcha extends WicketExamplePage<Void>
 {
 	private final class CaptchaForm extends Form
 	{
@@ -54,6 +54,7 @@ public class Captcha extends WicketExamplePage
 			add(new Image("captchaImage", captchaImageResource));
 			add(new RequiredTextField("password", new PropertyModel(properties, "password"))
 			{
+				@Override
 				protected final void onComponentTag(final ComponentTag tag)
 				{
 					super.onComponentTag(tag);
@@ -66,12 +67,13 @@ public class Captcha extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			if (!imagePass.equals(getPassword()))
 			{
 				error("Captcha password '" + getPassword() + "' is wrong.\n" +
-						"Correct password was: " + imagePass);
+					"Correct password was: " + imagePass);
 			}
 			else
 			{
@@ -100,7 +102,7 @@ public class Captcha extends WicketExamplePage
 	}
 
 	/** Random captcha password to match against. */
-	private String imagePass = randomString(6, 8);
+	private final String imagePass = randomString(6, 8);
 
 	private final ValueMap properties = new ValueMap();
 

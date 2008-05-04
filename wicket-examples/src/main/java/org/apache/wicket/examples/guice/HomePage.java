@@ -29,7 +29,7 @@ import com.google.inject.Inject;
  * 
  * @author Alastair Maw
  */
-public class HomePage extends WicketExamplePage
+public class HomePage extends WicketExamplePage<Void>
 {
 	@Inject
 	private IMyService service;

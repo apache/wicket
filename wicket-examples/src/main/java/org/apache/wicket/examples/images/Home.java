@@ -36,7 +36,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Jonathan Locke
  */
-public final class Home extends WicketExamplePage
+public final class Home extends WicketExamplePage<Void>
 {
 	/**
 	 * A dynamic image resource using {@link Home#drawCircle(Graphics2D)} to draw a random circle on
@@ -50,6 +50,7 @@ public final class Home extends WicketExamplePage
 			super(width, height);
 		}
 
+		@Override
 		protected boolean render(Graphics2D graphics)
 		{
 			drawCircle(graphics);
@@ -58,7 +59,7 @@ public final class Home extends WicketExamplePage
 	}
 
 	private static final ResourceReference RESOURCE_REF = new ResourceReference(Home.class,
-			"Image2.gif");
+		"Image2.gif");
 
 	/**
 	 * Constructor
@@ -99,6 +100,7 @@ public final class Home extends WicketExamplePage
 	{
 		return new ResourceReference(Home.class, "image5")
 		{
+			@Override
 			public Resource newResource()
 			{
 				final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
@@ -134,6 +136,7 @@ public final class Home extends WicketExamplePage
 	{
 		return new ResourceReference("okButton")
 		{
+			@Override
 			protected Resource newResource()
 			{
 				return new DefaultButtonImageResource("Ok");

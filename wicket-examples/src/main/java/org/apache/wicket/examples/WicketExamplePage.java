@@ -25,7 +25,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class WicketExamplePage extends WebPage
+public class WicketExamplePage<T> extends WebPage<T>
 {
 	/**
 	 * Constructor

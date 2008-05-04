@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.guestbook;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -37,7 +38,7 @@ public class GuestBookApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<GuestBook> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return GuestBook.class;
 	}

@@ -44,7 +44,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Jonathan Locke
  */
-public class Home extends WicketExamplePage
+public class Home extends WicketExamplePage<Void>
 {
 	/** click count for Link. */
 	private int linkClickCount = 0;
@@ -60,6 +60,7 @@ public class Home extends WicketExamplePage
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
 		{
+			@Override
 			public void onClick()
 			{
 				linkClickCount++;
@@ -71,6 +72,7 @@ public class Home extends WicketExamplePage
 		// Action link counts link clicks on works with onclick handler
 		final Link actionOnClickLink = new Link("actionOnClickLink")
 		{
+			@Override
 			public void onClick()
 			{
 				onClickLinkClickCount++;
@@ -86,7 +88,7 @@ public class Home extends WicketExamplePage
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
 		add(new BookmarkablePageLink("page3Link", Page3.class).setParameter("bookmarkparameter",
-				"3++2 & 5 � >< space + �"));
+			"3++2 & 5 � >< space + �"));
 
 		// Link to BookDetails page
 		add(new PageLink("bookDetailsLink", new IPageLink()
@@ -118,29 +120,28 @@ public class Home extends WicketExamplePage
 
 		// Image map link example
 		add(new ImageMap("imageMap").addRectangleLink(0, 0, 100, 100,
-				new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
-				new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
-				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-				new BookmarkablePageLink("page3", Page3.class)).add(
-				RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
+			new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
+			new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
+			new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
+			new BookmarkablePageLink("page3", Page3.class)).add(
+			RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
-				500).setWidth(500);
+			500).setWidth(500);
 		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink("popupButtonLink", Popup.class)
-				.setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
 
 		// And that link as a popup
 		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE |
-				PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
+			PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
 		add(new ExternalLink("googlePopup", "http://www.google.com",
-				"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
+			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
 		add(new ResourceLink("cancelButtonLink", new ResourceReference("cancelButton")));
@@ -152,6 +153,7 @@ public class Home extends WicketExamplePage
 
 		Link linkToAnchor = new Link("linkToAnchor")
 		{
+			@Override
 			public void onClick()
 			{
 			}
@@ -159,13 +161,14 @@ public class Home extends WicketExamplePage
 		add(linkToAnchor);
 		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
 		{
+			@Override
 			public void onClick()
 			{
 			}
 		};
 		add(anotherlinkToAnchor);
 		Component anchorLabel = new Label("anchorLabel",
-				"this label is here to function as an anchor for a link").setOutputMarkupId(true);
+			"this label is here to function as an anchor for a link").setOutputMarkupId(true);
 		add(anchorLabel);
 		linkToAnchor.setAnchor(anchorLabel);
 	}
@@ -194,6 +197,7 @@ public class Home extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
 			setResponsePage(new RedirectPage(redirectUrl));
@@ -262,6 +266,7 @@ public class Home extends WicketExamplePage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

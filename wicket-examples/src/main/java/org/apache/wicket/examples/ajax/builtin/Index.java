@@ -21,7 +21,7 @@ package org.apache.wicket.examples.ajax.builtin;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Index extends BasePage
+public class Index extends BasePage<Void>
 {
 	/**
 	 * Constructor.

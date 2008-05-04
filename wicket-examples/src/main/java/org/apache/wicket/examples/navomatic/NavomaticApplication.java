@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.navomatic;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -36,7 +37,7 @@ public class NavomaticApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Page1> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Page1.class;
 	}

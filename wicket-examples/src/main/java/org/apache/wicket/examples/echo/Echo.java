@@ -28,7 +28,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class Echo extends WicketExamplePage
+public class Echo extends WicketExamplePage<Void>
 {
 	private String message = "[type your message to the world here]";
 

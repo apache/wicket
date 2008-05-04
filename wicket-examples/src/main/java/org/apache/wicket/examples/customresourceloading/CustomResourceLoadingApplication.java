@@ -21,6 +21,7 @@ import java.net.URL;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -33,7 +34,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Application class for the custom resource loading example.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class CustomResourceLoadingApplication extends WicketExampleApplication
@@ -107,7 +108,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Index> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Index.class;
 	}

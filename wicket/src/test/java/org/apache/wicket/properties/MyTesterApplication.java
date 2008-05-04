@@ -29,16 +29,19 @@ public class MyTesterApplication extends WebApplication
 {
 	private static final long serialVersionUID = 1L;
 
-	public Class<? extends Page> getHomePage()
+	@Override
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return null;
 	}
 
+	@Override
 	protected void outputDevelopmentModeWarning()
 	{
 		// Do nothing.
 	}
 
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		// Don't use a filestore, or we spawn lots of threads, which makes things slow.

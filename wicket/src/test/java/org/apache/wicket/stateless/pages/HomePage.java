@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author marrink
  * 
  */
-public class HomePage extends WebPage
+public class HomePage extends WebPage<Void>
 {
 
 	/**
@@ -43,6 +43,7 @@ public class HomePage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				setVisible(true); // dummy op

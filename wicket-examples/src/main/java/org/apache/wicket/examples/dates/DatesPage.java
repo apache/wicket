@@ -40,7 +40,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * Demonstrates components from the wicket-date project and a bunch of locale fiddling.
  */
-public class DatesPage extends WicketExamplePage
+public class DatesPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Choice for a locale.

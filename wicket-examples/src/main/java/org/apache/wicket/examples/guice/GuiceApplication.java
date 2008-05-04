@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.guice;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.guice.GuiceComponentInjector;
 
@@ -39,7 +40,7 @@ public class GuiceApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<HomePage> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return HomePage.class;
 	}

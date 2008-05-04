@@ -160,11 +160,13 @@ public class WicketTester extends BaseWicketTester
 		/**
 		 * @see org.apache.wicket.Application#getHomePage()
 		 */
-		public Class<? extends Page> getHomePage()
+		@Override
+		public Class< ? extends Page< ? >> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
 
+		@Override
 		protected ISessionStore newSessionStore()
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes
@@ -175,11 +177,13 @@ public class WicketTester extends BaseWicketTester
 		/**
 		 * @see org.apache.wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
 		 */
+		@Override
 		protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 		{
 			return new WebResponse(servletResponse);
 		}
 
+		@Override
 		protected void outputDevelopmentModeWarning()
 		{
 			// do nothing
@@ -192,6 +196,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public static class NonPageCachingDummyWebApplication extends DummyWebApplication
 	{
+		@Override
 		protected ISessionStore newSessionStore()
 		{
 			return new SecondLevelCacheSessionStore(this, new IPageStore()
@@ -256,11 +261,13 @@ public class WicketTester extends BaseWicketTester
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
-			public Class<? extends Page> getHomePage()
+			@Override
+			public Class< ? extends Page< ? >> getHomePage()
 			{
 				return homePage;
 			}
 
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
@@ -268,11 +275,13 @@ public class WicketTester extends BaseWicketTester
 				return new HttpSessionStore(this);
 			}
 
+			@Override
 			protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 			{
 				return new WebResponse(servletResponse);
 			}
 
+			@Override
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
@@ -472,6 +481,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedList
 	 *            expected <code>List</code> in the model of the given {@link ListView}
 	 */
+	@Override
 	public void assertListView(String path, List expectedList)
 	{
 		ListView listView = (ListView)getComponentFromLastRenderedPage(path);
@@ -535,6 +545,7 @@ public class WicketTester extends BaseWicketTester
 	 *            expected output filename <code>String</code>
 	 * @throws Exception
 	 */
+	@Override
 	public void assertResultPage(final Class clazz, final String filename) throws Exception
 	{
 		String document = getServletResponse().getDocument();

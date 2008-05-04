@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.niceurl;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.niceurl.mounted.Page3;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
@@ -45,7 +46,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Home> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

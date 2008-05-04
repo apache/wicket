@@ -19,12 +19,13 @@ package org.apache.wicket.examples.compref;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 
 /**
  * Application class for the component reference.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class ComponentReferenceApplication extends WicketExampleApplication
@@ -67,7 +68,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Index> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Index.class;
 	}

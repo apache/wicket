@@ -23,7 +23,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * 
  * @author Jonathan Locke
  */
-public class HangmanPage extends WicketExamplePage
+public class HangmanPage<T> extends WicketExamplePage<T>
 {
 	/**
 	 * @return Returns the hangman.
@@ -36,6 +36,7 @@ public class HangmanPage extends WicketExamplePage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

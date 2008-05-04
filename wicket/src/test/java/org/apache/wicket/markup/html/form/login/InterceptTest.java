@@ -61,6 +61,7 @@ public class InterceptTest extends TestCase
 	/**
 	 * @see TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new WicketTester(new MyMockWebApplication());
@@ -69,6 +70,7 @@ public class InterceptTest extends TestCase
 	/**
 	 * @see TestCase#tearDown()
 	 */
+	@Override
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
@@ -81,6 +83,7 @@ public class InterceptTest extends TestCase
 	{
 		application = new WicketTester(new MyMockWebApplication()
 		{
+			@Override
 			protected WebResponse newWebResponse(HttpServletResponse response)
 			{
 				return new BufferedWebResponse(response);
@@ -162,11 +165,13 @@ public class InterceptTest extends TestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public Class<? extends Page> getHomePage()
+		@Override
+		public Class< ? extends Page< ? >> getHomePage()
 		{
 			return MockHomePage.class;
 		}
 
+		@Override
 		protected void init()
 		{
 			getSecuritySettings().setAuthorizationStrategy(new MyAuthorizationStrategy());
@@ -176,7 +181,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @return Class
 		 */
-		public Class<? extends Page> getLoginPage()
+		public Class< ? extends Page> getLoginPage()
 		{
 			return MockLoginPage.class;
 		}
@@ -185,21 +190,25 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @see org.apache.wicket.ISessionFactory#newSession(Request, Response)
 		 */
+		@Override
 		public Session newSession(Request request, Response response)
 		{
 			return new MySession(this, request);
 		}
 
+		@Override
 		protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 		{
 			return new WebResponse(servletResponse);
 		}
 
+		@Override
 		protected void outputDevelopmentModeWarning()
 		{
 			// Do nothing.
 		}
 
+		@Override
 		protected ISessionStore newSessionStore()
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes things slow.

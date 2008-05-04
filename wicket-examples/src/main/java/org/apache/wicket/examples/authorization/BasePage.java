@@ -21,7 +21,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 /**
  * @author almaw
  */
-public class BasePage extends WicketExamplePage
+public class BasePage<T> extends WicketExamplePage<T>
 {
 
 }

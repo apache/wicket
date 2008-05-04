@@ -143,7 +143,7 @@ public abstract class Application
 
 	/** */
 	private List<IComponentOnBeforeRenderListener> componentPreOnBeforeRenderListeners;
-	
+
 	/** */
 	private List<IComponentOnBeforeRenderListener> componentPostOnBeforeRenderListeners;
 
@@ -242,7 +242,7 @@ public abstract class Application
 	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
 
 	/** Application level meta data. */
-	private MetaDataEntry[] metaData;
+	private MetaDataEntry< ? >[] metaData;
 
 	/** Name of application subclass. */
 	private final String name;
@@ -446,7 +446,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class< ? extends Page> getHomePage();
+	public abstract Class< ? extends Page< ? >> getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
@@ -1102,7 +1102,7 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typically only be called
 	 * during application startup; it is not thread safe.

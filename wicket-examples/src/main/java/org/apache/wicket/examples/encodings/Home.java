@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public class Home extends WicketExamplePage
+public class Home extends WicketExamplePage<Void>
 {
 	private static final Log log = LogFactory.getLog(Home.class);
 
@@ -49,6 +49,7 @@ public class Home extends WicketExamplePage
 	 * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list deployment
 	 * descriptors, this is a workaround for servlet 2.3
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		final Locale originalLocale = getSession().getLocale();

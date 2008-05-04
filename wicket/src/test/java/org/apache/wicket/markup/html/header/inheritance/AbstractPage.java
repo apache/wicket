@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Test page for wicket:head inclusion.
  */
-public abstract class AbstractPage extends WebPage
+public abstract class AbstractPage extends WebPage<Void>
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;

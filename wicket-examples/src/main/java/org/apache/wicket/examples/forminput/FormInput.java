@@ -57,7 +57,7 @@ import org.apache.wicket.validation.validator.NumberValidator;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FormInput extends WicketExamplePage
+public class FormInput extends WicketExamplePage<Void>
 {
 	/**
 	 * Form for collecting input.

@@ -22,6 +22,6 @@ package org.apache.wicket.examples.authentication;
  * 
  * @author Jonathan Locke
  */
-public class HomePage extends BasePage
+public class HomePage extends BasePage<Void>
 {
 }

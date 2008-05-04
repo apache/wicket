@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.hellobrowser;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.util.lang.PackageName;
 
@@ -37,7 +38,7 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<HelloBrowser> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return HelloBrowser.class;
 	}

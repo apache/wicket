@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public class HelloWorld extends WicketExamplePage
+public class HelloWorld extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor

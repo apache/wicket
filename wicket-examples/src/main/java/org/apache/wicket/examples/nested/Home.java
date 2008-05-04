@@ -40,7 +40,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class Home extends WicketExamplePage
+public class Home extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor.
@@ -72,12 +72,13 @@ public class Home extends WicketExamplePage
 		TreeModel treeModel = convertToTreeModel(l1);
 		final Tree tree = new Tree("tree", treeModel)
 		{
+			@Override
 			protected String renderNode(TreeNode node)
 			{
 				DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
 				Object userObject = treeNode.getUserObject();
-				return (userObject instanceof List) ? "<subtree>" : String.valueOf(treeNode
-						.getUserObject());
+				return (userObject instanceof List) ? "<subtree>"
+					: String.valueOf(treeNode.getUserObject());
 			}
 		};
 		// disable ajax links in this example
@@ -86,6 +87,7 @@ public class Home extends WicketExamplePage
 		add(tree);
 		add(new Link("expandAll")
 		{
+			@Override
 			public void onClick()
 			{
 				tree.getTreeState().expandAll();
@@ -94,6 +96,7 @@ public class Home extends WicketExamplePage
 
 		add(new Link("collapseAll")
 		{
+			@Override
 			public void onClick()
 			{
 				tree.getTreeState().collapseAll();

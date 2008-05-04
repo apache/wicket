@@ -39,22 +39,26 @@ public class TemporarySessionTest extends WicketTestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester(new WebApplication()
 		{
 
-			public Class<? extends Page> getHomePage()
+			@Override
+			public Class< ? extends Page< ? >> getHomePage()
 			{
 				return HomePage.class;
 			}
 
+			@Override
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
 		}, "src/test/java/" + getClass().getPackage().getName().replace('.', '/'))
 		{
+			@Override
 			public boolean initializeHttpSessionAsTemporary()
 			{
 				return true;

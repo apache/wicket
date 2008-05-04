@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class Home extends WebPage
+public final class Home extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,6 +50,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.CANADA);
@@ -59,6 +60,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.US);
@@ -68,6 +70,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("nl", "NL"));
@@ -77,6 +80,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("de", "DE"));
@@ -86,6 +90,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("zh", "CN"));
@@ -95,6 +100,7 @@ public final class Home extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("da", "DK"));

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.images;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
@@ -42,7 +43,7 @@ public class ImagesApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Home> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

@@ -118,7 +118,7 @@ public class BaseWicketTester extends MockWebApplication
 	public static class DummyWebApplication extends WebApplication
 	{
 		@Override
-		public Class< ? extends Page> getHomePage()
+		public Class< ? extends Page< ? >> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
@@ -153,7 +153,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
-	public BaseWicketTester(final Class homePage)
+	public BaseWicketTester(final Class< ? extends Page< ? >> homePage)
 	{
 		this(new WebApplication()
 		{
@@ -161,7 +161,7 @@ public class BaseWicketTester extends MockWebApplication
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
 			@Override
-			public Class< ? extends Page> getHomePage()
+			public Class< ? extends Page< ? >> getHomePage()
 			{
 				return homePage;
 			}

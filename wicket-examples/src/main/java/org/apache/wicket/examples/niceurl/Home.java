@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Eelco Hillenius
  */
-public class Home extends WicketExamplePage
+public class Home extends WicketExamplePage<Void>
 {
 	/**
 	 * Construct.
@@ -49,6 +49,7 @@ public class Home extends WicketExamplePage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

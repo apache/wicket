@@ -34,7 +34,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author Ate Douma
  */
-public class EditPage extends WebPage
+public class EditPage extends WebPage<Void>
 {
 	private static final IChoiceRenderer exampleChoiceRenderer = new IChoiceRenderer()
 	{
@@ -55,7 +55,7 @@ public class EditPage extends WebPage
 		}
 	};
 
-	private DropDownChoice ddc;
+	private final DropDownChoice ddc;
 
 	public EditPage()
 	{
@@ -71,12 +71,12 @@ public class EditPage extends WebPage
 				PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
 				PortletPreferences prefs = prc.getPortletRequest().getPreferences();
 				prc.getPortletRequest().getPortletSession().setAttribute(
-						WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, selected);
+					WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, selected);
 				try
 				{
 					((ActionResponse)prc.getPortletResponse()).setPortletMode(PortletMode.VIEW);
-					prefs.setValue(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, selected
-							.getFilterPath());
+					prefs.setValue(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF,
+						selected.getFilterPath());
 					prefs.store();
 				}
 				catch (Exception pe)
@@ -90,7 +90,7 @@ public class EditPage extends WebPage
 		ddc.setNullValid(false);
 		PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
 		String eaFilterPath = prc.getPortletRequest().getPreferences().getValue(
-				WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, null);
+			WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, null);
 		Model selected = new Model((ExampleApplication)examples.get(0));
 		if (eaFilterPath != null)
 		{

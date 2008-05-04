@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author marrink
  */
-public class MockHomePage extends WebPage
+public class MockHomePage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

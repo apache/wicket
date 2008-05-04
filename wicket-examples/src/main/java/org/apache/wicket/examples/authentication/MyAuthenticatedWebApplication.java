@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.authentication;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
@@ -44,7 +45,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<HomePage> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return HomePage.class;
 	}

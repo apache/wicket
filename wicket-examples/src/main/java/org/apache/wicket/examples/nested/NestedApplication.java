@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.nested;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -47,7 +48,7 @@ public class NestedApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Home> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

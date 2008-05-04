@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.examples.breadcrumb;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Application class for the bread crumb example.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class BreadCrumbApplication extends WebApplication
@@ -29,7 +30,7 @@ public class BreadCrumbApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Index> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Index.class;
 	}

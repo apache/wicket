@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.hangman;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
@@ -41,7 +42,7 @@ public class HangmanApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Home> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

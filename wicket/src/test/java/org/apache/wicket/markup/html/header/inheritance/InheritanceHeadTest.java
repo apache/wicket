@@ -68,26 +68,31 @@ public class InheritanceHeadTest extends WicketTestCase
 			/**
 			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 			 */
+			@Override
 			public Session newSession(Request request, Response response)
 			{
 				return new WebSession(request).setStyle("myStyle");
 			}
 
-			public Class<? extends Page> getHomePage()
+			@Override
+			public Class< ? extends Page< ? >> getHomePage()
 			{
 				return ConcretePage2.class;
 			}
 
+			@Override
 			protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 			{
 				return new WebResponse(servletResponse);
 			}
 
+			@Override
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
 
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which

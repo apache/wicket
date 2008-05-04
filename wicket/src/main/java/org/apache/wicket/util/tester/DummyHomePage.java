@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Ingram Chen
  * @since 1.2.6
  */
-public class DummyHomePage extends WebPage
+public class DummyHomePage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -82,6 +82,7 @@ public class DummyHomePage extends WebPage
 			super(id);
 		}
 
+		@Override
 		public void onClick()
 		{
 			setResponsePage(testPageSource.getTestPage());

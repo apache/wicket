@@ -36,7 +36,8 @@ public class PubApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class<? extends Page> getHomePage()
+	@Override
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

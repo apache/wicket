@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.helloworld;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -65,7 +66,7 @@ public class HelloWorldApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<HelloWorld> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return HelloWorld.class;
 	}

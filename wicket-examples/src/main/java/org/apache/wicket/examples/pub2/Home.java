@@ -33,7 +33,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class Home extends WicketExamplePage
+public final class Home extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -63,6 +63,7 @@ public final class Home extends WicketExamplePage
 		// locale
 		add(new Link("goCanadian")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.CANADA);
@@ -70,6 +71,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goUS")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.US);
@@ -77,6 +79,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goDutch")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("nl", "NL"));
@@ -84,6 +87,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goGerman")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("de", "DE"));
@@ -91,6 +95,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goChinese")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("zh", "CN"));
@@ -98,6 +103,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goDanish")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("da", "DK"));
@@ -105,6 +111,7 @@ public final class Home extends WicketExamplePage
 		});
 		add(new Link("goKorean")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("ko", "KR"));

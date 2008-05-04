@@ -35,7 +35,7 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
  * 
  * @author Eelco Hillenius
  */
-public class HelloBrowser extends WicketExamplePage
+public class HelloBrowser extends WicketExamplePage<Void>
 {
 	/**
 	 * Construct.
@@ -53,8 +53,7 @@ public class HelloBrowser extends WicketExamplePage
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
 		// is not allowed.
-		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
-				.getProperties();
+		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo()).getProperties();
 
 		add(new MultiLineLabel("clientinfo", properties.toString()));
 
@@ -63,6 +62,7 @@ public class HelloBrowser extends WicketExamplePage
 			/**
 			 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 			 */
+			@Override
 			public Object getObject()
 			{
 				TimeZone timeZone = properties.getTimeZone();
@@ -80,7 +80,7 @@ public class HelloBrowser extends WicketExamplePage
 					return b.toString();
 				}
 				return "Unfortunately, we were not able to figure out what your time zone is, so we have"
-						+ "no idea what your time is";
+					+ "no idea what your time is";
 			}
 		};
 		add(new Label("clienttime", clientTimeModel));

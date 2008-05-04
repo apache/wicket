@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.dates;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -34,7 +35,7 @@ public class DatesApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<DatesPage> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return DatesPage.class;
 	}

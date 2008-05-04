@@ -23,7 +23,7 @@ import org.apache.wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public class Home extends AuthenticatedWebPage
+public class Home extends AuthenticatedWebPage<Void>
 {
 	/**
 	 * Constructor

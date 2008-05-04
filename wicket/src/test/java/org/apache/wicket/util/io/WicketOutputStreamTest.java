@@ -40,7 +40,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	/**
 	 * Tests serialization of a big int.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testBigInteger() throws Exception
@@ -80,11 +80,13 @@ public class WicketOutputStreamTest extends WicketTestCase
 	{
 		WebApplication app = new WebApplication()
 		{
-			public Class<? extends Page> getHomePage()
+			@Override
+			public Class< ? extends Page< ? >> getHomePage()
 			{
 				return null;
 			}
 
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
@@ -133,7 +135,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 		Assert.assertEquals(a, a2);
 
 		Assert.assertSame(a2, a2.getB().getA());
-		
+
 		RequestCycle.get().detach();
 	}
 
@@ -164,6 +166,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

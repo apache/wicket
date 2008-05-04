@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.ServerHostNameAndTimeFilter;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -39,7 +40,7 @@ public class LinkomaticApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Home> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Home.class;
 	}

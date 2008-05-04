@@ -19,6 +19,7 @@ package org.apache.wicket.examples.authorization;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
@@ -31,7 +32,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Application object for this example.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class RolesApplication extends WebApplication
@@ -54,7 +55,7 @@ public class RolesApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<Index> getHomePage()
+	public Class< ? extends Page< ? >> getHomePage()
 	{
 		return Index.class;
 	}

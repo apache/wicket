@@ -36,7 +36,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends BasePage
+public class Index extends BasePage<Void>
 {
 	/**
 	 * Construct.
@@ -76,7 +76,7 @@ public class Index extends BasePage
 
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink("adminAnnotBookmarkableLink",
-				AdminAnnotationsBookmarkablePage.class));
+			AdminAnnotationsBookmarkablePage.class));
 		add(new Link("adminAnnotInternalLink")
 		{
 			@Override

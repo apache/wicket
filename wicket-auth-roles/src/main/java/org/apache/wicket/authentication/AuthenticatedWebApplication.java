@@ -79,7 +79,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
 	 */
-	public final void onUnauthorizedInstantiation(final Component component)
+	public final void onUnauthorizedInstantiation(final Component< ? > component)
 	{
 		// If there is a sign in page class declared, and the unauthorized
 		// component is a page, but it's not the sign in page
@@ -92,7 +92,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			}
 			else
 			{
-				onUnauthorizedPage((Page)component);
+				onUnauthorizedPage((Page< ? >)component);
 			}
 		}
 		else

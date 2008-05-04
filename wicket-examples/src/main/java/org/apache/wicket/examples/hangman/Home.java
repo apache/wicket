@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Home extends HangmanPage
+public class Home extends HangmanPage<Void>
 {
 	/**
 	 * Create the home page.
