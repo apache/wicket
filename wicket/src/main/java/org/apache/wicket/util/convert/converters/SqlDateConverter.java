@@ -16,31 +16,67 @@
  */
 package org.apache.wicket.util.convert.converters;
 
-import java.util.Date;
+import java.sql.Date;
+import java.text.DateFormat;
 import java.util.Locale;
+
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Converts to {@link java.sql.Date}.
  */
-public class SqlDateConverter extends DateConverter
+public class SqlDateConverter extends AbstractConverter<Date>
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
+	 */
+	public Date convertToObject(final String value, Locale locale)
+	{
+		if (value == null || Strings.isEmpty(value))
+		{
+			return null;
+		}
+		else
+		{
+			return (Date)parse(getDateFormat(locale), value, locale);
+		}
+	}
 
 	/**
 	 * @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
-	public Object convertToObject(String value, Locale locale)
+	@Override
+	public String convertToString(final Date value, Locale locale)
 	{
-		return new java.sql.Date(((Date)super.convertToObject(value, locale)).getTime());
+		final DateFormat dateFormat = getDateFormat(locale);
+		if (dateFormat != null)
+		{
+			return dateFormat.format(value);
+		}
+		return value.toString();
 	}
+
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.DateConverter#getTargetType()
+	 * @param locale
+	 * @return Returns the date format.
 	 */
-	protected Class getTargetType()
+	public DateFormat getDateFormat(Locale locale)
 	{
-		return java.sql.Date.class;
+		if (locale == null)
+		{
+			locale = Locale.getDefault();
+		}
+
+		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
 
+	@Override
+	protected Class<Date> getTargetType()
+	{
+		return Date.class;
+	}
 }

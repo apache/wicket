@@ -67,6 +67,9 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T>
+ *            The model object type
+ * 
  */
 public class DataTable<T> extends Panel<T> implements IPageable
 {

@@ -27,13 +27,13 @@ import org.apache.wicket.util.convert.ConversionException;
 /**
  * Converts to {@link Time}.
  */
-public class SqlTimeConverter extends DateConverter
+public class SqlTimeConverter extends AbstractConverter<Time>
 {
 
 	private static final long serialVersionUID = 1L;
 
 	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
-	public Object convertToObject(String value, Locale locale)
+	public Time convertToObject(String value, Locale locale)
 	{
 		if (value == null)
 			return null;
@@ -47,24 +47,28 @@ public class SqlTimeConverter extends DateConverter
 		}
 		catch (ParseException e)
 		{
-			throw new ConversionException("Cannot parse '" + value + "' using format " + format)
-					.setSourceValue(value).setTargetType(getTargetType()).setConverter(this)
-					.setLocale(locale);
+			throw new ConversionException("Cannot parse '" + value + "' using format " + format).setSourceValue(
+				value)
+				.setTargetType(getTargetType())
+				.setConverter(this)
+				.setLocale(locale);
 		}
 	}
 
-	public String convertToString(final Object value, Locale locale)
+	@Override
+	public String convertToString(final Time value, Locale locale)
 	{
 		if (value == null)
 			return null;
 		if (locale == null)
 			locale = Locale.getDefault();
-		Time time = (Time)value;
+		Time time = value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(time);
 	}
 
-	protected Class getTargetType()
+	@Override
+	protected Class<Time> getTargetType()
 	{
 		return Time.class;
 	}

@@ -25,6 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -386,13 +387,20 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			// Get next choice
 			final T choice = choices.get(index);
 
-			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class objectClass = displayValue == null ? null : displayValue.getClass();
-			// Get label for choice
+      Collection<T> displayValue = (Collection<T>) getChoiceRenderer().getDisplayValue(choice);
+
+      Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
+
+      // Get label for choice
 			String label = "";
 			if (objectClass != null && objectClass != String.class)
 			{
-				label = getConverter(objectClass).convertToString(displayValue, getLocale());
+        final IConverter<Collection<T>> converter = getConverter((Class<Collection<T>>) objectClass);
+
+        if(!converter.getClass().isAssignableFrom(objectClass))
+          throw new IllegalArgumentException("converter can not convert class " + converter.getClass().getName() + " to string");
+
+        label = converter.convertToString(displayValue, getLocale());
 			}
 			else if (displayValue != null)
 			{

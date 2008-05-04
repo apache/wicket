@@ -23,19 +23,18 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.IConverter;
 
 /**
  * Converts to {@link Timestamp}.
  * 
  * @author eelcohillenius
  */
-public class SqlTimestampConverter implements IConverter
+public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
-	public Object convertToObject(String value, Locale locale)
+	public Timestamp convertToObject(String value, Locale locale)
 	{
 		if (value == null)
 			return null;
@@ -49,24 +48,28 @@ public class SqlTimestampConverter implements IConverter
 		}
 		catch (ParseException e)
 		{
-			throw new ConversionException("Cannot parse '" + value + "' using format " + format)
-					.setSourceValue(value).setTargetType(getTargetType()).setConverter(this)
-					.setLocale(locale);
+			throw new ConversionException("Cannot parse '" + value + "' using format " + format).setSourceValue(
+				value)
+				.setTargetType(getTargetType())
+				.setConverter(this)
+				.setLocale(locale);
 		}
 	}
 
-	public String convertToString(final Object value, Locale locale)
+	@Override
+	public String convertToString(final Timestamp value, Locale locale)
 	{
 		if (value == null)
 			return null;
 		if (locale == null)
 			locale = Locale.getDefault();
-		Timestamp timestamp = (Timestamp)value;
+		Timestamp timestamp = value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(timestamp);
 	}
 
-	protected Class getTargetType()
+	@Override
+	protected Class<Timestamp> getTargetType()
 	{
 		return Timestamp.class;
 	}

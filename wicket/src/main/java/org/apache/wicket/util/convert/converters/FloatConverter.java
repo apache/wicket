@@ -27,19 +27,19 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FloatConverter extends AbstractDecimalConverter
+public final class FloatConverter extends AbstractDecimalConverter<Float>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a float converter
 	 */
-	public static final IConverter INSTANCE = new FloatConverter();
+	public static final IConverter<Float> INSTANCE = new FloatConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Float convertToObject(final String value, Locale locale)
 	{
 		final Number number = parse(value, -Float.MAX_VALUE, Float.MAX_VALUE, locale);
 
@@ -54,7 +54,8 @@ public final class FloatConverter extends AbstractDecimalConverter
 	/**
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	@Override
+	protected Class<Float> getTargetType()
 	{
 		return Float.class;
 	}

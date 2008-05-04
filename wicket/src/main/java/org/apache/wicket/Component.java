@@ -202,7 +202,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            Model object type
  */
-public abstract class Component<T> implements IClusterable, IConverterLocator
+public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 {
 	/**
 	 * Change record of a model.
@@ -1323,7 +1323,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public <Z> IConverter<Z> getConverter(Class<Z> type)
+	public IConverter<T> getConverter(Class<T> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
@@ -1644,7 +1644,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		if (modelObject != null)
 		{
 			// Get converter
-			final IConverter<T> converter = getConverter((Class<T>)modelObject.getClass());
+			final Class<T> objectClass = (Class<T>)modelObject.getClass();
+
+			final IConverter<T> converter = getConverter(objectClass);
+
+			if (!converter.getClass().isAssignableFrom(objectClass))
+				throw new IllegalArgumentException("converter can not convert " +
+					objectClass.getName() + " to string");
 
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());

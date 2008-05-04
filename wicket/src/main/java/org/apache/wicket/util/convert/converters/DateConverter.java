@@ -27,14 +27,14 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class DateConverter extends AbstractConverter
+public class DateConverter extends AbstractConverter<Date>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Date convertToObject(final String value, Locale locale)
 	{
 		if (value == null || Strings.isEmpty(value))
 		{
@@ -42,14 +42,15 @@ public class DateConverter extends AbstractConverter
 		}
 		else
 		{
-			return parse(getDateFormat(locale), value, locale);
+			return (Date)parse(getDateFormat(locale), value, locale);
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
 	 */
-	public String convertToString(final Object value, Locale locale)
+	@Override
+	public String convertToString(final Date value, Locale locale)
 	{
 		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null)
@@ -77,7 +78,8 @@ public class DateConverter extends AbstractConverter
 	/**
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	@Override
+	protected Class<Date> getTargetType()
 	{
 		return Date.class;
 	}

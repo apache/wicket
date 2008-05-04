@@ -27,19 +27,19 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ByteConverter extends AbstractIntegerConverter
+public final class ByteConverter extends AbstractIntegerConverter<Byte>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a byte converter
 	 */
-	public static final IConverter INSTANCE = new ByteConverter();
+	public static final IConverter<Byte> INSTANCE = new ByteConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Byte convertToObject(final String value, Locale locale)
 	{
 		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
 
@@ -54,7 +54,8 @@ public final class ByteConverter extends AbstractIntegerConverter
 	/**
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	@Override
+	protected Class<Byte> getTargetType()
 	{
 		return Byte.class;
 	}

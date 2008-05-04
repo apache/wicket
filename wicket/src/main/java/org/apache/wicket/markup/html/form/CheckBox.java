@@ -128,8 +128,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * 
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
-	@Override
-	public <Z> IConverter<Z> getConverter(Class<Z> type)
+	public IConverter<Boolean> getConverter(Class<Boolean> type)
 	{
 		return BooleanConverter.INSTANCE;
 	}

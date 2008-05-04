@@ -380,13 +380,19 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 	protected void appendOptionHtml(AppendingStringBuffer buffer, E choice, int index,
 		String selected)
 	{
-		Object objectValue = renderer.getDisplayValue(choice);
-		Class< ? extends Object> objectClass = objectValue == null ? null : objectValue.getClass();
+		T objectValue = (T)renderer.getDisplayValue(choice);
+		Class<T> objectClass = (Class<T>)(objectValue == null ? null : objectValue.getClass());
+
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
-			displayValue = ((IConverter<Object>)this.getConverter(objectClass)).convertToString(
-				objectValue, getLocale());
+			final IConverter<T> converter = this.getConverter(objectClass);
+
+			if (!converter.getClass().isAssignableFrom(objectClass))
+				throw new IllegalArgumentException("converter can not convert " +
+					objectClass.getName() + " to a string");
+
+			displayValue = converter.convertToString(objectValue, getLocale());
 		}
 		else if (objectValue != null)
 		{

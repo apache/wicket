@@ -74,7 +74,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected MultiLineLabel<T> newLabel(MarkupContainer parent, String componentId, IModel<T> model)
+	protected MultiLineLabel<T> newLabel(MarkupContainer< ? > parent, String componentId,
+		IModel<T> model)
 	{
 		MultiLineLabel<T> label = new MultiLineLabel<T>(componentId, model)
 		{

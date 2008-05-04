@@ -48,39 +48,45 @@ import org.apache.wicket.util.lang.Objects;
  * @see IConverterLocator
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The converter object type
  */
-public class ConverterLocator implements IConverterLocator
+public class ConverterLocator<T> implements IConverterLocator<T>
 {
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
+	 * 
+	 * @param <X>
+	 *            The converter object type
 	 */
-	private class DefaultConverter<T> implements IConverter<T>
+	private class DefaultConverter<X> implements IConverter<X>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WeakReference<Class<T>> type;
+		private final WeakReference<Class<X>> type;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param type
 		 */
-		private DefaultConverter(Class<T> type)
+		private DefaultConverter(Class<X> type)
 		{
-			this.type = new WeakReference<Class<T>>(type);
+			this.type = new WeakReference<Class<X>>(type);
 		}
 
 		/**
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 		 *      java.util.Locale)
 		 */
-		public T convertToObject(String value, Locale locale)
+		public X convertToObject(String value, Locale locale)
 		{
 			if (value == null)
 			{
 				return null;
 			}
-			Class<T> theType = type.get();
+			Class<X> theType = type.get();
 			if ("".equals(value))
 			{
 				if (theType.equals(String.class))
@@ -104,7 +110,7 @@ public class ConverterLocator implements IConverterLocator
 		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 		 *      java.util.Locale)
 		 */
-		public String convertToString(T value, Locale locale)
+		public String convertToString(X value, Locale locale)
 		{
 			if (value == null || "".equals(value))
 			{
@@ -156,7 +162,8 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The type converter that is registered for class c or null if no type converter was
 	 *         registered for class c
 	 */
-	public final <T> IConverter<T> get(Class<T> c)
+	@SuppressWarnings("unchecked")
+	public final IConverter<T> get(Class<T> c)
 	{
 		return (IConverter<T>)classToConverter.get(c.getName());
 	}
@@ -171,7 +178,8 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
-	public final <T> IConverter<T> getConverter(Class<T> type)
+	@SuppressWarnings("unchecked")
+	public final IConverter<T> getConverter(Class<T> type)
 	{
 		// Null is always converted to null
 		if (type == null)
@@ -192,18 +200,24 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * Removes the type converter currently registered for class c.
 	 * 
+	 * @param <C>
+	 *            The type of the converter
 	 * @param c
 	 *            The class for which the converter registration should be removed
 	 * @return The converter that was registered for class c before removal or null if none was
 	 *         registered
 	 */
-	public final <T> IConverter<T> remove(Class<T> c)
+	@SuppressWarnings("unchecked")
+	public final <C> IConverter<C> remove(Class<C> c)
 	{
-		return (IConverter<T>)classToConverter.remove(c.getName());
+		return (IConverter<C>)classToConverter.remove(c.getName());
 	}
 
 	/**
 	 * Registers a converter for use with class c.
+	 * 
+	 * @param <C>
+	 *            The type of the converter
 	 * 
 	 * @param converter
 	 *            The converter to add
@@ -212,7 +226,8 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The previous registered converter for class c or null if none was registered yet for
 	 *         class c
 	 */
-	public final <T> IConverter<T> set(final Class<T> c, final IConverter<T> converter)
+	@SuppressWarnings("unchecked")
+	public final <C> IConverter<C> set(final Class<C> c, final IConverter<C> converter)
 	{
 		if (converter == null)
 		{
@@ -222,6 +237,6 @@ public class ConverterLocator implements IConverterLocator
 		{
 			throw new IllegalArgumentException("Class cannot be null");
 		}
-		return (IConverter<T>)classToConverter.put(c.getName(), converter);
+		return (IConverter<C>)classToConverter.put(c.getName(), converter);
 	}
 }

@@ -1218,10 +1218,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		}
 		else
 		{
-			final IConverter converter = getConverter(getType());
-			try
+      final IConverter<T> converter = getConverter(getType());
+
+      try
 			{
-				convertedInput = (T)converter.convertToObject(getInput(), getLocale());
+        if(!getType().isAssignableFrom(converter.getClass()))
+        throw new IllegalStateException("converter can not convert string to " + getType());
+
+        convertedInput = converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{

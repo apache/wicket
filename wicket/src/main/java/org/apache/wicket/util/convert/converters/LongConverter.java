@@ -27,19 +27,19 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class LongConverter extends AbstractIntegerConverter
+public final class LongConverter extends AbstractIntegerConverter<Long>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a long converter
 	 */
-	public static final IConverter INSTANCE = new LongConverter();
+	public static final IConverter<Long> INSTANCE = new LongConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Long convertToObject(final String value, Locale locale)
 	{
 		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE, locale);
 
@@ -54,7 +54,8 @@ public final class LongConverter extends AbstractIntegerConverter
 	/**
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	@Override
+	protected Class<Long> getTargetType()
 	{
 		return Long.class;
 	}

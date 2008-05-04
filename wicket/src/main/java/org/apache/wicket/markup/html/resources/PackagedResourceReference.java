@@ -28,7 +28,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class PackagedResourceReference extends WebMarkupContainer
+public class PackagedResourceReference extends WebMarkupContainer<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	public PackagedResourceReference(final String id, final Class referer, final String file,
 		final String attributeToReplace)
 	{
-		this(id, referer, new Model(file), attributeToReplace);
+		this(id, referer, new Model<String>(file), attributeToReplace);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final Class referer, final IModel file,
+	public PackagedResourceReference(final String id, final Class referer, final IModel<String> file,
 		final String attributeToReplace)
 	{
 		super(id);
@@ -88,16 +88,17 @@ public class PackagedResourceReference extends WebMarkupContainer
 			@Override
 			public String getObject()
 			{
-				Object o = file.getObject();
-				if (o == null)
+        String str = file.getObject();
+				if (str == null)
 				{
 					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
-				if (!(o instanceof String))
+        // can this check be safely removed?
+        if (!(str instanceof String))
 				{
 					throw new IllegalArgumentException("The model must provide a string");
 				}
-				String f = getConverter(String.class).convertToString(o, getLocale());
+				String f = getConverter(String.class).convertToString(str, getLocale());
 				ResourceReference ref = new ResourceReference(referer, f, getLocale(), getStyle());
 				CharSequence url = urlFor(ref);
 				return url != null ? url.toString() : null;
@@ -135,7 +136,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	public PackagedResourceReference(final String id, final ResourceReference resourceReference,
 		final String attributeToReplace)
 	{
-		this(id, new Model(resourceReference), attributeToReplace);
+		this(id, new Model<ResourceReference>(resourceReference), attributeToReplace);
 	}
 
 	/**
@@ -149,7 +150,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final IModel resourceReference,
+	public PackagedResourceReference(final String id, final IModel<ResourceReference> resourceReference,
 		final String attributeToReplace)
 	{
 		super(id);

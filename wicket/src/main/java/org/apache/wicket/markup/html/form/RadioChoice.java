@@ -25,6 +25,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -423,13 +424,20 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			// Get next choice
 			final T choice = choices.get(index);
 
-			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class objectClass = displayValue == null ? null : displayValue.getClass();
+      T displayValue = (T) getChoiceRenderer().getDisplayValue(choice);
+      Class<T> objectClass = (Class<T>) (displayValue == null ? null : displayValue.getClass());
+
 			// Get label for choice
 			String label = "";
+
 			if (objectClass != null && objectClass != String.class)
 			{
-				label = getConverter(objectClass).convertToString(displayValue, getLocale());
+        final IConverter<T> converter = getConverter(objectClass);
+
+        if(!converter.getClass().isAssignableFrom(objectClass))
+          throw new IllegalArgumentException("converter can not convert " + objectClass.getName() + " to string");
+
+        label = converter.convertToString(displayValue, getLocale());
 			}
 			else if (displayValue != null)
 			{

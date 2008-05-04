@@ -42,8 +42,12 @@ import org.apache.wicket.model.IModel;
  * @see NoRecordsToolbar
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * 
+ * @param <T>
+ *            The model object type
+ * 
  */
-public class AjaxFallbackDefaultDataTable extends DataTable
+public class AjaxFallbackDefaultDataTable<T> extends DataTable<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,10 +63,11 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public AjaxFallbackDefaultDataTable(String id, final List/* <IColumn> */columns,
-			ISortableDataProvider dataProvider, int rowsPerPage)
+	@SuppressWarnings("unchecked")
+	public AjaxFallbackDefaultDataTable(String id, final List<IColumn<T>> columns,
+		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
-		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
+		this(id, columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
 	}
 
 	/**
@@ -77,8 +82,8 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public AjaxFallbackDefaultDataTable(String id, final IColumn[] columns,
-			ISortableDataProvider dataProvider, int rowsPerPage)
+	public AjaxFallbackDefaultDataTable(String id, final IColumn<T>[] columns,
+		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 		setOutputMarkupId(true);
@@ -88,9 +93,10 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
-	protected Item newRowItem(String id, int index, IModel model)
+	@Override
+	protected Item<T> newRowItem(String id, int index, IModel<T> model)
 	{
-		return new OddEvenItem(id, index, model);
+		return new OddEvenItem<T>(id, index, model);
 	}
 
 }

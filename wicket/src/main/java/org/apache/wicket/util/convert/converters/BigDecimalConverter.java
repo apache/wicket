@@ -25,16 +25,17 @@ import java.util.Locale;
  * see IConverter
  * 
  */
-public class BigDecimalConverter extends AbstractDecimalConverter
+public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 {
 	private static final long serialVersionUID = 1L;
 
-	protected Class getTargetType()
+	@Override
+	protected Class<BigDecimal> getTargetType()
 	{
 		return BigDecimal.class;
 	}
 
-	public Object convertToObject(String value, Locale locale)
+	public BigDecimal convertToObject(String value, Locale locale)
 	{
 		if (value == null || value.trim().equals(""))
 			return null;
@@ -42,7 +43,7 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
 		if (number instanceof BigDecimal)
 		{
-			return number;
+			return (BigDecimal)number;
 		}
 		else if (number instanceof Double)
 		{

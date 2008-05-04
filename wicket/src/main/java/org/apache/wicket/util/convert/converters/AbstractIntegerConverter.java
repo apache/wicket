@@ -25,8 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The converter object type
  */
-public abstract class AbstractIntegerConverter extends AbstractNumberConverter
+public abstract class AbstractIntegerConverter<T extends Number> extends AbstractNumberConverter<T>
 {
 	private static final long serialVersionUID = 1L;
 

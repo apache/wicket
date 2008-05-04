@@ -29,19 +29,19 @@ import org.apache.wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class BooleanConverter extends AbstractConverter
+public final class BooleanConverter extends AbstractConverter<Boolean>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a boolean converter
 	 */
-	public static final IConverter INSTANCE = new BooleanConverter();
+	public static final IConverter<Boolean> INSTANCE = new BooleanConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Boolean convertToObject(final String value, Locale locale)
 	{
 		try
 		{
@@ -56,7 +56,8 @@ public final class BooleanConverter extends AbstractConverter
 	/**
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	@Override
+  protected Class<Boolean> getTargetType()
 	{
 		return Boolean.class;
 	}

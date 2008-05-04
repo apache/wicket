@@ -26,8 +26,12 @@ import org.apache.wicket.util.convert.ConversionException;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The converter object type
+ * 
  */
-public abstract class AbstractNumberConverter extends AbstractConverter
+public abstract class AbstractNumberConverter<T extends Number> extends AbstractConverter<T>
 {
 	/**
 	 * 
@@ -101,7 +105,8 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(final Object value, Locale locale)
+	@Override
+	public String convertToString(final T value, Locale locale)
 	{
 		NumberFormat fmt = getNumberFormat(locale);
 		if (fmt != null)

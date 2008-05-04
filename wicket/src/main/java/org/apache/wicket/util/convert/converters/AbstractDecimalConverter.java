@@ -26,8 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The converter object type
  */
-public abstract class AbstractDecimalConverter extends AbstractNumberConverter
+public abstract class AbstractDecimalConverter<T extends Number> extends AbstractNumberConverter<T>
 {
 	private static final long serialVersionUID = 1L;
 

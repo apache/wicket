@@ -29,8 +29,11 @@ import org.apache.wicket.util.convert.IConverter;
  * @see IConverterLocatorFactory
  * 
  * @author jcompagner
+ * 
+ * @param <T>
+ *            The converter object type
  */
-public interface IConverterLocator extends IClusterable
+public interface IConverterLocator<T> extends IClusterable
 {
 
 	/**
@@ -39,5 +42,5 @@ public interface IConverterLocator extends IClusterable
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public<T> IConverter<T> getConverter(Class< T > type);
+	public IConverter<T> getConverter(Class<T> type);
 }
