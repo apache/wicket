@@ -636,11 +636,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 			}
 		}
 
-		Form form = (Form)findParent(Form.class);
+		Form form = findParent(Form.class);
 		if (form == null)
 		{
 			// check whether the form is a child of a surrounding border
-			final Border border = (Border)findParent(Border.class);
+			final Border border = findParent(Border.class);
 			if (border != null)
 			{
 				FindFormVisitor formVisitor = new FindFormVisitor();
@@ -728,7 +728,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		{
 			inputName.prepend(Component.PATH_SEPARATOR);
 		}
-		Form form = (Form)findParent(Form.class);
+		Form form = findParent(Form.class);
 
 		if (form != null)
 		{
@@ -765,7 +765,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 */
 	public String getValidatorKeyPrefix()
 	{
-		Form form = (Form)findParent(Form.class);
+		Form form = findParent(Form.class);
 		if (form != null)
 		{
 			return getForm().getValidatorKeyPrefix();
@@ -1218,14 +1218,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		}
 		else
 		{
-      final IConverter<T> converter = getConverter(getType());
+			final IConverter<T> converter = getConverter(getType());
 
-      try
+			try
 			{
-        if(!getType().isAssignableFrom(converter.getClass()))
-        throw new IllegalStateException("converter can not convert string to " + getType());
-
-        convertedInput = converter.convertToObject(getInput(), getLocale());
+				convertedInput = converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{

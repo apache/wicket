@@ -1648,10 +1648,6 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 
 			final IConverter<T> converter = getConverter(objectClass);
 
-			if (!converter.getClass().isAssignableFrom(objectClass))
-				throw new IllegalArgumentException("converter can not convert " +
-					objectClass.getName() + " to string");
-
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());
 

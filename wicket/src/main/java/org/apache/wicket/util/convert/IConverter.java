@@ -42,6 +42,9 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The converter object type
  */
 public interface IConverter<T> extends IClusterable
 {
