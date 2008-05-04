@@ -50,20 +50,29 @@ import org.apache.wicket.model.ResourceModel;
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
  * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
  * attached to the recorder component which supports the javascript <code>onchange</code> event.
- * The recorder component can be retrieved via a call to {@link #getRecorderComponent()}.
+ * The behavior should be attached by overriding {@link #newRecorderComponent()}
  * 
  * Example:
  * 
  * <pre>
- *         Form form=new Form(...);
- *         Palette palette=new Palette(...);
- *         palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *  Form form=new Form(...);
+ *  Palette palette=new Palette(...) {
+ *    protected Recorder newRecorderComponent()
+ *    {
+ *      Recorder recorder=super.newRecorderComponent();     
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *      return recorder;
+ *    }
+ *  }
+ * 
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            Type of model object
  * 
  */
-public class Palette extends Panel implements IHeaderContributor
+public class Palette<T> extends Panel<Collection<T>> implements IHeaderContributor
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -72,12 +81,12 @@ public class Palette extends Panel implements IHeaderContributor
 	private static final long serialVersionUID = 1L;
 
 	/** collection containing all available choices */
-	private final IModel choicesModel;
+	private final IModel<Collection< ? extends T>> choicesModel;
 
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private final IChoiceRenderer choiceRenderer;
+	private final IChoiceRenderer<T> choiceRenderer;
 
 	/** number of rows to show in the select boxes */
 	private final int rows;
@@ -138,8 +147,8 @@ public class Palette extends Panel implements IHeaderContributor
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel choicesModel, IChoiceRenderer choiceRenderer, int rows,
-		boolean allowOrder)
+	public Palette(String id, IModel<Collection< ? extends T>> choicesModel,
+		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -159,8 +168,9 @@ public class Palette extends Panel implements IHeaderContributor
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel model, IModel choicesModel, IChoiceRenderer choiceRenderer,
-		int rows, boolean allowOrder)
+	public Palette(String id, IModel<Collection<T>> model,
+		IModel<Collection< ? extends T>> choicesModel, IChoiceRenderer<T> choiceRenderer, int rows,
+		boolean allowOrder)
 	{
 		super(id, model);
 
@@ -170,6 +180,7 @@ public class Palette extends Panel implements IHeaderContributor
 		this.allowOrder = allowOrder;
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		if (!hasBeenRendered())
@@ -266,6 +277,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void updateModel()
 			{
 				super.updateModel();
@@ -312,6 +324,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -331,6 +344,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -350,6 +364,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -369,6 +384,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -388,6 +404,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Map getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForSelection(choice);
@@ -414,6 +431,7 @@ public class Palette extends Panel implements IHeaderContributor
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Map getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForChoices(choice);
@@ -456,7 +474,7 @@ public class Palette extends Panel implements IHeaderContributor
 	 */
 	public Collection getChoices()
 	{
-		return (Collection)choicesModel.getObject();
+		return choicesModel.getObject();
 	}
 
 	/**
@@ -464,7 +482,7 @@ public class Palette extends Panel implements IHeaderContributor
 	 */
 	public Collection getModelCollection()
 	{
-		return (Collection)getModelObject();
+		return getModelObject();
 	}
 
 	/**
@@ -495,15 +513,15 @@ public class Palette extends Panel implements IHeaderContributor
 	protected final void updateModel()
 	{
 		// prepare model
-		Collection model = (Collection)getModelObject();
+		Collection<T> model = getModelObject();
 		model.clear();
 
 		// update model
-		Iterator it = getRecorderComponent().getSelectedChoices();
+		Iterator<T> it = getRecorderComponent().getSelectedChoices();
 
 		while (it.hasNext())
 		{
-			final Object selectedChoice = it.next();
+			final T selectedChoice = it.next();
 			model.add(selectedChoice);
 		}
 
@@ -578,6 +596,7 @@ public class Palette extends Panel implements IHeaderContributor
 		return buildJSCall("Wicket.Palette.moveDown");
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		// we need to manually detach the choices model since it is not attached
@@ -604,6 +623,7 @@ public class Palette extends Panel implements IHeaderContributor
 		}
 
 
+		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			if (!isPaletteEnabled())
