@@ -113,10 +113,6 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 */
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
-		if (!url.endsWith("/"))
-		{
-			url.append("/");
-		}
 		if (parameters != null && parameters.size() > 0)
 		{
 			final Iterator entries;
@@ -151,14 +147,14 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		if (requestParameters.getInterfaceName() != null)
 		{
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName(),
-					requestParameters.getVersionNumber());
+				(Class)bookmarkablePageClassRef.get(), parameters,
+				requestParameters.getComponentPath(), requestParameters.getInterfaceName(),
+				requestParameters.getVersionNumber());
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef
-					.get(), parameters);
+			return new BookmarkablePageRequestTarget(pageMapName,
+				(Class)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
 
