@@ -26,8 +26,14 @@ import org.apache.wicket.IClusterable;
  * A compound property model that supports type conversions and property expression bindings.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object
+ * 
+ * @deprecated See {@link CompoundPropertyModel#bind(String)}
  */
-public class BoundCompoundPropertyModel extends CompoundPropertyModel
+@Deprecated
+public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 {
 	/**
 	 * Internal binding representation.
@@ -38,10 +44,10 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component component;
+		private final Component< ? > component;
 		private final String propertyExpression;
 
-		private Binding(final Component component, final String propertyExpression)
+		private Binding(final Component< ? > component, final String propertyExpression)
 		{
 			this.component = component;
 			this.propertyExpression = propertyExpression;
@@ -50,6 +56,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 		/**
 		 * @see Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer("Binding(");
@@ -68,7 +75,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * theory, in practice it's unlikely that any BoundCompoundPropertyModel will really have enough
 	 * bindings to matter.
 	 */
-	private final ArrayList bindings = new ArrayList(1);
+	private final ArrayList<Binding> bindings = new ArrayList<Binding>(1);
 
 	/**
 	 * Constructor
@@ -84,11 +91,15 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	/**
 	 * Adds a property binding, using the component's id as the property expression.
 	 * 
+	 * @param
+	 * <P>
+	 * The Model object of the component
+	 * 
 	 * @param component
 	 *            The component to bind
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component)
+	public <P> Component<P> bind(final Component<P> component)
 	{
 		if (component == null)
 		{
@@ -102,13 +113,17 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	/**
 	 * Adds a property binding.
 	 * 
+	 * @param
+	 * <P>
+	 * The Model object of the component
+	 * 
 	 * @param component
 	 *            The component to bind
 	 * @param propertyExpression
 	 *            A property expression pointing to the property in this model
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component, final String propertyExpression)
+	public <P> Component<P> bind(final Component<P> component, final String propertyExpression)
 	{
 		if (component == null)
 		{
@@ -126,6 +141,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	/**
 	 * @see org.apache.wicket.model.CompoundPropertyModel#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		super.detach();
@@ -137,11 +153,12 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
 		sb.append(":bindings=[");
-		for (int i = 0, size = this.bindings.size(); i < size; i++)
+		for (int i = 0, size = bindings.size(); i < size; i++)
 		{
 			if (i > 0)
 			{
@@ -158,11 +175,11 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 *            Component to get binding for
 	 * @return The binding information
 	 */
-	private Binding getBinding(final Component component)
+	private Binding getBinding(final Component< ? > component)
 	{
 		for (int i = 0; i < bindings.size(); i++)
 		{
-			final Binding binding = (Binding)bindings.get(i);
+			final Binding binding = bindings.get(i);
 			if (component == binding.component)
 			{
 				return binding;
@@ -174,7 +191,8 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	/**
 	 * @see org.apache.wicket.model.CompoundPropertyModel#propertyExpression(org.apache.wicket.Component)
 	 */
-	protected String propertyExpression(final Component component)
+	@Override
+	protected String propertyExpression(final Component< ? > component)
 	{
 		final Binding binding = getBinding(component);
 		if (binding != null)
