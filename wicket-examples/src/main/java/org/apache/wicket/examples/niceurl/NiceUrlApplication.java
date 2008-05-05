@@ -71,7 +71,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
 
-		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded/", Page2QP.class);
+		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded", Page2QP.class);
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url

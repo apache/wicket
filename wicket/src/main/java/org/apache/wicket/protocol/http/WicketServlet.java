@@ -119,9 +119,9 @@ public class WicketServlet extends HttpServlet
 	 * @throws IOException
 	 */
 	public final void doGet(final HttpServletRequest servletRequest,
-			final HttpServletResponse servletResponse) throws ServletException, IOException
+		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.doGet(servletRequest, servletResponse) == false) 
+		if (wicketFilter.doGet(servletRequest, servletResponse) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}
@@ -140,45 +140,51 @@ public class WicketServlet extends HttpServlet
 	 * @throws IOException
 	 */
 	public final void doPost(final HttpServletRequest servletRequest,
-			final HttpServletResponse servletResponse) throws ServletException, IOException
+		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.doGet(servletRequest, servletResponse) == false) 
+		if (wicketFilter.doGet(servletRequest, servletResponse) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}
 	}
 
-	private void fallback(HttpServletRequest request, HttpServletResponse response) throws IOException 
+	private void fallback(HttpServletRequest request, HttpServletResponse response)
+		throws IOException
 	{
-		
+
 		// The ServletWebRequest is created here to avoid code duplication. The getURL
-		// call doesn't depend on anything wicket specific 
+		// call doesn't depend on anything wicket specific
 		ServletWebRequest req = new ServletWebRequest(request);
 		String url = req.getURL();
-		
+
 		// Get the relative URL we need for loading the resource from
 		// the servlet context
 		// NOTE: we NEED to put the '/' in front as otherwise some versions
 		// of application servers (e.g. Jetty 5.1.x) will fail for requests
 		// like '/mysubdir/myfile.css'
-		
+
 		if ((url.length() > 0 && url.charAt(0) != '/') || url.length() == 0)
 		{
 			url = '/' + url;
 		}
-		
+
 		InputStream stream = getServletContext().getResourceAsStream(url);
-						
-		if (stream == null) 
+		String mimeType = getServletContext().getMimeType(url);
+
+
+		if (stream == null)
 		{
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		} 
-		else 
+		}
+		else
 		{
+			if (mimeType != null)
+				response.setContentType(mimeType);
+
 			Streams.copy(stream, response.getOutputStream());
 		}
 	}
-	
+
 	/**
 	 * Servlet initialization
 	 */

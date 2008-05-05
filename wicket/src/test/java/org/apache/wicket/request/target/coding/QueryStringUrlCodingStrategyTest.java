@@ -30,8 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory
-			.getLogger(QueryStringUrlCodingStrategyTest.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryStringUrlCodingStrategyTest.class);
 
 	/**
 	 * Tests mounting.
@@ -39,7 +38,7 @@ public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 	public void testQS()
 	{
 		IRequestTargetUrlCodingStrategy ucs = new QueryStringUrlCodingStrategy("/mount/point",
-				TestPage.class);
+			TestPage.class);
 		PageParameters params = new PageParameters();
 		params.add("a", "1");
 		params.add("a", "2");
@@ -47,6 +46,6 @@ public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 		IRequestTarget rt = new BookmarkablePageRequestTarget(TestPage.class, params);
 		String path = ucs.encode(rt).toString();
 		log.debug(path);
-		assertEquals("mount/point/?a=1&a=2&b=1", path);
+		assertEquals("mount/point?a=1&a=2&b=1", path);
 	}
 }

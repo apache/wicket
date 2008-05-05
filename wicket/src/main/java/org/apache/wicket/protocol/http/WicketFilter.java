@@ -384,27 +384,29 @@ public class WicketFilter implements Filter
 			finally
 			{
 				// Close response
-				if (response != null)
+				try
 				{
-					try
+					if (response != null)
 					{
 						response.close();
 					}
-					catch (Exception e)
-					{
-						log.error("closing the buffer error", e);
-					}
 				}
-
-				// Clean up thread local session
-				Session.unset();
-
-				if (externalCall)
+				catch (Exception e)
 				{
-					// Clean up thread local application if this was an external call
-					// (if not, doFilter will clean it up)
-					Application.unset();
-					RequestContext.unset();
+					log.error("closing the buffer error", e);
+				}
+				finally
+				{
+					// Clean up thread local session
+					Session.unset();
+
+					if (externalCall)
+					{
+						// Clean up thread local application if this was an external call
+						// (if not, doFilter will clean it up)
+						Application.unset();
+						RequestContext.unset();
+					}
 				}
 			}
 		}
