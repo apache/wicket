@@ -388,10 +388,6 @@ abstract class AbstractChoice<T, E> extends FormComponent<T>
 		{
 			final IConverter<T> converter = this.getConverter(objectClass);
 
-			if (!converter.getClass().isAssignableFrom(objectClass))
-				throw new IllegalArgumentException("converter can not convert " +
-					objectClass.getName() + " to a string");
-
 			displayValue = converter.convertToString(objectValue, getLocale());
 		}
 		else if (objectValue != null)
