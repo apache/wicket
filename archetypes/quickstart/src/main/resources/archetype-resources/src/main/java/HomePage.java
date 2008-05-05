@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Homepage
  */
-public class HomePage extends WebPage {
+public class HomePage extends WebPage<Void> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class HomePage extends WebPage {
     public HomePage(final PageParameters parameters) {
 
         // Add the simplest type of label
-        add(new Label("message", "If you see this message wicket is properly configured and running"));
+        add(new Label<String>("message", "If you see this message wicket is properly configured and running"));
 
         // TODO Add your page's components here
     }

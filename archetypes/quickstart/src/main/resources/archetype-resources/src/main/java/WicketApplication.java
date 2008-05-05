@@ -19,7 +19,7 @@ public class WicketApplication extends WebApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}

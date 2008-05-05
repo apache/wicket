@@ -10,6 +10,7 @@ public class TestHomePage extends TestCase
 {
 	private WicketTester tester;
 
+	@Override
 	public void setUp()
 	{
 		tester = new WicketTester(new WicketApplication());
