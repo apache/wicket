@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 public class VelocityHeaderContributor extends AbstractHeaderContributor
 {
 
-	private final List contributors = new ArrayList(1);
+	private final List<VelocityContributor> contributors = new ArrayList<VelocityContributor>(1);
 
 	/**
 	 * Adds a contributor.
@@ -48,11 +48,12 @@ public class VelocityHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
-	public void detach(Component component)
+	@Override
+	public void detach(Component< ? > component)
 	{
-		for (Iterator i = contributors.iterator(); i.hasNext();)
+		for (Iterator<VelocityContributor> i = contributors.iterator(); i.hasNext();)
 		{
-			VelocityContributor vc = (VelocityContributor)i.next();
+			VelocityContributor vc = i.next();
 			vc.detach(component);
 		}
 	}
@@ -60,9 +61,9 @@ public class VelocityHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
 	 */
+	@Override
 	public IHeaderContributor[] getHeaderContributors()
 	{
-		return (IHeaderContributor[])contributors.toArray(new IHeaderContributor[contributors
-				.size()]);
+		return contributors.toArray(new IHeaderContributor[contributors.size()]);
 	}
 }

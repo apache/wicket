@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.contrib.velocity;
 
-import java.io.Serializable;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -29,7 +27,7 @@ import org.apache.wicket.velocity.VelocityJavascriptContributor;
 /**
  * Test page.
  */
-public class VelocityJavascriptPage extends WebPage
+public class VelocityJavascriptPage extends WebPage<Void>
 {
 	static final String MSG1 = "Stoopid test 1";
 
@@ -44,11 +42,12 @@ public class VelocityJavascriptPage extends WebPage
 		String javascript = "msg1: Stoopid test 1\nmsg2: Stooopid test 2";
 		JavascriptUtils.writeJavascript(getResponse(), javascript, id);
 
-		IModel model = new Model()
+		IModel<MiniMap<String, String>> model = new Model<MiniMap<String, String>>()
 		{
-			public Serializable getObject()
+			@Override
+			public MiniMap<String, String> getObject()
 			{
-				MiniMap map = new MiniMap(2);
+				MiniMap<String, String> map = new MiniMap<String, String>(2);
 				map.put("msg1", MSG1);
 				map.put("msg2", "Stooopid test 2");
 				return map;

@@ -70,7 +70,7 @@ public abstract class VelocityPanel extends Panel<Map>
 	 *            The template resource
 	 * @return an instance of {@link VelocityPanel}
 	 */
-	public static VelocityPanel forTemplateResource(String id, IModel<Map> model,
+	public static VelocityPanel forTemplateResource(String id, IModel< ? extends Map> model,
 			final IStringResourceStream templateResource)
 	{
 		if (templateResource == null)
@@ -101,9 +101,9 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * @param model
 	 *            Model with variables that can be substituted by Velocity.
 	 */
-	public VelocityPanel(final String id, final IModel<Map> model)
+	public VelocityPanel(final String id, final IModel< ? extends Map> model)
 	{
-		super(id, model);
+		super(id, (IModel<Map>)model);
 	}
 
 	/**

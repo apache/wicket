@@ -28,7 +28,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityPage extends WebPage
+public class VelocityPage extends WebPage<Void>
 {
 	protected static final String TEST_STRING = "Hello, World!";
 
@@ -37,9 +37,9 @@ public class VelocityPage extends WebPage
 	 */
 	public VelocityPage()
 	{
-		HashMap values = new HashMap();
+		HashMap<String, String> values = new HashMap<String, String>();
 		values.put("message", TEST_STRING);
-		add(VelocityPanel.forTemplateResource("velocityPanel", new Model(values),
-				new UrlResourceStream(this.getClass().getResource("test.html"))));
+		add(VelocityPanel.forTemplateResource("velocityPanel", new Model<HashMap<String, String>>(
+				values), new UrlResourceStream(this.getClass().getResource("test.html"))));
 	}
 }

@@ -28,32 +28,36 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**
  * Test page for <code>VelocityPanel</code>
- *
+ * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityWithMarkupParsingPage extends WebPage
+public class VelocityWithMarkupParsingPage extends WebPage<Void>
 {
 	/**
 	 * Adds a VelocityPanel to the page with markup parsing
 	 */
 	public VelocityWithMarkupParsingPage()
 	{
-		HashMap values = new HashMap();
+		HashMap<String, String> values = new HashMap<String, String>();
 		values.put("labelId", "message");
-		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel", new Model(values))
+		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
+				new Model<HashMap<String, String>>(values))
 		{
+			@Override
 			protected IStringResourceStream getTemplateResource()
 			{
 				return new UrlResourceStream(getClass().getResource("testWithMarkup.html"));
 			}
 
+			@Override
 			public boolean parseGeneratedMarkup()
 			{
 				return true;
 			}
 		};
-		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING)
+		velocityPanel.add(new Label<String>("message", VelocityPage.TEST_STRING)
 		{
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);

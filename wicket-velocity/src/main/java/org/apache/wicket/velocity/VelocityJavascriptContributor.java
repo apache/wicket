@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.velocity;
 
+import java.util.Map;
+
+import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Packages;
 
 /**
  * A derivation of VelocityContributor that uses
- * {@link wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
+ * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
  */
 public class VelocityJavascriptContributor extends VelocityContributor
 {
 	private final String id;
 
 	/**
-	 * Ctor
-	 * 
 	 * Use this constructor if you have configured Velocity to use a ClasspathResourceLoader. The
 	 * templatePath will then be relative to the package for clazz
 	 * 
@@ -39,23 +40,23 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(Class clazz, String templatePath, IModel model, String id)
+	public VelocityJavascriptContributor(Class< ? > clazz, String templatePath,
+			IModel< ? extends Map< ? , ? >> model, String id)
 	{
 		super(Packages.absolutePath(clazz, templatePath), model);
 		this.id = id;
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * Use this constructor when Velocity is configured with the FileResourceLoader. templatePath
-	 * with then be relative to the loader path configured in velocity.properties
+	 * Use this constructor when Velocity is configured with the {@link FileResourceLoader}.
+	 * templatePath with then be relative to the loader path configured in velocity.properties
 	 * 
 	 * @param templatePath
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(String templatePath, IModel model, String id)
+	public VelocityJavascriptContributor(String templatePath,
+			IModel< ? extends Map< ? , ? >> model, String id)
 	{
 		super(templatePath, model);
 		this.id = id;
@@ -64,6 +65,7 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	/**
 	 * @see org.apache.wicket.velocity.VelocityContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		CharSequence s = evaluate();

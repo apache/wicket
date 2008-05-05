@@ -41,7 +41,6 @@ public class DynamicPage extends WicketExamplePage<Void>
 	 * @param parameters
 	 *            Page parameters
 	 */
-	@SuppressWarnings("unchecked")
 	public DynamicPage(final PageParameters parameters)
 	{
 		final IStringResourceStream template = new PackageResourceStream(DynamicPage.class,

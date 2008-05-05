@@ -42,24 +42,22 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 
 	private String encoding = "ISO-8859-1";
 
-	private final IModel model;
+	private final IModel< ? extends Map< ? , ? >> model;
 
 	private final String templateName;
 
 	/**
-	 * Ctor for VelocityContributor
-	 * 
 	 * The templateName needs to have the full path relative to where the resource loader starts
 	 * looking. For example, if there is a template next to this class in the package called foo.vm,
 	 * and you have configured the ClassPathResourceLoader, template name will then be
 	 * "wicket/contrib/util/resource/foo.vm". Wicket provides a nice utility
-	 * {@link wicket.util.lang.Packages} for this.
+	 * {@link org.apache.wicket.util.lang.Packages} for this.
 	 * 
 	 * 
 	 * @param templateName
 	 * @param model
 	 */
-	public VelocityContributor(String templateName, final IModel model)
+	public VelocityContributor(String templateName, final IModel< ? extends Map< ? , ? >> model)
 	{
 		this.templateName = templateName;
 		this.model = model;
@@ -68,7 +66,8 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
-	public void detach(Component c)
+	@Override
+	public void detach(Component< ? > c)
 	{
 		if (model instanceof IDetachable)
 		{
@@ -87,6 +86,7 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
@@ -116,7 +116,7 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	/**
 	 * Evaluate the template.
 	 * 
-	 * @return The avaluated template
+	 * @return The evaluated template
 	 */
 	protected final CharSequence evaluate()
 	{
@@ -125,7 +125,7 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 			return null;
 		}
 		// create a Velocity context object using the model if set
-		final VelocityContext ctx = new VelocityContext((Map)model.getObject());
+		final VelocityContext ctx = new VelocityContext(model.getObject());
 
 		// create a writer for capturing the Velocity output
 		StringWriter writer = new StringWriter();
