@@ -68,7 +68,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	public static Model< ? > valueOf(final Map map)
+	public static Model valueOf(final Map map)
 	{
 		return new Model(map instanceof Serializable ? (Serializable)map : new HashMap(map));
 	}
