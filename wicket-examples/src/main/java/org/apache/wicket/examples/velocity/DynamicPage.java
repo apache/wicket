@@ -33,7 +33,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class DynamicPage extends WicketExamplePage
+public class DynamicPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -41,10 +41,11 @@ public class DynamicPage extends WicketExamplePage
 	 * @param parameters
 	 *            Page parameters
 	 */
+	@SuppressWarnings("unchecked")
 	public DynamicPage(final PageParameters parameters)
 	{
 		final IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
-				"fields.vm");
+			"fields.vm");
 
 		Map<String, List<Field>> map = new HashMap<String, List<Field>>();
 		List<Field> fields = VelocityTemplateApplication.getFields();

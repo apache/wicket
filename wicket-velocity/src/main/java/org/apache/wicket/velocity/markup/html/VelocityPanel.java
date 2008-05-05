@@ -43,19 +43,17 @@ import org.apache.wicket.util.string.Strings;
 /**
  * Panel that displays the result of rendering a <a
  * href="http://jakarta.apache.org/velocity">Velocity</a> template. The template itself can be any
- * <code><a href="http://wicket.apache.org/wicket/apidocs/org/apache/wicket/util/resource/IStringResourceStream.html">IStringResourceStream</a></code>
- * implementation, of which there are a number of convenient implementations in the wicket.util
- * package. The model can be any normal
- * <code><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Map.html">Map</a></code>,
- * which will be used to create the
- * <code><a href="http://jakarta.apache.org/velocity/docs/api/org/apache/velocity/VelocityContext.html">VelocityContext</a></code>.
+ * {@link StringResourceStream} implementation, of which there are a number of convenient
+ * implementations in the {@link org.apache.wicket.util} package. The model can be any normal
+ * {@link Map}, which will be used to create the {@link VelocityContext}.
  * 
  * <p>
  * <b>Note:</b> Be sure to properly initialize the Velocity engine before using
- * <code>VelocityPanel</code>.
+ * {@link VelocityPanel}.
  * </p>
  */
-public abstract class VelocityPanel extends Panel
+@SuppressWarnings("unchecked")
+public abstract class VelocityPanel extends Panel<Map>
 		implements
 			IMarkupResourceStreamProvider,
 			IMarkupCacheKeyProvider
@@ -67,12 +65,12 @@ public abstract class VelocityPanel extends Panel
 	 * @param id
 	 *            Component id
 	 * @param model
-	 *            optional model for variable substituation.
+	 *            optional model for variable substitution.
 	 * @param templateResource
 	 *            The template resource
 	 * @return an instance of {@link VelocityPanel}
 	 */
-	public static VelocityPanel forTemplateResource(String id, IModel model,
+	public static VelocityPanel forTemplateResource(String id, IModel<Map> model,
 			final IStringResourceStream templateResource)
 	{
 		if (templateResource == null)
@@ -82,6 +80,7 @@ public abstract class VelocityPanel extends Panel
 
 		return new VelocityPanel(id, model)
 		{
+			@Override
 			protected IStringResourceStream getTemplateResource()
 			{
 				return templateResource;
@@ -100,10 +99,9 @@ public abstract class VelocityPanel extends Panel
 	 * @param templateResource
 	 *            The velocity template as a string resource
 	 * @param model
-	 *            Model with variables that can be substituted by Velocity. Must return a
-	 *            {@link Map}.
+	 *            Model with variables that can be substituted by Velocity.
 	 */
-	public VelocityPanel(final String id, final IModel/* <Map> */model)
+	public VelocityPanel(final String id, final IModel<Map> model)
 	{
 		super(id, model);
 	}
@@ -134,6 +132,7 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		if (!Strings.isEmpty(stackTraceAsString))
@@ -218,7 +217,7 @@ public abstract class VelocityPanel extends Panel
 		if (evaluatedTemplate == null)
 		{
 			// Get model as a map
-			final Map map = (Map)getModelObject();
+			final Map map = getModelObject();
 
 			// create a Velocity context object using the model if set
 			final VelocityContext ctx = new VelocityContext(map);
@@ -282,8 +281,8 @@ public abstract class VelocityPanel extends Panel
 	 * traps and displays any exception without having consequences for the other components on the
 	 * page.
 	 * <p>
-	 * Trapping these exceptions without disturbing the other components is especially usefull in
-	 * CMS like applications, where 'normal' users are allowed to do basic scripting. On errors, you
+	 * Trapping these exceptions without disturbing the other components is especially useful in CMS
+	 * like applications, where 'normal' users are allowed to do basic scripting. On errors, you
 	 * want them to be able to have them correct them while the rest of the application keeps on
 	 * working.
 	 * </p>
@@ -299,8 +298,8 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public final IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class containerClass)
+	public final IResourceStream getMarkupResourceStream(MarkupContainer< ? > container,
+			Class< ? > containerClass)
 	{
 		Reader reader = getTemplateReader();
 		if (reader == null)
@@ -320,7 +319,7 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public final String getCacheKey(MarkupContainer container, Class containerClass)
+	public final String getCacheKey(MarkupContainer< ? > container, Class< ? > containerClass)
 	{
 		// don't cache the evaluated template
 		return null;
@@ -329,6 +328,7 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
