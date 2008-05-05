@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
@@ -34,17 +33,18 @@ import org.apache.wicket.model.Model;
  * An inplace editor much like {@link AjaxEditableLabel}, but instead of a {@link TextField} a
  * {@link DropDownChoice} is displayed.
  * 
+ * @param <T>
  * @author Eelco Hillenius
  */
-public class AjaxEditableChoiceLabel extends AjaxEditableLabel
+public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The list of objects. */
-	private IModel choices;
+	private IModel< ? extends List< ? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer renderer;
+	private IChoiceRenderer<T> renderer;
 
 	/**
 	 * Construct.
@@ -65,7 +65,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param model
 	 *            The model
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel model)
+	public AjaxEditableChoiceLabel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -78,7 +78,7 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, List choices)
+	public AjaxEditableChoiceLabel(String id, List< ? extends T> choices)
 	{
 		this(id, null, choices);
 	}
@@ -93,7 +93,8 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel model, IModel choices)
+	public AjaxEditableChoiceLabel(String id, IModel<T> model,
+		IModel< ? extends List< ? extends T>> choices)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -111,7 +112,8 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param renderer
 	 *            The rendering engine
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public AjaxEditableChoiceLabel(String id, IModel<T> model,
+		IModel< ? extends List< ? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -128,9 +130,10 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel model, List choices)
+	@SuppressWarnings("unchecked")
+	public AjaxEditableChoiceLabel(String id, IModel<T> model, List< ? extends T> choices)
 	{
-		this(id, model, new Model((Serializable)choices));
+		this(id, model, Model.valueOf(choices));
 	}
 
 	/**
@@ -145,9 +148,11 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 * @param renderer
 	 *            The rendering engine
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel model, List choices, IChoiceRenderer renderer)
+	@SuppressWarnings("unchecked")
+	public AjaxEditableChoiceLabel(String id, IModel<T> model, List< ? extends T> choices,
+		IChoiceRenderer<T> renderer)
 	{
-		this(id, model, new Model((Serializable)choices), renderer);
+		this(id, model, Model.valueOf(choices), renderer);
 	}
 
 
@@ -156,21 +161,22 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
+	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
+		IModel<T> model)
 	{
-		IModel choiceModel = new AbstractReadOnlyModel()
+		IModel<List< ? extends T>> choiceModel = new AbstractReadOnlyModel<List< ? extends T>>()
 		{
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject()
+			public List< ? extends T> getObject()
 			{
 				return choices.getObject();
 			}
 
 		};
-		DropDownChoice editor = new DropDownChoice(componentId, model, choiceModel, renderer)
+		DropDownChoice<T> editor = new DropDownChoice<T>(componentId, model, choiceModel, renderer)
 		{
 			private static final long serialVersionUID = 1L;
 

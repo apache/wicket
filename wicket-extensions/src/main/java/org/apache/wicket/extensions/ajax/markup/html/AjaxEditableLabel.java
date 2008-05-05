@@ -279,7 +279,8 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The model
 	 * @return The editor
 	 */
-	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
+		IModel<T> model)
 	{
 		TextField<T> editor = new TextField<T>(componentId, model)
 		{
@@ -510,7 +511,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		// check that a model was found
 		if (m == null)
 		{
-			Component parent = getParent();
+			Component< ? > parent = getParent();
 			String msg = "No model found for this component, either pass one explicitly or "
 				+ "make sure an inheritable model is available.";
 			if (parent == null)

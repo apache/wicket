@@ -33,12 +33,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class EditableLabelPage extends BasePage
+public class EditableLabelPage extends BasePage<EditableLabelPage>
 {
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
-	private String site = (String)SITES.get(0);
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
+	private String site = SITES.get(0);
 	private String text1 = "fox";
 	private String text2 = "dog";
 	private String text3 = "multiple\nlines of\ntextual content";
@@ -49,22 +49,24 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		setModel(new CompoundPropertyModel(this));
-		add(new AjaxEditableLabel("text1"));
-		add(new AjaxEditableLabel("text2"));
-		add(new AjaxEditableMultiLineLabel("text3"));
-		add(new AjaxEditableChoiceLabel("site", SITES));
+		setModel(new CompoundPropertyModel<EditableLabelPage>(this));
+		add(new AjaxEditableLabel<String>("text1"));
+		add(new AjaxEditableLabel<String>("text2"));
+		add(new AjaxEditableMultiLineLabel<String>("text3"));
+		add(new AjaxEditableChoiceLabel<String>("site", SITES));
 
-		add(new Label("refresh-counter", new AbstractReadOnlyModel()
+		add(new Label<String>("refresh-counter", new AbstractReadOnlyModel<String>()
 		{
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				return "" + refreshCounter;
 			}
 		}));
 
-		add(new Link("refresh-link")
+		add(new Link<Void>("refresh-link")
 		{
+			@Override
 			public void onClick()
 			{
 				refreshCounter++;

@@ -25,10 +25,11 @@ import org.apache.wicket.markup.html.form.Form;
  * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
  * progress.
  * 
+ * @param <T>
  * @author evan
  * 
  */
-public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIndicatorAware
+public abstract class IndicatingAjaxButton<T> extends AjaxButton<T> implements IAjaxIndicatorAware
 {
 
 	/**
@@ -42,13 +43,14 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	 * @param id
 	 * @param form
 	 */
-	public IndicatingAjaxButton(String id, Form form)
+	public IndicatingAjaxButton(String id, Form< ? > form)
 	{
 		super(id, form);
 		add(indicatorAppender);
 	}
 
-	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
+	@Override
+	protected abstract void onSubmit(AjaxRequestTarget target, Form< ? > form);
 
 	/**
 	 * @see IAjaxIndicatorAware#getAjaxIndicatorMarkupId()

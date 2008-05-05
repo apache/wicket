@@ -117,7 +117,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
+		IModel<T> model)
 	{
 		TextArea<T> editor = new TextArea<T>(componentId, model)
 		{

@@ -24,14 +24,16 @@ import org.apache.wicket.model.IModel;
  * A variant of the {@link AjaxFallbackLink} that displays a busy indicator while the ajax request
  * is in progress.
  * 
+ * @param <T>
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
-		implements
-			IAjaxIndicatorAware
+public abstract class IndicatingAjaxFallbackLink<T> extends AjaxFallbackLink<T>
+	implements
+		IAjaxIndicatorAware
 {
 
 	/**
@@ -56,7 +58,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxFallbackLink(String id, IModel model)
+	public IndicatingAjaxFallbackLink(String id, IModel<T> model)
 	{
 		super(id, model);
 		add(indicatorAppender);
