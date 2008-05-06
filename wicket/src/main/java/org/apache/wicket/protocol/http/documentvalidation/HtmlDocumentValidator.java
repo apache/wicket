@@ -39,7 +39,7 @@ public class HtmlDocumentValidator
 {
 	private static final Logger log = LoggerFactory.getLogger(HtmlDocumentValidator.class);
 
-	private final List elements = new ArrayList();
+	private final List<DocumentElement> elements = new ArrayList<DocumentElement>();
 
 	private boolean skipComments = true;
 
@@ -75,9 +75,9 @@ public class HtmlDocumentValidator
 	public boolean isDocumentValid(final String document)
 	{
 		HtmlDocumentParser parser = new HtmlDocumentParser(document);
-		Iterator expectedElements = elements.iterator();
-		ArrayListStack iteratorStack = new ArrayListStack();
-		ArrayListStack tagNameStack = new ArrayListStack();
+		Iterator<DocumentElement> expectedElements = elements.iterator();
+		ArrayListStack<Iterator<DocumentElement>> iteratorStack = new ArrayListStack<Iterator<DocumentElement>>();
+		ArrayListStack<String> tagNameStack = new ArrayListStack<String>();
 
 		boolean end = false;
 		boolean valid = true;
@@ -108,7 +108,7 @@ public class HtmlDocumentValidator
 					else
 					{
 						expectedElements = saveOpenTagState(iteratorStack, expectedElements,
-								tagNameStack);
+							tagNameStack);
 					}
 					break;
 				case HtmlDocumentParser.OPENCLOSE_TAG :
@@ -124,7 +124,7 @@ public class HtmlDocumentValidator
 					break;
 				case HtmlDocumentParser.CLOSE_TAG :
 					expectedElements = validateCloseTag(tagNameStack, parser, expectedElements,
-							iteratorStack);
+						iteratorStack);
 					if (expectedElements == null)
 					{
 						valid = false;
@@ -168,7 +168,7 @@ public class HtmlDocumentValidator
 		if (!workingTag.getExpectedChildren().isEmpty())
 		{
 			log.error("Found tag <" + workingTag.getTag() + "/> was expected to have " +
-					workingTag.getExpectedChildren().size() + " child elements");
+				workingTag.getExpectedChildren().size() + " child elements");
 			valid = false;
 		}
 		return valid;
@@ -266,8 +266,9 @@ public class HtmlDocumentValidator
 	 *            The stack of open tags
 	 * @return The iterator to continue to use
 	 */
-	private Iterator saveOpenTagState(ArrayListStack iteratorStack, Iterator expectedElements,
-			ArrayListStack tagNameStack)
+	private Iterator<DocumentElement> saveOpenTagState(
+		ArrayListStack<Iterator<DocumentElement>> iteratorStack,
+		Iterator<DocumentElement> expectedElements, ArrayListStack<String> tagNameStack)
 	{
 		if (!isNonClosedTag(workingTag.getTag()))
 		{
@@ -291,31 +292,32 @@ public class HtmlDocumentValidator
 	 *            The stack of previous iterators
 	 * @return The next iterator to use, or null
 	 */
-	private Iterator validateCloseTag(ArrayListStack tagNameStack, HtmlDocumentParser parser,
-			Iterator expectedElements, ArrayListStack iteratorStack)
+	private Iterator<DocumentElement> validateCloseTag(ArrayListStack<String> tagNameStack,
+		HtmlDocumentParser parser, Iterator<DocumentElement> expectedElements,
+		ArrayListStack<Iterator<DocumentElement>> iteratorStack)
 	{
 		if (tagNameStack.isEmpty())
 		{
 			log.error("Found closing tag </" + parser.getTag() + "> when there are no " +
-					"tags currently open");
+				"tags currently open");
 			expectedElements = null;
 		}
 		else
 		{
-			String expectedTag = (String)tagNameStack.pop();
+			String expectedTag = tagNameStack.pop();
 			if (!expectedTag.equals(parser.getTag()))
 			{
 				log.error("Found closing tag </" + parser.getTag() + "> when we expecting " +
-						"the closing tag </" + expectedTag + "> instead");
+					"the closing tag </" + expectedTag + "> instead");
 				expectedElements = null;
 			}
 			else
 			{
 				if (expectedElements.hasNext())
 				{
-					DocumentElement e = (DocumentElement)expectedElements.next();
+					DocumentElement e = expectedElements.next();
 					log.error("Found closing tag </" + parser.getTag() + "> but we were " +
-							"expecting to find another child element: " + e.toString());
+						"expecting to find another child element: " + e.toString());
 					expectedElements = null;
 				}
 				else
@@ -327,7 +329,7 @@ public class HtmlDocumentValidator
 					}
 					else
 					{
-						expectedElements = (Iterator)iteratorStack.pop();
+						expectedElements = iteratorStack.pop();
 					}
 				}
 			}
@@ -344,34 +346,35 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the comment is valid or not
 	 */
-	private boolean validateComment(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateComment(Iterator<DocumentElement> expectedElements,
+		HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (!skipComments)
 		{
 			if (expectedElements.hasNext())
 			{
-				DocumentElement e = (DocumentElement)expectedElements.next();
+				DocumentElement e = expectedElements.next();
 				if (e instanceof Comment)
 				{
 					if (!((Comment)e).getText().equals(parser.getComment()))
 					{
 						log.error("Found comment '" + parser.getComment() + "' does not match " +
-								"expected comment '" + ((Comment)e).getText() + "'");
+							"expected comment '" + ((Comment)e).getText() + "'");
 						valid = false;
 					}
 				}
 				else
 				{
 					log.error("Found comment '" + parser.getComment() + "' was not expected. " +
-							"We were expecting: " + e.toString());
+						"We were expecting: " + e.toString());
 					valid = false;
 				}
 			}
 			else
 			{
 				log.error("Found comment '" + parser.getComment() + "' was not expected. " +
-						"We were not expecting any more elements within the current tag");
+					"We were not expecting any more elements within the current tag");
 				valid = false;
 			}
 		}
@@ -387,39 +390,41 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the tag is valid or not
 	 */
-	private boolean validateTag(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateTag(Iterator<DocumentElement> expectedElements,
+		HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (expectedElements.hasNext())
 		{
-			DocumentElement e = (DocumentElement)expectedElements.next();
+			DocumentElement e = expectedElements.next();
 			if (e instanceof Tag)
 			{
 				workingTag = (Tag)e;
 				if (!workingTag.getTag().equals(parser.getTag()))
 				{
 					log.error("Found tag <" + parser.getTag() + "> does not match " +
-							"expected tag <" + workingTag.getTag() + ">");
+						"expected tag <" + workingTag.getTag() + ">");
 					valid = false;
 				}
 				else
 				{
-					Map actualAttributes = parser.getAttributes();
+					Map<String, String> actualAttributes = parser.getAttributes();
 
-					Map expectedAttributes = workingTag.getExpectedAttributes();
-					for (Iterator it = expectedAttributes.entrySet().iterator(); it.hasNext();)
+					Map<String, String> expectedAttributes = workingTag.getExpectedAttributes();
+					for (Iterator<Map.Entry<String, String>> it = expectedAttributes.entrySet()
+						.iterator(); it.hasNext();)
 					{
-						Map.Entry entry = (Map.Entry) it.next();
-						String name = (String) entry.getKey();
-						String pattern = (String)entry.getValue();
+						Map.Entry<String, String> entry = it.next();
+						String name = entry.getKey();
+						String pattern = entry.getValue();
 						if (!actualAttributes.containsKey(name))
 						{
 							log.error("Tag <" + workingTag.getTag() + "> was expected to have a '" +
-									name + "' attribute " + "but this was not present");
+								name + "' attribute " + "but this was not present");
 							valid = false;
 						}
 
-						String value = (String)actualAttributes.get(name);
+						String value = actualAttributes.get(name);
 						if (value == null)
 						{
 							log.error("Attribute " + name + " was expected but not found");
@@ -430,21 +435,21 @@ public class HtmlDocumentValidator
 							if (!value.matches(pattern))
 							{
 								log.error("The value '" + value + "' of attribute '" + name +
-										"' of tag <" + workingTag.getTag() +
-										"> was expected to match the pattern '" + pattern +
-										"' but it does not");
+									"' of tag <" + workingTag.getTag() +
+									"> was expected to match the pattern '" + pattern +
+									"' but it does not");
 								valid = false;
 							}
 						}
 					}
 
-					for (Iterator it = workingTag.getIllegalAttributes().iterator(); it.hasNext();)
+					for (Iterator<String> it = workingTag.getIllegalAttributes().iterator(); it.hasNext();)
 					{
-						String name = (String)it.next();
+						String name = it.next();
 						if (actualAttributes.containsKey(name))
 						{
 							log.error("Tag <" + workingTag.getTag() +
-									"> should not have an attributed named '" + name + "'");
+								"> should not have an attributed named '" + name + "'");
 							valid = false;
 						}
 					}
@@ -453,14 +458,14 @@ public class HtmlDocumentValidator
 			else
 			{
 				log.error("Found tag <" + parser.getTag() + "> was not expected. " +
-						"We were expecting: " + e.toString());
+					"We were expecting: " + e.toString());
 				valid = false;
 			}
 		}
 		else
 		{
 			log.error("Found tag <" + parser.getTag() + "> was not expected. " +
-					"We were not expecting any more elements within the current tag");
+				"We were not expecting any more elements within the current tag");
 			valid = false;
 		}
 		return valid;
@@ -475,32 +480,33 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the text is valid or not
 	 */
-	private boolean validateText(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateText(Iterator<DocumentElement> expectedElements,
+		HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (expectedElements.hasNext())
 		{
-			DocumentElement e = (DocumentElement)expectedElements.next();
+			DocumentElement e = expectedElements.next();
 			if (e instanceof TextContent)
 			{
 				if (!parser.getText().matches(((TextContent)e).getValue()))
 				{
 					log.error("Found text '" + parser.getText() + "' does not match " +
-							"expected text '" + ((TextContent)e).getValue() + "'");
+						"expected text '" + ((TextContent)e).getValue() + "'");
 					valid = false;
 				}
 			}
 			else
 			{
 				log.error("Found text '" + parser.getText() + "' was not expected. " +
-						"We were expecting: " + e.toString());
+					"We were expecting: " + e.toString());
 				valid = false;
 			}
 		}
 		else
 		{
 			log.error("Found text '" + parser.getText() + "' was not expected. " +
-					"We were not expecting any more elements within the current tag");
+				"We were not expecting any more elements within the current tag");
 			valid = false;
 		}
 		return valid;

@@ -30,11 +30,11 @@ import java.util.Set;
  */
 public class Tag implements DocumentElement
 {
-	private final Map expectedAttributes = new HashMap();
+	private final Map<String, String> expectedAttributes = new HashMap<String, String>();
 
-	private final List expectedChildren = new ArrayList();
+	private final List<DocumentElement> expectedChildren = new ArrayList<DocumentElement>();
 
-	private final Set illegalAttributes = new HashSet();
+	private final Set<String> illegalAttributes = new HashSet<String>();
 
 	private final String tag;
 
@@ -93,7 +93,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The expected attribute map
 	 */
-	public Map getExpectedAttributes()
+	public Map<String, String> getExpectedAttributes()
 	{
 		return expectedAttributes;
 	}
@@ -103,7 +103,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The expected children
 	 */
-	public List getExpectedChildren()
+	public List<DocumentElement> getExpectedChildren()
 	{
 		return expectedChildren;
 	}
@@ -113,7 +113,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The illegal attributes
 	 */
-	public Set getIllegalAttributes()
+	public Set<String> getIllegalAttributes()
 	{
 		return illegalAttributes;
 	}
@@ -133,6 +133,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The string
 	 */
+	@Override
 	public String toString()
 	{
 		return "[tag = '" + tag + "']";

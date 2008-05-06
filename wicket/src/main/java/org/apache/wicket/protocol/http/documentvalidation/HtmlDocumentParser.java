@@ -55,7 +55,7 @@ public class HtmlDocumentParser
 	/** constant for unknown token. */
 	public static final int UNKNOWN = -1;
 
-	private Map attributes;
+	private Map<String, String> attributes;
 
 	/** Extracted content */
 	private String comment;
@@ -88,7 +88,7 @@ public class HtmlDocumentParser
 	 * 
 	 * @return The attributes
 	 */
-	public Map getAttributes()
+	public Map<String, String> getAttributes()
 	{
 		return attributes;
 	}
@@ -154,9 +154,9 @@ public class HtmlDocumentParser
 	 *            The string
 	 * @return The map of attributes
 	 */
-	private Map extractAttributes(String attributeString)
+	private Map<String, String> extractAttributes(String attributeString)
 	{
-		Map m = new HashMap();
+		Map<String, String> m = new HashMap<String, String>();
 		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
 		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
@@ -223,7 +223,7 @@ public class HtmlDocumentParser
 			{
 				// No attributes
 				tag = part.substring(1, part.indexOf("/>")).toLowerCase();
-				attributes = new HashMap();
+				attributes = new HashMap<String, String>();
 			}
 			else
 			{
@@ -242,7 +242,7 @@ public class HtmlDocumentParser
 			{
 				// No attributes
 				tag = part.substring(1, part.indexOf('>')).toLowerCase();
-				attributes = new HashMap();
+				attributes = new HashMap<String, String>();
 			}
 			else
 			{
