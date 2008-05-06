@@ -45,7 +45,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class ExtensionResourceNameIterator implements Iterator
+public class ExtensionResourceNameIterator implements Iterator<String>
 {
 	/** The base path */
 	private final String path;
@@ -104,7 +104,7 @@ public class ExtensionResourceNameIterator implements Iterator
 	 * 
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public String next()
 	{
 		return path + extensions[index++];
 	}

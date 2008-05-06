@@ -53,7 +53,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @return a {@link Map} of XSLT parameters, appropriate for passing information to the XSL
 	 *         stylesheet
 	 */
-	protected Map getParameters()
+	protected Map<Object, Object> getParameters()
 	{
 		return null;
 	}
@@ -71,24 +71,23 @@ public class XSLTResourceStream extends AbstractResourceStream
 		try
 		{
 			javax.xml.transform.Source xmlSource = new javax.xml.transform.stream.StreamSource(
-					xmlResource.getInputStream());
+				xmlResource.getInputStream());
 			javax.xml.transform.Source xsltSource = new javax.xml.transform.stream.StreamSource(
-					xsltResource.getInputStream());
+				xsltResource.getInputStream());
 			out = new ByteArrayOutputStream();
 			javax.xml.transform.Result result = new javax.xml.transform.stream.StreamResult(out);
 
 			// create an instance of TransformerFactory
-			javax.xml.transform.TransformerFactory transFact = javax.xml.transform.TransformerFactory
-					.newInstance();
+			javax.xml.transform.TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
 
 			javax.xml.transform.Transformer trans = transFact.newTransformer(xsltSource);
-			Map parameters = getParameters();
+			Map<Object, Object> parameters = getParameters();
 			if (parameters != null)
 			{
-				Iterator it = parameters.entrySet().iterator();
+				Iterator<Entry<Object, Object>> it = parameters.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Entry e = (Entry)it.next();
+					Entry<Object, Object> e = it.next();
 					trans.setParameter(e.getKey().toString(), e.getValue().toString());
 				}
 			}
@@ -125,6 +124,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		return null;
@@ -141,6 +141,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
 		return out.size();
@@ -151,6 +152,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * 
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		return null;

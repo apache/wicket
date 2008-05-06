@@ -51,16 +51,16 @@ public class PackageResourceStream extends AbstractResourceStream
 	 * @param path
 	 *            The path to the resource
 	 */
-	public PackageResourceStream(Class scope, String path)
+	public PackageResourceStream(Class< ? > scope, String path)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-				scope, absolutePath, null, null, null);
+			scope, absolutePath, null, null, null);
 
 		if (resourceStream == null)
 		{
 			throw new WicketRuntimeException("Cannot find resource with " + scope.getName() +
-					" and path " + path);
+				" and path " + path);
 		}
 	}
 
@@ -69,6 +69,7 @@ public class PackageResourceStream extends AbstractResourceStream
 		resourceStream.close();
 	}
 
+	@Override
 	public String getContentType()
 	{
 		return resourceStream.getContentType();
@@ -79,11 +80,13 @@ public class PackageResourceStream extends AbstractResourceStream
 		return resourceStream.getInputStream();
 	}
 
+	@Override
 	public long length()
 	{
 		return resourceStream.length();
 	}
 
+	@Override
 	public Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();

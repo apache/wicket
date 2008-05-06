@@ -42,7 +42,7 @@ import java.util.Iterator;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class StyleAndVariationResourceNameIterator implements Iterator
+public class StyleAndVariationResourceNameIterator implements Iterator<String>
 {
 	/** The base path */
 	private final String path;
@@ -64,7 +64,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator
 	 * @param variation
 	 */
 	public StyleAndVariationResourceNameIterator(final String path, final String style,
-			final String variation)
+		final String variation)
 	{
 		this.path = path;
 		this.style = style;
@@ -77,14 +77,14 @@ public class StyleAndVariationResourceNameIterator implements Iterator
 	 */
 	public boolean hasNext()
 	{
-		return (this.state < 3);
+		return (state < 3);
 	}
 
 	/**
 	 * 
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public String next()
 	{
 		if (state == 0)
 		{

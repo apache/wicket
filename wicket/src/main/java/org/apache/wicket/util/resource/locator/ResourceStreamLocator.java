@@ -84,7 +84,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public IResourceStream locate(final Class clazz, final String path)
+	public IResourceStream locate(final Class< ? > clazz, final String path)
 	{
 		// First try with the resource finder registered with the application
 		// (allows for markup reloading)
@@ -109,8 +109,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public IResourceStream locate(final Class clazz, String path, final String style,
-			final Locale locale, final String extension)
+	public IResourceStream locate(final Class< ? > clazz, String path, final String style,
+		final Locale locale, final String extension)
 	{
 		// Try the various combinations of style, locale and extension to find
 		// the resource.
@@ -137,7 +137,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param path
 	 * @return resource stream
 	 */
-	protected IResourceStream locateByClassLoader(final Class clazz, final String path)
+	protected IResourceStream locateByClassLoader(final Class< ? > clazz, final String path)
 	{
 		ClassLoader classLoader = null;
 		if (clazz != null)
@@ -162,7 +162,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		if (log.isDebugEnabled())
 		{
 			log.debug("Attempting to locate resource '" + path + "' using classloader " +
-					classLoader);
+				classLoader);
 		}
 
 		// Try loading path using classloader
@@ -181,9 +181,9 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param path
 	 * @return resource stream
 	 */
-	protected IResourceStream locateByResourceFinder(final Class clazz, final String path)
+	protected IResourceStream locateByResourceFinder(final Class< ? > clazz, final String path)
 	{
-		if (this.finder == null)
+		if (finder == null)
 		{
 			finder = Application.get().getResourceSettings().getResourceFinder();
 		}

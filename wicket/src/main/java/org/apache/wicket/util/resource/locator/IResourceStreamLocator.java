@@ -43,7 +43,7 @@ public interface IResourceStreamLocator
 	 * 
 	 * @return The resource or null
 	 */
-	public IResourceStream locate(Class clazz, String path);
+	public IResourceStream locate(Class< ? > clazz, String path);
 
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
@@ -61,6 +61,6 @@ public interface IResourceStreamLocator
 	 * 
 	 * @return The resource or null
 	 */
-	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
-			String extension);
+	public IResourceStream locate(Class< ? > clazz, String path, String style, Locale locale,
+		String extension);
 }

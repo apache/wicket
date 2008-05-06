@@ -48,7 +48,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public class ResourceNameIterator implements Iterator
+public class ResourceNameIterator implements Iterator<String>
 {
 	// The locale to search for the resource file
 	private final Locale locale;
@@ -57,9 +57,9 @@ public class ResourceNameIterator implements Iterator
 	private final String extensions;
 
 	// The various iterators used to locate the resource file
-	private final Iterator styleIterator;
+	private final Iterator<String> styleIterator;
 	private LocaleResourceNameIterator localeIterator;
-	private Iterator extenstionsIterator;
+	private Iterator<String> extenstionsIterator;
 
 	// The latest exact Locale used
 	private Locale currentLocale;
@@ -129,7 +129,7 @@ public class ResourceNameIterator implements Iterator
 			{
 				// Get the next Locale from the iterator and start the next
 				// inner iterator over again.
-				String newPath = (String)localeIterator.next();
+				String newPath = localeIterator.next();
 				currentLocale = localeIterator.getLocale();
 				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
 				if (extenstionsIterator.hasNext() == true)
@@ -144,12 +144,12 @@ public class ResourceNameIterator implements Iterator
 		// variations
 		while (styleIterator.hasNext())
 		{
-			String newPath = (String)styleIterator.next();
+			String newPath = styleIterator.next();
 
 			localeIterator = new LocaleResourceNameIterator(newPath, locale);
 			while (localeIterator.hasNext())
 			{
-				newPath = (String)localeIterator.next();
+				newPath = localeIterator.next();
 				currentLocale = localeIterator.getLocale();
 				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
 				if (extenstionsIterator.hasNext() == true)
@@ -166,7 +166,7 @@ public class ResourceNameIterator implements Iterator
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public String next()
 	{
 		if (extenstionsIterator != null)
 		{

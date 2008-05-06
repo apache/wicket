@@ -54,7 +54,7 @@ public final class OptionalMetaPattern extends MetaPattern
 	 * 
 	 * @param patterns
 	 */
-	public OptionalMetaPattern(final List patterns)
+	public OptionalMetaPattern(final List<MetaPattern> patterns)
 	{
 		super(patterns);
 	}
@@ -72,6 +72,7 @@ public final class OptionalMetaPattern extends MetaPattern
 	/**
 	 * @return String representation of this pattern
 	 */
+	@Override
 	public String toString()
 	{
 		return "(?:" + super.toString() + ")?";

@@ -39,7 +39,7 @@ public class ListParser extends MetaPatternParser
 	private final MetaPattern separatorPattern;
 
 	/** The list elements parsed */
-	private final List values = new ArrayList();
+	private final List<String> values = new ArrayList<String>();
 
 	/**
 	 * Constructs a list parser from an entry MetaPattern, a separator MetaPattern and an input
@@ -53,10 +53,10 @@ public class ListParser extends MetaPatternParser
 	 *            The input to parse
 	 */
 	public ListParser(final MetaPattern entryPattern, final MetaPattern separatorPattern,
-			final CharSequence input)
+		final CharSequence input)
 	{
 		super(input);
-		this.entryGroup = new Group(entryPattern);
+		entryGroup = new Group(entryPattern);
 		this.separatorPattern = separatorPattern;
 	}
 
@@ -66,6 +66,7 @@ public class ListParser extends MetaPatternParser
 	 * @see #getValues()
 	 * @see org.apache.wicket.util.parse.metapattern.parsers.MetaPatternParser#matches()
 	 */
+	@Override
 	public final boolean matches()
 	{
 		// Are there any more elements
@@ -96,7 +97,7 @@ public class ListParser extends MetaPatternParser
 	 * 
 	 * @return the parsed values
 	 */
-	public final List getValues()
+	public final List<String> getValues()
 	{
 		return values;
 	}

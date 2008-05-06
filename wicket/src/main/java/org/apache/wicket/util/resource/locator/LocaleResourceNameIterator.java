@@ -46,7 +46,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class LocaleResourceNameIterator implements Iterator
+public class LocaleResourceNameIterator implements Iterator<String>
 {
 	/** The base path */
 	private final String path;
@@ -92,14 +92,14 @@ public class LocaleResourceNameIterator implements Iterator
 	 */
 	public boolean hasNext()
 	{
-		return (this.state < 4);
+		return (state < 4);
 	}
 
 	/**
 	 * 
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public String next()
 	{
 		if (locale == null)
 		{
@@ -110,10 +110,10 @@ public class LocaleResourceNameIterator implements Iterator
 		// 1. Apply Locale default toString() implementation. See Locale.
 		if (state == 0)
 		{
-			this.state++;
-			this.currentLocale = locale;
-			this.currentPath = path + '_' + locale.toString();
-			return this.currentPath;
+			state++;
+			currentLocale = locale;
+			currentPath = path + '_' + locale.toString();
+			return currentPath;
 		}
 
 		// Get language and country, either of which may be the empty string
@@ -123,13 +123,13 @@ public class LocaleResourceNameIterator implements Iterator
 		// 2. If country and language are available
 		if (state == 1)
 		{
-			this.state++;
+			state++;
 
 			if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 			{
-				this.currentLocale = new Locale(language, country);
+				currentLocale = new Locale(language, country);
 				String newPath = path + '_' + language + '_' + country;
-				if (this.currentPath.equals(newPath) == false)
+				if (currentPath.equals(newPath) == false)
 				{
 					return newPath;
 				}
@@ -139,19 +139,19 @@ public class LocaleResourceNameIterator implements Iterator
 		// 3. If language is available
 		if (state == 2)
 		{
-			this.state++;
+			state++;
 
 			if (!Strings.isEmpty(language))
 			{
-				this.currentLocale = new Locale(language);
+				currentLocale = new Locale(language);
 				return path + '_' + language;
 			}
 		}
 
 		// 4. The path only; without locale
-		this.state++;
+		state++;
 
-		this.currentLocale = null;
+		currentLocale = null;
 		return path;
 	}
 

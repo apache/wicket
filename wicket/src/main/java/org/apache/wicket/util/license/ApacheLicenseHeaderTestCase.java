@@ -20,9 +20,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -94,15 +94,15 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			{
 				String relativePathname = pathname.getAbsolutePath();
 				relativePathname = Strings.replaceAll(relativePathname,
-						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
-						.toString();
+					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+					.toString();
 
 				for (int i = 0; i < ignoreFiles.length; i++)
 				{
 					String ignorePath = ignoreFiles[i];
 					// Will convert '/'s to '\\'s on Windows
 					ignorePath = Strings.replaceAll(ignorePath, "/",
-							System.getProperty("file.separator")).toString();
+						System.getProperty("file.separator")).toString();
 					File ignoreFile = new File(baseDirectory, ignorePath);
 
 					// Directory ignore
@@ -143,8 +143,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			{
 				String relativePathname = pathname.getAbsolutePath();
 				relativePathname = Strings.replaceAll(relativePathname,
-						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
-						.toString();
+					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+					.toString();
 				if (relativePathname.equals("target") == false)
 				{
 					boolean found = false;
@@ -193,6 +193,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	public final void setUp()
 	{
 		// setup the base directory for when running inside maven (building a release
@@ -217,56 +218,50 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				new CssLicenseHeaderHandler(cssIgnore), new HtmlLicenseHeaderHandler(htmlIgnore),
 				new VelocityLicenseHeaderHandler(velocityIgnore) };
 
-		final Map/* <ILicenseHeaderHandler, List<File>> */badFiles = new HashMap/*
-																				 * <ILicenseHeaderHandler,
-																				 * List<File>>
-																				 */();
+		final Map<ILicenseHeaderHandler, List<File>> badFiles = new HashMap<ILicenseHeaderHandler, List<File>>();
 
 		for (int i = 0; i < licenseHeaderHandlers.length; i++)
 		{
 			final ILicenseHeaderHandler licenseHeaderHandler = licenseHeaderHandlers[i];
 
 			visitFiles(licenseHeaderHandler.getSuffixes(), licenseHeaderHandler.getIgnoreFiles(),
-					new FileVisitor()
+				new FileVisitor()
+				{
+					public void visitFile(File file)
 					{
-						public void visitFile(File file)
+						if (licenseHeaderHandler.checkLicenseHeader(file) == false)
 						{
-							if (licenseHeaderHandler.checkLicenseHeader(file) == false)
+							if (addHeaders == false ||
+								licenseHeaderHandler.addLicenseHeader(file) == false)
 							{
-								if (addHeaders == false ||
-										licenseHeaderHandler.addLicenseHeader(file) == false)
+								List<File> files = badFiles.get(licenseHeaderHandler);
+
+								if (files == null)
 								{
-									List/* <File> */files = (List)badFiles
-											.get(licenseHeaderHandler);
-
-									if (files == null)
-									{
-										files = new ArrayList/* <File> */();
-										badFiles.put(licenseHeaderHandler, files);
-									}
-
-									files.add(file);
+									files = new ArrayList<File>();
+									badFiles.put(licenseHeaderHandler, files);
 								}
+
+								files.add(file);
 							}
 						}
-					});
+					}
+				});
 		}
 
 		failIncorrectLicenceHeaders(badFiles);
 	}
 
-	private void failIncorrectLicenceHeaders(Map/* <ILicenseHeaderHandler, List<File>> */files)
+	private void failIncorrectLicenceHeaders(Map<ILicenseHeaderHandler, List<File>> files)
 	{
 		if (files.size() > 0)
 		{
 			StringBuffer failString = new StringBuffer();
 
-			for (Iterator iter = files.entrySet().iterator(); iter.hasNext();)
+			for (Entry<ILicenseHeaderHandler, List<File>> entry : files.entrySet())
 			{
-				Map.Entry entry = (Map.Entry) iter.next();
-
-				ILicenseHeaderHandler licenseHeaderHandler = (ILicenseHeaderHandler) entry.getKey();
-				List/* <File> */fileList = (List) entry.getValue();
+				ILicenseHeaderHandler licenseHeaderHandler = entry.getKey();
+				List<File> fileList = entry.getValue();
 
 				failString.append("\n");
 				failString.append(licenseHeaderHandler.getClass().getName());
@@ -274,9 +269,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				failString.append(fileList.size());
 				failString.append(") didn't have correct license header:\n");
 
-				for (Iterator iterator = fileList.iterator(); iterator.hasNext();)
+				for (File file : fileList)
 				{
-					File file = (File)iterator.next();
 					String filename = file.getAbsolutePath();
 
 					// Find the license type
@@ -306,7 +300,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	}
 
 	private void visitDirectory(String[] suffixes, String[] ignoreFiles, File directory,
-			FileVisitor fileVisitor)
+		FileVisitor fileVisitor)
 	{
 		File[] files = directory.listFiles(new SuffixAndIgnoreFileFilter(suffixes, ignoreFiles));
 

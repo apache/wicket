@@ -51,7 +51,7 @@ public class MetaPattern implements IClusterable
 	private Pattern pattern;
 
 	/** List of patterns, or null if pattern variable is valid instead */
-	private List patterns;
+	private List<MetaPattern> patterns;
 
 	/** The compiled MetaPattern */
 	private Pattern compiledPattern;
@@ -60,7 +60,7 @@ public class MetaPattern implements IClusterable
 	private static final String _DOUBLE_QUOTED_STRING = "\"[^\"]*?\"";
 	private static final String _SINGLE_QUOTED_STRING = "'[^']*?\'";
 	private static final String _STRING = "(?:[\\w\\-\\.]+|" + _DOUBLE_QUOTED_STRING + "|" +
-			_SINGLE_QUOTED_STRING + ")";
+		_SINGLE_QUOTED_STRING + ")";
 	private static final String _OPTIONAL_STRING = _STRING + "?";
 	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_]*";
 	private static final String _XML_NAME = "[A-Za-z_][A-Za-z0-9_.-]*";
@@ -164,7 +164,7 @@ public class MetaPattern implements IClusterable
 
 	/** Constant for a floating point number. */
 	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern(
-			"-?\\d+\\.?\\d*|-?\\.\\d+");
+		"-?\\d+\\.?\\d*|-?\\.\\d+");
 
 	/** Constant for a positive integer. */
 	public static final MetaPattern POSITIVE_INTEGER = new MetaPattern("\\d+");
@@ -198,7 +198,7 @@ public class MetaPattern implements IClusterable
 
 	/** Constant for perl interpolation. */
 	public static final MetaPattern PERL_INTERPOLATION = new MetaPattern("$\\{" + _VARIABLE_NAME +
-			"\\}");
+		"\\}");
 
 	/** Constant for a double quoted string. */
 	public static final MetaPattern DOUBLE_QUOTED_STRING = new MetaPattern(_DOUBLE_QUOTED_STRING);
@@ -250,7 +250,7 @@ public class MetaPattern implements IClusterable
 	 * @param patterns
 	 *            List of MetaPatterns
 	 */
-	public MetaPattern(final List patterns)
+	public MetaPattern(final List<MetaPattern> patterns)
 	{
 		this.patterns = patterns;
 	}
@@ -316,6 +316,7 @@ public class MetaPattern implements IClusterable
 	 * @return A String representing this MetaPattern
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		if (pattern != null)
@@ -368,7 +369,7 @@ public class MetaPattern implements IClusterable
 		{
 			for (int i = 0; i < patterns.size(); i++)
 			{
-				group = ((MetaPattern)patterns.get(i)).bind(group);
+				group = (patterns.get(i)).bind(group);
 			}
 		}
 
