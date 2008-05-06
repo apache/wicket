@@ -84,11 +84,13 @@ import org.apache.wicket.WicketRuntimeException;
  * mask is on a per character basis, and will thus adjust to fit as many chars as are needed.
  * </p>
  * 
+ * @param <T>
+ *            The converter object type
  * @see MaskFormatter
  * 
  * @author Eelco Hillenius
  */
-public class MaskConverter implements IConverter
+public class MaskConverter<T> implements IConverter<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -132,7 +134,7 @@ public class MaskConverter implements IConverter
 	 *            The type to convert string values to.
 	 * @see MaskFormatter
 	 */
-	public MaskConverter(String mask, Class/* <?> */type)
+	public MaskConverter(String mask, Class< ? > type)
 	{
 		try
 		{
@@ -152,11 +154,12 @@ public class MaskConverter implements IConverter
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
-	public Object convertToObject(String value, Locale locale)
+	@SuppressWarnings("unchecked")
+	public T convertToObject(String value, Locale locale)
 	{
 		try
 		{
-			return maskFormatter.stringToValue(value);
+			return (T)maskFormatter.stringToValue(value);
 		}
 		catch (ParseException e)
 		{
@@ -169,7 +172,7 @@ public class MaskConverter implements IConverter
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(Object value, Locale locale)
+	public String convertToString(T value, Locale locale)
 	{
 		try
 		{

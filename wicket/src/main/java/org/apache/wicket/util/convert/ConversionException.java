@@ -35,7 +35,7 @@ public class ConversionException extends WicketRuntimeException
 	private static final long serialVersionUID = 1L;
 
 	/** The converter that was used. */
-	private IConverter converter;
+	private IConverter< ? > converter;
 
 	/** Pattern that was used for conversion. */
 	private Format format;
@@ -53,7 +53,7 @@ public class ConversionException extends WicketRuntimeException
 	private String resourceKey;
 
 	/** Variable map to use in variable substitution */
-	private Map vars;
+	private Map<String, Object> vars;
 
 	/**
 	 * Construct exception with message.
@@ -95,7 +95,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the used converter.
 	 */
-	public final IConverter getConverter()
+	public final IConverter< ? > getConverter()
 	{
 		return converter;
 	}
@@ -135,7 +135,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the target property type.
 	 */
-	public final Class/* <?> */getTargetType()
+	public final Class< ? > getTargetType()
 	{
 		return Classes.resolveClass(targetTypeName);
 	}
@@ -147,7 +147,7 @@ public class ConversionException extends WicketRuntimeException
 	 *            the converter.
 	 * @return This
 	 */
-	public final ConversionException setConverter(IConverter converter)
+	public final ConversionException setConverter(IConverter< ? > converter)
 	{
 		this.converter = converter;
 		return this;
@@ -199,9 +199,9 @@ public class ConversionException extends WicketRuntimeException
 	 *            sets the target property type
 	 * @return This
 	 */
-	public final ConversionException setTargetType(Class/* ? */targetType)
+	public final ConversionException setTargetType(Class< ? > targetType)
 	{
-		this.targetTypeName = targetType.getName();
+		targetTypeName = targetType.getName();
 		return this;
 	}
 
@@ -242,17 +242,17 @@ public class ConversionException extends WicketRuntimeException
 		if (name == null || name.trim().length() == 0)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[name]] cannot be null or an empty string");
+				"Argument [[name]] cannot be null or an empty string");
 		}
 		if (value == null)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[value]] cannot be null or an empty string");
+				"Argument [[value]] cannot be null or an empty string");
 		}
 
 		if (vars == null)
 		{
-			vars = new HashMap(2);
+			vars = new HashMap<String, Object>(2);
 		}
 		vars.put(name, value);
 
@@ -264,7 +264,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return map of variables for this exception (or null if no variables were defined)
 	 */
-	public Map getVariables()
+	public Map<String, Object> getVariables()
 	{
 		return vars;
 	}

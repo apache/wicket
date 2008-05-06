@@ -78,7 +78,7 @@ public class FormInput extends WicketExamplePage<Void>
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link("defaultLocaleLink")
+			add(new Link<Void>("defaultLocaleLink")
 			{
 				@Override
 				public void onClick()
@@ -102,54 +102,54 @@ public class FormInput extends WicketExamplePage<Void>
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
 			// display the multiply result
-			Label multiplyLabel = new Label("multiplyLabel", new PropertyModel(getModel(),
-				"multiply"));
+			Label<Integer> multiplyLabel = new Label<Integer>("multiplyLabel",
+				new PropertyModel<Integer>(getModel(), "multiply"));
 			// just for fun, add a border so that our result will be displayed
 			// as '[ x ]'
 			multiplyLabel.setComponentBorder(new BeforeAndAfterBorder());
 			add(multiplyLabel);
-			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
-			rc.setLabel(new Model("number"));
+			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");
+			rc.setLabel(new Model<String>("number"));
 			rc.setRequired(true);
 			add(rc);
 
-			RadioGroup group = new RadioGroup("numbersGroup");
+			RadioGroup<String> group = new RadioGroup<String>("numbersGroup");
 			add(group);
-			ListView persons = new ListView("numbers", NUMBERS)
+			ListView<String> persons = new ListView<String>("numbers", NUMBERS)
 			{
 				@Override
-				protected void populateItem(ListItem item)
+				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Radio("radio", item.getModel()));
-					item.add(new Label("number", item.getModelObjectAsString()));
+					item.add(new Radio<String>("radio", item.getModel()));
+					item.add(new Label<String>("number", item.getModelObjectAsString()));
 				};
 			}.setReuseItems(true);
 			group.add(persons);
 
-			CheckGroup checks = new CheckGroup("numbersCheckGroup");
+			CheckGroup<String> checks = new CheckGroup<String>("numbersCheckGroup");
 			add(checks);
-			ListView checksList = new ListView("numbers", NUMBERS)
+			ListView<String> checksList = new ListView<String>("numbers", NUMBERS)
 			{
 				@Override
-				protected void populateItem(ListItem item)
+				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Check("check", item.getModel()));
-					item.add(new Label("number", item.getModelObjectAsString()));
+					item.add(new Check<String>("check", item.getModel()));
+					item.add(new Label<String>("number", item.getModelObjectAsString()));
 				};
 			}.setReuseItems(true);
 			checks.add(checksList);
 
-			add(new ListMultipleChoice("siteSelection", SITES));
+			add(new ListMultipleChoice<String>("siteSelection", SITES));
 
 			// TextField using a custom converter.
-			add(new TextField("urlProperty", URL.class)
+			add(new TextField<URL>("urlProperty", URL.class)
 			{
 				@Override
-				public IConverter getConverter(final Class type)
+				public IConverter<URL> getConverter(final Class<URL> type)
 				{
-					return new IConverter()
+					return new IConverter<URL>()
 					{
-						public Object convertToObject(String value, Locale locale)
+						public URL convertToObject(String value, Locale locale)
 						{
 							try
 							{
@@ -161,7 +161,7 @@ public class FormInput extends WicketExamplePage<Void>
 							}
 						}
 
-						public String convertToString(Object value, Locale locale)
+						public String convertToString(URL value, Locale locale)
 						{
 							return value != null ? value.toString() : null;
 						}
@@ -170,22 +170,22 @@ public class FormInput extends WicketExamplePage<Void>
 			});
 
 			// TextField using a mask converter
-			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
+			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
 				@Override
-				public IConverter getConverter(final Class/* <?> */type)
+				public IConverter<UsPhoneNumber> getConverter(final Class<UsPhoneNumber> type)
 				{
 					// US telephone number mask
-					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+					return new MaskConverter<UsPhoneNumber>("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 
 			// and this is to show we can nest ListViews in Forms too
 			add(new LinesListView("lines"));
 
-			add(new Button("saveButton"));
+			add(new Button<Void>("saveButton"));
 
-			add(new Button("resetButton")
+			add(new Button<Void>("resetButton")
 			{
 				@Override
 				public void onSubmit()
@@ -274,7 +274,7 @@ public class FormInput extends WicketExamplePage<Void>
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel(FormInput.this, "locale"));
+			setModel(new PropertyModel<Locale>(FormInput.this, "locale"));
 		}
 
 		/**
@@ -305,11 +305,11 @@ public class FormInput extends WicketExamplePage<Void>
 	}
 
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
 
 	/** available numbers for the radio selection. */
-	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+	static final List<String> NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	/**
 	 * Constructor

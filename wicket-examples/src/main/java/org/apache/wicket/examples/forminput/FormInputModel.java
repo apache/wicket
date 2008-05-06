@@ -74,6 +74,7 @@ public final class FormInputModel implements IClusterable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return text;
@@ -84,14 +85,14 @@ public final class FormInputModel implements IClusterable
 	private Double doubleProperty = 20.5;
 	private Integer integerInRangeProperty = 50;
 	private Integer integerProperty = 100;
-	private List lines = new ArrayList();
+	private List<Line> lines = new ArrayList<Line>();
 	private Integer multiply = 0;
-	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
-	private List numbersCheckGroup = new ArrayList();
+	private String numberRadioChoice = FormInput.NUMBERS.get(0);
+	private final List<String> numbersCheckGroup = new ArrayList<String>();
 	private String numbersGroup;
 	/** US phone number with mask '(###) ###-####'. */
 	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
-	private Set siteSelection = new HashSet();
+	private Set<String> siteSelection = new HashSet<String>();
 	private String stringProperty = "test";
 	private URL urlProperty;
 
@@ -158,7 +159,7 @@ public final class FormInputModel implements IClusterable
 	 * 
 	 * @return lines
 	 */
-	public List getLines()
+	public List<Line> getLines()
 	{
 		return lines;
 	}
@@ -184,7 +185,7 @@ public final class FormInputModel implements IClusterable
 	/**
 	 * @return the numbers list
 	 */
-	public List getNumbersCheckGroup()
+	public List<String> getNumbersCheckGroup()
 	{
 		return numbersCheckGroup;
 	}
@@ -194,7 +195,7 @@ public final class FormInputModel implements IClusterable
 	 */
 	public String getNumbersGroup()
 	{
-		return this.numbersGroup;
+		return numbersGroup;
 	}
 
 	/**
@@ -210,7 +211,7 @@ public final class FormInputModel implements IClusterable
 	 * 
 	 * @return selectedSites
 	 */
-	public Set getSiteSelection()
+	public Set<String> getSiteSelection()
 	{
 		return siteSelection;
 	}
@@ -285,7 +286,7 @@ public final class FormInputModel implements IClusterable
 	 * @param lines
 	 *            lines
 	 */
-	public void setLines(List lines)
+	public void setLines(List<Line> lines)
 	{
 		this.lines = lines;
 	}
@@ -307,7 +308,7 @@ public final class FormInputModel implements IClusterable
 	 */
 	public void setNumberRadioChoice(String favoriteColor)
 	{
-		this.numberRadioChoice = favoriteColor;
+		numberRadioChoice = favoriteColor;
 	}
 
 	/**
@@ -318,7 +319,7 @@ public final class FormInputModel implements IClusterable
 	 */
 	public void setNumbersGroup(String group)
 	{
-		this.numbersGroup = group;
+		numbersGroup = group;
 	}
 
 	/**
@@ -336,9 +337,9 @@ public final class FormInputModel implements IClusterable
 	 * @param selectedSites
 	 *            selectedSites
 	 */
-	public void setSiteSelection(Set selectedSites)
+	public void setSiteSelection(Set<String> selectedSites)
 	{
-		this.siteSelection = selectedSites;
+		siteSelection = selectedSites;
 	}
 
 	/**
@@ -366,19 +367,32 @@ public final class FormInputModel implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();
-		b.append("[TestInputObject stringProperty = '").append(stringProperty).append(
-				"', integerProperty = ").append(integerProperty).append(", doubleProperty = ")
-				.append(doubleProperty).append(", booleanProperty = ").append(booleanProperty)
-				.append(", integerInRangeProperty = ").append(integerInRangeProperty).append(
-						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
-				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
-				.append(", numbersCheckgroup ").append(numbersCheckGroup).append(
-						", numberRadioGroup= ").append(numbersGroup);
+		b.append("[TestInputObject stringProperty = '")
+			.append(stringProperty)
+			.append("', integerProperty = ")
+			.append(integerProperty)
+			.append(", doubleProperty = ")
+			.append(doubleProperty)
+			.append(", booleanProperty = ")
+			.append(booleanProperty)
+			.append(", integerInRangeProperty = ")
+			.append(integerInRangeProperty)
+			.append(", urlProperty = ")
+			.append(urlProperty)
+			.append(", phoneNumberUS = ")
+			.append(phoneNumberUS)
+			.append(", numberRadioChoice = ")
+			.append(numberRadioChoice)
+			.append(", numbersCheckgroup ")
+			.append(numbersCheckGroup)
+			.append(", numberRadioGroup= ")
+			.append(numbersGroup);
 		b.append(", selected sites {");
-		for (Iterator i = siteSelection.iterator(); i.hasNext();)
+		for (Iterator<String> i = siteSelection.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
 			if (i.hasNext())
@@ -388,7 +402,7 @@ public final class FormInputModel implements IClusterable
 		}
 		b.append("]");
 		b.append(", lines [");
-		for (Iterator i = lines.iterator(); i.hasNext();)
+		for (Iterator<Line> i = lines.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
 			if (i.hasNext())
