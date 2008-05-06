@@ -172,5 +172,5 @@ public interface IWizardModel extends IClusterable
 	 * 
 	 * @return an iterator over all the steps of the model or null if the wizard model is not static
 	 */
-	Iterator stepIterator();
+	Iterator<IWizardStep> stepIterator();
 }

@@ -29,7 +29,7 @@ import org.apache.wicket.model.ResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public abstract class WizardButton extends Button
+public abstract class WizardButton extends Button<String>
 {
 	/**
 	 * 
@@ -84,6 +84,7 @@ public abstract class WizardButton extends Button
 	/**
 	 * @see org.apache.wicket.markup.html.form.Button#onSubmit()
 	 */
+	@Override
 	public final void onSubmit()
 	{
 		onClick();

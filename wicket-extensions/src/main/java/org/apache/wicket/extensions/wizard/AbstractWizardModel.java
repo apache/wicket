@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.wizard;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,7 +42,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	private boolean lastVisible = false;
 
 	/** Listeners for {@link IWizardModelListener model events}. */
-	private final List wizardModelListeners = new ArrayList(1);
+	private final List<IWizardModelListener> wizardModelListeners = new ArrayList<IWizardModelListener>(
+		1);
 
 	/**
 	 * Construct.
@@ -149,9 +149,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 */
 	protected final void fireActiveStepChanged(IWizardStep step)
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onActiveStepChanged(step);
 		}
 	}
@@ -161,9 +160,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 */
 	protected final void fireWizardCancelled()
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onCancel();
 		}
 	}
@@ -173,9 +171,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 */
 	protected final void fireWizardFinished()
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onFinish();
 		}
 	}

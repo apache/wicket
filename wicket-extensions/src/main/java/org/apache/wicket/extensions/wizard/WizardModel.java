@@ -82,13 +82,13 @@ public class WizardModel extends AbstractWizardModel
 	private IWizardStep activeStep;
 
 	/** Conditions with steps. */
-	private List conditions = new ArrayList();
+	private final List<ICondition> conditions = new ArrayList<ICondition>();
 
 	/** State history. */
-	private final ArrayListStack history = new ArrayListStack();
+	private final ArrayListStack<IWizardStep> history = new ArrayListStack<IWizardStep>();
 
 	/** The wizard steps. */
-	private List steps = new ArrayList();
+	private final List<IWizardStep> steps = new ArrayList<IWizardStep>();
 
 	/**
 	 * Construct.
@@ -202,7 +202,7 @@ public class WizardModel extends AbstractWizardModel
 	 */
 	public void previous()
 	{
-		IWizardStep step = (IWizardStep)history.pop();
+		IWizardStep step = history.pop();
 		setActiveStep(step);
 	}
 
@@ -212,7 +212,7 @@ public class WizardModel extends AbstractWizardModel
 	public void reset()
 	{
 		history.clear();
-		this.activeStep = null;
+		activeStep = null;
 		setActiveStep(findNextVisibleStep());
 	}
 
@@ -224,12 +224,12 @@ public class WizardModel extends AbstractWizardModel
 	 */
 	public void setActiveStep(IWizardStep step)
 	{
-		if (this.activeStep != null && step != null && activeStep.equals(step))
+		if (activeStep != null && step != null && activeStep.equals(step))
 		{
 			return;
 		}
 
-		this.activeStep = step;
+		activeStep = step;
 
 		fireActiveStepChanged(step);
 	}
@@ -237,7 +237,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see IWizardModel#stepIterator()
 	 */
-	public final Iterator stepIterator()
+	public final Iterator<IWizardStep> stepIterator()
 	{
 		return steps.iterator();
 	}
@@ -252,9 +252,9 @@ public class WizardModel extends AbstractWizardModel
 	 */
 	protected final boolean allStepsComplete()
 	{
-		for (Iterator iterator = stepIterator(); iterator.hasNext();)
+		for (IWizardStep step : steps)
 		{
-			if (!((IWizardStep)iterator.next()).isComplete())
+			if (!step.isComplete())
 			{
 				return false;
 			}
@@ -272,10 +272,10 @@ public class WizardModel extends AbstractWizardModel
 	{
 		for (int i = conditions.size() - 1; i >= 0; i--)
 		{
-			ICondition condition = (ICondition)conditions.get(i);
+			ICondition condition = conditions.get(i);
 			if (condition.evaluate())
 			{
-				return (IWizardStep)steps.get(i);
+				return steps.get(i);
 			}
 		}
 
@@ -293,10 +293,10 @@ public class WizardModel extends AbstractWizardModel
 
 		for (int i = startIndex; i < conditions.size(); i++)
 		{
-			ICondition condition = (ICondition)conditions.get(i);
+			ICondition condition = conditions.get(i);
 			if (condition.evaluate())
 			{
-				return (IWizardStep)steps.get(i);
+				return steps.get(i);
 			}
 		}
 

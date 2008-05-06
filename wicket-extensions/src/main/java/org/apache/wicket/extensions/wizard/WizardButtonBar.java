@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class WizardButtonBar extends Panel implements IDefaultButtonProvider
+public class WizardButtonBar extends Panel<Void> implements IDefaultButtonProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,15 +61,15 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	{
 		if (model.isNextAvailable())
 		{
-			return (Button)get("next");
+			return (Button< ? >)get("next");
 		}
 		else if (model.isLastAvailable())
 		{
-			return (Button)get("last");
+			return (Button< ? >)get("last");
 		}
 		else if (model.isLastStep(model.getActiveStep()))
 		{
-			return (Button)get("finish");
+			return (Button< ? >)get("finish");
 		}
 		return null;
 	}

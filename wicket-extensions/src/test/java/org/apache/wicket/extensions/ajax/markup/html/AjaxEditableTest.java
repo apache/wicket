@@ -29,6 +29,7 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 public class AjaxEditableTest extends WicketTestCase
 {
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -43,8 +44,8 @@ public class AjaxEditableTest extends WicketTestCase
 	 */
 	public void testAjaxEditableLabel()
 	{
-		Page page = tester.getLastRenderedPage();
-		AjaxEditableLabel ajaxLabel = (AjaxEditableLabel)page.get("ajaxLabel");
+		Page< ? > page = tester.getLastRenderedPage();
+		AjaxEditableLabel< ? > ajaxLabel = (AjaxEditableLabel< ? >)page.get("ajaxLabel");
 
 		AbstractAjaxBehavior labelBehavior = (AbstractAjaxBehavior)ajaxLabel.get("label")
 			.getBehaviors()
@@ -70,9 +71,9 @@ public class AjaxEditableTest extends WicketTestCase
 	 */
 	public void testDisabledAjaxEditableLabel()
 	{
-		Page page = tester.getLastRenderedPage();
-		AjaxEditableLabel ajaxLabel = (AjaxEditableLabel)page.get("ajaxLabel");
-		AjaxLink toggle = (AjaxLink)page.get("toggle");
+		Page< ? > page = tester.getLastRenderedPage();
+		AjaxEditableLabel< ? > ajaxLabel = (AjaxEditableLabel< ? >)page.get("ajaxLabel");
+		AjaxLink< ? > toggle = (AjaxLink< ? >)page.get("toggle");
 
 		AbstractAjaxBehavior toggleBehavior = (AbstractAjaxBehavior)toggle.getBehaviors().get(0);
 

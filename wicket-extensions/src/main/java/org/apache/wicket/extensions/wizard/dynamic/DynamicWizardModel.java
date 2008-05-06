@@ -140,7 +140,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#stepIterator()
 	 */
-	public Iterator stepIterator()
+	public Iterator<IWizardStep> stepIterator()
 	{
 		return null;
 	}
@@ -159,7 +159,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 		}
 
 		step.init(this);
-		this.activeStep = step;
+		activeStep = step;
 
 		fireActiveStepChanged(step);
 	}

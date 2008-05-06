@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.wizard;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -75,10 +74,11 @@ import org.apache.wicket.model.Model;
  * 
  * </p>
  * 
+ * @param <T>
  * 
  * @author Eelco Hillenius
  */
-public class WizardStep extends Panel implements IWizardStep
+public class WizardStep<T> extends Panel<T> implements IWizardStep
 {
 	/**
 	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know at construction time
@@ -93,7 +93,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 		void execute()
 		{
-			Form form = (Form)findParent(Form.class);
+			Form< ? > form = findParent(Form.class);
 			form.add(formValidatorWrapper);
 		}
 	}
@@ -107,7 +107,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 		private static final long serialVersionUID = 1L;
 
-		private final List validators = new ArrayList();
+		private final List<IFormValidator> validators = new ArrayList<IFormValidator>();
 
 		/**
 		 * Adds a form validator.
@@ -123,15 +123,14 @@ public class WizardStep extends Panel implements IWizardStep
 		/**
 		 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
 		 */
-		public FormComponent[] getDependentFormComponents()
+		public FormComponent< ? >[] getDependentFormComponents()
 		{
 			if (isActiveStep())
 			{
-				Set components = new HashSet();
-				for (Iterator i = validators.iterator(); i.hasNext();)
+				Set<Component< ? >> components = new HashSet<Component< ? >>();
+				for (IFormValidator v : validators)
 				{
-					IFormValidator v = (IFormValidator)i.next();
-					FormComponent[] dependentComponents = v.getDependentFormComponents();
+					FormComponent< ? >[] dependentComponents = v.getDependentFormComponents();
 					if (dependentComponents != null)
 					{
 						int len = dependentComponents.length;
@@ -141,7 +140,7 @@ public class WizardStep extends Panel implements IWizardStep
 						}
 					}
 				}
-				return (FormComponent[])components.toArray(new FormComponent[components.size()]);
+				return components.toArray(new FormComponent[components.size()]);
 			}
 			return null;
 		}
@@ -149,13 +148,12 @@ public class WizardStep extends Panel implements IWizardStep
 		/**
 		 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#validate(org.apache.wicket.markup.html.form.Form)
 		 */
-		public void validate(Form form)
+		public void validate(Form< ? > form)
 		{
 			if (isActiveStep())
 			{
-				for (Iterator i = validators.iterator(); i.hasNext();)
+				for (IFormValidator v : validators)
 				{
-					IFormValidator v = (IFormValidator)i.next();
 					v.validate(form);
 				}
 			}
@@ -173,7 +171,7 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * Default header for wizards.
 	 */
-	private final class Header extends Panel
+	private final class Header extends Panel<IWizard>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -188,21 +186,23 @@ public class WizardStep extends Panel implements IWizardStep
 		public Header(final String id, final IWizard wizard)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel(wizard));
-			add(new Label("title", new AbstractReadOnlyModel()
+			setModel(new CompoundPropertyModel<IWizard>(wizard));
+			add(new Label<String>("title", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 					return getTitle();
 				}
 			}).setEscapeModelStrings(false));
-			add(new Label("summary", new AbstractReadOnlyModel()
+			add(new Label<String>("summary", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 					return getSummary();
 				}
@@ -225,12 +225,12 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * A summary of this step, or some usage advice.
 	 */
-	private IModel summary;
+	private IModel<String> summary;
 
 	/**
 	 * The title of this step.
 	 */
-	private IModel title;
+	private IModel<String> title;
 
 	/**
 	 * The wizard model.
@@ -255,7 +255,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(IModel title, IModel summary)
+	public WizardStep(IModel<String> title, IModel<String> summary)
 	{
 		this(title, summary, null);
 	}
@@ -271,7 +271,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(IModel title, IModel summary, IModel model)
+	public WizardStep(IModel<String> title, IModel<String> summary, IModel<T> model)
 	{
 		super(Wizard.VIEW_ID, model);
 
@@ -304,9 +304,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(String title, String summary, IModel model)
+	public WizardStep(String title, String summary, IModel<T> model)
 	{
-		this(new Model(title), new Model(summary), model);
+		this(new Model<String>(title), new Model<String>(summary), model);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component getHeader(String id, Component parent, IWizard wizard)
+	public Component< ? > getHeader(String id, Component< ? > parent, IWizard wizard)
 	{
 		return new Header(id, wizard);
 	}
@@ -348,7 +348,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getSummary()
 	{
-		return (summary != null) ? (String)summary.getObject() : (String)null;
+		return (summary != null) ? summary.getObject() : null;
 	}
 
 	/**
@@ -358,14 +358,14 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getTitle()
 	{
-		return (title != null) ? (String)title.getObject() : (String)null;
+		return (title != null) ? title.getObject() : null;
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component getView(String id, Component parent, IWizard wizard)
+	public Component< ? > getView(String id, Component< ? > parent, IWizard wizard)
 	{
 		return this;
 	}
@@ -425,7 +425,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            summary
 	 */
-	public void setSummaryModel(IModel summary)
+	public void setSummaryModel(IModel<String> summary)
 	{
 		this.summary = wrap(summary);
 	}
@@ -436,7 +436,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param title
 	 *            title
 	 */
-	public void setTitleModel(IModel title)
+	public void setTitleModel(IModel<String> title)
 	{
 		this.title = wrap(title);
 	}
@@ -444,6 +444,7 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * @see org.apache.wicket.Component#detachModel()
 	 */
+	@Override
 	protected void detachModel()
 	{
 		super.detachModel();
@@ -462,6 +463,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		if (onAttachAction != null)

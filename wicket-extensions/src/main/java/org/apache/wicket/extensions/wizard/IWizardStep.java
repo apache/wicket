@@ -56,7 +56,7 @@ public interface IWizardStep extends IClusterable
 	 *            The wizard component the header will be placed on
 	 * @return The header component
 	 */
-	Component getHeader(String id, Component parent, IWizard wizard);
+	Component< ? > getHeader(String id, Component< ? > parent, IWizard wizard);
 
 	/**
 	 * Returns the current view this step is displaying. This component will be displayed in the
@@ -71,7 +71,7 @@ public interface IWizardStep extends IClusterable
 	 *            The wizard component the header will be placed on
 	 * @return The current view of the step.
 	 */
-	Component getView(String id, Component parent, IWizard wizard);
+	Component< ? > getView(String id, Component< ? > parent, IWizard wizard);
 
 	/**
 	 * Initializes this step with the model it will belong to.

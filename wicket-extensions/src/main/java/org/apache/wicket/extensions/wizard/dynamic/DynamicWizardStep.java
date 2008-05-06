@@ -24,9 +24,11 @@ import org.apache.wicket.model.IModel;
 /**
  * Default implementation of a {@link IDynamicWizardStep dynamic wizard step}.
  * 
+ * @param <T>
+ * 
  * @author eelcohillenius
  */
-public abstract class DynamicWizardStep extends WizardStep implements IDynamicWizardStep
+public abstract class DynamicWizardStep<T> extends WizardStep<T> implements IDynamicWizardStep
 {
 	/**
 	 * 
@@ -36,7 +38,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a custom header by
-	 * overiding {@link #getHeader(String, Component, IWizard)}.
+	 * overriding {@link #getHeader(String, Component, IWizard)}.
 	 * 
 	 * @param previousStep
 	 *            The previous step. May be null if this is the first step in the wizard
@@ -58,7 +60,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel title, IModel summary)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel<String> title,
+		IModel<String> summary)
 	{
 		super(title, summary);
 		this.previousStep = previousStep;
@@ -77,8 +80,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel title, IModel summary,
-			IModel model)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel<String> title,
+		IModel<String> summary, IModel<T> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;
@@ -115,7 +118,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 *            Any model which is to be used for this step
 	 */
 	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary,
-			IModel model)
+		IModel<T> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;
@@ -151,7 +154,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	public IDynamicWizardStep last()
 	{
 		throw new IllegalStateException("if the last button is available, this step "
-				+ "has to override the last() method and let it return a step");
+			+ "has to override the last() method and let it return a step");
 	}
 
 	/**

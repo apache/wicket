@@ -46,7 +46,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class Wizard extends Panel implements IWizardModelListener, IWizard
+public class Wizard extends Panel<Void> implements IWizardModelListener, IWizard
 {
 	/** Component id of the buttons panel as used by the default wizard panel. */
 	public static final String BUTTONS_ID = "buttons";
@@ -74,7 +74,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * The form in which the view is nested, and on which the wizard buttons work.
 	 */
-	private Form form;
+	private Form< ? > form;
 
 	/** The wizard model. */
 	private IWizardModel wizardModel;
@@ -189,7 +189,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return The wizard form
 	 */
-	public Form getForm()
+	public Form< ? > getForm()
 	{
 		return form;
 	}
@@ -209,6 +209,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @return False
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -224,7 +225,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Called when the wizard is cancelled.
+	 * Called when the wizard is canceled.
 	 */
 	public void onCancel()
 	{
@@ -258,21 +259,21 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		form = newForm(FORM_ID);
 		addOrReplace(form);
 		// dummy view to be replaced
-		form.addOrReplace(new WebMarkupContainer(HEADER_ID));
+		form.addOrReplace(new WebMarkupContainer<Void>(HEADER_ID));
 		form.addOrReplace(newFeedbackPanel(FEEDBACK_ID));
 		// add dummy view; will be replaced on initialization
-		form.addOrReplace(new WebMarkupContainer(VIEW_ID));
+		form.addOrReplace(new WebMarkupContainer<Void>(VIEW_ID));
 		form.addOrReplace(newButtonBar(BUTTONS_ID));
 		form.addOrReplace(newOverviewBar(OVERVIEW_ID));
 
 		wizardModel.addListener(this);
 
-		Iterator stepsIterator = wizardModel.stepIterator();
+		Iterator<IWizardStep> stepsIterator = wizardModel.stepIterator();
 		if (stepsIterator != null)
 		{
 			while (stepsIterator.hasNext())
 			{
-				((IWizardStep)stepsIterator.next()).init(wizardModel);
+				(stepsIterator.next()).init(wizardModel);
 			}
 		}
 
@@ -288,7 +289,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new button bar
 	 */
-	protected Component newButtonBar(String id)
+	protected Component< ? > newButtonBar(String id)
 	{
 		return new WizardButtonBar(id, this);
 	}
@@ -310,19 +311,23 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Create a new form. Clients can override this method to provide a custom {@link Form}.
 	 * 
+	 * @param <T>
+	 *            The form's model object type
+	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * @return a new form
 	 */
-	protected Form newForm(String id)
+	protected <T> Form<T> newForm(String id)
 	{
-		return new Form(id);
+		return new Form<T>(id);
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		Component buttonBar = form.get(BUTTONS_ID);
+		Component< ? > buttonBar = form.get(BUTTONS_ID);
 		if (buttonBar instanceof IDefaultButtonProvider)
 		{
 			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar).getDefaultButton(wizardModel);
@@ -333,15 +338,18 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Create a new overview bar. Clients can override this method to provide a custom bar.
 	 * 
+	 * @param <T>
+	 *            The overview bar's model object type
+	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * 
-	 * @return A new ovewview bar
+	 * @return A new overview bar
 	 */
-	protected Component newOverviewBar(String id)
+	protected <T> Component<T> newOverviewBar(String id)
 	{
 		// return a dummy component by default as we don't have an overview
 		// component
-		return new WebMarkupContainer(id).setVisible(false);
+		return new WebMarkupContainer<T>(id).setVisible(false);
 	}
 }
