@@ -42,10 +42,10 @@ public final class WebApplicationPath implements IResourcePath
 	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
 	/** The list of urls in the path */
-	private final List webappPaths = new ArrayList();
+	private final List<String> webappPaths = new ArrayList<String>();
 
 	/** The list of folders in the path */
-	private final List folders = new ArrayList();
+	private final List<Folder> folders = new ArrayList<Folder>();
 
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
@@ -90,12 +90,12 @@ public final class WebApplicationPath implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final Class clazz, final String pathname)
+	public IResourceStream find(final Class< ? > clazz, final String pathname)
 	{
-		Iterator iter = folders.iterator();
-		while (iter.hasNext())
+		Iterator<Folder> foldersIter = folders.iterator();
+		while (foldersIter.hasNext())
 		{
-			Folder folder = (Folder)iter.next();
+			Folder folder = foldersIter.next();
 			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
@@ -103,10 +103,10 @@ public final class WebApplicationPath implements IResourcePath
 			}
 		}
 
-		iter = webappPaths.iterator();
-		while (iter.hasNext())
+		Iterator<String> webappPathsIter = webappPaths.iterator();
+		while (webappPathsIter.hasNext())
 		{
-			String path = (String)iter.next();
+			String path = webappPathsIter.next();
 			try
 			{
 				final URL url = servletContext.getResource(path + pathname);
@@ -127,9 +127,10 @@ public final class WebApplicationPath implements IResourcePath
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " +
-				StringList.valueOf(webappPaths) + "]";
+			StringList.valueOf(webappPaths) + "]";
 	}
 }

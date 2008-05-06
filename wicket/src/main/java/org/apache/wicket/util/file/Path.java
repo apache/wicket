@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.StringList;
 public final class Path implements IResourcePath
 {
 	/** The list of folders in the path */
-	private final List folders = new ArrayList();
+	private final List<Folder> folders = new ArrayList<Folder>();
 
 	/**
 	 * Constructor
@@ -97,11 +97,11 @@ public final class Path implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final Class clazz, final String pathname)
+	public IResourceStream find(final Class< ? > clazz, final String pathname)
 	{
 		for (int i = 0; i < folders.size(); i++)
 		{
-			Folder folder = (Folder)folders.get(i);
+			Folder folder = folders.get(i);
 			final File file = new File(folder, pathname);
 
 			if (file.exists())
@@ -116,7 +116,7 @@ public final class Path implements IResourcePath
 	/**
 	 * @return Returns the folders.
 	 */
-	public List getFolders()
+	public List<Folder> getFolders()
 	{
 		return folders;
 	}
@@ -132,6 +132,7 @@ public final class Path implements IResourcePath
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[folders = " + StringList.valueOf(folders) + "]";

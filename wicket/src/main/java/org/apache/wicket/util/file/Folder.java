@@ -172,14 +172,14 @@ public final class Folder extends File
 	 */
 	public File[] getNestedFiles(final FileFilter filter)
 	{
-		final List files = new ArrayList();
+		final List<File> files = new ArrayList<File>();
 		files.addAll(Arrays.asList(getFiles(filter)));
 		final Folder[] folders = getFolders();
 		for (int i = 0; i < folders.length; i++)
 		{
 			files.addAll(Arrays.asList(folders[i].getNestedFiles(filter)));
 		}
-		return (File[])files.toArray(new File[files.size()]);
+		return files.toArray(new File[files.size()]);
 	}
 
 	/**
@@ -269,6 +269,7 @@ public final class Folder extends File
 	 * 
 	 * @return True if the folder was successfully removed
 	 */
+	@Override
 	public boolean remove()
 	{
 		return remove(this);

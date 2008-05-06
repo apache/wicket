@@ -34,5 +34,5 @@ public interface IResourceFinder
 	 *            The filename with possible path
 	 * @return The resource stream
 	 */
-	IResourceStream find(final Class clazz, final String pathname);
+	IResourceStream find(final Class< ? > clazz, final String pathname);
 }
