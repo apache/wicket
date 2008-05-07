@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -202,6 +203,29 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 			}
 		});
 		return editor;
+	}
+
+
+	protected Component newLabel(MarkupContainer parent, String componentId, final IModel model)
+	{
+		IModel wrapper = new AbstractReadOnlyModel()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject()
+			{
+				if (renderer != null)
+				{
+					return renderer.getDisplayValue(model.getObject());
+				}
+				else
+				{
+					return model.getObject();
+				}
+			}
+
+		};
+		return super.newLabel(parent, componentId, wrapper);
 	}
 
 	protected void onModelChanged()
