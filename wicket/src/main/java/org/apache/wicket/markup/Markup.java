@@ -97,6 +97,19 @@ public class Markup
 	{
 		return markupResourceData;
 	}
+	
+	/**
+	 * Allowing the markup to return its own location allows special types of Markup
+	 * (i.e. MergedMarkup) to override their location, as they are composed of multiple
+	 * Markups in different locations.
+	 * SEE WICKET-1507 (Jeremy Thomerson)
+	 * @return the location of this markup
+	 */
+	public String locationAsString()
+	{
+		return markupResourceData.getResource().locationAsString();
+	}
+
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package protected. However to allow

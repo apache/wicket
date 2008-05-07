@@ -68,7 +68,7 @@ public class MergedMarkup extends Markup
 		getMarkupResourceData().setEncoding(markup.getMarkupResourceData().getEncoding());
 		getMarkupResourceData().setWicketNamespace(
 			markup.getMarkupResourceData().getWicketNamespace());
-		getMarkupResourceData().setBaseMarkupResourceData(baseMarkup.getMarkupResourceData());
+		getMarkupResourceData().setBaseMarkup(baseMarkup);
 
 		if (log.isDebugEnabled())
 		{
@@ -92,6 +92,17 @@ public class MergedMarkup extends Markup
 		{
 			log.debug("Merge markup: " + toString());
 		}
+	}
+
+	public String locationAsString()
+	{
+		/*
+		 * Uses both resource locations so that if the child does not have a style and the parent
+		 * does, the location is unique to this combination (or vice versa) SEE WICKET-1507 (Jeremy
+		 * Thomerson)
+		 */
+		return getMarkupResourceData().getBaseMarkup().locationAsString() + ":" +
+			getMarkupResourceData().getResource().locationAsString();
 	}
 
 	/**
