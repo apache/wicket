@@ -20,11 +20,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -485,10 +487,46 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
+	 * Components can implement this interface to get a notification when AjaxRequestTarget begins
+	 * to respond. This can be used to postpone adding components to AjaxRequestTarget until the
+	 * response begins.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static interface ITargetRespondListener
+	{
+		/**
+		 * Invoked when AjaxRequestTarget is about the respond.
+		 * 
+		 * @param target
+		 */
+		public void onTargetRespond(AjaxRequestTarget target);
+	};
+
+	private Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
+
+	/**
+	 * Register the given respond listener. The listener's
+	 * {@link ITargetRespondListener#onTargetRespond(AjaxRequestTarget)} method will be invoked
+	 * when the {@link AjaxRequestTarget} starts to respond.
+	 * 
+	 * @param listener
+	 */
+	public void registerRespondListener(ITargetRespondListener listener)
+	{
+		respondListeners.add(listener);
+	}
+
+	/**
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
+		for (ITargetRespondListener listener : respondListeners)
+		{
+			listener.onTargetRespond(this);
+		}
+		
 		final Application app = Application.get();
 
 		// Determine encoding
