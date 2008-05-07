@@ -53,7 +53,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractTree extends Panel implements ITreeStateListener, TreeModelListener
+public abstract class AbstractTree extends Panel implements ITreeStateListener, TreeModelListener, AjaxRequestTarget.ITargetRespondListener
 {
 
 	/**
@@ -880,23 +880,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		target.addComponent(component);
 	}
 
-	/**
-	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
-	 * you modified the tree model during an ajax request target and you want to partially update
-	 * the component on page. Make sure that the tree model has fired the proper listener functions.
-	 * <p>
-	 * <b>You can only call this method once in a request.</b>
-	 * 
-	 * @param target
-	 *            Ajax request target used to send the update to the page
-	 */
-	public final void updateTree(final AjaxRequestTarget target)
+	public void onTargetRespond(AjaxRequestTarget target)
 	{
-		if (target == null)
-		{
-			return;
-		}
-
 		// check whether the model hasn't changed
 		checkModel();
 
@@ -991,6 +976,26 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			// clear dirty flags
 			updated();
 		}
+	}
+	
+	/**
+	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
+	 * you modified the tree model during an ajax request target and you want to partially update
+	 * the component on page. Make sure that the tree model has fired the proper listener functions.
+	 * <p>
+	 * <b>You can only call this method once in a request.</b>
+	 * 
+	 * @param target
+	 *            Ajax request target used to send the update to the page
+	 */
+	public final void updateTree(final AjaxRequestTarget target)
+	{
+		if (target == null)
+		{
+			return;
+		}
+
+		target.registerRespondListener(this);
 	}
 
 	/**
