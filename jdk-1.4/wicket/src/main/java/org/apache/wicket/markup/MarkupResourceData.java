@@ -40,8 +40,8 @@ public class MarkupResourceData
 	/** The markup's resource stream */
 	private MarkupResourceStream resource;
 
-	/** In case of the inherited markup, the base markup's resource stream */
-	private MarkupResourceData baseMarkupResourceData;
+	/** In case of the inherited markup, this is the base markup */
+	private Markup baseMarkup;
 
 	/** If found in the markup, the <?xml ...?> string */
 	private String xmlDeclaration;
@@ -116,7 +116,7 @@ public class MarkupResourceData
 	 */
 	public String getWicketNamespace()
 	{
-		return this.wicketNamespace;
+		return wicketNamespace;
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class MarkupResourceData
 	public final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
-		this.wicketId = wicketNamespace + ":id";
+		wicketId = wicketNamespace + ":id";
 
 		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{
@@ -185,17 +185,29 @@ public class MarkupResourceData
 	 */
 	public MarkupResourceData getBaseMarkupResourceData()
 	{
-		return this.baseMarkupResourceData;
+		if (baseMarkup == null)
+			return null;
+		return baseMarkup.getMarkupResourceData();
+	}
+
+	/**
+	 * In case of markup inheritance, the base markup.
+	 * 
+	 * @param baseMarkup
+	 *            The base markup
+	 */
+	public void setBaseMarkup(Markup baseMarkup)
+	{
+		this.baseMarkup = baseMarkup;
 	}
 
 	/**
 	 * In case of markup inheritance, the base markup resource.
 	 * 
-	 * @param baseMarkupResourceData
-	 *            The base markup resource
+	 * @return The base markup
 	 */
-	public void setBaseMarkupResourceData(MarkupResourceData baseMarkupResourceData)
+	public Markup getBaseMarkup()
 	{
-		this.baseMarkupResourceData = baseMarkupResourceData;
+		return baseMarkup;
 	}
 }

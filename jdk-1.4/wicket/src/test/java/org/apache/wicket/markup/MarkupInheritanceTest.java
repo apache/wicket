@@ -18,6 +18,7 @@ package org.apache.wicket.markup;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,31 @@ public class MarkupInheritanceTest extends WicketTestCase
 		super(name);
 	}
 
+	/**
+	 * TEST FOR WICKET-1507
+	 * @throws Exception
+	 */
+	public void testRenderChildPageWithStyleVariation() throws Exception
+	{
+		// first, render page with no style
+		executeTest(MarkupInheritanceExtension_1.class, "MarkupInheritanceExpectedResult_1.html");
+
+		// then, render with style1
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		cycle.getSession().setStyle("style1");
+		tester.startPage(MarkupInheritanceExtension_1.class);
+		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
+		tester.assertResultPage(getClass(), "MarkupInheritanceExpectedResult_1_style1.html");
+
+		// then, render with style2
+		tester.setupRequestAndResponse();
+		cycle = tester.createRequestCycle();
+		cycle.getSession().setStyle("style2");
+		tester.startPage(MarkupInheritanceExtension_1.class);
+		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
+		tester.assertResultPage(getClass(), "MarkupInheritanceExpectedResult_1_style2.html");
+	}
 	/**
 	 * @throws Exception
 	 */
