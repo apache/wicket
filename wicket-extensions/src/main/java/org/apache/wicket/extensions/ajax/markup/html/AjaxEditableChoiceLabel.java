@@ -32,6 +32,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -256,7 +257,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 					}
 				}
 
-				if (displayValue == null || "".equals(displayValue))
+				if (Strings.isEmpty(displayValue))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
