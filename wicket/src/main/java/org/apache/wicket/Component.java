@@ -3419,7 +3419,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		if (!component.isAuto() && getFlag(FLAG_RENDERING))
 		{
 			throw new WicketRuntimeException(
-				"Cannot modify component hierarchy during render phase");
+				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)");
 		}
 	}
 
