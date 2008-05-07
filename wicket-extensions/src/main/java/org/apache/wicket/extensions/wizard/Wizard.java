@@ -44,9 +44,12 @@ import org.apache.wicket.markup.html.panel.Panel;
  * components you want yourself using methods like {@link #newButtonBar(String)} et-cetera.
  * </p>
  * 
+ * @param <T>
+ *            The model object type
+ * 
  * @author Eelco Hillenius
  */
-public class Wizard extends Panel<Void> implements IWizardModelListener, IWizard
+public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 {
 	/** Component id of the buttons panel as used by the default wizard panel. */
 	public static final String BUTTONS_ID = "buttons";
