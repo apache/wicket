@@ -25,28 +25,28 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Convenience class for building tree columns.
- * 
+ *
  * @author Matej Knopp
  */
 public abstract class AbstractColumn implements IColumn
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String header;
+	private final String header;
 
-	private ColumnLocation location;
+	private final ColumnLocation location;
 
 	private TreeTable treeTable = null;
 
 	/**
 	 * Creates the tree column.
-	 * 
+	 *
 	 * @param location
 	 *            Specifies how the column should be aligned and what his size should be
-	 * 
+	 *
 	 * @param header
 	 *            Header caption
 	 */
@@ -93,13 +93,17 @@ public abstract class AbstractColumn implements IColumn
 	 */
 	public void setTreeTable(TreeTable treeTable)
 	{
+		if (this.treeTable != null && this.treeTable != treeTable)
+		{
+			throw new IllegalStateException("You can't add single IColumn to multiple tree tables.");
+		}
 		this.treeTable = treeTable;
 	}
 
 	/**
 	 * Returns the tree table that this columns belongs to. If you call this method from constructor
 	 * it will return null, as the column is constructed before the tree is.
-	 * 
+	 *
 	 * @return The tree table this column belongs to
 	 */
 	protected TreeTable getTreeTable()
