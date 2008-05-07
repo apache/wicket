@@ -79,7 +79,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *            the parameter names (not null)
 	 */
 	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-			String pageMapName, String[] parameterNames)
+		String pageMapName, String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 		this.parameterNames = parameterNames;
@@ -96,7 +96,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *            the parameter names (not null)
 	 */
 	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-			String[] parameterNames)
+		String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 		this.parameterNames = parameterNames;
@@ -124,7 +124,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			for (int i = 0; i <= lastSpecifiedParameter; i++)
 			{
 				String parameterName = parameterNames[i];
-				String value = (String)parameters.get(parameterName);
+				final Object param = parameters.get(parameterName);
+				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
 				if (value == null)
 				{
 					value = "";
@@ -150,7 +151,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			{
 				url.append(first ? '?' : '&');
 				String parameterName = (String)iterator.next();
-				String value = (String)parameters.get(parameterName);
+				final Object param = parameters.get(parameterName);
+				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
 				url.append(urlEncode(parameterName)).append("=").append(urlEncode(value));
 				first = false;
 			}
@@ -175,7 +177,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			if (pathParts.length > parameterNames.length)
 			{
 				throw new IllegalArgumentException(
-						"Too many path parts, please provide sufficient number of path parameter names");
+					"Too many path parts, please provide sufficient number of path parameter names");
 			}
 
 			for (int i = 0; i < pathParts.length; i++)
