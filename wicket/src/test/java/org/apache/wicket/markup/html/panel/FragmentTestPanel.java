@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class FragmentTestPanel extends Panel
+public class FragmentTestPanel extends Panel<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,7 @@ public class FragmentTestPanel extends Panel
 	/**
 	 * 
 	 */
-	private class TestFragment extends Fragment
+	private class TestFragment extends Fragment<Object>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class FragmentTestPanel extends Panel
 		public TestFragment(String id)
 		{
 			super(id, "testFrag", FragmentTestPanel.this);
-			add(new Label("label", "Hello!"));
+			add(new Label<String>("label", "Hello!"));
 		}
 	}
 }
