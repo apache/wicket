@@ -22,6 +22,8 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -29,6 +31,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -206,26 +210,47 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	}
 
 
-	protected Component newLabel(MarkupContainer parent, String componentId, final IModel model)
+	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
 	{
-		IModel wrapper = new AbstractReadOnlyModel()
+		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			public IConverter getConverter(Class type)
 			{
+				IConverter c = AjaxEditableChoiceLabel.this.getConverter(type);
+				return c != null ? c : super.getConverter(type);
+			}
+
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			{
+				String displayValue = getModelObjectAsString();
 				if (renderer != null)
 				{
-					return renderer.getDisplayValue(model.getObject());
+					Object displayObject = renderer.getDisplayValue(getModelObject());
+					Class objectClass = (displayObject == null ? null : displayObject.getClass());
+
+					if (objectClass != null && objectClass != String.class)
+					{
+						final IConverter converter = getConverter(objectClass);
+
+						displayValue = converter.convertToString(displayObject, getLocale());
+					}
+				}
+
+				if (Strings.isEmpty(displayValue))
+				{
+					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
 				else
 				{
-					return model.getObject();
+					replaceComponentTagBody(markupStream, openTag, displayValue);
 				}
 			}
-
 		};
-		return super.newLabel(parent, componentId, wrapper);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
+		return label;
 	}
 
 	protected void onModelChanged()
