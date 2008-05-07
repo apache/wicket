@@ -314,16 +314,16 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	/**
 	 * Create a new form. Clients can override this method to provide a custom {@link Form}.
 	 * 
-	 * @param <T>
+	 * @param <E>
 	 *            The form's model object type
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * @return a new form
 	 */
-	protected <T> Form<T> newForm(String id)
+	protected <E> Form<E> newForm(String id)
 	{
-		return new Form<T>(id);
+		return new Form<E>(id);
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	/**
 	 * Create a new overview bar. Clients can override this method to provide a custom bar.
 	 * 
-	 * @param <T>
+	 * @param <E>
 	 *            The overview bar's model object type
 	 * 
 	 * @param id
@@ -349,10 +349,10 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new overview bar
 	 */
-	protected <T> Component<T> newOverviewBar(String id)
+	protected <E> Component<E> newOverviewBar(String id)
 	{
 		// return a dummy component by default as we don't have an overview
 		// component
-		return new WebMarkupContainer<T>(id).setVisible(false);
+		return new WebMarkupContainer<E>(id).setVisible(false);
 	}
 }
