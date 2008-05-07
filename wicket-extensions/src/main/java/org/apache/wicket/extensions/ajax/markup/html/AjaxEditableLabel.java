@@ -112,7 +112,8 @@ public class AjaxEditableLabel<T> extends Panel<T>
 				" else if (kc!=13) { return true; } else " + saveCall;
 
 			tag.put("onblur", saveCall);
-			tag.put("onkeypress", keypress);
+			tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
+			tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
 
 		}
 
