@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -213,6 +214,32 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			}
 		});
 		return editor;
+	}
+
+	@Override
+	protected WebComponent<T> newLabel(MarkupContainer< ? > parent, String componentId,
+		final IModel<T> model)
+	{
+		IModel<T> wrapper = new AbstractReadOnlyModel<T>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			@SuppressWarnings("unchecked")
+			public T getObject()
+			{
+				if (renderer != null)
+				{
+					return (T)renderer.getDisplayValue(model.getObject());
+				}
+				else
+				{
+					return model.getObject();
+				}
+			}
+
+		};
+		return super.newLabel(parent, componentId, wrapper);
 	}
 
 	@Override
