@@ -18,9 +18,12 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -28,6 +31,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
 
 
 /**
@@ -218,28 +222,53 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 
 	@Override
 	protected WebComponent<T> newLabel(MarkupContainer< ? > parent, String componentId,
-		final IModel<T> model)
+		IModel<T> model)
 	{
-		IModel<T> wrapper = new AbstractReadOnlyModel<T>()
+		Label<T> label = new Label<T>(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			@SuppressWarnings("unchecked")
-			public T getObject()
+			public IConverter<T> getConverter(Class<T> type)
 			{
+				IConverter<T> c = AjaxEditableChoiceLabel.this.getConverter(type);
+				return c != null ? c : super.getConverter(type);
+			}
+
+			@Override
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			{
+				String displayValue = getModelObjectAsString();
 				if (renderer != null)
 				{
-					return (T)renderer.getDisplayValue(model.getObject());
+					Object displayObject = renderer.getDisplayValue(getModelObject());
+					Class< ? > objectClass = (displayObject == null ? null
+						: displayObject.getClass());
+
+
+					if (objectClass != null && objectClass != String.class)
+					{
+						final IConverter converter = Application.get()
+							.getConverterLocator()
+							.getConverter(objectClass);
+
+						displayValue = converter.convertToString(displayObject, getLocale());
+					}
+				}
+
+				if (displayValue == null || "".equals(displayValue))
+				{
+					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
 				else
 				{
-					return model.getObject();
+					replaceComponentTagBody(markupStream, openTag, displayValue);
 				}
 			}
-
 		};
-		return super.newLabel(parent, componentId, wrapper);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
+		return label;
 	}
 
 	@Override
