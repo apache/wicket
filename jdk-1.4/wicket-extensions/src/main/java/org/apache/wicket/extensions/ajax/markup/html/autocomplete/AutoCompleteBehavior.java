@@ -28,6 +28,8 @@ import org.apache.wicket.protocol.http.WebResponse;
  * This behavior builds on top of {@link AbstractAutoCompleteBehavior} by introducing the concept of
  * a {@link IAutoCompleteRenderer} to make response writing easier.
  * 
+ * @param
+ * 
  * @see IAutoCompleteRenderer
  * 
  * @since 1.2
@@ -63,23 +65,37 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	 */
 	public AutoCompleteBehavior(IAutoCompleteRenderer renderer, boolean preselect)
 	{
+		this(renderer, new AutoCompleteSettings().setPreselect(preselect));
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param renderer
+	 *            renderer that will be used to generate output
+	 * @param settings
+	 *            settings for the autocomplete list
+	 */
+	public AutoCompleteBehavior(IAutoCompleteRenderer renderer, AutoCompleteSettings settings)
+	{
 		if (renderer == null)
 		{
 			throw new IllegalArgumentException("renderer cannot be null");
 		}
+		if (settings == null)
+		{
+			settings = new AutoCompleteSettings();
+		}
 		this.renderer = renderer;
-		this.preselect = preselect;
+		this.settings = settings;
 	}
-
 
 	protected final void onRequest(final String val, RequestCycle requestCycle)
 	{
 		IRequestTarget target = new IRequestTarget()
 		{
-
 			public void respond(RequestCycle requestCycle)
 			{
-
 				WebResponse r = (WebResponse)requestCycle.getResponse();
 
 				// Determine encoding

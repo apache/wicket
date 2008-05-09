@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -37,21 +38,47 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	protected boolean preselect = false;
 
+	protected AutoCompleteSettings settings = new AutoCompleteSettings();
+
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
-		response.renderOnDomReadyJavascript("new Wicket.AutoComplete('" + id + "','" +
-			getCallbackUrl() + "'," + preselect + ");");
+		String initJS = constructInitJS();
+		response.renderOnDomReadyJavascript(initJS);
+	}
+
+	protected final String constructInitJS()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("new Wicket.AutoComplete('")
+			.append(getComponent().getMarkupId())
+			.append("','")
+			.append(getCallbackUrl())
+			.append("',")
+			.append(constructSettingsJS())
+			.append(");");
+		return sb.toString();
+	}
+
+	protected final String constructSettingsJS()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{preselect:").append(settings.getPreselect()).append(",maxHeight:").append(
+			settings.getMaxHeightInPx()).append(",showListOnEmptyInput:").append(
+			settings.getShowListOnEmptyInput()).append("}");
+		return sb.toString();
 	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
 	 */
+
 	protected void onBind()
 	{
 		// add empty AbstractDefaultAjaxBehavior to the component, to force
@@ -60,6 +87,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		getComponent().add(new AbstractDefaultAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
+
 
 			protected void respond(AjaxRequestTarget target)
 			{
@@ -81,6 +109,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+
 	protected void respond(AjaxRequestTarget target)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();

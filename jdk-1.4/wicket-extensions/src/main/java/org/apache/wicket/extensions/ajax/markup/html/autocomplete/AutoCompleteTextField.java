@@ -32,6 +32,9 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param The
+ *            model object type
  */
 public abstract class AutoCompleteTextField extends TextField
 {
@@ -57,8 +60,20 @@ public abstract class AutoCompleteTextField extends TextField
 	public AutoCompleteTextField(String id, IModel model, Class type, boolean preselect)
 	{
 		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, preselect);
+	}
 
-	} 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 * @param type
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel model, Class type, AutoCompleteSettings settings)
+	{
+		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, settings);
+	}
 
 	/**
 	 * @param id
@@ -68,6 +83,18 @@ public abstract class AutoCompleteTextField extends TextField
 	public AutoCompleteTextField(String id, IModel object, boolean preselect)
 	{
 		this(id, object, (Class)null, preselect);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param object
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel object, AutoCompleteSettings settings)
+	{
+		this(id, object, (Class)null, settings);
 	}
 
 
@@ -87,6 +114,17 @@ public abstract class AutoCompleteTextField extends TextField
 	public AutoCompleteTextField(String id, boolean preselect)
 	{
 		this(id, (IModel)null, preselect);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, AutoCompleteSettings settings)
+	{
+		this(id, (IModel)null, settings);
 
 	}
 
@@ -138,12 +176,26 @@ public abstract class AutoCompleteTextField extends TextField
 	public AutoCompleteTextField(String id, IModel model, Class type,
 		IAutoCompleteRenderer renderer, boolean preselect)
 	{
-		super(id, model, type);
+		this(id, model, type, renderer, new AutoCompleteSettings().setPreselect(preselect));
+	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 * @param type
+	 * @param renderer
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel model, Class type,
+		IAutoCompleteRenderer renderer, AutoCompleteSettings settings)
+	{
+		super(id, model, type);
 		// this disables Firefox autocomplete
 		add(new SimpleAttributeModifier("autocomplete", "off"));
 
-		add(new AutoCompleteBehavior(renderer, preselect)
+		add(new AutoCompleteBehavior(renderer, settings)
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -154,7 +206,6 @@ public abstract class AutoCompleteTextField extends TextField
 			}
 
 		});
-
 	}
 
 	/**
@@ -169,6 +220,11 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator getChoices(String input);
+
+	protected int getMaxHeightInPx()
+	{
+		return 50;
+	}
 
 
 }
