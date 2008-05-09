@@ -28,6 +28,8 @@ import org.apache.wicket.protocol.http.WebResponse;
  * This behavior builds on top of {@link AbstractAutoCompleteBehavior} by introducing the concept of
  * a {@link IAutoCompleteRenderer} to make response writing easier.
  * 
+ * @param <T>
+ * 
  * @see IAutoCompleteRenderer
  * 
  * @since 1.2
@@ -35,11 +37,11 @@ import org.apache.wicket.protocol.http.WebResponse;
  * @author Igor Vaynberg (ivaynberg)
  * @author Janne Hietam&auml;ki (jannehietamaki)
  */
-public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
+public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private final IAutoCompleteRenderer renderer;
+	private final IAutoCompleteRenderer<T> renderer;
 
 	/**
 	 * Constructor
@@ -47,7 +49,7 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	 * @param renderer
 	 *            renderer that will be used to generate output
 	 */
-	public AutoCompleteBehavior(IAutoCompleteRenderer renderer)
+	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer)
 	{
 		this(renderer, false);
 	}
@@ -61,17 +63,35 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	 * @param preselect
 	 *            highlight/preselect the first item in the autocomplete list automatically
 	 */
-	public AutoCompleteBehavior(IAutoCompleteRenderer renderer, boolean preselect)
+	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, boolean preselect)
+	{
+		this(renderer, new AutoCompleteSettings().setPreselect(preselect));
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param renderer
+	 *            renderer that will be used to generate output
+	 * @param settings
+	 *            settings for the autocomplete list
+	 */
+	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
 	{
 		if (renderer == null)
 		{
 			throw new IllegalArgumentException("renderer cannot be null");
 		}
+		if (settings == null)
+		{
+			settings = new AutoCompleteSettings();
+		}
 		this.renderer = renderer;
-		this.preselect = preselect;
+		this.settings = settings;
 	}
 
 
+	@Override
 	protected final void onRequest(final String val, RequestCycle requestCycle)
 	{
 		IRequestTarget target = new IRequestTarget()
@@ -94,11 +114,11 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 				r.setHeader("Cache-Control", "no-cache, must-revalidate");
 				r.setHeader("Pragma", "no-cache");
 
-				Iterator comps = getChoices(val);
+				Iterator<T> comps = getChoices(val);
 				renderer.renderHeader(r);
 				while (comps.hasNext())
 				{
-					final Object comp = comps.next();
+					final T comp = comps.next();
 					renderer.render(comp, r, val);
 				}
 				renderer.renderFooter(r);
@@ -121,5 +141,5 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	 *            current input
 	 * @return iterator over all possible choice objects
 	 */
-	protected abstract Iterator getChoices(String input);
+	protected abstract Iterator<T> getChoices(String input);
 }

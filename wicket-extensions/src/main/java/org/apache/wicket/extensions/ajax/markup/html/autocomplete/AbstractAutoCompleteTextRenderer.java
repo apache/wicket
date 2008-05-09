@@ -26,7 +26,7 @@ import org.apache.wicket.Response;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompleteRenderer
+public abstract class AbstractAutoCompleteTextRenderer<T> extends AbstractAutoCompleteRenderer<T>
 {
 	/**
 	 * 
@@ -36,7 +36,7 @@ public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompl
 	/**
 	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response, String)
 	 */
-	protected void renderChoice(Object object, Response response, String criteria)
+	protected void renderChoice(T object, Response response, String criteria)
 	{
 		response.write(getTextValue(object));
 	}

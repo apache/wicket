@@ -25,18 +25,30 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRenderer
+public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRenderer<Object>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * A singleton instance
 	 */
+	@SuppressWarnings("unchecked")
 	public static final IAutoCompleteRenderer INSTANCE = new StringAutoCompleteRenderer();
+
+	/**
+	 * @param <T>
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static final <T> IAutoCompleteRenderer<T> instance()
+	{
+		return INSTANCE;
+	}
 
 	/**
 	 * @see AbstractAutoCompleteTextRenderer#getTextValue(Object)
 	 */
+	@Override
 	protected String getTextValue(Object object)
 	{
 		return object.toString();

@@ -52,13 +52,15 @@ import org.apache.wicket.Response;
  * }
  * </pre>
  * 
+ * @param <T>
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
-public interface IAutoCompleteRenderer extends IClusterable
+public interface IAutoCompleteRenderer<T> extends IClusterable
 {
 	/**
 	 * Render the html fragment for the given completion object. Usually the html is written out by
@@ -71,7 +73,7 @@ public interface IAutoCompleteRenderer extends IClusterable
 	 * @param criteria
 	 *            text entered by user so far
 	 */
-	void render(Object object, Response response, String criteria);
+	void render(T object, Response response, String criteria);
 
 
 	/**

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -37,21 +38,32 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	protected boolean preselect = false;
 
+	protected AutoCompleteSettings settings = new AutoCompleteSettings();
+
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
-		response.renderOnDomReadyJavascript("new Wicket.AutoComplete('" + id + "','" +
-			getCallbackUrl() + "'," + preselect + ");");
+		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s);", id,
+			getCallbackUrl(), constructSettingsJS());
+		response.renderOnDomReadyJavascript(initJS);
+	}
+
+	protected final String constructSettingsJS()
+	{
+		return String.format("{preselect:%b,maxHeight:%d}", settings.getPreselect(),
+			settings.getMaxHeightInPx());
 	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		// add empty AbstractDefaultAjaxBehavior to the component, to force
@@ -61,6 +73,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void respond(AjaxRequestTarget target)
 			{
 			}
@@ -81,6 +94,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();

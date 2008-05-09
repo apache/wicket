@@ -27,7 +27,7 @@ Wicket.AutoCompleteSettings =  {
 	enterHidesWithNoSelection : false
 };
 
-Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
+Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
     var KEY_TAB=9;
     var KEY_ENTER=13;
     var KEY_ESC=27;
@@ -87,7 +87,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
                    	} else {
 	                    render();
         	        }
-            	    if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
+            	    if(Wicket.Browser.isSafari())return killEvent(event);
                 	break;
                 case KEY_DOWN:
                		if(selected<elementCount-1){
@@ -99,7 +99,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
                 	    render();
                     	showAutoComplete();
 	                }
-    	            if(navigator.appVersion.indexOf('AppleWebKit')>0)return killEvent(event);
+    	            if(Wicket.Browser.isSafari())return killEvent(event);
         	        break;
                 case KEY_ESC:
             	    hideAutoComplete();
@@ -166,22 +166,36 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     function getAutocompleteMenu() {
         var choiceDiv=document.getElementById(getMenuId());
         if (choiceDiv==null) {
+        	var container = document.createElement("div");
+        	container.className="wicket-aa-container";
+        	document.body.appendChild(container);
+        	container.style.display="none";
+        	container.style.overflow="auto";
+            container.style.position="absolute";            
+            container.id=getMenuId()+"-container";
+            	
+            container.show = function() { wicketShow(this.id) };
+            container.hide = function() { wicketHide(this.id) };
+            
             choiceDiv=document.createElement("div");
-            document.body.appendChild(choiceDiv);
+            container.appendChild(choiceDiv);
             choiceDiv.id=getMenuId();
             choiceDiv.className="wicket-aa";
-            choiceDiv.style.display="none";
-            choiceDiv.style.position="absolute";
+            
             
             // WICKET-1350/WICKET-1351
-            choiceDiv.onmouseout=function() {mouseactive=0;};
-            choiceDiv.onmouseover=function() {mouseactive=1;};
+            container.onmouseout=function() {mouseactive=0;};
+            container.onmousemove=function() {mouseactive=1;};
         }
 
-        choiceDiv.show = function() { wicketShow(this.id) }
-        choiceDiv.hide = function() { wicketHide(this.id) }
 
         return choiceDiv;
+    }
+    
+    function getAutocompleteContainer() {
+    	var node=getAutocompleteMenu().parentNode;
+    	
+        return node;
     }
     
     function killEvent(event){
@@ -203,7 +217,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
 
     function updateChoices(){
-        if(preselect==true){
+        if(cfg.preselect==true){
         	selected = 0;
         }
         else{
@@ -220,14 +234,14 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 
     function showAutoComplete(){
         var position=getPosition(wicketGet(elementId));
-        var menu = getAutocompleteMenu();
+        var container = getAutocompleteContainer();
         var input=wicketGet(elementId);
-        var index=getOffsetParentZIndex(elementId);        
-        menu.show();
-        menu.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
-        menu.style.left=position[0]+'px'
-        menu.style.top=(input.offsetHeight+position[1])+'px';
-        menu.style.width=input.offsetWidth+'px';
+        var index=getOffsetParentZIndex(elementId);
+        container.show();
+        container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
+        container.style.left=position[0]+'px'
+        container.style.top=(input.offsetHeight+position[1])+'px';
+        container.style.width=input.offsetWidth+'px';
         visible=1;
         hideShowCovered();
     }
@@ -235,9 +249,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     function hideAutoComplete(){
         visible=0;
         selected=-1;
-        if ( document.getElementById(getMenuId()) )
+        if ( getAutocompleteContainer() )
         {
-	        getAutocompleteMenu().hide();
+	        getAutocompleteContainer().hide();
     	    hideShowCovered();
         }
     }
@@ -332,11 +346,22 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     function stripHTML(str) {
         return str.replace(/<[^>]+>/g,"");
     }
+    
+    function adjustScrollOffset(menu, item) {    	
+    	if (item.offsetTop + item.offsetHeight > menu.scrollTop + menu.offsetHeight) {
+			menu.scrollTop = item.offsetTop + item.offsetHeight - menu.offsetHeight;
+		} else
+		// adjust to the top
+		if (item.offsetTop < menu.scrollTop) {
+			menu.scrollTop = item.offsetTop;
+		}	
+    }
 
     function render(){
-        var element= getAutocompleteMenu();
+        var menu=getAutocompleteMenu();
+        var height=0;
         for(var i=0;i<elementCount;i++){
-            var node=element.firstChild.childNodes[i];
+            var node=menu.firstChild.childNodes[i];
 
             var classNames=node.className.split(" ");
             for (var j=0; j<classNames.length; j++) {
@@ -347,13 +372,18 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
 
             if(selected==i){
                 classNames.push('selected');
-                node.scrollIntoView(true);
+                adjustScrollOffset(menu.parentNode, node);
             }
-
+            
             node.className=classNames.join(" ");
+            height+=node.offsetHeight;
+        }
+        if (maxHeight != -1) {
+        	height = height<cfg.maxHeight?height:cfg.maxHeight;
+        	menu.parentNode.style.height=height+"px";
         }
     }
-
+    
     // From http://www.robertnyman.com/2006/04/24/get-the-rendered-style-of-an-element/
     function getStyle(obj,cssRule) {
     	var cssRuleAlt = cssRule.replace(/\-(\w)/g,function(strMatch,p1){return p1.toUpperCase();});
@@ -398,7 +428,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
     
     function hideShowCoveredTimeout(){
-		var el=getAutocompleteMenu();
+		var el=getAutocompleteContainer();
         var p=getPosition(el);
 
         var acLeftX=p[0];

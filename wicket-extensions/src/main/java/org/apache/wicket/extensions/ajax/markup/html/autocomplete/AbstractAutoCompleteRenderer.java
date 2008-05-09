@@ -23,12 +23,14 @@ import org.apache.wicket.Response;
  * visual part of the assist instead of having to also render the necessary autoassist javascript
  * hooks.
  * 
+ * @param <T>
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRenderer
+public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRenderer<T>
 {
 
 	/**
@@ -40,14 +42,14 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
 	 *      org.apache.wicket.Response, String)
 	 */
-	public final void render(Object object, Response response, String criteria)
+	public final void render(T object, Response response, String criteria)
 	{
 		String textValue = getTextValue(object);
 		if (textValue == null)
 		{
 			throw new IllegalStateException(
-					"A call to textValue(Object) returned an illegal value: null for object: " +
-							object.toString());
+				"A call to textValue(Object) returned an illegal value: null for object: " +
+					object.toString());
 		}
 		textValue = textValue.replaceAll("\\\"", "&quot;");
 
@@ -82,7 +84,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 * @param response
 	 * @param criteria
 	 */
-	protected abstract void renderChoice(Object object, Response response, String criteria);
+	protected abstract void renderChoice(T object, Response response, String criteria);
 
 	/**
 	 * Retrieves the text value that will be set on the textbox if this assist is selected
@@ -91,5 +93,5 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 *            assist choice object
 	 * @return the text value that will be set on the textbox if this assist is selected
 	 */
-	protected abstract String getTextValue(Object object);
+	protected abstract String getTextValue(T object);
 }

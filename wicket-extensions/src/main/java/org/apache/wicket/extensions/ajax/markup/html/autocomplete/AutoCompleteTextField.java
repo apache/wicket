@@ -47,7 +47,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, Class<T> type)
 	{
-		this(id, (IModel)null, type, false);
+		this(id, (IModel<T>)null, type, false);
 	}
 
 	/**
@@ -60,7 +60,20 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type, boolean preselect)
 	{
 		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, preselect);
+	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 * @param type
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type,
+		AutoCompleteSettings settings)
+	{
+		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, settings);
 	}
 
 	/**
@@ -70,7 +83,19 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, IModel<T> object, boolean preselect)
 	{
-		this(id, object, (Class)null, preselect);
+		this(id, object, (Class<T>)null, preselect);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param object
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel<T> object, AutoCompleteSettings settings)
+	{
+		this(id, object, (Class<T>)null, settings);
 	}
 
 
@@ -80,7 +105,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, IModel<T> object)
 	{
-		this(id, object, (Class)null, false);
+		this(id, object, (Class<T>)null, false);
 	}
 
 	/**
@@ -89,7 +114,18 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, boolean preselect)
 	{
-		this(id, (IModel)null, preselect);
+		this(id, (IModel<T>)null, preselect);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, AutoCompleteSettings settings)
+	{
+		this(id, (IModel<T>)null, settings);
 
 	}
 
@@ -98,7 +134,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id)
 	{
-		this(id, (IModel)null, false);
+		this(id, (IModel<T>)null, false);
 
 	}
 
@@ -106,9 +142,9 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param id
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(String id, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, IAutoCompleteRenderer<T> renderer)
 	{
-		this(id, (IModel)null, renderer);
+		this(id, (IModel<T>)null, renderer);
 	}
 
 	/**
@@ -116,7 +152,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param type
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(String id, Class<T> type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, Class<T> type, IAutoCompleteRenderer<T> renderer)
 	{
 		this(id, null, type, renderer, false);
 	}
@@ -126,9 +162,9 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param model
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(String id, IModel<T> model, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, IModel<T> model, IAutoCompleteRenderer<T> renderer)
 	{
-		this(id, model, (Class)null, renderer, false);
+		this(id, model, (Class<T>)null, renderer, false);
 	}
 
 	/**
@@ -139,26 +175,39 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param preselect
 	 */
 	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type,
-		IAutoCompleteRenderer renderer, boolean preselect)
+		IAutoCompleteRenderer<T> renderer, boolean preselect)
+	{
+		this(id, model, type, renderer, new AutoCompleteSettings().setPreselect(preselect));
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 * @param type
+	 * @param renderer
+	 * @param settings
+	 */
+	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type,
+		IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
 	{
 		super(id, model, type);
-
 		// this disables Firefox autocomplete
 		add(new SimpleAttributeModifier("autocomplete", "off"));
 
-		add(new AutoCompleteBehavior(renderer, preselect)
+		add(new AutoCompleteBehavior<T>(renderer, settings)
 		{
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Iterator getChoices(String input)
+			protected Iterator<T> getChoices(String input)
 			{
 				return AutoCompleteTextField.this.getChoices(input);
 			}
 
 		});
-
 	}
 
 	/**
@@ -173,6 +222,11 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator<T> getChoices(String input);
+
+	protected int getMaxHeightInPx()
+	{
+		return 50;
+	}
 
 
 }
