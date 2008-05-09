@@ -56,8 +56,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	protected final String constructSettingsJS()
 	{
-		return String.format("{preselect:%b,maxHeight:%d}", settings.getPreselect(),
-			settings.getMaxHeightInPx());
+		return String.format("{preselect:%b,maxHeight:%d,showListOnEmptyInput:%b}",
+			settings.getPreselect(), settings.getMaxHeightInPx(),
+			settings.getShowListOnEmptyInput());
 	}
 
 	/**

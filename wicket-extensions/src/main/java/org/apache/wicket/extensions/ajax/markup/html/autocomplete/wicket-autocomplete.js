@@ -271,7 +271,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
     
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
-   		if (input.value==null || input.value=="") {
+   		if (!cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			return;
    		}
@@ -317,7 +317,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
     function scheduleEmptyCheck() {
     	window.setTimeout(function() {
     		var input=wicketGet(elementId);
-    		if (input.value==null || input.value=="") {
+    		if (!cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
     			hideAutoComplete();
     		}
     	}, 100);
@@ -378,7 +378,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
             node.className=classNames.join(" ");
             height+=node.offsetHeight;
         }
-        if (maxHeight != -1) {
+        if (cfg.maxHeight != -1) {
         	height = height<cfg.maxHeight?height:cfg.maxHeight;
         	menu.parentNode.style.height=height+"px";
         }

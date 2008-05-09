@@ -21,6 +21,26 @@ import org.apache.wicket.IClusterable;
 /**
  * This class encapsulates various settings for {@link AbstractAutoCompleteBehavior}. See the
  * documentation for the property accessors of this class for further information.
+ * <p>
+ * Default settings: <table>
+ * <tr>
+ * <th>setting</th>
+ * <th>default value</th>
+ * </tr>
+ * <tr>
+ * <td>preselect</td>
+ * <td>false</td>
+ * </tr>
+ * <tr>
+ * <td>maxHeightInPx</td>
+ * <td>-1</td>
+ * </tr>
+ * <tr>
+ * <td>showListOnEmptyInput</td>
+ * <td>false</td>
+ * </tr>
+ * </table>
+ * </p>
  * 
  * @author Gerolf Seitz
  */
@@ -31,6 +51,8 @@ public final class AutoCompleteSettings implements IClusterable
 	private boolean preselect = false;
 
 	private int maxHeightInPx = -1;
+
+	private boolean showListOnEmptyInput = false;
 
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -88,6 +110,30 @@ public final class AutoCompleteSettings implements IClusterable
 	public AutoCompleteSettings setMaxHeightInPx(int maxHeightInPx)
 	{
 		this.maxHeightInPx = maxHeightInPx;
+		return this;
+	}
+
+	/**
+	 * Indicates whether the autocomplete list will be shown if the input is empty.
+	 * 
+	 * @return true if the autocomlete list will be shown if the input string is empty, false
+	 *         otherwise
+	 */
+	public boolean getShowListOnEmptyInput()
+	{
+		return showListOnEmptyInput;
+	}
+
+	/**
+	 * Sets whether the list should be shown when the input is empty.
+	 * 
+	 * @param showListOnEmptyInput
+	 *            the flag
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setShowListOnEmptyInput(boolean showListOnEmptyInput)
+	{
+		this.showListOnEmptyInput = showListOnEmptyInput;
 		return this;
 	}
 }
