@@ -17,6 +17,8 @@
 package org.apache.wicket.util.value;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,14 +55,21 @@ import org.apache.wicket.util.time.Time;
  * key/value string for diagnostics.
  * 
  * @author Jonathan Locke
+ * @author Doug Donohoe
  * @since 1.2.6
  */
 public class ValueMap extends HashMap implements IValueMap
 {
 	/** an empty <code>ValueMap</code>. */
-	public static final ValueMap EMPTY_MAP = new ValueMap();
+	public static final ValueMap EMPTY_MAP;
 
-	private static final long serialVersionUID = 1L;
+    /** create EMPTY_MAP, make immutable **/
+    static {
+        EMPTY_MAP = new ValueMap();
+        EMPTY_MAP.makeImmutable();
+    }
+
+    private static final long serialVersionUID = 1L;
 
 	/**
 	 * <code>true</code> if this <code>ValueMap</code> has been made immutable.
@@ -127,8 +136,7 @@ public class ValueMap extends HashMap implements IValueMap
 				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex + 1);
 				if (equalsIndex2 != -1)
 				{
-					int delimiterIndex2 = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
-					delimiterIndex = delimiterIndex2;
+                    delimiterIndex = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
 				}
 				else
 				{
@@ -192,8 +200,7 @@ public class ValueMap extends HashMap implements IValueMap
 			}
 			else
 			{
-				throw new IllegalArgumentException("Invalid key value list: '" + keyValuePairs +
-						"'");
+				throw new IllegalArgumentException("Invalid key value list: '" + keyValuePairs + '\'');
 			}
 		}
 	}
@@ -201,7 +208,8 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * @see java.util.Map#clear()
 	 */
-	public final void clear()
+	@Override
+    public final void clear()
 	{
 		checkMutability();
 		super.clear();
@@ -418,7 +426,8 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	public Object put(final Object key, final Object value)
+	@Override
+    public Object put(final Object key, final Object value)
 	{
 		checkMutability();
 		return super.put(key, value);
@@ -469,7 +478,8 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map map)
+	@Override
+    public void putAll(final Map map)
 	{
 		checkMutability();
 		super.putAll(map);
@@ -478,7 +488,8 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public Object remove(final Object key)
+	@Override
+    public Object remove(final Object key)
 	{
 		checkMutability();
 		return super.remove(key);
@@ -489,19 +500,17 @@ public class ValueMap extends HashMap implements IValueMap
 	 */
 	public String getKey(final String key)
 	{
-		Iterator iter = keySet().iterator();
-		while (iter.hasNext())
-		{
-			Object keyValue = iter.next();
-			if (keyValue instanceof String)
-			{
-				String keyString = (String)keyValue;
-				if (key.equalsIgnoreCase(keyString))
-				{
-					return keyString;
-				}
-			}
-		}
+        for (Object keyValue : keySet())
+        {
+            if (keyValue instanceof String)
+            {
+                String keyString = (String) keyValue;
+                if (key.equalsIgnoreCase(keyString))
+                {
+                    return keyString;
+                }
+            }
+        }
 		return null;
 	}
 
@@ -512,7 +521,8 @@ public class ValueMap extends HashMap implements IValueMap
 	 *         the tag-attribute style of markup elements. For example:
 	 *         <code>a="x" b="y" c="z"</code>.
 	 */
-	public String toString()
+	@Override
+    public String toString()
 	{
 		final StringBuffer buffer = new StringBuffer();
 		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
@@ -534,7 +544,7 @@ public class ValueMap extends HashMap implements IValueMap
 				buffer.append(value);
 			}
 
-			buffer.append("\"");
+			buffer.append('\"');
 			if (iterator.hasNext())
 			{
 				buffer.append(' ');
@@ -546,11 +556,260 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * Throws an exception if <code>ValueMap</code> is immutable.
 	 */
-	private final void checkMutability()
+	private void checkMutability()
 	{
 		if (immutable)
 		{
 			throw new UnsupportedOperationException("Map is immutable");
 		}
 	}
+
+    ////
+    //// getAs convenience methods
+    ////
+
+    /**
+     * @see IValueMap#getAsBoolean(String)
+     *
+     */
+    public Boolean getAsBoolean(String key)
+    {
+        if (!containsKey(key)) return null;
+
+        try
+        {
+            return getBoolean(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsBoolean(String, boolean)
+     *
+     */
+    public boolean getAsBoolean(String key, boolean defaultValue)
+    {
+        try
+        {
+            return getBoolean(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsInteger(String)
+     */
+    public Integer getAsInteger(String key)
+    {
+        if (!containsKey(key)) return null;
+
+        try
+        {
+            return getInt(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsInteger(String, int)
+     */
+    public int getAsInteger(String key, int defaultValue)
+    {
+        try
+        {
+            return getInt(key, defaultValue);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsLong(String)
+     */
+    public Long getAsLong(String key)
+    {
+        if (!containsKey(key)) return null;
+
+        try
+        {
+            return getLong(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsLong(String, long)
+     */
+    public long getAsLong(String key, long defaultValue)
+    {
+        try
+        {
+            return getLong(key, defaultValue);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsDouble(String)
+     */
+    public Double getAsDouble(String key)
+    {
+        if (!containsKey(key)) return null;
+
+        try
+        {
+            return getDouble(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsDouble(String, double)
+     */
+    public double getAsDouble(String key, double defaultValue)
+    {
+        try
+        {
+            return getDouble(key, defaultValue);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsDuration(String)
+     */
+    public Duration getAsDuration(String key)
+    {
+        return getAsDuration(key, null);
+    }
+
+    /**
+     * @see IValueMap#getAsDuration(String, Duration)
+     */
+    public Duration getAsDuration(String key, Duration defaultValue)
+    {
+        if (!containsKey(key)) return defaultValue;
+
+        try
+        {
+            return getDuration(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsTime(String)
+     */
+    public Time getAsTime(String key)
+    {
+        return getAsTime(key, null);
+    }
+
+    /**
+     * @see IValueMap#getAsTime(String, Time)
+     */
+    public Time getAsTime(String key, Time defaultValue)
+    {
+        if (!containsKey(key)) return defaultValue;
+        
+        try
+        {
+            return getTime(key);
+        }
+        catch (StringValueConversionException ignored)
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * @see IValueMap#getAsEnum(String, Class<T>)
+     */
+    public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass)
+    {
+        return getEnumImpl(key, eClass, null);
+    }
+
+    /**
+     * @see IValueMap#getAsEnum
+     */
+    public <T extends Enum<T>> T getAsEnum(String key, T defaultValue)
+    {
+        if (defaultValue == null) throw new IllegalArgumentException("Default value cannot be null");
+        return getEnumImpl(key, defaultValue.getClass(), defaultValue);
+    }
+
+    /**
+     * @see IValueMap#getAsEnum(String, Class<T>, T)
+     */
+    public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue)
+    {
+        return getEnumImpl(key, eClass, defaultValue);
+    }
+
+    /**
+     * get enum implementation
+     */
+    @SuppressWarnings({"unchecked"})
+    private <T extends Enum<T>> T getEnumImpl(String key, Class<?> eClass, T defaultValue)
+    {
+        if (eClass == null) throw new IllegalArgumentException("eClass value cannot be null");
+
+        String value = getString(key);
+        if (value == null) return defaultValue;
+
+        Method valueOf = null;
+        try
+        {
+            valueOf = eClass.getMethod("valueOf", String.class);
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new RuntimeException("Could not find method valueOf(String s) for " + eClass.getName(), e);
+        }
+
+        try
+        {
+            return (T) valueOf.invoke(eClass, value);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException("Could not invoke method valueOf(String s) on " + eClass.getName(), e);
+        }
+        catch (InvocationTargetException e)
+        {
+            // IllegalArgumentException thrown if enum isn't defined - just return default
+            if (e.getCause() instanceof IllegalArgumentException)
+            {
+                return defaultValue;
+            }
+            throw new RuntimeException(e); // shouldn't happen
+        }
+    }
 }
