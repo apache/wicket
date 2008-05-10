@@ -378,7 +378,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
             node.className=classNames.join(" ");
             height+=node.offsetHeight;
         }
-        if (cfg.maxHeight != -1) {
+        if (cfg.maxHeight > -1) {
         	height = height<cfg.maxHeight?height:cfg.maxHeight;
         	menu.parentNode.style.height=height+"px";
         }
