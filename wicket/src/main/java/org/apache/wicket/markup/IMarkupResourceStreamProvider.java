@@ -20,13 +20,13 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
- * To be implemented by MarkupContainer which whish to implement there own algorithms for loading
- * the markup resource stream.
+ * To be implemented by MarkupContainer which wish to implement their own algorithms for loading the
+ * markup resource stream.
  * <p>
  * Note: IResourceStreamLocators should be used in case the strategy to find a markup resource is
  * meant to be applied to ALL components of your application.
  * <p>
- * Note: See IMarkupCacheKeyProvider if you whish to implement your own cache key algorithm, which
+ * Note: See IMarkupCacheKeyProvider if you wish to implement your own cache key algorithm, which
  * sometimes is useful when the MarkupContainer implements its own IMarkupResourceStreamProvider as
  * well.
  * 
