@@ -165,24 +165,22 @@ Wicket.Event = {
 					return;
 				window.loaded = true;
 				
-				// if there was a timer, clean it (khtml, safari)
-				if (Wicket.Event.domReadyTimer) {
-					clearTimeout(Wicket.Event.domReadyTimer);
-					Wicket.Event.domReadyTimer = null;
-				}
-				
 				// invoke the handlers
 				Wicket.Event.fireDomReadyHandlers();
 			}.bind(this);
 			
 			if (document.readyState && (Wicket.Browser.isKHTML() || Wicket.Browser.isSafari())) { 
-			   //safari and konqueror don't support the event - simulate it through a timeou
-				Wicket.Event.domReadyTimer = window.setTimeout(function() {
+			  //safari and konqueror don't support the event - simulate it through a timeout
+				var domCheck = function() {
 					if (document.readyState == "loaded" ||
 					    document.readyState == "complete") {
 					    domReady();
+					} else {
+						// dom not yet ready, set timer to check later
+						window.setTimeout(domCheck, 10);
 					}
-				}, 10);
+				}
+				window.setTimeout(domCheck, 10);
 			} else if (document.readyState && Wicket.Browser.isIE()) { 
 				if (document.getElementById('ie_ready') == null) {
 					// for internet explorer we need to load a "dummy" scrip from ::/ to get the 
