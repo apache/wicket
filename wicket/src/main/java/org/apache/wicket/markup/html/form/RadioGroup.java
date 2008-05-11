@@ -154,7 +154,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	}
 
 	/**
-	 * Template method that can be overridsen by clients that implement IOnChangeListener to be
+	 * Template method that can be overridden by clients that implement IOnChangeListener to be
 	 * notified by onChange events of a select element. This method does nothing by default.
 	 * <p>
 	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
