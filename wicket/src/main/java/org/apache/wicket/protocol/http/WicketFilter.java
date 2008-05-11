@@ -299,12 +299,24 @@ public class WicketFilter implements Filter
 			{
 				try
 				{
-					// The encoding defined by the wicket settings is used to
-					// encode the responses. Thus, it is reasonable to assume
-					// the request has the same encoding. This is especially
-					// important for forms and form parameters.
-					servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
-						.getResponseRequestEncoding());
+					// It this request is a wicket-ajax request, we need decode the
+					// request always by UTF-8, because the request data is encoded by
+					// encodeUrlComponent() JavaScript function, which always encode data
+					// by UTF-8.
+					String wicketAjaxHeader = servletRequest.getHeader("wicket-ajax");
+					if (wicketAjaxHeader != null && wicketAjaxHeader.equals("true"))
+					{
+						servletRequest.setCharacterEncoding("UTF-8");
+					}
+					else
+					{
+						// The encoding defined by the wicket settings is used to
+						// encode the responses. Thus, it is reasonable to assume
+						// the request has the same encoding. This is especially
+						// important for forms and form parameters.
+						servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
+							.getResponseRequestEncoding());
+					}
 				}
 				catch (UnsupportedEncodingException ex)
 				{
