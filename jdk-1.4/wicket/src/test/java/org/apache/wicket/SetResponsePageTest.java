@@ -29,9 +29,10 @@ public class SetResponsePageTest extends WicketTestCase
 	{
 		WicketTester tester = new WicketTester(Page1.class);
 		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-				.setURL("?wicket:bookmarkablePage=:" + Page1.class.getName() + "");
-		tester.processRequestCycle();
+// tester.getServletRequest()
+// .setURL("?wicket:bookmarkablePage=:" + Page1.class.getName() + "");
+// tester.processRequestCycle();
+		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);
 		tester.destroy();
 	}
