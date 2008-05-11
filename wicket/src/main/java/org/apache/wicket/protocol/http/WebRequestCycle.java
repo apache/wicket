@@ -52,7 +52,7 @@ public class WebRequestCycle extends RequestCycle
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(WebRequestCycle.class);
 
-	private static final MetaDataKey BROWSER_WAS_POLLED_KEY = new MetaDataKey(Boolean.class)
+	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -86,6 +86,7 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @see org.apache.wicket.RequestCycle#getProcessor()
 	 */
+	@Override
 	public IRequestCycleProcessor getProcessor()
 	{
 		return ((WebApplication)getApplication()).getRequestCycleProcessor();
@@ -124,6 +125,7 @@ public class WebRequestCycle extends RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
+	@Override
 	public final void redirectTo(final Page page)
 	{
 		String redirectUrl = null;
@@ -149,6 +151,7 @@ public class WebRequestCycle extends RequestCycle
 					currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
+					@Override
 					public CharSequence encodeURL(CharSequence url)
 					{
 						return currentResponse.encodeURL(url);
@@ -248,6 +251,7 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * @see org.apache.wicket.RequestCycle#newClientInfo()
 	 */
+	@Override
 	protected ClientInfo newClientInfo()
 	{
 		if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
@@ -274,6 +278,7 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @see org.apache.wicket.RequestCycle#isRedirect()
 	 */
+	@Override
 	public final boolean isRedirect()
 	{
 		if (getWebRequest().isAjax())

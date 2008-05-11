@@ -23,22 +23,22 @@ import junit.framework.TestCase;
  */
 public class MetaDataTest extends TestCase
 {
-	private static final MetaDataKey KEY1 = new MetaDataKey(String.class)
+	private static final MetaDataKey<String> KEY1 = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey KEY2 = new MetaDataKey(String.class)
+	private static final MetaDataKey<String> KEY2 = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey KEY3 = new MetaDataKey(String.class)
+	private static final MetaDataKey<String> KEY3 = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey KEY4 = new MetaDataKey(String.class)
+	private static final MetaDataKey<String> KEY4 = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

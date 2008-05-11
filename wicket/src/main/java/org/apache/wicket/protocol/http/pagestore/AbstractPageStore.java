@@ -22,7 +22,6 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.wicket.Page;
@@ -137,12 +136,14 @@ public abstract class AbstractPageStore implements IPageStore
 			this.data = data;
 		}
 
+		@Override
 		public int hashCode()
 		{
 			return pageId * 1931 + versionNumber * 13 + ajaxVersionNumber * 301 +
 				(pageMapName != null ? pageMapName.hashCode() : 0);
 		}
 
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (this == obj)
@@ -175,15 +176,17 @@ public abstract class AbstractPageStore implements IPageStore
 	 *            page to be serialized
 	 * @return list of {@link SerializedPage}s
 	 */
-	protected List/* <SerializedPage> */serializePage(Page page)
+	@SuppressWarnings("unchecked")
+	protected List<SerializedPage> serializePage(Page page)
 	{
-		final List result = new ArrayList();
+		final List<SerializedPage> result = new ArrayList<SerializedPage>();
 
 		SerializedPage initialPage = new SerializedPage(page);
 		result.add(initialPage);
 
 		PageSerializer serializer = new PageSerializer(initialPage)
 		{
+			@Override
 			protected void onPageSerialized(SerializedPage page)
 			{
 				result.add(page);
@@ -215,6 +218,7 @@ public abstract class AbstractPageStore implements IPageStore
 	 *            kept
 	 * @return page instance
 	 */
+	@SuppressWarnings("unchecked")
 	protected Page deserializePage(byte[] data, int versionNumber)
 	{
 		boolean set = Page.serializer.get() == null;
@@ -260,14 +264,15 @@ public abstract class AbstractPageStore implements IPageStore
 		public Object getPageReplacementObject(Page callingPage)
 		{
 			SerializedPage calling = new SerializedPage(callingPage);
-			
+
 			// if current page writeObject is called we need to really serialize the page instance
 			if (calling.equals(current))
 			{
 				completed.add(calling);
 				return callingPage;
 			}
-			else // serializing page referenced from current page
+			else
+			// serializing page referenced from current page
 			{
 				// if the referenced page has not yet been serialized...
 				if (completed.contains(calling) == false)
@@ -276,12 +281,12 @@ public abstract class AbstractPageStore implements IPageStore
 					SerializedPage prev = current;
 					current = calling;
 					current.data = Objects.objectToByteArray(callingPage);
-					
+
 					// invoke callback with the data
 					onPageSerialized(current);
 					current = prev;
 				}
-				
+
 				// return page holder instance (object that will readResolve to
 				// actual page instance
 				return new PageHolder(callingPage);
@@ -318,23 +323,11 @@ public abstract class AbstractPageStore implements IPageStore
 			throws IOException, ClassNotFoundException
 		{
 			// get the page instance registry
-			HashMap pageMaps = (HashMap)SecondLevelCacheSessionStore.getUsedPages().get();
-			if (pageMaps == null)
-			{
-				pageMaps = new HashMap();
-				SecondLevelCacheSessionStore.getUsedPages().set(pageMaps);
-			}
-			IntHashMap pages = (IntHashMap)pageMaps.get(pageMapName);
-			if (pages == null)
-			{
-				pages = new IntHashMap();
-				pageMaps.put(pageMapName, pages);
-			}
-
+			IntHashMap<Page<?>> pages = SecondLevelCacheSessionStore.getUsedPages(pageMapName);
 			// register the new page instance so that when the same page is being deserialized
 			// (curricular page references) we can use existing page instance (otherwise deadlock
 			// would happen)
-			
+
 			pages.put(id, page);
 
 			stream.defaultReadObject();

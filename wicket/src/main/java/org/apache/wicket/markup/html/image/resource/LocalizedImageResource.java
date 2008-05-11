@@ -161,7 +161,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * @param component
 	 *            The component that owns this localized image resource
 	 */
-	public LocalizedImageResource(final Component component)
+	public LocalizedImageResource(final Component<?> component)
 	{
 		this.component = component;
 		locale = component.getLocale();
@@ -368,6 +368,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * @throws WicketRuntimeException
 	 *             Thrown if the image cannot be located
 	 */
+	@SuppressWarnings("unchecked")
 	private void loadStaticImage(final String path)
 	{
 		if ((path.indexOf("..") != -1) || (path.indexOf("./") != -1) || (path.indexOf("/.") != -1))
@@ -390,6 +391,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			/**
 			 * @see org.apache.wicket.ResourceReference#newResource()
 			 */
+			@Override
 			protected Resource newResource()
 			{
 				PackageResource pr = PackageResource.get(getScope(), getName(),

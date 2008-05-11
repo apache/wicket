@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * A key to a piece of metadata associated with a Component at runtime. The key contains type
@@ -35,18 +34,14 @@ public abstract class MetaDataKey<T> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Type of data associated with this key */
-	private final String typeName;
-
 	/**
 	 * Constructor.
 	 * 
 	 * @param type
 	 *            The type of value stored under this key
 	 */
-	public MetaDataKey(final Class< ? super T> type)
+	public MetaDataKey()
 	{
-		typeName = type.getName();
 	}
 
 	/**
@@ -87,15 +82,14 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	MetaDataEntry< ? >[] set(MetaDataEntry< ? >[] metaData, final Object object)
+	MetaDataEntry<?>[] set(MetaDataEntry<?>[] metaData, final Object object)
 	{
-		checkType(object);
 		boolean set = false;
 		if (metaData != null)
 		{
 			for (int i = 0; i < metaData.length; i++)
 			{
-				MetaDataEntry< ? > m = metaData[i];
+				MetaDataEntry<?> m = metaData[i];
 				if (equals(m.key))
 				{
 					if (object != null)
@@ -109,7 +103,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 						if (metaData.length > 1)
 						{
 							int l = metaData.length - 1;
-							MetaDataEntry< ? >[] newMetaData = new MetaDataEntry[l];
+							MetaDataEntry<?>[] newMetaData = new MetaDataEntry[l];
 							System.arraycopy(metaData, 0, newMetaData, 0, i);
 							System.arraycopy(metaData, i + 1, newMetaData, i, l - i);
 							metaData = newMetaData;
@@ -134,7 +128,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 			}
 			else
 			{
-				final MetaDataEntry< ? >[] newMetaData = new MetaDataEntry[metaData.length + 1];
+				final MetaDataEntry<?>[] newMetaData = new MetaDataEntry[metaData.length + 1];
 				System.arraycopy(metaData, 0, newMetaData, 0, metaData.length);
 				newMetaData[metaData.length] = m;
 				metaData = newMetaData;
@@ -144,30 +138,11 @@ public abstract class MetaDataKey<T> implements IClusterable
 	}
 
 	/**
-	 * Checks the type of the given object against the type for this metadata key.
-	 * 
-	 * @param object
-	 *            The object to check
-	 * @throws IllegalArgumentException
-	 *             Thrown if the type of the given object does not match the type for this key.
-	 */
-	@SuppressWarnings("unchecked")
-	void checkType(final Object object)
-	{
-		Class<T> clazz = Classes.resolveClass(typeName);
-		if (object != null && !clazz.isAssignableFrom(object.getClass()))
-		{
-			throw new IllegalArgumentException("MetaDataKey " + getClass() +
-				" requires argument of " + clazz + ", not " + object.getClass());
-		}
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return getClass() + "[type=" + typeName + "]";
+		return getClass().toString();
 	}
 }

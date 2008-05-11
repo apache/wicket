@@ -40,7 +40,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	 * The value will be made available to the validator property by means of ${label}. It does not
 	 * have any specific meaning to FormComponent itself.
 	 */
-	private IModel labelModel = null;
+	private IModel<String> labelModel = null;
 
 	@Override
 	protected void onDetach()
@@ -51,7 +51,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 			labelModel.detach();
 			if (labelModel instanceof IWrapModel)
 			{
-				((IWrapModel)labelModel).getWrappedModel().detach();
+				((IWrapModel<?>)labelModel).getWrappedModel().detach();
 			}
 		}
 	}
@@ -67,7 +67,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public LabeledWebMarkupContainer(final String id, final IModel model)
+	public LabeledWebMarkupContainer(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -75,7 +75,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.ILabelProvider#getLabel()
 	 */
-	public IModel getLabel()
+	public IModel<String> getLabel()
 	{
 		return labelModel;
 	}
@@ -89,7 +89,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	 * 
 	 * @param labelModel
 	 */
-	protected void setLabelInternal(IModel labelModel)
+	protected void setLabelInternal(IModel<String> labelModel)
 	{
 		this.labelModel = wrap(labelModel);
 	}

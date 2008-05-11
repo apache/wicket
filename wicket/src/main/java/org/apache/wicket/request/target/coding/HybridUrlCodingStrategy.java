@@ -52,7 +52,7 @@ import org.apache.wicket.util.string.Strings;
  * an immediate redirect after hitting bookmarkable URL, e.g. it immediately redirects from
  * /mount/path to /mount/path.3 where 3 is the next page id. This preserves the page instance on
  * subsequent page refresh.
- *
+ * 
  * @author Matej Knopp
  */
 public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
@@ -64,7 +64,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClass
 	 * @param redirectOnBookmarkableRequest
@@ -81,7 +81,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param mountPath
 	 * @param pageClass
 	 */
@@ -92,7 +92,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Returns the amount of trailing slashes in the given string
-	 *
+	 * 
 	 * @param seq
 	 * @return
 	 */
@@ -116,7 +116,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * Returns whether after hitting bookmarkable url the request should be redirected to a hybrid
 	 * URL. This is recommended for pages with Ajax.
-	 *
+	 * 
 	 * @return
 	 */
 	protected boolean isRedirectOnBookmarkableRequest()
@@ -126,7 +126,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Returns whether to redirect when there is pageMap specified in bookmarkable URL
-	 *
+	 * 
 	 * @return
 	 */
 	protected boolean alwaysRedirectWhenPageMapIsSpecified()
@@ -239,11 +239,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * Handles the case where a non-bookmarkable url with a hybrid base refers to a page that is no
 	 * longer in session. eg <code>/context/hybrid-mount.0.23?wicket:interface=...</code>. The
 	 * default behavior is to throw a <code>PageExpiredException</code>.
-	 *
+	 * 
 	 * This method can be overwritten to, for example, return the user to a new instance of the
 	 * bookmarkable page that was mounted using hybrid strategy - this, however, should only be used
 	 * in cases where the page expects no page parameters because they are no longer available.
-	 *
+	 * 
 	 * @param pageMapName
 	 *            page map name this page is mounted in
 	 * @param pageClass
@@ -264,7 +264,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * Returns the number of trailing slashes in the url when the page in request target was created
 	 * or null if the number can't be determined.
-	 *
+	 * 
 	 * @param requestTarget
 	 * @return
 	 */
@@ -281,7 +281,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Extracts the PageParameters from given request target
-	 *
+	 * 
 	 * @param requestTarget
 	 * @return
 	 */
@@ -306,7 +306,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Extracts the PageInfo from given request target
-	 *
+	 * 
 	 * @param requestTarget
 	 * @return
 	 */
@@ -340,7 +340,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * Sets the initial page parameters for page instance. Use this only if you know what you are
 	 * doing.
-	 *
+	 * 
 	 * @param page
 	 * @param pageParameters
 	 */
@@ -365,17 +365,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	public static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
 
-	private static class PageParametersMetaDataKey extends MetaDataKey
+	private static class PageParametersMetaDataKey extends MetaDataKey<PageParameters>
 	{
 		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 */
-		public PageParametersMetaDataKey()
-		{
-			super(PageParameters.class);
-		}
 	};
 
 	// used to store number of trailing slashes in page url (prior the PageInfo)
@@ -385,23 +377,14 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	// (other mounted URLs)
 	private static final OriginalUrlTrailingSlashesCountMetaDataKey ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY = new OriginalUrlTrailingSlashesCountMetaDataKey();
 
-	private static class OriginalUrlTrailingSlashesCountMetaDataKey extends MetaDataKey
+	private static class OriginalUrlTrailingSlashesCountMetaDataKey extends MetaDataKey<Integer>
 	{
 		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 */
-		public OriginalUrlTrailingSlashesCountMetaDataKey()
-		{
-			super(Integer.class);
-		}
-
 	}
 
 	/**
 	 * Fix the amount of trailing slashes in the specified buffer.
-	 *
+	 * 
 	 * @param buffer
 	 * @param desiredCount
 	 */
@@ -476,7 +459,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Class that encapsulates {@link PageInfo} instance and the URL part prior the PageInfo part
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected static class PageInfoExtraction
@@ -487,7 +470,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param urlAfterExtraction
 		 * @param pageInfo
 		 */
@@ -516,7 +499,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Extracts the PageInfo string.
-	 *
+	 * 
 	 * @param url
 	 * @return
 	 */
@@ -569,7 +552,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Encodes the PageInfo part to the URL
-	 *
+	 * 
 	 * @param url
 	 * @param pageInfo
 	 * @return
@@ -596,7 +579,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * <li>pageMap.pageId.version
 	 * <li>pageMap.pageId (only if pageMap name starts with a letter)
 	 * </ul>
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected static class PageInfo
@@ -607,7 +590,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param pageId
 		 * @param versionNumber
 		 * @param pageMapName
@@ -664,6 +647,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * <li>pageMap.pageId.version
 		 * </ul>
 		 */
+		@Override
 		public String toString()
 		{
 			String pageMapName = this.pageMapName;
@@ -727,7 +711,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		/**
 		 * Method that rigidly checks if the string consists of digits only.
-		 *
+		 * 
 		 * @param string
 		 * @return
 		 */
@@ -756,7 +740,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * <li>pageMap.pageId (only in if pageMap name starts with a letter)
 		 * <li>pageMap.pageId.version
 		 * </ul>
-		 *
+		 * 
 		 * @param src
 		 * @return
 		 */
@@ -838,7 +822,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * BookmarkablePage request target that does a redirect after bookmarkable page was rendered
 	 * (only if the bookmarkable page is stateful though)
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static class HybridBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
@@ -848,7 +832,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param pageMapName
 		 * @param pageClass
 		 * @param pageParameters
@@ -863,6 +847,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			this.redirect = redirect;
 		}
 
+		@Override
 		protected Page newPage(Class pageClass, RequestCycle requestCycle)
 		{
 			Page page = super.newPage(pageClass, requestCycle);
@@ -872,6 +857,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			return page;
 		}
 
+		@Override
 		public void respond(RequestCycle requestCycle)
 		{
 			Page page = getPage(requestCycle);
@@ -889,6 +875,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
 	 */
+	@Override
 	public boolean matches(String path)
 	{
 		RequestCycle rc = RequestCycle.get();
@@ -930,6 +917,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		return false;
 	}
 
+	@Override
 	public String toString()
 	{
 		return "HybridUrlCodingStrategy[page=" + pageClassRef.get() + "]";

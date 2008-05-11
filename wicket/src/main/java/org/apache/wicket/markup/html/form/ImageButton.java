@@ -33,8 +33,11 @@ import org.apache.wicket.util.value.ValueMap;
  * {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
+ *            The model object type, can be only of type Resource, ResouceReference or a String
  */
-public class ImageButton extends Button implements IResourceListener
+public class ImageButton<T> extends Button<T> implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -120,7 +123,7 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ImageButton(final String id, final IModel model)
+	public ImageButton(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -132,6 +135,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Name of image
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public ImageButton(final String id, final String string)
 	{
 		this(id, new Model(string));
@@ -179,8 +183,9 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public ImageButton setModel(IModel model)
+	public ImageButton<T> setModel(IModel<T> model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.

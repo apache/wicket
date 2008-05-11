@@ -68,7 +68,7 @@ public class FormTester
 		/**
 		 * TODO need Javadoc from author.
 		 */
-		private final class SearchOptionByIndexVisitor implements IVisitor
+		private final class SearchOptionByIndexVisitor implements IVisitor<Component<?>>
 		{
 			int count = 0;
 
@@ -83,7 +83,7 @@ public class FormTester
 			/**
 			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 			 */
-			public Object component(Component component)
+			public Object component(Component<?> component)
 			{
 				if (count == index)
 				{
@@ -97,7 +97,7 @@ public class FormTester
 			}
 		}
 
-		private final FormComponent formComponent;
+		private final FormComponent<?> formComponent;
 
 		/**
 		 * Constructor.
@@ -105,7 +105,7 @@ public class FormTester
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 */
-		protected ChoiceSelector(FormComponent formComponent)
+		protected ChoiceSelector(FormComponent<?> formComponent)
 		{
 			this.formComponent = formComponent;
 		}
@@ -118,7 +118,8 @@ public class FormTester
 		 * @param value
 		 *            a <code>String</code> value
 		 */
-		protected abstract void assignValueToFormComponent(FormComponent formComponent, String value);
+		protected abstract void assignValueToFormComponent(FormComponent<?> formComponent,
+			String value);
 
 		/**
 		 * Selects a given index in a selectable <code>FormComponent</code>.
@@ -129,7 +130,7 @@ public class FormTester
 		{
 			if (formComponent instanceof RadioGroup)
 			{
-				Radio foundRadio = (Radio)formComponent.visitChildren(Radio.class,
+				Radio<?> foundRadio = (Radio<?>)formComponent.visitChildren(Radio.class,
 					new SearchOptionByIndexVisitor(index));
 				if (foundRadio == null)
 				{
@@ -139,7 +140,7 @@ public class FormTester
 			}
 			else if (formComponent instanceof CheckGroup)
 			{
-				Check foundCheck = (Check)formComponent.visitChildren(Check.class,
+				Check<?> foundCheck = (Check<?>)formComponent.visitChildren(Check.class,
 					new SearchOptionByIndexVisitor(index));
 				if (foundCheck == null)
 				{
@@ -171,19 +172,21 @@ public class FormTester
 		 *            the index to select
 		 * @return the id value at the selected index
 		 */
-		private String selectAbstractChoice(FormComponent formComponent, final int index)
+		@SuppressWarnings("unchecked")
+		private String selectAbstractChoice(FormComponent<?> formComponent, final int index)
 		{
 			try
 			{
 				Method getChoicesMethod = formComponent.getClass().getMethod("getChoices",
 					(Class[])null);
 				getChoicesMethod.setAccessible(true);
-				List choices = (List)getChoicesMethod.invoke(formComponent, (Object[])null);
+				List<Object> choices = (List<Object>)getChoicesMethod.invoke(formComponent,
+					(Object[])null);
 
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
 					"getChoiceRenderer", (Class[])null);
 				getChoiceRendererMethod.setAccessible(true);
-				IChoiceRenderer choiceRenderer = (IChoiceRenderer)getChoiceRendererMethod.invoke(
+				IChoiceRenderer<Object> choiceRenderer = (IChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
 					formComponent, (Object[])null);
 
 				return choiceRenderer.getIdValue(choices.get(index), index);
@@ -226,7 +229,7 @@ public class FormTester
 			 * @param formComponent
 			 *            a <code>FormComponent</code>
 			 */
-			protected MultipleChoiceSelector(FormComponent formComponent)
+			protected MultipleChoiceSelector(FormComponent<?> formComponent)
 			{
 				super(formComponent);
 				if (!allowMultipleChoice(formComponent))
@@ -241,7 +244,8 @@ public class FormTester
 			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
-			protected void assignValueToFormComponent(FormComponent formComponent, String value)
+			@Override
+			protected void assignValueToFormComponent(FormComponent<?> formComponent, String value)
 			{
 				// multiple selectable should retain selected option
 				addFormComponentValue(formComponent, value);
@@ -259,7 +263,7 @@ public class FormTester
 			 * @param formComponent
 			 *            a <code>FormComponent</code>
 			 */
-			protected SingleChoiceSelector(FormComponent formComponent)
+			protected SingleChoiceSelector(FormComponent<?> formComponent)
 			{
 				super(formComponent);
 			}
@@ -268,7 +272,8 @@ public class FormTester
 			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
-			protected void assignValueToFormComponent(FormComponent formComponent, String value)
+			@Override
+			protected void assignValueToFormComponent(FormComponent<?> formComponent, String value)
 			{
 				// single selectable should overwrite already selected option
 				setFormComponentValue(formComponent, value);
@@ -282,7 +287,7 @@ public class FormTester
 		 *            a <code>FormComponent</code>
 		 * @return ChoiceSelector a <code>ChoiceSelector</code>
 		 */
-		protected ChoiceSelector create(FormComponent formComponent)
+		protected ChoiceSelector create(FormComponent<?> formComponent)
 		{
 			if (formComponent == null)
 			{
@@ -313,7 +318,7 @@ public class FormTester
 		 *            a <code>FormComponent</code>
 		 * @return ChoiceSelector a <code>ChoiceSelector</code>
 		 */
-		protected ChoiceSelector createForMultiple(FormComponent formComponent)
+		protected ChoiceSelector createForMultiple(FormComponent<?> formComponent)
 		{
 			return new MultipleChoiceSelector(formComponent);
 		}
@@ -325,7 +330,7 @@ public class FormTester
 		 *            a <code>FormComponent</code>
 		 * @return <code>true</code> if the given FormComponent allows multiple choice
 		 */
-		private boolean allowMultipleChoice(FormComponent formComponent)
+		private boolean allowMultipleChoice(FormComponent<?> formComponent)
 		{
 			return formComponent instanceof CheckGroup ||
 				formComponent instanceof ListMultipleChoice;
@@ -347,7 +352,7 @@ public class FormTester
 	private final BaseWicketTester baseWicketTester;
 
 	/** <code>FormComponent</code> to be tested */
-	private final Form workingForm;
+	private final Form<?> workingForm;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
@@ -362,7 +367,7 @@ public class FormTester
 	 *            specifies whether to fill child <code>TextComponent</code>s with blank
 	 *            <code>String</code>s
 	 */
-	protected FormTester(final String path, final Form workingForm,
+	protected FormTester(final String path, final Form<?> workingForm,
 		final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
 		this.path = path;
@@ -373,7 +378,9 @@ public class FormTester
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void onFormComponent(final FormComponent formComponent)
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -413,14 +420,15 @@ public class FormTester
 				}
 				else if (formComponent instanceof CheckGroup)
 				{
-					final Collection checkGroupValues = (Collection)formComponent.getModelObject();
-					formComponent.visitChildren(Check.class, new IVisitor()
+					final Collection<?> checkGroupValues = (Collection<?>)formComponent.getModelObject();
+					formComponent.visitChildren(Check.class, new IVisitor<Component<?>>()
 					{
-						public Object component(Component component)
+						public Object component(Component<?> component)
 						{
 							if (checkGroupValues.contains(component.getModelObject()))
 							{
-								addFormComponentValue(formComponent, ((Check)component).getValue());
+								addFormComponentValue(formComponent,
+									((Check<?>)component).getValue());
 							}
 							return CONTINUE_TRAVERSAL;
 						}
@@ -434,14 +442,14 @@ public class FormTester
 					final Object value = formComponent.getModelObject();
 					if (value != null)
 					{
-						formComponent.visitChildren(Radio.class, new IVisitor()
+						formComponent.visitChildren(Radio.class, new IVisitor<Component<?>>()
 						{
-							public Object component(Component component)
+							public Object component(Component<?> component)
 							{
 								if (value.equals(component.getModelObject()))
 								{
 									addFormComponentValue(formComponent,
-										((Radio)component).getValue());
+										((Radio<?>)component).getValue());
 									return STOP_TRAVERSAL;
 								}
 								return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -459,7 +467,7 @@ public class FormTester
 	 * 
 	 * @return the working <code>Form</code>
 	 */
-	public Form getForm()
+	public Form<?> getForm()
 	{
 		return workingForm;
 	}
@@ -473,10 +481,10 @@ public class FormTester
 	 */
 	public String getTextComponentValue(String id)
 	{
-		Component c = getForm().get(id);
+		Component<?> c = getForm().get(id);
 		if (c instanceof AbstractTextComponent)
 		{
-			return ((AbstractTextComponent)c).getValue();
+			return ((AbstractTextComponent<?>)c).getValue();
 		}
 		return null;
 	}
@@ -498,7 +506,7 @@ public class FormTester
 	public void select(String formComponentId, int index)
 	{
 		checkClosed();
-		FormComponent component = (FormComponent)workingForm.get(formComponentId);
+		FormComponent<?> component = (FormComponent<?>)workingForm.get(formComponentId);
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
@@ -513,7 +521,7 @@ public class FormTester
 					component, new Object[0])).booleanValue();
 				if (wantOnSelectionChangedNotifications)
 				{
-					((DropDownChoice)component).onSelectionChanged();
+					((DropDownChoice<?>)component).onSelectionChanged();
 				}
 			}
 			catch (Exception e)
@@ -539,7 +547,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent)workingForm.get(formComponentId));
+		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent<?>)workingForm.get(formComponentId));
 
 		for (int i = 0; i < indexes.length; i++)
 		{
@@ -560,14 +568,14 @@ public class FormTester
 	{
 		checkClosed();
 
-		Component component = workingForm.get(formComponentId);
+		Component<?> component = workingForm.get(formComponentId);
 		if (component instanceof IFormSubmittingComponent)
 		{
 			setFormSubmittingComponentValue((IFormSubmittingComponent)component, value);
 		}
 		else if (component instanceof FormComponent)
 		{
-			setFormComponentValue((FormComponent)component, value);
+			setFormComponentValue((FormComponent<?>)component, value);
 		}
 	}
 
@@ -587,7 +595,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
+		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
 
 		if (formComponent instanceof FileUploadField == false)
 		{
@@ -673,16 +681,16 @@ public class FormTester
 	 * @param value
 	 *            a value to add
 	 */
-	private void addFormComponentValue(FormComponent formComponent, String value)
+	private void addFormComponentValue(FormComponent<?> formComponent, String value)
 	{
 		if (parameterExist(formComponent))
 		{
 			String[] values = baseWicketTester.getServletRequest().getParameterValues(
 				formComponent.getInputName());
 			// remove duplicated
-			HashSet all = new HashSet(Arrays.asList(values));
+			HashSet<String> all = new HashSet<String>(Arrays.asList(values));
 			all.add(value);
-			Map newParameters = new HashMap();
+			Map<String, String[]> newParameters = new HashMap<String, String[]>();
 			newParameters.put(formComponent.getInputName(), all.toArray(new String[all.size()]));
 			baseWicketTester.getServletRequest().setParameters(newParameters);
 		}
@@ -712,7 +720,7 @@ public class FormTester
 	 *            a <code>FormComponent</code>
 	 * @return <code>true</code> if the parameter exists in the <code>FormComponent</code>
 	 */
-	private boolean parameterExist(FormComponent formComponent)
+	private boolean parameterExist(FormComponent<?> formComponent)
 	{
 		String parameter = baseWicketTester.getServletRequest().getParameter(
 			formComponent.getInputName());
@@ -727,7 +735,7 @@ public class FormTester
 	 * @param value
 	 *            a value to add
 	 */
-	private void setFormComponentValue(FormComponent formComponent, String value)
+	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
 		baseWicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}

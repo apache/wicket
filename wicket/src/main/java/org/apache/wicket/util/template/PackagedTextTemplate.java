@@ -91,8 +91,7 @@ public class PackagedTextTemplate extends TextTemplate
 	/** class loader stream locator. */
 	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();
 
-	private static final MetaDataKey<TextTemplateCache> TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey<TextTemplateCache>(
-		TextTemplateCache.class)
+	private static final MetaDataKey<TextTemplateCache> TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey<TextTemplateCache>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -151,7 +150,7 @@ public class PackagedTextTemplate extends TextTemplate
 		String path = Packages.absolutePath(clazz, fileName);
 
 		Application app = Application.get();
-		TextTemplateCache cache = (TextTemplateCache)app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
+		TextTemplateCache cache = app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
 		// TODO implement cache
 
 		IResourceStream stream = streamLocator.locate(clazz, path);

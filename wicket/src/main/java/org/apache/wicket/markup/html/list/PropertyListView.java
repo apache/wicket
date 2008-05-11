@@ -18,17 +18,20 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.List;
 
-import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
 
 /**
- * Simple ListVew subclass that wraps its item models in a BoundCompoundPropertyModel. Useful for
- * lists where the item components will be mapped through property expressions.
+ * Simple ListVew subclass that wraps its item models in a CompoundPropertyModel. Useful for lists
+ * where the item components will be mapped through property expressions.
  * 
  * @author Nathan Hamblen
+ * 
+ * @param <T>
+ *            Model object type
  */
-public abstract class PropertyListView extends ListView
+public abstract class PropertyListView<T> extends ListView<T>
 {
 	/**
 	 * 
@@ -54,7 +57,7 @@ public abstract class PropertyListView extends ListView
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(final String id, final IModel model)
+	public PropertyListView(final String id, final IModel<List<T>> model)
 	{
 		super(id, model);
 	}
@@ -68,20 +71,21 @@ public abstract class PropertyListView extends ListView
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(final String id, final List list)
+	public PropertyListView(final String id, final List<T> list)
 	{
 		super(id, list);
 	}
 
 	/**
-	 * Wraps a ListItemModel in a BoundCompoundPropertyModel.
+	 * Wraps a ListItemModel in a CompoundPropertyModel.
 	 * 
 	 * @param model
 	 * @param index
-	 * @return a BoundCompoundPropertyModel wrapping a ListItemModel
+	 * @return a CompoundPropertyModel wrapping a ListItemModel
 	 */
-	protected IModel getListItemModel(final IModel model, final int index)
+	@Override
+	protected IModel<T> getListItemModel(final IModel<List<T>> model, final int index)
 	{
-		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
+		return new CompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}
 }

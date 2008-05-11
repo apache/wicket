@@ -250,7 +250,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @param <T>
 	 *            The component
 	 */
-	public static interface IVisitor<T extends Component< ? >>
+	public static interface IVisitor<T extends Component<?>>
 	{
 		/**
 		 * Value to return to continue a traversal.
@@ -380,7 +380,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		private static final long serialVersionUID = 1L;
 
 		/** Subject. */
-		private final Component< ? > component;
+		private final Component<?> component;
 
 		/** Former value. */
 		private final boolean enabled;
@@ -390,7 +390,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		 * 
 		 * @param component
 		 */
-		EnabledChange(final Component< ? > component)
+		EnabledChange(final Component<?> component)
 		{
 			this.component = component;
 			enabled = component.getFlag(FLAG_ENABLED);
@@ -423,7 +423,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		private static final long serialVersionUID = 1L;
 
 		/** Subject. */
-		private final Component< ? > component;
+		private final Component<?> component;
 
 		/** Former value. */
 		private final boolean visible;
@@ -433,7 +433,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		 * 
 		 * @param component
 		 */
-		VisibilityChange(final Component< ? > component)
+		VisibilityChange(final Component<?> component)
 		{
 			this.component = component;
 			visible = component.getFlag(FLAG_VISIBLE);
@@ -507,14 +507,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>(
-		IComponentBorder.class)
+	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
 	/* meta data for user specified markup id */
-	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>(String.class)
+	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -651,7 +650,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
 	 * for access in {@link MarkupContainer} and {@link Page}
 	 */
-	static final MetaDataKey<String> ADDED_AT_KEY = new MetaDataKey<String>(String.class)
+	static final MetaDataKey<String> ADDED_AT_KEY = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -660,7 +659,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * meta data key for line precise error logging for the moment of construction. Made package
 	 * private for access in {@link Page}
 	 */
-	static final MetaDataKey<String> CONSTRUCTED_AT_KEY = new MetaDataKey<String>(String.class)
+	static final MetaDataKey<String> CONSTRUCTED_AT_KEY = new MetaDataKey<String>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -673,7 +672,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	private String id;
 
 	/** Any parent container. */
-	private MarkupContainer< ? > parent;
+	private MarkupContainer<?> parent;
 
 	/**
 	 * I really dislike it, but for now we need it. Reason: due to transparent containers and
@@ -1054,8 +1053,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * request cycle metadata. The List is then iterated over in {@link #prepareForRender()} after
 	 * calling {@link #beforeRender()}, to initialize postponed components.
 	 */
-	private static final MetaDataKey<List<Component< ? >>> FEEDBACK_LIST = new MetaDataKey<List<Component< ? >>>(
-		List.class)
+	private static final MetaDataKey<List<Component<?>>> FEEDBACK_LIST = new MetaDataKey<List<Component<?>>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -1074,10 +1072,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		{
 			// this component is a feedback. Feedback must be initialized last, so that
 			// they can collect messages from other components
-			List<Component< ? >> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
+			List<Component<?>> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks == null)
 			{
-				feedbacks = new ArrayList<Component< ? >>();
+				feedbacks = new ArrayList<Component<?>>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
 			feedbacks.add(this);
@@ -1225,10 +1223,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *         found
 	 */
 	@SuppressWarnings("unchecked")
-	public final <Z> Z findParent(final Class< ? extends Z> c)
+	public final <Z> Z findParent(final Class<? extends Z> c)
 	{
 		// Start with immediate parent
-		MarkupContainer< ? > current = parent;
+		MarkupContainer<?> current = parent;
 
 		// Walk up containment hierarchy
 		while (current != null)
@@ -1250,9 +1248,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * @return The nearest markup container with associated markup
 	 */
-	public final MarkupContainer< ? > findParentWithAssociatedMarkup()
+	public final MarkupContainer<?> findParentWithAssociatedMarkup()
 	{
-		MarkupContainer< ? > container = parent;
+		MarkupContainer<?> container = parent;
 		while (container != null)
 		{
 			if (container.hasAssociatedMarkup())
@@ -1310,7 +1308,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @deprecated To be removed. Please use/ override {@link #getConverter(Class)} instead.
 	 */
 	@Deprecated
-	public final IConverter< ? > getConverter()
+	public final IConverter<?> getConverter()
 	{
 		throw new UnsupportedOperationException("use #getConverter(Class) instead");
 	}
@@ -1359,7 +1357,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * @return Innermost model for this component
 	 */
-	public final IModel< ? > getInnermostModel()
+	public final IModel<?> getInnermostModel()
 	{
 		return getInnermostModel(getModel());
 	}
@@ -1693,10 +1691,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
 	 */
-	public final Page< ? > getPage()
+	public final Page<?> getPage()
 	{
 		// Search for nearest Page
-		final Page< ? > page = findPage();
+		final Page<?> page = findPage();
 
 		// If no Page was found
 		if (page == null)
@@ -1731,7 +1729,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return Any parent container, or null if there is none
 	 */
-	public final MarkupContainer< ? > getParent()
+	public final MarkupContainer<?> getParent()
 	{
 		return parent;
 	}
@@ -1744,7 +1742,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	public final String getPath()
 	{
 		final PrependingStringBuffer buffer = new PrependingStringBuffer(32);
-		for (Component< ? > c = this; c != null; c = c.getParent())
+		for (Component<?> c = this; c != null; c = c.getParent())
 		{
 			if (buffer.length() > 0)
 			{
@@ -1814,7 +1812,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 */
 	public long getSizeInBytes()
 	{
-		final MarkupContainer< ? > originalParent = parent;
+		final MarkupContainer<?> originalParent = parent;
 		parent = null;
 		long size = -1;
 		try
@@ -1848,7 +1846,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @return The formatted string
 	 * @see Localizer
 	 */
-	public final String getString(final String key, final IModel< ? > model)
+	public final String getString(final String key, final IModel<?> model)
 	{
 		return getLocalizer().getString(key, this, model);
 	}
@@ -1863,8 +1861,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @return The formatted string
 	 * @see Localizer
 	 */
-	public final String getString(final String key, final IModel< ? > model,
-		final String defaultValue)
+	public final String getString(final String key, final IModel<?> model, final String defaultValue)
 	{
 		return getLocalizer().getString(key, this, model, defaultValue);
 	}
@@ -1998,7 +1995,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @deprecated use getParent().contains(component, false)
 	 */
 	@Deprecated
-	public final boolean isAncestorOf(final Component< ? > component)
+	public final boolean isAncestorOf(final Component<?> component)
 	{
 		return getParent().contains(component, false);
 		// // Walk up containment hierarchy
@@ -2123,7 +2120,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
-		Component< ? > component = this;
+		Component<?> component = this;
 		while (component != null)
 		{
 			if (component.determineVisibility())
@@ -2181,7 +2178,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The class of page to create
 	 * @return The new page
 	 */
-	public final Page newPage(final Class< ? extends Page> c)
+	public final Page newPage(final Class<? extends Page> c)
 	{
 		return getPageFactory().newPage(c);
 	}
@@ -2195,7 +2192,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Any parameters to pass to the constructor
 	 * @return The new page
 	 */
-	public final Page newPage(final Class< ? extends Page> c, final PageParameters parameters)
+	public final Page newPage(final Class<? extends Page> c, final PageParameters parameters)
 	{
 		return getPageFactory().newPage(c, parameters);
 	}
@@ -2209,12 +2206,12 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	public final void prepareForRender()
 	{
 		beforeRender();
-		List<Component< ? >> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
+		List<Component<?>> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 		if (feedbacks != null)
 		{
-			for (Iterator<Component< ? >> i = feedbacks.iterator(); i.hasNext();)
+			for (Iterator<Component<?>> i = feedbacks.iterator(); i.hasNext();)
 			{
-				Component< ? > feedback = i.next();
+				Component<?> feedback = i.next();
 				feedback.internalBeforeRender();
 			}
 		}
@@ -2456,7 +2453,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		else
 		{
 			// Save the parent's markup stream to re-assign it at the end
-			MarkupContainer< ? > parent = getParent();
+			MarkupContainer<?> parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
 			MarkupStream markupStream = locateMarkupStream();
 
@@ -2634,7 +2631,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @param replacement
 	 *            component to replace this one
 	 */
-	public void replaceWith(Component< ? > replacement)
+	public void replaceWith(Component<?> replacement)
 	{
 		if (replacement == null)
 		{
@@ -2659,7 +2656,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The component to compare with
 	 * @return True if the given component's model is the same as this component's model.
 	 */
-	public final boolean sameInnermostModel(final Component< ? > component)
+	public final boolean sameInnermostModel(final Component<?> component)
 	{
 		return sameInnermostModel(component.getModel());
 	}
@@ -2669,11 +2666,11 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The model to compare with
 	 * @return True if the given component's model is the same as this component's model.
 	 */
-	public final boolean sameInnermostModel(final IModel< ? > model)
+	public final boolean sameInnermostModel(final IModel<?> model)
 	{
 		// Get the two models
-		IModel< ? > thisModel = getModel();
-		IModel< ? > thatModel = model;
+		IModel<?> thisModel = getModel();
+		IModel<?> thatModel = model;
 
 		// If both models are non-null they could be the same
 		if (thisModel != null && thatModel != null)
@@ -3041,7 +3038,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
 	 */
-	public final void setResponsePage(final Class< ? extends Page> cls)
+	public final void setResponsePage(final Class<? extends Page> cls)
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
@@ -3056,7 +3053,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The parameters for this bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class< ? extends Page> cls, PageParameters parameters)
+	public final void setResponsePage(final Class<? extends Page> cls, PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -3169,7 +3166,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class< ? extends Page> pageClass,
+	public final CharSequence urlFor(final Class<? extends Page> pageClass,
 		final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
@@ -3208,8 +3205,8 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IPageMap pageMap,
-		final Class< ? extends Page> pageClass, final PageParameters parameters)
+	public final CharSequence urlFor(final IPageMap pageMap, final Class<? extends Page> pageClass,
+		final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -3265,11 +3262,11 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final Object visitParents(final Class< ? extends MarkupContainer< ? >> c,
-		final IVisitor<Component< ? >> visitor)
+	public final Object visitParents(final Class<? extends MarkupContainer<?>> c,
+		final IVisitor<Component<?>> visitor)
 	{
 		// Start here
-		Component< ? > current = this;
+		Component<?> current = this;
 
 		// Walk up containment hierarchy
 		while (current != null)
@@ -3413,7 +3410,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @param component
 	 *            the component which is about to be added or removed
 	 */
-	protected void checkHierarchyChange(final Component< ? > component)
+	protected void checkHierarchyChange(final Component<?> component)
 	{
 		// Throw exception if modification is attempted during rendering
 		if (!component.isAuto() && getFlag(FLAG_RENDERING))
@@ -3493,7 +3490,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @return The subset of the currently coupled behaviors that are of the provided type as a
 	 *         unmodifiable list or null
 	 */
-	protected List<IBehavior> getBehaviors(Class< ? extends IBehavior> type)
+	protected List<IBehavior> getBehaviors(Class<? extends IBehavior> type)
 	{
 		List<IBehavior> behaviors = getBehaviorsImpl();
 		if (behaviors == null)
@@ -3544,12 +3541,12 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The model
 	 * @return The innermost (most nested) model
 	 */
-	protected final IModel< ? > getInnermostModel(final IModel< ? > model)
+	protected final IModel<?> getInnermostModel(final IModel<?> model)
 	{
-		IModel< ? > nested = model;
+		IModel<?> nested = model;
 		while (nested != null && nested instanceof IWrapModel)
 		{
-			final IModel< ? > next = ((IWrapModel< ? >)nested).getWrappedModel();
+			final IModel<?> next = ((IWrapModel<?>)nested).getWrappedModel();
 			if (nested == next)
 			{
 				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
@@ -3596,17 +3593,17 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	{
 		IModel<T> foundModel = null;
 		// Search parents for CompoundPropertyModel
-		for (Component< ? > current = getParent(); current != null; current = current.getParent())
+		for (Component<?> current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
 			// Don't call the getModel() that could initialize many inbetween
 			// completely useless models.
 			// IModel model = current.getModel();
-			IModel< ? > model = current.getModelImpl();
+			IModel<?> model = current.getModelImpl();
 
 			if (model instanceof IWrapModel && !(model instanceof IComponentInheritedModel))
 			{
-				model = ((IWrapModel< ? >)model).getWrappedModel();
+				model = ((IWrapModel<?>)model).getWrappedModel();
 			}
 
 			if (model instanceof IComponentInheritedModel)
@@ -3893,7 +3890,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
-				Iterator< ? extends IBehavior> tagBehaviors = tag.getBehaviors();
+				Iterator<? extends IBehavior> tagBehaviors = tag.getBehaviors();
 				while (tagBehaviors.hasNext())
 				{
 					final IBehavior behavior = tagBehaviors.next();
@@ -4062,7 +4059,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Path to component
 	 * @return The component at the path
 	 */
-	Component< ? > get(final String path)
+	Component<?> get(final String path)
 	{
 		// Path to this component is an empty path
 		if (path.equals(""))
@@ -4100,7 +4097,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	final boolean isAuto()
 	{
 		// Search up hierarchy for FLAG_AUTO
-		for (Component< ? > current = this; current != null; current = current.getParent())
+		for (Component<?> current = this; current != null; current = current.getParent())
 		{
 			if (current.getFlag(FLAG_AUTO))
 			{
@@ -4207,7 +4204,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @param parent
 	 *            The parent container
 	 */
-	final void setParent(final MarkupContainer< ? > parent)
+	final void setParent(final MarkupContainer<?> parent)
 	{
 		if (this.parent != null && log.isDebugEnabled())
 		{

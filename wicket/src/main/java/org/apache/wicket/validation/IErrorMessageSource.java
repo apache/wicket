@@ -55,5 +55,5 @@ public interface IErrorMessageSource
 	 * @return the given <code>String</code> with the variables substituted
 	 */
 	// FIXME 2.0 this doesnt need to be in this interface, its just a straight var substitution
-	String substitute(String string, Map vars) throws IllegalStateException;
+	String substitute(String string, Map<String, String> vars) throws IllegalStateException;
 }

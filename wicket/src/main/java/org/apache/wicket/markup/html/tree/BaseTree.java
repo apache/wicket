@@ -413,11 +413,11 @@ public abstract class BaseTree extends AbstractTree
 	 *            The link call back
 	 * @return The link component
 	 */
-	public MarkupContainer newLink(String id, final ILinkCallback callback)
+	public MarkupContainer<? extends Object> newLink(String id, final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link(id)
+			return new Link<Object>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -433,7 +433,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink(id)
+			return new AjaxLink<Object>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -449,7 +449,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink(id)
+			return new AjaxFallbackLink<Object>(id)
 			{
 				private static final long serialVersionUID = 1L;
 

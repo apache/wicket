@@ -54,7 +54,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String id, final Class pageClass)
+	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass)
 	{
 		this(id, pageClass, null);
 	}
@@ -104,7 +104,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * @param parameters
 	 *            The parameters to pass to the new page when the link is clicked
 	 */
-	public BookmarkablePageLink(final String id, final Class pageClass,
+	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
 		final PageParameters parameters)
 	{
 		super(id);
@@ -128,7 +128,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * 
 	 * @return Page class
 	 */
-	public final Class< ? extends Page< ? >> getPageClass()
+	public final Class<? extends Page<?>> getPageClass()
 	{
 		return Classes.resolveClass(pageClassName);
 	}

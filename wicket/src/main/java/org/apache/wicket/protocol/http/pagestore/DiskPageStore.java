@@ -515,6 +515,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		initPageSavingThread();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadIndex()
 	{
 		File storeFolder = getStoreFolder();
@@ -525,13 +526,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				InputStream stream = new FileInputStream(index);
 				ObjectInputStream ois = new ObjectInputStream(stream);
-				Map map = (Map)ois.readObject();
+				Map<String, SessionEntry> map = (Map<String, SessionEntry>)ois.readObject();
 				sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>(map);
-				for (Iterator entries = sessionIdToEntryMap.entrySet().iterator(); entries.hasNext();)
+				for (Iterator<Entry<String, SessionEntry>> entries = sessionIdToEntryMap.entrySet()
+					.iterator(); entries.hasNext();)
 				{
 					// initialize the diskPageStore reference
-					Entry entry = (Entry)entries.next();
-					SessionEntry sessionEntry = (SessionEntry)entry.getValue();
+					Entry<String, SessionEntry> entry = entries.next();
+					SessionEntry sessionEntry = entry.getValue();
 					sessionEntry.diskPageStore = this;
 				}
 				stream.close();
@@ -622,11 +624,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			// make sure that all pages are saved in asynchronous mode
 			synchronized (pagesToSaveAll)
 			{
-				for (Iterator i = pagesToSaveAll.entrySet().iterator(); i.hasNext();)
+				for (Entry<String, List<SerializedPage>> entry : pagesToSaveAll.entrySet())
 				{
-					Entry entry = (Entry)i.next();
-					String sessionId = (String)entry.getKey();
-					List pages = (List)entry.getValue();
+					String sessionId = entry.getKey();
+					List<SerializedPage> pages = entry.getValue();
 					synchronized (pages)
 					{
 						flushPagesToSaveList(sessionId, pages);
@@ -644,7 +645,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 	}
 
-	private Map /* <String, SessionEntry> */<String, SessionEntry> sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>();
+	private Map<String, SessionEntry> sessionIdToEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
 	/**
 	 * Returns the SessionEntry for session with given id. If the entry does not yet exist and the
@@ -693,7 +694,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				// we need to make sure that the there are no pending pages to
 				// be saved before loading a page
-				List pages = getPagesToSaveList(sessionId);
+				List<SerializedPage> pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
 					flushPagesToSaveList(sessionId, pages);
@@ -755,7 +756,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				// we need to make sure that the there are no pending pages to
 				// be saved before removing the page (or pagemap)
-				List pages = getPagesToSaveList(sessionId);
+				List<SerializedPage> pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
 					flushPagesToSaveList(sessionId, pages);
@@ -830,7 +831,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			}
 			else
 			{
-				List pages = getPagesToSaveList(sessionId);
+				List<SerializedPage> pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
 					flushPagesToSaveList(sessionId, pages);
@@ -843,10 +844,10 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	// map from session id to serialized page list
 	// this contains lists for all active sessions
-	private final Map /* <String, List<SerializedPage>> */<String, List> pagesToSaveAll = new ConcurrentHashMap<String, List>();
+	private final Map<String, List<SerializedPage>> pagesToSaveAll = new ConcurrentHashMap<String, List<SerializedPage>>();
 
 	// contains list of serialized pages to be saved - only non empty lists
-	private final Map /* <String, List<SerializedPage>> */<String, List> pagesToSaveActive = new ConcurrentHashMap<String, List>();
+	private final Map<String, List<SerializedPage>> pagesToSaveActive = new ConcurrentHashMap<String, List<SerializedPage>>();
 
 	/**
 	 * Returns the list of pages to be saved for the specified session id. If the list is not found,
@@ -855,9 +856,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param sessionId
 	 * @return
 	 */
-	protected List getPagesToSaveList(String sessionId)
+	protected List<SerializedPage> getPagesToSaveList(String sessionId)
 	{
-		List list = pagesToSaveAll.get(sessionId);
+		List<SerializedPage> list = pagesToSaveAll.get(sessionId);
 		if (list == null)
 		{
 			synchronized (pagesToSaveAll)
@@ -865,7 +866,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				list = pagesToSaveAll.get(sessionId);
 				if (list == null)
 				{
-					list = new ArrayList();
+					list = new ArrayList<SerializedPage>();
 					pagesToSaveAll.put(sessionId, list);
 				}
 			}
@@ -879,15 +880,15 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param sessionId
 	 * @param list
 	 */
-	protected void flushPagesToSaveList(String sessionId, List /* <SerializedPage> */list)
+	protected void flushPagesToSaveList(String sessionId, List<SerializedPage> list)
 	{
 		if (list != null)
 		{
-			for (Iterator i = list.iterator(); i.hasNext();)
+			for (Iterator<SerializedPage> i = list.iterator(); i.hasNext();)
 			{
 				try
 				{
-					SerializedPage page = (SerializedPage)i.next();
+					SerializedPage page = i.next();
 					getSessionEntry(sessionId, true).savePage(page);
 				}
 				catch (Exception e)
@@ -952,7 +953,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				{
 					Map.Entry entry = (Map.Entry)i.next();
 					String sessionId = (String)entry.getKey();
-					List pages = (List)entry.getValue();
+					List<SerializedPage> pages = (List<SerializedPage>)entry.getValue();
 
 					synchronized (pages)
 					{
@@ -1098,7 +1099,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				// we need to make sure that the there are no pending pages to
 				// be saved before loading a page
-				List pages = getPagesToSaveList(sessionId);
+				List<SerializedPage> pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
 					flushPagesToSaveList(sessionId, pages);
@@ -1256,7 +1257,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				// we need to make sure that the there are no pending pages to
 				// be saved before loading a page
-				List pages = getPagesToSaveList(sessionId);
+				List<SerializedPage> pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
 					flushPagesToSaveList(sessionId, pages);

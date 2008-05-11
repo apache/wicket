@@ -19,10 +19,12 @@ package org.apache.wicket.protocol.http;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
@@ -267,21 +269,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.PageMap#get(int, int)
 		 */
+		@Override
 		public Page get(int id, int versionNumber)
 		{
-			HashMap pageMaps = (HashMap)usedPages.get();
-			if (pageMaps == null)
-			{
-				pageMaps = new HashMap();
-				usedPages.set(pageMaps);
-			}
-			IntHashMap pages = (IntHashMap)pageMaps.get(getName());
-			if (pages == null)
-			{
-				pages = new IntHashMap();
-				pageMaps.put(getName(), pages);
-			}
-
+			IntHashMap<Page<?>> pages = getUsedPages(getName());
 			// for now i only get by id.
 			// does it really make any sense that there are multiply instances
 			// of the
@@ -319,6 +310,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.PageMap#put(org.apache.wicket.Page)
 		 */
+		@Override
 		public void put(Page page)
 		{
 			if (!page.isPageStateless())
@@ -339,6 +331,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.PageMap#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			super.clear();
@@ -352,6 +345,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.PageMap#removeEntry(org.apache.wicket.session.pagemap.IPageMapEntry)
 		 */
+		@Override
 		public void removeEntry(IPageMapEntry entry)
 		{
 			String sessionId = getSession().getId();
@@ -628,15 +622,30 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 	}
 
-	static final ThreadLocal usedPages = new ThreadLocal();
+	private static MetaDataKey<Map<String, IntHashMap<Page<?>>>> USED_PAGES = new MetaDataKey<Map<String, IntHashMap<Page<?>>>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
+	 * @param pageMapName
 	 * @return
 	 */
-	public static ThreadLocal getUsedPages()
+	public static IntHashMap<Page<?>> getUsedPages(String pageMapName)
 	{
-		// TODO: Move this to RequestCycle metadata!
-		return usedPages;
+		Map<String, IntHashMap<Page<?>>> usedPages = RequestCycle.get().getMetaData(USED_PAGES);
+		if (usedPages == null)
+		{
+			usedPages = new HashMap<String, IntHashMap<Page<?>>>();
+			RequestCycle.get().setMetaData(USED_PAGES, usedPages);
+		}
+		IntHashMap<Page<?>> intHashMap = usedPages.get(pageMapName);
+		if (intHashMap == null)
+		{
+			intHashMap = new IntHashMap<Page<?>>();
+			usedPages.put(pageMapName, intHashMap);
+		}
+		return intHashMap;
 	}
 
 	private final IPageStore pageStore;
@@ -670,6 +679,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see org.apache.wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
 	 *      org.apache.wicket.Session)
 	 */
+	@Override
 	public IPageMap createPageMap(String name)
 	{
 		return new SecondLevelCachePageMap(Session.get().getId(), Application.get(), name);
@@ -678,15 +688,16 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#onEndRequest(org.apache.wicket.Request)
 	 */
+	@Override
 	public void onEndRequest(Request request)
 	{
 		super.onEndRequest(request);
-		usedPages.set(null);
 	}
 
 	/**
 	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 		super.destroy();
@@ -704,6 +715,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @see org.apache.wicket.protocol.http.HttpSessionStore#newVersionManager(org.apache.wicket.Page)
 	 */
+	@Override
 	public IPageVersionManager newVersionManager(Page page)
 	{
 		return new SecondLevelCachePageVersionManager(page);
@@ -713,6 +725,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see org.apache.wicket.session.ISessionStore#setAttribute(org.apache.wicket.Request,
 	 *      java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void setAttribute(Request request, String name, Object value)
 	{
 		// ignore all pages, they are stored through the pagemap
@@ -725,6 +738,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#onUnbind(java.lang.String)
 	 */
+	@Override
 	protected void onUnbind(String sessionId)
 	{
 		getStore().unbind(sessionId);

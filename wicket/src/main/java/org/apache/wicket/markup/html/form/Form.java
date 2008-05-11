@@ -147,9 +147,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			if (component instanceof FormComponent)
 			{
-				FormComponent< ? > formComponent = (FormComponent< ? >)component;
+				FormComponent<?> formComponent = (FormComponent<?>)component;
 
-				Form< ? > form = formComponent.getForm();
+				Form<?> form = formComponent.getForm();
 				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
 				{
 					// do not validate formComponent or any of formComponent's children
@@ -177,7 +177,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		 * 
 		 * @param formComponent
 		 */
-		public abstract void validate(FormComponent< ? > formComponent);
+		public abstract void validate(FormComponent<?> formComponent);
 	}
 
 	/**
@@ -502,7 +502,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -535,9 +535,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
 		IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)getPage().visitChildren(
-			IFormSubmittingComponent.class, new IVisitor<Component< ? >>()
+			IFormSubmittingComponent.class, new IVisitor<Component<?>>()
 			{
-				public Object component(final Component< ? > component)
+				public Object component(final Component<?> component)
 				{
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
@@ -603,7 +603,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
-		Form< ? > root = getRootForm();
+		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
 			root.getHiddenFieldId()).append("').value='").append(url).append(
 			"';document.getElementById('").append(root.getJavascriptId()).append("').submit();");
@@ -629,14 +629,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * 
 	 * @return root form or this form
 	 */
-	public Form< ? > getRootForm()
+	public Form<?> getRootForm()
 	{
-		Form< ? > form;
-		Form< ? > parent = this;
+		Form<?> form;
+		Form<?> parent = this;
 		do
 		{
 			form = parent;
-			parent = (Form< ? >)form.findParent(Form.class);
+			parent = form.findParent(Form.class);
 		}
 		while (parent != null);
 
@@ -726,7 +726,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				// Component must implement persister interface and
 				// persistence for that component must be enabled.
@@ -782,7 +782,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				else
 				{
 					// this is the root form
-					Form< ? > formToProcess = this;
+					Form<?> formToProcess = this;
 
 					// find out whether it was a nested form that was submitted
 					if (submittingComponent != null)
@@ -866,11 +866,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		onError();
 		// call onError on nested forms
-		visitChildren(Form.class, new IVisitor<Component< ? >>()
+		visitChildren(Form.class, new IVisitor<Component<?>>()
 		{
-			public Object component(Component< ? > component)
+			public Object component(Component<?> component)
 			{
-				final Form< ? > form = (Form< ? >)component;
+				final Form<?> form = (Form<?>)component;
 				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
 				{
 					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -892,11 +892,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		setFlag(FLAG_SUBMITTED, true);
 
-		visitChildren(Form.class, new IVisitor<Component< ? >>()
+		visitChildren(Form.class, new IVisitor<Component<?>>()
 		{
-			public Object component(Component< ? > component)
+			public Object component(Component<?> component)
 			{
-				Form< ? > form = (Form< ? >)component;
+				Form<?> form = (Form<?>)component;
 				if (form.isEnabled() && form.isEnableAllowed() && isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
@@ -927,7 +927,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1009,7 +1009,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				formComponent.setVersioned(isVersioned);
 			}
@@ -1025,11 +1025,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	public final void visitFormComponents(final FormComponent.IVisitor visitor)
 	{
-		visitChildren(FormComponent.class, new IVisitor<Component< ? >>()
+		visitChildren(FormComponent.class, new IVisitor<Component<?>>()
 		{
-			public Object component(final Component< ? > component)
+			public Object component(final Component<?> component)
 			{
-				visitor.formComponent((FormComponent< ? >)component);
+				visitor.formComponent((FormComponent<?>)component);
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1065,14 +1065,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		if (getParent() instanceof Border)
 		{
-			MarkupContainer< ? > border = getParent();
-			Iterator<Component< ? >> iter = border.iterator();
+			MarkupContainer<?> border = getParent();
+			Iterator<Component<?>> iter = border.iterator();
 			while (iter.hasNext())
 			{
-				Component< ? > child = iter.next();
+				Component<?> child = iter.next();
 				if (child instanceof FormComponent)
 				{
-					visitor.formComponent((FormComponent< ? >)child);
+					visitor.formComponent((FormComponent<?>)child);
 				}
 			}
 		}
@@ -1085,9 +1085,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private boolean anyFormComponentError()
 	{
-		final Object value = visitChildren(new IVisitor<Component< ? >>()
+		final Object value = visitChildren(new IVisitor<Component<?>>()
 		{
-			public Object component(final Component< ? > component)
+			public Object component(final Component<?> component)
 			{
 				if (component.hasErrorMessage())
 				{
@@ -1211,7 +1211,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1241,7 +1241,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 			{
 				@Override
-				public void onFormComponent(final FormComponent< ? > formComponent)
+				public void onFormComponent(final FormComponent<?> formComponent)
 				{
 					if (formComponent.isVisibleInHierarchy())
 					{
@@ -1288,7 +1288,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
 
 		// add the submitting component
-		final Component< ? > submittingComponent = (Component< ? >)defaultSubmittingComponent;
+		final Component<?> submittingComponent = (Component<?>)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" name=\"");
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=Wicket.$('");
@@ -1334,7 +1334,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		// when the given submitting component is not null, it means that it was the
 		// submitting component
-		Form< ? > formToProcess = this;
+		Form<?> formToProcess = this;
 		if (submittingComponent != null)
 		{
 			// use the form which the submittingComponent has submitted for further processing
@@ -1346,11 +1346,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		formToProcess.onSubmit();
 
 		// call onSubmit on nested forms
-		formToProcess.visitChildren(Form.class, new IVisitor<Form< ? >>()
+		formToProcess.visitChildren(Form.class, new IVisitor<Form<?>>()
 		{
-			public Object component(Form< ? > component)
+			public Object component(Form<?> component)
 			{
-				Form< ? > form = component;
+				Form<?> form = component;
 				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
 				{
 					form.onSubmit();
@@ -1492,7 +1492,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				// If form component is using form model
 				if (formComponent.sameInnermostModel(Form.this))
@@ -1512,7 +1512,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1536,11 +1536,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private void markNestedFormComponentsValid()
 	{
-		visitChildren(Form.class, new IVisitor<Form< ? >>()
+		visitChildren(Form.class, new IVisitor<Form<?>>()
 		{
-			public Object component(Form< ? > component)
+			public Object component(Form<?> component)
 			{
-				Form< ? > form = component;
+				Form<?> form = component;
 				if (form.isEnableAllowed() && form.isEnabled() && form.isVisibleInHierarchy())
 				{
 					form.internalMarkFormComponentsValid();
@@ -1560,7 +1560,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(final FormComponent< ? > formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				if (formComponent.getForm() == Form.this && formComponent.isVisibleInHierarchy())
 				{
@@ -1674,7 +1674,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			// if a default submitting component was set, handle the rendering of that
 			if (defaultSubmittingComponent instanceof Component)
 			{
-				final Component< ? > submittingComponent = (Component< ? >)defaultSubmittingComponent;
+				final Component<?> submittingComponent = (Component<?>)defaultSubmittingComponent;
 				if (submittingComponent.isVisibleInHierarchy() && submittingComponent.isEnabled())
 				{
 					appendDefaultButtonField(markupStream, openTag);
@@ -1735,7 +1735,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(FormComponent< ? > formComponent)
+			public void onFormComponent(FormComponent<?> formComponent)
 			{
 				if (formComponent.isVisible() && formComponent.isMultiPart())
 				{
@@ -1777,9 +1777,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private final void updateNestedFormComponentModels()
 	{
-		visitChildren(Form.class, new IVisitor<Form< ? >>()
+		visitChildren(Form.class, new IVisitor<Form<?>>()
 		{
-			public Object component(Form< ? > form)
+			public Object component(Form<?> form)
 			{
 				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
 				{
@@ -1801,9 +1801,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			@Override
-			public void validate(FormComponent< ? > formComponent)
+			public void validate(FormComponent<?> formComponent)
 			{
-				Form< ? > form = formComponent.getForm();
+				Form<?> form = formComponent.getForm();
 				if (form == Form.this)
 				{
 					// Potentially update the model
@@ -1841,9 +1841,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			@Override
-			public void validate(final FormComponent< ? > formComponent)
+			public void validate(final FormComponent<?> formComponent)
 			{
-				final Form< ? > form = formComponent.getForm();
+				final Form<?> form = formComponent.getForm();
 				if (form == Form.this && form.isEnabled() && form.isEnableAllowed() &&
 					form.isVisibleInHierarchy())
 				{
@@ -1862,7 +1862,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @return true if the form component and all its parents are visible and there component is in
 	 *         page's hierarchy
 	 */
-	private boolean isFormComponentVisibleInPage(FormComponent< ? > fc)
+	private boolean isFormComponentVisibleInPage(FormComponent<?> fc)
 	{
 		if (fc == null)
 		{
@@ -1884,7 +1884,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
 		}
 
-		final FormComponent< ? >[] dependents = validator.getDependentFormComponents();
+		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
 		boolean validate = true;
 
@@ -1892,7 +1892,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			for (int j = 0; j < dependents.length; j++)
 			{
-				final FormComponent< ? > dependent = dependents[j];
+				final FormComponent<?> dependent = dependents[j];
 				// check if the dependent component is valid
 				if (!dependent.isValid())
 				{
@@ -1941,9 +1941,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private void validateNestedForms()
 	{
-		visitChildren(Form.class, new IVisitor<Form< ? >>()
+		visitChildren(Form.class, new IVisitor<Form<?>>()
 		{
-			public Object component(Form< ? > form)
+			public Object component(Form<?> form)
 			{
 				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
 				{

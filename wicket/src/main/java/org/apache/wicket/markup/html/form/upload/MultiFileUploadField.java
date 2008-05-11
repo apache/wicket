@@ -219,7 +219,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		if (inputArrayCache == null)
 		{
 			// this array will aggregate all input names
-			ArrayList names = null;
+			ArrayList<String> names = null;
 
 			final Request request = getRequest();
 			if (request instanceof IMultipartWebRequest)
@@ -243,7 +243,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 						// make sure the fileitem belongs to this component and
 						// is not empty
 
-						names = (names != null) ? names : new ArrayList();
+						names = (names != null) ? names : new ArrayList<String>();
 						names.add(name);
 					}
 				}
@@ -251,7 +251,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 			if (names != null)
 			{
-				inputArrayCache = (String[])names.toArray(new String[names.size()]);
+				inputArrayCache = names.toArray(new String[names.size()]);
 			}
 		}
 		return inputArrayCache;

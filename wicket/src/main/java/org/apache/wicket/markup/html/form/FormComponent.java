@@ -108,12 +108,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		{
 			if (component instanceof FormComponent)
 			{
-				onFormComponent((FormComponent< ? >)component);
+				onFormComponent((FormComponent<?>)component);
 			}
 			return Component.IVisitor.CONTINUE_TRAVERSAL;
 		}
 
-		protected abstract void onFormComponent(FormComponent< ? > formComponent);
+		protected abstract void onFormComponent(FormComponent<?> formComponent);
 	}
 
 	/**
@@ -138,14 +138,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 */
 	private class MessageSource implements IErrorMessageSource
 	{
-		private final Set/* <String> */triedKeys = new LinkedHashSet();
+		private final Set<String> triedKeys = new LinkedHashSet<String>();
 
 		/**
 		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
 		 */
 		public String getMessage(String key)
 		{
-			final FormComponent formComponent = FormComponent.this;
+			final FormComponent<T> formComponent = FormComponent.this;
 
 			// retrieve prefix that will be used to construct message keys
 			String prefix = formComponent.getValidatorKeyPrefix();
@@ -207,7 +207,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 			return message;
 		}
 
-		private String getString(Localizer localizer, String key, Component component)
+		private String getString(Localizer localizer, String key, Component<?> component)
 		{
 			triedKeys.add(key);
 			return localizer.getString(key, component, "");
@@ -217,7 +217,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		 * @see org.apache.wicket.validation.IErrorMessageSource#substitute(java.lang.String,
 		 *      java.util.Map)
 		 */
-		public String substitute(String string, Map vars) throws IllegalStateException
+		public String substitute(String string, Map<String, String> vars)
+			throws IllegalStateException
 		{
 			return new MapVariableInterpolator(string, addDefaultVars(vars), Application.get()
 				.getResourceSettings()
@@ -232,17 +233,17 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		 *            original params map
 		 * @return new params map
 		 */
-		private Map addDefaultVars(Map params)
+		private Map<String, String> addDefaultVars(Map params)
 		{
 			// create and fill the new params map
-			final HashMap fullParams;
+			final HashMap<String, String> fullParams;
 			if (params == null)
 			{
-				fullParams = new HashMap(6);
+				fullParams = new HashMap<String, String>(6);
 			}
 			else
 			{
-				fullParams = new HashMap(params.size() + 6);
+				fullParams = new HashMap<String, String>(params.size() + 6);
 				fullParams.putAll(params);
 			}
 
@@ -270,10 +271,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		/**
 		 * @return value of label param for this form component
 		 */
-		private Object getLabel()
+		private String getLabel()
 		{
-			final FormComponent fc = FormComponent.this;
-			Object label = null;
+			final FormComponent<T> fc = FormComponent.this;
+			String label = null;
 
 			// first try the label model ...
 			if (fc.getLabel() != null)
@@ -754,9 +755,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	/**
 	 * @return the type to use when updating the model for this form component
 	 */
-	public final Class getType()
+	public final Class<T> getType()
 	{
-		return typeName == null ? null : Classes.resolveClass(typeName);
+		return typeName == null ? null : (Class<T>)Classes.resolveClass(typeName);
 	}
 
 	/**
