@@ -56,8 +56,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * Component meta data key for actions/roles information. Typically, you do not need to use this
 	 * meta data key directly, but instead use one of the bind methods of this class.
 	 */
-	public static final MetaDataKey<ActionPermissions> ACTION_PERMISSIONS = new MetaDataKey<ActionPermissions>(
-			ActionPermissions.class)
+	public static final MetaDataKey<ActionPermissions> ACTION_PERMISSIONS = new MetaDataKey<ActionPermissions>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -66,8 +65,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * Application meta data key for actions/roles information. Typically, you do not need to use
 	 * this meta data key directly, but instead use one of the bind methods of this class.
 	 */
-	public static final MetaDataKey<InstantiationPermissions> INSTANTIATION_PERMISSIONS = new MetaDataKey<InstantiationPermissions>(
-			InstantiationPermissions.class)
+	public static final MetaDataKey<InstantiationPermissions> INSTANTIATION_PERMISSIONS = new MetaDataKey<InstantiationPermissions>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

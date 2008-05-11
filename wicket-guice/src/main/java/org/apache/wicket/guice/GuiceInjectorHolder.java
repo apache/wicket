@@ -35,8 +35,7 @@ public class GuiceInjectorHolder implements IClusterable
 	/**
 	 * Metadata key used to store Injector holder in application's metadata
 	 */
-	public static MetaDataKey<GuiceInjectorHolder> INJECTOR_KEY = new MetaDataKey<GuiceInjectorHolder>(
-			GuiceInjectorHolder.class)
+	public static MetaDataKey<GuiceInjectorHolder> INJECTOR_KEY = new MetaDataKey<GuiceInjectorHolder>()
 	{
 
 		private static final long serialVersionUID = 1L;

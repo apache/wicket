@@ -37,8 +37,7 @@ public class GuiceTypeStore implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	public static MetaDataKey<GuiceTypeStore> TYPESTORE_KEY = new MetaDataKey<GuiceTypeStore>(
-			GuiceTypeStore.class)
+	public static MetaDataKey<GuiceTypeStore> TYPESTORE_KEY = new MetaDataKey<GuiceTypeStore>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
