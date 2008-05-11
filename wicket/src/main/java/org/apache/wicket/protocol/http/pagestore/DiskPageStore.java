@@ -929,11 +929,11 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	private class PageSavingThread implements Runnable
 	{
-		private volatile boolean stop = false;
+		private volatile Boolean stop = Boolean.FALSE;
 
 		public void run()
 		{
-			while (stop == false)
+			while (stop == Boolean.FALSE)
 			{
 				// wait until we have something to save
 				while (pagesToSaveActive.isEmpty() && stop == false)
@@ -971,7 +971,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				}
 			}
 
-			stop = false;
+			stop = null;
 		}
 
 		/**
@@ -979,10 +979,13 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		 */
 		public void stop()
 		{
-			stop = true;
+			if (stop == null)
+				return;
+
+			stop = Boolean.TRUE;
 
 			// Block the calling thread until this thread has really stopped running
-			while (stop)
+			while (stop != null)
 			{
 				try
 				{
