@@ -134,6 +134,7 @@ public class MockWebApplication
 
 		filter = new WicketFilter()
 		{
+			@Override
 			protected IWebApplicationFactory getApplicationFactory()
 			{
 				return new IWebApplicationFactory()
@@ -476,7 +477,7 @@ public class MockWebApplication
 					// create a new request cycle for the newPage call
 					createRequestCycle();
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
-					Class<? extends Page> pageClass = pageClassRequestTarget.getPageClass();
+					Class< ? extends Page> pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
@@ -590,6 +591,7 @@ public class MockWebApplication
 		filter.destroy();
 		File dir = (File)context.getAttribute("javax.servlet.context.tempdir");
 		deleteDir(dir);
+		application.internalDestroy();
 	}
 
 	private void deleteDir(File dir)
