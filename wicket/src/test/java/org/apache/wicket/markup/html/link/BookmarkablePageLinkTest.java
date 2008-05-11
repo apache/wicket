@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 
 /**
  * @author jcompagner
@@ -42,19 +40,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 */
 	public void testBookmarkableRequest() throws Exception
 	{
-		tester.setupRequestAndResponse();
-
-		WebRequestCycle cycle = tester.createRequestCycle();
-
-		String url = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, null))
-				.toString();
-
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url);
-
-		tester.processRequestCycle();
+		tester.startPage(BookmarkableHomePageLinksPage.class);
 
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableHomePageLinksPage.class);
 
@@ -65,28 +51,12 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 */
 	public void testBookmarkableRequestWithIntercept() throws Exception
 	{
-		tester.setupRequestAndResponse();
 
-		WebRequestCycle cycle = tester.createRequestCycle();
-
-		String url = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableThrowsInterceptPage.class, null))
-				.toString();
-		String url2 = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableContinueToPage.class, null))
-				.toString();
-
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url);
-		tester.processRequestCycle();
+		tester.startPage(BookmarkableThrowsInterceptPage.class);
 
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableSetSecurityPage.class);
 
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
-		tester.processRequestCycle();
+		tester.startPage(BookmarkableContinueToPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableThrowsInterceptPage.class);
 
 	}
@@ -96,30 +66,15 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 */
 	public void testBookmarkableRequestWithInterceptWithParams() throws Exception
 	{
-		tester.setupRequestAndResponse();
-
-		WebRequestCycle cycle = tester.createRequestCycle();
 
 		PageParameters pp = new PageParameters();
 		pp.put("test", "test");
-		String url = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableThrowsInterceptPage.class, pp))
-				.toString();
-		String url2 = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableContinueToPage.class, null))
-				.toString();
 
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url);
-		tester.processRequestCycle();
+		tester.startPage(BookmarkableThrowsInterceptPage.class, pp);
 
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableSetSecurityPage.class);
 
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
-		tester.processRequestCycle();
+		tester.startPage(BookmarkableContinueToPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableThrowsInterceptPage.class);
 
 	}

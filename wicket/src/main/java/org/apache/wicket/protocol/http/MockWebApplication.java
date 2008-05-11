@@ -373,7 +373,19 @@ public class MockWebApplication
 		try
 		{
 			BaseWicketTester.callOnBeginRequest(cycle);
-			cycle.request(new BookmarkablePageRequestTarget(pageClass, params));
+			BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(
+				pageClass, params);
+			if (application.getHomePage() != null)
+			{
+				String url = cycle.urlFor(requestTarget).toString();
+				String path = application.getClass().getName();
+				path = path.substring(path.lastIndexOf('.') + 1);
+				path = "/" + path + "/" + path + "/";
+				getServletRequest().setURL(path + url);
+			}
+			else
+				log.warn("The application does not have a HomePage, this might cause problems or unexpected behavior");
+			cycle.request(requestTarget);
 		}
 		finally
 		{
