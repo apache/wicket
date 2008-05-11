@@ -590,6 +590,7 @@ public class MockWebApplication
 		filter.destroy();
 		File dir = (File)context.getAttribute("javax.servlet.context.tempdir");
 		deleteDir(dir);
+		application.internalDestroy();
 	}
 
 	private void deleteDir(File dir)
