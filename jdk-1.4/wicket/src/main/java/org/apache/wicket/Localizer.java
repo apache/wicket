@@ -205,7 +205,7 @@ public class Localizer
 		}
 
 		// Value not found are cached as well (value = null)
-		if ((cacheKey != null) && cache.containsKey(cacheKey))
+		if (cacheKey != null)
 		{
 			string = getFromCache(cacheKey);
 		}
@@ -332,6 +332,8 @@ public class Localizer
 				buffer.append("-").append(cursor.getClass().getName());
 				buffer.append(":").append(cursor.getId());
 				cursor = cursor.getParent();
+				if (cursor instanceof Page)
+					break;
 			}
 
 			buffer.append("-").append(component.getLocale());
