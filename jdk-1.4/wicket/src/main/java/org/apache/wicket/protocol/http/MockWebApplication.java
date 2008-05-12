@@ -19,7 +19,9 @@ package org.apache.wicket.protocol.http;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -28,17 +30,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
+import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
+import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.file.WebApplicationPath;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -374,7 +380,70 @@ public class MockWebApplication
 			BaseWicketTester.callOnBeginRequest(cycle);
 			BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(
 				pageClass, params);
-			if (application.getHomePage() != null)
+			if (pageClass == application.getHomePage())
+			{
+				// special handling
+
+				// code is copy pasted from
+				// org.apache.wicket.protocol.http.request.WebRequestCodingStrategy.encode(RequestCycle
+				// , IBookmarkablePageRequestTarget)
+				// since only the test is suffering from this problem
+
+				// this is a bit ugly and i am open to suggestions on how to fix this better. MM
+				String pageMapName;
+				IRequestTarget currentTarget = cycle.getRequestTarget();
+				if (currentTarget instanceof IPageRequestTarget)
+				{
+					Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
+					final IPageMap pageMap = currentPage.getPageMap();
+					if (pageMap.isDefault())
+					{
+						pageMapName = "";
+					}
+					else
+					{
+						pageMapName = pageMap.getName();
+					}
+				}
+				else
+				{
+					pageMapName = "";
+				}
+				AppendingStringBuffer buffer = new AppendingStringBuffer(64);
+				WebRequestEncoder encoder = new WebRequestEncoder(buffer);
+				encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+				if (params != null)
+				{
+					final Iterator iterator;
+					if (UnitTestSettings.getSortUrlParameters())
+					{
+						iterator = new TreeSet(params.keySet()).iterator();
+					}
+					else
+					{
+						iterator = params.keySet().iterator();
+					}
+					while (iterator.hasNext())
+					{
+						final String key = (String)iterator.next();
+						final String values[] = params.getStringArray(key);
+						if (values != null)
+						{
+							for (int i = 0; i < values.length; i++)
+							{
+								encoder.addValue(key, values[i]);
+							}
+						}
+					}
+				}
+				String url = buffer.toString();
+				String path = application.getClass().getName();
+				path = path.substring(path.lastIndexOf('.') + 1);
+				path = "/" + path + "/" + path + "/";
+				getServletRequest().setURL(path + url);
+			}
+			else if (application.getHomePage() != null)
 			{
 				String url = cycle.urlFor(requestTarget).toString();
 				String path = application.getClass().getName();
