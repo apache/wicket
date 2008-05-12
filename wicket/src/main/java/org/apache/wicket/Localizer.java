@@ -275,6 +275,9 @@ public class Localizer
 	 */
 	protected void putIntoCache(final String cacheKey, final String string)
 	{
+		if (cache == null)
+			return;
+
 		// ConcurrentHashMap does not allow null values
 		if (string == null)
 		{
@@ -294,6 +297,9 @@ public class Localizer
 	 */
 	protected String getFromCache(final String cacheKey)
 	{
+		if (cache == null)
+			return null;
+	
 		final String value = cache.get(cacheKey);
 
 		// ConcurrentHashMap does not allow null values
@@ -362,6 +368,7 @@ public class Localizer
 
 	/**
 	 * By default the cache is enabled. Disabling the cache will disable it and clear the cache.
+	 * This can be handy for example in development mode.
 	 * 
 	 * @param value
 	 */
@@ -378,11 +385,14 @@ public class Localizer
 	}
 
 	/**
-	 * Create a new cache
+	 * Create a new cache, override this method if you want a different map to store the cache keys,
+	 * for example a map that hold only the last X number of elements..
+	 * 
+	 * By default it uses the {@link ConcurrentHashMap}
 	 * 
 	 * @return cache
 	 */
-	private Map<String, String> newCache()
+	protected Map<String, String> newCache()
 	{
 		return new ConcurrentHashMap<String, String>();
 	}
