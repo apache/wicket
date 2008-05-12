@@ -205,7 +205,7 @@ public class Localizer
 		}
 
 		// Value not found are cached as well (value = null)
-		if (cacheKey != null)
+		if ((cacheKey != null) && cache.containsKey(cacheKey))
 		{
 			string = getFromCache(cacheKey);
 		}
