@@ -21,6 +21,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at the component
@@ -44,10 +45,10 @@ final class MarkupFragmentFinder
 	 * @param component
 	 * @return A MarkupStream which is positioned at the component
 	 */
-	final MarkupStream find(final Component< ? > component)
+	final MarkupStream find(final Component<?> component)
 	{
 		// Get the parent's associated markup stream.
-		MarkupContainer< ? > parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
+		MarkupContainer<?> parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
 		MarkupStream markupStream = null;
 
 		// Might be that we have to walk up the component hierarchy
@@ -78,6 +79,15 @@ final class MarkupFragmentFinder
 							// Ok, found it
 							return markupStream;
 						}
+						else
+						{
+							Component<?> parent = component.getParent();
+							if (parent instanceof AbstractRepeater && id != null &&
+								id.equals(parent.getId()))
+							{
+								return markupStream;
+							}
+						}
 					}
 				}
 				catch (IndexOutOfBoundsException ex)
@@ -100,7 +110,7 @@ final class MarkupFragmentFinder
 
 			if (parentWithAssociatedMarkup instanceof Fragment)
 			{
-				markupStream = ((Fragment< ? >)parentWithAssociatedMarkup).findComponentIndex(component.getId());
+				markupStream = ((Fragment<?>)parentWithAssociatedMarkup).findComponentIndex(component.getId());
 				return markupStream;
 			}
 
@@ -130,8 +140,8 @@ final class MarkupFragmentFinder
 	 * @param parentWithAssociatedMarkup
 	 * @return the relative path
 	 */
-	private String getComponentRelativePath(final Component< ? > component,
-		final MarkupContainer< ? > parentWithAssociatedMarkup)
+	private String getComponentRelativePath(final Component<?> component,
+		final MarkupContainer<?> parentWithAssociatedMarkup)
 	{
 		final String componentPath = component.getParent().getPageRelativePath();
 		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
