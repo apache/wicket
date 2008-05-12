@@ -37,6 +37,7 @@ import org.apache.wicket.protocol.http.IgnoreAjaxRequestException;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
@@ -740,12 +741,29 @@ public abstract class Session implements IClusterable
 					if (t != null && t != Thread.currentThread() &&
 						(startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
+						AppendingStringBuffer asb = new AppendingStringBuffer(100);
+						asb.append("After " + timeout + " the Pagemap " + pageMapName +
+							" is still locked by: " + t +
+							", giving up trying to get the page for path: " + path);
 						// if it is still not the right thread..
 						// This either points to long running code (a report
 						// page?) or a deadlock or such
-						throw new WicketRuntimeException("After " + timeout + " the Pagemap " +
-							pageMapName + " is still locked by: " + t +
-							", giving up trying to get the page for path: " + path);
+						try
+						{
+							StackTraceElement[] stackTrace = t.getStackTrace();
+							asb.append("\n\tBegin of stack trace of " + t);
+							for (StackTraceElement stackTraceElement : stackTrace)
+							{
+								asb.append("\n\t");
+								asb.append(stackTraceElement);
+							}
+							asb.append("\n\tEnd of stack trace of " + t);
+						}
+						catch (Exception e)
+						{
+							// ignore
+						}
+						throw new WicketRuntimeException(asb.toString());
 					}
 				}
 
