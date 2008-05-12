@@ -87,7 +87,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component< ? > component)
+	public String getString(final String key, final Component<?> component)
 		throws MissingResourceException
 	{
 		return getString(key, component, null, null);
@@ -106,8 +106,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component< ? > component,
-		final IModel< ? > model) throws MissingResourceException
+	public String getString(final String key, final Component<?> component, final IModel<?> model)
+		throws MissingResourceException
 	{
 		return getString(key, component, model, null);
 	}
@@ -125,7 +125,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component< ? > component,
+	public String getString(final String key, final Component<?> component,
 		final String defaultValue) throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
@@ -145,8 +145,8 @@ public class Localizer
 	 * 
 	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
-	public String getString(final String key, final Component< ? > component,
-		final IModel< ? > model, final Locale locale, final String style, final String defaultValue)
+	public String getString(final String key, final Component<?> component, final IModel<?> model,
+		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
 		return getString(key, component, model, defaultValue);
@@ -170,8 +170,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component< ? > component,
-		final IModel< ? > model, final String defaultValue) throws MissingResourceException
+	public String getString(final String key, final Component<?> component, final IModel<?> model,
+		final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
@@ -205,7 +205,7 @@ public class Localizer
 		}
 
 		// Value not found are cached as well (value = null)
-		if ((cacheKey != null) && cache.containsKey(cacheKey))
+		if (cacheKey != null)
 		{
 			string = getFromCache(cacheKey);
 		}
@@ -299,7 +299,7 @@ public class Localizer
 	{
 		if (cache == null)
 			return null;
-	
+
 		final String value = cache.get(cacheKey);
 
 		// ConcurrentHashMap does not allow null values
@@ -320,19 +320,22 @@ public class Localizer
 	 * @param component
 	 * @return The value of the key
 	 */
-	protected String getCacheKey(final String key, final Component< ? > component)
+	protected String getCacheKey(final String key, final Component<?> component)
 	{
 		String cacheKey = key;
 		if (component != null)
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer(key);
+			AppendingStringBuffer buffer = new AppendingStringBuffer(200);
+			buffer.append(key);
 
-			Component< ? > cursor = component;
+			Component<?> cursor = component;
 			while (cursor != null)
 			{
 				buffer.append("-").append(cursor.getClass().getName());
 				buffer.append(":").append(cursor.getId());
 				cursor = cursor.getParent();
+				if (cursor instanceof Page)
+					break;
 			}
 
 			buffer.append("-").append(component.getLocale());
@@ -356,8 +359,8 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	public String substitutePropertyExpressions(final Component< ? > component,
-		final String string, final IModel< ? > model)
+	public String substitutePropertyExpressions(final Component<?> component, final String string,
+		final IModel<?> model)
 	{
 		if ((string != null) && (model != null))
 		{
