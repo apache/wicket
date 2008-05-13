@@ -514,7 +514,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			this.sessionId = sessionId;
 			startDate = System.currentTimeMillis();
-			numberOfRequests = 1;
+			numberOfRequests = 0;
 		}
 
 		/**
