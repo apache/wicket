@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Juergen Donnerstag
  */
-public class PagingNavigator extends Panel
+public class PagingNavigator extends Panel<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -98,7 +98,8 @@ public class PagingNavigator extends Panel
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected Link<Object> newPagingNavigationIncrementLink(String id, IPageable pageable,
+		int increment)
 	{
 		return new PagingNavigationIncrementLink(id, pageable, increment);
 	}
@@ -115,7 +116,7 @@ public class PagingNavigator extends Panel
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link<Object> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new PagingNavigationLink(id, pageable, pageNumber);
 	}

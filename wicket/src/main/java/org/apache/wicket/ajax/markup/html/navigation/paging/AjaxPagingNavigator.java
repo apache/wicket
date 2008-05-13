@@ -91,7 +91,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the increment link
 	 */
 	@Override
-	protected Link< ? > newPagingNavigationIncrementLink(String id, IPageable pageable,
+	protected Link<Object> newPagingNavigationIncrementLink(String id, IPageable pageable,
 		int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
@@ -110,9 +110,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the pagenumber link
 	 */
 	@Override
-	protected Link< ? > newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link<Object> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
-		return new AjaxPagingNavigationLink<Void>(id, pageable, pageNumber);
+		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 		// the pageable is a component, and that it is a child of a web
 		// markup container.
 
-		Component< ? > container = ((Component< ? >)pageable);
+		Component<?> container = ((Component<?>)pageable);
 		// no need for a nullcheck as there is bound to be a non-repeater
 		// somewhere higher in the hierarchy
 		while (container instanceof AbstractRepeater)
@@ -157,7 +157,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 
 		// in case the navigator is not contained by the container, we have
 		// to add it to the response
-		if (((MarkupContainer< ? >)container).contains(this, true) == false)
+		if (((MarkupContainer<?>)container).contains(this, true) == false)
 		{
 			target.addComponent(this);
 		}

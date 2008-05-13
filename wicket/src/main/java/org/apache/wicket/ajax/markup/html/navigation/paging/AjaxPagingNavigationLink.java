@@ -27,10 +27,8 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
  * @since 1.2
  * 
  * @author Martijn Dashorst
- * @param <T>
- *            The model data type
  */
-public class AjaxPagingNavigationLink<T> extends PagingNavigationLink<T> implements IAjaxLink
+public class AjaxPagingNavigationLink extends PagingNavigationLink implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 

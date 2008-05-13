@@ -36,7 +36,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Juergen Donnerstag
  * @author Martijn Dashorst
  */
-public class PagingNavigationIncrementLink extends Link
+public class PagingNavigationIncrementLink extends Link<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class PagingNavigationIncrementLink extends Link
 	 *            increment by
 	 */
 	public PagingNavigationIncrementLink(final String id, final IPageable pageable,
-			final int increment)
+		final int increment)
 	{
 		super(id);
 		setAutoEnable(true);
@@ -68,6 +68,7 @@ public class PagingNavigationIncrementLink extends Link
 	/**
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Tell the PageableListView which page to print next
@@ -119,7 +120,8 @@ public class PagingNavigationIncrementLink extends Link
 	 * @return True if this link links to the given page
 	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
 	 */
-	public boolean linksTo(final Page page)
+	@Override
+	public boolean linksTo(final Page<?> page)
 	{
 		pageable.getCurrentPage();
 		return ((increment < 0) && isFirst()) || ((increment > 0) && isLast());
