@@ -48,7 +48,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	private int height = 100;
 
 	/** Transient image data so that image only needs to be generated once per VM */
-	private transient SoftReference imageData;
+	private transient SoftReference<byte[]> imageData;
 
 	/** Type of image (one of BufferedImage.TYPE_*) */
 	private int type = BufferedImage.TYPE_INT_RGB;
@@ -60,9 +60,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * Constructor.
 	 * 
 	 * @param width
-	 *            Width of image
+	 * 		Width of image
 	 * @param height
-	 *            Height of image
+	 * 		Height of image
 	 */
 	public RenderedDynamicImageResource(final int width, final int height)
 	{
@@ -74,11 +74,11 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * Constructor.
 	 * 
 	 * @param width
-	 *            Width of image
+	 * 		Width of image
 	 * @param height
-	 *            Height of image
+	 * 		Height of image
 	 * @param format
-	 *            The format of the image (jpg, png or gif)
+	 * 		The format of the image (jpg, png or gif)
 	 */
 	public RenderedDynamicImageResource(final int width, final int height, String format)
 	{
@@ -116,6 +116,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * 
 	 * @see org.apache.wicket.Resource#invalidate()
 	 */
+	@Override
 	public synchronized void invalidate()
 	{
 		imageData = null;
@@ -123,7 +124,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * @param height
-	 *            The height to set.
+	 * 		The height to set.
 	 */
 	public synchronized void setHeight(int height)
 	{
@@ -133,7 +134,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * @param type
-	 *            The type to set (one of BufferedImage.TYPE_*).
+	 * 		The type to set (one of BufferedImage.TYPE_*).
 	 */
 	public synchronized void setType(int type)
 	{
@@ -143,7 +144,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * @param width
-	 *            The width to set.
+	 * 		The width to set.
 	 */
 	public synchronized void setWidth(int width)
 	{
@@ -151,18 +152,19 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 		invalidate();
 	}
 
+	@Override
 	protected byte[] getImageData()
 	{
 		// get image data is always called in sync block
 		byte[] data = null;
 		if (imageData != null)
 		{
-			data = (byte[])imageData.get();
+			data = imageData.get();
 		}
 		if (data == null)
 		{
 			data = render();
-			imageData = new SoftReference(data);
+			imageData = new SoftReference<byte[]>(data);
 			setLastModifiedTime(Time.now());
 		}
 		return data;
@@ -189,9 +191,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * Override this method to provide your rendering code
 	 * 
 	 * @param graphics
-	 *            The graphics context to render on
+	 * 		The graphics context to render on
 	 * @return True if the image was rendered. False if the image size was changed by the rendering
-	 *         implementation and the image should be re-rendered at the new size.
+	 * 	implementation and the image should be re-rendered at the new size.
 	 */
 	protected abstract boolean render(Graphics2D graphics);
 }

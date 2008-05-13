@@ -59,8 +59,8 @@ import org.apache.wicket.util.value.ValueMap;
  * no matter what page it appears on, which is a very convenient and efficient way to create and
  * share images. The [specification] string which follows the second colon is passed directly to the
  * image factory and its format is dependent on the specific image factory. For details on the
- * default buttonFactory, see
- * {@link org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}.
+ * default buttonFactory, see {@link
+ * org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}.
  * <p>
  * Finally, if there is no SRC attribute and no VALUE attribute, the Image component's model is
  * inspected. If the model contains a resource or resource reference, this image is used, otherwise
@@ -79,7 +79,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private Boolean resourceKind;
 
 	/** The component that is referencing this image resource */
-	private final Component component;
+	private final Component<?> component;
 
 	/** The image resource this image component references */
 	private Resource resource;
@@ -123,7 +123,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		 * Construct.
 		 * 
 		 * @param input
-		 *            to parse
+		 * 		to parse
 		 */
 		private ImageValueParser(final CharSequence input)
 		{
@@ -159,7 +159,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * Constructor
 	 * 
 	 * @param component
-	 *            The component that owns this localized image resource
+	 * 		The component that owns this localized image resource
 	 */
 	public LocalizedImageResource(final Component<?> component)
 	{
@@ -200,7 +200,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 	/**
 	 * @param resource
-	 *            The resource to set.
+	 * 		The resource to set.
 	 */
 	public final void setResource(final Resource resource)
 	{
@@ -213,7 +213,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 	/**
 	 * @param resourceReference
-	 *            The resource to set.
+	 * 		The resource to set.
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
@@ -230,9 +230,9 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 	/**
 	 * @param resourceReference
-	 *            The resource to set.
+	 * 		The resource to set.
 	 * @param resourceParameters
-	 *            The resource parameters for the shared resource
+	 * 		The resource parameters for the shared resource
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference,
 		final ValueMap resourceParameters)
@@ -248,9 +248,9 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 	/**
 	 * @param tag
-	 *            The tag to inspect for an optional src attribute that might reference an image.
+	 * 		The tag to inspect for an optional src attribute that might reference an image.
 	 * @throws WicketRuntimeException
-	 *             Thrown if an image is required by the caller, but none can be found.
+	 * 		Thrown if an image is required by the caller, but none can be found.
 	 */
 	public final void setSrcAttribute(final ComponentTag tag)
 	{
@@ -337,12 +337,12 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 	/**
 	 * @param application
-	 *            The application
+	 * 		The application
 	 * @param factoryName
-	 *            The name of the image resource factory
+	 * 		The name of the image resource factory
 	 * @return The resource factory
 	 * @throws WicketRuntimeException
-	 *             Thrown if factory cannot be found
+	 * 		Thrown if factory cannot be found
 	 */
 	private IResourceFactory getResourceFactory(final Application application,
 		final String factoryName)
@@ -364,9 +364,9 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * located.
 	 * 
 	 * @param path
-	 *            The path to the image
+	 * 		The path to the image
 	 * @throws WicketRuntimeException
-	 *             Thrown if the image cannot be located
+	 * 		Thrown if the image cannot be located
 	 */
 	@SuppressWarnings("unchecked")
 	private void loadStaticImage(final String path)
@@ -409,7 +409,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * Generates an image resource based on the attribute values on tag
 	 * 
 	 * @param value
-	 *            The value to parse
+	 * 		The value to parse
 	 */
 	private void newImage(final CharSequence value)
 	{

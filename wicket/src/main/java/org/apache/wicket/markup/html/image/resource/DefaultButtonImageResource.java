@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,12 +51,12 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	private static final int DEFAULT_TEXT_COLOR = Color.WHITE.getRGB();
 
 	/** default font: Helvetica bold 16. */
-	private static final Map DEFAULT_FONT = new HashMap(new Font("Helvetica", Font.BOLD, 16)
-			.getAttributes());
+	private static final Map<TextAttribute, Object> DEFAULT_FONT = new HashMap<TextAttribute, Object>(
+		new Font("Helvetica", Font.BOLD, 16).getAttributes());
 
 	/**
 	 * @param defaultHeight
-	 *            The defaultHeight to set.
+	 * 		The defaultHeight to set.
 	 */
 	public static void setDefaultHeight(int defaultHeight)
 	{
@@ -64,7 +65,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param defaultWidth
-	 *            The defaultWidth to set.
+	 * 		The defaultWidth to set.
 	 */
 	public static void setDefaultWidth(int defaultWidth)
 	{
@@ -84,7 +85,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	private int colorRgb = DEFAULT_COLOR;
 
 	/** The font to use */
-	private Map fontAttributes = DEFAULT_FONT;
+	private Map<TextAttribute, Object> fontAttributes = DEFAULT_FONT;
 
 	/** The color of the text */
 	private int textColorRgb = DEFAULT_TEXT_COLOR;
@@ -94,11 +95,11 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param label
-	 *            The label for this button image
+	 * 		The label for this button image
 	 * @param width
-	 *            Width of image in pixels
+	 * 		Width of image in pixels
 	 * @param height
-	 *            Height of image in pixels
+	 * 		Height of image in pixels
 	 */
 	public DefaultButtonImageResource(int width, int height, final String label)
 	{
@@ -110,7 +111,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param label
-	 *            The label for this button image
+	 * 		The label for this button image
 	 */
 	public DefaultButtonImageResource(final String label)
 	{
@@ -167,7 +168,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param arcHeight
-	 *            The arcHeight to set.
+	 * 		The arcHeight to set.
 	 */
 	public synchronized void setArcHeight(int arcHeight)
 	{
@@ -177,7 +178,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param arcWidth
-	 *            The arcWidth to set.
+	 * 		The arcWidth to set.
 	 */
 	public synchronized void setArcWidth(int arcWidth)
 	{
@@ -187,7 +188,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param backgroundColor
-	 *            The backgroundColor to set.
+	 * 		The backgroundColor to set.
 	 */
 	public synchronized void setBackgroundColor(Color backgroundColor)
 	{
@@ -197,7 +198,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param color
-	 *            The color to set.
+	 * 		The color to set.
 	 */
 	public synchronized void setColor(Color color)
 	{
@@ -207,17 +208,17 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param font
-	 *            The font to set.
+	 * 		The font to set.
 	 */
 	public synchronized void setFont(Font font)
 	{
-		fontAttributes = new HashMap(font.getAttributes());
+		fontAttributes = new HashMap<TextAttribute, Object>(font.getAttributes());
 		invalidate();
 	}
 
 	/**
 	 * @param textColor
-	 *            The textColor to set.
+	 * 		The textColor to set.
 	 */
 	public synchronized void setTextColor(Color textColor)
 	{
@@ -230,6 +231,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * 
 	 * @see RenderedDynamicImageResource#render(Graphics2D)
 	 */
+	@Override
 	protected boolean render(final Graphics2D graphics)
 	{
 		// Get width and height
@@ -253,7 +255,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 		{
 			// Turn on anti-aliasing
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
 			// Draw background
 			Color bgColor = getBackgroundColor();
