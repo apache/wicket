@@ -28,7 +28,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
@@ -63,6 +65,11 @@ public class RequestLogger implements IRequestLogger
 	protected static Logger log = LoggerFactory.getLogger(RequestLogger.class);
 
 
+	private static MetaDataKey REQUEST_DATA = new MetaDataKey(RequestData.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/**
 	 * This interface can be implemented in a custom session object. to give an object that has more
 	 * information for the current session (state of session).
@@ -90,8 +97,6 @@ public class RequestLogger implements IRequestLogger
 	private final List requests;
 
 	private final Map liveSessions;
-
-	private final ThreadLocal currentRequest = new ThreadLocal();
 
 	private int active;
 
@@ -154,7 +159,7 @@ public class RequestLogger implements IRequestLogger
 	public SessionData[] getLiveSessions()
 	{
 		SessionData[] sessions = (SessionData[])liveSessions.values().toArray(
-				new SessionData[liveSessions.size()]);
+			new SessionData[liveSessions.size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
@@ -182,11 +187,12 @@ public class RequestLogger implements IRequestLogger
 
 	RequestData getCurrentRequest()
 	{
-		RequestData rd = (RequestData)currentRequest.get();
+		RequestCycle requestCycle = RequestCycle.get();
+		RequestData rd = (RequestData)requestCycle.getMetaData(REQUEST_DATA);
 		if (rd == null)
 		{
 			rd = new RequestData();
-			currentRequest.set(rd);
+			requestCycle.setMetaData(REQUEST_DATA, rd);
 			synchronized (this)
 			{
 				active++;
@@ -200,7 +206,7 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public void requestTime(long timeTaken)
 	{
-		RequestData rd = (RequestData)currentRequest.get();
+		RequestData rd = (RequestData)RequestCycle.get().getMetaData(REQUEST_DATA);
 		if (rd != null)
 		{
 			synchronized (this)
@@ -229,17 +235,15 @@ public class RequestLogger implements IRequestLogger
 					// log the error and let the request logging continue (this is what happens in
 					// the
 					// detach phase of the request cycle anyway. This provides better diagnostics).
-					log
-							.error(
-									"Exception while determining the size of the session in the request logger: " +
-											e.getMessage(), e);
+					log.error(
+						"Exception while determining the size of the session in the request logger: " +
+							e.getMessage(), e);
 				}
 			}
 			rd.setSessionSize(sizeInBytes);
 			rd.setTimeTaken(timeTaken);
 
 			requests.add(0, rd);
-			currentRequest.set(null);
 			if (sessionId != null)
 			{
 				SessionData sd = (SessionData)liveSessions.get(sessionId);
@@ -345,7 +349,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap removed, name: " +
-					(map.getName() == null ? "DEFAULT" : map.getName()));
+				(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else if (value instanceof WebSession)
 		{
@@ -372,7 +376,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap updated, name: " +
-					(map.getName() == null ? "DEFAULT" : map.getName()));
+				(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else if (value instanceof Session)
 		{
@@ -404,7 +408,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap created, name: " +
-					(map.getName() == null ? "DEFAULT" : map.getName()));
+				(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else
 		{
@@ -770,9 +774,9 @@ public class RequestLogger implements IRequestLogger
 		public String toString()
 		{
 			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo +
-					",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request=" +
-					eventTarget + ",response=" + responseTarget + ",alteredobjects=" +
-					getAlteredObjects() + ",activerequest=" + activeRequest + "]";
+				",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request=" +
+				eventTarget + ",response=" + responseTarget + ",alteredobjects=" +
+				getAlteredObjects() + ",activerequest=" + activeRequest + "]";
 		}
 	}
 }

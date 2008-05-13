@@ -1048,7 +1048,7 @@ public abstract class RequestCycle
 				{
 					target.detach(this);
 				}
-				catch (RuntimeException e)
+				catch (Throwable e)
 				{
 					log.error("there was an error cleaning up target " + target + ".", e);
 				}
@@ -1066,24 +1066,10 @@ public abstract class RequestCycle
 					getSession().cleanupFeedbackMessages();
 				}
 			}
-			catch (RuntimeException re)
+			catch (Throwable re)
 			{
 				log.error("there was an error cleaning up the feedback messages", re);
 			}
-		}
-
-		// if we have a request logger, update that now
-		try
-		{
-			IRequestLogger requestLogger = getApplication().getRequestLogger();
-			if (requestLogger != null)
-			{
-				requestLogger.requestTime((System.currentTimeMillis() - startTime));
-			}
-		}
-		catch (RuntimeException re)
-		{
-			log.error("there was an error in the RequestLogger ending.", re);
 		}
 
 		// let the session cleanup after a request, flushing changes etc.
@@ -1093,7 +1079,7 @@ public abstract class RequestCycle
 			{
 				getSession().requestDetached();
 			}
-			catch (RuntimeException re)
+			catch (Throwable re)
 			{
 				log.error("there was an error detaching the request from the session " + session +
 					".", re);
@@ -1106,7 +1092,7 @@ public abstract class RequestCycle
 			{
 				((BufferedWebResponse)getResponse()).filter();
 			}
-			catch (RuntimeException re)
+			catch (Throwable re)
 			{
 				log.error("there was an error filtering the response.", re);
 			}
@@ -1116,7 +1102,7 @@ public abstract class RequestCycle
 		{
 			onEndRequest();
 		}
-		catch (RuntimeException e)
+		catch (Throwable e)
 		{
 			log.error("Exception occurred during onEndRequest", e);
 		}
@@ -1125,17 +1111,32 @@ public abstract class RequestCycle
 		{
 			getApplication().getSessionStore().onEndRequest(getRequest());
 		}
-		catch (RuntimeException e)
+		catch (Throwable e)
 		{
 			log.error("Exception occurred during onEndRequest of the SessionStore", e);
 		}
+
+		// if we have a request logger, update that now
+		try
+		{
+			IRequestLogger requestLogger = getApplication().getRequestLogger();
+			if (requestLogger != null)
+			{
+				requestLogger.requestTime((System.currentTimeMillis() - startTime));
+			}
+		}
+		catch (Throwable re)
+		{
+			log.error("there was an error in the RequestLogger ending.", re);
+		}
+
 
 		// Release thread local resources
 		try
 		{
 			threadDetach();
 		}
-		catch (RuntimeException re)
+		catch (Throwable re)
 		{
 			log.error("Exception occurred during threadDetach", re);
 		}
