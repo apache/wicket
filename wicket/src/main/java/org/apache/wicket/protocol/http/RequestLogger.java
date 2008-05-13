@@ -30,7 +30,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
@@ -63,6 +65,11 @@ public class RequestLogger implements IRequestLogger
 	/** log. */
 	protected static Logger log = LoggerFactory.getLogger(RequestLogger.class);
 
+
+	private static MetaDataKey<RequestData> REQUEST_DATA = new MetaDataKey<RequestData>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * This interface can be implemented in a custom session object. to give an object that has more
@@ -184,11 +191,12 @@ public class RequestLogger implements IRequestLogger
 
 	RequestData getCurrentRequest()
 	{
-		RequestData rd = currentRequest.get();
+		RequestCycle requestCycle = RequestCycle.get();
+		RequestData rd = requestCycle.getMetaData(REQUEST_DATA);
 		if (rd == null)
 		{
 			rd = new RequestData();
-			currentRequest.set(rd);
+			requestCycle.setMetaData(REQUEST_DATA, rd);
 			active.incrementAndGet();
 		}
 		return rd;
@@ -199,7 +207,7 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public void requestTime(long timeTaken)
 	{
-		RequestData rd = currentRequest.get();
+		RequestData rd = RequestCycle.get().getMetaData(REQUEST_DATA);
 		if (rd != null)
 		{
 			if (active.get() > 0)
@@ -234,7 +242,6 @@ public class RequestLogger implements IRequestLogger
 			rd.setTimeTaken(timeTaken);
 
 			requests.add(0, rd);
-			currentRequest.set(null);
 			if (sessionId != null)
 			{
 				SessionData sd = liveSessions.get(sessionId);
