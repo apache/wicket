@@ -147,7 +147,7 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets an init parameter from the filter's context.
+	 * Gets an init parameter of the filter, or null if the parameter does not exist.
 	 * 
 	 * @param key
 	 *            the key to search for
@@ -159,9 +159,10 @@ public abstract class WebApplication extends Application
 		{
 			return wicketFilter.getFilterConfig().getInitParameter(key);
 		}
-		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-			+ " Application object that uses the wicketServlet/Filter instance should be put"
-			+ " in the init() method instead of your constructor");
+		throw new IllegalStateException("init parameter '" + key +
+			"' is not set yet. Any code in your" +
+			" Application object that uses the wicketServlet/Filter instance should be put" +
+			" in the init() method instead of your constructor");
 	}
 
 	/**
@@ -182,7 +183,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Gets the servlet context for this application. Use this to get references to absolute paths,
-	 * global web.xml parameters (<context-param>), etc.
+	 * global web.xml parameters (&lt;context-param&gt;), etc.
 	 * 
 	 * @return The servlet context for this application
 	 */
@@ -509,7 +510,7 @@ public abstract class WebApplication extends Application
 		 * namespaced param. see WICKET-1317
 		 */
 
-		// If no system parameter check filter/servert initparam and context param
+		// If no system parameter check filter/servlet <init-param> and <context-param>
 		if (result == null)
 		{
 			result = getInitParameter("wicket." + Application.CONFIGURATION);
