@@ -34,13 +34,13 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param referer
-	 *            the class that is referring; is used as the relative root for getting the resource
+	 * 		the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 *            reference as a string
+	 * 		reference as a string
 	 */
-	public StyleSheetReference(String id, Class referer, String file)
+	public StyleSheetReference(String id, Class<?> referer, String file)
 	{
 		super(id, referer, file, "href");
 	}
@@ -49,13 +49,13 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param referer
-	 *            the class that is referring; is used as the relative root for getting the resource
+	 * 		the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 *            reference. The model must provide an instance of {@link String}
+	 * 		reference. The model must provide an instance of {@link String}
 	 */
-	public StyleSheetReference(String id, Class referer, IModel file)
+	public StyleSheetReference(String id, Class<?> referer, IModel<String> file)
 	{
 		super(id, referer, file, "href");
 	}
@@ -64,9 +64,9 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param resourceReference
-	 *            resource reference
+	 * 		resource reference
 	 */
 	public StyleSheetReference(String id, ResourceReference resourceReference)
 	{
@@ -77,12 +77,11 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param resourceReference
-	 *            resource reference. The model must provide an instance of
-	 *            {@link ResourceReference}
+	 * 		resource reference. The model must provide an instance of {@link ResourceReference}
 	 */
-	public StyleSheetReference(String id, IModel resourceReference)
+	public StyleSheetReference(String id, IModel<ResourceReference> resourceReference)
 	{
 		super(id, resourceReference, "href");
 	}
@@ -90,6 +89,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// Must be attached to a style tag

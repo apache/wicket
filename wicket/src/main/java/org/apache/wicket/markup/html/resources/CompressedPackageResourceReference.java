@@ -36,6 +36,7 @@ import org.apache.wicket.markup.html.PackageResourceReference;
  * 
  * @deprecated Will be renamed to CompressedResourceReference in Wicket 2.0
  */
+@Deprecated
 public class CompressedPackageResourceReference extends PackageResourceReference
 {
 	private static final long serialVersionUID = 1L;
@@ -43,17 +44,17 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	/**
 	 * @see PackageResourceReference#PackageResourceReference(Application, Class, String)
 	 */
-	public CompressedPackageResourceReference(Application application, Class scope, String name)
+	public CompressedPackageResourceReference(Application application, Class<?> scope, String name)
 	{
 		super(application, scope, name);
 	}
 
 	/**
 	 * @see PackageResourceReference#PackageResourceReference(Application, Class, String, Locale,
-	 *      String)
+	 * 	String)
 	 */
-	public CompressedPackageResourceReference(Application application, Class scope, String name,
-			Locale locale, String style)
+	public CompressedPackageResourceReference(Application application, Class<?> scope, String name,
+		Locale locale, String style)
 	{
 		super(application, scope, name, locale, style);
 	}
@@ -69,7 +70,7 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	/**
 	 * @see PackageResourceReference#PackageResourceReference(Class, String)
 	 */
-	public CompressedPackageResourceReference(Class scope, String name)
+	public CompressedPackageResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
@@ -77,10 +78,11 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	/**
 	 * @see org.apache.wicket.markup.html.PackageResourceReference#newResource()
 	 */
+	@Override
 	protected Resource newResource()
 	{
 		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
-				getLocale(), getStyle());
+			getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -88,7 +90,7 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 		else
 		{
 			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
-					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+				getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 

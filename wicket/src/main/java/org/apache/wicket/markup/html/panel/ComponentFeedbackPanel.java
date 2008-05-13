@@ -35,11 +35,11 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            the component id.
+	 * 		the component id.
 	 * @param filter
-	 *            the component for which the messages need to be filtered.
+	 * 		the component for which the messages need to be filtered.
 	 */
-	public ComponentFeedbackPanel(String id, Component filter)
+	public ComponentFeedbackPanel(String id, Component<?> filter)
 	{
 		super(id, new ComponentFeedbackMessageFilter(filter));
 	}

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.panel;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
@@ -44,12 +43,12 @@ import org.apache.wicket.model.Model;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class FeedbackPanel extends Panel implements IFeedback
+public class FeedbackPanel extends Panel<Void> implements IFeedback
 {
 	/**
 	 * List for messages.
 	 */
-	private final class MessageListView extends ListView
+	private final class MessageListView extends ListView<FeedbackMessage>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -63,12 +62,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+		 * @see
+		 * 	org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html
+		 * 	.list.ListItem)
 		 */
 		@Override
-		protected void populateItem(final ListItem listItem)
+		protected void populateItem(final ListItem<FeedbackMessage> listItem)
 		{
-			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
+			final FeedbackMessage message = listItem.getModelObject();
 			message.markRendered();
 			final IModel<String> replacementModel = new Model<String>()
 			{
@@ -87,7 +88,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				}
 			};
 
-			final Component label = newMessageDisplayComponent("message", message);
+			final Component<?> label = newMessageDisplayComponent("message", message);
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
@@ -117,7 +118,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
 	{
 		super(id);
-		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
+		WebMarkupContainer<?> messagesContainer = new WebMarkupContainer<Void>("feedbackul")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -165,16 +166,15 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * level.
 	 * 
 	 * @param level
-	 *            the level, see FeedbackMessage
+	 * 		the level, see FeedbackMessage
 	 * @return whether there is any message for this panel of the given level
 	 */
 	public final boolean anyMessage(int level)
 	{
-		List msgs = getCurrentMessages();
+		List<FeedbackMessage> msgs = getCurrentMessages();
 
-		for (Iterator i = msgs.iterator(); i.hasNext();)
+		for (FeedbackMessage msg : msgs)
 		{
-			FeedbackMessage msg = (FeedbackMessage)i.next();
 			if (msg.isLevel(level))
 			{
 				return true;
@@ -216,7 +216,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * @return The current sorting comparator
 	 */
-	public final Comparator getSortingComparator()
+	public final Comparator<FeedbackMessage> getSortingComparator()
 	{
 		return getFeedbackMessagesModel().getSortingComparator();
 	}
@@ -234,7 +234,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Sets whether model messages should be HTML escaped. Default is true.
 	 * 
 	 * @param escapeMessages
-	 *            whether model messages should be HTML escaped
+	 * 		whether model messages should be HTML escaped
 	 * 
 	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
 	 */
@@ -248,7 +248,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Sets a filter to use on the feedback messages model
 	 * 
 	 * @param filter
-	 *            The message filter to install on the feedback messages model
+	 * 		The message filter to install on the feedback messages model
 	 */
 	public final void setFilter(IFeedbackMessageFilter filter)
 	{
@@ -257,8 +257,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 	/**
 	 * @param maxMessages
-	 *            The maximum number of feedback messages that this feedback panel should show at
-	 *            one time
+	 * 		The maximum number of feedback messages that this feedback panel should show at one time
 	 */
 	public final void setMaxMessages(int maxMessages)
 	{
@@ -269,9 +268,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Sets the comparator used for sorting the messages.
 	 * 
 	 * @param sortingComparator
-	 *            comparator used for sorting the messages.
+	 * 		comparator used for sorting the messages.
 	 */
-	public final void setSortingComparator(Comparator sortingComparator)
+	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
 		getFeedbackMessagesModel().setSortingComparator(sortingComparator);
 	}
@@ -280,9 +279,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Gets the css class for the given message.
 	 * 
 	 * @param message
-	 *            the message
+	 * 		the message
 	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
-	 *         'feedbackPanelERROR', but you can override this method to provide your own
+	 * 	'feedbackPanelERROR', but you can override this method to provide your own
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
@@ -294,9 +293,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return the currently collected messages for this panel, possibly empty
 	 */
-	protected final List getCurrentMessages()
+	protected final List<FeedbackMessage> getCurrentMessages()
 	{
-		final List messages = (List)messageListView.getModelObject();
+		final List<FeedbackMessage> messages = messageListView.getModelObject();
 		return Collections.unmodifiableList(messages);
 	}
 
@@ -316,18 +315,18 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * By default a {@link Label} is used.
 	 * 
-	 * Note that the created component is expected to respect feedback panel's
-	 * {@link #getEscapeModelStrings()} value
+	 * Note that the created component is expected to respect feedback panel's {@link
+	 * #getEscapeModelStrings()} value
 	 * 
 	 * @param id
-	 *            parent id
+	 * 		parent id
 	 * @param message
-	 *            feedback message
+	 * 		feedback message
 	 * @return component used to display the message
 	 */
-	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
+	protected Component<?> newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
-		Label label = new Label(id, message.getMessage().toString());
+		Label<String> label = new Label<String>(id, message.getMessage().toString());
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}

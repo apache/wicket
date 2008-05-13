@@ -39,16 +39,16 @@ public class CompressedResourceReference extends ResourceReference
 	/**
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
-	public CompressedResourceReference(Class scope, String name)
+	public CompressedResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
 
 	/**
 	 * @see ResourceReference#ResourceReference(Class scope, String name, Locale locale, String
-	 *      style)
+	 * 	style)
 	 */
-	public CompressedResourceReference(Class scope, String name, Locale locale, String style)
+	public CompressedResourceReference(Class<?> scope, String name, Locale locale, String style)
 	{
 		super(scope, name, locale, style);
 	}
@@ -64,10 +64,11 @@ public class CompressedResourceReference extends ResourceReference
 	/**
 	 * @see org.apache.wicket.ResourceReference#newResource()
 	 */
+	@Override
 	protected Resource newResource()
 	{
 		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
-				getLocale(), getStyle());
+			getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -75,7 +76,7 @@ public class CompressedResourceReference extends ResourceReference
 		else
 		{
 			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
-					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+				getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}

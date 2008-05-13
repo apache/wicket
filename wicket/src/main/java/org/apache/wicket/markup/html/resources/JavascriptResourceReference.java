@@ -42,7 +42,7 @@ public class JavascriptResourceReference extends ResourceReference
 	 * @param locale
 	 * @param style
 	 */
-	public JavascriptResourceReference(Class scope, String name, Locale locale, String style)
+	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style)
 	{
 		super(scope, name, locale, style);
 	}
@@ -53,7 +53,7 @@ public class JavascriptResourceReference extends ResourceReference
 	 * @param scope
 	 * @param name
 	 */
-	public JavascriptResourceReference(Class scope, String name)
+	public JavascriptResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
@@ -68,10 +68,11 @@ public class JavascriptResourceReference extends ResourceReference
 		super(name);
 	}
 
+	@Override
 	protected Resource newResource()
 	{
 		PackageResource packageResource = JavascriptPackageResource.get(getScope(), getName(),
-				getLocale(), getStyle());
+			getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -79,7 +80,7 @@ public class JavascriptResourceReference extends ResourceReference
 		else
 		{
 			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
-					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+				getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}
