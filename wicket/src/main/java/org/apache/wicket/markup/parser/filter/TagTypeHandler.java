@@ -36,7 +36,7 @@ import org.apache.wicket.util.collections.ArrayListStack;
 public final class TagTypeHandler extends AbstractMarkupFilter
 {
 	/** Tag stack to find balancing tags */
-	final private ArrayListStack stack = new ArrayListStack();
+	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();
 
 	/** Map of simple tags. */
 	private static final Map<String, Boolean> requireOpenBodyCloseTag = new HashMap<String, Boolean>();
@@ -67,7 +67,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 		// If there is something in the stack, ...
 		while (stack.size() > 0)
 		{
-			final ComponentTag top = (ComponentTag)stack.pop();
+			final ComponentTag top = stack.pop();
 			return top;
 		}
 
@@ -108,7 +108,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	 * Gets whether this tag does not require open-body-close tags.
 	 * 
 	 * @param name
-	 *            The tag's name, e.g. a, br, div, etc.
+	 * 		The tag's name, e.g. a, br, div, etc.
 	 * @return True if this tag must be converted into open-body-close if openClose
 	 */
 	public static boolean requiresOpenBodyCloseTag(final String name)

@@ -56,7 +56,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 
 	/** Allow to have link regions within link regions */
-	private ArrayListStack autolinkStatus;
+	private ArrayListStack<Boolean> autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
@@ -73,7 +73,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * Set the default value for autolinking
 	 * 
 	 * @param enable
-	 *            if true, autolinks are enabled
+	 * 		if true, autolinks are enabled
 	 */
 	public void setAutomaticLinking(final boolean enable)
 	{
@@ -130,12 +130,12 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new ArrayListStack();
+							autolinkStatus = new ArrayListStack<Boolean>();
 						}
 
 						// remember the current setting to be reset after the
 						// region
-						autolinkStatus.push(Boolean.valueOf(autolinking));
+						autolinkStatus.push(autolinking);
 					}
 
 					// html allows to represent true in different ways
@@ -147,13 +147,13 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					catch (StringValueConversionException e)
 					{
 						throw new WicketRuntimeException("Invalid autolink attribute value \"" +
-								autolink + "\"");
+							autolink + "\"");
 					}
 				}
 				else if (tag.isClose())
 				{
 					// restore the autolink setting from before the region
-					autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
+					autolinking = autolinkStatus.pop();
 				}
 
 				return wtag;
@@ -170,7 +170,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * tag handler with the markup parser through Application.newMarkupParser().
 	 * 
 	 * @param tag
-	 *            The current tag being parsed
+	 * 		The current tag being parsed
 	 * @return If true, tag will become auto-component
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)

@@ -40,7 +40,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	private static final Logger log = LoggerFactory.getLogger(HtmlHandler.class);
 
 	/** Tag stack to find balancing tags */
-	final private ArrayListStack stack = new ArrayListStack();
+	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();
 
 	/** Map of simple tags. */
 	private static final Map<String, Boolean> doesNotRequireCloseTag = new HashMap<String, Boolean>();
@@ -82,7 +82,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			// If there's still a non-simple tag left, it's an error
 			while (stack.size() > 0)
 			{
-				final ComponentTag top = (ComponentTag)stack.peek();
+				final ComponentTag top = stack.peek();
 
 				if (!requiresCloseTag(top.getName()))
 				{
@@ -115,7 +115,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			if (stack.size() > 0)
 			{
 				// Pop the top tag off the stack
-				ComponentTag top = (ComponentTag)stack.pop();
+				ComponentTag top = stack.pop();
 
 				// If the name of the current close tag does not match the
 				// tag on the stack then we may have a mismatched close tag
@@ -135,7 +135,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						{
 							break;
 						}
-						top = (ComponentTag)stack.pop();
+						top = stack.pop();
 
 						// Does new top of stack mismatch too?
 						mismatch = !top.hasEqualTagName(tag);
@@ -173,7 +173,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 * Gets whether this tag does not require a closing tag.
 	 * 
 	 * @param name
-	 *            The tag's name, e.g. a, br, div, etc.
+	 * 		The tag's name, e.g. a, br, div, etc.
 	 * @return True if this tag does not require a closing tag
 	 */
 	public static boolean requiresCloseTag(final String name)
