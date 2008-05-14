@@ -81,7 +81,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	private static final long serialVersionUID = 1L;
 
 	/** collection containing all available choices */
-	private final IModel<Collection< ? extends T>> choicesModel;
+	private final IModel<Collection<? extends T>> choicesModel;
 
 	/**
 	 * choice render used to render the choices in both available and selected collections
@@ -147,7 +147,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel<Collection< ? extends T>> choicesModel,
+	public Palette(String id, IModel<Collection<? extends T>> choicesModel,
 		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
@@ -169,7 +169,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(String id, IModel<Collection<T>> model,
-		IModel<Collection< ? extends T>> choicesModel, IChoiceRenderer<T> choiceRenderer, int rows,
+		IModel<Collection<? extends T>> choicesModel, IChoiceRenderer<T> choiceRenderer, int rows,
 		boolean allowOrder)
 	{
 		super(id, model);
@@ -413,7 +413,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes()
 	 */
 	protected Map getAdditionalAttributesForSelection(Object choice)
 	{
@@ -440,7 +440,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes()
 	 */
 	protected Map getAdditionalAttributesForChoices(Object choice)
 	{

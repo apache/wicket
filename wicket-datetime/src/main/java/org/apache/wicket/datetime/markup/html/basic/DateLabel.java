@@ -197,8 +197,8 @@ public class DateLabel extends Label
 	/**
 	 * Construct with a converter.
 	 * 
-	 * @param The
-	 *            component id
+	 * @param id
+	 *            The component id
 	 * @param converter
 	 *            The converter to use
 	 */
@@ -210,10 +210,10 @@ public class DateLabel extends Label
 	/**
 	 * Construct with a converter.
 	 * 
-	 * @param The
-	 *            component id
-	 * @param The
-	 *            model
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
 	 * @param converter
 	 *            The converter to use
 	 */
@@ -247,6 +247,7 @@ public class DateLabel extends Label
 	/**
 	 * Returns the specialized converter.
 	 */
+	@Override
 	public IConverter getConverter(Class clazz)
 	{
 		return converter;
@@ -270,6 +271,7 @@ public class DateLabel extends Label
 		this.before = before;
 	}
 
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		String s = getModelObjectAsString();

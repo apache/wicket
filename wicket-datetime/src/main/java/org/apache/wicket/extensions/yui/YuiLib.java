@@ -23,9 +23,9 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
 /**
- * Use the {@link #load(IHeaderResponse, boolean)} method to initialize the YUI library using the
- * YUI loader. It is OK to call this multiple times.
- *
+ * Use the {@link #load(IHeaderResponse)} method to initialize the YUI library using the YUI loader.
+ * It is OK to call this multiple times.
+ * 
  * @author eelcohillenius
  */
 public final class YuiLib implements IClusterable
@@ -37,7 +37,7 @@ public final class YuiLib implements IClusterable
 	/**
 	 * Load the YUI loader script. After that, you can declare YUI dependencies using
 	 * YAHOO.util.YUILoader.
-	 *
+	 * 
 	 * @param response
 	 *            header response
 	 */

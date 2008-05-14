@@ -55,7 +55,7 @@ public class RolesApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Index.class;
 	}
@@ -67,7 +67,7 @@ public class RolesApplication extends WebApplication
 	@Override
 	public Session newSession(Request request, Response response)
 	{
-		return new RolesSession(this, request);
+		return new RolesSession(request);
 	}
 
 	@Override

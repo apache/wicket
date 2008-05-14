@@ -161,8 +161,8 @@ public class ModalWindow extends Panel
 	/**
 	 * Callback for close button that contains a method that is invoked after the button has been
 	 * clicked. If no callback instance is specified using
-	 * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>, no ajax
-	 * request will be fired. Clicking the button will just close the window.
+	 * <code>{@link ModalWindow#setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>,
+	 * no ajax request will be fired. Clicking the button will just close the window.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -723,6 +723,7 @@ public class ModalWindow extends Panel
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		// if user is refreshing whole page, the window will not be shown
@@ -740,6 +741,7 @@ public class ModalWindow extends Panel
 	/**
 	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -771,6 +773,7 @@ public class ModalWindow extends Panel
 	/**
 	 * @see org.apache.wicket.MarkupContainer#remove(org.apache.wicket.Component)
 	 */
+	@Override
 	public void remove(Component component)
 	{
 		super.remove(component);
@@ -804,6 +807,7 @@ public class ModalWindow extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
 			shown = false;
@@ -829,6 +833,7 @@ public class ModalWindow extends Panel
 			}
 		}
 
+		@Override
 		protected CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
@@ -842,6 +847,7 @@ public class ModalWindow extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
 			if (closeButtonCallback == null ||
@@ -854,6 +860,7 @@ public class ModalWindow extends Panel
 		/**
 		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
 		 */
+		@Override
 		protected IAjaxCallDecorator getAjaxCallDecorator()
 		{
 			return new CancelEventIfNoAjaxDecorator(super.getAjaxCallDecorator());
@@ -862,6 +869,7 @@ public class ModalWindow extends Panel
 		/**
 		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
 		 */
+		@Override
 		protected CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
@@ -1039,12 +1047,14 @@ public class ModalWindow extends Panel
 	private PageCreator pageCreator = null;
 	private CloseButtonCallback closeButtonCallback = null;
 	private WindowClosedCallback windowClosedCallback = null;
-	
+
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
-		if (this.title != null) {
-			this.title.detach();
+		if (title != null)
+		{
+			title.detach();
 		}
 	}
 }

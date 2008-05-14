@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.authorization;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
 /**
@@ -33,13 +32,11 @@ public class RolesSession extends WebSession
 	/**
 	 * Construct.
 	 * 
-	 * @param application
 	 * @param request
-	 * @param response
 	 */
-	public RolesSession(WebApplication application, Request request)
+	public RolesSession(Request request)
 	{
-		super(application, request);
+		super(request);
 	}
 
 	/**

@@ -195,10 +195,10 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	/**
 	 * Construct with a converter.
 	 * 
-	 * @param The
-	 *            component id
-	 * @param The
-	 *            model
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
 	 * @param converter
 	 *            The converter to use
 	 */
@@ -217,6 +217,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @return The specialized converter.
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
+	@Override
 	public final IConverter getConverter(Class clazz)
 	{
 		return converter;

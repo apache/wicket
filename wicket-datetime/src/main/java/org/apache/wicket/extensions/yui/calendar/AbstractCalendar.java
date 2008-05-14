@@ -47,7 +47,7 @@ import org.apache.wicket.util.string.JavascriptUtils;
  * 
  * @author eelcohillenius
  * 
- * @see CalendarPopup
+ * @see DatePicker
  */
 // TODO provide localization strings (base them on the messages of
 // JsDatePicker?)
@@ -111,6 +111,7 @@ public abstract class AbstractCalendar extends WebComponent
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Object load()
 			{
 
@@ -258,7 +259,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 * properties for the javascript widget. See <a
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
 	 * available options. If you want to override/ remove properties, you obviously should call
-	 * {@link super#setWidgetProperties(Properties)} first.
+	 * <code>super.configureWidgetProperties(properties)</code>.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
