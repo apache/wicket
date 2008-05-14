@@ -49,6 +49,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
@@ -719,7 +720,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 
 		// Get page Class
-		final Class< ? extends Page> pageClass = requestTarget.getPageClass();
+		final Class<? extends Page> pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
 		// Find pagemap name
@@ -1189,10 +1190,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 	}
 
-	private static class PassThroughUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
+	private static class PassThroughUrlCodingStrategy extends
+		AbstractRequestTargetUrlCodingStrategy
 	{
-		private final String path;
-
 		/**
 		 * Construct.
 		 * 
@@ -1200,7 +1200,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		 */
 		public PassThroughUrlCodingStrategy(String path)
 		{
-			this.path = path;
+			super(path);
 		}
 
 		public IRequestTarget decode(RequestParameters requestParameters)
@@ -1213,21 +1213,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			return null;
 		}
 
-		public String getMountPath()
-		{
-			return path;
-		}
-
 		public boolean matches(IRequestTarget requestTarget)
 		{
 			return false;
 		}
-
-		public boolean matches(String path)
-		{
-			return false;
-		}
-
 	}
 
 }

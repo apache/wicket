@@ -35,6 +35,17 @@ public interface IRequestTargetMounter
 	void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy);
 
 	/**
+	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
+	 * mount("/mypage", MyPage.class); and then "/mypage/arealdir" should be ignored. This can be
+	 * done by calling unMount("/mypage/arealdir");
+	 * 
+	 * @param path
+	 *            the path that should be ignored.
+	 * 
+	 */
+	void addIgnoreMountPath(String path);
+
+	/**
 	 * Gets the url that the provided request target conforms to.
 	 * 
 	 * @param requestTarget

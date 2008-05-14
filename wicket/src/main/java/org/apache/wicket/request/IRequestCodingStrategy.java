@@ -56,15 +56,4 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 * @return the url to the provided target
 	 */
 	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget);
-
-	/**
-	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
-	 * mount("/mypage", MyPage.class); and then "/mypage/arealdir" should be ignored. This can be
-	 * done by calling unMount("/mypage/arealdir");
-	 * 
-	 * @param path
-	 *            the path that should be ignored.
-	 * 
-	 */
-	void addIgnoreMountPath(String path);
 }
