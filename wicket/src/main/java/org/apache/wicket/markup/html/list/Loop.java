@@ -49,8 +49,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * 
 	 * @author Jonathan Locke
 	 */
-	// FIXME 1.5: store iteration in the model instead of taking up a slot in a field
-	public static class LoopItem extends WebMarkupContainer
+	public static class LoopItem extends WebMarkupContainer<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -65,7 +64,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 		 */
 		public LoopItem(final int iteration)
 		{
-			super(Integer.toString(iteration));
+			super(Integer.toString(iteration).intern());
 			this.iteration = iteration;
 		}
 
