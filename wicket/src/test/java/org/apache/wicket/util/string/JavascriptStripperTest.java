@@ -27,44 +27,47 @@ public class JavascriptStripperTest extends TestCase
 {
 	public void testUNIXWICKET501()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testDOSWICKET501()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testMACWICKET501()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testRegexp()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals("\nt = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
 
 	public void testRegexp2()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
 	}
 
 	public void testRegexp3()
 	{
-		String s = JavascriptStripper
-				.stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
+		String s = JavascriptStripper.stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
 		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r",
-				s);
+			s);
+	}
+
+	public void testRegexp4()
+	{
+		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		String expected = " attr:   /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/\nafter\nregex";
+		assertEquals(expected, after);
+		System.out.println(after);
 	}
 }

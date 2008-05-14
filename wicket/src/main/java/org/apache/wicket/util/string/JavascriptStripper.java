@@ -76,7 +76,7 @@ public class JavascriptStripper
 	public static String stripCommentsAndWhitespace(String original)
 	{
 		// let's be optimistic
-		StringBuffer result = new StringBuffer(original.length() / 2);
+		AppendingStringBuffer result = new AppendingStringBuffer(original.length() / 2);
 		int state = REGULAR_TEXT;
 
 		for (int i = 0; i < original.length(); ++i)
@@ -113,16 +113,16 @@ public class JavascriptStripper
 					// Work out if it's a regular expression by finding the previous non-whitespace
 					// char, which
 					// will be either '=' or '('. If it's not, it's just a divide operator.
-					int idx = i - 1;
+					int idx = result.length() - 1;
 					while (idx > 0)
 					{
-						char tmp = original.charAt(idx);
+						char tmp = result.charAt(idx);
 						if (Character.isWhitespace(tmp))
 						{
 							idx--;
 							continue;
 						}
-						if (tmp == '=' || tmp == '(')
+						if (tmp == '=' || tmp == '(' || tmp == '{' || tmp == ':' || tmp == ',')
 						{
 							state = REG_EXP;
 							break;
