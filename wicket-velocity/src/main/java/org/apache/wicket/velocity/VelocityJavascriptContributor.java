@@ -24,11 +24,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Packages;
 
 /**
- * A derivation of VelocityContributor that uses
- * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
+ * A derivation of VelocityContributor that uses {@link
+ * org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
  */
 public class VelocityJavascriptContributor extends VelocityContributor
 {
+	private static final long serialVersionUID = 1L;
+
 	private final String id;
 
 	/**
@@ -63,7 +65,8 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.velocity.VelocityContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.velocity.VelocityContributor#renderHead(org.apache.wicket.markup.html.
+	 * 	IHeaderResponse)
 	 */
 	@Override
 	public void renderHead(IHeaderResponse response)

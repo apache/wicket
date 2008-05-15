@@ -44,6 +44,8 @@ public class VelocityJavascriptPage extends WebPage<Void>
 
 		IModel<MiniMap<String, String>> model = new Model<MiniMap<String, String>>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public MiniMap<String, String> getObject()
 			{

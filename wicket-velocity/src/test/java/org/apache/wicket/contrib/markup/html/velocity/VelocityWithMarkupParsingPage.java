@@ -43,6 +43,8 @@ public class VelocityWithMarkupParsingPage extends WebPage<Void>
 		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
 				new Model<HashMap<String, String>>(values))
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected IStringResourceStream getTemplateResource()
 			{

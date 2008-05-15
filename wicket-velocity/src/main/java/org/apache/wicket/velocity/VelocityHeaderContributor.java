@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
  */
 public class VelocityHeaderContributor extends AbstractHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
 
 	private final List<VelocityContributor> contributors = new ArrayList<VelocityContributor>(1);
 
