@@ -20,6 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -35,22 +36,23 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public class SmartLinkLabel extends Label
+public class SmartLinkLabel<T> extends Label<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see Label#Label(String, String)
 	 */
+	@SuppressWarnings("unchecked")
 	public SmartLinkLabel(String name, String label)
 	{
-		super(name, label);
+		this(name, new Model(label));
 	}
 
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, IModel model)
+	public SmartLinkLabel(String name, IModel<T> model)
 	{
 		super(name, model);
 	}
@@ -65,8 +67,9 @@ public class SmartLinkLabel extends Label
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 * 	org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getSmartLink(getModelObjectAsString()));
@@ -81,7 +84,7 @@ public class SmartLinkLabel extends Label
 	 * Replace all email and URL addresses
 	 * 
 	 * @param text
-	 *            Text to be modified
+	 * 		Text to be modified
 	 * @return Modified Text
 	 */
 	protected final CharSequence getSmartLink(final CharSequence text)

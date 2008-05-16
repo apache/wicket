@@ -54,12 +54,12 @@ public final class CaptchaImageResource extends DynamicImageResource
 	private static final class CharAttributes implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		private char c;
-		private String name;
-		private int rise;
-		private double rotation;
-		private double shearX;
-		private double shearY;
+		private final char c;
+		private final String name;
+		private final int rise;
+		private final double rotation;
+		private final double shearX;
+		private final double shearY;
 
 		CharAttributes(char c, String name, double rotation, int rise, double shearX, double shearY)
 		{
@@ -118,17 +118,18 @@ public final class CaptchaImageResource extends DynamicImageResource
 		return new String(b);
 	}
 
-	private String challengeId;
-	private final List charAttsList;
+	private final String challengeId;
+	private final List<CharAttributes> charAttsList;
 
-	private List fontNames = Arrays.asList(new String[] { "Helventica", "Arial", "Courier" });
+	private final List<String> fontNames = Arrays.asList(new String[] { "Helventica", "Arial",
+			"Courier" });
 	private final int fontSize;
 	private final int fontStyle;
 
 	private int height = 0;
 
 	/** Transient image data so that image only needs to be generated once per VM */
-	private transient SoftReference imageData;
+	private transient SoftReference<byte[]> imageData;
 
 	private final int margin;
 
@@ -146,7 +147,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * Construct.
 	 * 
 	 * @param challengeId
-	 *            The id of the challenge
+	 * 		The id of the challenge
 	 */
 	public CaptchaImageResource(String challengeId)
 	{
@@ -157,46 +158,46 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * Construct.
 	 * 
 	 * @param challengeId
-	 *            The id of the challenge
+	 * 		The id of the challenge
 	 * @param fontSize
-	 *            The font size
+	 * 		The font size
 	 * @param margin
-	 *            The image's margin
+	 * 		The image's margin
 	 */
 	public CaptchaImageResource(String challengeId, int fontSize, int margin)
 	{
 		this.challengeId = challengeId;
-		this.fontStyle = 1;
+		fontStyle = 1;
 		this.fontSize = fontSize;
 		this.margin = margin;
-		this.width = this.margin * 2;
-		this.height = this.margin * 2;
+		width = this.margin * 2;
+		height = this.margin * 2;
 		char[] chars = challengeId.toCharArray();
-		charAttsList = new ArrayList();
+		charAttsList = new ArrayList<CharAttributes>();
 		TextLayout text;
 		AffineTransform textAt;
 		Shape shape;
 		for (int i = 0; i < chars.length; i++)
 		{
-			String fontName = (String)fontNames.get(randomInt(0, fontNames.size()));
+			String fontName = fontNames.get(randomInt(0, fontNames.size()));
 			double rotation = Math.toRadians(randomInt(-35, 35));
 			int rise = randomInt(margin / 2, margin);
 			Random ran = new Random();
 			double shearX = ran.nextDouble() * 0.2;
 			double shearY = ran.nextDouble() * 0.2;
 			CharAttributes cf = new CharAttributes(chars[i], fontName, rotation, rise, shearX,
-					shearY);
+				shearY);
 			charAttsList.add(cf);
 			text = new TextLayout(chars[i] + "", getFont(fontName), new FontRenderContext(null,
-					false, false));
+				false, false));
 			textAt = new AffineTransform();
 			textAt.rotate(rotation);
 			textAt.shear(shearX, shearY);
 			shape = text.getOutline(textAt);
-			this.width += (int)shape.getBounds2D().getWidth();
-			if (this.height < (int)shape.getBounds2D().getHeight() + rise)
+			width += (int)shape.getBounds2D().getWidth();
+			if (height < (int)shape.getBounds2D().getHeight() + rise)
 			{
-				this.height = (int)shape.getBounds2D().getHeight() + rise;
+				height = (int)shape.getBounds2D().getHeight() + rise;
 			}
 		}
 	}
@@ -216,6 +217,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * 
 	 * @see org.apache.wicket.Resource#invalidate()
 	 */
+	@Override
 	public final void invalidate()
 	{
 		imageData = null;
@@ -224,18 +226,19 @@ public final class CaptchaImageResource extends DynamicImageResource
 	/**
 	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
 	 */
+	@Override
 	protected final byte[] getImageData()
 	{
 		// get image data is always called in sync block
 		byte[] data = null;
 		if (imageData != null)
 		{
-			data = (byte[])imageData.get();
+			data = imageData.get();
 		}
 		if (data == null)
 		{
 			data = render();
-			imageData = new SoftReference(data);
+			imageData = new SoftReference<byte[]>(data);
 			setLastModifiedTime(Time.now());
 		}
 		return data;
@@ -261,9 +264,9 @@ public final class CaptchaImageResource extends DynamicImageResource
 			int curWidth = margin;
 			for (int i = 0; i < charAttsList.size(); i++)
 			{
-				CharAttributes cf = (CharAttributes)charAttsList.get(i);
-				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx
-						.getFontRenderContext());
+				CharAttributes cf = charAttsList.get(i);
+				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()),
+					gfx.getFontRenderContext());
 				AffineTransform textAt = new AffineTransform();
 				textAt.translate(curWidth, height - cf.getRise());
 				textAt.rotate(cf.getRotation());

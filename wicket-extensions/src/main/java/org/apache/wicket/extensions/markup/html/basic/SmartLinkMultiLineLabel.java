@@ -36,13 +36,14 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class SmartLinkMultiLineLabel extends MultiLineLabel
+public final class SmartLinkMultiLineLabel<T> extends MultiLineLabel<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
+	@SuppressWarnings("unchecked")
 	public SmartLinkMultiLineLabel(String name, String label)
 	{
 		this(name, new Model(label));
@@ -51,15 +52,16 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
 	 */
-	public SmartLinkMultiLineLabel(String name, IModel model)
+	public SmartLinkMultiLineLabel(String name, IModel<T> model)
 	{
 		super(name, model);
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 * 	org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());

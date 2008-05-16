@@ -31,16 +31,16 @@ import java.util.regex.Pattern;
  */
 public class LinkParser implements ILinkParser
 {
-	private final Map renderStrategies = new HashMap();
+	private final Map<String, ILinkRenderStrategy> renderStrategies = new HashMap<String, ILinkRenderStrategy>();
 
 	/**
 	 * Adds a render strategy to the parser.
 	 * 
 	 * @param pattern
-	 *            the pattern to which the provided <code>renderStrategy</code> should be applied.
+	 * 		the pattern to which the provided <code>renderStrategy</code> should be applied.
 	 * @param renderStrategy
-	 *            the <code>ILinkRenderStrategy</code> which is applied to the text found by the
-	 *            provided <code>pattern</code>.
+	 * 		the <code>ILinkRenderStrategy</code> which is applied to the text found by the provided
+	 * 		<code>pattern</code>.
 	 * @return this <code>ILinkParser</code>.
 	 */
 	public ILinkParser addLinkRenderStrategy(String pattern, ILinkRenderStrategy renderStrategy)
@@ -60,11 +60,11 @@ public class LinkParser implements ILinkParser
 		}
 
 		String work = text;
-		Iterator iter = renderStrategies.keySet().iterator();
+		Iterator<String> iter = renderStrategies.keySet().iterator();
 		while (iter.hasNext())
 		{
-			String pattern = (String) iter.next();
-			ILinkRenderStrategy strategy = (ILinkRenderStrategy)renderStrategies.get(pattern);
+			String pattern = iter.next();
+			ILinkRenderStrategy strategy = renderStrategies.get(pattern);
 
 			Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(work);
 			StringBuffer buffer = new StringBuffer();
