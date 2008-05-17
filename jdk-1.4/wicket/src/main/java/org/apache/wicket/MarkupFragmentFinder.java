@@ -21,6 +21,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at the component
@@ -78,6 +79,16 @@ final class MarkupFragmentFinder
 							// Ok, found it
 							return markupStream;
 						}
+						else
+						{
+							// WICKET-1560
+							Component parent = component.getParent();
+							if (parent instanceof AbstractRepeater && id != null &&
+								id.equals(parent.getId()))
+							{
+								return markupStream;
+							}
+						}
 					}
 				}
 				catch (IndexOutOfBoundsException ex)
@@ -100,8 +111,7 @@ final class MarkupFragmentFinder
 
 			if (parentWithAssociatedMarkup instanceof Fragment)
 			{
-				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component
-						.getId());
+				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component.getId());
 				return markupStream;
 			}
 
@@ -110,14 +120,13 @@ final class MarkupFragmentFinder
 			// ...
 			if (parentWithAssociatedMarkup instanceof Border)
 			{
-				parentWithAssociatedMarkup = parentWithAssociatedMarkup
-						.findParentWithAssociatedMarkup();
+				parentWithAssociatedMarkup = parentWithAssociatedMarkup.findParentWithAssociatedMarkup();
 			}
 			else
 			{
 				throw new WicketRuntimeException(
-						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: " +
-								component.toString());
+					"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: " +
+						component.toString());
 			}
 
 			// Not found, reset the stream
@@ -133,11 +142,10 @@ final class MarkupFragmentFinder
 	 * @return the relative path
 	 */
 	private String getComponentRelativePath(final Component component,
-			final MarkupContainer parentWithAssociatedMarkup)
+		final MarkupContainer parentWithAssociatedMarkup)
 	{
 		final String componentPath = component.getParent().getPageRelativePath();
-		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
-				.getPageRelativePath();
+		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup.getPageRelativePath();
 		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
 		if (relativePath.startsWith(":"))
 		{
