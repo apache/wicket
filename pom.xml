@@ -101,6 +101,11 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<inherited>true</inherited>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>maven-bundle-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -215,6 +220,11 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<inherited>true</inherited>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>maven-bundle-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
 				</plugins>
 			</build>
 			<distributionManagement>
@@ -238,7 +248,7 @@
 				<module>jdk-1.5</module>
 				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
-			</modules>
+			</modules>			
 		</profile>
 	</profiles>
 
@@ -615,14 +625,14 @@
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<inherited>true</inherited>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>           
 			</plugin>
 		</plugins>
 
@@ -675,8 +685,9 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.2</version>
 					<configuration>
+						<useDefaultManifestFile>true</useDefaultManifestFile>
 						<archive>
 							<index>true</index>
 							<manifest>
@@ -685,8 +696,18 @@
 							</manifest>
 							<manifestEntries>
 							</manifestEntries>
-						</archive>
+						</archive>						
 					</configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                            <configuration>
+                                <useDefaultManifestFile>false</useDefaultManifestFile>
+                            </configuration>
+                        </execution>
+                    </executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -762,6 +783,27 @@
 					</executions>
 					<inherited>true</inherited>
 				</plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>1.4.1</version>
+                    <executions>
+                        <execution>
+                            <id>bundle-manifest</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>manifest</goal>
+                            </goals>
+                            <configuration>
+                                <instructions>
+                                    <Import-Package>org.apache.wicket*</Import-Package>
+                                    <Dynamic-ImportPackage>*</Dynamic-ImportPackage>
+                                    <_nouses>true</_nouses>
+                                </instructions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
