@@ -81,6 +81,7 @@ final class MarkupFragmentFinder
 						}
 						else
 						{
+							// WICKET-1560
 							Component<?> parent = component.getParent();
 							if (parent instanceof AbstractRepeater && id != null &&
 								id.equals(parent.getId()))
