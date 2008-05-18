@@ -19,8 +19,10 @@ package org.apache.wicket.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -66,8 +68,10 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * @param map
 	 *            The Map, which may or may not be Serializable
+	 * @deprecated see {@link Model#ofMap(Map)}
 	 * @return A Model object wrapping the Map
 	 */
+	@Deprecated
 	public static Model valueOf(final Map map)
 	{
 		return new Model(map instanceof Serializable ? (Serializable)map : new HashMap(map));
@@ -76,11 +80,83 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * @param list
 	 *            The List, which may or may not be Serializable
+	 * @deprecated see {@link Model#of(List)}
 	 * @return A Model object wrapping the List
 	 */
+	@Deprecated
 	public static Model valueOf(final List list)
 	{
 		return new Model(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
+	}
+
+	/**
+	 * Factory method for models that contain maps. This factory method will automatically rebuild a
+	 * nonserializable <code>map</code> into a serializable one.
+	 * 
+	 * @param <K>
+	 *            key type in map
+	 * @param <V>
+	 *            value type in map
+	 * @param <T>
+	 *            model type
+	 * @param map
+	 *            The Map, which may or may not be Serializable
+	 * @return A Model object wrapping the Map
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V, T extends Map<K, V> & Serializable> Model<T> of(final Map<K, V> map)
+	{
+		return new Model<T>((T)(map instanceof Serializable ? map : new HashMap<K, V>(map)));
+	}
+
+	/**
+	 * Factory method for models that contain lists. This factory method will automatically rebuild
+	 * a nonserializable <code>list</code> into a serializable one.
+	 * 
+	 * @param <V>
+	 *            value type in list
+	 * @param <T>
+	 *            model type
+	 * @param list
+	 *            The List, which may or may not be Serializable
+	 * @return A Model object wrapping the List
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V, T extends List<V> & Serializable> Model<T> of(final List<V> list)
+	{
+		return new Model<T>((T)(list instanceof Serializable ? list : new ArrayList<V>(list)));
+	}
+
+	/**
+	 * Factory method for models that contain sets. This factory method will automatically rebuild a
+	 * nonserializable <code>set</code> into a serializable one.
+	 * 
+	 * @param <V>
+	 *            value type in set
+	 * @param <T>
+	 *            model type
+	 * @param set
+	 *            The Set, which may or may not be Serializable
+	 * @return A Model object wrapping the Set
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V, T extends Set<V> & Serializable> Model<T> of(final Set<V> set)
+	{
+		return new Model<T>((T)(set instanceof Serializable ? set : new HashSet<V>(set)));
+	}
+
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Eqivalent to
+	 * <code>new Model<TypeOfObject>(object)</code>.
+	 * 
+	 * @param <T>
+	 * @param object
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T extends Serializable> Model<T> of(T object)
+	{
+		return new Model<T>(object);
 	}
 
 	/**
