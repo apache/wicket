@@ -35,7 +35,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * Configuration example:
  * 
  * <pre>
- *    &lt;servlet&gt;
+ * &lt;servlet&gt;
  *    &lt;servlet-name&gt;phonebook&lt;/servlet-name&gt;
  *    &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
  *    &lt;init-param&gt;
@@ -52,7 +52,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * Example:
  * 
  * <pre>
- *    &lt;servlet&gt;
+ * &lt;servlet&gt;
  *    &lt;servlet-name&gt;phonebook&lt;/servlet-name&gt;
  *    &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
  *    &lt;init-param&gt;

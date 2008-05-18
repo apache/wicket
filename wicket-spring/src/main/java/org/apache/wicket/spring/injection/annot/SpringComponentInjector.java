@@ -32,15 +32,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * {@link IComponentInstantiationListener} that injects component properties annotated with
- * {@link SpringBean} annotations.
+ * {@link IComponentInstantiationListener} that injects component properties annotated with {@link
+ * SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
- * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
- * 
- * Non-wicket components such as {@link Session}, {@link Model}, and any other pojo can be
- * injected by calling <code>InjectorHolder.getInjector().inject(this)</code> in their
- * constructor.
+ * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code> Non-wicket
+ * components such as {@link Session}, {@link Model}, and any other pojo can be injected by calling
+ * <code>InjectorHolder.getInjector().inject(this)</code> in their constructor.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>
@@ -61,11 +59,11 @@ public class SpringComponentInjector extends ComponentInjector
 
 	/**
 	 * Constructor used when spring application context is declared in the spring standard way and
-	 * can be located through
-	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
+	 * can be located through {@link
+	 * WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
-	 *            wicket web application
+	 * 		wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp)
 	{
@@ -79,9 +77,9 @@ public class SpringComponentInjector extends ComponentInjector
 	 * Constructor
 	 * 
 	 * @param webapp
-	 *            wicket web application
+	 * 		wicket web application
 	 * @param ctx
-	 *            spring's application context
+	 * 		spring's application context
 	 */
 	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
 	{

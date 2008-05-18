@@ -39,8 +39,10 @@ import org.apache.wicket.spring.SpringBeanLocator;
  * IDependency dependency = (IDependency)factory.getFieldValue(field, obj);
  * </pre>
  * 
- * In the example above the <code>dependency</code> object returned is a lazy init proxy that will
- * look up the actual IDependency bean from spring context upon first access to one of the methods.
+ * In the example above the
+ * 
+ * <code>dependency</code> object returned is a lazy init proxy that will look up the actual
+ * IDependency bean from spring context upon first access to one of the methods.
  * <p>
  * This class will also cache any produced proxies so that the same proxy is always returned for the
  * same spring dependency. This helps cut down on session size beacause proxies for the same
@@ -63,7 +65,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	/**
 	 * @param contextLocator
-	 *            spring context locator
+	 * 		spring context locator
 	 */
 	public AnnotProxyFieldValueFactory(ISpringContextLocator contextLocator)
 	{
@@ -76,7 +78,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
-	 *      java.lang.Object)
+	 * 	java.lang.Object)
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
@@ -141,7 +143,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	/**
 	 * @param failFast
-	 *            true if the locator fails if a bean can't be located
+	 * 		true if the locator fails if a bean can't be located
 	 */
 	public void setFailFast(boolean failFast)
 	{
