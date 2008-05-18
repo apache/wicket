@@ -58,6 +58,8 @@ public abstract class VelocityPanel extends Panel<Map>
 			IMarkupResourceStreamProvider,
 			IMarkupCacheKeyProvider
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Convenience factory method to create a {@link VelocityPanel} instance with a given {@link
 	 * IStringResourceStream template resource}.

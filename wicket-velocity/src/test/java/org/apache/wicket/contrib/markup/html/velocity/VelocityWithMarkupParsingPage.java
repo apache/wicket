@@ -59,6 +59,8 @@ public class VelocityWithMarkupParsingPage extends WebPage<Void>
 		};
 		velocityPanel.add(new Label<String>("message", VelocityPage.TEST_STRING)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
