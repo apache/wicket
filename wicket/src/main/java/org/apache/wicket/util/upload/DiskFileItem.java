@@ -153,7 +153,7 @@ public class DiskFileItem implements FileItem
 	 *            the item size exceed the threshold.
 	 */
 	public DiskFileItem(String fieldName, String contentType, boolean isFormField, String fileName,
-			int sizeThreshold, File repository)
+		int sizeThreshold, File repository)
 	{
 		this.fieldName = fieldName;
 		this.contentType = contentType;
@@ -213,7 +213,7 @@ public class DiskFileItem implements FileItem
 		ParameterParser parser = new ParameterParser();
 		parser.setLowerCaseNames(true);
 		// Parameter parser can handle null input
-		Map params = parser.parse(getContentType(), ';');
+		Map<?, ?> params = parser.parse(getContentType(), ';');
 		return (String)params.get("charset");
 	}
 
@@ -580,6 +580,7 @@ public class DiskFileItem implements FileItem
 	/**
 	 * Removes the file contents from the temporary storage.
 	 */
+	@Override
 	protected void finalize()
 	{
 		File outputFile = dfos.getFile();
@@ -611,10 +612,9 @@ public class DiskFileItem implements FileItem
 			}
 			catch (SecurityException e)
 			{
-				throw new WicketRuntimeException(
-						"Reading property java.io.tmpdir is not allowed"
-								+ " for the current security settings. The repository location needs to be"
-								+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
+				throw new WicketRuntimeException("Reading property java.io.tmpdir is not allowed"
+					+ " for the current security settings. The repository location needs to be"
+					+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
 			}
 			tempDir = new File(systemTmp);
 		}
@@ -657,10 +657,11 @@ public class DiskFileItem implements FileItem
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
-		return "name=" + this.getName() + ", StoreLocation=" +
-				String.valueOf(this.getStoreLocation()) + ", size=" + this.getSize() + "bytes, " +
-				"isFormField=" + isFormField() + ", FieldName=" + this.getFieldName();
+		return "name=" + getName() + ", StoreLocation=" + String.valueOf(getStoreLocation()) +
+			", size=" + getSize() + "bytes, " + "isFormField=" + isFormField() + ", FieldName=" +
+			getFieldName();
 	}
 }

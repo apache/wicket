@@ -51,7 +51,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * FIXME 2.0: remove asap
 	 */
 	@Deprecated
-	protected final Map< ? , ? > messageModel()
+	protected final Map<?, ?> messageModel()
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -65,7 +65,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 *            form component against which the error is reported
 	 * 
 	 */
-	public void error(FormComponent< ? > fc)
+	public void error(FormComponent<?> fc)
 	{
 		error(fc, resourceKey(), variablesMap());
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param resourceKey
 	 *            The message resource key to use
 	 */
-	public void error(FormComponent< ? > fc, final String resourceKey)
+	public void error(FormComponent<?> fc, final String resourceKey)
 	{
 		if (resourceKey == null)
 		{
@@ -96,7 +96,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param vars
 	 *            variables for variable interpolation
 	 */
-	public void error(FormComponent< ? > fc, final Map< ? , ? > vars)
+	public void error(FormComponent<?> fc, final Map<String, Object> vars)
 	{
 		if (vars == null)
 		{
@@ -115,7 +115,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * @param vars
 	 *            The model for variable interpolation
 	 */
-	public void error(FormComponent< ? > fc, final String resourceKey, Map< ? , ? > vars)
+	public void error(FormComponent<?> fc, final String resourceKey, Map<String, Object> vars)
 	{
 		if (fc == null)
 		{
@@ -155,17 +155,17 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 */
 	protected Map<String, Object> variablesMap()
 	{
-		FormComponent< ? >[] formComponents = getDependentFormComponents();
+		FormComponent<?>[] formComponents = getDependentFormComponents();
 
 		if (formComponents != null && formComponents.length > 0)
 		{
 			Map<String, Object> args = new HashMap<String, Object>(formComponents.length * 3);
 			for (int i = 0; i < formComponents.length; i++)
 			{
-				final FormComponent< ? > formComponent = formComponents[i];
+				final FormComponent<?> formComponent = formComponents[i];
 
 				String arg = "label" + i;
-				IModel< ? > label = formComponent.getLabel();
+				IModel<?> label = formComponent.getLabel();
 				if (label != null)
 				{
 					args.put(arg, label.getObject());

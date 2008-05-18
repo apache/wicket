@@ -211,6 +211,7 @@ public final class Task
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[name=" + name + ", startTime=" + startTime + ", isDaemon=" + isDaemon +
@@ -272,7 +273,7 @@ public final class Task
 	/**
 	 * Gets the thread priority
 	 * 
-	 * @return
+	 * @return priority
 	 */
 	public int getPriority()
 	{

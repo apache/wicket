@@ -110,7 +110,7 @@ public class ServletFileUpload extends FileUpload
 	 * @exception FileUploadException
 	 *                if there are problems reading/parsing the request or storing files.
 	 */
-	public List /* FileItem */parseRequest(HttpServletRequest request) throws FileUploadException
+	public List<FileItem> parseRequest(HttpServletRequest request) throws FileUploadException
 	{
 		return parseRequest(new ServletRequestContext(request));
 	}

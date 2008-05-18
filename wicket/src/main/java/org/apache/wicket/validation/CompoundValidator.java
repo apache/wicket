@@ -32,7 +32,7 @@ public class CompoundValidator implements IValidator
 {
 	private static final long serialVersionUID = 1L;
 
-	private final List validators = new ArrayList(2);
+	private final List<IValidator> validators = new ArrayList<IValidator>(2);
 
 	/**
 	 * Constructor.
@@ -63,19 +63,19 @@ public class CompoundValidator implements IValidator
 	 */
 	public final void validate(IValidatable validatable)
 	{
-		Iterator it = validators.iterator();
+		Iterator<IValidator> it = validators.iterator();
 		while (it.hasNext() && validatable.isValid())
 		{
-			((IValidator)it.next()).validate(validatable);
+			it.next().validate(validatable);
 		}
 	}
 
 	/**
 	 * Gets an unmodifiable list of the registered validators.
 	 * 
-	 * @return
+	 * @return unmodifiable list of delegate {@link IValidator}s inside this one
 	 */
-	public final List getValidators()
+	public final List<IValidator> getValidators()
 	{
 		return Collections.unmodifiableList(validators);
 	}

@@ -217,7 +217,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		 * @see org.apache.wicket.validation.IErrorMessageSource#substitute(java.lang.String,
 		 *      java.util.Map)
 		 */
-		public String substitute(String string, Map<String, String> vars)
+		public String substitute(String string, Map<String, Object> vars)
 			throws IllegalStateException
 		{
 			return new MapVariableInterpolator(string, addDefaultVars(vars), Application.get()

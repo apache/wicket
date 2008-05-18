@@ -48,12 +48,14 @@ public class ValidationError implements IValidationError, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final Map<String, Object> EMPTY_VARS = Collections.emptyMap();
+
 	// XXX 2.0: optimization - keys can be null by default until a key is added
 	/** list of message keys to try against the <code>IErrorMessageSource</code> */
-	private final List keys = new ArrayList(1);
+	private final List<String> keys = new ArrayList<String>(1);
 
 	/** variables map to use in variable substitution */
-	private Map vars;
+	private Map<String, Object> vars;
 
 	/** default message used when all keys yield no message */
 	private String message;
@@ -116,11 +118,11 @@ public class ValidationError implements IValidationError, IClusterable
 	 * 
 	 * @return a <code>Map</code> of variables for this error
 	 */
-	public final Map getVariables()
+	public final Map<String, Object> getVariables()
 	{
 		if (vars == null)
 		{
-			vars = new HashMap(2);
+			vars = new HashMap<String, Object>(2);
 		}
 		return vars;
 	}
@@ -132,11 +134,11 @@ public class ValidationError implements IValidationError, IClusterable
 	 *            a variables map
 	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
-	public final ValidationError setVariables(Map vars)
+	public final ValidationError setVariables(Map<String, Object> vars)
 	{
 		if (vars == null)
 		{
-			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
+			throw new IllegalArgumentException("Argument `vars` cannot be null");
 		}
 		this.vars = vars;
 		return this;
@@ -150,9 +152,9 @@ public class ValidationError implements IValidationError, IClusterable
 		String errorMessage = null;
 
 		// try any message keys ...
-		for (Iterator iterator = keys.iterator(); iterator.hasNext();)
+		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();)
 		{
-			errorMessage = messageSource.getMessage((String)iterator.next());
+			errorMessage = messageSource.getMessage(iterator.next());
 			if (errorMessage != null)
 			{
 				break;
@@ -168,7 +170,7 @@ public class ValidationError implements IValidationError, IClusterable
 		// if a message was found perform variable substitution
 		if (errorMessage != null)
 		{
-			final Map p = (vars == null) ? Collections.EMPTY_MAP : vars;
+			final Map<String, Object> p = (vars != null) ? vars : EMPTY_VARS;
 			errorMessage = messageSource.substitute(errorMessage, p);
 		}
 		return errorMessage;
@@ -205,6 +207,7 @@ public class ValidationError implements IValidationError, IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer tostring = new StringBuffer();
@@ -215,7 +218,7 @@ public class ValidationError implements IValidationError, IClusterable
 		tostring.append("], keys=[");
 		if (keys != null)
 		{
-			Iterator i = keys.iterator();
+			Iterator<String> i = keys.iterator();
 			while (i.hasNext())
 			{
 				tostring.append(i.next());
@@ -233,10 +236,10 @@ public class ValidationError implements IValidationError, IClusterable
 
 		if (vars != null)
 		{
-			Iterator i = vars.entrySet().iterator();
+			Iterator<Entry<String, Object>> i = vars.entrySet().iterator();
 			while (i.hasNext())
 			{
-				final Map.Entry e = (Entry)i.next();
+				final Entry<String, Object> e = i.next();
 				tostring.append("[")
 					.append(e.getKey())
 					.append("=")

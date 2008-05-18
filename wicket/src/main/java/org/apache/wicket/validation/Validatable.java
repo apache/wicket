@@ -56,7 +56,7 @@ public class Validatable implements IValidatable
 	private Object value;
 
 	/** the list of errors */
-	private ArrayList errors;
+	private ArrayList<IValidationError> errors;
 
 	/**
 	 * Constructor.
@@ -102,7 +102,7 @@ public class Validatable implements IValidatable
 	{
 		if (errors == null)
 		{
-			errors = new ArrayList();
+			errors = new ArrayList<IValidationError>();
 		}
 		errors.add(error);
 	}
@@ -113,11 +113,11 @@ public class Validatable implements IValidatable
 	 * 
 	 * @return an unmodifiable list of errors
 	 */
-	public List getErrors()
+	public List<IValidationError> getErrors()
 	{
 		if (errors == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		else
 		{
