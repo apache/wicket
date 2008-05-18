@@ -28,7 +28,7 @@
 			<outputDirectory>src/archetypes</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
-				<exclude>target/**</exclude>
+				<exclude>**/quickstart/target/**</exclude>
 				<exclude>**/.classpath/**</exclude>
 				<exclude>**/.project/**</exclude>
 				<exclude>**/.settings/**</exclude>
