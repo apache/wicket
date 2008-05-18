@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_9a extends WebPage
+public class HeaderSectionPage_9a extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

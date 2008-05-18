@@ -30,7 +30,7 @@ import org.apache.wicket.validation.validator.NumberValidator;
  * 
  * @author Eelco Hillenius
  */
-public class StatelessPage extends WebPage
+public class StatelessPage extends WebPage<Void>
 {
 	private final Integer number = new Integer(10);
 

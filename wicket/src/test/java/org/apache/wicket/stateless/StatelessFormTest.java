@@ -41,8 +41,8 @@ public class StatelessFormTest extends TestCase
 
 	private WebApplication application;
 
-	private Class< ? extends Page< ? >> homePage = HomePage.class;
-	private Class< ? extends Page< ? >> loginPage = LoginPage.class;
+	private Class<? extends Page<?>> homePage = HomePage.class;
+	private Class<? extends Page<?>> loginPage = LoginPage.class;
 
 
 	@Override
@@ -51,7 +51,7 @@ public class StatelessFormTest extends TestCase
 		mock = new WicketTester(application = new WebApplication()
 		{
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class<? extends Page<?>> getHomePage()
 			{
 				return StatelessFormTest.this.getHomePage();
 			}
@@ -88,7 +88,7 @@ public class StatelessFormTest extends TestCase
 	/**
 	 * @return Returns the homePage.
 	 */
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return homePage;
 	}
@@ -97,7 +97,7 @@ public class StatelessFormTest extends TestCase
 	 * @param homePage
 	 *            The homePage to set.
 	 */
-	public void setHomePage(Class< ? extends Page< ? >> homePage)
+	public void setHomePage(Class<? extends Page<?>> homePage)
 	{
 		this.homePage = homePage;
 	}
@@ -105,7 +105,7 @@ public class StatelessFormTest extends TestCase
 	/**
 	 * @return Returns the loginPage.
 	 */
-	public Class< ? extends Page> getLoginPage()
+	public Class<? extends Page<?>> getLoginPage()
 	{
 		return loginPage;
 	}
@@ -114,7 +114,7 @@ public class StatelessFormTest extends TestCase
 	 * @param loginPage
 	 *            The loginPage to set.
 	 */
-	public void setLoginPage(Class< ? extends Page< ? >> loginPage)
+	public void setLoginPage(Class<? extends Page<?>> loginPage)
 	{
 		this.loginPage = loginPage;
 	}

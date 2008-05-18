@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrement
 /**
  * Dummy page used for resource testing.
  */
-public class IncrementalTableNavigationPage extends WebPage
+public class IncrementalTableNavigationPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

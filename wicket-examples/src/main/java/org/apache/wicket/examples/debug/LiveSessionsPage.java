@@ -39,7 +39,7 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * @author jcompagner
  */
-public class LiveSessionsPage extends WebPage
+public class LiveSessionsPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

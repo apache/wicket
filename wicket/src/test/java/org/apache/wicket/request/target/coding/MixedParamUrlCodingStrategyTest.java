@@ -38,7 +38,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	 * 
 	 * @author erik.van.oosten
 	 */
-	public static class TestPage extends WebPage
+	public static class TestPage extends WebPage<Void>
 	{
 		private static final long serialVersionUID = 1L;
 		// EMPTY

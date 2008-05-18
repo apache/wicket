@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Gerolf Seitz
  */
-public class NestedFormsPage extends WebPage
+public class NestedFormsPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	static Logger logger = LoggerFactory.getLogger(NestedFormsPage.class);

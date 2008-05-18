@@ -25,7 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * 
  */
-public class AjaxLinkWithBorderPage extends WebPage
+public class AjaxLinkWithBorderPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

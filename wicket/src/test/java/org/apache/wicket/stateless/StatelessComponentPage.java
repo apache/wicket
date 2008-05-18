@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.link.StatelessLink;
 /**
  * @author jcompagner
  */
-public class StatelessComponentPage extends WebPage
+public class StatelessComponentPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

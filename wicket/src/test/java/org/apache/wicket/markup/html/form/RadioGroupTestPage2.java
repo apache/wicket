@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author igor
  */
-public class RadioGroupTestPage2 extends WebPage
+public class RadioGroupTestPage2 extends WebPage<Void>
 {
 	/**
 	 * 

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.PageLink;
  * 
  * @author Eelco Hillenius
  */
-public class NonBookmarkablePage extends WebPage
+public class NonBookmarkablePage extends WebPage<Void>
 {
 	/**
 	 * Constructor.

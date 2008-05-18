@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
-public class HomePage extends WebPage
+public class HomePage extends WebPage<Void>
 {
 	boolean submitted = false;
 	boolean submittedViaLink = false;

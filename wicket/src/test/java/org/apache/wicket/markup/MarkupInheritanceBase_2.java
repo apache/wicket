@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  */
-public class MarkupInheritanceBase_2 extends WebPage
+public class MarkupInheritanceBase_2 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

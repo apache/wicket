@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class LeftFrame extends WebPage
+public class LeftFrame extends WebPage<Void>
 {
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as that is a shared

@@ -35,7 +35,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class Page_2 extends WebPage
+public class Page_2 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

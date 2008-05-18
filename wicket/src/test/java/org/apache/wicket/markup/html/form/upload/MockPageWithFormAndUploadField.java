@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.form.Form;
  * 
  * @author Frank Bille (billen)
  */
-public class MockPageWithFormAndUploadField extends WebPage
+public class MockPageWithFormAndUploadField extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

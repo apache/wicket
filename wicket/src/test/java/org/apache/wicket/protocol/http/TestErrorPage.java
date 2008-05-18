@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Tests that an error page is displayed on runtime errors during ajax requests.
  */
-public class TestErrorPage extends WebPage
+public class TestErrorPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -46,7 +46,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  * @author almaw
  */
-public class ResourceTestPage extends WebPage
+public class ResourceTestPage extends WebPage<Void>
 {
 
 	public static final int IMAGES_PER_PAGE = 20;

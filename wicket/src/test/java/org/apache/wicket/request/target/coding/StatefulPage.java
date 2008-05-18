@@ -32,7 +32,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class StatefulPage extends WebPage
+public class StatefulPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class Test1 extends WebPage
+public class Test1 extends WebPage<Void>
 {
 	/**
 	 * Construct.

@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class InspectorPage extends WebPage
+public final class InspectorPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

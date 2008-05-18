@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
-public class Home extends WebPage
+public class Home extends WebPage<Void>
 {
 
 	public Home()

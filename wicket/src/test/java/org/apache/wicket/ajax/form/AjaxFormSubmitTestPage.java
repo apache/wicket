@@ -27,7 +27,7 @@ import org.apache.wicket.util.value.ValueMap;
 /**
  * @author marrink
  */
-public class AjaxFormSubmitTestPage extends WebPage
+public class AjaxFormSubmitTestPage extends WebPage<Void>
 {
 	/**
 	 * Indicates form handled submit.

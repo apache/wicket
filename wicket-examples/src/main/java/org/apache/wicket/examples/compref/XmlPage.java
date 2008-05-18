@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.list.ListView;
  * 
  * @author Eelco Hillenius
  */
-public class XmlPage extends WebPage
+public class XmlPage extends WebPage<Void>
 {
 	/**
 	 * Constructor

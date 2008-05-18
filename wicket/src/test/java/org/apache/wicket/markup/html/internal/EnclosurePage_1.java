@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Juergen Donnerstag
  */
-public class EnclosurePage_1 extends WebPage
+public class EnclosurePage_1 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

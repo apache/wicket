@@ -32,7 +32,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class BodyFrame extends WebPage
+public class BodyFrame extends WebPage<Void>
 {
 	/**
 	 * Model that returns the url to the bookmarkable page that is set in the current frame target.

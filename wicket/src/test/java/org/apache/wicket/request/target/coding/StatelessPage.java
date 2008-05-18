@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class StatelessPage extends WebPage
+public class StatelessPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

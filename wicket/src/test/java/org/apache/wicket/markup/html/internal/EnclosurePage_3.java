@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Juergen Donnerstag
  */
-public class EnclosurePage_3 extends WebPage
+public class EnclosurePage_3 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

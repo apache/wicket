@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * @author marrink
  */
-public class AjaxBehaviorEnabledPage extends WebPage
+public class AjaxBehaviorEnabledPage extends WebPage<Void>
 {
 
 	/**

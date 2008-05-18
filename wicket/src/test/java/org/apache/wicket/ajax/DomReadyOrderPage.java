@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 /**
  * @author jcompagner
  */
-public class DomReadyOrderPage extends WebPage
+public class DomReadyOrderPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +49,7 @@ public class DomReadyOrderPage extends WebPage
 			super(id);
 		}
 
+		@Override
 		public void renderHead(HtmlHeaderContainer container)
 		{
 			super.renderHead(container);
@@ -57,6 +58,7 @@ public class DomReadyOrderPage extends WebPage
 			container.getHeaderResponse().renderOnDomReadyJavascript("test2();");
 		}
 
+		@Override
 		public void onClick(AjaxRequestTarget target)
 		{
 			target.addComponent(this);

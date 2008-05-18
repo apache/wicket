@@ -82,7 +82,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- * public MyPage extends WebPage
+ * public MyPage extends WebPage<Void>
  * {
  *    public MyPage(final PageParameters parameters)
  *    {
@@ -98,7 +98,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * In this example, the resource key is selected based on the evaluation of a property expression:
  * 
  * <pre>
- * public MyPage extends WebPage
+ * public MyPage extends WebPage<Void>
  * {
  *     public MyPage(final PageParameters parameters)
  *     {
@@ -126,7 +126,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * the model:
  * 
  * <pre>
- * public MyPage extends WebPage
+ * public MyPage extends WebPage<Void>
  * {
  *     public MyPage(final PageParameters parameters)
  *     {
@@ -146,7 +146,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * string. This is an example of the most complex and powerful use of the string resource model:
  * 
  * <pre>
- * public MyPage extends WebPage
+ * public MyPage extends WebPage<Void>
  * {
  *     public MyPage(final PageParameters parameters)
  *     {

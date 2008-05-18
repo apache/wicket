@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Matej Knopp
  * 
  */
-public class ModalContent1Page extends WebPage
+public class ModalContent1Page extends WebPage<Void>
 {
 
 	/**

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Juergen Donnerstag
  */
-public class SimplePage_12 extends WebPage
+public class SimplePage_12 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

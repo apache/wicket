@@ -26,7 +26,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author Ate Douma
  */
-public class HeaderPage extends WebPage
+public class HeaderPage extends WebPage<Void>
 {
 	public HeaderPage()
 	{

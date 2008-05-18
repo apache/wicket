@@ -27,7 +27,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Chris Turner
  */
-public class MockPage extends WebPage
+public class MockPage extends WebPage<Void>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -43,6 +43,7 @@ public class MockPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				linkClickCount++;

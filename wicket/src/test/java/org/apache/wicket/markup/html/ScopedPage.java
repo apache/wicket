@@ -23,7 +23,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * @author Juergen Donnerstag
  */
-public class ScopedPage extends WebPage
+public class ScopedPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

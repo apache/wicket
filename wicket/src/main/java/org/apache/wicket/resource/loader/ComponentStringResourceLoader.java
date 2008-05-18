@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * In addition to the above search order, each component that is being searched for a resource also
  * includes the resources from any parent classes that it inherits from. For example, PageA extends
- * CommonBasePage which in turn extends WebPage. When a resource lookup is requested on PageA, the
+ * CommonBasePage which in turn extends WebPage<Void> When a resource lookup is requested on PageA, the
  * resource bundle for PageA is first checked. If the resource is not found in this bundle then the
  * resource bundle for CommonBasePage is checked. This allows designers of base pages and components
  * to define default sets of string resources and then developers implementing subclasses to either

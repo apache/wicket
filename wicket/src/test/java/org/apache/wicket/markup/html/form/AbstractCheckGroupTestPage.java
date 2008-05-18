@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author igor
  */
-public abstract class AbstractCheckGroupTestPage extends WebPage
+public abstract class AbstractCheckGroupTestPage extends WebPage<Void>
 {
 	/**
 	 * 

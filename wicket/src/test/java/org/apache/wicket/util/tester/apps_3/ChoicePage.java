@@ -43,7 +43,7 @@ import org.apache.wicket.util.tester.apps_1.Book;
 /**
  * @author Ingram Chen
  */
-public class ChoicePage extends WebPage
+public class ChoicePage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

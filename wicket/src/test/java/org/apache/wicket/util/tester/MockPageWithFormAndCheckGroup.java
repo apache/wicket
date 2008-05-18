@@ -34,7 +34,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Frank Bille (billen)
  */
-public class MockPageWithFormAndCheckGroup extends WebPage
+public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

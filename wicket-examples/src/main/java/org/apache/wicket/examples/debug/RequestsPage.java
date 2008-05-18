@@ -42,7 +42,7 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * @author jcompagner
  */
-public class RequestsPage extends WebPage
+public class RequestsPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");

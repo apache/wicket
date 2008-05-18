@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.IPageLink;
 import org.apache.wicket.markup.html.link.PageLink;
 
-public class SecondPage extends WebPage
+public class SecondPage extends WebPage<Void>
 {
 
 	public SecondPage(final FirstPage page)

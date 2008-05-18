@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class AjaxHeaderContributionPage2 extends WebPage
+public class AjaxHeaderContributionPage2 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +49,7 @@ public class AjaxHeaderContributionPage2 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				target.prependJavascript("prepend();");

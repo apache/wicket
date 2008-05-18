@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * Testpage for inherited models. TestCases should set the model on the page.
  */
-public class InheritedTestPage extends WebPage
+public class InheritedTestPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -59,7 +59,7 @@ import org.apache.wicket.util.convert.MaskConverter;
 import org.apache.wicket.validation.validator.NumberValidator;
 import org.apache.wicket.version.undo.Change;
 
-public class Home extends WebPage
+public class Home extends WebPage<Void>
 {
 
 	private class ActionPanel extends Panel

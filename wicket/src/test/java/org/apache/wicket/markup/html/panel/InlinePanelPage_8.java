@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class InlinePanelPage_8 extends WebPage
+public class InlinePanelPage_8 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	private int number = 0;

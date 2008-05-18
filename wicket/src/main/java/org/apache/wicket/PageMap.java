@@ -55,7 +55,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * MetaDataEntry array.
 	 */
-	private MetaDataEntry< ? >[] metaData;
+	private MetaDataEntry<?>[] metaData;
 
 	/**
 	 * Gets a page map for a page map name, automatically creating the page map if it does not
@@ -227,7 +227,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	public final void redirectToInterceptPage(final Class< ? extends Page> pageClazz)
+	public final void redirectToInterceptPage(final Class<? extends Page<?>> pageClazz)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);
@@ -243,7 +243,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param page
 	 *            The page to temporarily redirect to
 	 */
-	public final void redirectToInterceptPage(final Page page)
+	public final void redirectToInterceptPage(final Page<?> page)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);
@@ -372,7 +372,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey< ? > key, final Serializable object)
+	public final void setMetaData(final MetaDataKey<?> key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -385,7 +385,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey< ? > key)
+	public final Serializable getMetaData(final MetaDataKey<?> key)
 	{
 		return (Serializable)key.get(metaData);
 	}

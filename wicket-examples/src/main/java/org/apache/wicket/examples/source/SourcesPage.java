@@ -62,7 +62,7 @@ import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
  * 
  * @author Martijn Dashorst
  */
-public class SourcesPage extends WebPage
+public class SourcesPage extends WebPage<Void>
 {
 	private static final Log log = LogFactory.getLog(SourcesPage.class);
 

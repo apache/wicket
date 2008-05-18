@@ -25,7 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * 
  */
-public class AjaxLinkPage extends WebPage
+public class AjaxLinkPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +43,7 @@ public class AjaxLinkPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";

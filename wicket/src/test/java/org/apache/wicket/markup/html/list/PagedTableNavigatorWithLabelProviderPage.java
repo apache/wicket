@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTableNavigatorWithLabelProviderPage extends WebPage
+public class PagedTableNavigatorWithLabelProviderPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

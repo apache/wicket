@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePage extends WebPage
+public class BookmarkablePage extends WebPage<Void>
 {
 	/**
 	 * Constructor.

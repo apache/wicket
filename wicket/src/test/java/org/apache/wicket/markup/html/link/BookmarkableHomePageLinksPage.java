@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class BookmarkableHomePageLinksPage extends WebPage
+public class BookmarkableHomePageLinksPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,9 +36,8 @@ public class BookmarkableHomePageLinksPage extends WebPage
 	{
 		add(new BookmarkablePageLink("defaulthompage", Application.get().getHomePage()));
 		add(new BookmarkablePageLink("defaulthompagewithparams", Application.get().getHomePage(),
-				new PageParameters("param1=1,param2=test")));
-		add(new BookmarkablePageLink("defaulthompagewithpagemap", Application.get().getHomePage())
-				.setPageMap(PageMap.forName("testpagemap")));
+			new PageParameters("param1=1,param2=test")));
+		add(new BookmarkablePageLink("defaulthompagewithpagemap", Application.get().getHomePage()).setPageMap(PageMap.forName("testpagemap")));
 	}
 
 }

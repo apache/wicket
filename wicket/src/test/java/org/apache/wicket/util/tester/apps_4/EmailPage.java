@@ -25,7 +25,7 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 /**
  * @author Juergen Donnerstag
  */
-public class EmailPage extends WebPage
+public class EmailPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

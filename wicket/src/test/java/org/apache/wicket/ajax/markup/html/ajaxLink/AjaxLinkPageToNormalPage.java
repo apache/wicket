@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Tests going from an ajax request to a normal request.
  */
-public class AjaxLinkPageToNormalPage extends WebPage
+public class AjaxLinkPageToNormalPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,7 @@ public class AjaxLinkPageToNormalPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				RequestCycle.get().setResponsePage(NormalPage.class);

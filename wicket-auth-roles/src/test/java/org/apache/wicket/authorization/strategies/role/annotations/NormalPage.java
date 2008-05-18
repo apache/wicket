@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-public class NormalPage extends WebPage
+public class NormalPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * Dummy page used for resource testing.
  */
-public class SimpleTablePage_1 extends WebPage
+public class SimpleTablePage_1 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

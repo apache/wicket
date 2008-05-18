@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  *  // only users with role ADMIN are allowed to create instances of this page, whether it is
  *  // either bookmarkable or not
  *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
- *  public class AdminAnnotationsBookmarkablePage extends WebPage
+ *  public class AdminAnnotationsBookmarkablePage extends WebPage<Void>
  * </pre>
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy

@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class StatefulPage extends WebPage
+public class StatefulPage extends WebPage<Void>
 {
 	/** click count for Link. */
 	private int linkClickCount = 0;

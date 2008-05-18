@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.form.Form;
  * @author jcompagner
  * 
  */
-public class SimpleResponsePageClass extends WebPage
+public class SimpleResponsePageClass extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

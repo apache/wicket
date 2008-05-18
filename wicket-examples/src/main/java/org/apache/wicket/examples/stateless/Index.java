@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.StatelessLink;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WebPage
+public class Index extends WebPage<Void>
 {
 	/**
 	 * Constructor

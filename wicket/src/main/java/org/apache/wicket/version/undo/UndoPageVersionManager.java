@@ -30,9 +30,11 @@ import org.slf4j.LoggerFactory;
  * being managed.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            Type of Page
  * @since 1.2.6
  */
-public class UndoPageVersionManager implements IPageVersionManager
+public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 {
 	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(UndoPageVersionManager.class);
@@ -43,7 +45,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private ChangeList changeList;
 
 	/** the stack of change lists for undoing */
-	private final ArrayListStack changeListStack = new ArrayListStack();
+	private final ArrayListStack<ChangeList> changeListStack = new ArrayListStack<ChangeList>();
 
 	/** the current version number */
 	private int currentVersionNumber = 0;
@@ -55,7 +57,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private final int maxVersions;
 
 	/** the <code>Page</code> being managed */
-	private final Page page;
+	private final Page<T> page;
 
 	/**
 	 * If this is true, the version that was created is not merged with the previous one.
@@ -70,7 +72,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 * @param maxVersions
 	 *            the maximum number of versions to maintain before expiring old versions
 	 */
-	public UndoPageVersionManager(final Page page, final int maxVersions)
+	public UndoPageVersionManager(final Page<T> page, final int maxVersions)
 	{
 		this.page = page;
 		this.maxVersions = maxVersions;
@@ -110,7 +112,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * @see IPageVersionManager#componentAdded(Component)
 	 */
-	public void componentAdded(Component component)
+	public void componentAdded(Component<?> component)
 	{
 		changeList.componentAdded(component);
 	}
@@ -118,7 +120,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * @see IPageVersionManager#componentModelChanging(Component)
 	 */
-	public void componentModelChanging(Component component)
+	public void componentModelChanging(Component<?> component)
 	{
 		changeList.componentModelChanging(component);
 	}
@@ -126,7 +128,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * @see IPageVersionManager#componentRemoved(Component)
 	 */
-	public void componentRemoved(Component component)
+	public void componentRemoved(Component<?> component)
 	{
 		changeList.componentRemoved(component);
 	}
@@ -148,7 +150,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		{
 			if (changeListStack.size() > 0)
 			{
-				ChangeList previous = (ChangeList)changeListStack.peek();
+				ChangeList previous = changeListStack.peek();
 				previous.add(changeList);
 			}
 		}
@@ -202,7 +204,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * @see IPageVersionManager#getVersion(int)
 	 */
-	public Page getVersion(final int versionNumber)
+	public Page<T> getVersion(final int versionNumber)
 	{
 		// If the requested version is at or before the current version,
 		if (versionNumber <= getCurrentVersionNumber())
@@ -230,7 +232,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * @see IPageVersionManager#rollbackPage(int)
 	 */
-	public Page rollbackPage(int numberOfVersions)
+	public Page<T> rollbackPage(int numberOfVersions)
 	{
 		// TODO NEEDS IMPL! See SecondLevelCache PageMap impl
 		return null;
@@ -262,7 +264,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		}
 
 		// Pop off the top change list.
-		final ChangeList changeList = (ChangeList)changeListStack.pop();
+		final ChangeList changeList = changeListStack.pop();
 		if (changeList == null)
 		{
 			return false;

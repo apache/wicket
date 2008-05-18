@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.time.Duration;
 
-public class AjaxBehaviorAndMetaDataPage extends WebPage implements IAjaxIndicatorAware
+public class AjaxBehaviorAndMetaDataPage extends WebPage<Void> implements IAjaxIndicatorAware
 {
 	private static final long serialVersionUID = 1L;
 

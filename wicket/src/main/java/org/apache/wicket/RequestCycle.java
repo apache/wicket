@@ -187,7 +187,7 @@ public abstract class RequestCycle
 	private static final int RESPOND = 4;
 
 	/** MetaDataEntry array. */
-	private MetaDataEntry< ? >[] metaData;
+	private MetaDataEntry<?>[] metaData;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -394,7 +394,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page or null
 	 */
-	public final Page< ? > getResponsePage()
+	public final Page<?> getResponsePage()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target instanceof IPageRequestTarget)
@@ -414,7 +414,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page class or null
 	 */
-	public final Class< ? extends Page> getResponsePageClass()
+	public final Class<? extends Page> getResponsePageClass()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
@@ -467,7 +467,7 @@ public abstract class RequestCycle
 	 *            The exception
 	 * @return Any error page to redirect to
 	 */
-	public Page< ? > onRuntimeException(Page< ? > page, RuntimeException e)
+	public Page<?> onRuntimeException(Page<?> page, RuntimeException e)
 	{
 		return null;
 	}
@@ -481,7 +481,7 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
-	public abstract void redirectTo(final Page< ? > page);
+	public abstract void redirectTo(final Page<?> page);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -511,7 +511,7 @@ public abstract class RequestCycle
 	 * @param component
 	 *            to be re-rendered
 	 */
-	public final void request(final Component< ? > component)
+	public final void request(final Component<?> component)
 	{
 		checkReuse();
 
@@ -644,7 +644,7 @@ public abstract class RequestCycle
 		IRequestTarget target = RequestCycle.get().getRequestTarget();
 		if (target instanceof IPageRequestTarget)
 		{
-			Page< ? > page = ((IPageRequestTarget)target).getPage();
+			Page<?> page = ((IPageRequestTarget)target).getPage();
 			return page != null ? page.getPageMapName() : null;
 		}
 		else if (target instanceof IBookmarkablePageRequestTarget)
@@ -664,7 +664,7 @@ public abstract class RequestCycle
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
-	public final void setResponsePage(final Class< ? extends Page> pageClass)
+	public final void setResponsePage(final Class<? extends Page<?>> pageClass)
 	{
 		setResponsePage(pageClass, null);
 	}
@@ -677,7 +677,7 @@ public abstract class RequestCycle
 	 * @param pageParameters
 	 *            The page parameters that gets appended to the bookmarkable url,
 	 */
-	public final void setResponsePage(final Class< ? extends Page> pageClass,
+	public final void setResponsePage(final Class<? extends Page<?>> pageClass,
 		final PageParameters pageParameters)
 	{
 		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
@@ -694,7 +694,7 @@ public abstract class RequestCycle
 	 * @param pageMapName
 	 *            The pagemap in which the response page should be created
 	 */
-	public final void setResponsePage(final Class< ? extends Page> pageClass,
+	public final void setResponsePage(final Class<? extends Page<?>> pageClass,
 		final PageParameters pageParameters, final String pageMapName)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
@@ -708,7 +708,7 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to render as a response
 	 */
-	public final void setResponsePage(final Page< ? > page)
+	public final void setResponsePage(final Page<?> page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		setRequestTarget(target);
@@ -769,7 +769,7 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class< ? extends Page< ? >> pageClass,
+	public final CharSequence urlFor(final Class<? extends Page<?>> pageClass,
 		final PageParameters parameters)
 	{
 		return urlFor(null, pageClass, parameters);
@@ -789,7 +789,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component, behavior and interface to call
 	 */
-	public final CharSequence urlFor(final Component< ? > component, final IBehavior behaviour,
+	public final CharSequence urlFor(final Component<?> component, final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
 		int index = component.getBehaviors().indexOf(behaviour);
@@ -830,11 +830,11 @@ public abstract class RequestCycle
 	 *            Additional parameters to pass to the page
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component< ? > component,
+	public final CharSequence urlFor(final Component<?> component,
 		final RequestListenerInterface listener, ValueMap params)
 	{
 		// Get Page holding component and mark it as stateful.
-		final Page< ? > page = component.getPage();
+		final Page<?> page = component.getPage();
 		final IRequestTarget target;
 		if (listener != IRedirectListener.INTERFACE && component.isStateless() &&
 			page.isBookmarkable() && page.getStatelessHint())
@@ -922,7 +922,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component< ? > component,
+	public final CharSequence urlFor(final Component<?> component,
 		final RequestListenerInterface listener)
 	{
 		return urlFor(component, listener, null);
@@ -942,7 +942,7 @@ public abstract class RequestCycle
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final IPageMap pageMap,
-		final Class< ? extends Page> pageClass, final PageParameters parameters)
+		final Class<? extends Page<?>> pageClass, final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 			? PageMap.DEFAULT_NAME : pageMap.getName(), pageClass, parameters);
@@ -970,7 +970,7 @@ public abstract class RequestCycle
 	 *            The page
 	 * @return The url pointing to the provided page
 	 */
-	public final CharSequence urlFor(final Page< ? > page)
+	public final CharSequence urlFor(final Page<?> page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		getSession().touch(((IPageRequestTarget)target).getPage());

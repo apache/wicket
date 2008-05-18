@@ -3038,7 +3038,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
 	 */
-	public final void setResponsePage(final Class<? extends Page> cls)
+	public final void setResponsePage(final Class<? extends Page<?>> cls)
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
@@ -3053,7 +3053,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The parameters for this bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class<? extends Page> cls, PageParameters parameters)
+	public final void setResponsePage(final Class<? extends Page<?>> cls, PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -3065,7 +3065,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The response page
 	 * @see RequestCycle#setResponsePage(Page)
 	 */
-	public final void setResponsePage(final Page page)
+	public final void setResponsePage(final Page<?> page)
 	{
 		getRequestCycle().setResponsePage(page);
 	}
@@ -3166,7 +3166,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class<? extends Page> pageClass,
+	public final CharSequence urlFor(final Class<? extends Page<?>> pageClass,
 		final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
@@ -3205,8 +3205,8 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IPageMap pageMap, final Class<? extends Page> pageClass,
-		final PageParameters parameters)
+	public final CharSequence urlFor(final IPageMap pageMap,
+		final Class<? extends Page<?>> pageClass, final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
