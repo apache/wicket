@@ -45,6 +45,7 @@ public abstract class NumberValidator extends AbstractValidator
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.positive";
@@ -58,6 +59,7 @@ public abstract class NumberValidator extends AbstractValidator
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.negative";
@@ -242,9 +244,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Long(minimum));
 			map.put("maximum", new Long(maximum));
 			return map;
@@ -253,6 +256,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.range";
@@ -261,6 +265,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Number value = (Number)validatable.getValue();
@@ -273,7 +278,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * Gets the minimum value.
 		 * 
-		 * @return
+		 * @return minimum value
 		 */
 		public long getMinimum()
 		{
@@ -283,7 +288,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * Gets the maximum value.
 		 * 
-		 * @return
+		 * @return maximum value
 		 */
 		public long getMaximum()
 		{
@@ -313,9 +318,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Long(minimum));
 			return map;
 		}
@@ -323,6 +329,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
@@ -331,6 +338,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).longValue() < minimum)
@@ -373,9 +381,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Long(maximum));
 			return map;
 		}
@@ -383,6 +392,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
@@ -391,6 +401,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).longValue() > maximum)
@@ -437,9 +448,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Double(minimum));
 			map.put("maximum", new Double(maximum));
 			return map;
@@ -448,6 +460,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.range";
@@ -456,6 +469,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Number value = (Number)validatable.getValue();
@@ -508,9 +522,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			if (Math.abs(minimum) == Double.MIN_VALUE)
 			{
 				map.put("minimum", new Integer(0));
@@ -525,6 +540,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
@@ -533,6 +549,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).doubleValue() < minimum)
@@ -574,9 +591,10 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			if (Math.abs(maximum) == Double.MIN_VALUE)
 			{
 				map.put("maximum", new Integer(0));
@@ -591,6 +609,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
@@ -599,6 +618,7 @@ public abstract class NumberValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).doubleValue() > maximum)

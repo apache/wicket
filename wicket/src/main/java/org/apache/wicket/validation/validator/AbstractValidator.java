@@ -125,7 +125,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @param vars
 	 *            <code>Map</code> of variables for variable interpolation
 	 */
-	public void error(final IValidatable validatable, final Map vars)
+	public void error(final IValidatable validatable, final Map<String, Object> vars)
 	{
 		if (vars == null)
 		{
@@ -145,7 +145,8 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @param vars
 	 *            <code>Map</code> of variables for variable interpolation
 	 */
-	public void error(final IValidatable validatable, final String resourceKey, Map vars)
+	public void error(final IValidatable validatable, final String resourceKey,
+		Map<String, Object> vars)
 	{
 		if (validatable == null)
 		{
@@ -195,9 +196,9 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * 
 	 * @return a <code>Map</code> of variables for variable interpolation
 	 */
-	protected Map variablesMap(IValidatable validatable)
+	protected Map<String, Object> variablesMap(IValidatable validatable)
 	{
-		final Map resourceModel = new HashMap(1);
+		final Map<String, Object> resourceModel = new HashMap<String, Object>(1);
 		return resourceModel;
 	}
 
@@ -225,7 +226,8 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * 
 	 * FIXME 2.0: remove asap
 	 */
-	protected final Map messageModel(final FormComponent formComponent)
+	@Deprecated
+	protected final Map<String, Object> messageModel(final FormComponent<?> formComponent)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -247,7 +249,8 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * FIXME 2.0: remove asap
 	 * 
 	 */
-	protected final String resourceKey(final FormComponent formComponent)
+	@Deprecated
+	protected final String resourceKey(final FormComponent<?> formComponent)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -272,7 +275,8 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * 
 	 * FIXME 2.0: remove asap
 	 */
-	public final void validate(final FormComponent component)
+	@Deprecated
+	public final void validate(final FormComponent<?> component)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}

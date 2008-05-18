@@ -71,6 +71,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() != length)
@@ -82,6 +83,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey()
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "StringValidator.exact";
@@ -90,11 +92,12 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("length", new Integer(((String)validatable.getValue()).length()));
-			map.put("exact", new Integer(this.length));
+			map.put("exact", new Integer(length));
 			return map;
 		}
 
@@ -148,6 +151,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			final String value = (String)validatable.getValue();
@@ -161,6 +165,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey()
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "StringValidator.range";
@@ -169,9 +174,10 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(((String)validatable.getValue()).length()));
@@ -213,6 +219,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() > maximum)
@@ -224,6 +231,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey()
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "StringValidator.maximum";
@@ -232,9 +240,10 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(((String)validatable.getValue()).length()));
 			return map;
@@ -274,6 +283,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() < minimum)
@@ -285,6 +295,7 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey()
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "StringValidator.minimum";
@@ -293,9 +304,10 @@ public abstract class StringValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("length", new Integer(((String)validatable.getValue()).length()));
 			return map;

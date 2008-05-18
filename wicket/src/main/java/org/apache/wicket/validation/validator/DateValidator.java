@@ -132,9 +132,10 @@ public abstract class DateValidator extends AbstractValidator
 
 		}
 
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
 			map.put("maximum", maximum);
 			return map;
@@ -143,11 +144,13 @@ public abstract class DateValidator extends AbstractValidator
 		/**
 		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "DateValidator.range";
 		}
 
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Date value = (Date)validatable.getValue();
@@ -170,19 +173,22 @@ public abstract class DateValidator extends AbstractValidator
 			this.minimum = minimum;
 		}
 
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
 			return map;
 		}
 
+		@Override
 		protected String resourceKey()
 		{
 			return "DateValidator.minimum";
 		}
 
 
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Date value = (Date)validatable.getValue();
@@ -205,19 +211,22 @@ public abstract class DateValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
-		protected Map variablesMap(IValidatable validatable)
+		@Override
+		protected Map<String, Object> variablesMap(IValidatable validatable)
 		{
-			final Map map = super.variablesMap(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", maximum);
 			return map;
 		}
 
+		@Override
 		protected String resourceKey()
 		{
 			return "DateValidator.maximum";
 		}
 
 
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Date value = (Date)validatable.getValue();

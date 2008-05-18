@@ -21,6 +21,7 @@ package org.apache.wicket.validation.validator;
  * 
  * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource keys!
  */
+@Deprecated
 public class EmailAddressPatternValidator extends EmailAddressValidator
 {
 	private static final long serialVersionUID = 1L;
@@ -29,8 +30,9 @@ public class EmailAddressPatternValidator extends EmailAddressValidator
 	/**
 	 * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource
 	 *             keys!
-	 * @return
+	 * @return instance of email validator
 	 */
+	@Deprecated
 	public static EmailAddressValidator getInstance()
 	{
 		// We have to have our own instance because otherwise we break the resource keys.
