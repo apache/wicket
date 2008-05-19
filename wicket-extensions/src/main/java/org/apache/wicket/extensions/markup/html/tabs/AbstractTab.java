@@ -25,11 +25,9 @@ import org.apache.wicket.model.IModel;
  * @see ITab
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            the panel's model object type
  * 
  */
-public abstract class AbstractTab<T> implements ITab<T>
+public abstract class AbstractTab implements ITab
 {
 	/**
 	 * 
@@ -59,5 +57,5 @@ public abstract class AbstractTab<T> implements ITab<T>
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public abstract Panel<T> getPanel(final String panelId);
+	public abstract Panel<?> getPanel(final String panelId);
 }

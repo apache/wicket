@@ -50,8 +50,8 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		addCssSwitchingLinks();
 
 		// create a list of ITab objects used to feed the tabbed panel
-		List<ITab<?>> tabs = new ArrayList<ITab<?>>();
-		tabs.add(new AbstractTab<Void>(new Model<String>("first tab"))
+		List<ITab> tabs = new ArrayList<ITab>();
+		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 
 			@Override
@@ -62,7 +62,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 
 		});
 
-		tabs.add(new AbstractTab<Void>(new Model<String>("second tab"))
+		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
 
 			@Override
@@ -73,7 +73,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 
 		});
 
-		tabs.add(new AbstractTab<Void>(new Model<String>("third tab"))
+		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
 
 			@Override

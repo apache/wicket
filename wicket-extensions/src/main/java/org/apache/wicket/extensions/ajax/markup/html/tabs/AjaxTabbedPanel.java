@@ -42,7 +42,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param id
 	 * @param tabs
 	 */
-	public AjaxTabbedPanel(String id, List<ITab<?>> tabs)
+	public AjaxTabbedPanel(String id, List<ITab> tabs)
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);
@@ -82,7 +82,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * the fallback mode is used. See {@link AjaxFallbackLink} for details.
 	 * 
 	 * @param target
-	 * 		ajax target used to update this component
+	 *            ajax target used to update this component
 	 */
 	protected void onAjaxUpdate(AjaxRequestTarget target)
 	{

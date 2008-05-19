@@ -37,8 +37,8 @@ import org.apache.wicket.model.Model;
  * content panels inside the TabbedPanel panel.
  * 
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
- * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
+ * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
  * <p>
  * 
  * Example:
@@ -94,17 +94,17 @@ public class TabbedPanel extends Panel<Integer>
 	public static final String TAB_PANEL_ID = "panel";
 
 
-	private final List<ITab<?>> tabs;
+	private final List<ITab> tabs;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param tabs
-	 * 		list of ITab objects used to represent tabs
+	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List<ITab<?>> tabs)
+	public TabbedPanel(String id, List<ITab> tabs)
 	{
 		super(id, new Model<Integer>(new Integer(-1)));
 
@@ -148,7 +148,7 @@ public class TabbedPanel extends Panel<Integer>
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
-				final ITab<?> tab = (TabbedPanel.this.tabs.get(index));
+				final ITab tab = (TabbedPanel.this.tabs.get(index));
 
 				final WebMarkupContainer<?> titleLink = newLink("link", index);
 
@@ -218,7 +218,7 @@ public class TabbedPanel extends Panel<Integer>
 
 	/**
 	 * @return the value of css class attribute that will be added to a div containing the tabs. The
-	 * 	default value is <code>tab-row</code>
+	 *         default value is <code>tab-row</code>
 	 */
 	protected String getTabContainerCssClass()
 	{
@@ -228,7 +228,7 @@ public class TabbedPanel extends Panel<Integer>
 	/**
 	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
-	public final List<ITab<?>> getTabs()
+	public final List<ITab> getTabs()
 	{
 		return tabs;
 	}
@@ -237,15 +237,14 @@ public class TabbedPanel extends Panel<Integer>
 	 * Factory method for tab titles. Returned component can be anything that can attach to span
 	 * tags such as a fragment, panel, or a label
 	 * 
-	 * @param <
-	 * 		S> the returned component's model object type
-	 * 
 	 * @param titleId
-	 * 		id of title component
+	 *            id of title component
 	 * @param titleModel
-	 * 		model containing tab title
+	 *            model containing tab title
 	 * @param index
-	 * 		index of tab
+	 *            index of tab
+	 * @param <S>
+	 *            the returned component's model object type
 	 * @return title component
 	 */
 	protected <S> Component<S> newTitle(String titleId, IModel<S> titleModel, int index)
@@ -282,10 +281,11 @@ public class TabbedPanel extends Panel<Integer>
 	 * </pre>
 	 * 
 	 * @param linkId
-	 * 		component id with which the link should be created
+	 *            component id with which the link should be created
 	 * @param index
-	 * 		index of the tab that should be activated when this link is clicked. See {@link
-	 * 		#setSelectedTab(int)}.
+	 *            index of the tab that should be activated when this link is clicked. See {@link
+	 *            #setSelectedTab(int)}.
+	 * @param <S>
 	 * @return created link component
 	 */
 	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
@@ -306,7 +306,7 @@ public class TabbedPanel extends Panel<Integer>
 	 * sets the selected tab
 	 * 
 	 * @param index
-	 * 		index of the tab to select
+	 *            index of the tab to select
 	 * 
 	 */
 	public void setSelectedTab(int index)
@@ -318,7 +318,7 @@ public class TabbedPanel extends Panel<Integer>
 
 		setModelObject(new Integer(index));
 
-		ITab<?> tab = tabs.get(index);
+		ITab tab = tabs.get(index);
 
 		Panel<?> panel = tab.getPanel(TAB_PANEL_ID);
 

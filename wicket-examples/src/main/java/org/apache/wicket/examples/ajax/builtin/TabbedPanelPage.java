@@ -39,8 +39,8 @@ public class TabbedPanelPage extends BasePage<Void>
 	public TabbedPanelPage()
 	{
 		// create a list of ITab objects used to feed the tabbed panel
-		List<ITab<?>> tabs = new ArrayList<ITab<?>>();
-		tabs.add(new AbstractTab<Void>(new Model<String>("first tab"))
+		List<ITab> tabs = new ArrayList<ITab>();
+		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 			@Override
 			public Panel<Void> getPanel(String panelId)
@@ -49,7 +49,7 @@ public class TabbedPanelPage extends BasePage<Void>
 			}
 		});
 
-		tabs.add(new AbstractTab<Void>(new Model<String>("second tab"))
+		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
 			@Override
 			public Panel<Void> getPanel(String panelId)
@@ -58,7 +58,7 @@ public class TabbedPanelPage extends BasePage<Void>
 			}
 		});
 
-		tabs.add(new AbstractTab<Void>(new Model<String>("third tab"))
+		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
 			@Override
 			public Panel<Void> getPanel(String panelId)
