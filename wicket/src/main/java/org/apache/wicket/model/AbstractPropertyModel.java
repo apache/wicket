@@ -89,11 +89,11 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel< ? > getChainedModel()
+	public IModel<?> getChainedModel()
 	{
 		if (target instanceof IModel)
 		{
-			return (IModel< ? >)target;
+			return (IModel<?>)target;
 		}
 		return null;
 	}
@@ -132,7 +132,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
-	public void setChainedModel(IModel< ? > model)
+	public void setChainedModel(IModel<?> model)
 	{
 		target = model;
 	}
@@ -216,7 +216,7 @@ public abstract class AbstractPropertyModel<T>
 		{
 			try
 			{
-				return PropertyResolver.getPropertyClass(expression, target);
+				return (Class<T>)PropertyResolver.getPropertyClass(expression, target);
 			}
 			catch (Exception e)
 			{

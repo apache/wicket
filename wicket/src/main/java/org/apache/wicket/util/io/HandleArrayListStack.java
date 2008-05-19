@@ -24,8 +24,10 @@ import java.util.EmptyStackException;
  * TODO document me.
  * 
  * @author jcompagner
+ * @param <T>
+ *            type of object in stack
  */
-final class HandleArrayListStack extends ArrayList
+final class HandleArrayListStack<T> extends ArrayList<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +45,7 @@ final class HandleArrayListStack extends ArrayList
 	 * @param collection
 	 *            The collection to add
 	 */
-	public HandleArrayListStack(final Collection collection)
+	public HandleArrayListStack(final Collection<? extends T> collection)
 	{
 		super(collection);
 	}
@@ -73,6 +75,7 @@ final class HandleArrayListStack extends ArrayList
 	/**
 	 * @see java.util.ArrayList#indexOf(java.lang.Object)
 	 */
+	@Override
 	public int indexOf(Object elem)
 	{
 		int size = size();
@@ -102,6 +105,7 @@ final class HandleArrayListStack extends ArrayList
 	/**
 	 * @see java.util.ArrayList#lastIndexOf(java.lang.Object)
 	 */
+	@Override
 	public int lastIndexOf(Object elem)
 	{
 		if (elem == null)
@@ -134,7 +138,7 @@ final class HandleArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object peek()
+	public final T peek()
 	{
 		int size = size();
 		if (size == 0)
@@ -151,9 +155,9 @@ final class HandleArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object pop()
+	public final T pop()
 	{
-		final Object top = peek();
+		final T top = peek();
 		remove(size() - 1);
 		return top;
 	}
@@ -164,7 +168,7 @@ final class HandleArrayListStack extends ArrayList
 	 * @param item
 	 *            the item to be pushed onto this stack.
 	 */
-	public final void push(final Object item)
+	public final void push(final T item)
 	{
 		add(item);
 	}

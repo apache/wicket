@@ -64,14 +64,14 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 				if (accessPM.getVersions() > maxVersions)
 				{
 					// Remove oldest entry from access stack
-					final AccessStackPageMap.Access oldestAccess = (Access)accessPM
-							.getAccessStack().remove(0);
+					final AccessStackPageMap.Access oldestAccess = (Access)accessPM.getAccessStack()
+						.remove(0);
 					final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
 
 					// If entry is a page (cannot be null if we're evicting)
 					if (oldestEntry instanceof Page)
 					{
-						Page page = (Page)oldestEntry;
+						Page<?> page = (Page<?>)oldestEntry;
 
 						// If there is more than one version of this page
 						if (page.getVersions() > 1)
@@ -105,6 +105,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[LeastRecentlyAccessedEvictionStrategy maxVersions = " + maxVersions + "]";

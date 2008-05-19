@@ -74,6 +74,21 @@ public class Generics
 	}
 
 	/**
+	 * Creates a new HashMap
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param capacity
+	 *            initial capacity
+	 * @return new hash map
+	 */
+	public static <K, V> HashMap<K, V> newHashMap(int capacity)
+	{
+		return new HashMap<K, V>(capacity);
+	}
+
+
+	/**
 	 * Creates a new ConcurrentHashMap
 	 * 
 	 * @param <K>
@@ -98,5 +113,6 @@ public class Generics
 	{
 		return new ConcurrentHashMap<K, V>(initialCapacity);
 	}
+
 
 }

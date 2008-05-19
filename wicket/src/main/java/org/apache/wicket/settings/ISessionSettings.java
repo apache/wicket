@@ -92,7 +92,7 @@ public interface ISessionSettings
 	 * Returns whether the page id is unique per session. If the page id is not unique per session,
 	 * it is only unique per pagemap.
 	 * 
-	 * @return
+	 * @return true if he page id is unique per session
 	 */
 	boolean isPageIdUniquePerSession();
 }

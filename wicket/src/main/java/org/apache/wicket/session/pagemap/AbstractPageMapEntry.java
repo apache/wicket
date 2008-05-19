@@ -42,7 +42,7 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPage()
 	 */
-	public abstract Page getPage();
+	public abstract Page<?> getPage();
 
 	/**
 	 * Failing to override this method could be pretty expensive because this default implementation
@@ -52,9 +52,10 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	 * 
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	public Class<? extends Page> getPageClass()
+	@SuppressWarnings("unchecked")
+	public Class<? extends Page<?>> getPageClass()
 	{
-		return getPage().getClass();
+		return (Class<? extends Page<?>>)getPage().getClass();
 	}
 
 	/**

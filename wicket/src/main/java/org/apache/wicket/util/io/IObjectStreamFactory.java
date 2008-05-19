@@ -60,7 +60,8 @@ public interface IObjectStreamFactory
 			{
 				// This override is required to resolve classes inside in different bundle, i.e.
 				// The classes can be resolved by OSGI classresolver implementation
-				protected Class resolveClass(ObjectStreamClass desc) throws IOException,
+				@Override
+				protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 					ClassNotFoundException
 				{
 					String className = desc.getName();
@@ -76,7 +77,7 @@ public interface IObjectStreamFactory
 					}
 
 
-					Class candidate = null;
+					Class<?> candidate = null;
 					try
 					{
 						// Can the application always be taken??
@@ -110,6 +111,7 @@ public interface IObjectStreamFactory
 			final ObjectOutputStream oos = new ObjectOutputStream(out);
 			return new ObjectOutputStream()
 			{
+				@Override
 				protected final void writeObjectOverride(final Object obj) throws IOException
 				{
 					try
@@ -136,11 +138,13 @@ public interface IObjectStreamFactory
 					}
 				}
 
+				@Override
 				public void flush() throws IOException
 				{
 					oos.flush();
 				}
 
+				@Override
 				public void close() throws IOException
 				{
 					oos.close();

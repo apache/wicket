@@ -1178,7 +1178,7 @@ public final class Settings
 	 * @param pageClass
 	 *            the page class to check
 	 */
-	private void checkPageClass(final Class<? extends Page> pageClass)
+	private void checkPageClass(final Class<? extends Page<?>> pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
 		// here, as - though the default is that a bookmarkable page must

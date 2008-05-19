@@ -62,8 +62,7 @@ public final class PropertyResolver
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private final static Map<Object, Map> applicationToClassesToGetAndSetters = new ConcurrentHashMap<Object, Map>(2);
-
+	private final static Map<Object, Map<Class<?>, Map<String, IGetAndSet>>> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
@@ -139,7 +138,7 @@ public final class PropertyResolver
 	 * @param object
 	 * @return class of the target property object
 	 */
-	public final static Class getPropertyClass(String expression, Object object)
+	public final static Class<?> getPropertyClass(String expression, Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, RESOLVE_CLASS);
 		if (setter == null)
@@ -209,7 +208,7 @@ public final class PropertyResolver
 		int index = getNextDotIndex(expressionBracketsSeperated, 0);
 		int lastIndex = 0;
 		Object value = object;
-		Class clz = value.getClass();
+		Class<?> clz = value.getClass();
 		String exp = expressionBracketsSeperated;
 		while (index != -1)
 		{
@@ -302,9 +301,9 @@ public final class PropertyResolver
 		return -1;
 	}
 
-	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
+	private final static IGetAndSet getGetAndSetter(String exp, Class<?> clz)
 	{
-		Map<Class, Map> classesToGetAndSetters = getClassesToGetAndSetters();
+		Map<Class<?>, Map<String, IGetAndSet>> classesToGetAndSetters = getClassesToGetAndSetters();
 		Map<String, IGetAndSet> getAndSetters = classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
@@ -467,7 +466,7 @@ public final class PropertyResolver
 	 * @param expression
 	 * @return introspected field
 	 */
-	private static Field findField(Class clz, String expression)
+	private static Field findField(Class<?> clz, String expression)
 	{
 		Field field = null;
 		try
@@ -476,7 +475,7 @@ public final class PropertyResolver
 		}
 		catch (Exception e)
 		{
-			Class tmp = clz;
+			Class<?> tmp = clz;
 			while (tmp != null && tmp != Object.class)
 			{
 				Field[] fields = tmp.getDeclaredFields();
@@ -500,13 +499,13 @@ public final class PropertyResolver
 	 * @param expression
 	 * @return The method for the expression null if not found
 	 */
-	private final static Method findGetter(Class clz, String expression)
+	private final static Method findGetter(Class<?> clz, String expression)
 	{
 		String name = Character.toUpperCase(expression.charAt(0)) + expression.substring(1);
 		Method method = null;
 		try
 		{
-			method = clz.getMethod("get" + name, null);
+			method = clz.getMethod("get" + name, (Class[])null);
 		}
 		catch (Exception e)
 		{
@@ -515,7 +514,7 @@ public final class PropertyResolver
 		{
 			try
 			{
-				method = clz.getMethod("is" + name, null);
+				method = clz.getMethod("is" + name, (Class[])null);
 			}
 			catch (Exception e)
 			{
@@ -525,7 +524,7 @@ public final class PropertyResolver
 		return method;
 	}
 
-	private final static Method findMethod(Class clz, String expression)
+	private final static Method findMethod(Class<?> clz, String expression)
 	{
 		if (expression.endsWith("()"))
 		{
@@ -534,7 +533,7 @@ public final class PropertyResolver
 		Method method = null;
 		try
 		{
-			method = clz.getMethod(expression, null);
+			method = clz.getMethod(expression, (Class[])null);
 		}
 		catch (Exception e)
 		{
@@ -590,7 +589,7 @@ public final class PropertyResolver
 		/**
 		 * @return class of property value
 		 */
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return getAndSetter.getTargetClass();
 		}
@@ -635,7 +634,7 @@ public final class PropertyResolver
 		/**
 		 * @return The target class of the object that as to be set.
 		 */
-		public Class getTargetClass();
+		public Class<?> getTargetClass();
 
 		/**
 		 * @param object
@@ -698,7 +697,7 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return null;
 		}
@@ -718,13 +717,14 @@ public final class PropertyResolver
 		 */
 		public Object getValue(Object object)
 		{
-			return ((Map)object).get(key);
+			return ((Map<?, ?>)object).get(key);
 		}
 
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
 		 *      PropertyResolverConverter)
 		 */
+		@SuppressWarnings("unchecked")
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			((Map<String, Object>)object).put(key, value);
@@ -755,13 +755,14 @@ public final class PropertyResolver
 		 */
 		public Object getValue(Object object)
 		{
-			return ((List)object).get(index);
+			return ((List<?>)object).get(index);
 		}
 
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
 		 *      PropertyResolverConverter)
 		 */
+		@SuppressWarnings("unchecked")
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			List<Object> lst = (List<Object>)object;
@@ -798,9 +799,9 @@ public final class PropertyResolver
 	private static final class ArrayGetSet extends AbstractGetAndSet
 	{
 		private final int index;
-		private final Class clzComponentType;
+		private final Class<?> clzComponentType;
 
-		ArrayGetSet(Class clzComponentType, int index)
+		ArrayGetSet(Class<?> clzComponentType, int index)
 		{
 			this.clzComponentType = clzComponentType;
 			this.index = index;
@@ -847,7 +848,7 @@ public final class PropertyResolver
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
 		@Override
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return clzComponentType;
 		}
@@ -888,7 +889,7 @@ public final class PropertyResolver
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
 		@Override
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return int.class;
 		}
@@ -906,7 +907,7 @@ public final class PropertyResolver
 			getMethod = method;
 		}
 
-		private final static Method findSetter(Method getMethod, Class clz)
+		private final static Method findSetter(Method getMethod, Class<?> clz)
 		{
 			String name = getMethod.getName();
 			name = "set" + name.substring(3);
@@ -988,7 +989,7 @@ public final class PropertyResolver
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
 		@Override
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return getMethod.getReturnType();
 		}
@@ -1046,7 +1047,7 @@ public final class PropertyResolver
 			Object ret = null;
 			try
 			{
-				ret = getMethod.invoke(object, null);
+				ret = getMethod.invoke(object, (Object[])null);
 			}
 			catch (InvocationTargetException ex)
 			{
@@ -1109,7 +1110,7 @@ public final class PropertyResolver
 			}
 		}
 
-		private final static Method findSetter(Method getMethod, Class clz)
+		private final static Method findSetter(Method getMethod, Class<?> clz)
 		{
 			String name = getMethod.getName();
 			if (name.startsWith("get"))
@@ -1136,7 +1137,7 @@ public final class PropertyResolver
 				{
 					if (methods[i].getName().equals(name))
 					{
-						Class[] parameterTypes = methods[i].getParameterTypes();
+						Class<?>[] parameterTypes = methods[i].getParameterTypes();
 						if (parameterTypes.length == 1)
 						{
 							if (parameterTypes[0].isAssignableFrom(getMethod.getReturnType()))
@@ -1166,7 +1167,7 @@ public final class PropertyResolver
 				return null;
 			}
 
-			Class clz = getMethod.getReturnType();
+			Class<?> clz = getMethod.getReturnType();
 			Object value = null;
 			try
 			{
@@ -1184,7 +1185,7 @@ public final class PropertyResolver
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
 		@Override
-		public Class getTargetClass()
+		public Class<?> getTargetClass()
 		{
 			return getMethod.getReturnType();
 		}
@@ -1258,7 +1259,7 @@ public final class PropertyResolver
 		 */
 		public Object newValue(Object object)
 		{
-			Class clz = field.getType();
+			Class<?> clz = field.getType();
 			Object value = null;
 			try
 			{
@@ -1293,18 +1294,20 @@ public final class PropertyResolver
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass()
 		 */
-		public Class getTargetClass()
+		@Override
+		public Class<?> getTargetClass()
 		{
 			return field.getType();
 		}
 
+		@Override
 		public Field getField()
 		{
 			return field;
 		}
 	}
 
-	private static Map<Class, Map> getClassesToGetAndSetters()
+	private static Map<Class<?>, Map<String, IGetAndSet>> getClassesToGetAndSetters()
 	{
 		Object key = null;
 		if (Application.exists())
@@ -1315,13 +1318,14 @@ public final class PropertyResolver
 		{
 			key = PropertyResolver.class;
 		}
-		Map<Class, Map> result = applicationToClassesToGetAndSetters.get(key);
+		Map<Class<?>, Map<String, IGetAndSet>> result = applicationToClassesToGetAndSetters.get(key);
 		if (result == null)
 		{
 			// Don't synchronize this - Doesn't matter if we create two of them,
 			// as it's only a cache and the first will go out of scope and get
 			// GC'ed.
-			applicationToClassesToGetAndSetters.put(key, result = new ConcurrentHashMap<Class, Map>(64));
+			result = Generics.newConcurrentHashMap(64);
+			applicationToClassesToGetAndSetters.put(key, result);
 		}
 		return result;
 	}

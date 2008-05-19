@@ -299,7 +299,7 @@ public interface IResourceSettings
 	/**
 	 * Returns whether Wicket should add last modified time as resource reference URL parameter.
 	 * 
-	 * @return
+	 * @return true if Wicket should add last modified time as resource reference URL parameter
 	 */
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl();
 }

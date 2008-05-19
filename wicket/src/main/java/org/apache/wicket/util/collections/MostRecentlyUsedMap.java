@@ -24,13 +24,17 @@ import java.util.Map;
  * map exceeds that maximum size.
  * 
  * @author Jonathan Locke
+ * @param <K>
+ *            key type
+ * @param <V>
+ *            value type
  */
-public class MostRecentlyUsedMap extends LinkedHashMap
+public class MostRecentlyUsedMap<K, V> extends LinkedHashMap<K, V>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Value most recently removed from map */
-	Object removedValue;
+	V removedValue;
 
 	/** Maximum number of entries allowed in this map */
 	private final int maxEntries;
@@ -64,7 +68,8 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	/**
 	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 	 */
-	protected boolean removeEldestEntry(final Map.Entry eldest)
+	@Override
+	protected boolean removeEldestEntry(final Map.Entry<K, V> eldest)
 	{
 		final boolean remove = size() > maxEntries;
 		// when it should be removed remember the oldest value that will be removed

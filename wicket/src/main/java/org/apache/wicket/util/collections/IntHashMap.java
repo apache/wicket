@@ -100,6 +100,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @throws IllegalArgumentException
 	 *             if the initial capacity is negative or the load factor is nonpositive.
 	 */
+	@SuppressWarnings("unchecked")
 	public IntHashMap(int initialCapacity, float loadFactor)
 	{
 		if (initialCapacity < 0)
@@ -148,6 +149,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * Constructs an empty <tt>HashMap</tt> with the default initial capacity (16) and the default
 	 * load factor (0.75).
 	 */
+	@SuppressWarnings("unchecked")
 	public IntHashMap()
 	{
 		loadFactor = DEFAULT_LOAD_FACTOR;
@@ -351,6 +353,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *            the new capacity, MUST be a power of two; must be greater than current capacity
 	 *            unless current capacity is MAXIMUM_CAPACITY (in which case value is irrelevant).
 	 */
+	@SuppressWarnings("unchecked")
 	void resize(int newCapacity)
 	{
 		Entry<V>[] oldTable = table;
@@ -502,6 +505,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param o
 	 * @return The entry that was removed
 	 */
+	@SuppressWarnings("unchecked")
 	Entry<V> removeMapping(Object o)
 	{
 		if (!(o instanceof Entry))
@@ -509,7 +513,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			return null;
 		}
 
-		Entry<V> entry = (Entry)o;
+		Entry<V> entry = (Entry<V>)o;
 		int key = entry.getKey();
 		int i = indexFor(key, table.length);
 		Entry<V> prev = table[i];
@@ -608,13 +612,14 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * 
 	 * @return a shallow copy of this map.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
 		IntHashMap<V> result = null;
 		try
 		{
-			result = (IntHashMap)super.clone();
+			result = (IntHashMap<V>)super.clone();
 			result.table = new Entry[table.length];
 			result.entrySet = null;
 			result.modCount = 0;
@@ -631,6 +636,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 
 	/**
 	 * @author jcompagner
+	 * @param <V>
+	 *            type of value object
 	 */
 	public static class Entry<V>
 	{
@@ -682,6 +689,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean equals(Object o)
 		{
@@ -1049,6 +1057,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean contains(Object o)
 		{
@@ -1056,7 +1065,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			{
 				return false;
 			}
-			Entry<V> e = (Entry)o;
+			Entry<V> e = (Entry<V>)o;
 			Entry<V> candidate = getEntry(e.getKey());
 			return candidate != null && candidate.equals(e);
 		}
@@ -1132,6 +1141,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		// Read in the threshold, loadfactor, and any hidden stuff
