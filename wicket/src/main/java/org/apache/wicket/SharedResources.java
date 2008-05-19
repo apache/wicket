@@ -41,7 +41,7 @@ public class SharedResources
 	/** Logger */
 	private static final Logger log = LoggerFactory.getLogger(SharedResources.class);
 
-  /**
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts _[locale] and
 	 * _[style] into path just before any extension that might exist.
 	 * 
@@ -55,12 +55,14 @@ public class SharedResources
 	 */
 	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
-    // escape sequence for '..' (prevents crippled urls in browser)
-    final CharSequence parentEscape = Application.get().getResourceSettings().getParentFolderPlaceholder();
+		// escape sequence for '..' (prevents crippled urls in browser)
+		final CharSequence parentEscape = Application.get()
+			.getResourceSettings()
+			.getParentFolderPlaceholder();
 
-    final String extension = Files.extension(path);
-    // get relative path to resource, replace '..' with escape sequence
-    final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
+		final String extension = Files.extension(path);
+		// get relative path to resource, replace '..' with escape sequence
+		final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 
@@ -96,10 +98,10 @@ public class SharedResources
 	}
 
 	/** Map of Class to alias String */
-	private final Map<Class< ? >, String> classAliasMap = new WeakHashMap<Class< ? >, String>();
+	private final Map<Class<?>, String> classAliasMap = new WeakHashMap<Class<?>, String>();
 
 	/** Map of alias String to WeakReference(Class) */
-	private final Map<String, WeakReference<Class< ? >>> aliasClassMap = new HashMap<String, WeakReference<Class< ? >>>();
+	private final Map<String, WeakReference<Class<?>>> aliasClassMap = new HashMap<String, WeakReference<Class<?>>>();
 
 	/** Map of shared resources states */
 	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
@@ -128,7 +130,7 @@ public class SharedResources
 	 * @param resource
 	 *            Resource to store
 	 */
-	public final void add(final Class< ? > scope, final String name, final Locale locale,
+	public final void add(final Class<?> scope, final String name, final Locale locale,
 		final String style, final Resource resource)
 	{
 		// Store resource
@@ -190,7 +192,7 @@ public class SharedResources
 	 * 
 	 * @return The logical resource
 	 */
-	public final Resource get(final Class< ? > scope, final String name, final Locale locale,
+	public final Resource get(final Class<?> scope, final String name, final Locale locale,
 		final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
@@ -267,10 +269,10 @@ public class SharedResources
 	 * @param alias
 	 *            The alias string.
 	 */
-	public final void putClassAlias(Class< ? > clz, String alias)
+	public final void putClassAlias(Class<?> clz, String alias)
 	{
 		classAliasMap.put(clz, alias);
-		aliasClassMap.put(alias, new WeakReference<Class< ? >>(clz));
+		aliasClassMap.put(alias, new WeakReference<Class<?>>(clz));
 	}
 
 	/**
@@ -280,9 +282,9 @@ public class SharedResources
 	 * @return The class this is an alias for.
 	 * @see #putClassAlias(Class, String)
 	 */
-	public final Class< ? > getAliasClass(String alias)
+	public final Class<?> getAliasClass(String alias)
 	{
-		WeakReference<Class< ? >> classRef = aliasClassMap.get(alias);
+		WeakReference<Class<?>> classRef = aliasClassMap.get(alias);
 		if (classRef == null)
 		{
 			return null;
@@ -317,7 +319,7 @@ public class SharedResources
 	 *            The style (see {@link org.apache.wicket.Session})
 	 * @return The localized path
 	 */
-	public String resourceKey(final Class< ? > scope, final String path, final Locale locale,
+	public String resourceKey(final Class<?> scope, final String path, final Locale locale,
 		final String style)
 	{
 		String alias = classAliasMap.get(scope);

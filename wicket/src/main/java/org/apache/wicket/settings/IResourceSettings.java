@@ -299,24 +299,26 @@ public interface IResourceSettings
 	/**
 	 * Returns whether Wicket should add last modified time as resource reference URL parameter.
 	 * 
-	 * @return
+	 * @return whether Wicket should add last modified time as resource reference URL parameter
 	 */
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl();
 
 
-  /**
-   * placeholder string for '..' within resource urls (which will be crippled by the browser and not work anymore)
-   *
-   * @return placeholder
-   */
-  CharSequence getParentFolderPlaceholder();
+	/**
+	 * placeholder string for '..' within resource urls (which will be crippled by the browser and
+	 * not work anymore)
+	 * 
+	 * @return placeholder
+	 */
+	CharSequence getParentFolderPlaceholder();
 
-  /**
-   * set placeholder for '..' inside resource urls
-   *
-   * @see #getParentFolderPlaceholder()
-   *
-   * @param sequence character sequence which must not be ambiguous within urls
-   */
-  void setParentFolderPlaceholder(CharSequence sequence);
+	/**
+	 * set placeholder for '..' inside resource urls
+	 * 
+	 * @see #getParentFolderPlaceholder()
+	 * 
+	 * @param sequence
+	 *            character sequence which must not be ambiguous within urls
+	 */
+	void setParentFolderPlaceholder(CharSequence sequence);
 }

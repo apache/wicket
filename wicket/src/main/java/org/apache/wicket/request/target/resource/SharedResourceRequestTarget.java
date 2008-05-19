@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation of {@link ISharedResourceRequestTarget}. Target that denotes a shared
  * {@link org.apache.wicket.Resource}.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
@@ -47,7 +47,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param requestParameters
 	 *            the request parameters
 	 */
@@ -75,6 +75,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof SharedResourceRequestTarget)
@@ -105,6 +106,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "SharedResourceRequestTarget".hashCode();
@@ -115,7 +117,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * Respond by looking up the shared resource and delegating the actual response to that
 	 * resource.
-	 *
+	 * 
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -133,7 +135,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			{
 				String className = resourceKey.substring(0, ix);
 				IClassResolver resolver = application.getApplicationSettings().getClassResolver();
-				Class scope = null;
+				Class<?> scope = null;
 				try
 				{
 					// First try to match mounted resources.
@@ -145,9 +147,11 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					{
 						scope = resolver.resolveClass(className);
 					}
-          final CharSequence escapeString = application.getResourceSettings().getParentFolderPlaceholder();
-          // get path component of resource key, replace '..' with escape sequence to prevent crippled urls in browser 
-          String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
+					final CharSequence escapeString = application.getResourceSettings()
+						.getParentFolderPlaceholder();
+					// get path component of resource key, replace '..' with escape sequence to
+					// prevent crippled urls in browser
+					String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
 
 					if (PackageResource.exists(scope, path, null, null))
 					{
@@ -198,6 +202,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
