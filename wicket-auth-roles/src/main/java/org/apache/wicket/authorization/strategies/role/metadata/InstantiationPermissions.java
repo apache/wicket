@@ -38,7 +38,7 @@ public class InstantiationPermissions implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Holds roles objects for component classes */
-	private final Map<Class<? extends Component<?>>, Roles> rolesForComponentClass = new HashMap<Class<? extends Component<?>>, Roles>();
+	private final Map<Class<? extends Component>, Roles> rolesForComponentClass = new HashMap<Class<? extends Component>, Roles>();
 
 	/**
 	 * Gives the given role permission to instantiate the given class.
@@ -48,7 +48,7 @@ public class InstantiationPermissions implements IClusterable
 	 * @param rolesToAdd
 	 *            The roles to add
 	 */
-	public final void authorize(final Class<? extends Component<?>> componentClass,
+	public final void authorize(final Class<? extends Component> componentClass,
 		final Roles rolesToAdd)
 	{
 		if (componentClass == null)
@@ -78,7 +78,7 @@ public class InstantiationPermissions implements IClusterable
 	 * @param componentClass
 	 *            The component class
 	 */
-	public final void authorizeAll(final Class<? extends Component<?>> componentClass)
+	public final void authorizeAll(final Class<? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{
@@ -96,7 +96,7 @@ public class InstantiationPermissions implements IClusterable
 	 * @return the roles that have a binding with the given component class, or null if no entries
 	 *         are found
 	 */
-	public Roles authorizedRoles(final Class<? extends Component<?>> componentClass)
+	public Roles authorizedRoles(final Class<? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{
@@ -114,7 +114,7 @@ public class InstantiationPermissions implements IClusterable
 	 * @param rolesToRemove
 	 *            The role to deny
 	 */
-	public final void unauthorize(final Class<? extends Component<?>> componentClass,
+	public final void unauthorize(final Class<? extends Component> componentClass,
 		final Roles rolesToRemove)
 	{
 		if (componentClass == null)
@@ -150,7 +150,7 @@ public class InstantiationPermissions implements IClusterable
 	/**
 	 * @return gets map with roles objects for a component classes
 	 */
-	protected final Map<Class<? extends Component<?>>, Roles> getRolesForComponentClass()
+	protected final Map<Class<? extends Component>, Roles> getRolesForComponentClass()
 	{
 		return rolesForComponentClass;
 	}

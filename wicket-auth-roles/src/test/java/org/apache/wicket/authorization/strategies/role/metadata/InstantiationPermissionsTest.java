@@ -55,18 +55,17 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public void testAdd1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
-		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("jonathan"));
-		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("johan"));
-		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("maurice"));
-		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("eelco"));
+		permissions.authorize(Page.class, new Roles("jonathan"));
+		permissions.authorize(Page.class, new Roles("johan"));
+		permissions.authorize(Page.class, new Roles("maurice"));
+		permissions.authorize(Page.class, new Roles("eelco"));
 		assertEquals(4, permissions.getRolesForComponentClass().get(Page.class).size());
-		permissions.unauthorize((Class<? extends Component<?>>)Page.class, new Roles("maurice"));
+		permissions.unauthorize(Page.class, new Roles("maurice"));
 		assertEquals(3, permissions.getRolesForComponentClass().get(Page.class).size());
-		permissions.authorizeAll((Class<? extends Component<?>>)Page.class);
+		permissions.authorizeAll(Page.class);
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
 	}
 
@@ -75,12 +74,11 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public void testRemove1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
-		permissions.unauthorize((Class<? extends Component<?>>)Page.class, new Roles("eelco"));
+		permissions.unauthorize(Page.class, new Roles("eelco"));
 		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
 			permissions.getRolesForComponentClass().get(Page.class));
 	}
