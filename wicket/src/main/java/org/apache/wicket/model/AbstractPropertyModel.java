@@ -142,9 +142,9 @@ public abstract class AbstractPropertyModel<T>
 	 * 
 	 * @param object
 	 *            The object that will be used when setting a value on the model object
-	 * @see IModel#setObject(Object)
+	 * @see IModel#setObject(T)
 	 */
-	public void setObject(Object object)
+	public void setObject(T object)
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
