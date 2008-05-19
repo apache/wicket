@@ -59,7 +59,7 @@ public class TextAreaPage extends WicketExamplePage<TextAreaPage.Input>
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		/** some plain text. */
 		public String text = "line 1\nline 2\nline 3";

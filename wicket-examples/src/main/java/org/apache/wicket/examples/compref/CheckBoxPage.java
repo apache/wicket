@@ -67,7 +67,7 @@ public class CheckBoxPage extends WicketExamplePage<CheckBoxPage.Input>
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		/** a boolean. */
 		public Boolean bool = Boolean.TRUE;

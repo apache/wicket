@@ -100,7 +100,7 @@ public class TextFieldPage extends WicketExamplePage<TextFieldPage.Input>
 	/**
 	 * Simple data class that acts as a holder for the data for the input fields.
 	 */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		// Normally we would have played nice and made it a proper JavaBean with
 		// getters and

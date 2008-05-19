@@ -71,7 +71,7 @@ public class ListChoicePage extends WicketExamplePage<ListChoicePage.Input>
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		/** the selected site. */
 		public String site = SITES.get(0);

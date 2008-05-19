@@ -72,7 +72,7 @@ public final class LibraryApplication extends WicketExampleApplication
 		// Install a simple page authorization strategy, that checks all pages
 		// of type AuthenticatedWebPage.
 		IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
-			(Class<? extends Component<?>>)AuthenticatedWebPage.class, SignIn.class)
+			(Class)AuthenticatedWebPage.class, SignIn.class)
 		{
 			@Override
 			protected boolean isAuthorized()
