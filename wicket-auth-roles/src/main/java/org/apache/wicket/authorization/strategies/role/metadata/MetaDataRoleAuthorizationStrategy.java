@@ -83,7 +83,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The comma separated roles that are authorized to create component instances of
 	 *            type componentClass
 	 */
-	public static final void authorize(final Class<? extends Component<?>> componentClass,
+	public static final void authorize(final Class<? extends Component> componentClass,
 		final String roles)
 	{
 		final Application application = Application.get();
@@ -164,7 +164,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The comma separated list of roles that are no longer to be authorized to create
 	 *            instances of type componentClass
 	 */
-	public static final void unauthorize(final Class<? extends Component<?>> componentClass,
+	public static final void unauthorize(final Class<? extends Component> componentClass,
 		final String roles)
 	{
 		final InstantiationPermissions permissions = Application.get().getMetaData(

@@ -18,7 +18,6 @@ package org.apache.wicket.authorization.strategies.role.metadata;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -104,8 +103,7 @@ public class InstantiationPermissionsTest extends TestCase
 		tester.getApplication().setMetaData(
 			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
 			new InstantiationPermissions());
-		MetaDataRoleAuthorizationStrategy.unauthorize((Class<? extends Component<?>>)Page.class,
-			"martijn");
+		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
 		tester.processRequestCycle();
 		tester.destroy();
@@ -115,7 +113,6 @@ public class InstantiationPermissionsTest extends TestCase
 	 * Test consistency in behavior between authorizing a role for a class and then unauthorizing it
 	 * with {@link #testRemove2()}.
 	 */
-	@SuppressWarnings("unchecked")
 	public void testRemove3()
 	{
 		WicketTester tester = new WicketTester();
@@ -132,10 +129,8 @@ public class InstantiationPermissionsTest extends TestCase
 		tester.getApplication().setMetaData(
 			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
 			new InstantiationPermissions());
-		MetaDataRoleAuthorizationStrategy.authorize((Class<? extends Component<?>>)Page.class,
-			"martijn");
-		MetaDataRoleAuthorizationStrategy.unauthorize((Class<? extends Component<?>>)Page.class,
-			"martijn");
+		MetaDataRoleAuthorizationStrategy.authorize(Page.class, "martijn");
+		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
 		tester.processRequestCycle();
 		tester.destroy();
