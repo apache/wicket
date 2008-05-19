@@ -28,6 +28,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +152,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 						.getParentFolderPlaceholder();
 					// get path component of resource key, replace' ..' with escape sequence to
 					// prevent crippled urls in browser
-					String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
+					String path = resourceKey.substring(ix + 1);
+					path = Strings.replaceAll(path, escapeString, "..").toString();
 
 					if (PackageResource.exists(scope, path, null, null))
 					{

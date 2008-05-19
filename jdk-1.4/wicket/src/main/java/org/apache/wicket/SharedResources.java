@@ -24,6 +24,7 @@ import java.util.WeakHashMap;
 
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,8 @@ public class SharedResources
 
 		final String extension = Files.extension(path);
 		// get relative path to resource, replace' ..' with escape sequence
-		final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
+		String basePath = Files.basePath(path, extension);
+		basePath = Strings.replaceAll(basePath, "../", parentEscape + "/").toString();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 
