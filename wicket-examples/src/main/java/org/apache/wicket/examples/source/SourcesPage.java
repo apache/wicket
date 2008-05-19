@@ -167,31 +167,31 @@ public class SourcesPage extends WebPage<Void>
 			if (resources.isEmpty())
 			{
 				get(page);
-				PackageName name = PackageName.forClass(page);
-				ClassLoader loader = page.getClassLoader();
-				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
-				try
-				{
-					// gives the urls for each place where the package
-					// path could be found. There could be multiple
-					// jar files containing the same package, so each
-					// jar file has its own url.
-
-					Enumeration<URL> urls = loader.getResources(path);
-					while (urls.hasMoreElements())
-					{
-						URL url = urls.nextElement();
-
-						// the url points to the directory structure
-						// embedded in the classpath.
-
-						getPackageContents(url);
-					}
-				}
-				catch (IOException e)
-				{
-					log.error("Unable to read resource for: " + path, e);
-				}
+// PackageName name = PackageName.forClass(page);
+// ClassLoader loader = page.getClassLoader();
+// String path = Strings.replaceAll(name.getName(), ".", "/").toString();
+// try
+// {
+// // gives the urls for each place where the package
+// // path could be found. There could be multiple
+// // jar files containing the same package, so each
+// // jar file has its own url.
+//
+// Enumeration<URL> urls = loader.getResources(path);
+// while (urls.hasMoreElements())
+// {
+// URL url = urls.nextElement();
+//
+// // the url points to the directory structure
+// // embedded in the classpath.
+//
+// getPackageContents(url);
+// }
+// }
+// catch (IOException e)
+// {
+// log.error("Unable to read resource for: " + path, e);
+// }
 			}
 			return resources;
 		}
