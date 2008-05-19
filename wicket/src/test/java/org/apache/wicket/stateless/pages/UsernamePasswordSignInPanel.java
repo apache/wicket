@@ -59,7 +59,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 
 		add(new FeedbackPanel("feedback"));
 		add(new Label<Object>("naam"));
-		add(new SignInForm("signInForm"));
+		add(new SignInForm("signInForm", this));
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends StatelessForm<IValueMap>
+	public static final class SignInForm extends StatelessForm<IValueMap>
 	{
 		/** Voor serializatie. */
 		private static final long serialVersionUID = 1L;
@@ -84,15 +84,19 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		/** Moeten de inlog waarden bewaard blijven? */
 		private boolean rememberMe = true;
 
+		private final UsernamePasswordSignInPanel<?> panel;
+
 		/**
 		 * Constructor.
 		 * 
 		 * @param id
 		 *            id of the form component
+		 * @param panel
 		 */
-		public SignInForm(final String id)
+		public SignInForm(final String id, UsernamePasswordSignInPanel<?> panel)
 		{
 			super(id, new CompoundPropertyModel<IValueMap>(new ValueMap()));
+			this.panel = panel;
 
 			// only save username, not passwords
 			add(new TextField<String>("username").setPersistent(rememberMe));
@@ -123,7 +127,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 			String username = values.getString("username");
 			String password = values.getString("password");
 
-			if (signIn(username, password))
+			if (panel.signIn(username, password))
 			{
 				if (!getPage().continueToOriginalDestination())
 				{
@@ -157,7 +161,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		public void setRememberMe(boolean rememberMe)
 		{
 			this.rememberMe = rememberMe;
-			((FormComponent< ? >)get("username")).setPersistent(rememberMe);
+			((FormComponent<?>)get("username")).setPersistent(rememberMe);
 		}
 	}
 }
