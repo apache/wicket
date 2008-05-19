@@ -310,7 +310,12 @@ public final class Settings
 
 	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
 
-	/**
+  /**
+   * escape string for '..' within resource keys
+   */
+  private CharSequence parentFolderPlaceholder = "$up$";
+
+  /**
 	 * Create the application settings, carrying out any necessary initializations.
 	 * 
 	 * @param application
@@ -1354,4 +1359,21 @@ public final class Settings
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;
 	}
+
+  /**
+   * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
+   */
+  public CharSequence getParentFolderPlaceholder()
+  {
+    return parentFolderPlaceholder;
+  }
+
+  /**
+   * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
+   */
+  public void setParentFolderPlaceholder(final CharSequence sequence)
+  {
+    parentFolderPlaceholder = sequence;
+  }
+
 }

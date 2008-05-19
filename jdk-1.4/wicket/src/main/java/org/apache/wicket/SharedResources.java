@@ -46,17 +46,23 @@ public class SharedResources
 	 * _[style] into path just before any extension that might exist.
 	 * 
 	 * @param path
-	 *            The resource path
+	 * 		The resource path
 	 * @param locale
-	 *            The locale
+	 * 		The locale
 	 * @param style
-	 *            The style (see {@link org.apache.wicket.Session})
+	 * 		The style (see {@link org.apache.wicket.Session})
 	 * @return The localized path
 	 */
 	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
+		// escape sequence for' ..' (prevents crippled urls in browser)
+		final CharSequence parentEscape = Application.get()
+			.getResourceSettings()
+			.getParentFolderPlaceholder();
+
 		final String extension = Files.extension(path);
-		final String basePath = Files.basePath(path, extension);
+		// get relative path to resource, replace' ..' with escape sequence
+		final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 
@@ -104,7 +110,7 @@ public class SharedResources
 	 * Construct.
 	 * 
 	 * @param application
-	 *            The application
+	 * 		The application
 	 */
 	SharedResources(Application application)
 	{
@@ -114,18 +120,18 @@ public class SharedResources
 	 * Adds a resource.
 	 * 
 	 * @param scope
-	 *            Scope of resource
+	 * 		Scope of resource
 	 * @param name
-	 *            Logical name of resource
+	 * 		Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 * 		The locale of the resource
 	 * @param style
-	 *            The resource style (see {@link org.apache.wicket.Session})
+	 * 		The resource style (see {@link org.apache.wicket.Session})
 	 * @param resource
-	 *            Resource to store
+	 * 		Resource to store
 	 */
 	public final void add(final Class scope, final String name, final Locale locale,
-			final String style, final Resource resource)
+		final String style, final Resource resource)
 	{
 		// Store resource
 		final String key = resourceKey(scope, name, locale, style);
@@ -147,11 +153,11 @@ public class SharedResources
 	 * Adds a resource.
 	 * 
 	 * @param name
-	 *            Logical name of resource
+	 * 		Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 * 		The locale of the resource
 	 * @param resource
-	 *            Resource to store
+	 * 		Resource to store
 	 */
 	public final void add(final String name, final Locale locale, final Resource resource)
 	{
@@ -162,9 +168,9 @@ public class SharedResources
 	 * Adds a resource.
 	 * 
 	 * @param name
-	 *            Logical name of resource
+	 * 		Logical name of resource
 	 * @param resource
-	 *            Resource to store
+	 * 		Resource to store
 	 */
 	public final void add(final String name, final Resource resource)
 	{
@@ -173,21 +179,20 @@ public class SharedResources
 
 	/**
 	 * @param scope
-	 *            The resource's scope
+	 * 		The resource's scope
 	 * @param name
-	 *            Name of resource to get
+	 * 		Name of resource to get
 	 * @param locale
-	 *            The locale of the resource
+	 * 		The locale of the resource
 	 * @param style
-	 *            The resource style (see {@link org.apache.wicket.Session})
+	 * 		The resource style (see {@link org.apache.wicket.Session})
 	 * @param exact
-	 *            If true then only return the resource that is registered for the given locale and
-	 *            style.
+	 * 		If true then only return the resource that is registered for the given locale and style.
 	 * 
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class scope, final String name, final Locale locale,
-			final String style, boolean exact)
+		final String style, boolean exact)
 	{
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
@@ -243,7 +248,7 @@ public class SharedResources
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
 	 * @param key
-	 *            Shared resource key
+	 * 		Shared resource key
 	 * @return The resource
 	 */
 	public final Resource get(final String key)
@@ -259,9 +264,9 @@ public class SharedResources
 	 * instead of resources/org.apache.wicket.resources.ResourceClass/Image.jpg
 	 * 
 	 * @param clz
-	 *            The class that has to be aliased.
+	 * 		The class that has to be aliased.
 	 * @param alias
-	 *            The alias string.
+	 * 		The alias string.
 	 */
 	public final void putClassAlias(Class clz, String alias)
 	{
@@ -290,7 +295,7 @@ public class SharedResources
 	 * Removes a shared resource.
 	 * 
 	 * @param key
-	 *            Shared resource key
+	 * 		Shared resource key
 	 */
 	public final void remove(final String key)
 	{
@@ -304,17 +309,17 @@ public class SharedResources
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param scope
-	 *            The scope of the resource
+	 * 		The scope of the resource
 	 * @param path
-	 *            The resource path
+	 * 		The resource path
 	 * @param locale
-	 *            The locale
+	 * 		The locale
 	 * @param style
-	 *            The style (see {@link org.apache.wicket.Session})
+	 * 		The style (see {@link org.apache.wicket.Session})
 	 * @return The localized path
 	 */
 	public String resourceKey(final Class scope, final String path, final Locale locale,
-			final String style)
+		final String style)
 	{
 		String alias = (String)classAliasMap.get(scope);
 		if (alias == null)

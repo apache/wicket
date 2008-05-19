@@ -58,9 +58,9 @@ import org.apache.wicket.util.watch.ModificationWatcher;
  * <p>
  * <i>A Localizer </i> The getLocalizer() method returns an object encapsulating all of the
  * functionality required to access localized resources. For many localization problems, even this
- * will not be required, as there are convenience methods available to all components:
- * {@link org.apache.wicket.Component#getString(String key)} and
- * {@link org.apache.wicket.Component#getString(String key, IModel model)}.
+ * will not be required, as there are convenience methods available to all components: {@link
+ * org.apache.wicket.Component#getString(String key)} and {@link
+ * org.apache.wicket.Component#getString(String key, IModel model)}.
  * <p>
  * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code> instances that are
  * searched in order to obtain string resources used during localization. By default the chain is
@@ -77,9 +77,9 @@ public interface IResourceSettings
 	 * automatically
 	 * 
 	 * @param name
-	 *            The name to give to the factory
+	 * 		The name to give to the factory
 	 * @param resourceFactory
-	 *            The resource factory to add
+	 * 		The resource factory to add
 	 */
 	void addResourceFactory(final String name, final IResourceFactory resourceFactory);
 
@@ -89,7 +89,7 @@ public interface IResourceSettings
 	 * configure other, additional, search paths, you can use this method
 	 * 
 	 * @param resourceFolder
-	 *            The resourceFolder to set
+	 * 		The resourceFolder to set
 	 */
 	void addResourceFolder(final String resourceFolder);
 
@@ -99,7 +99,7 @@ public interface IResourceSettings
 	 * before the new loader is added.
 	 * 
 	 * @param loader
-	 *            The loader to be added
+	 * 		The loader to be added
 	 */
 	void addStringResourceLoader(final IStringResourceLoader loader);
 
@@ -115,8 +115,9 @@ public interface IResourceSettings
 	/**
 	 * Get the application's localizer.
 	 * 
-	 * @see IResourceSettings#addStringResourceLoader(org.apache.wicket.resource.loader.IStringResourceLoader)
-	 *      for means of extending the way Wicket resolves keys to localized messages.
+	 * @see IResourceSettings#addStringResourceLoader(org.apache.wicket.resource.loader.
+	 * 	IStringResourceLoader) for means of extending the way Wicket resolves keys to localized
+	 * 	messages.
 	 * 
 	 * @return The application wide localizer instance
 	 */
@@ -138,7 +139,7 @@ public interface IResourceSettings
 
 	/**
 	 * @param name
-	 *            Name of the factory to get
+	 * 		Name of the factory to get
 	 * @return The IResourceFactory with the given name.
 	 */
 	IResourceFactory getResourceFactory(final String name);
@@ -164,10 +165,10 @@ public interface IResourceSettings
 
 	/**
 	 * @param start
-	 *            boolean if the resource watcher should be started if not already started.
+	 * 		boolean if the resource watcher should be started if not already started.
 	 * 
 	 * @return Resource watcher with polling frequency determined by setting, or null if no polling
-	 *         frequency has been set.
+	 * 	frequency has been set.
 	 */
 	ModificationWatcher getResourceWatcher(boolean start);
 
@@ -209,7 +210,7 @@ public interface IResourceSettings
 	 * Sets the {@link PackageResourceGuard package resource guard}.
 	 * 
 	 * @param packageResourceGuard
-	 *            The package resource guard
+	 * 		The package resource guard
 	 */
 	void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard);
 
@@ -226,7 +227,7 @@ public interface IResourceSettings
 	 * method.
 	 * 
 	 * @param resourceFinder
-	 *            The resourceFinder to set
+	 * 		The resourceFinder to set
 	 */
 	void setResourceFinder(final IResourceFinder resourceFinder);
 
@@ -236,7 +237,7 @@ public interface IResourceSettings
 	 * Default is for no resource polling to occur.
 	 * 
 	 * @param resourcePollFrequency
-	 *            Frequency at which to poll resources
+	 * 		Frequency at which to poll resources
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
@@ -245,12 +246,13 @@ public interface IResourceSettings
 	 * Sets the resource stream locator for this application
 	 * 
 	 * @param resourceStreamLocator
-	 *            new resource stream locator
+	 * 		new resource stream locator
 	 */
 	void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator);
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
+	 * @see
+	 * 	org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
 	 * 
 	 * @param throwExceptionOnMissingResource
 	 */
@@ -258,7 +260,7 @@ public interface IResourceSettings
 
 	/**
 	 * @param useDefaultOnMissingResource
-	 *            Whether to use a default value (if available) when a missing resource is requested
+	 * 		Whether to use a default value (if available) when a missing resource is requested
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
@@ -272,7 +274,7 @@ public interface IResourceSettings
 
 	/**
 	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link JavascriptPackageResource}
+	 * 	through {@link JavascriptPackageResource}
 	 */
 	boolean getStripJavascriptCommentsAndWhitespace();
 
@@ -290,4 +292,23 @@ public interface IResourceSettings
 	 * @return
 	 */
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl();
+
+
+	/**
+	 * placeholder string for '..' within resource urls (which will be crippled by the browser and
+	 * not work anymore)
+	 * 
+	 * @return placeholder
+	 */
+	CharSequence getParentFolderPlaceholder();
+
+	/**
+	 * set placeholder for '..' inside resource urls
+	 * 
+	 * @see #getParentFolderPlaceholder()
+	 * 
+	 * @param sequence
+	 * 		character sequence which must not be ambiguous within urls
+	 */
+	void setParentFolderPlaceholder(CharSequence sequence);
 }
