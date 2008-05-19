@@ -21,7 +21,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		tester.assertRenderedPage(ParentResourceEscapePathTestPage.class);
 		tester.assertNoErrorMessage();
 
-		final StringBuilder expectedHtml = new StringBuilder();
+		final StringBuffer expectedHtml = new StringBuffer();
 		expectedHtml.append("<html><head><wicket:link><script src=\"");
 		expectedHtml.append(expectedResourceUrl());
 		expectedHtml.append("\" type=\"text/javascript\"></script></wicket:link></head></html>");
@@ -73,7 +73,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 			.getResourceSettings()
 			.getParentFolderPlaceholder();
 
-		final StringBuilder url = new StringBuilder();
+		final StringBuffer url = new StringBuffer();
 		url.append("resources/org.apache.wicket.ParentResourceEscapePathTestPage/");
 
 		for (int i = 0; i < 3; i++)
