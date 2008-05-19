@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation of {@link ISharedResourceRequestTarget}. Target that denotes a shared
  * {@link org.apache.wicket.Resource}.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
@@ -47,7 +47,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param requestParameters
 	 *            the request parameters
 	 */
@@ -115,7 +115,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * Respond by looking up the shared resource and delegating the actual response to that
 	 * resource.
-	 * 
+	 *
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
@@ -145,7 +145,9 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					{
 						scope = resolver.resolveClass(className);
 					}
-					String path = resourceKey.substring(ix + 1);
+          final CharSequence escapeString = application.getResourceSettings().getParentFolderPlaceholder();
+          // get path component of resource key, replace '..' with escape sequence to prevent crippled urls in browser 
+          String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
 
 					if (PackageResource.exists(scope, path, null, null))
 					{

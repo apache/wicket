@@ -41,7 +41,7 @@ public class SharedResources
 	/** Logger */
 	private static final Logger log = LoggerFactory.getLogger(SharedResources.class);
 
-	/**
+  /**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts _[locale] and
 	 * _[style] into path just before any extension that might exist.
 	 * 
@@ -55,8 +55,12 @@ public class SharedResources
 	 */
 	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
-		final String extension = Files.extension(path);
-		final String basePath = Files.basePath(path, extension);
+    // escape sequence for '..' (prevents crippled urls in browser)
+    final CharSequence parentEscape = Application.get().getResourceSettings().getParentFolderPlaceholder();
+
+    final String extension = Files.extension(path);
+    // get relative path to resource, replace '..' with escape sequence
+    final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 

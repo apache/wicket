@@ -276,7 +276,7 @@ public final class Settings
 		 * @param component
 		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
-		public void onUnauthorizedInstantiation(final Component<?> component)
+		public void onUnauthorizedInstantiation(final Component< ? > component)
 		{
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
@@ -312,7 +312,12 @@ public final class Settings
 	/** */
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
-	/**
+  /**
+   * escape string for '..' within resource keys
+   */
+  private CharSequence parentFolderPlaceholder = "$up$";
+
+  /**
 	 * Create the application settings, carrying out any necessary initializations.
 	 * 
 	 * @param application
@@ -1399,4 +1404,20 @@ public final class Settings
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;
 	}
+
+  /**
+   * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
+   */
+  public CharSequence getParentFolderPlaceholder()
+  {
+    return parentFolderPlaceholder;
+  }
+
+  /**
+   * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
+   */
+  public void setParentFolderPlaceholder(final CharSequence sequence)
+  {
+    parentFolderPlaceholder = sequence;
+  }
 }
