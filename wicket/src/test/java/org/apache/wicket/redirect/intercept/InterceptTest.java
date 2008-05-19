@@ -55,8 +55,8 @@ public class InterceptTest extends WicketTestCase
 						return true;
 					}
 
-					public boolean isInstantiationAuthorized(
-						Class<? extends Component<?>> componentClass)
+					public <T extends Component<?>> boolean isInstantiationAuthorized(
+						Class<T> componentClass)
 					{
 						if (block &&
 							(componentClass == TargetPage.class || componentClass == HomePage.class))

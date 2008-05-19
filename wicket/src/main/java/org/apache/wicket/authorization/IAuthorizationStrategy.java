@@ -40,7 +40,7 @@ public interface IAuthorizationStrategy
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean isInstantiationAuthorized(final Class<? extends Component<?>> c)
+		public <T extends Component<?>> boolean isInstantiationAuthorized(final Class<T> c)
 		{
 			return true;
 		}
@@ -66,11 +66,13 @@ public interface IAuthorizationStrategy
 	 * {@link org.apache.wicket.RestartResponseAtInterceptPageException} in your implementation of
 	 * this method.
 	 * 
+	 * @param <T>
+	 * 
 	 * @param componentClass
 	 *            The component class to check
 	 * @return Whether the given component may be created
 	 */
-	boolean isInstantiationAuthorized(Class<? extends Component<?>> componentClass);
+	<T extends Component<?>> boolean isInstantiationAuthorized(Class<T> componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should return true. If it

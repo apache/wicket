@@ -50,7 +50,7 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public boolean isInstantiationAuthorized(Class<? extends Component<?>> componentClass)
+	public <T extends Component<?>> boolean isInstantiationAuthorized(Class<T> componentClass)
 	{
 		return true;
 	}

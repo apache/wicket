@@ -80,7 +80,8 @@ public final class SignIn2Application extends WicketExampleApplication
 				return true;
 			}
 
-			public boolean isInstantiationAuthorized(Class<? extends Component<?>> componentClass)
+			public <T extends Component<?>> boolean isInstantiationAuthorized(
+				Class<T> componentClass)
 			{
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))
 				{
