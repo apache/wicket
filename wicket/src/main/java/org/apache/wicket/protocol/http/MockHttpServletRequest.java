@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -683,28 +682,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		else
 		{
 			final StringBuffer buf = new StringBuffer();
-			try
-			{
-				for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-				{
-					final String name = (String)iterator.next();
-					final String value = parameters.getString(name);
-					if (name != null)
-						buf.append(URLEncoder.encode(name, "UTF-8"));
-					buf.append('=');
-					if (value != null)
-						buf.append(URLEncoder.encode(value, "UTF-8"));
-					if (iterator.hasNext())
-					{
-						buf.append('&');
-					}
-				}
-			}
-			catch (UnsupportedEncodingException e)
-			{
-				// Should never happen!
-			}
-			return buf.toString();
+            for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+            {
+                final String name = (String)iterator.next();
+                final String value = parameters.getString(name);
+                if (name != null)
+                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
+                buf.append('=');
+                if (value != null)
+                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
+                if (iterator.hasNext())
+                {
+                    buf.append('&');
+                }
+            }
+            return buf.toString();
 		}
 	}
 

@@ -20,10 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.protocol.http.IRequestLogger;
-import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.*;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
@@ -853,8 +850,13 @@ public abstract class RequestCycle
 					final Map.Entry entry = it.next();
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
-					pageParameters.add(encode(key), encode(value));
-				}
+                    // Do not encode values here.  It is the encoder's job
+                    // to do the endoding.  This leads to double encoding
+                    // - Doug Donohoe
+                    // @see https://issues.apache.org/jira/browse/WICKET-1627
+                    //pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
+                    pageParameters.add(key, value);
+                }
 			}
 
 			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
@@ -887,10 +889,9 @@ public abstract class RequestCycle
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
 					buff.append("&");
-					buff.append(encode(key));
+					buff.append(encodeQueryStringItem(key));
 					buff.append("=");
-					buff.append(encode(value));
-
+					buff.append(encodeQueryStringItem(value));
 				}
 
 				url = buff;
@@ -906,9 +907,9 @@ public abstract class RequestCycle
 	 *            value to encode
 	 * @return encoded value
 	 */
-	private static String encode(String value)
+	private static String encodeQueryStringItem(String value)
 	{
-		return RequestUtils.encode(value);
+        return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**

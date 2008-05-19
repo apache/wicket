@@ -79,7 +79,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			{
 				url.append("/");
 			}
-			url.append(urlEncode(value)).append("/");
+			url.append(urlEncodePathComponent(value)).append("/");
 			i++;
 		}
 
@@ -92,7 +92,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			{
 				url.append("/");
 			}
-			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap))
+			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncodePathComponent(pageMap))
 					.append("/");
 		}
 
@@ -105,7 +105,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				url.append("/");
 			}
 			url.append(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME).append("/").append(
-					urlEncode(intface)).append("/");
+					urlEncodePathComponent(intface)).append("/");
 		}
 		if (i != parameters.size())
 		{
@@ -140,17 +140,17 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				{
 					i++;
 					params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-							.decodePageMapName(urlDecode(parts[i])));
+							.decodePageMapName(urlDecodePathComponent(parts[i])));
 				}
 				else if (WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.equals(parts[i]))
 				{
 					i++;
 					params.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,
-							urlDecode(parts[i]));
+							urlDecodePathComponent(parts[i]));
 				}
 				else
 				{
-					params.put(String.valueOf(i), urlDecode(parts[i]));
+					params.put(String.valueOf(i), urlDecodePathComponent(parts[i]));
 				}
 			}
 		}

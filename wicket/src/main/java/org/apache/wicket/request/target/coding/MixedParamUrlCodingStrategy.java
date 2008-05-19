@@ -131,7 +131,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				{
 					value = "";
 				}
-				url.append(urlEncode(value)).append("/");
+				url.append(urlEncodePathComponent(value)).append("/");
 				parameterNamesToAdd.remove(parameterName);
 			}
 		}
@@ -154,7 +154,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				String parameterName = (String)iterator.next();
 				final Object param = parameters.get(parameterName);
 				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
-				url.append(urlEncode(parameterName)).append("=").append(urlEncode(value));
+				url.append(urlEncodeQueryComponent(parameterName)).append("=").append(urlEncodeQueryComponent(value));
 				first = false;
 			}
 		}
@@ -184,7 +184,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 			for (int i = 0; i < pathParts.length; i++)
 			{
-				params.put(parameterNames[i], urlDecode(pathParts[i]));
+				params.put(parameterNames[i], urlDecodePathComponent(pathParts[i]));
 			}
 		}
 
