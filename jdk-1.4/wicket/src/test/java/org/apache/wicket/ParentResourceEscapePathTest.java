@@ -38,9 +38,9 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		tester.assertNoErrorMessage();
 
 		final StringBuffer expectedHtml = new StringBuffer();
-		expectedHtml.append("<html><head><wicket:link><script src=\"");
+		expectedHtml.append("<html><head><wicket:link><script type=\"text/javascript\" src=\"");
 		expectedHtml.append(expectedResourceUrl());
-		expectedHtml.append("\" type=\"text/javascript\"></script></wicket:link></head></html>");
+		expectedHtml.append("\"></script></wicket:link></head></html>");
 
 		assertEquals(expectedHtml.toString(), tester.getServletResponse().getDocument());
 	}
