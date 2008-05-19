@@ -59,7 +59,7 @@ public class PackagedTextTemplate extends TextTemplate
 
 		private final String className;
 
-		CachedTextTemplateKey(Class clazz, String path)
+		CachedTextTemplateKey(Class<?> clazz, String path)
 		{
 			className = clazz.getName();
 		}
@@ -108,7 +108,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param fileName
 	 *            the name of the file, relative to the <code>clazz</code> position
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName)
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName)
 	{
 		this(clazz, fileName, "text");
 	}
@@ -124,7 +124,8 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param contentType
 	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType)
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
+		final String contentType)
 	{
 		this(clazz, fileName, contentType, null);
 	}
@@ -142,8 +143,8 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param encoding
 	 *            the file's encoding, for example, "<code>UTF-8</code>"
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType,
-		final String encoding)
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
+		final String contentType, final String encoding)
 	{
 		super(contentType);
 
@@ -227,7 +228,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @return this for chaining
 	 */
 	@Override
-	public final TextTemplate interpolate(Map variables)
+	public final TextTemplate interpolate(Map<String, Object> variables)
 	{
 		if (variables != null)
 		{

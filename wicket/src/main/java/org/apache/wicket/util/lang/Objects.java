@@ -101,10 +101,11 @@ public final class Objects
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private final ClassLoader classloader;
-		private final HashMap replacedComponents;
+		private final HashMap<String, Component<?>> replacedComponents;
 
-		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents,
-			ClassLoader classloader) throws IOException
+		private ReplaceObjectInputStream(InputStream in,
+			HashMap<String, Component<?>> replacedComponents, ClassLoader classloader)
+			throws IOException
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
@@ -116,7 +117,7 @@ public final class Objects
 		// bundle, i.e.
 		// The classes can be resolved by OSGI classresolver implementation
 		@Override
-		protected Class resolveClass(ObjectStreamClass desc) throws IOException,
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 			ClassNotFoundException
 		{
 			String className = desc.getName();
@@ -135,7 +136,7 @@ public final class Objects
 			IApplicationSettings applicationSettings = application.getApplicationSettings();
 			IClassResolver classResolver = applicationSettings.getClassResolver();
 
-			Class candidate = null;
+			Class<?> candidate = null;
 			try
 			{
 				candidate = classResolver.resolveClass(className);
@@ -168,10 +169,10 @@ public final class Objects
 
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
 	{
-		private final HashMap replacedComponents;
+		private final HashMap<String, Component<?>> replacedComponents;
 
-		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
-			throws IOException
+		private ReplaceObjectOutputStream(OutputStream out,
+			HashMap<String, Component<?>> replacedComponents) throws IOException
 		{
 			super(out);
 			this.replacedComponents = replacedComponents;
@@ -183,8 +184,9 @@ public final class Objects
 		{
 			if (obj instanceof Component)
 			{
-				String name = ((Component)obj).getPath();
-				replacedComponents.put(name, obj);
+				final Component<?> component = (Component<?>)obj;
+				String name = component.getPath();
+				replacedComponents.put(name, component);
 				return name;
 			}
 			return super.replaceObject(obj);
@@ -237,7 +239,7 @@ public final class Objects
 	private static final int SHORT = 3;
 
 	/** defaults for primitives. */
-	private static final HashMap primitiveDefaults = new HashMap();
+	private static final HashMap<Class<?>, Object> primitiveDefaults = Generics.newHashMap();
 
 	/**
 	 * The default object stream factory to use. Keep this as a static here opposed to in
@@ -283,7 +285,7 @@ public final class Objects
 		{
 			return BigDecimal.valueOf(0L);
 		}
-		Class c = value.getClass();
+		Class<?> c = value.getClass();
 		if (c == BigDecimal.class)
 		{
 			return (BigDecimal)value;
@@ -322,7 +324,7 @@ public final class Objects
 		{
 			return BigInteger.valueOf(0L);
 		}
-		Class c = value.getClass();
+		Class<?> c = value.getClass();
 		if (c == BigInteger.class)
 		{
 			return (BigInteger)value;
@@ -361,7 +363,7 @@ public final class Objects
 		{
 			return false;
 		}
-		Class c = value.getClass();
+		Class<?> c = value.getClass();
 		if (c == Boolean.class)
 		{
 			return ((Boolean)value).booleanValue();
@@ -436,7 +438,7 @@ public final class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap replacedObjects = new HashMap();
+				final HashMap<String, Component<?>> replacedObjects = Generics.newHashMap();
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(
@@ -482,7 +484,7 @@ public final class Objects
 					// This override is required to resolve classes inside in different bundle, i.e.
 					// The classes can be resolved by OSGI classresolver implementation
 					@Override
-					protected Class resolveClass(ObjectStreamClass desc) throws IOException,
+					protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 						ClassNotFoundException
 					{
 						String className = desc.getName();
@@ -503,7 +505,7 @@ public final class Objects
 						IApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
-						Class candidate = null;
+						Class<?> candidate = null;
 						try
 						{
 							candidate = classResolver.resolveClass(className);
@@ -618,6 +620,9 @@ public final class Objects
 	 * This method also detects when arrays are being converted and converts the components of one
 	 * array to the type of the other.
 	 * 
+	 * @param <T>
+	 *            type to convert to
+	 * 
 	 * @param value
 	 *            an object to be converted to the given type
 	 * @param toType
@@ -634,7 +639,7 @@ public final class Objects
 			/* If array -> array then convert components of array individually */
 			if (value.getClass().isArray() && toType.isArray())
 			{
-				Class< ? > componentType = toType.getComponentType();
+				Class<?> componentType = toType.getComponentType();
 
 				result = Array.newInstance(componentType, Array.getLength(value));
 				for (int i = 0, icount = Array.getLength(value); i < icount; i++)
@@ -715,7 +720,7 @@ public final class Objects
 		{
 			return 0.0;
 		}
-		Class c = value.getClass();
+		Class<?> c = value.getClass();
 		if (c.getSuperclass() == Number.class)
 		{
 			return ((Number)value).doubleValue();
@@ -837,7 +842,7 @@ public final class Objects
 	{
 		if (value != null)
 		{
-			Class c = value.getClass();
+			Class<?> c = value.getClass();
 			if (c == Integer.class)
 			{
 				return INT;
@@ -976,7 +981,7 @@ public final class Objects
 		{
 			return 0L;
 		}
-		Class c = value.getClass();
+		Class<?> c = value.getClass();
 		if (c.getSuperclass() == Number.class)
 		{
 			return ((Number)value).longValue();
@@ -1006,7 +1011,7 @@ public final class Objects
 		{
 			try
 			{
-				Class c = Classes.resolveClass(className);
+				Class<?> c = Classes.resolveClass(className);
 				if (c == null)
 				{
 					throw new WicketRuntimeException("Unable to create " + className);

@@ -38,7 +38,7 @@ public final class Packages
 	 *            The relative path to the class
 	 * @return The absolute path
 	 */
-	public static String absolutePath(final Class p, final String relativePath)
+	public static String absolutePath(final Class<?> p, final String relativePath)
 	{
 		String packName = extractPackageName(p);
 		return absolutePath(packName, relativePath);
@@ -124,7 +124,7 @@ public final class Packages
 	 *            the class
 	 * @return the package name
 	 */
-	public static String extractPackageName(final Class forClass)
+	public static String extractPackageName(final Class<?> forClass)
 	{
 		String classname = forClass.getName();
 		String parent = parent(classname);
@@ -163,7 +163,7 @@ public final class Packages
 	 *            the class
 	 * @return the scope string
 	 */
-	public static String resolveScope(final Class forClass)
+	public static String resolveScope(final Class<?> forClass)
 	{
 		String packName = extractPackageName(forClass);
 		return packName.replace('.', '/');

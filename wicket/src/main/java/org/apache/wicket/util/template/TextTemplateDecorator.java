@@ -65,6 +65,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 *         {@link #getAfterTemplateContents()}
 	 * @see org.apache.wicket.util.template.TextTemplate#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		StringBuffer b = new StringBuffer();
@@ -81,7 +82,8 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 *         {@link #getAfterTemplateContents()}.
 	 * @see org.apache.wicket.util.template.TextTemplate#asString(java.util.Map)
 	 */
-	public String asString(Map variables)
+	@Override
+	public String asString(Map<String, Object> variables)
 	{
 		StringBuffer b = new StringBuffer();
 		b.append(getBeforeTemplateContents());
@@ -115,6 +117,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		decorated.close();
@@ -123,6 +126,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		return decorated.equals(obj);
@@ -131,6 +135,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		return decorated.getContentType();
@@ -139,6 +144,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getInputStream()
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return decorated.getInputStream();
@@ -147,6 +153,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return decorated.getLocale();
@@ -155,6 +162,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return decorated.hashCode();
@@ -163,6 +171,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#lastModifiedTime()
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		return decorated.lastModifiedTime();
@@ -171,6 +180,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
 		return decorated.length();
@@ -179,6 +189,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#setCharset(java.nio.charset.Charset)
 	 */
+	@Override
 	public void setCharset(Charset charset)
 	{
 		decorated.setCharset(charset);
@@ -187,6 +198,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#setLastModified(org.apache.wicket.util.time.Time)
 	 */
+	@Override
 	public void setLastModified(Time lastModified)
 	{
 		decorated.setLastModified(lastModified);
@@ -195,6 +207,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#setLocale(java.util.Locale)
 	 */
+	@Override
 	public void setLocale(Locale locale)
 	{
 		decorated.setLocale(locale);
@@ -203,6 +216,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see org.apache.wicket.util.template.TextTemplate#getString()
 	 */
+	@Override
 	public String getString()
 	{
 		return decorated.getString();
@@ -211,6 +225,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return decorated.toString();

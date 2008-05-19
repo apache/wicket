@@ -303,7 +303,7 @@ public class StringValue implements IClusterable
 	 * @return The converted value
 	 * @throws StringValueConversionException
 	 */
-	public final Object to(final Class type) throws StringValueConversionException
+	public final Object to(final Class<?> type) throws StringValueConversionException
 	{
 		if (type == String.class)
 		{
@@ -680,6 +680,7 @@ public class StringValue implements IClusterable
 	/**
 	 * @return The string value
 	 */
+	@Override
 	public final String toString()
 	{
 		return text;
