@@ -38,13 +38,15 @@ public class AjaxLinkWithBorderPage extends WebPage<Void>
 	{
 		add(new AjaxTestBorder("border").setTransparentResolver(true));
 
-		final Label label = new Label("ajaxLabel", new PropertyModel(this, "labelText"));
+		final Label<String> label = new Label<String>("ajaxLabel", new PropertyModel<String>(this,
+			"labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
-		add(new AjaxLink("ajaxLink")
+		add(new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";

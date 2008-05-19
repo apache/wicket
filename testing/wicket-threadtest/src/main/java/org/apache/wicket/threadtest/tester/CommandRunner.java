@@ -83,8 +83,8 @@ public class CommandRunner implements Runnable
 			}
 			catch (Exception e)
 			{
-				log.fatal("execution of command " + command + ", thread " + Thread.currentThread()
-						+ " failed", e);
+				log.fatal("execution of command " + command + ", thread " + Thread.currentThread() +
+					" failed", e);
 				observer.onError(this, e);
 				return;
 			}

@@ -37,8 +37,8 @@ import org.apache.wicket.model.Model;
  * content panels inside the TabbedPanel panel.
  * 
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
- * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
+ * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
  * <p>
  * 
  * Example:
@@ -84,7 +84,7 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * 
  */
-public class TabbedPanel extends Panel
+public class TabbedPanel extends Panel<Integer>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -94,19 +94,19 @@ public class TabbedPanel extends Panel
 	public static final String TAB_PANEL_ID = "panel";
 
 
-	private final List tabs;
+	private final List<ITab<?>> tabs;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param tabs
-	 *            list of ITab objects used to represent tabs
+	 * 		list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List tabs)
+	public TabbedPanel(String id, List<ITab<?>> tabs)
 	{
-		super(id, new Model(new Integer(-1)));
+		super(id, new Model<Integer>(new Integer(-1)));
 
 		if (tabs == null)
 		{
@@ -115,20 +115,22 @@ public class TabbedPanel extends Panel
 
 		this.tabs = tabs;
 
-		final IModel tabCount = new AbstractReadOnlyModel()
+		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject()
+			@Override
+			public Integer getObject()
 			{
-				return new Integer(TabbedPanel.this.tabs.size());
+				return TabbedPanel.this.tabs.size();
 			}
 		};
 
-		WebMarkupContainer tabsContainer = new WebMarkupContainer("tabs-container")
+		WebMarkupContainer<?> tabsContainer = new WebMarkupContainer<Void>("tabs-container")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -142,17 +144,19 @@ public class TabbedPanel extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
-				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
+				final ITab<?> tab = (TabbedPanel.this.tabs.get(index));
 
-				final WebMarkupContainer titleLink = newLink("link", index);
+				final WebMarkupContainer<?> titleLink = newLink("link", index);
 
 				titleLink.add(newTitle("title", tab.getTitle(), index));
 				item.add(titleLink);
 			}
 
+			@Override
 			protected LoopItem newItem(int iteration)
 			{
 				return newTabContainer(iteration);
@@ -174,6 +178,7 @@ public class TabbedPanel extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -200,6 +205,7 @@ public class TabbedPanel extends Panel
 
 
 	// @see org.apache.wicket.Component#onAttach()
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -212,7 +218,7 @@ public class TabbedPanel extends Panel
 
 	/**
 	 * @return the value of css class attribute that will be added to a div containing the tabs. The
-	 *         default value is <code>tab-row</code>
+	 * 	default value is <code>tab-row</code>
 	 */
 	protected String getTabContainerCssClass()
 	{
@@ -222,7 +228,7 @@ public class TabbedPanel extends Panel
 	/**
 	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
-	public final List getTabs()
+	public final List<ITab<?>> getTabs()
 	{
 		return tabs;
 	}
@@ -231,17 +237,20 @@ public class TabbedPanel extends Panel
 	 * Factory method for tab titles. Returned component can be anything that can attach to span
 	 * tags such as a fragment, panel, or a label
 	 * 
+	 * @param <
+	 * 		S> the returned component's model object type
+	 * 
 	 * @param titleId
-	 *            id of title component
+	 * 		id of title component
 	 * @param titleModel
-	 *            model containing tab title
+	 * 		model containing tab title
 	 * @param index
-	 *            index of tab
+	 * 		index of tab
 	 * @return title component
 	 */
-	protected Component newTitle(String titleId, IModel titleModel, int index)
+	protected <S> Component<S> newTitle(String titleId, IModel<S> titleModel, int index)
 	{
-		return new Label(titleId, titleModel);
+		return new Label<S>(titleId, titleModel);
 	}
 
 
@@ -252,7 +261,7 @@ public class TabbedPanel extends Panel
 	 * will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
-	 *            &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 * &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
 	 * 
 	 * Example implementation:
@@ -273,18 +282,19 @@ public class TabbedPanel extends Panel
 	 * </pre>
 	 * 
 	 * @param linkId
-	 *            component id with which the link should be created
+	 * 		component id with which the link should be created
 	 * @param index
-	 *            index of the tab that should be activated when this link is clicked. See
-	 *            {@link #setSelectedTab(int)}.
+	 * 		index of the tab that should be activated when this link is clicked. See {@link
+	 * 		#setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
 	{
-		return new Link(linkId)
+		return new Link<S>(linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				setSelectedTab(index);
@@ -296,7 +306,7 @@ public class TabbedPanel extends Panel
 	 * sets the selected tab
 	 * 
 	 * @param index
-	 *            index of the tab to select
+	 * 		index of the tab to select
 	 * 
 	 */
 	public void setSelectedTab(int index)
@@ -308,9 +318,9 @@ public class TabbedPanel extends Panel
 
 		setModelObject(new Integer(index));
 
-		ITab tab = (ITab)tabs.get(index);
+		ITab<?> tab = tabs.get(index);
 
-		Panel panel = tab.getPanel(TAB_PANEL_ID);
+		Panel<?> panel = tab.getPanel(TAB_PANEL_ID);
 
 		if (panel == null)
 		{
@@ -344,7 +354,7 @@ public class TabbedPanel extends Panel
 	 */
 	public final int getSelectedTab()
 	{
-		return ((Integer)getModelObject()).intValue();
+		return (getModelObject()).intValue();
 	}
 
 }

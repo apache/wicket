@@ -227,7 +227,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private transient Boolean stateless = null;
 
 	/** Version manager for this page */
-	private IPageVersionManager versionManager;
+	private IPageVersionManager<T> versionManager;
 
 	/** The page parameters object hat constructed this page */
 	private PageParameters parameters;
@@ -817,7 +817,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
 	 */
-	public final void removePersistedFormData(final Class<? extends Form> formClass,
+	public final void removePersistedFormData(final Class<? extends Form<?>> formClass,
 		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
@@ -1422,7 +1422,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @deprecated TODO Remove in 1.4
 	 */
 	@Deprecated
-	protected final IPageVersionManager newVersionManager()
+	protected final IPageVersionManager<T> newVersionManager()
 	{
 		return null;
 	}

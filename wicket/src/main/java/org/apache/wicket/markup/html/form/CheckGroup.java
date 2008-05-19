@@ -37,9 +37,7 @@ import org.apache.wicket.util.string.Strings;
  * component has to be an instance of java.util.Collection. The model collection of the group is
  * filled with model objects of all selected Check components.
  * 
- * ie
- * 
- * <code>
+ * ie <code>
  * <span wicket:id="checkboxgroup">
  *   ...
  *   <input type="checkbox" wicket:id="checkbox1">choice 1</input>
@@ -50,17 +48,17 @@ import org.apache.wicket.util.string.Strings;
  * </code>
  * 
  * @see org.apache.wicket.markup.html.form.Check
- * @see org.apache.wicket.markup.html.form.CheckGroupSelector
- * 
- * <p>
- * Note: This component does not support cookie persistence
+ * @see org.apache.wicket.markup.html.form.CheckGroupSelector <p>
+ * 	Note: This component does not support cookie persistence
  * 
  * @author Igor Vaynberg
  * 
- * @param <T>
- *            The model object type
+ * @param <
+ * 		T> The model object type
  */
-public class CheckGroup<T> extends FormComponent<Collection<? extends T>> implements IOnChangeListener
+public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
+	implements
+		IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +66,7 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>> implem
 	 * Constructor that will create a default model collection
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 */
 	public CheckGroup(String id)
 	{
@@ -80,9 +78,9 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>> implem
 	 * Constructor that wraps the provided collection with the org.apache.wicket.model.Model object
 	 * 
 	 * @param id
-	 *            component id
+	 * 		component id
 	 * @param collection
-	 *            collection to be used as the model
+	 * 		collection to be used as the model
 	 * 
 	 */
 	public CheckGroup(String id, Collection<? extends T> collection)
@@ -187,7 +185,9 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>> implem
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 * @see
+	 * 	org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.
+	 * 	ComponentTag)
 	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
@@ -217,8 +217,8 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>> implem
 	 * events.
 	 * 
 	 * @param newSelection
-	 *            The new selection of the {@link CheckGroup}. NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
+	 * 		The new selection of the {@link CheckGroup}. NOTE this is the same as you would get by
+	 * 		calling getModelObject() if the new selection were current
 	 */
 	protected void onSelectionChanged(final Collection newSelection)
 	{

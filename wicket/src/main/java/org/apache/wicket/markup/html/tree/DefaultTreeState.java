@@ -42,18 +42,18 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	private boolean allowSelectMultiple = false;
 
 	/** Tree state listeners. */
-	private final List listeners = new ArrayList(1);
+	private final List<ITreeStateListener> listeners = new ArrayList<ITreeStateListener>(1);
 
 	/**
 	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed variable).
 	 */
-	private final Set nodes = new HashSet();
+	private final Set<Object> nodes = new HashSet<Object>();
 
 	/** Whether the nodes set should be treated as set of collapsed or expanded nodes. */
 	private boolean nodesCollapsed = false; // by default treat the node set as expanded nodes
 
 	/** Set selected nodes. */
-	private final Set selectedNodes = new HashSet();
+	private final Set<Object> selectedNodes = new HashSet<Object>();
 
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
@@ -155,9 +155,9 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#getSelectedNodes()
 	 */
-	public Collection getSelectedNodes()
+	public Collection<Object> getSelectedNodes()
 	{
-		return Collections.unmodifiableList(new ArrayList(selectedNodes));
+		return Collections.unmodifiableList(new ArrayList<Object>(selectedNodes));
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	{
 		if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 		{
-			for (Iterator i = selectedNodes.iterator(); i.hasNext();)
+			for (Iterator<Object> i = selectedNodes.iterator(); i.hasNext();)
 			{
 				Object current = i.next();
 				if (current.equals(node) == false)

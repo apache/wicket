@@ -23,8 +23,9 @@ import org.apache.wicket.model.IModel;
  * Base class for banners.
  * 
  * @author Eelco Hillenius
+ * @param <T>
  */
-public abstract class Banner extends Panel
+public abstract class Banner<T> extends Panel<T>
 {
 	/**
 	 * Construct.
@@ -42,7 +43,7 @@ public abstract class Banner extends Panel
 	 * @param id
 	 * @param model
 	 */
-	public Banner(String id, IModel model)
+	public Banner(String id, IModel<T> model)
 	{
 		super(id, model);
 	}

@@ -18,11 +18,19 @@ package org.apache.wicket.threadtest.apps.app2;
 
 import org.apache.wicket.Session;
 
+/**
+ */
 public class Connection
 {
 
 	private final String id;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the connection id
+	 */
 	public Connection(String id)
 	{
 		this.id = id;
@@ -34,10 +42,13 @@ public class Connection
 		return ((Connection)obj).id.equals(id);
 	}
 
+	/**
+	 * @return information about the connection, session and the current thread
+	 */
 	public String getData()
 	{
-		return "data[Connection=" + id + ",Session=" + Session.get() + ",Thread="
-				+ Thread.currentThread() + "]";
+		return "data[Connection=" + id + ",Session=" + Session.get() + ",Thread=" +
+			Thread.currentThread() + "]";
 	}
 
 	/**

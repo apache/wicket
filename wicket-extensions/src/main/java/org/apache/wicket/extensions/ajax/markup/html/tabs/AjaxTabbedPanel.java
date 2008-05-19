@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
@@ -41,7 +42,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param id
 	 * @param tabs
 	 */
-	public AjaxTabbedPanel(String id, List tabs)
+	public AjaxTabbedPanel(String id, List<ITab<?>> tabs)
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);
@@ -49,13 +50,15 @@ public class AjaxTabbedPanel extends TabbedPanel
 		setVersioned(false);
 	}
 
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	@Override
+	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
 	{
-		return new AjaxFallbackLink(linkId)
+		return new AjaxFallbackLink<S>(linkId)
 		{
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				setSelectedTab(index);
@@ -79,7 +82,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * the fallback mode is used. See {@link AjaxFallbackLink} for details.
 	 * 
 	 * @param target
-	 *            ajax target used to update this component
+	 * 		ajax target used to update this component
 	 */
 	protected void onAjaxUpdate(AjaxRequestTarget target)
 	{

@@ -71,7 +71,7 @@ public class BookmarkablePage extends WebPage<Void>
 		}
 
 		// Add a label to display the message
-		add(new Label("messageLabel", message));
+		add(new Label<String>("messageLabel", message));
 
 		// Add a link back. We did not hold any important instance data in
 		// BookMarkabelPageLinkPage,

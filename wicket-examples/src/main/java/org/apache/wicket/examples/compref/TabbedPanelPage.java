@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -36,44 +37,47 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class TabbedPanelPage extends WicketExamplePage
+public class TabbedPanelPage extends WicketExamplePage<String>
 {
 	/**
 	 * Constructor
 	 */
 	public TabbedPanelPage()
 	{
-		setModel(new Model("tabpanel"));
+		setModel(new Model<String>("tabpanel"));
 
 		// create links used to switch between css variations
 		addCssSwitchingLinks();
 
 		// create a list of ITab objects used to feed the tabbed panel
-		List tabs = new ArrayList();
-		tabs.add(new AbstractTab(new Model("first tab"))
+		List<ITab<?>> tabs = new ArrayList<ITab<?>>();
+		tabs.add(new AbstractTab<Void>(new Model<String>("first tab"))
 		{
 
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel1(panelId);
 			}
 
 		});
 
-		tabs.add(new AbstractTab(new Model("second tab"))
+		tabs.add(new AbstractTab<Void>(new Model<String>("second tab"))
 		{
 
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel2(panelId);
 			}
 
 		});
 
-		tabs.add(new AbstractTab(new Model("third tab"))
+		tabs.add(new AbstractTab<Void>(new Model<String>("third tab"))
 		{
 
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel3(panelId);
 			}
@@ -83,7 +87,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
 		add(new TabbedPanel("tabs", tabs).add(new AttributeModifier("class", true,
-				TabbedPanelPage.this.getModel())));
+			TabbedPanelPage.this.getModel())));
 
 	}
 
@@ -96,7 +100,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		add(new CssSwitchingLink("var4", "tabpanel4"));
 	}
 
-	protected class CssSwitchingLink extends Link
+	protected class CssSwitchingLink extends Link<Void>
 	{
 		private final String clazz;
 
@@ -113,6 +117,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.link.Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
 			TabbedPanelPage.this.setModelObject(clazz);
@@ -121,6 +126,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.link.Link#isEnabled()
 		 */
+		@Override
 		public boolean isEnabled()
 		{
 			return !TabbedPanelPage.this.getModelObjectAsString().equals(clazz);
@@ -134,7 +140,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel1 extends Panel
+	private static class TabPanel1 extends Panel<Void>
 	{
 
 		/**
@@ -156,7 +162,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel2 extends Panel
+	private static class TabPanel2 extends Panel<Void>
 	{
 
 		/**
@@ -178,7 +184,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel3 extends Panel
+	private static class TabPanel3 extends Panel<Void>
 	{
 
 		/**
@@ -195,20 +201,21 @@ public class TabbedPanelPage extends WicketExamplePage
 	};
 
 
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"tabs\" class=\"tabpanel\">[tabbed panel will be here]</span>\n";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;List tabs=new ArrayList();<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"first tab\")) {<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel1(panelId); }<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"second tab\")) {<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel2(panelId); }<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"third tab\")) {<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel3(panelId); }<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(new TabbedPanel(\"tabs\", tabs)<br/>";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"first tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel1(panelId); }<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"second tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel2(panelId); }<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"third tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel3(panelId); }<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(new TabbedPanel(\"tabs\", tabs)<br/>";
 		add(new ExplainPanel(html, code));
 	}
 }

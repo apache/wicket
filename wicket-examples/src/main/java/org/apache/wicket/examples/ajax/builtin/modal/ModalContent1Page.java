@@ -38,8 +38,9 @@ public class ModalContent1Page extends WebPage<Void>
 	 */
 	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window)
 	{
-		add(new AjaxLink("closeOK")
+		add(new AjaxLink<Void>("closeOK")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				if (modalWindowPage != null)
@@ -48,8 +49,9 @@ public class ModalContent1Page extends WebPage<Void>
 			}
 		});
 
-		add(new AjaxLink("closeCancel")
+		add(new AjaxLink<Void>("closeCancel")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				if (modalWindowPage != null)
@@ -76,7 +78,7 @@ public class ModalContent1Page extends WebPage<Void>
 
 		modal.setPageCreator(new ModalWindow.PageCreator()
 		{
-			public Page createPage()
+			public Page<?> createPage()
 			{
 				return new ModalContent2Page(modal);
 			}
@@ -86,15 +88,15 @@ public class ModalContent1Page extends WebPage<Void>
 		{
 			public boolean onCloseButtonClicked(AjaxRequestTarget target)
 			{
-				target
-						.appendJavascript("alert('You can\\'t close this modal window using close button."
-								+ " Use the link inside the window instead.');");
+				target.appendJavascript("alert('You can\\'t close this modal window using close button."
+					+ " Use the link inside the window instead.');");
 				return false;
 			}
 		});
 
-		add(new AjaxLink("open")
+		add(new AjaxLink<Void>("open")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				modal.show(target);

@@ -37,29 +37,30 @@ public class RepeatingPage extends BasePage
 	 */
 	public RepeatingPage()
 	{
-		Iterator contacts = new ContactDataProvider().iterator(0, 10);
+		Iterator<Contact> contacts = new ContactDataProvider().iterator(0, 10);
 
-		RepeatingView repeating = new RepeatingView("repeating");
+		RepeatingView<?> repeating = new RepeatingView<Void>("repeating");
 		add(repeating);
 
 		int index = 0;
 		while (contacts.hasNext())
 		{
-			WebMarkupContainer item = new WebMarkupContainer(repeating.newChildId());
+			WebMarkupContainer<?> item = new WebMarkupContainer<Void>(repeating.newChildId());
 			repeating.add(item);
-			Contact contact = (Contact)contacts.next();
+			Contact contact = contacts.next();
 
 			item.add(new ActionPanel("actions", new DetachableContactModel(contact)));
-			item.add(new Label("contactid", String.valueOf(contact.getId())));
-			item.add(new Label("firstname", contact.getFirstName()));
-			item.add(new Label("lastname", contact.getLastName()));
-			item.add(new Label("homephone", contact.getHomePhone()));
-			item.add(new Label("cellphone", contact.getCellPhone()));
+			item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
+			item.add(new Label<String>("firstname", contact.getFirstName()));
+			item.add(new Label<String>("lastname", contact.getLastName()));
+			item.add(new Label<String>("homephone", contact.getHomePhone()));
+			item.add(new Label<String>("cellphone", contact.getCellPhone()));
 
 			final int idx = index;
-			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 			{
-				public Object getObject()
+				@Override
+				public String getObject()
 				{
 					return (idx % 2 == 1) ? "even" : "odd";
 				}

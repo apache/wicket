@@ -31,6 +31,6 @@ public class Page1 extends TemplatePage
 	public Page1()
 	{
 		setPageTitle("Template example, page 1");
-		add(new Panel1("panel1"));
+		add(new Panel1<Void>("panel1"));
 	}
 }

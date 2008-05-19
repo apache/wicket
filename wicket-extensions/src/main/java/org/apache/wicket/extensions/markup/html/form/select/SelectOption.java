@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg
  */
-public class SelectOption extends WebMarkupContainer
+public class SelectOption<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class SelectOption extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public SelectOption(String id, IModel model)
+	public SelectOption(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -55,7 +55,7 @@ public class SelectOption extends WebMarkupContainer
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
 	 * @param tag
-	 *            the abstraction representing html tag of this component
+	 * 		the abstraction representing html tag of this component
 	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
@@ -64,7 +64,7 @@ public class SelectOption extends WebMarkupContainer
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 
-		Select select = (Select)findParent(Select.class);
+		Select select = findParent(Select.class);
 		if (select == null)
 		{
 			throw new WicketRuntimeException(

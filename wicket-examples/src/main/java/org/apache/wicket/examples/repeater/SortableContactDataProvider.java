@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * @author igor
  * 
  */
-public class SortableContactDataProvider extends SortableDataProvider
+public class SortableContactDataProvider extends SortableDataProvider<Contact>
 {
 	/**
 	 * constructor
@@ -48,7 +48,7 @@ public class SortableContactDataProvider extends SortableDataProvider
 	/**
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
 	 */
-	public Iterator iterator(int first, int count)
+	public Iterator<Contact> iterator(int first, int count)
 	{
 		SortParam sp = getSort();
 		return getContactsDB().find(first, count, sp.getProperty(), sp.isAscending()).iterator();
@@ -65,9 +65,9 @@ public class SortableContactDataProvider extends SortableDataProvider
 	/**
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
-	public IModel model(Object object)
+	public IModel<Contact> model(Contact object)
 	{
-		return new DetachableContactModel((Contact)object);
+		return new DetachableContactModel(object);
 	}
 
 }

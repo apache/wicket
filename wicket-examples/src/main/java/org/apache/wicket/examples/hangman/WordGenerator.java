@@ -40,7 +40,7 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 public class WordGenerator implements IClusterable
 {
 	/** List of words */
-	private final List words;
+	private final List<String> words;
 
 	/** Index into words */
 	private int index;
@@ -53,9 +53,9 @@ public class WordGenerator implements IClusterable
 		try
 		{
 			final IResourceStream resource = new ResourceStreamLocator().locate(null,
-					"org/apache/wicket/examples/hangman/WordList", "", Locale.getDefault(), ".txt");
+				"org/apache/wicket/examples/hangman/WordList", "", Locale.getDefault(), ".txt");
 			final String wordlist = Streams.readString(resource.getInputStream());
-			this.words = Arrays.asList(wordlist.split("\\s+"));
+			words = Arrays.asList(wordlist.split("\\s+"));
 			shuffle();
 		}
 		catch (IOException e)
@@ -91,7 +91,7 @@ public class WordGenerator implements IClusterable
 		{
 			shuffle();
 		}
-		return new Word((String)words.get(index++));
+		return new Word(words.get(index++));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class WordGenerator implements IClusterable
 	}
 
 	/**
-	 * Randomises the list of loaded words and sets the index back to the beginning of the word
+	 * Randomizes the list of loaded words and sets the index back to the beginning of the word
 	 * list.
 	 */
 	private void shuffle()

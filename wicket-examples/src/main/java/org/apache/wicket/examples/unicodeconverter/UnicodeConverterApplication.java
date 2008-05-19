@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.unicodeconverter;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -35,7 +36,8 @@ public class UnicodeConverterApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return UnicodeConverter.class;
 	}

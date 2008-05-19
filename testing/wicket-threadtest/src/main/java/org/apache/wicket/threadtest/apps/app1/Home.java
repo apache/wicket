@@ -53,31 +53,39 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.threadtest.apps.app1.FormInputModel.Line;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
 import org.apache.wicket.validation.validator.NumberValidator;
 import org.apache.wicket.version.undo.Change;
 
+/**
+ */
 public class Home extends WebPage<Void>
 {
 
-	private class ActionPanel extends Panel
+	private class ActionPanel extends Panel<Contact>
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @param id
 		 *            component id
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(String id, IModel model)
+		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link("select")
+			add(new Link<Void>("select")
 			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
 				public void onClick()
 				{
-					Home.this.selected = (Contact)getParent().getModelObject();
+					selected = ActionPanel.this.getModelObject();
 				}
 			});
 		}
@@ -86,8 +94,10 @@ public class Home extends WebPage<Void>
 	/**
 	 * Form for collecting input.
 	 */
-	private class InputForm extends Form
+	private class InputForm extends Form<FormInputModel>
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 
@@ -96,70 +106,85 @@ public class Home extends WebPage<Void>
 		 */
 		public InputForm(String name)
 		{
-			super(name, new CompoundPropertyModel(new FormInputModel()));
+			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 			add(new LocaleDropDownChoice("localeSelect"));
-			add(new Link("defaultLocaleLink")
+			add(new Link<Void>("defaultLocaleLink")
 			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
 				public void onClick()
 				{
 					WebRequest request = (WebRequest)getRequest();
 					setLocale(request.getLocale());
 				}
 			});
-			TextField stringTextField = new TextField("stringProperty");
-			stringTextField.setLabel(new Model("String"));
+			TextField<String> stringTextField = new TextField<String>("stringProperty");
+			stringTextField.setLabel(new Model<String>("String"));
 			add(stringTextField);
-			TextField integerTextField = new TextField("integerProperty", Integer.class);
+			TextField<Integer> integerTextField = new TextField<Integer>("integerProperty",
+				Integer.class);
 			add(integerTextField.add(NumberValidator.POSITIVE));
-			add(new TextField("doubleProperty", Double.class));
-			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
+			add(new TextField<Double>("doubleProperty", Double.class));
+			WebMarkupContainer<?> dateLabel = new WebMarkupContainer<Void>("dateLabel");
 			add(dateLabel);
-			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
+			TextField<Date> datePropertyTextField = new TextField<Date>("dateProperty", Date.class);
 			add(datePropertyTextField);
-			add(new TextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
-					100)));
+			add(new TextField<Integer>("integerInRangeProperty", Integer.class).add(NumberValidator.range(
+				0, 100)));
 			add(new CheckBox("booleanProperty"));
-			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
-			rc.setLabel(new Model("number"));
+			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");
+			rc.setLabel(new Model<String>("number"));
 			add(rc);
 
-			RadioGroup group = new RadioGroup("numbersGroup");
+			RadioGroup<String> group = new RadioGroup<String>("numbersGroup");
 			add(group);
-			ListView persons = new ListView("numbers", NUMBERS)
+			ListView<String> numbers = new ListView<String>("numbers", NUMBERS)
 			{
-				protected void populateItem(ListItem item)
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Radio("radio", item.getModel()));
-					item.add(new Label("number", item.getModelObjectAsString()));
+					item.add(new Radio<String>("radio", item.getModel()));
+					item.add(new Label<String>("number", item.getModelObjectAsString()));
 				};
 			};
-			group.add(persons);
+			group.add(numbers);
 
-			CheckGroup checks = new CheckGroup("numbersCheckGroup");
+			CheckGroup<String> checks = new CheckGroup<String>("numbersCheckGroup");
 			add(checks);
-			ListView checksList = new ListView("numbers", NUMBERS)
+			ListView<String> checksList = new ListView<String>("numbers", NUMBERS)
 			{
-				protected void populateItem(ListItem item)
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Check("check", item.getModel()));
-					item.add(new Label("number", item.getModelObjectAsString()));
+					item.add(new Check<String>("check", item.getModel()));
+					item.add(new Label<String>("number", item.getModelObjectAsString()));
 				};
 			};
 			checks.add(checksList);
 
-			add(new ListMultipleChoice("siteSelection", SITES));
+			add(new ListMultipleChoice<String>("siteSelection", SITES));
 
-			add(new TextField("urlProperty", URL.class)
+			add(new TextField<URL>("urlProperty", URL.class)
 			{
-				public IConverter getConverter(Class clazz)
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public IConverter<URL> getConverter(Class<URL> clazz)
 				{
-					return new IConverter()
+					return new IConverter<URL>()
 					{
+						private static final long serialVersionUID = 1L;
+
 						/**
 						 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 						 *      java.util.Locale)
 						 */
-						public Object convertToObject(String value, Locale locale)
+						public URL convertToObject(String value, Locale locale)
 						{
 							try
 							{
@@ -175,7 +200,7 @@ public class Home extends WebPage<Void>
 						 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 						 *      java.util.Locale)
 						 */
-						public String convertToString(Object value, Locale locale)
+						public String convertToString(URL value, Locale locale)
 						{
 							return value != null ? value.toString() : null;
 						}
@@ -183,30 +208,37 @@ public class Home extends WebPage<Void>
 				}
 			});
 
-			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
+			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
-				public IConverter getConverter(Class clazz)
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public IConverter<UsPhoneNumber> getConverter(Class<UsPhoneNumber> clazz)
 				{
-					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+					return new MaskConverter<UsPhoneNumber>("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 
 			add(new LinesListView("lines"));
 
-			add(new ImageButton("saveButton"));
+			add(new ImageButton<Void>("saveButton"));
 
-			add(new Link("resetButtonLink")
+			add(new Link<Void>("resetButtonLink")
 			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
 				public void onClick()
 				{
 					InputForm.this.modelChanged();
 				}
-			}.add(new Image("resetButtonImage")));
+			}.add(new Image<Void>("resetButtonImage")));
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			info("Saved model " + getModelObject());
@@ -214,8 +246,9 @@ public class Home extends WebPage<Void>
 	}
 
 	/** list view to be nested in the form. */
-	private static final class LinesListView extends ListView
+	private static final class LinesListView extends ListView<Line>
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
@@ -228,17 +261,21 @@ public class Home extends WebPage<Void>
 			setReuseItems(true);
 		}
 
-		protected void populateItem(ListItem item)
+		@Override
+		protected void populateItem(ListItem<Line> item)
 		{
-			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
+			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(item.getModel(),
+				"text")));
 		}
 	}
 
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Constructor.
 		 */
@@ -249,9 +286,10 @@ public class Home extends WebPage<Void>
 		/**
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
-		public Object getDisplayValue(Object object)
+		@Override
+		public Object getDisplayValue(Locale object)
 		{
-			Locale locale = (Locale)object;
+			Locale locale = object;
 			String display = locale.getDisplayName(getLocale());
 			return display;
 		}
@@ -260,8 +298,10 @@ public class Home extends WebPage<Void>
 	/**
 	 * Dropdown with Locales.
 	 */
-	private final class LocaleDropDownChoice extends DropDownChoice
+	private final class LocaleDropDownChoice extends DropDownChoice<Locale>
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 
@@ -271,19 +311,21 @@ public class Home extends WebPage<Void>
 		public LocaleDropDownChoice(String id)
 		{
 			super(id, LOCALES, new LocaleChoiceRenderer());
-			setModel(new PropertyModel(Home.this, "locale"));
+			setModel(new PropertyModel<Locale>(Home.this, "locale"));
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
-		public void onSelectionChanged(Object newSelection)
+		@Override
+		public void onSelectionChanged(Locale newSelection)
 		{
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 		 */
+		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
 			return true;
@@ -291,24 +333,28 @@ public class Home extends WebPage<Void>
 	}
 
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
 			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK") });
 
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
 
 	/** available numbers for the radio selection. */
-	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+	static final List<String> NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	private Contact selected;
 
+	/**
+	 * Construct.
+	 */
 	public Home()
 	{
 
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
+			private static final long serialVersionUID = 1L;
 			int i = 0;
 
 			@Override
@@ -317,6 +363,8 @@ public class Home extends WebPage<Void>
 				i++;
 				addStateChange(new Change()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void undo()
 					{
@@ -325,23 +373,30 @@ public class Home extends WebPage<Void>
 			}
 		});
 
-		add(new Label("selectedLabel", new PropertyModel(this, "selectedContactLabel")));
+		add(new Label<Contact>("selectedLabel", new PropertyModel<Contact>(this,
+			"selectedContactLabel")));
 
-		add(new DataView("simple", new ContactDataProvider())
+		add(new DataView<Contact>("simple", new ContactDataProvider())
 		{
-			protected void populateItem(final Item item)
-			{
-				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+			private static final long serialVersionUID = 1L;
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+			@Override
+			protected void populateItem(final Item<Contact> item)
+			{
+				Contact contact = item.getModelObject();
+				item.add(new ActionPanel("actions", item.getModel()));
+				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
+				item.add(new Label<String>("firstname", contact.getFirstName()));
+				item.add(new Label<String>("lastname", contact.getLastName()));
+				item.add(new Label<String>("homephone", contact.getHomePhone()));
+				item.add(new Label<String>("cellphone", contact.getCellPhone()));
+
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
-					public Object getObject()
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
@@ -370,8 +425,7 @@ public class Home extends WebPage<Void>
 	}
 
 	/**
-	 * Sets locale for the user's session (getLocale() is inherited from
-	 * Component)
+	 * Sets locale for the user's session (getLocale() is inherited from Component)
 	 * 
 	 * @param locale
 	 *            The new locale

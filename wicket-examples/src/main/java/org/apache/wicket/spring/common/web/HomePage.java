@@ -27,6 +27,9 @@ import org.apache.wicket.spring.annot.web.AnnotPage;
  */
 public class HomePage extends BasePage
 {
+	/**
+	 * Construct.
+	 */
 	public HomePage()
 	{
 		add(new BookmarkablePageLink("annot-link", AnnotPage.class));

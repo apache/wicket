@@ -52,7 +52,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 		 *      java.lang.String)
 		 */
 		@Override
-		public IResourceStream locate(Class clazz, String path)
+		public IResourceStream locate(Class<?> clazz, String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())
@@ -108,7 +108,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Index.class;
 	}

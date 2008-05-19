@@ -27,11 +27,20 @@ public class ExampleApplication implements Serializable
 	private final String displayName;
 	private final String filterPath;
 	private final String filterQuery;
-	private final Map initParameters;
+	private final Map<String, String> initParameters;
 	private final String description;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param displayName
+	 * @param filterPath
+	 * @param filterQuery
+	 * @param initParameters
+	 * @param description
+	 */
 	public ExampleApplication(String displayName, String filterPath, String filterQuery,
-			Map initParameters, String description)
+		Map<String, String> initParameters, String description)
 	{
 		this.displayName = displayName;
 		this.filterPath = filterPath;
@@ -89,7 +98,7 @@ public class ExampleApplication implements Serializable
 	 */
 	public String getInitParameter(String name)
 	{
-		return (String)initParameters.get(name);
+		return initParameters.get(name);
 	}
 
 

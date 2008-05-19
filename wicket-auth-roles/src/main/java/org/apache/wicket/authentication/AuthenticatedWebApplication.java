@@ -40,12 +40,12 @@ import org.apache.wicket.protocol.http.WebApplication;
  * @author Jonathan Locke
  */
 public abstract class AuthenticatedWebApplication extends WebApplication
-		implements
-			IRoleCheckingStrategy,
-			IUnauthorizedComponentInstantiationListener
+	implements
+		IRoleCheckingStrategy,
+		IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
-	private final WeakReference<Class< ? extends AuthenticatedWebSession>> webSessionClassRef;
+	private final WeakReference<Class<? extends AuthenticatedWebSession>> webSessionClassRef;
 
 	/**
 	 * Constructor
@@ -53,8 +53,8 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public AuthenticatedWebApplication()
 	{
 		// Get web session class to instantiate
-		webSessionClassRef = new WeakReference<Class< ? extends AuthenticatedWebSession>>(
-				getWebSessionClass());
+		webSessionClassRef = new WeakReference<Class<? extends AuthenticatedWebSession>>(
+			getWebSessionClass());
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
 	 */
-	public final void onUnauthorizedInstantiation(final Component< ? > component)
+	public final void onUnauthorizedInstantiation(final Component<?> component)
 	{
 		// If there is a sign in page class declared, and the unauthorized
 		// component is a page, but it's not the sign in page
@@ -92,7 +92,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			}
 			else
 			{
-				onUnauthorizedPage((Page< ? >)component);
+				onUnauthorizedPage((Page<?>)component);
 			}
 		}
 		else
@@ -112,24 +112,24 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		try
 		{
 			return webSessionClassRef.get().getDeclaredConstructor(Request.class).newInstance(
-					request);
+				request);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Unable to instantiate web session " +
-					webSessionClassRef.get(), e);
+				webSessionClassRef.get(), e);
 		}
 	}
 
 	/**
 	 * @return AuthenticatedWebSession subclass to use in this authenticated web application.
 	 */
-	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
 
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class< ? extends WebPage< ? >> getSignInPageClass();
+	protected abstract Class<? extends WebPage<?>> getSignInPageClass();
 
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they are not authorized to
@@ -139,7 +139,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * @param page
 	 *            The page
 	 */
-	protected void onUnauthorizedPage(final Page page)
+	protected void onUnauthorizedPage(final Page<?> page)
 	{
 		// The component was not a page, so throw an exception
 		throw new UnauthorizedInstantiationException(page.getClass());

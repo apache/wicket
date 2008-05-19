@@ -22,6 +22,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * Session for hangman game.
  * 
  * @author Jonathan Locke
+ * @param <T>
  */
 public class HangmanPage<T> extends WicketExamplePage<T>
 {

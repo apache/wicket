@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
  * 
  * @author Eelco Hillenius
  */
-public class ExternalLinkPage extends WicketExamplePage
+public class ExternalLinkPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -41,6 +41,7 @@ public class ExternalLinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<a href=\"#\" target=\"_new\" wicket:id=\"externalLink1\">this body will be replaced</a>";

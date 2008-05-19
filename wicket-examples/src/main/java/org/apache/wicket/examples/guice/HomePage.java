@@ -41,7 +41,7 @@ public class HomePage extends WicketExamplePage<Void>
 	 */
 	public HomePage()
 	{
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -52,11 +52,11 @@ public class HomePage extends WicketExamplePage<Void>
 				labelValue = service.getHelloWorldText();
 			}
 		});
-		add(new Label("message", new AbstractReadOnlyModel()
+		add(new Label<String>("message", new AbstractReadOnlyModel<String>()
 		{
 
 			@Override
-			public Object getObject()
+			public String getObject()
 			{
 				return labelValue;
 			}

@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -54,31 +55,36 @@ public class RequestsPage extends WebPage<Void>
 	 */
 	public RequestsPage(final SessionData sessionData)
 	{
-		add(new Image("bug"));
+		add(new Image<Void>("bug"));
 		if (sessionData == null)
 		{
-			add(new Label("id").setVisible(false));
-			add(new Label("sessionInfo").setVisible(false));
-			add(new Label("startDate").setVisible(false));
-			add(new Label("lastRequestTime").setVisible(false));
-			add(new Label("numberOfRequests").setVisible(false));
-			add(new Label("totalTimeTaken").setVisible(false));
-			add(new Label("size").setVisible(false));
-			add(new WebMarkupContainer("sessionid"));
+			add(new Label<Void>("id").setVisible(false));
+			add(new Label<Void>("sessionInfo").setVisible(false));
+			add(new Label<Void>("startDate").setVisible(false));
+			add(new Label<Void>("lastRequestTime").setVisible(false));
+			add(new Label<Void>("numberOfRequests").setVisible(false));
+			add(new Label<Void>("totalTimeTaken").setVisible(false));
+			add(new Label<Void>("size").setVisible(false));
+			add(new WebMarkupContainer<Void>("sessionid"));
 		}
 		else
 		{
-			add(new Label("id", new Model(sessionData.getSessionId())));
-			add(new Label("sessionInfo", new Model((Serializable)sessionData.getSessionInfo())));
-			add(new Label("startDate", new Model(sdf.format(sessionData.getStartDate()))));
-			add(new Label("lastRequestTime", new Model(sdf.format(sessionData.getLastActive()))));
-			add(new Label("numberOfRequests", new Model(sessionData.getNumberOfRequests())));
-			add(new Label("totalTimeTaken", new Model(sessionData.getTotalTimeTaken())));
-			add(new Label("size", new Model(Bytes.bytes(sessionData.getSessionSize()))));
-			add(new WebMarkupContainer("sessionid").setVisible(false));
+			add(new Label<String>("id", new Model<String>(sessionData.getSessionId())));
+			add(new Label<Serializable>("sessionInfo", new Model<Serializable>(
+				(Serializable)sessionData.getSessionInfo())));
+			add(new Label<String>("startDate", new Model<String>(
+				sdf.format(sessionData.getStartDate()))));
+			add(new Label<String>("lastRequestTime", new Model<String>(
+				sdf.format(sessionData.getLastActive()))));
+			add(new Label<Long>("numberOfRequests", new Model<Long>(
+				sessionData.getNumberOfRequests())));
+			add(new Label<Long>("totalTimeTaken", new Model<Long>(sessionData.getTotalTimeTaken())));
+			add(new Label<Bytes>("size",
+				new Model<Bytes>(Bytes.bytes(sessionData.getSessionSize()))));
+			add(new WebMarkupContainer<Void>("sessionid").setVisible(false));
 		}
 
-		IModel<ArrayList<RequestData>> requestsModel = new Model<ArrayList<RequestData>>()
+		IModel<List<RequestData>> requestsModel = new AbstractReadOnlyModel<List<RequestData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -102,23 +108,27 @@ public class RequestsPage extends WebPage<Void>
 				return new ArrayList<RequestData>(requests);
 			}
 		};
-		PageableListView listView = new PageableListView("requests", requestsModel, 50)
+		PageableListView<RequestData> listView = new PageableListView<RequestData>("requests",
+			requestsModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<RequestData> item)
 			{
-				RequestData rd = (RequestData)item.getModelObject();
-				item.add(new Label("id", new Model(rd.getSessionId())).setVisible(sessionData == null));
-				item.add(new Label("startDate", new Model(sdf.format(rd.getStartDate()))));
-				item.add(new Label("timeTaken", new Model(rd.getTimeTaken())));
-				item.add(new Label("eventTarget", new Model(rd.getEventTarget())));
-				item.add(new Label("responseTarget", new Model(rd.getResponseTarget())));
-				item.add(new Label("alteredObjects", new Model(rd.getAlteredObjects())))
+				RequestData rd = item.getModelObject();
+				item.add(new Label<String>("id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null));
+				item.add(new Label<String>("startDate", new Model<String>(
+					sdf.format(rd.getStartDate()))));
+				item.add(new Label<Long>("timeTaken", new Model<Long>(rd.getTimeTaken())));
+				item.add(new Label<String>("eventTarget", new Model<String>(rd.getEventTarget())));
+				item.add(new Label<String>("responseTarget", new Model<String>(
+					rd.getResponseTarget())));
+				item.add(
+					new Label<String>("alteredObjects", new Model<String>(rd.getAlteredObjects())))
 					.setEscapeModelStrings(false);
-				item.add(new Label("sessionSize", new Model(Bytes.bytes(rd.getSessionSize()
-					.longValue()))));
+				item.add(new Label<Bytes>("sessionSize", new Model<Bytes>(
+					Bytes.bytes(rd.getSessionSize().longValue()))));
 			}
 		};
 		add(listView);

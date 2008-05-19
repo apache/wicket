@@ -36,6 +36,7 @@ import java.util.jar.JarFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -46,7 +47,6 @@ import org.apache.wicket.markup.html.link.PopupCloseLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
@@ -69,7 +69,7 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged resource.
 	 */
-	public class SourceModel extends AbstractReadOnlyModel
+	public class SourceModel extends AbstractReadOnlyModel<String>
 	{
 		/**
 		 * Constructor.
@@ -83,7 +83,8 @@ public class SourcesPage extends WebPage<Void>
 		 * 
 		 * @return the contents of the file identified by name
 		 */
-		public Object getObject()
+		@Override
+		public String getObject()
 		{
 			// name contains the name of the selected file
 			if (Strings.isEmpty(name))
@@ -118,12 +119,12 @@ public class SourcesPage extends WebPage<Void>
 					}
 				}
 				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n",
-						"<br />");
+					"<br />");
 			}
 			catch (IOException e)
 			{
 				log.error("Unable to read resource stream for: " + name + "; Page=" +
-						page.toString(), e);
+					page.toString(), e);
 				return "";
 			}
 			finally
@@ -136,9 +137,9 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * Model for retrieving the contents of a package directory from the class path.
 	 */
-	public class PackagedResourcesModel extends AbstractReadOnlyModel implements IDetachable
+	public class PackagedResourcesModel extends AbstractReadOnlyModel<List<String>>
 	{
-		private final List resources = new ArrayList();
+		private final List<String> resources = new ArrayList<String>();
 
 		/**
 		 * Constructor.
@@ -160,36 +161,37 @@ public class SourcesPage extends WebPage<Void>
 		 * 
 		 * @return the list of resources found in the package of the page.
 		 */
-		public Object getObject()
+		@Override
+		public List<String> getObject()
 		{
 			if (resources.isEmpty())
 			{
 				get(page);
-// PackageName name = PackageName.forClass(page);
-// ClassLoader loader = page.getClassLoader();
-// String path = Strings.replaceAll(name.getName(), ".", "/").toString();
-// try
-// {
-// // gives the urls for each place where the package
-// // path could be found. There could be multiple
-// // jar files containing the same package, so each
-// // jar file has its own url.
-//
-// Enumeration urls = loader.getResources(path);
-// while (urls.hasMoreElements())
-// {
-// URL url = (URL)urls.nextElement();
-//
-// // the url points to the directory structure
-// // embedded in the classpath.
-//
-// getPackageContents(url);
-// }
-// }
-// catch (IOException e)
-// {
-// log.error("Unable to read resource for: " + path, e);
-// }
+				PackageName name = PackageName.forClass(page);
+				ClassLoader loader = page.getClassLoader();
+				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
+				try
+				{
+					// gives the urls for each place where the package
+					// path could be found. There could be multiple
+					// jar files containing the same package, so each
+					// jar file has its own url.
+
+					Enumeration<URL> urls = loader.getResources(path);
+					while (urls.hasMoreElements())
+					{
+						URL url = urls.nextElement();
+
+						// the url points to the directory structure
+						// embedded in the classpath.
+
+						getPackageContents(url);
+					}
+				}
+				catch (IOException e)
+				{
+					log.error("Unable to read resource for: " + path, e);
+				}
 			}
 			return resources;
 		}
@@ -232,8 +234,8 @@ public class SourcesPage extends WebPage<Void>
 			}
 		}
 
-		private final void addResources(final Class scope,
-				final AppendingStringBuffer relativePath, final File dir)
+		private final void addResources(final Class<?> scope,
+			final AppendingStringBuffer relativePath, final File dir)
 		{
 			File[] files = dir.listFiles();
 			for (int i = 0; i < files.length; i++)
@@ -242,7 +244,7 @@ public class SourcesPage extends WebPage<Void>
 				if (file.isDirectory())
 				{
 					addResources(scope, new AppendingStringBuffer(relativePath).append(
-							file.getName()).append('/'), file);
+						file.getName()).append('/'), file);
 				}
 				else
 				{
@@ -257,18 +259,18 @@ public class SourcesPage extends WebPage<Void>
 			}
 		}
 
-		private void get(Class scope)
+		private void get(Class<?> scope)
 		{
 			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
-					.toString();
+				.toString();
 			ClassLoader loader = scope.getClassLoader();
 			try
 			{
 				// loop through the resources of the package
-				Enumeration packageResources = loader.getResources(packageRef);
+				Enumeration<URL> packageResources = loader.getResources(packageRef);
 				while (packageResources.hasMoreElements())
 				{
-					URL resource = (URL)packageResources.nextElement();
+					URL resource = packageResources.nextElement();
 					URLConnection connection = resource.openConnection();
 					if (connection instanceof JarURLConnection)
 					{
@@ -313,9 +315,7 @@ public class SourcesPage extends WebPage<Void>
 							// ".jar"
 							// or
 							// ".zip"
-							log
-									.debug("trying the filename: " + filename +
-											" to load as a zip/jar.");
+							log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 							JarFile jarFile = new JarFile(filename, false);
 							scanJarFile(scope, packageRef, jarFile);
 							return;
@@ -323,7 +323,7 @@ public class SourcesPage extends WebPage<Void>
 						if (!basedir.isDirectory())
 						{
 							throw new IllegalStateException(
-									"unable to read resources from directory " + basedir);
+								"unable to read resources from directory " + basedir);
 						}
 						addResources(scope, new AppendingStringBuffer(), basedir);
 					}
@@ -337,12 +337,12 @@ public class SourcesPage extends WebPage<Void>
 			return;
 		}
 
-		private void scanJarFile(Class scope, String packageRef, JarFile jf)
+		private void scanJarFile(Class<?> scope, String packageRef, JarFile jf)
 		{
-			Enumeration enumeration = jf.entries();
+			Enumeration<JarEntry> enumeration = jf.entries();
 			while (enumeration.hasMoreElements())
 			{
-				JarEntry je = (JarEntry)enumeration.nextElement();
+				JarEntry je = enumeration.nextElement();
 				String name = je.getName();
 				if (name.startsWith(packageRef))
 				{
@@ -360,7 +360,7 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * Displays the resources embedded in a package in a list.
 	 */
-	public class FilesBrowser extends WebMarkupContainer
+	public class FilesBrowser extends WebMarkupContainer<Void>
 	{
 		/**
 		 * Constructor.
@@ -371,12 +371,15 @@ public class SourcesPage extends WebPage<Void>
 		public FilesBrowser(String id)
 		{
 			super(id);
-			ListView lv = new ListView("file", new PackagedResourcesModel())
+			ListView<String> lv = new ListView<String>("file", new PackagedResourcesModel())
 			{
-				protected void populateItem(ListItem item)
+				@Override
+				protected void populateItem(ListItem<String> item)
 				{
-					AjaxFallbackLink link = new AjaxFallbackLink("link", item.getModel())
+					AjaxFallbackLink<String> link = new AjaxFallbackLink<String>("link",
+						item.getModel())
 					{
+						@Override
 						public void onClick(AjaxRequestTarget target)
 						{
 							setName(getModelObjectAsString());
@@ -388,7 +391,7 @@ public class SourcesPage extends WebPage<Void>
 							}
 						}
 					};
-					link.add(new Label("name", item.getModelObjectAsString()));
+					link.add(new Label<String>("name", item.getModelObjectAsString()));
 					item.add(link);
 				}
 			};
@@ -400,7 +403,7 @@ public class SourcesPage extends WebPage<Void>
 	 * Container for displaying the source of the selected page, resource or other element from the
 	 * package.
 	 */
-	public class CodePanel extends WebMarkupContainer
+	public class CodePanel extends WebMarkupContainer<Void>
 	{
 		/**
 		 * Constructor.
@@ -411,7 +414,7 @@ public class SourcesPage extends WebPage<Void>
 		public CodePanel(String id)
 		{
 			super(id);
-			Label code = new Label("code", new SourceModel());
+			Label<String> code = new Label<String>("code", new SourceModel());
 			code.setEscapeModelStrings(false);
 			code.setOutputMarkupId(true);
 			add(code);
@@ -426,14 +429,14 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * The class of the page of which the sources need to be displayed.
 	 */
-	private Class page;
+	private final Class<? extends Page<?>> page;
 
 	/**
 	 * The panel for setting the ajax calls.
 	 */
-	private Component codePanel;
+	private final Component<?> codePanel;
 
-	private Label filename;
+	private final Label<String> filename;
 
 	/**
 	 * Sets the name.
@@ -470,16 +473,16 @@ public class SourcesPage extends WebPage<Void>
 	 * @param page
 	 *            the page where the sources need to be shown from.
 	 */
-	public SourcesPage(Class page)
+	public SourcesPage(Class<? extends Page<?>> page)
 	{
 		this.page = page;
 
-		filename = new Label("filename", new PropertyModel(this, "name"));
+		filename = new Label<String>("filename", new PropertyModel<String>(this, "name"));
 		filename.setOutputMarkupId(true);
 		add(filename);
 		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
 		add(codePanel);
 		add(new FilesBrowser("filespanel"));
-		add(new PopupCloseLink("close"));
+		add(new PopupCloseLink<Void>("close"));
 	}
 }

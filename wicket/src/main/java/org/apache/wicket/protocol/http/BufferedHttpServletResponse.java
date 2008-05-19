@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -52,13 +53,13 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	private PrintWriter pw = new PrintWriter(sbw);
 
 	/** cookies list */
-	private List cookies;
+	private List<Cookie> cookies;
 
 	/** status code */
 	private int status = -1;
 
 	/** headers map */
-	private Map headers;
+	private Map<String, Object> headers;
 
 	/** the real response for encoding the url */
 	private HttpServletResponse realResponse;
@@ -88,7 +89,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (cookies == null)
 		{
-			cookies = new ArrayList(2);
+			cookies = new ArrayList<Cookie>(2);
 		}
 		cookies.add(cookie);
 	}
@@ -128,6 +129,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Deprecated
 	public String encodeUrl(String url)
 	{
 		isOpen();
@@ -138,6 +140,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Deprecated
 	public String encodeRedirectUrl(String url)
 	{
 		isOpen();
@@ -186,7 +189,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (headers == null)
 		{
-			headers = new HashMap();
+			headers = new HashMap<String, Object>();
 		}
 	}
 
@@ -207,11 +210,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (previousObject instanceof List)
 		{
-			((List)previousObject).add(object);
+			((List<Object>)previousObject).add(object);
 		}
 		else
 		{
-			ArrayList list = new ArrayList();
+			ArrayList<Object> list = new ArrayList<Object>();
 			list.add(previousObject);
 			list.add(object);
 			headers.put(name, list);
@@ -284,10 +287,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
 	 * @deprecated use setStatus(int) instead
 	 */
+	@Deprecated
 	public void setStatus(int sc, String sm)
 	{
 		throw new UnsupportedOperationException(
-				"not supported in the buffered http response, use setStatus(int)");
+			"not supported in the buffered http response, use setStatus(int)");
 	}
 
 	/**
@@ -511,15 +515,15 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		if (headers != null)
 		{
-			Iterator it = headers.entrySet().iterator();
+			Iterator<Entry<String, Object>> it = headers.entrySet().iterator();
 			while (it.hasNext())
 			{
-				Map.Entry entry = (Map.Entry)it.next();
-				String name = (String)entry.getKey();
+				Entry<String, Object> entry = it.next();
+				String name = entry.getKey();
 				Object value = entry.getValue();
 				if (value instanceof List)
 				{
-					List lst = (List)value;
+					List<Object> lst = (List<Object>)value;
 					for (int i = 0; i < lst.size(); i++)
 					{
 						addHeader(name, lst.get(i), servletResponse);
@@ -536,7 +540,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		{
 			for (int i = 0; i < cookies.size(); i++)
 			{
-				Cookie cookie = (Cookie)cookies.get(i);
+				Cookie cookie = cookies.get(i);
 				servletResponse.addCookie(cookie);
 			}
 		}

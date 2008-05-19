@@ -34,21 +34,23 @@ public class SimplePage extends BasePage
 	 */
 	public SimplePage()
 	{
-		add(new DataView("simple", new ContactDataProvider())
+		add(new DataView<Contact>("simple", new ContactDataProvider())
 		{
-			protected void populateItem(final Item item)
+			@Override
+			protected void populateItem(final Item<Contact> item)
 			{
-				Contact contact = (Contact)item.getModelObject();
+				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
+				item.add(new Label<String>("firstname", contact.getFirstName()));
+				item.add(new Label<String>("lastname", contact.getLastName()));
+				item.add(new Label<String>("homephone", contact.getHomePhone()));
+				item.add(new Label<String>("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
-					public Object getObject()
+					@Override
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

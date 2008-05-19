@@ -33,10 +33,11 @@ public class TestExpirePage extends WebPage<Void>
 	public TestExpirePage()
 	{
 
-		add(new AjaxLink("link")
+		add(new AjaxLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				target.addComponent(this);

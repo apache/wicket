@@ -24,9 +24,9 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends LoadableDetachableModel
+public class DetachableContactModel extends LoadableDetachableModel<Contact>
 {
-	private long id;
+	private final long id;
 
 	protected ContactsDatabase getContactsDB()
 	{
@@ -56,6 +56,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return Long.valueOf(id).hashCode();
@@ -67,6 +68,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 	 * @see org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if (obj == this)
@@ -80,7 +82,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 		else if (obj instanceof DetachableContactModel)
 		{
 			DetachableContactModel other = (DetachableContactModel)obj;
-			return other.id == this.id;
+			return other.id == id;
 		}
 		return false;
 	}
@@ -88,7 +90,8 @@ public class DetachableContactModel extends LoadableDetachableModel
 	/**
 	 * @see org.apache.wicket.model.LoadableDetachableModel#load()
 	 */
-	protected Object load()
+	@Override
+	protected Contact load()
 	{
 		// loads contact from the database
 		return getContactsDB().get(id);

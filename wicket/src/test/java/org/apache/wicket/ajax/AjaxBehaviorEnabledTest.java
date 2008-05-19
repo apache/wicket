@@ -43,7 +43,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(Component< ? > component, Action action)
+		public boolean isActionAuthorized(Component<?> component, Action action)
 		{
 			if (action == Component.ENABLE && component.getId().endsWith("disabled"))
 				return false;
@@ -54,7 +54,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		 * 
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean isInstantiationAuthorized(Class< ? extends Component> componentClass)
+		public boolean isInstantiationAuthorized(Class<? extends Component<?>> componentClass)
 		{
 			return true;
 		}

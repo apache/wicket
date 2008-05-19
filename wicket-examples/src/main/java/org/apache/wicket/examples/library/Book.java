@@ -58,7 +58,7 @@ public final class Book implements IClusterable
 	public static final WritingStyle BAD = new WritingStyle("bad");
 
 	private static long nextId = 0;
-	private static final Map idToBook = new HashMap();
+	private static final Map<Long, Book> idToBook = new HashMap<Long, Book>();
 
 	static
 	{
@@ -73,7 +73,7 @@ public final class Book implements IClusterable
 	private Book companionBook;
 	private Book relatedBook;
 	private boolean isFiction;
-	private List writingStyles = new ArrayList();
+	private List<WritingStyle> writingStyles = new ArrayList<WritingStyle>();
 
 	/**
 	 * Constructor
@@ -87,7 +87,7 @@ public final class Book implements IClusterable
 	 */
 	public Book(final String title, final String author, final boolean isFiction)
 	{
-		this.id = nextId++;
+		id = nextId++;
 		this.title = title;
 		this.author = author;
 		this.isFiction = isFiction;
@@ -98,10 +98,10 @@ public final class Book implements IClusterable
 	private void add(final Book book)
 	{
 		boolean hit = false;
-		final Iterator iter = idToBook.values().iterator();
+		final Iterator<Book> iter = idToBook.values().iterator();
 		while (iter.hasNext())
 		{
-			final Book value = (Book)iter.next();
+			final Book value = iter.next();
 			if (value.toString().equals(book.toString()))
 			{
 				book.id = value.id;
@@ -123,13 +123,13 @@ public final class Book implements IClusterable
 	 */
 	public static Book get(final long id)
 	{
-		return (Book)idToBook.get(id);
+		return idToBook.get(id);
 	}
 
 	/**
 	 * @return All books
 	 */
-	public static Collection getBooks()
+	public static Collection<Book> getBooks()
 	{
 		return idToBook.values();
 	}
@@ -220,7 +220,7 @@ public final class Book implements IClusterable
 	/**
 	 * @return Returns the writingStyles.
 	 */
-	public final List getWritingStyles()
+	public final List<WritingStyle> getWritingStyles()
 	{
 		return writingStyles;
 	}
@@ -229,7 +229,7 @@ public final class Book implements IClusterable
 	 * @param writingStyles
 	 *            The writingStyles to set.
 	 */
-	public final void setWritingStyles(final List writingStyles)
+	public final void setWritingStyles(final List<WritingStyle> writingStyles)
 	{
 		this.writingStyles = writingStyles;
 	}
@@ -254,6 +254,7 @@ public final class Book implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public final String toString()
 	{
 		return title + " (" + author + ")";

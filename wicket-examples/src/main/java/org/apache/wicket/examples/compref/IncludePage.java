@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.include.Include;
  * 
  * @author Eelco Hillenius
  */
-public class IncludePage extends WicketExamplePage
+public class IncludePage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -38,14 +38,15 @@ public class IncludePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"include\">\n"
-				+ "Inclusion contents to be inserted here.\n" + "</span>";
+			+ "Inclusion contents to be inserted here.\n" + "</span>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public IncludePage()\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new Include(\"include\", \"to_be_included.html\"));\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new Include(\"include\", \"to_be_included.html\"));\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
 		add(new ExplainPanel(html, code));
 	}
 }

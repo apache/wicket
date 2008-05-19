@@ -19,6 +19,8 @@ package org.apache.wicket.authorization.strategies.role.annotations;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
@@ -28,8 +30,6 @@ import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * Test the annotations package of the auth-roles project.
@@ -76,12 +76,12 @@ public class AnnotationsRoleTest extends TestCase
 	public void testClear() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
+			new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
 		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return new NormalPage();
 			}
@@ -96,12 +96,12 @@ public class AnnotationsRoleTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new RoleAuthorizationStrategy(new UserRolesAuthorizer("ADMIN")));
+			new RoleAuthorizationStrategy(new UserRolesAuthorizer("ADMIN")));
 		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return new AdminPage();
 			}
@@ -116,19 +116,20 @@ public class AnnotationsRoleTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new RoleAuthorizationStrategy(new UserRolesAuthorizer("USER")));
+			new RoleAuthorizationStrategy(new UserRolesAuthorizer("USER")));
 		final class Listener implements IUnauthorizedComponentInstantiationListener
 		{
 			private boolean eventReceived = false;
 
-			public void onUnauthorizedInstantiation(Component component)
+			public void onUnauthorizedInstantiation(Component<?> component)
 			{
 				eventReceived = true;
 			}
 		}
 		Listener listener = new Listener();
-		tester.getApplication().getSecuritySettings()
-				.setUnauthorizedComponentInstantiationListener(listener);
+		tester.getApplication()
+			.getSecuritySettings()
+			.setUnauthorizedComponentInstantiationListener(listener);
 
 		try
 		{
@@ -136,18 +137,17 @@ public class AnnotationsRoleTest extends TestCase
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Page getTestPage()
+				public Page<?> getTestPage()
 				{
 					return new AdminPage();
 				}
 			});
 			assertTrue("an authorization exception event should have been received",
-					listener.eventReceived);
+				listener.eventReceived);
 		}
 		catch (Exception e)
 		{
-			if (!(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e
-					.getCause()).getTargetException() instanceof UnauthorizedInstantiationException))
+			if (!(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e.getCause()).getTargetException() instanceof UnauthorizedInstantiationException))
 			{
 				throw e;
 			}

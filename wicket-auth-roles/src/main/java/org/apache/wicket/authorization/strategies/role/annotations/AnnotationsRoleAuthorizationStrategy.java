@@ -56,8 +56,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		final Package componentPackage = componentClass.getPackage();
 		if (componentPackage != null)
 		{
-			final AuthorizeInstantiation packageAnnotation = (AuthorizeInstantiation)componentPackage
-					.getAnnotation(AuthorizeInstantiation.class);
+			final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
 			if (packageAnnotation != null)
 			{
 				authorized = hasAny(new Roles(packageAnnotation.value()));
@@ -65,8 +64,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// Check class annotation
-		final AuthorizeInstantiation classAnnotation = (AuthorizeInstantiation)componentClass
-				.getAnnotation(AuthorizeInstantiation.class);
+		final AuthorizeInstantiation classAnnotation = (AuthorizeInstantiation)componentClass.getAnnotation(AuthorizeInstantiation.class);
 		if (classAnnotation != null)
 		{
 			// If roles are defined for the class, that overrides the package
@@ -80,10 +78,11 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final Component component, final Action action)
+	@SuppressWarnings("unchecked")
+	public boolean isActionAuthorized(final Component<?> component, final Action action)
 	{
 		// Get component's class
-		final Class< ? extends Component> componentClass = component.getClass();
+		final Class<? extends Component<?>> componentClass = (Class<? extends Component<?>>)component.getClass();
 
 		// Check for a single action
 		if (!check(action, componentClass.getAnnotation(AuthorizeAction.class)))
@@ -92,12 +91,10 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		}
 
 		// Check for multiple actions
-		final AuthorizeActions authorizeActionsAnnotation = componentClass
-				.getAnnotation(AuthorizeActions.class);
+		final AuthorizeActions authorizeActionsAnnotation = componentClass.getAnnotation(AuthorizeActions.class);
 		if (authorizeActionsAnnotation != null)
 		{
-			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation
-					.actions())
+			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation.actions())
 			{
 				if (!check(action, authorizeActionAnnotation))
 				{

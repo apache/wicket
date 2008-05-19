@@ -33,7 +33,7 @@ import org.apache.wicket.model.Model;
  * You can use this component in your webapplication just as you might want to use a
  * <code>Label</code>.
  */
-public class StockQuoteLabel extends WebComponent
+public class StockQuoteLabel extends WebComponent<String>
 {
 	/**
 	 * Constructor
@@ -58,13 +58,13 @@ public class StockQuoteLabel extends WebComponent
 	 */
 	public StockQuoteLabel(String id, String symbol)
 	{
-		super(id, new Model(symbol));
+		super(id, new Model<String>(symbol));
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public StockQuoteLabel(String id, IModel model)
+	public StockQuoteLabel(String id, IModel<String> model)
 	{
 		super(id, model);
 	}
@@ -73,6 +73,7 @@ public class StockQuoteLabel extends WebComponent
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		String symbol = getModelObjectAsString();

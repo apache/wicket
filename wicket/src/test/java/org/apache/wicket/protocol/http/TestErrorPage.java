@@ -35,16 +35,18 @@ public class TestErrorPage extends WebPage<Void>
 	public TestErrorPage()
 	{
 
-		add(new AjaxLink("link")
+		add(new AjaxLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				clicked = true;
 				target.addComponent(this);
 			}
 
+			@Override
 			protected void onAfterRender()
 			{
 				super.onAfterRender();

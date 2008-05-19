@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.frames;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.examples.linkomatic.Home;
 import org.apache.wicket.markup.html.WebPage;
@@ -40,7 +41,7 @@ public class LeftFrame extends WebPage<Void>
 	 * Tags that use this link should have a <code>target="_parent"</code> attribute, so that the
 	 * top frame will be refreshed.
 	 */
-	private static final class ChangeFramePageLink extends Link
+	private static final class ChangeFramePageLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -48,7 +49,7 @@ public class LeftFrame extends WebPage<Void>
 		private final BodyFrame bodyFrame;
 
 		/** this link's target. */
-		private final Class pageClass;
+		private final Class<? extends Page<?>> pageClass;
 
 		/**
 		 * Construct.
@@ -57,7 +58,8 @@ public class LeftFrame extends WebPage<Void>
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(String id, BodyFrame bodyFrame, Class pageClass)
+		public ChangeFramePageLink(String id, BodyFrame bodyFrame,
+			Class<? extends Page<?>> pageClass)
 		{
 			super(id);
 			this.bodyFrame = bodyFrame;
@@ -67,6 +69,7 @@ public class LeftFrame extends WebPage<Void>
 		/**
 		 * @see org.apache.wicket.markup.html.link.Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
 			// change frame class
@@ -99,6 +102,7 @@ public class LeftFrame extends WebPage<Void>
 	 * 
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

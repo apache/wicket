@@ -43,18 +43,18 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class GuestBook extends BasePage
+public class GuestBook extends BasePage<Void>
 {
 	/** A global list of all comments from all users across all sessions */
-	public static final List commentList = new ArrayList();
+	public static final List<Comment> commentList = new ArrayList<Comment>();
 
 	/** The list view that shows comments */
-	private final ListView commentListView;
+	private final ListView<Comment> commentListView;
 	/** Container for the comments, used to update the listview. */
-	private WebMarkupContainer comments;
+	private final WebMarkupContainer<?> comments;
 
 	/** The textarea for entering the comments, is updated in the ajax call. */
-	private Component text;
+	private Component<String> text;
 
 	/**
 	 * Constructor.
@@ -66,18 +66,19 @@ public class GuestBook extends BasePage
 		add(commentForm);
 
 		// the WebMarkupContainer is used to update the listview in an ajax call
-		comments = new WebMarkupContainer("comments");
+		comments = new WebMarkupContainer<Void>("comments");
 		add(comments.setOutputMarkupId(true));
 
 		// Add commentListView of existing comments
-		comments.add(commentListView = new ListView("comments", new PropertyModel(this,
-				"commentList"))
+		comments.add(commentListView = new ListView<Comment>("comments",
+			new PropertyModel<List<Comment>>(this, "commentList"))
 		{
-			public void populateItem(final ListItem listItem)
+			@Override
+			public void populateItem(final ListItem<Comment> listItem)
 			{
-				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", new Model(comment.getDate())));
-				listItem.add(new MultiLineLabel("text", comment.getText()));
+				final Comment comment = listItem.getModelObject();
+				listItem.add(new Label<Date>("date", new Model<Date>(comment.getDate())));
+				listItem.add(new MultiLineLabel<String>("text", comment.getText()));
 			}
 		});
 
@@ -94,10 +95,12 @@ public class GuestBook extends BasePage
 		// specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "onsubmit")
 		{
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return script + "return false;";
@@ -105,6 +108,7 @@ public class GuestBook extends BasePage
 				};
 			}
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				// add the list of components that need to be updated
@@ -113,7 +117,7 @@ public class GuestBook extends BasePage
 
 				// focus the textarea again
 				target.appendJavascript("document.getElementById('" + text.getMarkupId() +
-						"').focus();");
+					"').focus();");
 			}
 
 			@Override
@@ -128,7 +132,7 @@ public class GuestBook extends BasePage
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class CommentForm extends Form
+	public final class CommentForm extends Form<Comment>
 	{
 		/**
 		 * Constructor
@@ -139,20 +143,21 @@ public class GuestBook extends BasePage
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new Comment()));
+			super(id, new CompoundPropertyModel<Comment>(new Comment()));
 
 			// Add text entry widget
-			text = new TextArea("text").setOutputMarkupId(true);
+			text = new TextArea<String>("text").setOutputMarkupId(true);
 			add(text);
 		}
 
 		/**
 		 * Show the resulting valid edit
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
-			final Comment comment = (Comment)getModelObject();
+			final Comment comment = getModelObject();
 			final Comment newComment = new Comment(comment);
 
 			// Set date of comment to add

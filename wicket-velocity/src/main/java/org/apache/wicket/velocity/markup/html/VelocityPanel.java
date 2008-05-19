@@ -48,8 +48,8 @@ import org.apache.wicket.util.string.Strings;
  * {@link Map}, which will be used to create the {@link VelocityContext}.
  * 
  * <p>
- * <b>Note:</b> Be sure to properly initialize the Velocity engine before using {@link VelocityPanel
- * }.
+ * <b>Note:</b> Be sure to properly initialize the Velocity engine before using
+ * {@link VelocityPanel }.
  * </p>
  */
 @SuppressWarnings("unchecked")
@@ -61,15 +61,15 @@ public abstract class VelocityPanel extends Panel<Map>
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Convenience factory method to create a {@link VelocityPanel} instance with a given {@link
-	 * IStringResourceStream template resource}.
+	 * Convenience factory method to create a {@link VelocityPanel} instance with a given
+	 * {@link IStringResourceStream template resource}.
 	 * 
 	 * @param id
-	 * 		Component id
+	 *            Component id
 	 * @param model
-	 * 		optional model for variable substitution.
+	 *            optional model for variable substitution.
 	 * @param templateResource
-	 * 		The template resource
+	 *            The template resource
 	 * @return an instance of {@link VelocityPanel}
 	 */
 	public static VelocityPanel forTemplateResource(String id, IModel< ? extends Map> model,
@@ -99,11 +99,11 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		Component id
+	 *            Component id
 	 * @param templateResource
-	 * 		The velocity template as a string resource
+	 *            The velocity template as a string resource
 	 * @param model
-	 * 		Model with variables that can be substituted by Velocity.
+	 *            Model with variables that can be substituted by Velocity.
 	 */
 	public VelocityPanel(final String id, final IModel< ? extends Map> model)
 	{
@@ -134,20 +134,22 @@ public abstract class VelocityPanel extends Panel<Map>
 
 	/**
 	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.
-	 * 	MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 *      MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		if (!Strings.isEmpty(stackTraceAsString))
 		{
-			// TODO: only display the velocity error/stacktrace in development mode?
+			// TODO: only display the velocity error/stacktrace in development
+			// mode?
 			replaceComponentTagBody(markupStream, openTag, Strings
 					.toMultilineMarkup(stackTraceAsString));
 		}
 		else if (!parseGeneratedMarkup())
 		{
-			// check that no components have been added in case the generated markup should not be
+			// check that no components have been added in case the generated
+			// markup should not be
 			// parsed
 			if (size() > 0)
 			{
@@ -172,11 +174,11 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * Either print or rethrow the throwable.
 	 * 
 	 * @param exception
-	 * 		the cause
+	 *            the cause
 	 * @param markupStream
-	 * 		the markup stream
+	 *            the markup stream
 	 * @param openTag
-	 * 		the open tag
+	 *            the open tag
 	 */
 	private void onException(final Exception exception)
 	{
@@ -213,7 +215,7 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * Evaluates the template and returns the result.
 	 * 
 	 * @param templateReader
-	 * 		used to read the template
+	 *            used to read the template
 	 * @return the result of evaluating the velocity template
 	 */
 	private String evaluateVelocityTemplate(Reader templateReader)
@@ -299,9 +301,8 @@ public abstract class VelocityPanel extends Panel<Map>
 	}
 
 	/**
-	 * @see
-	 * 	org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache
-	 * 	.wicket.MarkupContainer, java.lang.Class)
+	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache
+	 *      .wicket.MarkupContainer, java.lang.Class)
 	 */
 	public final IResourceStream getMarkupResourceStream(MarkupContainer< ? > container,
 			Class< ? > containerClass)
@@ -322,7 +323,7 @@ public abstract class VelocityPanel extends Panel<Map>
 
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.
-	 * 	MarkupContainer, java.lang.Class)
+	 *      MarkupContainer, java.lang.Class)
 	 */
 	public final String getCacheKey(MarkupContainer< ? > container, Class< ? > containerClass)
 	{

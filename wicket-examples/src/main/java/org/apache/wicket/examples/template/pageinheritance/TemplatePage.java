@@ -31,35 +31,36 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public abstract class TemplatePage extends WicketExamplePage
+public abstract class TemplatePage extends WicketExamplePage<Void>
 {
 	/** title of the current page. */
 	private String pageTitle = "(no title)";
 
 	/** the current banner. */
-	private Banner currentBanner;
+	private Banner<Void> currentBanner;
 
 	/**
 	 * Constructor
 	 */
 	public TemplatePage()
 	{
-		add(new Label("title", new PropertyModel(this, "pageTitle")));
-		add(currentBanner = new Banner1("ad"));
-		add(new Link("changeAdLink")
+		add(new Label<String>("title", new PropertyModel<String>(this, "pageTitle")));
+		add(currentBanner = new Banner1<Void>("ad"));
+		add(new Link<Void>("changeAdLink")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					TemplatePage.this.replace(currentBanner = new Banner2("ad"));
+					TemplatePage.this.replace(currentBanner = new Banner2<Void>("ad"));
 				}
 				else
 				{
-					TemplatePage.this.replace(currentBanner = new Banner1("ad"));
+					TemplatePage.this.replace(currentBanner = new Banner1<Void>("ad"));
 				}
 			}
 		});
@@ -85,6 +86,6 @@ public abstract class TemplatePage extends WicketExamplePage
 	 */
 	public final void setPageTitle(String title)
 	{
-		this.pageTitle = title;
+		pageTitle = title;
 	}
 }

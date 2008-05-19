@@ -34,16 +34,17 @@ public class Index extends WebPage<Void>
 	public Index()
 	{
 		setStatelessHint(true);
-		add(new Label("message", new SessionModel()));
+		add(new Label<String>("message", new SessionModel()));
 		// First a normal bookmarkable link (which is stateless by default)
 		add(new BookmarkablePageLink("linkToStatelessPage", StatelessPage.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
-		add(new StatelessLink("linkToStatefulPage")
+		add(new StatelessLink<Void>("linkToStatefulPage")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				setResponsePage(StatefulPage.class);

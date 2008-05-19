@@ -29,7 +29,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Clock extends Label
+public class Clock extends Label<String>
 {
 	/**
 	 * Constructor
@@ -50,9 +50,9 @@ public class Clock extends Label
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static class ClockModel extends AbstractReadOnlyModel
+	private static class ClockModel extends AbstractReadOnlyModel<String>
 	{
-		private DateFormat df;
+		private final DateFormat df;
 
 		/**
 		 * @param tz
@@ -66,7 +66,8 @@ public class Clock extends Label
 		/**
 		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 		 */
-		public Object getObject()
+		@Override
+		public String getObject()
 		{
 			return df.format(new Date());
 		}

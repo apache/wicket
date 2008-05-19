@@ -25,13 +25,13 @@ import org.apache.wicket.markup.html.link.PopupCloseLink;
  * 
  * @author Jonathan Locke
  */
-public class Popup extends WicketExamplePage
+public class Popup extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
 	 */
 	public Popup()
 	{
-		add(new PopupCloseLink("close"));
+		add(new PopupCloseLink<Void>("close"));
 	}
 }

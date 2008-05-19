@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.stockquote;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -35,7 +36,8 @@ public class StockQuoteApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return StockQuotePage.class;
 	}

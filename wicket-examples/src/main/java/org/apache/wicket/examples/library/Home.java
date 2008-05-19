@@ -43,16 +43,17 @@ public final class Home extends AuthenticatedWebPage<Void>
 	public Home(final PageParameters parameters)
 	{
 		// Add table of books
-		final PageableListView listView;
-		add(listView = new PageableListView("books", new PropertyModel(this, "books"), 4)
+		final PageableListView<Book> listView;
+		add(listView = new PageableListView<Book>("books", new PropertyModel<List<Book>>(this,
+			"books"), 4)
 		{
 			@Override
-			public void populateItem(final ListItem listItem)
+			public void populateItem(final ListItem<Book> listItem)
 			{
-				final Book book = (Book)listItem.getModelObject();
+				final Book book = listItem.getModelObject();
 				listItem.add(BookDetails.link("details", book, getLocalizer().getString(
 					"noBookTitle", this)));
-				listItem.add(new Label("author", new Model(book)));
+				listItem.add(new Label<Book>("author", new Model<Book>(book)));
 				listItem.add(moveUpLink("moveUp", listItem));
 				listItem.add(moveDownLink("moveDown", listItem));
 				listItem.add(removeLink("remove", listItem));
@@ -66,7 +67,7 @@ public final class Home extends AuthenticatedWebPage<Void>
 	 * 
 	 * @return List of books
 	 */
-	public List getBooks()
+	public List<Book> getBooks()
 	{
 		// Note: checkAccess() (and thus login etc.) happen after the Page
 		// has been instantiated. Thus, you can not realy on user != null.
@@ -75,7 +76,7 @@ public final class Home extends AuthenticatedWebPage<Void>
 		User user = getLibrarySession().getUser();
 		if (user == null)
 		{
-			return new ArrayList();
+			return new ArrayList<Book>();
 		}
 
 		return user.getBooks();

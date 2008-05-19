@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
  * @author igor
  * 
  */
-public class ContactDataProvider implements IDataProvider
+public class ContactDataProvider implements IDataProvider<Contact>
 {
 	protected ContactsDatabase getContactsDB()
 	{
@@ -41,7 +41,7 @@ public class ContactDataProvider implements IDataProvider
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
 	 */
-	public Iterator iterator(int first, int count)
+	public Iterator<Contact> iterator(int first, int count)
 	{
 		return getContactsDB().find(first, count, "firstName", true).iterator();
 	}
@@ -61,9 +61,9 @@ public class ContactDataProvider implements IDataProvider
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
-	public IModel model(Object object)
+	public IModel<Contact> model(Contact object)
 	{
-		return new DetachableContactModel((Contact)object);
+		return new DetachableContactModel(object);
 	}
 
 	/**

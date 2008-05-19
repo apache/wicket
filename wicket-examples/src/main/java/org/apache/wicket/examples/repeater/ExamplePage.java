@@ -21,6 +21,8 @@ import org.apache.wicket.examples.WicketExamplePage;
 /**
  * Base class for all pages in the QuickStart application. Any page which subclasses this page can
  * get session properties from QuickStartSession via getQuickStartSession().
+ * 
+ * @param <T>
  */
 public abstract class ExamplePage<T> extends WicketExamplePage<T>
 {

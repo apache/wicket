@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class OrderByBorder extends Border
+public class OrderByBorder extends Border<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,15 +50,16 @@ public class OrderByBorder extends Border
 	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 */
 	public OrderByBorder(String id, String property, ISortStateLocator stateLocator,
-			OrderByLink.ICssProvider cssProvider)
+		OrderByLink.ICssProvider cssProvider)
 	{
 		super(id);
 		OrderByLink link = new OrderByLink("orderByLink", property, stateLocator,
-				OrderByLink.VoidCssProvider.getInstance())
+			OrderByLink.VoidCssProvider.getInstance())
 		{
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSortChanged()
 			{
 				OrderByBorder.this.onSortChanged();

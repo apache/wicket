@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.Page;
 
 /**
  * Simple struct for holding the class of the right frame.
@@ -28,7 +29,7 @@ public final class FrameTarget implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** the class of the bookmarkable page. */
-	private Class frameClass;
+	private Class<? extends Page<?>> frameClass;
 
 	/**
 	 * Construct.
@@ -42,7 +43,7 @@ public final class FrameTarget implements IClusterable
 	 * 
 	 * @param frameClass
 	 */
-	public FrameTarget(Class frameClass)
+	public FrameTarget(Class<? extends Page<?>> frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -52,7 +53,7 @@ public final class FrameTarget implements IClusterable
 	 * 
 	 * @return lefFrameClass
 	 */
-	public Class getFrameClass()
+	public Class<? extends Page<?>> getFrameClass()
 	{
 		return frameClass;
 	}
@@ -63,7 +64,7 @@ public final class FrameTarget implements IClusterable
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public void setFrameClass(Class frameClass)
+	public void setFrameClass(Class<? extends Page<?>> frameClass)
 	{
 		this.frameClass = frameClass;
 	}

@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-class AnotherPanel extends Panel
+class AnotherPanel extends Panel<Void>
 {
 	/**
 	 * Construct.

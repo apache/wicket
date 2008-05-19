@@ -40,7 +40,7 @@ public class BodyFrame extends WebPage<Void>
 	private final class FrameModel implements IModel<CharSequence>
 	{
 		/**
-		 * @see org.apache.wicket.model.Model#getObject()
+		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
 		public CharSequence getObject()
 		{
@@ -51,7 +51,7 @@ public class BodyFrame extends WebPage<Void>
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(CharSequence object)
+		public void setObject(final CharSequence object)
 		{
 		}
 
@@ -71,6 +71,7 @@ public class BodyFrame extends WebPage<Void>
 	/**
 	 * Constructor
 	 */
+	@SuppressWarnings("unchecked")
 	public BodyFrame()
 	{
 		// create a new page instance, passing this 'master page' as an argument
@@ -79,12 +80,12 @@ public class BodyFrame extends WebPage<Void>
 		CharSequence leftFrameSrc = RequestCycle.get().urlFor(leftFrame);
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
-		WebComponent leftFrameTag = new WebComponent("leftFrame");
+		WebComponent<?> leftFrameTag = new WebComponent<Void>("leftFrame");
 		leftFrameTag.add(new AttributeModifier("src", new Model((Serializable)leftFrameSrc)));
 		add(leftFrameTag);
 
 		// make a simple component for the right frame tag
-		WebComponent rightFrameTag = new WebComponent("rightFrame");
+		WebComponent<?> rightFrameTag = new WebComponent<Void>("rightFrame");
 		// and this time, set a model which retrieves the url to the currently
 		// set frame class in the frame target
 		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));

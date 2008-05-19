@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.staticpages;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -27,7 +28,7 @@ import org.apache.wicket.response.StringResponse;
  */
 public abstract class CapturingBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
 {
-	Class displayedPageClass;
+	Class<? extends Page<?>> displayedPageClass;
 
 	/**
 	 * @see org.apache.wicket.request.target.component.BookmarkablePageRequestTarget#respond(org.apache.wicket.RequestCycle)
@@ -53,9 +54,11 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 *            the bookmarkable page to capture for sending in email
 	 * @param displayedPageClass
 	 *            the bookmarkable page to display in the browser
+	 * @param pageParameters
+	 *            the page parameters
 	 */
-	public CapturingBookmarkablePageRequestTarget(Class capturedPageClass,
-			Class displayedPageClass, PageParameters pageParameters)
+	public CapturingBookmarkablePageRequestTarget(Class<? extends Page<?>> capturedPageClass,
+		Class<? extends Page<?>> displayedPageClass, PageParameters pageParameters)
 	{
 		super(capturedPageClass, pageParameters);
 		this.displayedPageClass = displayedPageClass;
@@ -69,7 +72,8 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 * @param displayedPageClass
 	 *            the bookmarkable page to display in the browser
 	 */
-	public CapturingBookmarkablePageRequestTarget(Class capturedPageClass, Class displayedPageClass)
+	public CapturingBookmarkablePageRequestTarget(Class<? extends Page<?>> capturedPageClass,
+		Class<? extends Page<?>> displayedPageClass)
 	{
 		super(capturedPageClass);
 		this.displayedPageClass = displayedPageClass;

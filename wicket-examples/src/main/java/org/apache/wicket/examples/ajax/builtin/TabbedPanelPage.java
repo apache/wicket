@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
@@ -30,7 +31,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author ivaynberg
  */
-public class TabbedPanelPage extends BasePage
+public class TabbedPanelPage extends BasePage<Void>
 {
 	/**
 	 * Constructor
@@ -38,26 +39,29 @@ public class TabbedPanelPage extends BasePage
 	public TabbedPanelPage()
 	{
 		// create a list of ITab objects used to feed the tabbed panel
-		List tabs = new ArrayList();
-		tabs.add(new AbstractTab(new Model("first tab"))
+		List<ITab<?>> tabs = new ArrayList<ITab<?>>();
+		tabs.add(new AbstractTab<Void>(new Model<String>("first tab"))
 		{
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel1(panelId);
 			}
 		});
 
-		tabs.add(new AbstractTab(new Model("second tab"))
+		tabs.add(new AbstractTab<Void>(new Model<String>("second tab"))
 		{
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel2(panelId);
 			}
 		});
 
-		tabs.add(new AbstractTab(new Model("third tab"))
+		tabs.add(new AbstractTab<Void>(new Model<String>("third tab"))
 		{
-			public Panel getPanel(String panelId)
+			@Override
+			public Panel<Void> getPanel(String panelId)
 			{
 				return new TabPanel3(panelId);
 			}
@@ -69,7 +73,7 @@ public class TabbedPanelPage extends BasePage
 	/**
 	 * Panel representing the content panel for the first tab.
 	 */
-	private static class TabPanel1 extends Panel
+	private static class TabPanel1 extends Panel<Void>
 	{
 		/**
 		 * Constructor
@@ -86,7 +90,7 @@ public class TabbedPanelPage extends BasePage
 	/**
 	 * Panel representing the content panel for the second tab.
 	 */
-	private static class TabPanel2 extends Panel
+	private static class TabPanel2 extends Panel<Void>
 	{
 		/**
 		 * Constructor
@@ -103,7 +107,7 @@ public class TabbedPanelPage extends BasePage
 	/**
 	 * Panel representing the content panel for the third tab.
 	 */
-	private static class TabPanel3 extends Panel
+	private static class TabPanel3 extends Panel<Void>
 	{
 		/**
 		 * Constructor

@@ -32,20 +32,20 @@ public class AjaxHeaderContributionPage2 extends WebPage<Void>
 	 */
 	public AjaxHeaderContributionPage2()
 	{
-		final Component test1 = new AjaxHeaderContribution("test1").setOutputMarkupId(true);
+		final Component<?> test1 = new AjaxHeaderContribution("test1").setOutputMarkupId(true);
 		add(test1);
-		final Component test2 = new AjaxHeaderContribution("test2").setOutputMarkupId(true);
+		final Component<?> test2 = new AjaxHeaderContribution("test2").setOutputMarkupId(true);
 		add(test2);
-		final Component test3 = new AjaxHeaderContribution("test3").setOutputMarkupId(true);
+		final Component<?> test3 = new AjaxHeaderContribution("test3").setOutputMarkupId(true);
 		add(test3);
 
-		final Component btest1 = new AjaxHeaderContribution2("btest1").setOutputMarkupId(true);
+		final Component<?> btest1 = new AjaxHeaderContribution2("btest1").setOutputMarkupId(true);
 		add(btest1);
-		final Component btest2 = new AjaxHeaderContribution2("btest2").setOutputMarkupId(true);
+		final Component<?> btest2 = new AjaxHeaderContribution2("btest2").setOutputMarkupId(true);
 		add(btest2);
-		final Component btest3 = new AjaxHeaderContribution2("btest3").setOutputMarkupId(true);
+		final Component<?> btest3 = new AjaxHeaderContribution2("btest3").setOutputMarkupId(true);
 		add(btest3);
-		add(new AjaxFallbackLink("link")
+		add(new AjaxFallbackLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

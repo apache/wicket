@@ -17,6 +17,7 @@
 package org.apache.wicket.util.tester;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,28 +39,30 @@ public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	private List selected = new ArrayList();
+	private List<Integer> selected = new ArrayList<Integer>();
 
 	/**
 	 * Construct.
 	 */
 	public MockPageWithFormAndCheckGroup()
 	{
-		Form form = new Form("form");
+		Form<?> form = new Form<Void>("form");
 		add(form);
 
 
-		CheckGroup checkGroup = new CheckGroup("checkGroup", new PropertyModel(this, "selected"));
+		CheckGroup<Integer> checkGroup = new CheckGroup<Integer>("checkGroup",
+			new PropertyModel<Collection<Integer>>(this, "selected"));
 		form.add(checkGroup);
 
-		checkGroup.add(new Check("check1", new Model(new Integer(1))));
-		checkGroup.add(new Check("check2", new Model(new Integer(2))));
+		checkGroup.add(new Check<Integer>("check1", new Model<Integer>(1)));
+		checkGroup.add(new Check<Integer>("check2", new Model<Integer>(2)));
 
-		add(new AjaxSubmitLink("submitLink", form)
+		add(new AjaxSubmitLink<Void>("submitLink", form)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 			}
 		});
@@ -68,7 +71,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 	/**
 	 * @return selected
 	 */
-	public List getSelected()
+	public List<Integer> getSelected()
 	{
 		return selected;
 	}
@@ -76,7 +79,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 	/**
 	 * @param selected
 	 */
-	public void setSelected(List selected)
+	public void setSelected(List<Integer> selected)
 	{
 		this.selected = selected;
 	}

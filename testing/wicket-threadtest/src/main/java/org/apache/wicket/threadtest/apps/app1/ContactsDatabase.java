@@ -32,15 +32,15 @@ import java.util.Map;
 public class ContactsDatabase
 {
 
-	private List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
 
 	/**
 	 * Constructor
@@ -64,7 +64,7 @@ public class ContactsDatabase
 	 */
 	public void delete(final Contact contact)
 	{
-		Contact c = (Contact)map.remove(new Long(contact.getId()));
+		Contact c = map.remove(new Long(contact.getId()));
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);
@@ -83,9 +83,9 @@ public class ContactsDatabase
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
 	{
-		List sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
+		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
 		return sublist;
 	}
 
@@ -97,7 +97,7 @@ public class ContactsDatabase
 	 */
 	public Contact get(long id)
 	{
-		Contact c = (Contact)map.get(new Long(id));
+		Contact c = map.get(new Long(id));
 		if (c == null)
 		{
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
@@ -128,8 +128,8 @@ public class ContactsDatabase
 		}
 		else
 		{
-			throw new IllegalArgumentException("contact [" + contact.getFirstName()
-					+ "] is already persistent");
+			throw new IllegalArgumentException("contact [" + contact.getFirstName() +
+				"] is already persistent");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class ContactsDatabase
 		lnameDescIdx.add(contact);
 	}
 
-	protected List getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(String prop, boolean asc)
 	{
 		if (prop == null)
 		{
@@ -156,8 +156,8 @@ public class ContactsDatabase
 		{
 			return (asc) ? lnameIdx : lnameDescIdx;
 		}
-		throw new RuntimeException("uknown sort option [" + prop
-				+ "]. valid options: [firstName] , [lastName]");
+		throw new RuntimeException("uknown sort option [" + prop +
+			"]. valid options: [firstName] , [lastName]");
 	}
 
 	private void updateIndecies()

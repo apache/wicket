@@ -49,7 +49,7 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
  * 
  * @author Eelco Hillenius
  */
-public class NewUserWizard extends Wizard
+public class NewUserWizard extends Wizard<NewUserWizard>
 {
 	/**
 	 * The confirmation step.
@@ -62,7 +62,7 @@ public class NewUserWizard extends Wizard
 		public ConfirmationStep()
 		{
 			super(true);
-			IModel userModel = new Model(user);
+			IModel<User> userModel = new Model<User>(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
 			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
 			setContentModel(new StringResourceModel("confirmation.content", this, userModel));
@@ -72,7 +72,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * The user details step.
 	 */
-	private final class UserDetailsStep extends WizardStep
+	private final class UserDetailsStep extends WizardStep<Void>
 	{
 		/**
 		 * Construct.
@@ -80,10 +80,11 @@ public class NewUserWizard extends Wizard
 		public UserDetailsStep()
 		{
 			setTitleModel(new ResourceModel("confirmation.title"));
-			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
-			add(new RequiredTextField("user.firstName"));
-			add(new RequiredTextField("user.lastName"));
-			add(new TextField("user.department"));
+			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model<User>(
+				user)));
+			add(new RequiredTextField<String>("user.firstName"));
+			add(new RequiredTextField<String>("user.lastName"));
+			add(new TextField<String>("user.department"));
 			add(new CheckBox("assignRoles"));
 		}
 	}
@@ -91,7 +92,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * The user name step.
 	 */
-	private final class UserNameStep extends WizardStep
+	private final class UserNameStep extends WizardStep<Void>
 	{
 		/**
 		 * Construct.
@@ -99,15 +100,15 @@ public class NewUserWizard extends Wizard
 		public UserNameStep()
 		{
 			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
-			add(new RequiredTextField("user.userName"));
-			add(new RequiredTextField("user.email").add(EmailAddressValidator.getInstance()));
+			add(new RequiredTextField<String>("user.userName"));
+			add(new RequiredTextField<String>("user.email").add(EmailAddressValidator.getInstance()));
 		}
 	}
 
 	/**
 	 * The user details step.
 	 */
-	private final class UserRolesStep extends WizardStep implements ICondition
+	private final class UserRolesStep extends WizardStep<Void> implements ICondition
 	{
 		/**
 		 * Construct.
@@ -115,30 +116,30 @@ public class NewUserWizard extends Wizard
 		public UserRolesStep()
 		{
 			super(new ResourceModel("userroles.title"), null);
-			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			final ListMultipleChoice rolesChoiceField = new ListMultipleChoice("user.roles",
-					allRoles);
+			setSummaryModel(new StringResourceModel("userroles.summary", this,
+				new Model<User>(user)));
+			final ListMultipleChoice<String> rolesChoiceField = new ListMultipleChoice<String>(
+				"user.roles", allRoles);
 			add(rolesChoiceField);
-			final TextField rolesSetNameField = new TextField("user.rolesSetName");
+			final TextField<String> rolesSetNameField = new TextField<String>("user.rolesSetName");
 			add(rolesSetNameField);
 			add(new AbstractFormValidator()
 			{
-				public FormComponent[] getDependentFormComponents()
+				public FormComponent<?>[] getDependentFormComponents()
 				{
 					// name and roles don't have anything to validate,
 					// so might as well just skip them here
 					return null;
 				}
 
-				public void validate(Form form)
+				public void validate(Form<?> form)
 				{
 					String rolesInput = rolesChoiceField.getInput();
 					if (rolesInput != null && (!"".equals(rolesInput)))
 					{
 						if ("".equals(rolesSetNameField.getInput()))
 						{
-							rolesSetNameField.error((IValidationError)new ValidationError()
-									.addMessageKey("error.noSetNameForRoles"));
+							rolesSetNameField.error((IValidationError)new ValidationError().addMessageKey("error.noSetNameForRoles"));
 						}
 					}
 				}
@@ -177,7 +178,7 @@ public class NewUserWizard extends Wizard
 		// create a blank user
 		user = new User();
 
-		setModel(new CompoundPropertyModel(this));
+		setModel(new CompoundPropertyModel<NewUserWizard>(this));
 		WizardModel model = new WizardModel();
 		model.add(new UserNameStep());
 		model.add(new UserDetailsStep());
@@ -211,6 +212,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.Wizard#onCancel()
 	 */
+	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
@@ -219,6 +221,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.Wizard#onFinish()
 	 */
+	@Override
 	public void onFinish()
 	{
 		setResponsePage(Index.class);

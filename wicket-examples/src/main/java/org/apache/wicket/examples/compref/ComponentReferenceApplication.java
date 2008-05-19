@@ -30,10 +30,10 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class ComponentReferenceApplication extends WicketExampleApplication
 {
-	private static final List personsDB;
+	private static final List<Person> personsDB;
 	static
 	{
-		personsDB = new ArrayList();
+		personsDB = new ArrayList<Person>();
 		personsDB.add(new Person("Fritz", "Fritzel"));
 		personsDB.add(new Person("Ghan", "Phariounimn"));
 		personsDB.add(new Person("Jan", "Klaasen"));
@@ -43,7 +43,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	/**
 	 * @return persons db
 	 */
-	public static final List getPersons()
+	public static final List<Person> getPersons()
 	{
 		return personsDB;
 	}
@@ -68,7 +68,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Index.class;
 	}

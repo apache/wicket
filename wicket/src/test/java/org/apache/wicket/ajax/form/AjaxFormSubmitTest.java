@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
 
@@ -31,6 +32,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	/**
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -39,6 +41,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	/**
 	 * @see org.apache.wicket.WicketTestCase#tearDown()
 	 */
+	@Override
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
@@ -49,7 +52,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 */
 	public void testSubmitNoDefProcessing()
 	{
-		Class pageClass = AjaxFormSubmitTestPage.class;
+		Class<? extends Page<?>> pageClass = AjaxFormSubmitTestPage.class;
 		System.out.println("=== " + pageClass.getName() + " ===");
 
 		tester.startPage(pageClass);

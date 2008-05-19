@@ -48,17 +48,24 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  */
 public class ResourceTestPage extends WebPage<Void>
 {
-
+	/**
+	 * Defines the number of images per page
+	 */
 	public static final int IMAGES_PER_PAGE = 20;
 
+	/**
+	 * Construct.
+	 */
 	public ResourceTestPage()
 	{
-		List list = Arrays.asList(new Object[IMAGES_PER_PAGE]);
-		add(new ListView("listView", list)
+		List<Object> list = Arrays.asList(new Object[IMAGES_PER_PAGE]);
+		add(new ListView<Object>("listView", list)
 		{
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<Object> item)
 			{
 				final Random random = new Random();
 				BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
@@ -80,14 +87,16 @@ public class ResourceTestPage extends WebPage<Void>
 				}
 				final byte[] imageData = baos.toByteArray();
 
-				item.add(new Image("image", new WebResource()
+				item.add(new Image<Void>("image", new WebResource()
 				{
+					private static final long serialVersionUID = 1L;
 
 					@Override
 					public IResourceStream getResourceStream()
 					{
 						return new IResourceStream()
 						{
+							private static final long serialVersionUID = 1L;
 
 							public Time lastModifiedTime()
 							{
@@ -110,7 +119,7 @@ public class ResourceTestPage extends WebPage<Void>
 
 							// Make a 16x16 randomly background-coloured JPEG.
 							public InputStream getInputStream()
-									throws ResourceStreamNotFoundException
+								throws ResourceStreamNotFoundException
 							{
 								return new ByteArrayInputStream(imageData);
 							}

@@ -22,18 +22,27 @@ import org.apache.wicket.spring.common.web.ContactsDisplayPage;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 
+/**
+ */
 public class AnnotPage extends ContactsDisplayPage
 {
 
 	@SpringBean
 	private ContactDao dao;
 
+	/**
+	 * Construct.
+	 */
 	public AnnotPage()
 	{
 
 	}
 
-	protected SortableDataProvider getDataProvider()
+	/**
+	 * @see org.apache.wicket.spring.common.web.ContactsDisplayPage#getDataProvider()
+	 */
+	@Override
+	protected SortableDataProvider<?> getDataProvider()
 	{
 		return new ProxyDataProvider(dao);
 	}

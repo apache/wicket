@@ -24,6 +24,7 @@ import org.apache.wicket.util.string.Strings;
  * Base class for all example pages.
  * 
  * @author Jonathan Locke
+ * @param <T>
  */
 public class WicketExamplePage<T> extends WebPage<T>
 {
@@ -40,7 +41,7 @@ public class WicketExamplePage<T> extends WebPage<T>
 	 * 
 	 * @param model
 	 */
-	public WicketExamplePage(IModel model)
+	public WicketExamplePage(IModel<T> model)
 	{
 		super(model);
 		final String packageName = getClass().getPackage().getName();

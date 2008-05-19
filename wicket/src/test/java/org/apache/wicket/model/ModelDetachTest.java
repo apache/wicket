@@ -42,7 +42,7 @@ public class ModelDetachTest extends TestCase
 	public void testCompoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel model = new CompoundPropertyModel(detachable);
+		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
 		model.detach();
 		assertTrue(detachable.detached);
 	}
@@ -50,10 +50,11 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for BoundCompoundPropertyModel.
 	 */
+	@SuppressWarnings("deprecation")
 	public void testBoundCompoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel model = new BoundCompoundPropertyModel(detachable);
+		IModel<Detachable> model = new BoundCompoundPropertyModel<Detachable>(detachable);
 		model.detach();
 		assertTrue(detachable.detached);
 	}
@@ -64,10 +65,11 @@ public class ModelDetachTest extends TestCase
 	public void testAbstractPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel model = new AbstractPropertyModel(detachable)
+		IModel<?> model = new AbstractPropertyModel<Void>(detachable)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected String propertyExpression()
 			{
 				return null;
@@ -83,7 +85,7 @@ public class ModelDetachTest extends TestCase
 	public void testPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel model = new PropertyModel(detachable, "foo");
+		IModel<?> model = new PropertyModel<Void>(detachable, "foo");
 		model.detach();
 		assertTrue(detachable.detached);
 	}

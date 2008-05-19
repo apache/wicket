@@ -39,8 +39,7 @@ public class App1Test2
 	public static void main(String[] args) throws Exception
 	{
 
-		List<String> gets = Arrays
-				.asList(new String[] { "/app1?wicket:bookmarkablePage=one:org.apache.wicket.threadtest.apps.app1.Home" });
+		List<String> gets = Arrays.asList(new String[] { "/app1?wicket:bookmarkablePage=one:org.apache.wicket.threadtest.apps.app1.Home" });
 
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 5);
 

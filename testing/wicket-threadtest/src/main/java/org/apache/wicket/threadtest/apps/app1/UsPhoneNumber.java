@@ -19,15 +19,16 @@ package org.apache.wicket.threadtest.apps.app1;
 import java.io.Serializable;
 
 /**
- * Represents a US phone number. We use this instead of the direct string to
- * trigger conversion to and from string. Conversion in general may be
- * re-evaluated in Wicket 1.3, hopefully making this a hack from the past by
- * then.
+ * Represents a US phone number. We use this instead of the direct string to trigger conversion to
+ * and from string. Conversion in general may be re-evaluated in Wicket 1.3, hopefully making this a
+ * hack from the past by then.
  * 
  * @author Eelco Hillenius
  */
 public class UsPhoneNumber implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private String number;
 
 	/**
@@ -64,6 +65,7 @@ public class UsPhoneNumber implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return number;

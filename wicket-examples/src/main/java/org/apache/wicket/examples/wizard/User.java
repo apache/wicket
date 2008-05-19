@@ -35,7 +35,7 @@ public final class User implements IClusterable
 	private String firstName;
 	private String lastName;
 
-	private Set roles = new HashSet();
+	private Set<String> roles = new HashSet<String>();
 
 	private String rolesSetName;
 
@@ -86,7 +86,7 @@ public final class User implements IClusterable
 	 * 
 	 * @return roles
 	 */
-	public Set getRoles()
+	public Set<String> getRoles()
 	{
 		return roles;
 	}
@@ -123,7 +123,7 @@ public final class User implements IClusterable
 		{
 			departement = "";
 		}
-		this.department = departement;
+		department = departement;
 	}
 
 	/**
@@ -165,7 +165,7 @@ public final class User implements IClusterable
 	 * @param roles
 	 *            roles
 	 */
-	public void setRoles(Set roles)
+	public void setRoles(Set<String> roles)
 	{
 		this.roles = roles;
 	}

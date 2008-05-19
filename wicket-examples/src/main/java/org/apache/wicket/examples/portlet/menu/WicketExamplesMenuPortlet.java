@@ -41,8 +41,11 @@ import org.apache.wicket.protocol.http.portlet.WicketPortlet;
  */
 public class WicketExamplesMenuPortlet extends WicketPortlet
 {
+	/** */
 	public static final String EXAMPLE_APPLICATION_PREF = "exampleApplication";
+	/** */
 	public static final String EXAMPLES = WicketExamplesMenuPortlet.class.getName() + ".examples";
+	/** */
 	public static final String EXAMPLE_APPLICATION_ATTR = WicketExamplesMenuPortlet.class.getName() +
 		"." + EXAMPLE_APPLICATION_PREF;
 	private static final String MENU_APPLICATION_URL_PORTLET_PARAMETER = "_wmu";
@@ -55,7 +58,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 	 */
 	public static final String PARAM_HEADER_PAGE = "headerPage";
 
-	private static List examples;
+	private static List<ExampleApplication> examples;
 
 	/**
 	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#init(javax.portlet.PortletConfig)
@@ -69,7 +72,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 			examples = discoverExamples(config.getPortletContext());
 			if (examples == null)
 			{
-				examples = Collections.EMPTY_LIST;
+				examples = Collections.emptyList();
 			}
 			else
 			{
@@ -138,10 +141,10 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 			String eaFilterPath = request.getPreferences().getValue(EXAMPLE_APPLICATION_PREF, null);
 			if (eaFilterPath != null)
 			{
-				Iterator iter = examples.iterator();
+				Iterator<ExampleApplication> iter = examples.iterator();
 				while (iter.hasNext())
 				{
-					ea = (ExampleApplication)iter.next();
+					ea = iter.next();
 					if (ea.getFilterPath().equals(eaFilterPath))
 					{
 						break;
@@ -151,7 +154,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 			}
 			if (ea == null && examples.size() > 0)
 			{
-				ea = (ExampleApplication)examples.get(0);
+				ea = examples.get(0);
 			}
 			session.setAttribute(EXAMPLE_APPLICATION_ATTR, ea);
 		}
@@ -193,9 +196,9 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 		}
 	}
 
-	protected List discoverExamples(PortletContext portletContext)
+	protected List<ExampleApplication> discoverExamples(PortletContext portletContext)
 	{
-		ArrayList examples = new ArrayList();
+		ArrayList<ExampleApplication> examples = new ArrayList<ExampleApplication>();
 		InputStream is = portletContext.getResourceAsStream("/WEB-INF/portlet.xml");
 		if (is != null)
 		{
@@ -224,7 +227,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 					String filterPath = null;
 					String filterQuery = null;
 					String displayName = null;
-					HashMap initParameters = new HashMap();
+					HashMap<String, String> initParameters = new HashMap<String, String>();
 
 					level = 0;
 
@@ -293,7 +296,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 						}
 					}
 					while (level > -1);
-					filterPath = buildWicketFilterPath((String)initParameters.get(WICKET_FILTER_PATH_PARAM));
+					filterPath = buildWicketFilterPath(initParameters.get(WICKET_FILTER_PATH_PARAM));
 					if (displayName != null && filterPath != null && description != null)
 					{
 						filterQuery = buildWicketFilterQuery(filterPath);

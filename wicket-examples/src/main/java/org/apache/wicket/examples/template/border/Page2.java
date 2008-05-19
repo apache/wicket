@@ -23,7 +23,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * 
  * @author Eelco Hillenius
  */
-public class Page2 extends WicketExamplePage
+public class Page2 extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor

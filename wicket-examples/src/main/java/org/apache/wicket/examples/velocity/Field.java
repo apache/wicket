@@ -39,21 +39,41 @@ public class Field implements Serializable
 		this.fieldSize = fieldSize;
 	}
 
+	/**
+	 * Gets the field's name.
+	 * 
+	 * @return the field's name
+	 */
 	public String getFieldName()
 	{
 		return fieldName;
 	}
 
+	/**
+	 * Gets the field's size.
+	 * 
+	 * @return the field's size
+	 */
 	public int getFieldSize()
 	{
 		return fieldSize;
 	}
 
+	/**
+	 * Sets the field's name.
+	 * 
+	 * @param fieldName
+	 */
 	public void setFieldName(String fieldName)
 	{
 		this.fieldName = fieldName;
 	}
 
+	/**
+	 * Sets the field's size.
+	 * 
+	 * @param fieldSize
+	 */
 	public void setFieldSize(int fieldSize)
 	{
 		this.fieldSize = fieldSize;

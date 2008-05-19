@@ -47,6 +47,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * 
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -61,10 +62,11 @@ public class AjaxLinkClickTest extends WicketTestCase
 	public void testBasicAjaxLinkClick()
 	{
 		// Create a link, which we test is actually invoked
-		final AjaxLink ajaxLink = new AjaxLink("ajaxLink")
+		final AjaxLink<?> ajaxLink = new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				linkClicked = true;
@@ -79,9 +81,9 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
-				Page page = new MockPageWithLink();
+				Page<?> page = new MockPageWithLink();
 				page.add(ajaxLink);
 
 				return page;
@@ -102,13 +104,14 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 */
 	public void testAjaxFallbackLinkClick()
 	{
-		final Page page = new MockPageWithLink();
+		final Page<?> page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink("ajaxLink")
+		page.add(new AjaxFallbackLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				linkClicked = true;
@@ -123,7 +126,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}
@@ -141,13 +144,14 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 */
 	public void testFallbackLinkWithAjaxDisabled()
 	{
-		final Page page = new MockPageWithLink();
+		final Page<?> page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink("ajaxLink")
+		page.add(new AjaxFallbackLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				linkClicked = true;
@@ -162,7 +166,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}

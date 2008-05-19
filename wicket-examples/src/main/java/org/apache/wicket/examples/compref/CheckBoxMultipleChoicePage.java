@@ -34,15 +34,15 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class CheckBoxMultipleChoicePage extends WicketExamplePage
+public class CheckBoxMultipleChoicePage extends WicketExamplePage<CheckBoxMultipleChoicePage.Input>
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
 
 	/** available choices for large selection box. */
-	private static final List MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
-			"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
+	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1",
+			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
 	 * Constructor
@@ -50,15 +50,16 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	public CheckBoxMultipleChoicePage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel(input));
+		setModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -68,10 +69,11 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 
 		// add a couple of checkbox multiple choice components, notice the model
 		// used is a compound model set on the page
-		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice("sites", SITES);
+		CheckBoxMultipleChoice<String> listChoice = new CheckBoxMultipleChoice<String>("sites",
+			SITES);
 		form.add(listChoice);
 
-		listChoice = new CheckBoxMultipleChoice("choices", MANY_CHOICES);
+		listChoice = new CheckBoxMultipleChoice<String>("choices", MANY_CHOICES);
 		form.add(listChoice);
 	}
 
@@ -79,10 +81,10 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
-		public List sites = new ArrayList();
+		public List<String> sites = new ArrayList<String>();
 
 		/** the selected choices. */
-		public List choices = new ArrayList();
+		public List<String> choices = new ArrayList<String>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()
@@ -95,15 +97,16 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "sites = '" + listAsString(sites) + "', choices='" + listAsString(choices) + "'";
 		}
 
-		private String listAsString(List list)
+		private String listAsString(List<String> list)
 		{
 			StringBuffer b = new StringBuffer();
-			for (Iterator i = list.iterator(); i.hasNext();)
+			for (Iterator<String> i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
 				if (i.hasNext())
@@ -118,15 +121,16 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"sites\">\n" + "</span>\n"
-				+ "<span wicket:id=\"choices\">\n" + "</span>";
+			+ "<span wicket:id=\"choices\">\n" + "</span>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;CheckBoxMultipleChoice siteChoice = new CheckBoxMultipleChoice(\"sites\", SITES);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(siteChoice);\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new CheckBoxMultipleChoice(\"choices\", MANY_CHOICES);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(siteChoice);\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new CheckBoxMultipleChoice(\"choices\", MANY_CHOICES);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
 		add(new ExplainPanel(html, code));
 
 	}

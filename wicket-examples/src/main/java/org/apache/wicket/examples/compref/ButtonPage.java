@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class ButtonPage extends WicketExamplePage
+public class ButtonPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -39,16 +39,18 @@ public class ButtonPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("Form.onSubmit executed");
 			}
 		};
 
-		Button button1 = new Button("button1")
+		Button<?> button1 = new Button<Void>("button1")
 		{
+			@Override
 			public void onSubmit()
 			{
 				info("button1.onSubmit executed");
@@ -56,8 +58,9 @@ public class ButtonPage extends WicketExamplePage
 		};
 		form.add(button1);
 
-		Button button2 = new Button("button2")
+		Button<?> button2 = new Button<Void>("button2")
 		{
+			@Override
 			public void onSubmit()
 			{
 				info("button2.onSubmit executed");
@@ -72,36 +75,37 @@ public class ButtonPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = " <form wicket:id=\"form\">\n"
-				+ "  <input type=\"submit\" value=\"non wicket submit button\" />\n"
-				+ "  <input wicket:id=\"button1\" type=\"submit\" value=\"default wicket button\" />\n"
-				+ "  <input wicket:id=\"button2\" type=\"submit\" value=\"wicket button with setDefaultFormProcessing(false)\" />\n"
-				+ " </form>";
+			+ "  <input type=\"submit\" value=\"non wicket submit button\" />\n"
+			+ "  <input wicket:id=\"button1\" type=\"submit\" value=\"default wicket button\" />\n"
+			+ "  <input wicket:id=\"button2\" type=\"submit\" value=\"wicket button with setDefaultFormProcessing(false)\" />\n"
+			+ " </form>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// Add a form with an onSubmit implementation that sets a message\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;Form form = new Form(\"form\") {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"Form.onSubmit executed\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;Button button1 = new Button(\"button1\") {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"button1.onSubmit executed\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button1);\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;Button button2 = new Button(\"button2\") {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"button2.onSubmit executed\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;button2.setDefaultFormProcessing(false);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button2);\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(form);";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;Form form = new Form(\"form\") {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"Form.onSubmit executed\");\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;Button button1 = new Button(\"button1\") {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"button1.onSubmit executed\");\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button1);\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;Button button2 = new Button(\"button2\") {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected void onSubmit() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info(\"button2.onSubmit executed\");\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;};\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;button2.setDefaultFormProcessing(false);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button2);\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(form);";
 		add(new ExplainPanel(html, code));
 
 	}

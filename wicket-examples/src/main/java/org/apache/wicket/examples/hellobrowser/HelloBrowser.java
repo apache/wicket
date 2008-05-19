@@ -55,15 +55,15 @@ public class HelloBrowser extends WicketExamplePage<Void>
 		// is not allowed.
 		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo()).getProperties();
 
-		add(new MultiLineLabel("clientinfo", properties.toString()));
+		add(new MultiLineLabel<String>("clientinfo", properties.toString()));
 
-		IModel clientTimeModel = new AbstractReadOnlyModel()
+		IModel<String> clientTimeModel = new AbstractReadOnlyModel<String>()
 		{
 			/**
 			 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 			 */
 			@Override
-			public Object getObject()
+			public String getObject()
 			{
 				TimeZone timeZone = properties.getTimeZone();
 				if (timeZone != null)
@@ -83,6 +83,6 @@ public class HelloBrowser extends WicketExamplePage<Void>
 					+ "no idea what your time is";
 			}
 		};
-		add(new Label("clienttime", clientTimeModel));
+		add(new Label<String>("clienttime", clientTimeModel));
 	}
 }

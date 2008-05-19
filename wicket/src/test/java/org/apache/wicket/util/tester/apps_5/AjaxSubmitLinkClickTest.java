@@ -43,6 +43,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	}
 
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -60,11 +61,12 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		mockPojo.setName("Mock name");
 
 		final MockPageWithFormAndContainedLink page = new MockPageWithFormAndContainedLink(mockPojo);
-		page.addLink(new AjaxSubmitLink("link")
+		page.addLink(new AjaxSubmitLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				assertNotNull(form);
 				linkClicked = true;
@@ -75,7 +77,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}
@@ -105,11 +107,12 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		mockPojo.setName("Mock name");
 
 		final MockPageWithFormAndLink page = new MockPageWithFormAndLink(mockPojo);
-		AjaxSubmitLink link = new AjaxSubmitLink("link", page.getForm())
+		AjaxSubmitLink<?> link = new AjaxSubmitLink<Void>("link", page.getForm())
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				assertNotNull(form);
 				linkClicked = true;
@@ -121,7 +124,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}

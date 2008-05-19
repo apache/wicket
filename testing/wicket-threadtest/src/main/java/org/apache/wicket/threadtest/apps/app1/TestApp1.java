@@ -17,12 +17,16 @@
 package org.apache.wicket.threadtest.apps.app1;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.ISessionStore;
 
+/**
+ * Test application
+ */
 public class TestApp1 extends WebApplication
 {
 
@@ -33,6 +37,9 @@ public class TestApp1 extends WebApplication
 
 	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
+	/**
+	 * Construct.
+	 */
 	public TestApp1()
 	{
 	}
@@ -48,7 +55,7 @@ public class TestApp1 extends WebApplication
 	}
 
 	@Override
-	public Class getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}

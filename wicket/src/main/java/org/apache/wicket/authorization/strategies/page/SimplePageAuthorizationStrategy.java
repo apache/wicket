@@ -57,7 +57,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * The supertype (class or interface) of Pages that require authorization to be instantiated.
 	 */
-	private final WeakReference<Class< ? extends Component>> securePageSuperTypeRef;
+	private final WeakReference<Class<? extends Component<?>>> securePageSuperTypeRef;
 
 	/**
 	 * Construct.
@@ -68,21 +68,22 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
-	public SimplePageAuthorizationStrategy(final Class< ? extends Component> securePageSuperType,
-		final Class< ? extends Page< ? >> signInPageClass)
+	public SimplePageAuthorizationStrategy(final Class<? extends Component<?>> securePageSuperType,
+		final Class<? extends Page<?>> signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{
 			throw new IllegalArgumentException("Secure page super type must not be null");
 		}
 
-		securePageSuperTypeRef = new WeakReference<Class< ? extends Component>>(securePageSuperType);
+		securePageSuperTypeRef = new WeakReference<Class<? extends Component<?>>>(
+			securePageSuperType);
 
 		// Handle unauthorized access to pages
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
 			new IUnauthorizedComponentInstantiationListener()
 			{
-				public void onUnauthorizedInstantiation(final Component< ? > component)
+				public void onUnauthorizedInstantiation(final Component<?> component)
 				{
 					// If there is a sign in page class declared, and the
 					// unauthorized component is a page, but it's not the
@@ -105,7 +106,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @see org.apache.wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isPageAuthorized(java.lang.Class)
 	 */
 	@Override
-	protected boolean isPageAuthorized(final Class< ? extends Page> pageClass)
+	protected boolean isPageAuthorized(final Class<? extends Page<?>> pageClass)
 	{
 		if (instanceOf(pageClass, securePageSuperTypeRef.get()))
 		{

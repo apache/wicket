@@ -25,6 +25,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.resource.IStringResourceStream;
@@ -37,14 +38,14 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @author Eelco Hillenius
  */
-public class TemplatePage extends WicketExamplePage
+public class TemplatePage extends WicketExamplePage<Void>
 {
 	/**
 	 * Form for changing the template contents.
 	 */
-	private final class TemplateForm extends Form
+	private final class TemplateForm extends Form<Void>
 	{
-		private TextArea templateTextArea;
+		private TextArea<IStringResourceStream> templateTextArea;
 
 		/**
 		 * Construct.
@@ -55,13 +56,15 @@ public class TemplatePage extends WicketExamplePage
 		public TemplateForm(String name)
 		{
 			super(name);
-			add(templateTextArea = new TextArea("templateInput", new PropertyModel(new Model(
-					TemplatePage.this), "template")));
+			add(templateTextArea = new TextArea<IStringResourceStream>("templateInput",
+				new PropertyModel<IStringResourceStream>(
+					new Model<TemplatePage>(TemplatePage.this), "template")));
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
 		}
@@ -69,10 +72,10 @@ public class TemplatePage extends WicketExamplePage
 
 	/** the current template contents. */
 	private IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
-			"persons.vm");
+		"persons.vm");
 
 	/** context to be used by the template. */
-	private final Model templateContext;
+	private final IModel<Map<String, List<Person>>> templateContext;
 
 	/**
 	 * Constructor

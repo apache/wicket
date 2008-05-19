@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Jonathan Locke
  */
-public final class ApplicationView extends Panel
+public final class ApplicationView extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,19 +42,22 @@ public final class ApplicationView extends Panel
 		super(id);
 
 		// Basic attributes
-		add(new Label("name", application.getName()));
-		add(new Label("componentUseCheck", "" +
-				application.getDebugSettings().getComponentUseCheck()));
-		add(new Label("compressWhitespace", "" +
-				application.getMarkupSettings().getCompressWhitespace()));
-		add(new Label("stripComments", "" + application.getMarkupSettings().getStripComments()));
-		add(new Label("stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
-		add(new Label("bufferResponse", "" +
-				application.getRequestCycleSettings().getBufferResponse()));
-		add(new Label("resourcePollFrequency", "" +
-				application.getResourceSettings().getResourcePollFrequency()));
-		add(new Label("versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label("pageMapEvictionStrategy", "" +
-				application.getSessionSettings().getPageMapEvictionStrategy()));
+		add(new Label<String>("name", application.getName()));
+		add(new Label<String>("componentUseCheck", "" +
+			application.getDebugSettings().getComponentUseCheck()));
+		add(new Label<String>("compressWhitespace", "" +
+			application.getMarkupSettings().getCompressWhitespace()));
+		add(new Label<String>("stripComments", "" +
+			application.getMarkupSettings().getStripComments()));
+		add(new Label<String>("stripWicketTags", "" +
+			application.getMarkupSettings().getStripWicketTags()));
+		add(new Label<String>("bufferResponse", "" +
+			application.getRequestCycleSettings().getBufferResponse()));
+		add(new Label<String>("resourcePollFrequency", "" +
+			application.getResourceSettings().getResourcePollFrequency()));
+		add(new Label<String>("versionPages", "" +
+			application.getPageSettings().getVersionPagesByDefault()));
+		add(new Label<String>("pageMapEvictionStrategy", "" +
+			application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

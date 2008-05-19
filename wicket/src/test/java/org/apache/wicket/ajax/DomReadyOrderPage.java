@@ -35,7 +35,7 @@ public class DomReadyOrderPage extends WebPage<Void>
 		add(new Link("test"));
 	}
 
-	private static class Link extends AjaxFallbackLink
+	private static class Link extends AjaxFallbackLink<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -37,7 +37,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class SignInPanel extends Panel
+public abstract class SignInPanel extends Panel<Void>
 {
 	/** True if the panel should display a remember-me checkbox */
 	private boolean includeRememberMe = true;
@@ -49,12 +49,12 @@ public abstract class SignInPanel extends Panel
 	private boolean rememberMe = true;
 
 	/** Field for user name. */
-	private TextField username;
+	private TextField<String> username;
 
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends Form
+	public final class SignInForm extends Form<Void>
 	{
 		/** El-cheapo model for form. */
 		private final ValueMap properties = new ValueMap();
@@ -71,17 +71,21 @@ public abstract class SignInPanel extends Panel
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField("username", new PropertyModel(properties, "username")));
-			add(password = new PasswordTextField("password", new PropertyModel(properties,
-					"password")));
+			add(username = new TextField<String>("username", new PropertyModel<String>(properties,
+				"username")));
+			add(password = new PasswordTextField("password", new PropertyModel<String>(properties,
+				"password")));
+
+			username.setType(String.class);
+			password.setType(String.class);
 
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
+			WebMarkupContainer<?> rememberMeRow = new WebMarkupContainer<Void>("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(SignInPanel.this,
-					"rememberMe")));
+			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel<Boolean>(
+				SignInPanel.this, "rememberMe")));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -93,6 +97,7 @@ public abstract class SignInPanel extends Panel
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			if (signIn(getUsername(), getPassword()))
@@ -110,7 +115,7 @@ public abstract class SignInPanel extends Panel
 				// Try the component based localizer first. If not found try the
 				// application localizer. Else use the default
 				final String errmsg = getLocalizer().getString("loginError", this,
-						"Unable to sign you in");
+					"Unable to sign you in");
 
 				error(errmsg);
 			}
@@ -206,7 +211,7 @@ public abstract class SignInPanel extends Panel
 	public void setRememberMe(boolean rememberMe)
 	{
 		this.rememberMe = rememberMe;
-		this.setPersistent(rememberMe);
+		setPersistent(rememberMe);
 	}
 
 	/**

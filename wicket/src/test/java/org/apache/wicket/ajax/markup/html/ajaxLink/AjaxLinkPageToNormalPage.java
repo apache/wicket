@@ -33,7 +33,7 @@ public class AjaxLinkPageToNormalPage extends WebPage<Void>
 	 */
 	public AjaxLinkPageToNormalPage()
 	{
-		add(new AjaxLink("ajaxLink")
+		add(new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

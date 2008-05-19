@@ -18,6 +18,7 @@ package org.apache.wicket.authorization.strategies.role.metadata;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -54,17 +55,18 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void testAdd1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
-		permissions.authorize(Page.class, new Roles("jonathan"));
-		permissions.authorize(Page.class, new Roles("johan"));
-		permissions.authorize(Page.class, new Roles("maurice"));
-		permissions.authorize(Page.class, new Roles("eelco"));
+		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("jonathan"));
+		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("johan"));
+		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("maurice"));
+		permissions.authorize((Class<? extends Component<?>>)Page.class, new Roles("eelco"));
 		assertEquals(4, permissions.getRolesForComponentClass().get(Page.class).size());
-		permissions.unauthorize(Page.class, new Roles("maurice"));
+		permissions.unauthorize((Class<? extends Component<?>>)Page.class, new Roles("maurice"));
 		assertEquals(3, permissions.getRolesForComponentClass().get(Page.class).size());
-		permissions.authorizeAll(Page.class);
+		permissions.authorizeAll((Class<? extends Component<?>>)Page.class);
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
 	}
 
@@ -73,36 +75,39 @@ public class InstantiationPermissionsTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void testRemove1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
-		permissions.unauthorize(Page.class, new Roles("eelco"));
-		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE), permissions
-				.getRolesForComponentClass().get(Page.class));
+		permissions.unauthorize((Class<? extends Component<?>>)Page.class, new Roles("eelco"));
+		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
+			permissions.getRolesForComponentClass().get(Page.class));
 	}
 
 	/**
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public void testRemove2()
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		tester.getApplication().setMetaData(
-				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
-				new InstantiationPermissions());
-		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
+			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+			new InstantiationPermissions());
+		MetaDataRoleAuthorizationStrategy.unauthorize((Class<? extends Component<?>>)Page.class,
+			"martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
 		tester.processRequestCycle();
 		tester.destroy();
@@ -112,24 +117,27 @@ public class InstantiationPermissionsTest extends TestCase
 	 * Test consistency in behavior between authorizing a role for a class and then unauthorizing it
 	 * with {@link #testRemove2()}.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testRemove3()
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		tester.getApplication().setMetaData(
-				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
-				new InstantiationPermissions());
-		MetaDataRoleAuthorizationStrategy.authorize(Page.class, "martijn");
-		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
+			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+			new InstantiationPermissions());
+		MetaDataRoleAuthorizationStrategy.authorize((Class<? extends Component<?>>)Page.class,
+			"martijn");
+		MetaDataRoleAuthorizationStrategy.unauthorize((Class<? extends Component<?>>)Page.class,
+			"martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
 		tester.processRequestCycle();
 		tester.destroy();

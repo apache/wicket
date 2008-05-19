@@ -45,18 +45,19 @@ public class Page_2 extends WebPage<Void>
 	 */
 	public Page_2()
 	{
-		add(new Label("myLabel", "Test Label"));
+		add(new Label<String>("myLabel", "Test Label"));
 
-		MarkupContainer container = new NoopOutputTransformerContainer("test");
+		MarkupContainer<?> container = new NoopOutputTransformerContainer<Void>("test");
 
 		add(container);
-		container.add(new Label("myLabel2", "Test Label2"));
+		container.add(new Label<String>("myLabel2", "Test Label2"));
 
-		MarkupContainer panelContainer = new AbstractOutputTransformerContainer("test2")
+		MarkupContainer<?> panelContainer = new AbstractOutputTransformerContainer<Void>("test2")
 		{
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence transform(Component component, CharSequence output)
+			@Override
+			public CharSequence transform(Component<?> component, CharSequence output)
 			{
 				// replace the generated String
 				return "Whatever";
@@ -64,15 +65,16 @@ public class Page_2 extends WebPage<Void>
 		};
 
 		add(panelContainer);
-		Panel panel = new Panel_1("myPanel");
+		Panel<?> panel = new Panel_1("myPanel");
 		panel.setRenderBodyOnly(true);
 		panelContainer.add(panel);
 
-		MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
+		MarkupContainer<?> borderContainer = new AbstractOutputTransformerContainer<Void>("test3")
 		{
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence transform(Component component, CharSequence output)
+			@Override
+			public CharSequence transform(Component<?> component, CharSequence output)
 			{
 				// Convert all text to uppercase
 				return output.toString().toUpperCase();
@@ -80,12 +82,12 @@ public class Page_2 extends WebPage<Void>
 		};
 
 		add(borderContainer);
-		Border border = new SimpleBorder("myBorder");
+		Border<?> border = new SimpleBorder("myBorder");
 		borderContainer.add(border);
 
-		Border border2 = new SimpleBorder("myBorder2");
+		Border<?> border2 = new SimpleBorder("myBorder2");
 		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		border2.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
 		add(border2);
 
 		border2.add(new XsltTransformerBehavior());

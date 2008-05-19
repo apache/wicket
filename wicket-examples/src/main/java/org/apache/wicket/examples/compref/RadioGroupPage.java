@@ -33,7 +33,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class RadioGroupPage extends WicketExamplePage
+public class RadioGroupPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -41,9 +41,10 @@ public class RadioGroupPage extends WicketExamplePage
 	public RadioGroupPage()
 	{
 
-		final RadioGroup group = new RadioGroup("group", new Model());
-		Form form = new Form("form")
+		final RadioGroup<Person> group = new RadioGroup<Person>("group", new Model<Person>());
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("selected person: " + group.getModelObjectAsString());
@@ -53,14 +54,18 @@ public class RadioGroupPage extends WicketExamplePage
 		add(form);
 		form.add(group);
 
-		ListView persons = new ListView("persons", ComponentReferenceApplication.getPersons())
+		ListView<Person> persons = new ListView<Person>("persons",
+			ComponentReferenceApplication.getPersons())
 		{
 
-			protected void populateItem(ListItem item)
+			@Override
+			protected void populateItem(ListItem<Person> item)
 			{
-				item.add(new Radio("radio", item.getModel()));
-				item.add(new Label("name", new PropertyModel(item.getModel(), "name")));
-				item.add(new Label("lastName", new PropertyModel(item.getModel(), "lastName")));
+				item.add(new Radio<Person>("radio", item.getModel()));
+				item.add(new Label<String>("name", new PropertyModel<String>(item.getModel(),
+					"name")));
+				item.add(new Label<String>("lastName", new PropertyModel<String>(item.getModel(),
+					"lastName")));
 			}
 
 		};
@@ -70,25 +75,26 @@ public class RadioGroupPage extends WicketExamplePage
 		add(new FeedbackPanel("feedback"));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<form wicket:id=\"form\">\n" + "<span wicket:id=\"group\">\n"
-				+ "<tr wicket:id=\"persons\">\n"
-				+ "<td><input type=\"radio\" wicket:id=\"radio\"/></td>\n"
-				+ "<td><span wicket:id=\"name\">[this is where name will be]</span></td>\n"
-				+ "<td><span wicket:id=\"lastName\">[this is where lastname will be]</span></td>\n"
-				+ "</tr>\n" + "</span>" + "</form>";
+			+ "<tr wicket:id=\"persons\">\n"
+			+ "<td><input type=\"radio\" wicket:id=\"radio\"/></td>\n"
+			+ "<td><span wicket:id=\"name\">[this is where name will be]</span></td>\n"
+			+ "<td><span wicket:id=\"lastName\">[this is where lastname will be]</span></td>\n"
+			+ "</tr>\n" + "</span>" + "</form>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;Form f=new Form(\"form\");<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;RadioGroup group=new RadioGroup(\"group\");<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(group);<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListView persons=new ListView(\"persons\", getPersons()) {<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;protected void populateItem(ListItem item) {<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Radio(\"radio\", item.getModel()));<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"name\", new PropertyModel(item.getModel(), \"name\")));<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;RadioGroup group=new RadioGroup(\"group\");<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(group);<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;ListView persons=new ListView(\"persons\", getPersons()) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;protected void populateItem(ListItem item) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Radio(\"radio\", item.getModel()));<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"name\", new PropertyModel(item.getModel(), \"name\")));<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
 		add(new ExplainPanel(html, code));
 	}
 }

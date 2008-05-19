@@ -28,6 +28,9 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Test filter
+ */
 public class TestFilter implements Filter
 {
 
@@ -45,7 +48,7 @@ public class TestFilter implements Filter
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException
+		throws IOException, ServletException
 	{
 
 		chain.doFilter(request, response);

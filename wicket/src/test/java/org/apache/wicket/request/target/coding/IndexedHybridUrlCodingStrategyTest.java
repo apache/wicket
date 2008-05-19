@@ -47,20 +47,22 @@ public class IndexedHybridUrlCodingStrategyTest extends TestCase
 		 */
 		public TestPage(PageParameters pars)
 		{
-			add(new AjaxLink("ajax")
+			add(new AjaxLink<Void>("ajax")
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					getSession().bind();
 					target.addComponent(this);
 				}
 			}.setOutputMarkupId(true));
-			add(new Link("link")
+			add(new Link<Void>("link")
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onClick()
 				{
 					getSession().invalidate();

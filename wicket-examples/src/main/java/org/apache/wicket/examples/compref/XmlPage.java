@@ -43,13 +43,14 @@ public class XmlPage extends WebPage<Void>
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xml";
 	}
 
 	/** list view for rendering person objects. */
-	private static final class PersonsListView extends ListView
+	private static final class PersonsListView extends ListView<Person>
 	{
 		/**
 		 * Construct.
@@ -59,16 +60,17 @@ public class XmlPage extends WebPage<Void>
 		 * @param list
 		 *            the model
 		 */
-		public PersonsListView(String id, List list)
+		public PersonsListView(String id, List<Person> list)
 		{
 			super(id, list);
 		}
 
-		protected void populateItem(ListItem item)
+		@Override
+		protected void populateItem(ListItem<Person> item)
 		{
-			Person person = (Person)item.getModelObject();
-			item.add(new Label("firstName", person.getName()));
-			item.add(new Label("lastName", person.getLastName()));
+			Person person = item.getModelObject();
+			item.add(new Label<String>("firstName", person.getName()));
+			item.add(new Label<String>("lastName", person.getLastName()));
 		}
 	}
 }

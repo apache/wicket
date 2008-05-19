@@ -24,7 +24,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * 
  * @author Jonathan Locke
  */
-public class Home extends WicketExamplePage implements AuthenticatedWebPage
+public class Home extends WicketExamplePage<Void> implements AuthenticatedWebPage
 {
 	// Nothing in here.
 }

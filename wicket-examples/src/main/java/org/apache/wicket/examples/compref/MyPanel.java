@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-class MyPanel extends Panel
+class MyPanel extends Panel<Void>
 {
 	/**
 	 * Construct.
@@ -35,7 +35,7 @@ class MyPanel extends Panel
 	public MyPanel(String id)
 	{
 		super(id);
-		add(new Label("label", "yep, this is from a component proper"));
+		add(new Label<String>("label", "yep, this is from a component proper"));
 		add(new AnotherPanel("otherPanel"));
 	}
 }

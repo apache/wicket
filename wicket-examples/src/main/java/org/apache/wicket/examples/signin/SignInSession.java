@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.signin;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
 /**
@@ -33,13 +32,11 @@ public final class SignInSession extends WebSession
 	/**
 	 * Constructor
 	 * 
-	 * @param application
-	 *            The application
 	 * @param request
 	 */
-	protected SignInSession(final WebApplication application, Request request)
+	protected SignInSession(Request request)
 	{
-		super(application, request);
+		super(request);
 	}
 
 	/**

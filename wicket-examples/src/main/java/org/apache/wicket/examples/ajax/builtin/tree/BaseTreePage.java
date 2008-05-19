@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
  * 
  * @author Matej Knopp
  */
-public abstract class BaseTreePage extends BasePage
+public abstract class BaseTreePage extends BasePage<Void>
 {
 
 	/**
@@ -43,8 +43,9 @@ public abstract class BaseTreePage extends BasePage
 	 */
 	public BaseTreePage()
 	{
-		add(new AjaxLink("expandAll")
+		add(new AjaxLink<Void>("expandAll")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().getTreeState().expandAll();
@@ -52,8 +53,9 @@ public abstract class BaseTreePage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("collapseAll")
+		add(new AjaxLink<Void>("collapseAll")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().getTreeState().collapseAll();
@@ -61,8 +63,9 @@ public abstract class BaseTreePage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("switchRootless")
+		add(new AjaxLink<Void>("switchRootless")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().setRootLess(!getTree().isRootLess());
@@ -86,15 +89,15 @@ public abstract class BaseTreePage extends BasePage
 	 */
 	protected TreeModel createTreeModel()
 	{
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
 		l1.add("test 1.3");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<Object> l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l3.add("test 3.2");
 		l3.add("test 3.3");
@@ -105,7 +108,7 @@ public abstract class BaseTreePage extends BasePage
 		l2.add("test 2.5");
 		l2.add("test 2.6");
 
-		l3 = new ArrayList();
+		l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l3.add("test 3.2");
 		l3.add("test 3.3");
@@ -113,7 +116,7 @@ public abstract class BaseTreePage extends BasePage
 
 		l1.add(l2);
 
-		l2 = new ArrayList();
+		l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
@@ -127,7 +130,7 @@ public abstract class BaseTreePage extends BasePage
 		return convertToTreeModel(l1);
 	}
 
-	private TreeModel convertToTreeModel(List list)
+	private TreeModel convertToTreeModel(List<Object> list)
 	{
 		TreeModel model = null;
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new ModelBean("ROOT"));
@@ -136,22 +139,22 @@ public abstract class BaseTreePage extends BasePage
 		return model;
 	}
 
-	private void add(DefaultMutableTreeNode parent, List sub)
+	private void add(DefaultMutableTreeNode parent, List<Object> sub)
 	{
-		for (Iterator i = sub.iterator(); i.hasNext();)
+		for (Iterator<Object> i = sub.iterator(); i.hasNext();)
 		{
 			Object o = i.next();
 			if (o instanceof List)
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
-						"subtree..."));
+					"subtree..."));
 				parent.add(child);
-				add(child, (List)o);
+				add(child, (List<Object>)o);
 			}
 			else
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(o
-						.toString()));
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
+					o.toString()));
 				parent.add(child);
 			}
 		}

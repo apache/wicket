@@ -27,7 +27,7 @@ import org.apache.wicket.extensions.wizard.Wizard;
  * 
  * @author Eelco Hillenius
  */
-public class WizardPage extends WicketExamplePage
+public class WizardPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Construct.
@@ -35,7 +35,7 @@ public class WizardPage extends WicketExamplePage
 	 * @param wizardClass
 	 *            class of the wizard component
 	 */
-	public WizardPage(Class wizardClass)
+	public WizardPage(Class<? extends Wizard<?>> wizardClass)
 	{
 		if (wizardClass == null)
 		{
@@ -43,8 +43,8 @@ public class WizardPage extends WicketExamplePage
 		}
 		try
 		{
-			Constructor ctor = wizardClass.getConstructor(new Class[] { String.class });
-			Wizard wizard = (Wizard)ctor.newInstance(new String[] { "wizard" });
+			Constructor<? extends Wizard<?>> ctor = wizardClass.getConstructor(String.class);
+			Wizard<?> wizard = ctor.newInstance("wizard");
 			add(wizard);
 		}
 		catch (Exception e)

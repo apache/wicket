@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.border.BoxBorder;
  * 
  * @author Jonathan Locke
  */
-public class NavomaticBorder extends Border
+public class NavomaticBorder extends Border<Void>
 {
 	/**
 	 * Constructor
@@ -35,7 +35,7 @@ public class NavomaticBorder extends Border
 	public NavomaticBorder(final String id)
 	{
 		super(id);
-		add(new BoxBorder("navigationBorder"));
-		add(new BoxBorder("bodyBorder"));
+		add(new BoxBorder<Void>("navigationBorder"));
+		add(new BoxBorder<Void>("bodyBorder"));
 	}
 }

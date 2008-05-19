@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.stateless;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
@@ -37,7 +38,7 @@ public class StatelessApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Index.class;
 	}

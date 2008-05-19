@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public final class BookDetails extends WicketExamplePage
+public final class BookDetails extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -35,6 +35,6 @@ public final class BookDetails extends WicketExamplePage
 	 */
 	public BookDetails(final Book book)
 	{
-		add(new Label("title", book.getTitle()));
+		add(new Label<String>("title", book.getTitle()));
 	}
 }

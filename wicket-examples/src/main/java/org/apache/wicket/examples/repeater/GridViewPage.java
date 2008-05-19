@@ -34,19 +34,21 @@ public class GridViewPage extends BasePage
 	 */
 	public GridViewPage()
 	{
-		IDataProvider dataProvider = new ContactDataProvider();
-		GridView gridView = new GridView("rows", dataProvider)
+		IDataProvider<Contact> dataProvider = new ContactDataProvider();
+		GridView<Contact> gridView = new GridView<Contact>("rows", dataProvider)
 		{
-			protected void populateItem(Item item)
+			@Override
+			protected void populateItem(Item<Contact> item)
 			{
-				final Contact contact = (Contact)item.getModelObject();
-				item.add(new Label("firstName", contact.getFirstName() + " " +
-						contact.getLastName()));
+				final Contact contact = item.getModelObject();
+				item.add(new Label<String>("firstName", contact.getFirstName() + " " +
+					contact.getLastName()));
 			}
 
-			protected void populateEmptyItem(Item item)
+			@Override
+			protected void populateEmptyItem(Item<Contact> item)
 			{
-				item.add(new Label("firstName", "*empty*"));
+				item.add(new Label<String>("firstName", "*empty*"));
 			}
 		};
 

@@ -33,17 +33,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-
 /**
  * Linked select boxes example
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class ChoicePage extends BasePage
+public class ChoicePage extends BasePage<Void>
 {
 	private String selectedMake;
 
-	private Map modelsMap = new HashMap(); // map:company->model
+	private final Map<String, List<String>> modelsMap = new HashMap<String, List<String>>(); // map:company->model
 
 	/**
 	 * @return Currently selected make
@@ -73,38 +72,41 @@ public class ChoicePage extends BasePage
 		modelsMap.put("FORD", Arrays.asList(new String[] { "CROWN", "ESCAPE", "EXPEDITION",
 				"EXPLORER", "F-150" }));
 
-		IModel makeChoices = new AbstractReadOnlyModel()
+		IModel<List<? extends String>> makeChoices = new AbstractReadOnlyModel<List<? extends String>>()
 		{
-			public Object getObject()
+			@Override
+			public List<String> getObject()
 			{
-				Set keys = modelsMap.keySet();
-				List list = new ArrayList(keys);
+				Set<String> keys = modelsMap.keySet();
+				List<String> list = new ArrayList<String>(keys);
 				return list;
 			}
 
 		};
 
-		IModel modelChoices = new AbstractReadOnlyModel()
+		IModel<List<? extends String>> modelChoices = new AbstractReadOnlyModel<List<? extends String>>()
 		{
-			public Object getObject()
+			@Override
+			public List<String> getObject()
 			{
-				List models = (List)modelsMap.get(selectedMake);
+				List<String> models = modelsMap.get(selectedMake);
 				if (models == null)
 				{
-					models = Collections.EMPTY_LIST;
+					models = Collections.emptyList();
 				}
 				return models;
 			}
 
 		};
 
-		Form form = new Form("form");
+		Form<?> form = new Form<Void>("form");
 		add(form);
 
-		final DropDownChoice makes = new DropDownChoice("makes", new PropertyModel(this,
-				"selectedMake"), makeChoices);
+		final DropDownChoice<String> makes = new DropDownChoice<String>("makes",
+			new PropertyModel<String>(this, "selectedMake"), makeChoices);
 
-		final DropDownChoice models = new DropDownChoice("models", new Model(), modelChoices);
+		final DropDownChoice<String> models = new DropDownChoice<String>("models",
+			new Model<String>(), modelChoices);
 		models.setOutputMarkupId(true);
 
 		form.add(makes);
@@ -112,6 +114,7 @@ public class ChoicePage extends BasePage
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				target.addComponent(models);

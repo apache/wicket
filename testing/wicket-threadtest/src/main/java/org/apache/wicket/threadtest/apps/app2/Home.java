@@ -21,21 +21,27 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
+/**
+ */
 public class Home extends WebPage<Void>
 {
 
+	/**
+	 * Construct.
+	 */
 	public Home()
 	{
 
-		IModel model = new AbstractReadOnlyModel()
+		IModel<String> model = new AbstractReadOnlyModel<String>()
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject()
+			public String getObject()
 			{
 				return Pool.getConnection().getData();
 			}
 		};
-		add(new Label("label", model));
+		add(new Label<String>("label", model));
 	}
 }

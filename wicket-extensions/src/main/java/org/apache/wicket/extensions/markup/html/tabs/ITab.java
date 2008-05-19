@@ -26,20 +26,22 @@ import org.apache.wicket.model.IModel;
  * @see org.apache.wicket.extensions.markup.html.tabs.TabbedPanel
  * @see org.apache.wicket.extensions.markup.html.tabs.AbstractTab
  * 
+ * @param <T>
+ *            the panel's model object type
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ITab extends IClusterable
+public interface ITab<T> extends IClusterable
 {
 	/**
 	 * @return IModel used to represent the title of the tab. Must contain a string.
 	 */
-	IModel getTitle();
+	IModel<String> getTitle();
 
 	/**
 	 * @param panelId
 	 *            returned panel MUST have this id
 	 * @return a Panel object that will be placed as the content panel
 	 */
-	Panel getPanel(final String panelId);
+	Panel<T> getPanel(final String panelId);
 }

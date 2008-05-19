@@ -37,7 +37,7 @@ import org.apache.wicket.model.Model;
  */
 public class OIRPage extends BasePage
 {
-	private static class HighlitableDataItem extends Item
+	private static class HighlitableDataItem<T> extends Item<T>
 	{
 		private boolean highlite = false;
 
@@ -56,12 +56,13 @@ public class OIRPage extends BasePage
 		 * @param index
 		 * @param model
 		 */
-		public HighlitableDataItem(String id, int index, IModel model)
+		public HighlitableDataItem(String id, int index, IModel<T> model)
 		{
 			super(id, index, model);
-			add(new AttributeModifier("style", true, new Model("background-color:#80b6ed;"))
+			add(new AttributeModifier("style", true, new Model<String>("background-color:#80b6ed;"))
 			{
-				public boolean isEnabled(Component component)
+				@Override
+				public boolean isEnabled(Component<?> component)
 				{
 					return HighlitableDataItem.this.highlite;
 				}
@@ -76,38 +77,42 @@ public class OIRPage extends BasePage
 	{
 		SortableContactDataProvider dp = new SortableContactDataProvider();
 
-		final DataView dataView = new DataView("oir", dp)
+		final DataView<Contact> dataView = new DataView<Contact>("oir", dp)
 		{
-			protected void populateItem(final Item item)
+			@Override
+			protected void populateItem(final Item<Contact> item)
 			{
-				Contact contact = (Contact)item.getModelObject();
+				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Link("toggleHighlite")
+				item.add(new Link<Void>("toggleHighlite")
 				{
+					@Override
 					public void onClick()
 					{
-						HighlitableDataItem hitem = (HighlitableDataItem)item;
+						HighlitableDataItem<Contact> hitem = (HighlitableDataItem<Contact>)item;
 						hitem.toggleHighlite();
 					}
 				});
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
+				item.add(new Label<String>("firstname", contact.getFirstName()));
+				item.add(new Label<String>("lastname", contact.getLastName()));
+				item.add(new Label<String>("homephone", contact.getHomePhone()));
+				item.add(new Label<String>("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
-					public Object getObject()
+					@Override
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
 				}));
 			}
 
-			protected Item newItem(String id, int index, IModel model)
+			@Override
+			protected Item<Contact> newItem(String id, int index, IModel<Contact> model)
 			{
-				return new HighlitableDataItem(id, index, model);
+				return new HighlitableDataItem<Contact>(id, index, model);
 			}
 		};
 
@@ -116,6 +121,7 @@ public class OIRPage extends BasePage
 
 		add(new OrderByBorder("orderByFirstName", "firstName", dp)
 		{
+			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
@@ -124,6 +130,7 @@ public class OIRPage extends BasePage
 
 		add(new OrderByBorder("orderByLastName", "lastName", dp)
 		{
+			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);

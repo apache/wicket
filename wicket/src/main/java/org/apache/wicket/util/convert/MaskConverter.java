@@ -134,7 +134,7 @@ public class MaskConverter<T> implements IConverter<T>
 	 *            The type to convert string values to.
 	 * @see MaskFormatter
 	 */
-	public MaskConverter(String mask, Class< ? > type)
+	public MaskConverter(String mask, Class<?> type)
 	{
 		try
 		{

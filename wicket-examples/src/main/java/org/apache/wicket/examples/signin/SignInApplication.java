@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.signin;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -43,7 +44,8 @@ public final class SignInApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
@@ -51,24 +53,26 @@ public final class SignInApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 	 */
+	@Override
 	public Session newSession(Request request, Response response)
 	{
-		return new SignInSession(SignInApplication.this, request);
+		return new SignInSession(request);
 	}
 
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
-			public boolean isActionAuthorized(Component component, Action action)
+			public boolean isActionAuthorized(Component<?> component, Action action)
 			{
 				return true;
 			}
 
-			public boolean isInstantiationAuthorized(Class componentClass)
+			public boolean isInstantiationAuthorized(Class<? extends Component<?>> componentClass)
 			{
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))
 				{

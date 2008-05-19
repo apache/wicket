@@ -29,7 +29,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author igor
  */
-public class BasePage extends ExamplePage
+public class BasePage extends ExamplePage<Void>
 {
 	private Contact selected;
 
@@ -38,12 +38,13 @@ public class BasePage extends ExamplePage
 	 */
 	public BasePage()
 	{
-		add(new Label("selectedLabel", new PropertyModel(this, "selectedContactLabel")));
+		add(new Label<String>("selectedLabel", new PropertyModel<String>(this,
+			"selectedContactLabel")));
 		add(new FeedbackPanel("feedback"));
 	}
 
 	/**
-	 * @return string representation of selceted contact property
+	 * @return string representation of selected contact property
 	 */
 	public String getSelectedContactLabel()
 	{
@@ -60,7 +61,7 @@ public class BasePage extends ExamplePage
 	/**
 	 * 
 	 */
-	class ActionPanel extends Panel
+	class ActionPanel extends Panel<Contact>
 	{
 		/**
 		 * @param id
@@ -68,14 +69,15 @@ public class BasePage extends ExamplePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(String id, IModel model)
+		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link("select")
+			add(new Link<Void>("select")
 			{
+				@Override
 				public void onClick()
 				{
-					BasePage.this.selected = (Contact)getParent().getModelObject();
+					selected = (Contact)getParent().getModelObject();
 				}
 			});
 		}
@@ -100,6 +102,7 @@ public class BasePage extends ExamplePage
 		{
 			private final Contact old = BasePage.this.selected;
 
+			@Override
 			public void undo()
 			{
 				BasePage.this.selected = old;

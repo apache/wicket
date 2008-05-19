@@ -42,7 +42,7 @@ public class HangmanApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
@@ -53,6 +53,6 @@ public class HangmanApplication extends WicketExampleApplication
 	@Override
 	public Session newSession(Request request, Response response)
 	{
-		return new HangmanSession(HangmanApplication.this, request);
+		return new HangmanSession(request);
 	}
 }

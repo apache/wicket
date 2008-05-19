@@ -30,6 +30,9 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  */
 public class MenuPage extends WebPage<Void>
 {
+	/**
+	 * Construct.
+	 */
 	public MenuPage()
 	{
 		add(new Loop("examples", WicketExamplesMenuApplication.getExamples().size() - 1)
@@ -39,24 +42,23 @@ public class MenuPage extends WebPage<Void>
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
-				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication.getExamples()
-					.get(index + 1);
-				Link link = new Link("example")
+				ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(index + 1);
+				Link<?> link = new Link<Void>("example")
 				{
 					@Override
 					public void onClick()
 					{
 						int index = ((LoopItem)getParent()).getIteration();
-						ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication.getExamples()
-							.get(index + 1);
+						ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(
+							index + 1);
 						PortletSession session = ((PortletRequestContext)RequestContext.get()).getPortletRequest()
 							.getPortletSession();
 						session.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, ea);
 					}
 				};
-				link.add(new Label("name", ea.getDisplayName()));
+				link.add(new Label<String>("name", ea.getDisplayName()));
 				item.add(link);
-				item.add(new Label("description", ea.getDescription()));
+				item.add(new Label<String>("description", ea.getDescription()));
 			}
 		});
 	}

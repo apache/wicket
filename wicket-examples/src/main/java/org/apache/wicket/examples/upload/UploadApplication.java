@@ -18,6 +18,7 @@ package org.apache.wicket.examples.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -44,7 +45,8 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return UploadPage.class;
 	}
@@ -60,6 +62,7 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -76,6 +79,7 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
 	{
 		return new UploadWebRequest(servletRequest);

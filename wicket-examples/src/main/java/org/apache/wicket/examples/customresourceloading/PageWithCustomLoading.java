@@ -34,10 +34,10 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * 
  * @author Eelco Hillenius
  */
-public class PageWithCustomLoading extends WicketExamplePage
-		implements
-			IMarkupResourceStreamProvider,
-			IMarkupCacheKeyProvider
+public class PageWithCustomLoading extends WicketExamplePage<Void>
+	implements
+		IMarkupResourceStreamProvider,
+		IMarkupCacheKeyProvider
 {
 	/**
 	 * Constructor
@@ -58,8 +58,8 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
-			final Class containerClass)
+	public IResourceStream getMarkupResourceStream(final MarkupContainer<?> container,
+		final Class<?> containerClass)
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader
@@ -82,7 +82,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public String getCacheKey(MarkupContainer container, Class containerClass)
+	public String getCacheKey(MarkupContainer<?> container, Class<?> containerClass)
 	{
 		return null;
 	}

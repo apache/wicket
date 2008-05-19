@@ -80,8 +80,8 @@ public class ActionPermissionsTest extends TestCase
 		Action mambo = new Action("mambo");
 		assertEquals(null, permissions.rolesFor(mambo));
 		permissions.unauthorize(mambo, new Roles("maurice"));
-		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE), permissions
-				.rolesFor(mambo));
+		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
+			permissions.rolesFor(mambo));
 	}
 
 	/**
@@ -92,19 +92,19 @@ public class ActionPermissionsTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
-		Label label = new Label("label", "text");
+		Label<String> label = new Label<String>("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		label.setMetaData(MetaDataRoleAuthorizationStrategy.ACTION_PERMISSIONS,
-				new ActionPermissions());
+			new ActionPermissions());
 		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
 		assertFalse(strategy.isActionAuthorized(label, mambo));
 		tester.processRequestCycle();
@@ -119,19 +119,19 @@ public class ActionPermissionsTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
-		Label label = new Label("label", "text");
+		Label<String> label = new Label<String>("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		label.setMetaData(MetaDataRoleAuthorizationStrategy.ACTION_PERMISSIONS,
-				new ActionPermissions());
+			new ActionPermissions());
 		MetaDataRoleAuthorizationStrategy.authorize(label, mambo, "johan");
 		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
 		assertFalse(strategy.isActionAuthorized(label, mambo));

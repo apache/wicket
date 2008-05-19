@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.resources.StyleSheetReference;
 /**
  * 
  */
-public class MockComponent3 extends Panel
+public class MockComponent3 extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
