@@ -18,6 +18,8 @@ package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
 /**
@@ -50,7 +52,10 @@ public class StatelessApplication extends WicketExampleApplication
 	protected void init()
 	{
 		mount(new QueryStringUrlCodingStrategy("/statefull", StatefulPage.class));
-		mount(new QueryStringUrlCodingStrategy("/stateless", StatelessPage.class));
+		mount(new QueryStringUrlCodingStrategy("/query", StatelessPage1.class));
+		mount(new MixedParamUrlCodingStrategy("/mixed", StatelessPage2.class, new String[] {
+				"param1", "param2" }));
+		mount(new IndexedParamUrlCodingStrategy("/indexed", StatelessPage3.class));
 		// mount("/public", PackageName.forClass(StatelessApplication.class));
 		// mountBookmarkablePage("foo", StatelessPage.class);
 	}
