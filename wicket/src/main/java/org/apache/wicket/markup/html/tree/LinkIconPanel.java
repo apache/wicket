@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import javax.swing.tree.TreeNode;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -49,6 +47,7 @@ public class LinkIconPanel extends LabelIconPanel
 	 * @see org.apache.wicket.markup.html.tree.LabelIconPanel#addComponents(org.apache.wicket.model.IModel,
 	 *      org.apache.wicket.markup.html.tree.BaseTree)
 	 */
+	@Override
 	protected void addComponents(final IModel model, final BaseTree tree)
 	{
 		BaseTree.ILinkCallback callback = new BaseTree.ILinkCallback()
@@ -57,7 +56,7 @@ public class LinkIconPanel extends LabelIconPanel
 
 			public void onClick(AjaxRequestTarget target)
 			{
-				onNodeLinkClicked((TreeNode)model.getObject(), tree, target);
+				onNodeLinkClicked(model.getObject(), tree, target);
 			}
 		};
 
@@ -77,7 +76,7 @@ public class LinkIconPanel extends LabelIconPanel
 	 * @param tree
 	 * @param target
 	 */
-	protected void onNodeLinkClicked(TreeNode node, BaseTree tree, AjaxRequestTarget target)
+	protected void onNodeLinkClicked(Object node, BaseTree tree, AjaxRequestTarget target)
 	{
 		tree.getTreeState().selectNode(node, !tree.getTreeState().isNodeSelected(node));
 		tree.updateTree(target);

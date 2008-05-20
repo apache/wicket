@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
@@ -102,6 +101,8 @@ public abstract class AbstractTree extends Panel
 		/** tree item level - how deep is this item in tree */
 		private final int level;
 
+		private final TreeItem parent;
+
 		/**
 		 * Construct.
 		 * 
@@ -111,10 +112,13 @@ public abstract class AbstractTree extends Panel
 		 *            tree node
 		 * @param level
 		 *            current level
+		 * @param parent
 		 */
-		public TreeItem(String id, final Object node, int level)
+		public TreeItem(TreeItem parent, String id, final Object node, int level)
 		{
 			super(id, new Model((Serializable)node));
+
+			this.parent = parent;
 
 			nodeToItemMap.put(node, this);
 			this.level = level;
@@ -125,6 +129,11 @@ public abstract class AbstractTree extends Panel
 			{
 				populateTreeItem(this, level);
 			}
+		}
+
+		public TreeItem getParentItem()
+		{
+			return parent;
 		}
 
 		/**
@@ -153,14 +162,6 @@ public abstract class AbstractTree extends Panel
 			// if the tree has set (shorter) id in markup, we can use it to
 			// shorten the id of individual TreeItems
 			return AbstractTree.this.getMarkupId() + "_" + getId();
-		}
-
-		/**
-		 * @return parent item
-		 */
-		public TreeItem getParentItem()
-		{
-			return nodeToItemMap.get(getParentNode(getModelObject()));
 		}
 
 		/**
@@ -559,11 +560,11 @@ public abstract class AbstractTree extends Panel
 				{
 					if (isRootLess())
 					{
-						rootItem = newTreeItem(rootNode, -1);
+						rootItem = newTreeItem(null, rootNode, -1);
 					}
 					else
 					{
-						rootItem = newTreeItem(rootNode, 0);
+						rootItem = newTreeItem(null, rootNode, 0);
 					}
 					itemContainer.add(rootItem);
 					buildItemChildren(rootItem);
@@ -776,7 +777,7 @@ public abstract class AbstractTree extends Panel
 			{
 				Object node = e.getChildren()[i];
 				int index = e.getChildIndices()[i];
-				TreeItem item = newTreeItem(node, parentItem.getLevel() + 1);
+				TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
 				itemContainer.add(item);
 				parentItem.getChildren().add(index, item);
 
@@ -1068,7 +1069,7 @@ public abstract class AbstractTree extends Panel
 		if (isNodeExpanded(item.getModelObject()))
 		{
 			// build the items for children of the items' treenode.
-			items = buildTreeItems(nodeChildren(item.getModelObject()), item.getLevel() + 1);
+			items = buildTreeItems(item, nodeChildren(item.getModelObject()), item.getLevel() + 1);
 		}
 		else
 		{
@@ -1082,13 +1083,14 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Builds (recursively) TreeItems for the given Iterator of TreeNodes.
 	 * 
+	 * @param parent
 	 * @param nodes
 	 *            The nodes to build tree items for
 	 * @param level
 	 *            The current level
 	 * @return List with new tree items
 	 */
-	private final List<TreeItem> buildTreeItems(Iterator<Object> nodes, int level)
+	private final List<TreeItem> buildTreeItems(TreeItem parent, Iterator<Object> nodes, int level)
 	{
 		List<TreeItem> result = new ArrayList<TreeItem>();
 
@@ -1097,7 +1099,7 @@ public abstract class AbstractTree extends Panel
 		{
 			Object node = nodes.next();
 			// create tree item
-			TreeItem item = newTreeItem(node, level);
+			TreeItem item = newTreeItem(parent, node, level);
 			itemContainer.add(item);
 
 			// builds it children (recursively)
@@ -1272,7 +1274,7 @@ public abstract class AbstractTree extends Panel
 
 					item.remove();
 
-					item = newTreeItem(node, level, id);
+					item = newTreeItem(parent, node, level, id);
 					itemContainer.add(item);
 
 					item.setChildren(children);
@@ -1366,38 +1368,37 @@ public abstract class AbstractTree extends Panel
 	 */
 	public Object getParentNode(Object node)
 	{
-		if (getModelObject() instanceof ExtendedTreeModel)
+		TreeItem item = nodeToItemMap.get(node);
+		if (item == null)
 		{
-			return ((ExtendedTreeModel)getModelObject()).getParent(node);
-		}
-		else if (node instanceof TreeNode)
-		{
-			return ((TreeNode)node).getParent();
+			return null;
 		}
 		else
 		{
-			throw new IllegalStateException(
-				"Couldn't determine node parent. Either the tree model must implement ParentTreeModel or Node must implement TreeNode.");
+			TreeItem parent = item.getParentItem();
+			return parent == null ? null : parent.getModelObject();
 		}
 	}
 
 	/**
 	 * Creates a tree item for given node.
 	 * 
+	 * @param parent
 	 * @param node
 	 *            The tree node
 	 * @param level
-	 *            The level
+	 *            The level *
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(Object node, int level)
+	private final TreeItem newTreeItem(TreeItem parent, Object node, int level)
 	{
-		return new TreeItem("" + idCounter++, node, level);
+		return new TreeItem(parent, "" + idCounter++, node, level);
 	}
 
 	/**
 	 * Creates a tree item for given node with specified id.
 	 * 
+	 * @param parent
 	 * @param node
 	 *            The tree node
 	 * @param level
@@ -1406,9 +1407,9 @@ public abstract class AbstractTree extends Panel
 	 *            the component id
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(Object node, int level, String id)
+	private final TreeItem newTreeItem(TreeItem parent, Object node, int level, String id)
 	{
-		return new TreeItem(id, node, level);
+		return new TreeItem(parent, id, node, level);
 	}
 
 	/**

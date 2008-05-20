@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
@@ -74,16 +74,16 @@ public class LabelIconPanel extends Panel
 	 * @return icon image component
 	 */
 	protected Component newImageComponent(String componentId, final BaseTree tree,
-			final IModel model)
+		final IModel model)
 	{
 		return new Image(componentId)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected ResourceReference getImageResourceReference()
 			{
-				return LabelIconPanel.this.getImageResourceReference(tree, (TreeNode)model
-						.getObject());
+				return LabelIconPanel.this.getImageResourceReference(tree, model.getObject());
 			}
 		};
 	}
@@ -108,9 +108,10 @@ public class LabelIconPanel extends Panel
 	 * @param node
 	 * @return image resource reference
 	 */
-	protected ResourceReference getImageResourceReference(BaseTree tree, TreeNode node)
+	protected ResourceReference getImageResourceReference(BaseTree tree, Object node)
 	{
-		if (node.isLeaf())
+		TreeModel model = (TreeModel)tree.getModelObject();
+		if (model.isLeaf(node))
 		{
 			return getResourceItemLeaf(node);
 		}
@@ -144,7 +145,7 @@ public class LabelIconPanel extends Panel
 	 * @param node
 	 * @return resource reference
 	 */
-	protected ResourceReference getResourceFolderClosed(TreeNode node)
+	protected ResourceReference getResourceFolderClosed(Object node)
 	{
 		return RESOURCE_FOLDER_CLOSED;
 	}
@@ -155,7 +156,7 @@ public class LabelIconPanel extends Panel
 	 * @param node
 	 * @return resource reference
 	 */
-	protected ResourceReference getResourceFolderOpen(TreeNode node)
+	protected ResourceReference getResourceFolderOpen(Object node)
 	{
 		return RESOURCE_FOLDER_OPEN;
 	}
@@ -166,15 +167,15 @@ public class LabelIconPanel extends Panel
 	 * @param node
 	 * @return resource reference
 	 */
-	protected ResourceReference getResourceItemLeaf(TreeNode node)
+	protected ResourceReference getResourceItemLeaf(Object node)
 	{
 		return RESOURCE_ITEM;
 	}
 
 	private static final ResourceReference RESOURCE_FOLDER_OPEN = new ResourceReference(
-			LabelIconPanel.class, "res/folder-open.gif");
+		LabelIconPanel.class, "res/folder-open.gif");
 	private static final ResourceReference RESOURCE_FOLDER_CLOSED = new ResourceReference(
-			LabelIconPanel.class, "res/folder-closed.gif");
+		LabelIconPanel.class, "res/folder-closed.gif");
 	private static final ResourceReference RESOURCE_ITEM = new ResourceReference(
-			LabelIconPanel.class, "res/item.gif");
+		LabelIconPanel.class, "res/item.gif");
 }
