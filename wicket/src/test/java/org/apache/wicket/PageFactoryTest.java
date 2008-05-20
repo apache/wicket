@@ -37,6 +37,7 @@ public class PageFactoryTest extends WicketTestCase
 		super(message);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -69,8 +70,8 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 		assertNotNull(
-				"MyPage3 should have thrown an exception as it does not have a default or no constructor",
-				e);
+			"MyPage3 should have thrown an exception as it does not have a default or no constructor",
+			e);
 
 		// MyPage4: Illegal String parameter constructor only
 		e = null;
@@ -83,24 +84,13 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 		assertNotNull(
-				"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-				e);
+			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
+			e);
 
 		// MyPage5: PageParameter and default constructor
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class).getClass());
 
-		// String: Illegal String parameter constructor only
-		e = null;
-		try
-		{
-			factory.newPage(String.class).getClass();
-		}
-		catch (ClassCastException ex)
-		{
-			e = ex;
-		}
 
-		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
 	}
 
 	/**
@@ -130,8 +120,8 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 		assertNotNull(
-				"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-				e);
+			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
+			e);
 
 		// MyPage4: Illegal String parameter constructor only
 		e = null;
@@ -144,23 +134,12 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 		assertNotNull(
-				"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-				e);
+			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
+			e);
 
 		// MyPage5: PageParameter and default constructor
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class, new PageParameters()).getClass());
 
-		// String: Illegal String parameter constructor only
-		e = null;
-		try
-		{
-			factory.newPage(String.class, new PageParameters()).getClass();
-		}
-		catch (ClassCastException ex)
-		{
-			e = ex;
-		}
 
-		assertNotNull("String does not extend Page. Should have thrown an exception", e);
 	}
 }

@@ -84,7 +84,7 @@ public abstract class Delta extends ToString
 
 	protected Chunk revised;
 
-	static Class[][] DeltaClass;
+	static Class<?>[][] DeltaClass;
 
 	static
 	{
@@ -114,7 +114,7 @@ public abstract class Delta extends ToString
 	 */
 	public static Delta newDelta(Chunk orig, Chunk rev)
 	{
-		Class c = DeltaClass[orig.size() > 0 ? 1 : 0][rev.size() > 0 ? 1 : 0];
+		Class<?> c = DeltaClass[orig.size() > 0 ? 1 : 0][rev.size() > 0 ? 1 : 0];
 		Delta result;
 		try
 		{
@@ -166,7 +166,7 @@ public abstract class Delta extends ToString
 	 * @throws PatchFailedException
 	 *             if the patch cannot be applied.
 	 */
-	public abstract void verify(List target) throws PatchFailedException;
+	public abstract void verify(List<Object> target) throws PatchFailedException;
 
 	/**
 	 * Applies this delta as a patch to the given text.
@@ -176,7 +176,7 @@ public abstract class Delta extends ToString
 	 * @throws PatchFailedException
 	 *             if the patch cannot be applied.
 	 */
-	public final void patch(List target) throws PatchFailedException
+	public final void patch(List<Object> target) throws PatchFailedException
 	{
 		verify(target);
 		try
@@ -197,7 +197,7 @@ public abstract class Delta extends ToString
 	 * @throws PatchFailedException
 	 *             if the patch cannot be applied.
 	 */
-	public abstract void applyTo(List target);
+	public abstract void applyTo(List<Object> target);
 
 	/**
 	 * Converts this delta into its Unix diff style string representation.
@@ -206,6 +206,7 @@ public abstract class Delta extends ToString
 	 *            a {@link StringBuffer StringBuffer} to which the string representation will be
 	 *            appended.
 	 */
+	@Override
 	public void toString(StringBuffer s)
 	{
 		original.rangeString(s);

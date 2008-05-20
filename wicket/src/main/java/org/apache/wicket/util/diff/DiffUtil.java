@@ -57,8 +57,8 @@ public final class DiffUtil
 	 *            The name of the expected result file to be created
 	 * @throws IOException
 	 */
-	public final static void replaceExpectedResultFile(final String document, final Class clazz,
-			final String file) throws IOException
+	public final static void replaceExpectedResultFile(final String document, final Class<?> clazz,
+		final String file) throws IOException
 	{
 		String filename = clazz.getPackage().getName();
 		filename = filename.replace('.', '/');
@@ -86,8 +86,8 @@ public final class DiffUtil
 	 * @return true, if equal
 	 * @throws IOException
 	 */
-	public static final boolean validatePage(String document, final Class clazz, final String file,
-			boolean failWithAssert) throws IOException
+	public static final boolean validatePage(String document, final Class<?> clazz,
+		final String file, boolean failWithAssert) throws IOException
 	{
 		String filename = clazz.getPackage().getName();
 		filename = filename.replace('.', '/');

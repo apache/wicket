@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.lang;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,6 +88,29 @@ public class Generics
 		return new HashMap<K, V>(capacity);
 	}
 
+	/**
+	 * Creates a new ArrayList
+	 * 
+	 * @param <T>
+	 * @param capacity
+	 *            initial capacity
+	 * @return array list
+	 */
+	public static <T> ArrayList<T> newArrayList(int capacity)
+	{
+		return new ArrayList<T>(capacity);
+	}
+
+	/**
+	 * Creates a new ArrayList
+	 * 
+	 * @param <T>
+	 * @return array list
+	 */
+	public static <T> ArrayList<T> newArrayList()
+	{
+		return new ArrayList<T>();
+	}
 
 	/**
 	 * Creates a new ConcurrentHashMap

@@ -19,7 +19,6 @@ package org.apache.wicket.session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IPageFactory;
@@ -28,6 +27,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.util.lang.Generics;
 
 
 /**
@@ -42,25 +42,25 @@ import org.apache.wicket.markup.MarkupException;
 public final class DefaultPageFactory implements IPageFactory
 {
 	/** Map of Constructors for Page subclasses */
-	private final Map<Class, Constructor> constructorForClass = new ConcurrentHashMap<Class, Constructor>();
+	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
 	 * @see IPageFactory#newPage(Class)
 	 */
-	public final Page newPage(final Class pageClass)
+	public final Page<?> newPage(final Class<? extends Page<?>> pageClass)
 	{
 		try
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			final Constructor constructor = pageClass.getConstructor((Class[])null);
+			final Constructor<? extends Page<?>> constructor = pageClass.getConstructor((Class[])null);
 
 			return newPage(constructor, null);
 		}
 		catch (NoSuchMethodException e)
 		{
 			// a bit of a hack here..
-			Constructor constructor = constructor(pageClass, PageParameters.class);
+			Constructor<?> constructor = constructor(pageClass, PageParameters.class);
 			if (constructor != null)
 			{
 				return newPage(constructor, new PageParameters());
@@ -76,10 +76,11 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
-	public final Page newPage(final Class pageClass, final PageParameters parameters)
+	public final Page<?> newPage(final Class<? extends Page<?>> pageClass,
+		final PageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
-		Constructor constructor = constructor(pageClass, PageParameters.class);
+		Constructor<?> constructor = constructor(pageClass, PageParameters.class);
 
 		// If we got a PageParameters constructor
 		if (constructor != null)
@@ -102,10 +103,11 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final Constructor constructor(final Class pageClass, final Class<PageParameters> argumentType)
+	private final Constructor<?> constructor(final Class<? extends Page<?>> pageClass,
+		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor constructor = constructorForClass.get(pageClass);
+		Constructor<?> constructor = constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -139,14 +141,14 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final Page newPage(final Constructor constructor, final Object argument)
+	private final Page<?> newPage(final Constructor<?> constructor, final Object argument)
 	{
 		try
 		{
 			if (argument != null)
-				return (Page)constructor.newInstance(new Object[] { argument });
+				return (Page<?>)constructor.newInstance(new Object[] { argument });
 			else
-				return (Page)constructor.newInstance(new Object[] {});
+				return (Page<?>)constructor.newInstance(new Object[] {});
 		}
 		catch (InstantiationException e)
 		{
@@ -169,7 +171,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	private String createDescription(Constructor constructor, Object argument)
+	private String createDescription(Constructor<?> constructor, Object argument)
 	{
 		if (argument != null)
 			return "Can't instantiate page using constructor " + constructor + " and argument " +

@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Primitives;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public class LongValue implements Comparable, Serializable
+public class LongValue implements Comparable<LongValue>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,16 +55,14 @@ public class LongValue implements Comparable, Serializable
 	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
 	 *         than given <code>Object</code>'s value
 	 */
-	public final int compareTo(final Object object)
+	public final int compareTo(final LongValue that)
 	{
-		final LongValue that = (LongValue)object;
-
-		if (this.value < that.value)
+		if (value < that.value)
 		{
 			return -1;
 		}
 
-		if (this.value > that.value)
+		if (value > that.value)
 		{
 			return 1;
 		}
@@ -80,11 +78,12 @@ public class LongValue implements Comparable, Serializable
 	 * @return <code>true</code> if this <code>Object</code>'s value is equal to the given
 	 *         <code>Object</code>'s value
 	 */
+	@Override
 	public final boolean equals(final Object that)
 	{
 		if (that instanceof LongValue)
 		{
-			return this.value == ((LongValue)that).value;
+			return value == ((LongValue)that).value;
 		}
 
 		return false;
@@ -113,7 +112,7 @@ public class LongValue implements Comparable, Serializable
 	 */
 	public final boolean greaterThan(final LongValue that)
 	{
-		return this.value > that.value;
+		return value > that.value;
 	}
 
 	/**
@@ -121,6 +120,7 @@ public class LongValue implements Comparable, Serializable
 	 * 
 	 * @return hash code for this <code>Object</code>
 	 */
+	@Override
 	public final int hashCode()
 	{
 		return Primitives.hashCode(value);
@@ -136,7 +136,7 @@ public class LongValue implements Comparable, Serializable
 	 */
 	public final boolean lessThan(final long that)
 	{
-		return this.value < that;
+		return value < that;
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class LongValue implements Comparable, Serializable
 	 */
 	public final boolean lessThan(final LongValue that)
 	{
-		return this.value < that.value;
+		return value < that.value;
 	}
 
 	/**
@@ -157,6 +157,7 @@ public class LongValue implements Comparable, Serializable
 	 * 
 	 * @return a <code>String</code> representation of this <code>LongValue</code>
 	 */
+	@Override
 	public String toString()
 	{
 		return String.valueOf(value);

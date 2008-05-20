@@ -191,7 +191,7 @@ public class Diff extends ToString
 	 * @throws DifferentiationFailedException
 	 */
 	public static Revision diff(Object[] orig, Object[] rev, DiffAlgorithm algorithm)
-			throws DifferentiationFailedException
+		throws DifferentiationFailedException
 	{
 		if (orig == null || rev == null)
 		{
@@ -305,7 +305,7 @@ public class Diff extends ToString
 	 */
 	public static Object[] randomEdit(Object[] text, long seed)
 	{
-		List result = new ArrayList(Arrays.asList(text));
+		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
 		Random r = new Random(seed);
 		int nops = r.nextInt(10);
 		for (int i = 0; i < nops; i++)
@@ -351,7 +351,7 @@ public class Diff extends ToString
 	 */
 	public static Object[] shuffle(Object[] text, long seed)
 	{
-		List result = new ArrayList(Arrays.asList(text));
+		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
 		Collections.shuffle(result);
 		return result.toArray();
 	}

@@ -2178,7 +2178,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The class of page to create
 	 * @return The new page
 	 */
-	public final Page newPage(final Class<? extends Page> c)
+	public final Page<?> newPage(final Class<? extends Page<?>> c)
 	{
 		return getPageFactory().newPage(c);
 	}
@@ -2192,7 +2192,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Any parameters to pass to the constructor
 	 * @return The new page
 	 */
-	public final Page newPage(final Class<? extends Page> c, final PageParameters parameters)
+	public final Page<?> newPage(final Class<? extends Page<?>> c, final PageParameters parameters)
 	{
 		return getPageFactory().newPage(c, parameters);
 	}
