@@ -35,10 +35,13 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	/**
 	 * Construct.
 	 * 
+	 * @param <T>
+	 *            The component type.
+	 * 
 	 * @param componentClass
 	 *            The unauthorized component class
 	 */
-	public UnauthorizedInstantiationException(final Class<? extends Component> componentClass)
+	public <T extends Component<?>> UnauthorizedInstantiationException(final Class<T> componentClass)
 	{
 		super("Not authorized to instantiate class " + componentClass.getName());
 		componentClassName = componentClass.getName();
