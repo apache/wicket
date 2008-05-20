@@ -40,6 +40,7 @@ public class DiskPageStoreTest extends TestCase
 		DiskPageStore store = new DiskPageStore()
 		{
 			// Make sure that it's asynchronous, because that's what we are testing here.
+			@Override
 			protected boolean isSynchronous()
 			{
 				return false;
@@ -52,6 +53,21 @@ public class DiskPageStoreTest extends TestCase
 		store.destroy();
 
 		int activeThreadsAfter = Thread.activeCount();
+
+		// it can be that we are a bit to fast in this test.
+		// if it is not down by 1 yet sleep for 2 seconds to give it time to kill itself.
+		if (activeThreadsAfter != (activeThreadsBefore - 1))
+		{
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException e)
+			{
+				// ignore
+			}
+			activeThreadsAfter = Thread.activeCount();
+		}
 
 		assertEquals(activeThreadsBefore - 1, activeThreadsAfter);
 	}
