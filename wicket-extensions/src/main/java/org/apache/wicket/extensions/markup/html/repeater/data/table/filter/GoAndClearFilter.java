@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Objects;
@@ -31,9 +32,9 @@ public class GoAndClearFilter extends GoFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static final IModel defaultClearModel = new Model("clear");
+	protected static final IModel<String> defaultClearModel = new Model<String>("clear");
 
-	private final Button clear;
+	private final Button<String> clear;
 
 	private final Object originalState;
 
@@ -64,16 +65,18 @@ public class GoAndClearFilter extends GoFilter
 	 * @param clearModel
 	 *            model for the label of the 'clear' button
 	 */
-	public GoAndClearFilter(String id, FilterForm form, IModel goModel, IModel clearModel)
+	public GoAndClearFilter(String id, FilterForm form, IModel<String> goModel,
+		IModel<String> clearModel)
 	{
 		super(id, goModel);
 
 		originalState = Objects.cloneModel(form.getModelObject());
 
-		clear = new Button("clear", clearModel)
+		clear = new Button<String>("clear", clearModel)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onSubmit()
 			{
 				onClearSubmit(this);
@@ -88,7 +91,7 @@ public class GoAndClearFilter extends GoFilter
 	/**
 	 * @return button component representing the clear button
 	 */
-	protected Button getClearButton()
+	protected Button<String> getClearButton()
 	{
 		return clear;
 	}
@@ -100,9 +103,11 @@ public class GoAndClearFilter extends GoFilter
 	 *            the 'clear' button
 	 * 
 	 */
-	protected void onClearSubmit(Button button)
+	@SuppressWarnings("unchecked")
+	protected void onClearSubmit(Button<String> button)
 	{
-		button.getForm().setModelObject(Objects.cloneModel(originalState));
+		Form<Object> form = (Form<Object>)button.getForm();
+		form.setModelObject(Objects.cloneModel(originalState));
 	}
 
 }

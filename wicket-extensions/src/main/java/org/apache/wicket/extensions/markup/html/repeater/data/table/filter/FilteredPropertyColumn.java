@@ -28,9 +28,12 @@ import org.apache.wicket.model.PropertyModel;
  * @see IFilteredColumn
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
-public abstract class FilteredPropertyColumn extends PropertyColumn implements IFilteredColumn
+public abstract class FilteredPropertyColumn<T> extends PropertyColumn<T>
+	implements
+		IFilteredColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,8 +47,8 @@ public abstract class FilteredPropertyColumn extends PropertyColumn implements I
 	 * @param propertyExpression
 	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
-	public FilteredPropertyColumn(IModel displayModel, String sortProperty,
-			String propertyExpression)
+	public FilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
+		String propertyExpression)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 	}
@@ -56,7 +59,7 @@ public abstract class FilteredPropertyColumn extends PropertyColumn implements I
 	 * @param propertyExpression
 	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
-	public FilteredPropertyColumn(IModel displayModel, String propertyExpression)
+	public FilteredPropertyColumn(IModel<String> displayModel, String propertyExpression)
 	{
 		super(displayModel, propertyExpression);
 	}

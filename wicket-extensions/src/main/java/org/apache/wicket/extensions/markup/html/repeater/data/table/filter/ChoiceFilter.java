@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
@@ -33,14 +32,16 @@ import org.apache.wicket.model.Model;
  * @see DropDownChoice
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model object type
  * 
  */
-public class ChoiceFilter extends AbstractFilter
+public class ChoiceFilter<T> extends AbstractFilter<T>
 {
 	private static final long serialVersionUID = 1L;
 	private static final IChoiceRenderer defaultRenderer = new ChoiceRenderer();
 
-	private final DropDownChoice choice;
+	private final DropDownChoice<T> choice;
 
 	/**
 	 * @param id
@@ -49,7 +50,8 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices, boolean autoSubmit)
+	public ChoiceFilter(String id, IModel<T> model, FilterForm form,
+		IModel<List<? extends T>> choices, boolean autoSubmit)
 	{
 		this(id, model, form, choices, defaultRenderer, autoSubmit);
 	}
@@ -61,9 +63,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, List choices, boolean autoSubmit)
+	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
+		boolean autoSubmit)
 	{
-		this(id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
+		this(id, model, form, Model.valueOf(choices), defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -74,10 +77,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param renderer
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
-			IChoiceRenderer renderer, boolean autoSubmit)
+	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
+		IChoiceRenderer<T> renderer, boolean autoSubmit)
 	{
-		this(id, model, form, new Model((Serializable)choices), renderer, autoSubmit);
+		this(id, model, form, Model.valueOf(choices), renderer, autoSubmit);
 	}
 
 
@@ -96,8 +99,8 @@ public class ChoiceFilter extends AbstractFilter
 	 *            if true this filter will submit the form on selection change
 	 * @see DropDownChoice
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
-			IChoiceRenderer renderer, boolean autoSubmit)
+	public ChoiceFilter(String id, IModel<T> model, FilterForm form,
+		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer, boolean autoSubmit)
 	{
 		super(id, form);
 
@@ -105,7 +108,8 @@ public class ChoiceFilter extends AbstractFilter
 
 		if (autoSubmit)
 		{
-			choice.add(new AttributeModifier("onchange", true, new Model("this.form.submit();")));
+			choice.add(new AttributeModifier("onchange", true, new Model<String>(
+				"this.form.submit();")));
 		}
 		enableFocusTracking(choice);
 
@@ -125,16 +129,16 @@ public class ChoiceFilter extends AbstractFilter
 	 *            choice renderer
 	 * @return created drop down component
 	 */
-	protected DropDownChoice newDropDownChoice(String id, IModel model, IModel choices,
-			IChoiceRenderer renderer)
+	protected DropDownChoice<T> newDropDownChoice(String id, IModel<T> model,
+		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
-		return new DropDownChoice(id, model, choices, renderer);
+		return new DropDownChoice<T>(id, model, choices, renderer);
 	}
 
 	/**
 	 * @return the DropDownChoice form component created to represent this filter
 	 */
-	public DropDownChoice getChoice()
+	public DropDownChoice<T> getChoice()
 	{
 		return choice;
 	}

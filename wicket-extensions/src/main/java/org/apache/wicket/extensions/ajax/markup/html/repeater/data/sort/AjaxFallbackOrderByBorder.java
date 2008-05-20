@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxFallbackOrderByBorder extends Border
+public abstract class AjaxFallbackOrderByBorder extends Border<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
-				null);
+			null);
 	}
 
 
@@ -60,7 +60,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param cssProvider
 	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-			AjaxFallbackOrderByLink.ICssProvider cssProvider)
+		AjaxFallbackOrderByLink.ICssProvider cssProvider)
 	{
 		this(id, property, stateLocator, cssProvider, null);
 	}
@@ -75,10 +75,10 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param decorator
 	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-			IAjaxCallDecorator decorator)
+		IAjaxCallDecorator decorator)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
-				decorator);
+			decorator);
 	}
 
 
@@ -92,20 +92,22 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param decorator
 	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-			AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
+		AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
 	{
 		super(id);
 		AjaxFallbackOrderByLink link = new AjaxFallbackOrderByLink("orderByLink", property,
-				stateLocator, cssProvider, decorator)
+			stateLocator, cssProvider, decorator)
 		{
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSortChanged()
 			{
 				AjaxFallbackOrderByBorder.this.onSortChanged();
 			}
 
+			@Override
 			protected void onAjaxClick(AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);

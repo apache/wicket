@@ -29,11 +29,11 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NavigationToolbar extends AbstractToolbar
+public class NavigationToolbar extends AbstractToolbar<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	private DataTable table;
+	private final DataTable<?> table;
 
 	/**
 	 * Constructor
@@ -41,15 +41,15 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NavigationToolbar(final DataTable table)
+	public NavigationToolbar(final DataTable<?> table)
 	{
 		super(table);
 		this.table = table;
 
-		WebMarkupContainer span = new WebMarkupContainer("span");
+		WebMarkupContainer<?> span = new WebMarkupContainer<Void>("span");
 		add(span);
-		span.add(new AttributeModifier("colspan", true, new Model(String
-				.valueOf(table.getColumns().length))));
+		span.add(new AttributeModifier("colspan", true, new Model<String>(
+			String.valueOf(table.getColumns().length))));
 
 		span.add(newPagingNavigator("navigator", table));
 		span.add(newNavigatorLabel("navigatorLabel", table));
@@ -65,7 +65,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 *            dataview used by datatable
 	 * @return paging navigator that will be used to navigate the data table
 	 */
-	protected PagingNavigator newPagingNavigator(String navigatorId, final DataTable table)
+	protected PagingNavigator newPagingNavigator(String navigatorId, final DataTable<?> table)
 	{
 		return new PagingNavigator(navigatorId, table);
 	}
@@ -80,7 +80,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(String navigatorId, final DataTable table)
+	protected WebComponent<?> newNavigatorLabel(String navigatorId, final DataTable<?> table)
 	{
 		return new NavigatorLabel(navigatorId, table);
 	}
@@ -90,6 +90,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * 
 	 * @see org.apache.wicket.Component#isVisible()
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return table.getPageCount() > 1;

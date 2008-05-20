@@ -36,8 +36,10 @@ import org.apache.wicket.model.IModel;
  * @see NoRecordsToolbar
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            The model object type
  */
-public class DefaultDataTable extends DataTable
+public class DefaultDataTable<T> extends DataTable<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,10 +55,10 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final List/* <IColumn> */columns,
-			ISortableDataProvider dataProvider, int rowsPerPage)
+	public DefaultDataTable(String id, final List<IColumn<?>> columns,
+		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
-		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
+		this(id, columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
 	}
 
 	/**
@@ -71,8 +73,8 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final IColumn[] columns, ISortableDataProvider dataProvider,
-			int rowsPerPage)
+	public DefaultDataTable(String id, final IColumn<?>[] columns,
+		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 
@@ -81,9 +83,10 @@ public class DefaultDataTable extends DataTable
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
-	protected Item newRowItem(String id, int index, IModel model)
+	@Override
+	protected Item<T> newRowItem(String id, int index, IModel<T> model)
 	{
-		return new OddEvenItem(id, index, model);
+		return new OddEvenItem<T>(id, index, model);
 	}
 
 }

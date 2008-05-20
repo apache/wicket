@@ -34,12 +34,12 @@ import org.apache.wicket.model.ResourceModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NoRecordsToolbar extends AbstractToolbar
+public class NoRecordsToolbar extends AbstractToolbar<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final IModel DEFAULT_MESSAGE_MODEL = new ResourceModel(
-			"datatable.no-records-found", "No Records Found");
+	private static final IModel<String> DEFAULT_MESSAGE_MODEL = new ResourceModel(
+		"datatable.no-records-found", "No Records Found");
 
 	/**
 	 * Constructor
@@ -47,7 +47,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NoRecordsToolbar(final DataTable table)
+	public NoRecordsToolbar(final DataTable<?> table)
 	{
 		this(table, DEFAULT_MESSAGE_MODEL);
 	}
@@ -58,15 +58,15 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param messageModel
 	 *            model that will be used to display the "no records found" message
 	 */
-	public NoRecordsToolbar(final DataTable table, IModel messageModel)
+	public NoRecordsToolbar(final DataTable<?> table, IModel<String> messageModel)
 	{
 		super(table);
-		WebMarkupContainer td = new WebMarkupContainer("td");
+		WebMarkupContainer<?> td = new WebMarkupContainer<Void>("td");
 		add(td);
 
-		td.add(new AttributeModifier("colspan", true, new Model(String
-				.valueOf(table.getColumns().length))));
-		td.add(new Label("msg", messageModel));
+		td.add(new AttributeModifier("colspan", true, new Model<String>(
+			String.valueOf(table.getColumns().length))));
+		td.add(new Label<String>("msg", messageModel));
 	}
 
 	/**
@@ -74,6 +74,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * 
 	 * @see org.apache.wicket.Component#isVisible()
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return getTable().getRowCount() == 0;

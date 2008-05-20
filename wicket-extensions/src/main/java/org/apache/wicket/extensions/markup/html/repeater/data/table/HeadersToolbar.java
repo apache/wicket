@@ -31,7 +31,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class HeadersToolbar extends AbstractToolbar
+public class HeadersToolbar extends AbstractToolbar<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,30 +43,28 @@ public class HeadersToolbar extends AbstractToolbar
 	 * @param stateLocator
 	 *            locator for the ISortState implementation used by sortable headers
 	 */
-	public HeadersToolbar(final DataTable table, final ISortStateLocator stateLocator)
+	public HeadersToolbar(final DataTable<?> table, final ISortStateLocator stateLocator)
 	{
 		super(table);
 
 
-		RepeatingView headers = new RepeatingView("headers");
+		RepeatingView<?> headers = new RepeatingView<Void>("headers");
 		add(headers);
 
-		final IColumn[] columns = table.getColumns();
-		for (int i = 0; i < columns.length; i++)
+		final IColumn<?>[] columns = table.getColumns();
+		for (final IColumn<?> column : columns)
 		{
-			final IColumn column = columns[i];
-
-			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
+			WebMarkupContainer<?> item = new WebMarkupContainer<Void>(headers.newChildId());
 			headers.add(item);
 
-			WebMarkupContainer header = null;
+			WebMarkupContainer<?> header = null;
 			if (column.isSortable())
 			{
 				header = newSortableHeader("header", column.getSortProperty(), stateLocator);
 			}
 			else
 			{
-				header = new WebMarkupContainer("header");
+				header = new WebMarkupContainer<Void>("header");
 			}
 
 			if (column instanceof IStyledColumn)
@@ -75,9 +73,10 @@ public class HeadersToolbar extends AbstractToolbar
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					protected String getCssClass()
 					{
-						return ((IStyledColumn)column).getCssClass();
+						return ((IStyledColumn<?>)column).getCssClass();
 					}
 				});
 			}
@@ -101,7 +100,7 @@ public class HeadersToolbar extends AbstractToolbar
 	 *            sort state locator
 	 * @return created header component
 	 */
-	protected WebMarkupContainer newSortableHeader(String headerId, String property,
+	protected WebMarkupContainer<?> newSortableHeader(String headerId, String property,
 		ISortStateLocator locator)
 	{
 		return new OrderByBorder(headerId, property, locator)
@@ -109,6 +108,7 @@ public class HeadersToolbar extends AbstractToolbar
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSortChanged()
 			{
 				getTable().setCurrentPage(0);

@@ -27,9 +27,11 @@ import org.apache.wicket.model.PropertyModel;
  * the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The column's model object type
  * 
  */
-public class TextFilteredPropertyColumn extends FilteredPropertyColumn
+public class TextFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,8 +40,8 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @param sortProperty
 	 * @param propertyExpression
 	 */
-	public TextFilteredPropertyColumn(IModel displayModel, String sortProperty,
-			String propertyExpression)
+	public TextFilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
+		String propertyExpression)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 	}
@@ -48,7 +50,7 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @param displayModel
 	 * @param propertyExpression
 	 */
-	public TextFilteredPropertyColumn(IModel displayModel, String propertyExpression)
+	public TextFilteredPropertyColumn(IModel<String> displayModel, String propertyExpression)
 	{
 		super(displayModel, propertyExpression);
 	}
@@ -57,9 +59,9 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component<T> getFilter(String componentId, FilterForm form)
 	{
-		return new TextFilter(componentId, getFilterModel(form), form);
+		return new TextFilter<T>(componentId, getFilterModel(form), form);
 	}
 
 	/**
@@ -70,9 +72,9 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel getFilterModel(FilterForm form)
+	protected IModel<T> getFilterModel(FilterForm form)
 	{
-		return new PropertyModel(form.getModel(), getPropertyExpression());
+		return new PropertyModel<T>(form.getModel(), getPropertyExpression());
 	}
 
 
