@@ -20,6 +20,8 @@ package org.apache.wicket.model;
  * Interface implemented by model that can provide class of the model object.
  * 
  * @author Matej Knopp
+ * @param <T>
+ *            The model object type
  */
 public interface IObjectClassAwareModel<T> extends IModel<T>
 {

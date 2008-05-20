@@ -214,11 +214,11 @@ public class Model<T extends Serializable> implements IModel<T>
 	// deprecation release.
 	/**
 	 * @param component
-	 * @return
+	 * @return the model object
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
 	@Deprecated
-	public final Object getObject(Component component)
+	public final Object getObject(Component<?> component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -229,7 +229,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
 	@Deprecated
-	public final void setObject(Component component, Object object)
+	public final void setObject(Component<?> component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

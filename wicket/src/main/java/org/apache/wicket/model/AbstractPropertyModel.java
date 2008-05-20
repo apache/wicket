@@ -144,6 +144,7 @@ public abstract class AbstractPropertyModel<T>
 	 *            The object that will be used when setting a value on the model object
 	 * @see IModel#setObject(T)
 	 */
+	@SuppressWarnings("unchecked")
 	public void setObject(T object)
 	{
 		final String expression = propertyExpression();
@@ -153,7 +154,7 @@ public abstract class AbstractPropertyModel<T>
 			// why not just set the target to the object?
 			if (target instanceof IModel)
 			{
-				((IModel)target).setObject(object);
+				((IModel<T>)target).setObject(object);
 			}
 			else
 			{
@@ -189,7 +190,7 @@ public abstract class AbstractPropertyModel<T>
 		Object object = target;
 		while (object instanceof IModel)
 		{
-			Object tmp = ((IModel)object).getObject();
+			Object tmp = ((IModel<?>)object).getObject();
 			if (tmp == object)
 				break;
 			object = tmp;
@@ -307,7 +308,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #getObject()} instead
 	 */
 	@Deprecated
-	protected final Object onGetObject(Component component)
+	protected final Object onGetObject(Component<?> component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -320,7 +321,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #setObject(Object)} instead
 	 */
 	@Deprecated
-	protected final void onSetObject(Component component, Object object)
+	protected final void onSetObject(Component<?> component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -27,6 +27,8 @@ package org.apache.wicket.model;
  * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model object type
  */
 public interface IWrapModel<T> extends IModel<T>
 {
@@ -35,5 +37,5 @@ public interface IWrapModel<T> extends IModel<T>
 	 * 
 	 * @return The wrapped model
 	 */
-	IModel< ? > getWrappedModel();
+	IModel<?> getWrappedModel();
 }
