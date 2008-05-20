@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,6 +27,8 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -202,15 +201,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 					// encrypt the query string
 					String encryptedQueryString = urlCrypt.encryptUrlSafe(queryString);
 
-					try
-					{
-						encryptedQueryString = URLEncoder.encode(encryptedQueryString, Application
-								.get().getRequestCycleSettings().getResponseRequestEncoding());
-					}
-					catch (UnsupportedEncodingException ex)
-					{
-						throw new WicketRuntimeException(ex);
-					}
+                    encryptedQueryString = WicketURLEncoder.QUERY_INSTANCE.encode(encryptedQueryString);
 
 					// build the new complete url
 					return new AppendingStringBuffer(urlPrefix).append("?x=").append(
@@ -249,8 +240,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 					secureParam = url.substring(startIndex, endIndex);
 				}
 
-				secureParam = URLDecoder.decode(secureParam, Application.get()
-						.getRequestCycleSettings().getResponseRequestEncoding());
+				secureParam = WicketURLDecoder.QUERY_INSTANCE.decode(secureParam);
 
 				// Get the crypt implementation from the application
 				final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory()
@@ -391,15 +381,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// Remove the 'x' parameter which contains ALL the encoded params
 			parameterMap.remove("x");
 			String decodedParamReplacement = encodedParamReplacement;
-			try
-			{
-				decodedParamReplacement = URLDecoder.decode(encodedParamReplacement, Application
-						.get().getRequestCycleSettings().getResponseRequestEncoding());
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				log.error("error decoding url: " + encodedParamReplacement, ex);
-			}
+            decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(encodedParamReplacement);
 
 			// Add ALL of the params from the decoded 'x' param
 			ValueMap params = new ValueMap();

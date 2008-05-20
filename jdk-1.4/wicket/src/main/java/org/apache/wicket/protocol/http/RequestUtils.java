@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -51,22 +51,53 @@ public final class RequestUtils
 		for (int t = 0; t < paramTuples.length; t++)
 		{
 			final String[] bits = paramTuples[t].split("=");
-			try
+			if (bits.length == 2)
 			{
-				if (bits.length == 2)
-				{
-					params.add(URLDecoder.decode(bits[0], "UTF-8"), URLDecoder.decode(bits[1],
-						"UTF-8"));
-				}
-				else
-				{
-					params.add(URLDecoder.decode(bits[0], "UTF-8"), "");
-				}
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
+					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
 			}
-			catch (UnsupportedEncodingException e)
+			else
 			{
-				// Should never happen
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
 			}
+		}
+	}
+
+	public static void decodeUrlParameters(String queryString, Map parameters)
+	{
+		Map temp = new HashMap();
+		final String[] paramTuples = queryString.split("&");
+		for (int t = 0; t < paramTuples.length; t++)
+		{
+			final String[] bits = paramTuples[t].split("=");
+			final String key;
+			final String value;
+			key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
+			if (bits.length == 2)
+			{
+				value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
+			}
+			else
+			{
+				value = "";
+			}
+			List l = (List)temp.get(key);
+			if (l == null)
+			{
+				l = new ArrayList();
+				temp.put(key, l);
+			}
+			l.add(value);
+		}
+
+		Iterator entries = temp.entrySet().iterator();
+		while (entries.hasNext())
+		{
+			Map.Entry entry = (Entry)entries.next();
+			List lst = (List)entry.getValue();
+			String s[] = new String[lst.size()];
+			lst.toArray(s);
+			parameters.put(entry.getKey(), s);
 		}
 	}
 
@@ -110,40 +141,19 @@ public final class RequestUtils
 	}
 
 	/**
-	 * Does a URLDecoder.decode() in UTF-8
-	 * 
-	 * @param path
-	 * @return
+	 * @deprecated Use {@link WicketURLDecoder} instead.
 	 */
 	public static String decode(String path)
 	{
-		try
-		{
-			return URLDecoder.decode(path, "UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return WicketURLDecoder.QUERY_INSTANCE.decode(path);
 	}
 
 	/**
-	 * Does a URLEncoder.encode() in UTF-8
-	 * 
-	 * @param value
-	 *            value to be encoded
-	 * @return encoded value
+	 * @deprecated Use {@link WicketURLEncoder} instead.
 	 */
 	public static String encode(String value)
 	{
-		try
-		{
-			return URLEncoder.encode(value, "UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**
