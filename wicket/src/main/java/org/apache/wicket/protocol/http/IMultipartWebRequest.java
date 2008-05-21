@@ -31,7 +31,7 @@ public interface IMultipartWebRequest
 	/**
 	 * @return Returns the files.
 	 */
-	public Map getFiles();
+	public Map<String, FileItem> getFiles();
 
 	/**
 	 * Gets the file that was uploaded using the given field name.

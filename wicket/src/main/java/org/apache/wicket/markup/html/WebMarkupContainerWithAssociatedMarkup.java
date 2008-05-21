@@ -79,8 +79,8 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public HeaderPartContainer< ? > newHeaderPartContainer(final String id, final String scope)
+	public HeaderPartContainer newHeaderPartContainer(final String id, final String scope)
 	{
-		return new HeaderPartContainer<Object>(id, this, scope);
+		return new HeaderPartContainer(id, this, scope);
 	}
 }

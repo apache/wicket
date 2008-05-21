@@ -41,9 +41,11 @@ public final class FrameTarget implements IClusterable
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param frameClass
 	 */
-	public FrameTarget(Class<? extends Page<?>> frameClass)
+	public <C extends Page<?>> FrameTarget(Class<C> frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -61,10 +63,12 @@ public final class FrameTarget implements IClusterable
 	/**
 	 * Sets frame class.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public void setFrameClass(Class<? extends Page<?>> frameClass)
+	public <C extends Page<?>> void setFrameClass(Class<C> frameClass)
 	{
 		this.frameClass = frameClass;
 	}

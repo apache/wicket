@@ -499,14 +499,16 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to Wicket 1.3
 	 * 
+	 * @param <C>
+	 * 
 	 * @param containerClass
 	 * @return nothing
 	 * @throws IllegalStateException
 	 *             throws an {@link IllegalStateException}
 	 */
 	// TODO remove after release 1.3.0
-	public final IResourceStream newMarkupResourceStream(
-		Class<? extends Component<?>> containerClass)
+	public final <C extends Component<?>> IResourceStream newMarkupResourceStream(
+		Class<C> containerClass)
 	{
 		throw new IllegalStateException(
 			"this method is not used any more (and shouldn't be called by clients anyway)");

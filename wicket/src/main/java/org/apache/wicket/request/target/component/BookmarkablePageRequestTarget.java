@@ -49,10 +49,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(Class<? extends Page<?>> pageClass)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass)
 	{
 		this(null, pageClass);
 	}
@@ -60,12 +62,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(Class<? extends Page<?>> pageClass,
+	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass,
 		PageParameters pageParameters)
 	{
 		this(null, pageClass, pageParameters);
@@ -74,13 +78,15 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageMapName
 	 *            optional page map name
 	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class<? extends Page<?>> pageClass)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass)
 	{
 		this(null, pageClass, null);
 	}
@@ -95,8 +101,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class<? extends Page<?>> pageClass,
-		PageParameters pageParameters)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName,
+		Class<C> pageClass, PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -256,7 +262,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            request cycle
 	 * @return new instance of page
 	 */
-	protected Page<?> newPage(final Class<? extends Page<?>> pageClass,
+	protected <C extends Page<?>> Page<?> newPage(final Class<C> pageClass,
 		final RequestCycle requestCycle)
 	{
 		// Construct a new instance using the default page factory

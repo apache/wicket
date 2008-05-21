@@ -47,7 +47,7 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class)
 	 */
-	public final Page<?> newPage(final Class<? extends Page<?>> pageClass)
+	public final <C extends Page<?>> Page<?> newPage(final Class<C> pageClass)
 	{
 		try
 		{
@@ -76,7 +76,7 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
-	public final Page<?> newPage(final Class<? extends Page<?>> pageClass,
+	public final <C extends Page<?>> Page<?> newPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
@@ -96,6 +96,8 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * Looks up a one-arg Page constructor by class and argument type.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            The class of page
 	 * @param argumentType
@@ -103,7 +105,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final Constructor<?> constructor(final Class<? extends Page<?>> pageClass,
+	private final <C extends Page<?>> Constructor<?> constructor(final Class<C> pageClass,
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache

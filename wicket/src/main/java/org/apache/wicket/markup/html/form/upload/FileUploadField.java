@@ -34,7 +34,7 @@ import org.apache.wicket.util.upload.FileItem;
  * 
  * @author Eelco Hillenius
  */
-public class FileUploadField extends FormComponent
+public class FileUploadField extends FormComponent<FileUpload>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class FileUploadField extends FormComponent
 	 * @param model
 	 *            See Component
 	 */
-	public FileUploadField(final String id, IModel model)
+	public FileUploadField(final String id, IModel<FileUpload> model)
 	{
 		super(id, model);
 		hasExplicitModel = true;
@@ -96,7 +96,7 @@ public class FileUploadField extends FormComponent
 	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public FileUploadField setModel(IModel model)
+	public FileUploadField setModel(IModel<FileUpload> model)
 	{
 		hasExplicitModel = true;
 		return (FileUploadField)super.setModel(model);

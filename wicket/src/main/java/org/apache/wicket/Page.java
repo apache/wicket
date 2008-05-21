@@ -809,6 +809,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * Convenience method. Search for children of type fromClass and invoke their respective
 	 * removePersistedFormData() methods.
 	 * 
+	 * @param <C>
+	 * 
 	 * @see Form#removePersistentFormComponentValues(boolean)
 	 * 
 	 * @param formClass
@@ -817,7 +819,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
 	 */
-	public final void removePersistedFormData(final Class<? extends Form<?>> formClass,
+	public final <C extends Form<?>> void removePersistedFormData(final Class<C> formClass,
 		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form

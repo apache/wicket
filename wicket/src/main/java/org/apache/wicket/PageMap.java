@@ -227,7 +227,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	public final void redirectToInterceptPage(final Class<? extends Page<?>> pageClazz)
+	public final <T extends Page<?>> void redirectToInterceptPage(final Class<T> pageClazz)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);

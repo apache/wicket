@@ -470,10 +470,12 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * Constructor.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param page
 	 *            the page where the sources need to be shown from.
 	 */
-	public SourcesPage(Class<? extends Page<?>> page)
+	public <C extends Page<?>> SourcesPage(Class<C> page)
 	{
 		this.page = page;
 

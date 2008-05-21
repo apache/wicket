@@ -54,6 +54,7 @@ public abstract class WicketTestCase extends TestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
@@ -62,6 +63,7 @@ public abstract class WicketTestCase extends TestCase
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -71,11 +73,14 @@ public abstract class WicketTestCase extends TestCase
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
 	 * expected output file.
 	 * 
+	 * @param <T>
+	 * 
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename) throws Exception
+	protected <T extends Page<?>> void executeTest(final Class<T> pageClass, final String filename)
+		throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
@@ -88,13 +93,15 @@ public abstract class WicketTestCase extends TestCase
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
 	 * expected output file.
 	 * 
+	 * @param <T>
+	 * 
 	 * @param pageClass
 	 * @param parameters
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, PageParameters parameters,
-			final String filename) throws Exception
+	protected <T extends Page<?>> void executeTest(final Class<T> pageClass,
+		PageParameters parameters, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
@@ -110,13 +117,13 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedListener(final Class clazz, final Component component,
-			final String filename) throws Exception
+	protected void executedListener(final Class<?> clazz, final Component<?> component,
+		final String filename) throws Exception
 	{
 		assertNotNull(component);
 
 		System.out.println("=== " + clazz.getName() + " : " + component.getPageRelativePath() +
-				" ===");
+			" ===");
 
 		tester.executeListener(component);
 		tester.assertResultPage(clazz, filename);
@@ -129,8 +136,8 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedBehavior(final Class clazz, final AbstractAjaxBehavior behavior,
-			final String filename) throws Exception
+	protected void executedBehavior(final Class<?> clazz, final AbstractAjaxBehavior behavior,
+		final String filename) throws Exception
 	{
 		assertNotNull(behavior);
 

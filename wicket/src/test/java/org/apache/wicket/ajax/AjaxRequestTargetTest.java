@@ -77,13 +77,13 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		executeHeaderTest(MockComponent3.class, "MockComponent3-expected.html");
 	}
 
-	private void executeHeaderTest(final Class<? extends Component<?>> componentClass)
+	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass)
 		throws IOException
 	{
 		executeHeaderTest(componentClass, null);
 	}
 
-	private void executeHeaderTest(final Class<? extends Component<?>> componentClass,
+	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass,
 		String expectedFile) throws IOException
 	{
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();

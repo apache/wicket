@@ -94,10 +94,11 @@ public class StatelessFormTest extends TestCase
 	}
 
 	/**
+	 * @param <C>
 	 * @param homePage
 	 *            The homePage to set.
 	 */
-	public void setHomePage(Class<? extends Page<?>> homePage)
+	public <C extends Page<?>> void setHomePage(Class<C> homePage)
 	{
 		this.homePage = homePage;
 	}
@@ -111,10 +112,11 @@ public class StatelessFormTest extends TestCase
 	}
 
 	/**
+	 * @param <C>
 	 * @param loginPage
 	 *            The loginPage to set.
 	 */
-	public void setLoginPage(Class<? extends Page<?>> loginPage)
+	public <C extends Page<?>> void setLoginPage(Class<C> loginPage)
 	{
 		this.loginPage = loginPage;
 	}

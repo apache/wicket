@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.library;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -62,7 +61,6 @@ public final class LibraryApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void init()
 	{
@@ -72,7 +70,7 @@ public final class LibraryApplication extends WicketExampleApplication
 		// Install a simple page authorization strategy, that checks all pages
 		// of type AuthenticatedWebPage.
 		IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
-			(Class)AuthenticatedWebPage.class, SignIn.class)
+			AuthenticatedWebPage.class, SignIn.class)
 		{
 			@Override
 			protected boolean isAuthorized()

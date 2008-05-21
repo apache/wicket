@@ -62,7 +62,7 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public String loadStringResource(final Class clazz, final String key, final Locale locale,
+	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
 		if (clazz == null)
@@ -87,7 +87,7 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
 			while (iter.hasNext())
 			{
-				String newPath = (String)iter.next();
+				String newPath = iter.next();
 
 				final Properties props = propertiesFactory.load(clazz, newPath);
 				if (props != null)
@@ -119,7 +119,7 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
-	public String loadStringResource(final Component component, final String key)
+	public String loadStringResource(final Component<?> component, final String key)
 	{
 		if (component == null)
 		{

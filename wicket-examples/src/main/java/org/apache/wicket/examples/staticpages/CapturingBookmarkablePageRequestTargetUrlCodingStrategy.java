@@ -34,12 +34,15 @@ public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy extends
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * @param <D>
+	 * 
 	 * @param mountPath
 	 * @param capturedPageClass
 	 * @param displayedPageClass
 	 */
-	public CapturingBookmarkablePageRequestTargetUrlCodingStrategy(String mountPath,
-		Class<? extends Page<?>> capturedPageClass, Class<? extends Page<?>> displayedPageClass)
+	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTargetUrlCodingStrategy(
+		String mountPath, Class<C> capturedPageClass, Class<D> displayedPageClass)
 	{
 		super(mountPath, capturedPageClass, null);
 		this.displayedPageClass = displayedPageClass;

@@ -150,10 +150,12 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * Creates <code>WicketTester</code> and automatically creates a <code>WebApplication</code>.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
-	public BaseWicketTester(final Class<? extends Page<?>> homePage)
+	public <C extends Page<?>> BaseWicketTester(final Class<C> homePage)
 	{
 		this(new WebApplication()
 		{
@@ -287,11 +289,13 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * Renders a <code>Page</code> from its default constructor.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final Page<?> startPage(Class<? extends Page<?>> pageClass)
+	public final <C extends Page<?>> Page<?> startPage(Class<C> pageClass)
 	{
 		processRequestCycle(pageClass);
 		return getLastRenderedPage();
@@ -300,13 +304,15 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * Renders a <code>Page</code> from its default constructor.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
 	 * @param parameters
 	 *            the parameters to use for the class.
 	 * @return the rendered <code>Page</code>
 	 */
-	public final Page<?> startPage(Class<? extends Page<?>> pageClass, PageParameters parameters)
+	public final <C extends Page<?>> Page<?> startPage(Class<C> pageClass, PageParameters parameters)
 	{
 		processRequestCycle(pageClass, parameters);
 		return getLastRenderedPage();
@@ -379,11 +385,13 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code> constructor.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param panelClass
 	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel<?> startPanel(final Class<? extends Panel<?>> panelClass)
+	public final <C extends Panel<?>> Panel<?> startPanel(final Class<C> panelClass)
 	{
 		return (Panel<?>)startPage(new ITestPageSource()
 		{
@@ -505,13 +513,15 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * assert <code>PageLink</code> link to page class.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param path
 	 *            path to <code>PageLink</code> component
 	 * @param expectedPageClass
 	 *            expected page class to link
 	 * @return a <code>Result</code>
 	 */
-	public Result isPageLink(String path, Class<? extends Page<?>> expectedPageClass)
+	public <C extends Page<?>> Result isPageLink(String path, Class<C> expectedPageClass)
 	{
 		PageLink<?> pageLink = (PageLink<?>)getComponentFromLastRenderedPage(path);
 		try
@@ -538,13 +548,15 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * assert component class
 	 * 
+	 * @param <C>
+	 * 
 	 * @param path
 	 *            path to component
 	 * @param expectedComponentClass
 	 *            expected component class
 	 * @return a <code>Result</code>
 	 */
-	public Result isComponent(String path, Class<? extends Component<?>> expectedComponentClass)
+	public <C extends Component<?>> Result isComponent(String path, Class<C> expectedComponentClass)
 	{
 		Component<?> component = getComponentFromLastRenderedPage(path);
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
@@ -841,11 +853,13 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * FIXME explain why the code is so complicated to compare two classes, or simplify
 	 * 
+	 * @param <C>
+	 * 
 	 * @param expectedRenderedPageClass
 	 *            expected class of last rendered page
 	 * @return a <code>Result</code>
 	 */
-	public Result isRenderedPage(Class<? extends Page<?>> expectedRenderedPageClass)
+	public <C extends Page<?>> Result isRenderedPage(Class<C> expectedRenderedPageClass)
 	{
 		Page<?> page = getLastRenderedPage();
 		if (page == null)

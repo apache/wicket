@@ -50,11 +50,13 @@ public class AjaxDataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model<String>("ID"), "id"));
-		columns.add(new PropertyColumn(new Model<String>("First Name"), "firstName", "firstName"));
-		columns.add(new PropertyColumn(new Model<String>("Last Name"), "lastName", "lastName"));
-		columns.add(new PropertyColumn(new Model<String>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn(new Model<String>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Long>(new Model<String>("ID"), "id"));
+		columns.add(new PropertyColumn<String>(new Model<String>("First Name"), "firstName",
+			"firstName"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Last Name"), "lastName",
+			"lastName"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Cell Phone"), "cellPhone"));
 
 		add(new AjaxFallbackDefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
 	}

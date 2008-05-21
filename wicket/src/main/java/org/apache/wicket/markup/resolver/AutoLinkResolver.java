@@ -146,6 +146,8 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * Construct
 		 * 
+		 * @param <C>
+		 * 
 		 * @see BookmarkablePageLink#BookmarkablePageLink(String, Class, PageParameters)
 		 * 
 		 * @param id
@@ -153,9 +155,8 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param parameters
 		 * @param anchor
 		 */
-		public AutolinkBookmarkablePageLink(final String id,
-			final Class<? extends Page<?>> pageClass, final PageParameters parameters,
-			final String anchor)
+		public <C extends Page<?>> AutolinkBookmarkablePageLink(final String id,
+			final Class<C> pageClass, final PageParameters parameters, final String anchor)
 		{
 			super(id, pageClass, parameters);
 			this.anchor = anchor;

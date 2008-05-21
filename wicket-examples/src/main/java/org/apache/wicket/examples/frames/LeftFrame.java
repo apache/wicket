@@ -54,12 +54,14 @@ public class LeftFrame extends WebPage<Void>
 		/**
 		 * Construct.
 		 * 
+		 * @param <C>
+		 * 
 		 * @param id
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(String id, BodyFrame bodyFrame,
-			Class<? extends Page<?>> pageClass)
+		public <C extends Page<?>> ChangeFramePageLink(String id, BodyFrame bodyFrame,
+			Class<C> pageClass)
 		{
 			super(id);
 			this.bodyFrame = bodyFrame;

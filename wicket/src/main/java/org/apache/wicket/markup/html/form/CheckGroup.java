@@ -48,13 +48,14 @@ import org.apache.wicket.util.string.Strings;
  * </code>
  * 
  * @see org.apache.wicket.markup.html.form.Check
- * @see org.apache.wicket.markup.html.form.CheckGroupSelector <p>
- * 	Note: This component does not support cookie persistence
+ * @see org.apache.wicket.markup.html.form.CheckGroupSelector
+ *      <p>
+ *      Note: This component does not support cookie persistence
  * 
  * @author Igor Vaynberg
  * 
- * @param <
- * 		T> The model object type
+ * @param <T>
+ *            The model object type
  */
 public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	implements
@@ -66,7 +67,7 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	 * Constructor that will create a default model collection
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 */
 	public CheckGroup(String id)
 	{
@@ -78,9 +79,9 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	 * Constructor that wraps the provided collection with the org.apache.wicket.model.Model object
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param collection
-	 * 		collection to be used as the model
+	 *            collection to be used as the model
 	 * 
 	 */
 	public CheckGroup(String id, Collection<? extends T> collection)
@@ -185,9 +186,8 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	}
 
 	/**
-	 * @see
-	 * 	org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.
-	 * 	ComponentTag)
+	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.
+	 *      ComponentTag)
 	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
@@ -209,7 +209,7 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	}
 
 	/**
-	 * Template method that can be overriden by clients that implement IOnChangeListener to be
+	 * Template method that can be overridden by clients that implement IOnChangeListener to be
 	 * notified by onChange events of a select element. This method does nothing by default.
 	 * <p>
 	 * Called when a {@link Check} is clicked in a {@link CheckGroup} that wants to be notified of
@@ -217,10 +217,10 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	 * events.
 	 * 
 	 * @param newSelection
-	 * 		The new selection of the {@link CheckGroup}. NOTE this is the same as you would get by
-	 * 		calling getModelObject() if the new selection were current
+	 *            The new selection of the {@link CheckGroup}. NOTE this is the same as you would
+	 *            get by calling getModelObject() if the new selection were current
 	 */
-	protected void onSelectionChanged(final Collection newSelection)
+	protected void onSelectionChanged(final Collection<? extends T> newSelection)
 	{
 	}
 

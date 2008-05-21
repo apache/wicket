@@ -32,10 +32,12 @@ public class WizardPage extends WicketExamplePage<Void>
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param wizardClass
 	 *            class of the wizard component
 	 */
-	public WizardPage(Class<? extends Wizard<?>> wizardClass)
+	public <C extends Wizard<?>> WizardPage(Class<C> wizardClass)
 	{
 		if (wizardClass == null)
 		{

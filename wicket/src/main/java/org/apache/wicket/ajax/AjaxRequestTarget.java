@@ -96,7 +96,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 *            javascript
 		 * 
 		 */
-		public void onBeforeRespond(Map<String, Component< ? >> map, AjaxRequestTarget target);
+		public void onBeforeRespond(Map<String, Component<?>> map, AjaxRequestTarget target);
 
 		/**
 		 * Triggered after ajax request target is done with its response cycle. At this point only
@@ -111,7 +111,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 * @param response
 		 *            response object that can be used to output javascript
 		 */
-		public void onAfterRespond(Map<String, Component< ? >> map, IJavascriptResponse response);
+		public void onAfterRespond(Map<String, Component<?>> map, IJavascriptResponse response);
 	}
 
 	/**
@@ -243,20 +243,20 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	private final AjaxResponse encodingHeaderResponse;
 
 	/** the component instances that will be rendered */
-	private final Map<String, Component< ? >> markupIdToComponent = new LinkedHashMap<String, Component< ? >>();
+	private final Map<String, Component<?>> markupIdToComponent = new LinkedHashMap<String, Component<?>>();
 
 	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
 
-	private final Page< ? > page;
+	private final Page<?> page;
 
 	/**
 	 * 
 	 * @see org.apache.wicket.request.target.component.IPageRequestTarget#getPage()
 	 */
-	public Page< ? > getPage()
+	public Page<?> getPage()
 	{
 		return page;
 	}
@@ -266,7 +266,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * @param page
 	 */
-	public AjaxRequestTarget(Page< ? > page)
+	public AjaxRequestTarget(Page<?> page)
 	{
 		this.page = page;
 		Response response = RequestCycle.get().getResponse();
@@ -304,7 +304,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param parent
 	 * @param childCriteria
 	 */
-	public final void addChildren(MarkupContainer< ? > parent, Class< ? > childCriteria)
+	public final void addChildren(MarkupContainer<?> parent, Class<?> childCriteria)
 	{
 		if (parent == null)
 		{
@@ -317,10 +317,10 @@ public class AjaxRequestTarget implements IPageRequestTarget
 					Component.class.getName() + ".class` as the value for this argument");
 		}
 
-		parent.visitChildren(childCriteria, new Component.IVisitor<Component< ? >>()
+		parent.visitChildren(childCriteria, new Component.IVisitor<Component<?>>()
 		{
 
-			public Object component(Component< ? > component)
+			public Object component(Component<?> component)
 			{
 				addComponent(component);
 				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -334,7 +334,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public void addComponent(Component< ? > component)
+	public void addComponent(Component<?> component)
 	{
 		if (component == null)
 		{
@@ -358,7 +358,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 */
-	public final void addComponent(Component< ? > component, String markupId)
+	public final void addComponent(Component<?> component, String markupId)
 	{
 		if (Strings.isEmpty(markupId))
 		{
@@ -402,7 +402,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param component
 	 *            The component to get the focus or null.
 	 */
-	public final void focusComponent(Component< ? > component)
+	public final void focusComponent(Component<?> component)
 	{
 		if (component != null && component.getOutputMarkupId() == false)
 		{
@@ -437,7 +437,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		// detach the page if it was updated
 		if (markupIdToComponent.size() > 0)
 		{
-			final Component< ? > component = markupIdToComponent.values().iterator().next();
+			final Component<?> component = markupIdToComponent.values().iterator().next();
 			component.getPage().detach();
 		}
 	}
@@ -503,12 +503,12 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		public void onTargetRespond(AjaxRequestTarget target);
 	};
 
-	private Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
+	private final Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
 
 	/**
 	 * Register the given respond listener. The listener's
-	 * {@link ITargetRespondListener#onTargetRespond(AjaxRequestTarget)} method will be invoked
-	 * when the {@link AjaxRequestTarget} starts to respond.
+	 * {@link ITargetRespondListener#onTargetRespond(AjaxRequestTarget)} method will be invoked when
+	 * the {@link AjaxRequestTarget} starts to respond.
 	 * 
 	 * @param listener
 	 */
@@ -526,7 +526,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		{
 			listener.onTargetRespond(this);
 		}
-		
+
 		final Application app = Application.get();
 
 		// Determine encoding
@@ -588,7 +588,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		if (listeners != null)
 		{
-			final Map<String, Component< ? >> components = Collections.unmodifiableMap(markupIdToComponent);
+			final Map<String, Component<?>> components = Collections.unmodifiableMap(markupIdToComponent);
 
 			Iterator<IListener> it = listeners.iterator();
 			while (it.hasNext())
@@ -607,7 +607,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		// invoke onafterresponse event on listeners
 		if (listeners != null)
 		{
-			final Map<String, Component< ? >> components = Collections.unmodifiableMap(markupIdToComponent);
+			final Map<String, Component<?>> components = Collections.unmodifiableMap(markupIdToComponent);
 
 			// create response that will be used by listeners to append
 			// javascript
@@ -640,11 +640,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		// TODO: We might need to call prepareRender on all components upfront
 
 		// process component markup
-		Iterator<Map.Entry<String, Component< ? >>> it = markupIdToComponent.entrySet().iterator();
+		Iterator<Map.Entry<String, Component<?>>> it = markupIdToComponent.entrySet().iterator();
 		while (it.hasNext())
 		{
-			final Map.Entry<String, Component< ? >> entry = it.next();
-			final Component< ? > component = entry.getValue();
+			final Map.Entry<String, Component<?>> entry = it.next();
+			final Component<?> component = entry.getValue();
 			final String markupId = entry.getKey();
 
 			respondComponent(response, markupId, component);
@@ -714,7 +714,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 *            component to render
 	 */
 	private void respondComponent(final Response response, final String markupId,
-		final Component< ? > component)
+		final Component<?> component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
@@ -732,7 +732,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
-		final Page< ? > page = component.getPage();
+		final Page<?> page = component.getPage();
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
@@ -980,7 +980,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param response
 	 * @param component
 	 */
-	private void respondHeaderContribution(final Response response, final Component< ? > component)
+	private void respondHeaderContribution(final Response response, final Component<?> component)
 	{
 		headerRendering = true;
 
@@ -988,7 +988,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (header == null)
 		{
 			header = new AjaxHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID, this);
-			final Page< ? > page = component.getPage();
+			final Page<?> page = component.getPage();
 			page.addOrReplace(header);
 		}
 
@@ -1003,9 +1003,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer< ? >)component).visitChildren(new Component.IVisitor<Component< ? >>()
+			((MarkupContainer<?>)component).visitChildren(new Component.IVisitor<Component<?>>()
 			{
-				public Object component(Component< ? > component)
+				public Object component(Component<?> component)
 				{
 					if (component.isVisible())
 					{

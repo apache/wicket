@@ -97,10 +97,12 @@ public interface IPageMap extends IClusterable
 	 * use this method when you plan to continue to the current URL at some later time; otherwise
 	 * just use setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
+	 * @param <T>
+	 * 
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	void redirectToInterceptPage(final Class<? extends Page<?>> pageClazz);
+	<T extends Page<?>> void redirectToInterceptPage(final Class<T> pageClazz);
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's url

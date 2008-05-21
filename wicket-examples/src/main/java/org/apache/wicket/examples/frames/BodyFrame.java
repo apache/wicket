@@ -39,18 +39,12 @@ public class BodyFrame extends WebPage<Void>
 	 */
 	private final class FrameModel implements IModel<CharSequence>
 	{
-		/**
-		 * @see org.apache.wicket.model.IModel#getObject()
-		 */
 		public CharSequence getObject()
 		{
 			return RequestCycle.get().urlFor(PageMap.forName(RIGHT_FRAME_NAME),
 				frameTarget.getFrameClass(), null);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-		 */
 		public void setObject(final CharSequence object)
 		{
 		}

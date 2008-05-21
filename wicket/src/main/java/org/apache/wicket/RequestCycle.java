@@ -20,7 +20,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.protocol.http.*;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.IRequestLogger;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
@@ -411,7 +414,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page class or null
 	 */
-	public final Class<? extends Page> getResponsePageClass()
+	public final Class<? extends Page<?>> getResponsePageClass()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
@@ -658,10 +661,12 @@ public abstract class RequestCycle
 	 * Convenience method that sets page class as the response. This will generate a redirect to the
 	 * page with a bookmarkable url
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
-	public final void setResponsePage(final Class<? extends Page<?>> pageClass)
+	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass)
 	{
 		setResponsePage(pageClass, null);
 	}
@@ -669,12 +674,14 @@ public abstract class RequestCycle
 	/**
 	 * Sets the page class with optionally the page parameters as the render target of this request.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
 	 * @param pageParameters
 	 *            The page parameters that gets appended to the bookmarkable url,
 	 */
-	public final void setResponsePage(final Class<? extends Page<?>> pageClass,
+	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass,
 		final PageParameters pageParameters)
 	{
 		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
@@ -684,6 +691,8 @@ public abstract class RequestCycle
 	 * Sets the page class with optionally the page parameters and page map name as the render
 	 * target of this request.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
 	 * @param pageParameters
@@ -691,7 +700,7 @@ public abstract class RequestCycle
 	 * @param pageMapName
 	 *            The pagemap in which the response page should be created
 	 */
-	public final void setResponsePage(final Class<? extends Page<?>> pageClass,
+	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass,
 		final PageParameters pageParameters, final String pageMapName)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
@@ -760,13 +769,15 @@ public abstract class RequestCycle
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class<? extends Page<?>> pageClass,
+	public final <C extends Page<?>> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		return urlFor(null, pageClass, parameters);
@@ -850,13 +861,13 @@ public abstract class RequestCycle
 					final Map.Entry entry = it.next();
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
-                    // Do not encode values here.  It is the encoder's job
-                    // to do the endoding.  This leads to double encoding
-                    // - Doug Donohoe
-                    // @see https://issues.apache.org/jira/browse/WICKET-1627
-                    //pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
-                    pageParameters.add(key, value);
-                }
+					// Do not encode values here. It is the encoder's job
+					// to do the endoding. This leads to double encoding
+					// - Doug Donohoe
+					// @see https://issues.apache.org/jira/browse/WICKET-1627
+					// pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
+					pageParameters.add(key, value);
+				}
 			}
 
 			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
@@ -909,7 +920,7 @@ public abstract class RequestCycle
 	 */
 	private static String encodeQueryStringItem(String value)
 	{
-        return WicketURLEncoder.QUERY_INSTANCE.encode(value);
+		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**
@@ -934,6 +945,8 @@ public abstract class RequestCycle
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageMap
 	 *            Pagemap to use. If null is passed the default page map will be used
 	 * @param pageClass
@@ -942,8 +955,8 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IPageMap pageMap,
-		final Class<? extends Page<?>> pageClass, final PageParameters parameters)
+	public final <C extends Page<?>> CharSequence urlFor(final IPageMap pageMap,
+		final Class<C> pageClass, final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 			? PageMap.DEFAULT_NAME : pageMap.getName(), pageClass, parameters);

@@ -62,14 +62,17 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * @param <S>
+	 * 
 	 * @param securePageSuperType
 	 *            The class or interface supertype that indicates that a given Page requires
 	 *            authorization
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
-	public SimplePageAuthorizationStrategy(final Class<? extends Component<?>> securePageSuperType,
-		final Class<? extends Page<?>> signInPageClass)
+	public <C extends Component<?>, S extends Page<?>> SimplePageAuthorizationStrategy(
+		final Class<C> securePageSuperType, final Class<S> signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{

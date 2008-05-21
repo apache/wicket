@@ -54,6 +54,8 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * Constructs an inline frame that instantiates the given Page class when the content of the
 	 * inline frame is requested. The instantiated Page is used to render a response to the user.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageMap
@@ -61,7 +63,7 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * @param c
 	 *            Page class
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Class<? extends Page<?>> c)
+	public <C extends Page<?>> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c)
 	{
 		this(id, pageMap, c, null);
 	}
@@ -69,6 +71,8 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	/**
 	 * Constructs an inline frame that instantiates the given Page class when the content of the
 	 * inline frame is requested. The instantiated Page is used to render a response to the user.
+	 * 
+	 * @param <C>
 	 * 
 	 * @param id
 	 *            See Component
@@ -79,8 +83,8 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * @param params
 	 *            Page parameters
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Class<? extends Page<?>> c,
-		final PageParameters params)
+	public <C extends Page<?>> InlineFrame(final String id, final IPageMap pageMap,
+		final Class<C> c, final PageParameters params)
 	{
 		this(id, pageMap, new IPageLink()
 		{

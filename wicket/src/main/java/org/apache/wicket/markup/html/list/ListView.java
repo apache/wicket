@@ -248,14 +248,17 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will move the given item "down" (towards the end) in the listView.
 	 * 
+	 * @param <S>
+	 *            The returned {@link Link}'s model object type
+	 * 
 	 * @param id
 	 *            Name of move-down link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String id, final ListItem item)
+	public final <S> Link<S> moveDownLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<S>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -307,14 +310,17 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will move the given item "up" (towards the beginning) in the listView.
 	 * 
+	 * @param <S>
+	 *            The returned {@link Link}'s model object type
+	 * 
 	 * @param id
 	 *            Name of move-up link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String id, final ListItem item)
+	public final <S> Link<S> moveUpLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<S>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -367,14 +373,17 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will remove this ListItem from the ListView that holds it.
 	 * 
+	 * @param <S>
+	 *            The returned {@link Link}'s model object type
+	 * 
 	 * @param id
 	 *            Name of remove link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String id, final ListItem<T> item)
+	public final <S> Link<S> removeLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<S>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -436,7 +445,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	@Override
 	public ListView<T> setModel(IModel<List<T>> model)
 	{
-		return (ListView)super.setModel(model);
+		return (ListView<T>)super.setModel(model);
 	}
 
 	/**
@@ -569,10 +578,10 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				// Get index
 				final int index = firstIndex + i;
 
-				ListItem item = null;
+				ListItem<T> item = null;
 				if (hasChildren)
 					// If this component does not already exist, populate it
-					item = (ListItem)get(Integer.toString(index));
+					item = (ListItem<T>)get(Integer.toString(index));
 				if (item == null)
 				{
 					// Create item for index
@@ -631,7 +640,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
 	 */
 	@Override
-	protected final void renderChild(Component child)
+	protected final void renderChild(Component<?> child)
 	{
 		renderItem((ListItem<T>)child);
 	}

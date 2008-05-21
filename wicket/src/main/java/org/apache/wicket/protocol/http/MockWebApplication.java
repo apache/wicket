@@ -359,9 +359,11 @@ public class MockWebApplication
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 */
-	public void processRequestCycle(final Class<? extends Page<?>> pageClass)
+	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass)
 	{
 		processRequestCycle(pageClass, null);
 	}
@@ -369,10 +371,13 @@ public class MockWebApplication
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 * @param params
 	 */
-	public void processRequestCycle(final Class<? extends Page<?>> pageClass, PageParameters params)
+	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass,
+		PageParameters params)
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
@@ -544,7 +549,7 @@ public class MockWebApplication
 		Page<?> newLastRenderedPage = cycle.getResponsePage();
 		if (newLastRenderedPage == null)
 		{
-			Class responseClass = cycle.getResponsePageClass();
+			Class<? extends Page<?>> responseClass = cycle.getResponsePageClass();
 			if (responseClass != null)
 			{
 				Session.set(cycle.getSession());
@@ -613,6 +618,7 @@ public class MockWebApplication
 	 * @param isAjax
 	 *            indicates whether the request should be initialized as an ajax request (ajax
 	 *            header "Wicket-Ajax" is set)
+	 * @return the constructed {@link WebRequestCycle}
 	 */
 	public WebRequestCycle setupRequestAndResponse(boolean isAjax)
 	{
@@ -637,6 +643,8 @@ public class MockWebApplication
 	 * Reset the request and the response back to a starting state and recreate the necessary wicket
 	 * request, response and session objects. The request and response objects can be accessed and
 	 * Initialized at this point.
+	 * 
+	 * @return the constructed {@link WebRequestCycle}
 	 */
 	public WebRequestCycle setupRequestAndResponse()
 	{
@@ -659,7 +667,7 @@ public class MockWebApplication
 	 * @param parametersForNextRequest
 	 *            the parameters to be set on the next request
 	 */
-	public void setParametersForNextRequest(Map parametersForNextRequest)
+	public void setParametersForNextRequest(Map<String, Object> parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}

@@ -1222,8 +1222,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * @return First container parent that is an instance of the given class, or null if none can be
 	 *         found
 	 */
-	@SuppressWarnings("unchecked")
-	public final <Z> Z findParent(final Class<? extends Z> c)
+	public final <Z> Z findParent(final Class<Z> c)
 	{
 		// Start with immediate parent
 		MarkupContainer<?> current = parent;
@@ -1234,7 +1233,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 			// Is current an instance of this class?
 			if (c.isInstance(current))
 			{
-				return (Z)current;
+				return c.cast(current);
 			}
 
 			// Check parent
@@ -1421,7 +1420,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 
 	private final int nextAutoIndex()
 	{
-		Page page = findPage();
+		Page<?> page = findPage();
 		if (page == null)
 		{
 			throw new WicketRuntimeException(
@@ -2164,7 +2163,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		onModelChanging();
 
 		// Tell the page that our model changed
-		final Page page = findPage();
+		final Page<?> page = findPage();
 		if (page != null)
 		{
 			page.componentModelChanging(this);
@@ -2174,11 +2173,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * Creates a new page using the component's page factory
 	 * 
+	 * @param <C>
+	 * 
 	 * @param c
 	 *            The class of page to create
 	 * @return The new page
 	 */
-	public final Page<?> newPage(final Class<? extends Page<?>> c)
+	public final <C extends Page<?>> Page<?> newPage(final Class<C> c)
 	{
 		return getPageFactory().newPage(c);
 	}
@@ -2186,13 +2187,16 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * Creates a new page using the component's page factory
 	 * 
+	 * @param <C>
+	 * 
 	 * @param c
 	 *            The class of page to create
 	 * @param parameters
 	 *            Any parameters to pass to the constructor
 	 * @return The new page
 	 */
-	public final Page<?> newPage(final Class<? extends Page<?>> c, final PageParameters parameters)
+	public final <C extends Page<?>> Page<?> newPage(final Class<C> c,
+		final PageParameters parameters)
 	{
 		return getPageFactory().newPage(c, parameters);
 	}
@@ -2235,7 +2239,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @see Component#continueToOriginalDestination()
 	 */
-	public final void redirectToInterceptPage(final Page page)
+	public final void redirectToInterceptPage(final Page<?> page)
 	{
 		getPage().getPageMap().redirectToInterceptPage(page);
 	}
@@ -2448,7 +2452,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 		if (this instanceof Page)
 		{
 			// Render as Page, with all the special logic that entails
-			((Page)this).renderPage();
+			((Page<?>)this).renderPage();
 		}
 		else
 		{
@@ -2718,7 +2722,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 			// Tell the page that this component's enabled was changed
 			if (isVersioned())
 			{
-				final Page page = findPage();
+				final Page<?> page = findPage();
 				if (page != null)
 				{
 					addStateChange(new EnabledChange(this));
@@ -3034,11 +3038,13 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * Sets the page that will respond to this request
 	 * 
+	 * @param <C>
+	 * 
 	 * @param cls
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
 	 */
-	public final void setResponsePage(final Class<? extends Page<?>> cls)
+	public final <C extends Page<?>> void setResponsePage(final Class<C> cls)
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
@@ -3047,13 +3053,16 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	/**
 	 * Sets the page class and its parameters that will respond to this request
 	 * 
+	 * @param <C>
+	 * 
 	 * @param cls
 	 *            The response page class
 	 * @param parameters
 	 *            The parameters for this bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class<? extends Page<?>> cls, PageParameters parameters)
+	public final <C extends Page<?>> void setResponsePage(final Class<C> cls,
+		PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -3123,7 +3132,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	{
 		if (detailed)
 		{
-			final Page page = findPage();
+			final Page<?> page = findPage();
 			if (page == null)
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(
@@ -3158,6 +3167,8 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param <C>
+	 * 
 	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
 	 * 
 	 * @param pageClass
@@ -3166,7 +3177,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class<? extends Page<?>> pageClass,
+	public final <C extends Page<?>> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
@@ -3205,8 +3216,8 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IPageMap pageMap,
-		final Class<? extends Page<?>> pageClass, final PageParameters parameters)
+	public final <C extends Page<?>> CharSequence urlFor(final IPageMap pageMap,
+		final Class<C> pageClass, final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -3262,7 +3273,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final Object visitParents(final Class<? extends MarkupContainer<?>> c,
+	public final <C extends MarkupContainer<?>> Object visitParents(final Class<C> c,
 		final IVisitor<Component<?>> visitor)
 	{
 		// Start here
@@ -3349,7 +3360,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	protected final void addStateChange(final Change change)
 	{
 		checkHierarchyChange(this);
-		final Page page = findPage();
+		final Page<?> page = findPage();
 		if (page != null)
 		{
 			page.componentStateChanging(this, change);
@@ -3473,10 +3484,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return The Page or null if none can be found
 	 */
-	protected final Page findPage()
+	protected final Page<?> findPage()
 	{
 		// Search for page
-		return (Page)(this instanceof Page ? this : findParent(Page.class));
+		return (Page<?>)(this instanceof Page ? this : findParent(Page.class));
 	}
 
 	/**
@@ -4284,7 +4295,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	{
 		if (this instanceof Page)
 		{
-			((Page)this).writePageObject(s);
+			((Page<?>)this).writePageObject(s);
 		}
 		else
 		{
@@ -4302,7 +4313,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	{
 		if (this instanceof Page)
 		{
-			((Page)this).readPageObject(s);
+			((Page<?>)this).readPageObject(s);
 		}
 		else
 		{

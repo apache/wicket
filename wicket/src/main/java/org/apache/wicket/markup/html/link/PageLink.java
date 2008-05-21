@@ -41,12 +41,14 @@ public class PageLink<T> extends Link<T>
 	 * Constructs a link that instantiates the given Page class when the link is clicked. The
 	 * instantiated Page is used to render a response to the user.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(final String id, final Class<? extends Page<?>> c)
+	public <C extends Page<?>> PageLink(final String id, final Class<C> c)
 	{
 		super(id);
 

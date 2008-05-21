@@ -50,6 +50,9 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * @param <D>
+	 * 
 	 * @param capturedPageClass
 	 *            the bookmarkable page to capture for sending in email
 	 * @param displayedPageClass
@@ -57,8 +60,8 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 * @param pageParameters
 	 *            the page parameters
 	 */
-	public CapturingBookmarkablePageRequestTarget(Class<? extends Page<?>> capturedPageClass,
-		Class<? extends Page<?>> displayedPageClass, PageParameters pageParameters)
+	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTarget(
+		Class<C> capturedPageClass, Class<D> displayedPageClass, PageParameters pageParameters)
 	{
 		super(capturedPageClass, pageParameters);
 		this.displayedPageClass = displayedPageClass;
@@ -67,13 +70,16 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * @param <D>
+	 * 
 	 * @param capturedPageClass
 	 *            the bookmarkable page to capture for sending in email
 	 * @param displayedPageClass
 	 *            the bookmarkable page to display in the browser
 	 */
-	public CapturingBookmarkablePageRequestTarget(Class<? extends Page<?>> capturedPageClass,
-		Class<? extends Page<?>> displayedPageClass)
+	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTarget(
+		Class<C> capturedPageClass, Class<D> displayedPageClass)
 	{
 		super(capturedPageClass);
 		this.displayedPageClass = displayedPageClass;

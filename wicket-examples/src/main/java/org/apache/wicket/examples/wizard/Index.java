@@ -43,12 +43,14 @@ public class Index extends WicketExamplePage<Void>
 		/**
 		 * Construct.
 		 * 
+		 * @param <C>
+		 * 
 		 * @param id
 		 *            Component id
 		 * @param wizardClass
 		 *            Class of the wizard to instantiate
 		 */
-		public WizardLink(String id, Class<? extends Wizard<?>> wizardClass)
+		public <C extends Wizard<?>> WizardLink(String id, Class<C> wizardClass)
 		{
 			super(id);
 			this.wizardClass = wizardClass;

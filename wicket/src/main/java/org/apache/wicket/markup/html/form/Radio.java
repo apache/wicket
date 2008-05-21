@@ -99,7 +99,7 @@ public class Radio<T> extends LabeledWebMarkupContainer<T>
 
 		final String value = getValue();
 
-		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
+		RadioGroup<?> group = findParent(RadioGroup.class);
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
@@ -133,7 +133,7 @@ public class Radio<T> extends LabeledWebMarkupContainer<T>
 			// url that points to this components IOnChangeListener method
 			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-			Form form = (Form)group.findParent(Form.class);
+			Form<?> form = group.findParent(Form.class);
 			if (form != null)
 			{
 				RequestContext rc = RequestContext.get();
@@ -172,7 +172,7 @@ public class Radio<T> extends LabeledWebMarkupContainer<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public Radio<T> setLabel(IModel labelModel)
+	public Radio<T> setLabel(IModel<String> labelModel)
 	{
 		setLabelInternal(labelModel);
 		return this;

@@ -63,7 +63,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param buffer
 	 * @param component
 	 */
-	private final void appendComponent(AppendingStringBuffer buffer, Component< ? > component)
+	private final void appendComponent(AppendingStringBuffer buffer, Component<?> component)
 	{
 		checkId("Component id", component.getId());
 		buffer.append(component.getId());
@@ -88,14 +88,14 @@ abstract class ComponentSourceEntry implements IClusterable
 		buffer.append(component.markupIndex);
 
 		if (component instanceof MarkupContainer &&
-			((MarkupContainer< ? >)component).iterator().hasNext())
+			((MarkupContainer<?>)component).iterator().hasNext())
 		{
 			buffer.append('(');
 
-			Iterator<Component< ? >> i = ((MarkupContainer< ? >)component).iterator();
+			Iterator<Component<?>> i = ((MarkupContainer<?>)component).iterator();
 			while (i.hasNext())
 			{
-				Component< ? > child = i.next();
+				Component<?> child = i.next();
 				appendComponent(buffer, child);
 				if (i.hasNext())
 				{
@@ -114,7 +114,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param component
 	 * @param componentSource
 	 */
-	ComponentSourceEntry(MarkupContainer< ? > container, Component< ? > component,
+	ComponentSourceEntry(MarkupContainer<?> container, Component<?> component,
 		IComponentSource componentSource)
 	{
 		id = component.getId();
@@ -135,7 +135,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param index
 	 * @param child
 	 */
-	protected abstract void setChild(MarkupContainer< ? > parent, int index, Component< ? > child);
+	protected abstract void setChild(MarkupContainer<?> parent, int index, Component<?> child);
 
 	/**
 	 * Reconstructs the component
@@ -146,9 +146,9 @@ abstract class ComponentSourceEntry implements IClusterable
 	 *            position in parent's children
 	 * @return reconstructed component
 	 */
-	Component< ? > reconstruct(MarkupContainer< ? > parent, int index)
+	Component<?> reconstruct(MarkupContainer<?> parent, int index)
 	{
-		Component< ? > component = componentSource.restoreComponent(id);
+		Component<?> component = componentSource.restoreComponent(id);
 
 		if (parent != null)
 		{
@@ -203,8 +203,8 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param component
 	 * @return
 	 */
-	private static MarkupContainer< ? > applyComponentInfo(MarkupContainer< ? > parent,
-		String info, Component< ? > component)
+	private static MarkupContainer<?> applyComponentInfo(MarkupContainer<?> parent, String info,
+		Component<?> component)
 	{
 		if (parent == null)
 		{
@@ -258,7 +258,7 @@ abstract class ComponentSourceEntry implements IClusterable
 			}
 			component.markupIndex = (short)markupIndex;
 		}
-		return component instanceof MarkupContainer ? (MarkupContainer< ? >)component : null;
+		return component instanceof MarkupContainer ? (MarkupContainer<?>)component : null;
 	}
 
 	/**
@@ -273,8 +273,8 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param info
 	 * @return
 	 */
-	private static int parseComponentInfo(MarkupContainer< ? > parent, String info,
-		Component< ? > component)
+	private static int parseComponentInfo(MarkupContainer<?> parent, String info,
+		Component<?> component)
 	{
 		// find the first part for the component
 		final String substring = getComponentSubString(info);
@@ -288,7 +288,7 @@ abstract class ComponentSourceEntry implements IClusterable
 			++len; // skip the '('
 		}
 
-		final MarkupContainer< ? > child = applyComponentInfo(parent, substring, component);
+		final MarkupContainer<?> child = applyComponentInfo(parent, substring, component);
 
 		if (hasChildren)
 		{

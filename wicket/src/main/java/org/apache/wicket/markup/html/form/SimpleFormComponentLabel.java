@@ -25,7 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleFormComponentLabel extends FormComponentLabel
+public class SimpleFormComponentLabel extends FormComponentLabel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,14 +37,14 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @param labelProvider
 	 *            label provider (e.g. FormComponent, Radio, Check)
 	 */
-	public SimpleFormComponentLabel(String id, LabeledWebMarkupContainer labelProvider)
+	public SimpleFormComponentLabel(String id, LabeledWebMarkupContainer<?> labelProvider)
 	{
 		super(id, labelProvider);
 		if (labelProvider.getLabel() == null)
 		{
 			throw new IllegalStateException("Provided form component does not have a label set. "
-					+ "Use FormComponent.setLabel(IModel) to set the model "
-					+ "that will feed this label");
+				+ "Use FormComponent.setLabel(IModel) to set the model "
+				+ "that will feed this label");
 		}
 		setModel(labelProvider.getLabel());
 	}
@@ -53,6 +53,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());

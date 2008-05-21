@@ -83,9 +83,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * Gets the list of properties loader. You may add or remove properties loaders at your will.
+	 * Gets the {@link List} of properties loader. You may add or remove properties loaders at your
+	 * will.
 	 * 
-	 * @return
+	 * @return the {@link List} of properties loader
 	 */
 	public List<IPropertiesLoader> getPropertiesLoaders()
 	{
@@ -119,7 +120,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * 
 	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
 	 */
-	public Properties load(final Class< ? > clazz, final String path)
+	public Properties load(final Class<?> clazz, final String path)
 	{
 		// Check the cache
 		Properties properties = propertiesCache.get(path);
@@ -175,7 +176,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		 * @param path
 		 * @return
 		 */
-		Properties load(final Class< ? > clazz, final String path);
+		Properties load(final Class<?> clazz, final String path);
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		 * @see org.apache.wicket.resource.PropertiesFactory.IPropertiesLoader#load(java.lang.Class,
 		 *      java.lang.String)
 		 */
-		public Properties load(final Class< ? > clazz, final String path)
+		public Properties load(final Class<?> clazz, final String path)
 		{
 			String fullPath = path + getFileExtension();
 
@@ -275,7 +276,7 @@ public class PropertiesFactory implements IPropertiesFactory
 
 					// Copy the properties into the ValueMap
 					strings = new ValueMap();
-					Enumeration< ? > enumeration = properties.propertyNames();
+					Enumeration<?> enumeration = properties.propertyNames();
 					while (enumeration.hasMoreElements())
 					{
 						String property = (String)enumeration.nextElement();

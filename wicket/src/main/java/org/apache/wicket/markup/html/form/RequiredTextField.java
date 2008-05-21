@@ -23,6 +23,8 @@ import org.apache.wicket.model.IModel;
  * always add(new Required()) manually.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            the model object's type
  */
 public class RequiredTextField<T> extends TextField<T>
 {

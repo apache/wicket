@@ -51,7 +51,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 		return Home.class;
 	}
 
-	private void mountBookmarkablePageWithUrlCoding(String path, Class<? extends Page<?>> pageClass)
+	private <C extends Page<?>> void mountBookmarkablePageWithUrlCoding(String path,
+		Class<C> pageClass)
 	{
 		mount(new QueryStringUrlCodingStrategy(path, pageClass));
 	}

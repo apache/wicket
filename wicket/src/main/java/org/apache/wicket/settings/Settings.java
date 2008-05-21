@@ -822,7 +822,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
-	public void setAccessDeniedPage(Class<? extends Page<?>> accessDeniedPage)
+	public <C extends Page<?>> void setAccessDeniedPage(Class<C> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
 		{
@@ -973,7 +973,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
-	public void setInternalErrorPage(final Class<? extends Page<?>> internalErrorPage)
+	public <C extends Page<?>> void setInternalErrorPage(final Class<C> internalErrorPage)
 	{
 		if (internalErrorPage == null)
 		{
@@ -1020,7 +1020,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
-	public void setPageExpiredErrorPage(final Class<? extends Page<?>> pageExpiredErrorPage)
+	public <C extends Page<?>> void setPageExpiredErrorPage(final Class<C> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{
@@ -1180,10 +1180,12 @@ public final class Settings
 	/**
 	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the page class to check
 	 */
-	private void checkPageClass(final Class<? extends Page<?>> pageClass)
+	private <C extends Page<?>> void checkPageClass(final Class<C> pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
 		// here, as - though the default is that a bookmarkable page must
