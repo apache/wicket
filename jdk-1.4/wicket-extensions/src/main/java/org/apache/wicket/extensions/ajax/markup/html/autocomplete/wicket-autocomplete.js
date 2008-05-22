@@ -52,6 +52,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 	var objonkeypress;
 	var objonchange;
 	var objonchangeoriginal;
+	
+	// holds the eventual margins, padding, etc. of the menu container.
+	// it is computed when the menu is first rendered, and then reused.
+	var initialDelta = -1;
 
     function initialize(){    	
         var obj=wicketGet(elementId);
@@ -279,23 +283,26 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         var element = getAutocompleteMenu();
         element.innerHTML=resp;
         if(element.firstChild && element.firstChild.childNodes) {
-            elementCount=element.firstChild.childNodes.length;
+		elementCount=element.firstChild.childNodes.length;
 
-            for(var i=0;i<elementCount;i++){
-	            var node=element.firstChild.childNodes[i];
+		var clickFunc = function(event){
+			mouseactive=0;
+			wicketGet(elementId).value=getSelectedValue();
+			if(typeof objonchange=="function")objonchange();
+				hideAutoComplete();
+		};
+			
+		var mouseOverFunc = function(event){
+			selected = getElementIndex(this);
+			render();
+		 	showAutoComplete();
+		};
 
-				node.onclick = function(event){
-					mouseactive=0;
-					wicketGet(elementId).value=getSelectedValue();
-					if(typeof objonchange=="function")objonchange();
-					hideAutoComplete();
-       			}
-
-				node.onmouseover = function(event){					
-					selected = getElementIndex(this);
-					render();
-				 	showAutoComplete();
-				}
+		var node=element.firstChild.childNodes[0];
+		for(var i=0;i<elementCount;i++){
+			node.onclick = clickFunc;
+			node.onmouseover = mouseOverFunc;
+			node = node.nextSibling;
        		}
         } else {
             elementCount=0;
@@ -360,26 +367,28 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
     function render(){
         var menu=getAutocompleteMenu();
         var height=0;
-        for(var i=0;i<elementCount;i++){
-            var node=menu.firstChild.childNodes[i];
-
-            var classNames=node.className.split(" ");
-            for (var j=0; j<classNames.length; j++) {
-                if (classNames[j]=='selected') {
-                    classNames[j]='';
-                }
-            }
-
-            if(selected==i){
-                classNames.push('selected');
-                adjustScrollOffset(menu.parentNode, node);
-            }
-            
-            node.className=classNames.join(" ");
-            height+=node.offsetHeight;
-        }
+		var node=menu.firstChild.childNodes[0];
+		var re = /\bselected\b/gi;
+        for(var i=0;i<elementCount;i++)
+		{
+			var classNames = node.className.replace(re, "");
+			if(selected==i){
+				classNames += " selected";
+				adjustScrollOffset(menu.parentNode, node);
+			}
+			node.className = classNames;
+	
+			if ((cfg.maxHeight > -1) && (height < cfg.maxHeight))
+				height+=node.offsetHeight;
+	
+			node = node.nextSibling;
+		}
         if (cfg.maxHeight > -1) {
-        	height = height<cfg.maxHeight?height:cfg.maxHeight;
+			// If we don't exceed the maximum size, we add the extra space 
+			// that may be there due to padding, margins, etc.
+			if (initialDelta == -1)
+				initialDelta = menu.parentNode.offsetHeight - height;
+        	height = height<cfg.maxHeight ? height+initialDelta : cfg.maxHeight;
         	menu.parentNode.style.height=height+"px";
         }
     }
