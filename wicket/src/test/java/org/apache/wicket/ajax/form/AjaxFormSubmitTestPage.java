@@ -29,6 +29,8 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class AjaxFormSubmitTestPage extends WebPage<ValueMap>
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Indicates form handled submit.
 	 */

@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.link.PageLink;
 
 public class SecondPage extends WebPage<Void>
 {
+	private static final long serialVersionUID = 1L;
 
 	public SecondPage(final FirstPage page)
 	{

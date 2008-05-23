@@ -27,6 +27,8 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 public class MockPageWithFormAndContainedLink extends MockPageWithFormAndLink
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * 

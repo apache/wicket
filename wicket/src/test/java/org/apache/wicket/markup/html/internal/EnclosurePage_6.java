@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.link.Link;
  */
 public class EnclosurePage_6 extends WebPage<Void>
 {
+	private static final long serialVersionUID = 1L;
+
 	private int counter;
 
 	/**
