@@ -738,7 +738,7 @@
                             <configuration>
                                 <instructions>
                                     <Import-Package>org.apache.wicket*</Import-Package>
-                                    <Dynamic-ImportPackage>*</Dynamic-ImportPackage>
+                                    <DynamicImport-Package>*</DynamicImport-Package>
                                     <_nouses>true</_nouses>
                                 </instructions>
                             </configuration>
