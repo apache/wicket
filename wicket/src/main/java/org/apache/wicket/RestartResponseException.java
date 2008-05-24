@@ -29,10 +29,12 @@ public class RestartResponseException extends AbstractRestartResponseException
 	/**
 	 * Redirects to the specified bookmarkable page
 	 * 
+	 * @param <C> The page type
+	 * 
 	 * @param pageClass
 	 *            class of bookmarkable page
 	 */
-	public RestartResponseException(Class< ? extends Page< ? >> pageClass)
+	public <C extends Page<?>> RestartResponseException(Class<C> pageClass)
 	{
 		RequestCycle.get().setResponsePage(pageClass);
 	}
@@ -40,12 +42,14 @@ public class RestartResponseException extends AbstractRestartResponseException
 	/**
 	 * Redirects to the specified bookmarkable page with the given page parameters
 	 * 
+	 * @param <C> The page type
+	 * 
 	 * @param pageClass
 	 *            class of bookmarkable page
 	 * @param params
 	 *            bookmarkable page parameters
 	 */
-	public RestartResponseException(Class< ? extends Page< ? >> pageClass, PageParameters params)
+	public <C extends Page<?>> RestartResponseException(Class<C> pageClass, PageParameters params)
 	{
 		RequestCycle.get().setResponsePage(pageClass, params);
 	}
@@ -56,7 +60,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 * @param page
 	 *            redirect page
 	 */
-	public RestartResponseException(Page< ? > page)
+	public RestartResponseException(Page<?> page)
 	{
 		RequestCycle.get().setResponsePage(page);
 	}
