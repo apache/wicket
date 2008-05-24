@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -37,21 +39,24 @@ public class AjaxDataTablePage extends BasePage
 	 */
 	public AjaxDataTablePage()
 	{
-		List columns = new ArrayList();
+		List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
 
-		columns.add(new AbstractColumn(new Model("Actions"))
+		columns.add(new AbstractColumn<Contact>(new Model<String>("Actions"))
 		{
-			public void populateItem(Item cellItem, String componentId, IModel model)
+			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
+				IModel<Contact> model)
 			{
 				cellItem.add(new ActionPanel(componentId, model));
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("ID"), "id"));
-		columns.add(new PropertyColumn(new Model("First Name"), "firstName", "firstName"));
-		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName"));
-		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<Long>(new Model<String>("ID"), "id"));
+		columns.add(new PropertyColumn<String>(new Model<String>("First Name"), "firstName",
+			"firstName"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Last Name"), "lastName",
+			"lastName"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<String>(new Model<String>("Cell Phone"), "cellPhone"));
 
 		add(new AjaxFallbackDefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
 	}

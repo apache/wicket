@@ -35,7 +35,7 @@ public class AnnotSpringInjector extends ConfigurableInjector
 	 * Constructor
 	 * 
 	 * @param locator
-	 *            spring context locator
+	 * 		spring context locator
 	 */
 	public AnnotSpringInjector(ISpringContextLocator locator)
 	{

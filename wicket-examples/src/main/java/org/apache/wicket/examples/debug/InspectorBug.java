@@ -29,7 +29,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Jonathan Locke
  */
-public final class InspectorBug extends Panel
+public final class InspectorBug extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,13 +41,13 @@ public final class InspectorBug extends Panel
 	 * @param page
 	 *            Page to inspect
 	 */
-	public InspectorBug(final String id, final WebPage page)
+	public InspectorBug(final String id, final WebPage<?> page)
 	{
 		super(id);
 		PageParameters parameters = new PageParameters();
 		parameters.put("pageId", page.getId());
-		Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
-		link.add(new Image("bug"));
+		Link<?> link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
+		link.add(new Image<Void>("bug"));
 		add(link);
 	}
 }

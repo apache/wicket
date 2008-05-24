@@ -156,11 +156,11 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	@Override
-	protected Iterator renderIterator()
+	protected Iterator<Component<?>> renderIterator()
 	{
 		final int iterations = size();
 
-		return new ReadOnlyIterator()
+		return new ReadOnlyIterator<Component<?>>()
 		{
 			private int index = 0;
 
@@ -169,7 +169,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 				return index < iterations;
 			}
 
-			public Object next()
+			public Component<?> next()
 			{
 				return get(Integer.toString(index++));
 			}
@@ -189,7 +189,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * @param child
 	 */
 	@Override
-	protected final void renderChild(Component child)
+	protected final void renderChild(Component<?> child)
 	{
 		renderItem((LoopItem)child);
 	}

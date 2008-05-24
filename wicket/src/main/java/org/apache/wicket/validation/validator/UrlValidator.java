@@ -51,8 +51,8 @@ import org.apache.wicket.validation.IValidatable;
  * 
  * @author Vincent Demay
  * @since 1.2.6
- * @see <a href='http://www.ietf.org/rfc/rfc2396.txt' > Uniform Resource Identifiers (URI): Generic
- *      Syntax </a>
+ * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">Uniform Resource Identifiers (URI): Generic
+ *      Syntax (RFC 2396)</a>
  */
 public class UrlValidator extends AbstractValidator
 {
@@ -152,7 +152,7 @@ public class UrlValidator extends AbstractValidator
 	/**
 	 * The set of schemes that are allowed to be in a URL.
 	 */
-	private Set allowedSchemes = new HashSet();
+	private final Set<String> allowedSchemes = new HashSet<String>();
 
 	/**
 	 * If no schemes are provided, default to this set of protocols.
@@ -226,15 +226,16 @@ public class UrlValidator extends AbstractValidator
 
 		if (schemes == null)
 		{
-			schemes = this.defaultSchemes;
+			schemes = defaultSchemes;
 		}
 
-		this.allowedSchemes.addAll(Arrays.asList(schemes));
+		allowedSchemes.addAll(Arrays.asList(schemes));
 	}
 
 	/**
 	 * @see AbstractValidator#onValidate(IValidatable)
 	 */
+	@Override
 	protected void onValidate(IValidatable validatable)
 	{
 		String url = (String)validatable.getValue();
@@ -326,7 +327,7 @@ public class UrlValidator extends AbstractValidator
 		if (isOff(ALLOW_ALL_SCHEMES))
 		{
 
-			if (!this.allowedSchemes.contains(scheme))
+			if (!allowedSchemes.contains(scheme))
 			{
 				return false;
 			}
@@ -425,8 +426,8 @@ public class UrlValidator extends AbstractValidator
 				{
 					domainSegment[segmentCount] = atomMatcher.group(1);
 					segmentLength = domainSegment[segmentCount].length() + 1;
-					hostIP = (segmentLength >= hostIP.length()) ? "" : hostIP
-							.substring(segmentLength);
+					hostIP = (segmentLength >= hostIP.length()) ? ""
+						: hostIP.substring(segmentLength);
 
 					segmentCount++;
 				}
@@ -603,7 +604,7 @@ public class UrlValidator extends AbstractValidator
 	 */
 	public boolean isOn(long flag)
 	{
-		return (this.options & flag) > 0;
+		return (options & flag) > 0;
 	}
 
 	/**

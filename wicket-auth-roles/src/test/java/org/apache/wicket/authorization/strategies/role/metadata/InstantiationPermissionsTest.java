@@ -78,30 +78,31 @@ public class InstantiationPermissionsTest extends TestCase
 		InstantiationPermissions permissions = new InstantiationPermissions();
 		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
 		permissions.unauthorize(Page.class, new Roles("eelco"));
-		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE), permissions
-				.getRolesForComponentClass().get(Page.class));
+		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
+			permissions.getRolesForComponentClass().get(Page.class));
 	}
 
 	/**
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public void testRemove2()
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		tester.getApplication().setMetaData(
-				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
-				new InstantiationPermissions());
+			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+			new InstantiationPermissions());
 		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
 		tester.processRequestCycle();
@@ -117,17 +118,17 @@ public class InstantiationPermissionsTest extends TestCase
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
-				new IRoleCheckingStrategy()
-				{
+			new IRoleCheckingStrategy()
+			{
 
-					public boolean hasAnyRole(Roles roles)
-					{
-						return false;
-					}
-				});
+				public boolean hasAnyRole(Roles roles)
+				{
+					return false;
+				}
+			});
 		tester.getApplication().setMetaData(
-				MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
-				new InstantiationPermissions());
+			MetaDataRoleAuthorizationStrategy.INSTANTIATION_PERMISSIONS,
+			new InstantiationPermissions());
 		MetaDataRoleAuthorizationStrategy.authorize(Page.class, "martijn");
 		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));

@@ -242,7 +242,7 @@ public abstract class Application
 	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
 
 	/** Application level meta data. */
-	private MetaDataEntry< ? >[] metaData;
+	private MetaDataEntry<?>[] metaData;
 
 	/** Name of application subclass. */
 	private final String name;
@@ -281,9 +281,9 @@ public abstract class Application
 			/**
 			 * @see org.apache.wicket.application.IComponentInstantiationListener#onInstantiation(org.apache.wicket.Component)
 			 */
-			public void onInstantiation(final Component< ? > component)
+			public void onInstantiation(final Component<?> component)
 			{
-				final Class< ? extends Component< ? >> cl = (Class< ? extends Component< ? >>)component.getClass();
+				final Class<? extends Component<?>> cl = (Class<? extends Component<?>>)component.getClass();
 				// If component instantiation is not authorized
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(cl))
 				{
@@ -446,7 +446,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class< ? extends Page< ? >> getHomePage();
+	public abstract Class<? extends Page<?>> getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
@@ -984,7 +984,7 @@ public abstract class Application
 	 * @param component
 	 *            the component that is being instantiated
 	 */
-	final void notifyComponentInstantiationListeners(final Component< ? > component)
+	final void notifyComponentInstantiationListeners(final Component<?> component)
 	{
 		final int len = componentInstantiationListeners.length;
 		for (int i = 0; i < len; i++)
@@ -1036,7 +1036,7 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyPreComponentOnBeforeRenderListeners(final Component< ? > component)
+	final void notifyPreComponentOnBeforeRenderListeners(final Component<?> component)
 	{
 		if (componentPreOnBeforeRenderListeners != null)
 		{
@@ -1091,7 +1091,7 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyPostComponentOnBeforeRenderListeners(final Component< ? > component)
+	final void notifyPostComponentOnBeforeRenderListeners(final Component<?> component)
 	{
 		if (componentPostOnBeforeRenderListeners != null)
 		{
@@ -1146,7 +1146,7 @@ public abstract class Application
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnAfterRenderListeners(final Component< ? > component)
+	final void notifyComponentOnAfterRenderListeners(final Component<?> component)
 	{
 		if (componentOnAfterRenderListeners != null)
 		{

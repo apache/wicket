@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -32,7 +29,6 @@ public class WebRequestEncoder
 {
 	boolean firstParameter = true;
 	AppendingStringBuffer url;
-	Application application;
 
 	/**
 	 * Construct.
@@ -43,7 +39,6 @@ public class WebRequestEncoder
 	public WebRequestEncoder(AppendingStringBuffer url)
 	{
 		this.url = url;
-		application = Application.get();
 	}
 
 	/**
@@ -80,17 +75,7 @@ public class WebRequestEncoder
 	 */
 	public void addValue(String key, String value)
 	{
-		String escapedValue = value;
-		try
-		{
-			escapedValue = URLEncoder.encode(escapedValue, application.getRequestCycleSettings()
-					.getResponseRequestEncoding());
-		}
-		catch (UnsupportedEncodingException ex)
-		{
-			// ignore
-		}
-		if (!firstParameter)
+        if (!firstParameter)
 		{
 			url.append('&');
 		}
@@ -99,9 +84,9 @@ public class WebRequestEncoder
 			firstParameter = false;
 			url.append('?');
 		}
-		url.append(key);
+		url.append(WicketURLEncoder.QUERY_INSTANCE.encode(key));
 		url.append('=');
-		url.append(escapedValue);
+		url.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
 	}
 
 }

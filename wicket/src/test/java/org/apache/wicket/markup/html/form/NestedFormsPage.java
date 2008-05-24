@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Gerolf Seitz
  */
-public class NestedFormsPage extends WebPage
+public class NestedFormsPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	static Logger logger = LoggerFactory.getLogger(NestedFormsPage.class);
@@ -46,17 +46,20 @@ public class NestedFormsPage extends WebPage
 		feedback = new FeedbackPanel("feedback");
 		add(feedback.setOutputMarkupId(true));
 
-		Form outerForm = new NestableForm("outerForm");
+		Form<?> outerForm = new NestableForm("outerForm");
 		add(outerForm.setOutputMarkupId(true));
 
-		Form middleForm = new NestableForm("middleForm");
+		Form<?> middleForm = new NestableForm("middleForm");
 		outerForm.add(middleForm.setOutputMarkupId(true));
 
-		Form innerForm = new NestableForm("innerForm");
+		Form<?> innerForm = new NestableForm("innerForm");
 		middleForm.add(innerForm.setOutputMarkupId(true));
 	}
 
-	public class NestableForm extends Form
+	/**
+	 * @author Gerolf Seitz
+	 */
+	public class NestableForm extends Form<NestableForm>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -64,39 +67,50 @@ public class NestedFormsPage extends WebPage
 
 		private final String second = "test";
 
+		/** */
 		public boolean onSubmitCalled = false;
 
+		/** */
 		public boolean onErrorCalled = false;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 * 		the form's id
+		 */
 		public NestableForm(String id)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel(this));
+			setModel(new CompoundPropertyModel<NestableForm>(this));
 
-			TextField firstField = new RequiredTextField("first");
-			TextField secondField = new TextField("second");
+			TextField<String> firstField = new RequiredTextField<String>("first");
+			TextField<String> secondField = new TextField<String>("second");
 			add(firstField);
 			add(secondField);
 
 			add(new EqualInputValidator(firstField, secondField));
-			add(new AjaxSubmitLink("ajaxSubmit", this)
+			add(new AjaxSubmitLink<Void>("ajaxSubmit", this)
 			{
 				private static final long serialVersionUID = 1L;
 
-				protected void onSubmit(AjaxRequestTarget target, Form form)
+				@Override
+				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 				{
 					target.addComponent(feedback);
 				}
 
-				protected void onError(AjaxRequestTarget target, Form form)
+				@Override
+				protected void onError(AjaxRequestTarget target, Form<?> form)
 				{
 					target.addComponent(feedback);
 				}
 			});
 			add(new ToggleLink("toggle", this));
-			add(new SubmitLink("submit"));
+			add(new SubmitLink<Void>("submit"));
 		}
 
+		@Override
 		protected void onSubmit()
 		{
 			super.onSubmit();
@@ -104,6 +118,7 @@ public class NestedFormsPage extends WebPage
 			logger.info(getId() + ".onSubmit");
 		}
 
+		@Override
 		protected void onError()
 		{
 			super.onError();
@@ -112,24 +127,26 @@ public class NestedFormsPage extends WebPage
 		}
 	}
 
-	private class ToggleLink extends Link
+	private class ToggleLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Form form;
+		private final Form<?> form;
 
-		public ToggleLink(String id, Form form)
+		public ToggleLink(String id, Form<?> form)
 		{
 			super(id);
 			this.form = form;
 		}
 
+		@Override
 		public void onClick()
 		{
 			form.setEnabled(!form.isEnabled());
 			form.info(form.getId() + ".isEnabled() == " + form.isEnabled());
 		}
 
+		@Override
 		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			String state = form.isEnabled() ? "enabled" : "disabled";

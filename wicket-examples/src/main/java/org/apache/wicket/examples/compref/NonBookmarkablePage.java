@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.PageLink;
+import org.apache.wicket.markup.html.link.Link;
 
 /**
  * Example page that cannot be bookmarked. A page is bookmarkable when it has a public default
@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.PageLink;
  * 
  * @author Eelco Hillenius
  */
-public class NonBookmarkablePage extends WebPage
+public class NonBookmarkablePage extends WebPage<Void>
 {
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ public class NonBookmarkablePage extends WebPage
 	 * @param referer
 	 *            the refering page
 	 */
-	public NonBookmarkablePage(final WebPage referer)
+	public NonBookmarkablePage(final WebPage<?> referer)
 	{
 		if (referer == null)
 		{
@@ -45,7 +45,15 @@ public class NonBookmarkablePage extends WebPage
 		// constructor with the Page instance argument, because we allready have
 		// a page instance
 		// at our disposal
-		add(new PageLink("navigateBackLink", referer));
+		add(new Link<Void>("navigateBackLink")
+		{
+			@Override
+			public void onClick()
+			{
+				setResponsePage(referer);
+			}
+
+		});
 
 		// Note that this would have had the same effect
 		//

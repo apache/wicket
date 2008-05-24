@@ -51,7 +51,7 @@ public abstract class AbstractGetCommand extends AbstractCommand
 			{
 
 				String modUrl = Strings.replaceAll(url, "${iteration}", String.valueOf(i))
-						.toString();
+					.toString();
 				doGet(runner.getClient(), modUrl);
 			}
 		}

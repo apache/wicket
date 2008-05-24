@@ -51,14 +51,14 @@ public class Home extends WicketExamplePage<Void>
 	public Home(final PageParameters parameters)
 	{
 		// create a list with sublists
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<String> l3 = new ArrayList<String>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");
@@ -85,7 +85,7 @@ public class Home extends WicketExamplePage<Void>
 		tree.setLinkType(LinkType.REGULAR);
 
 		add(tree);
-		add(new Link("expandAll")
+		add(new Link<Void>("expandAll")
 		{
 			@Override
 			public void onClick()
@@ -94,7 +94,7 @@ public class Home extends WicketExamplePage<Void>
 			}
 		});
 
-		add(new Link("collapseAll")
+		add(new Link<Void>("collapseAll")
 		{
 			@Override
 			public void onClick()
@@ -114,16 +114,17 @@ public class Home extends WicketExamplePage<Void>
 	 * @param sub
 	 *            the sub list
 	 */
-	private void add(DefaultMutableTreeNode parent, List sub)
+	@SuppressWarnings("unchecked")
+	private void add(DefaultMutableTreeNode parent, List<Object> sub)
 	{
-		for (Iterator i = sub.iterator(); i.hasNext();)
+		for (Iterator<Object> i = sub.iterator(); i.hasNext();)
 		{
 			Object o = i.next();
 			if (o instanceof List)
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
 				parent.add(child);
-				add(child, (List)o);
+				add(child, (List<Object>)o);
 			}
 			else
 			{
@@ -140,7 +141,7 @@ public class Home extends WicketExamplePage<Void>
 	 *            the list
 	 * @return tree model
 	 */
-	private TreeModel convertToTreeModel(List list)
+	private TreeModel convertToTreeModel(List<Object> list)
 	{
 		TreeModel model = null;
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<root>");

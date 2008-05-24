@@ -56,11 +56,12 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@SuppressWarnings("unchecked")
 	public T getObject()
 	{
 		if (target instanceof IModel)
 		{
-			return (T)((IModel)target).getObject();
+			return ((IModel<T>)target).getObject();
 		}
 		return (T)target;
 	}
@@ -68,11 +69,12 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public void setObject(T object)
 	{
 		if (target instanceof IModel)
 		{
-			((IModel)target).setObject(object);
+			((IModel<T>)target).setObject(object);
 		}
 		else
 		{
@@ -83,11 +85,11 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel< ? > getChainedModel()
+	public IModel<?> getChainedModel()
 	{
 		if (target instanceof IModel)
 		{
-			return (IModel)target;
+			return (IModel<?>)target;
 		}
 		return null;
 	}
@@ -95,7 +97,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
-	public void setChainedModel(IModel< ? > model)
+	public void setChainedModel(IModel<?> model)
 	{
 		target = model;
 	}
@@ -117,7 +119,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
-	protected String propertyExpression(Component< ? > component)
+	protected String propertyExpression(Component<?> component)
 	{
 		return component.getId();
 	}
@@ -137,10 +139,12 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * 
 	 * @param property
 	 * @return The IModel that is a wrapper around the current model and the property
+	 * @param <S>
+	 *            the type of the property
 	 */
-	public <P> IModel<P> bind(String property)
+	public <S> IModel<S> bind(String property)
 	{
-		return new PropertyModel<P>(this, property);
+		return new PropertyModel<S>(this, property);
 	}
 
 	/**
@@ -148,6 +152,8 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * the model get
 	 * 
 	 * @author ivaynberg
+	 * @param <C>
+	 *            The model object type
 	 */
 	private class AttachedCompoundPropertyModel<C> extends AbstractPropertyModel<C>
 		implements
@@ -213,11 +219,11 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	// deprecation release.
 	/**
 	 * @param component
-	 * @return
+	 * @return the model object
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
 	@Deprecated
-	public final Object getObject(Component component)
+	public final Object getObject(Component<?> component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -228,7 +234,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
 	@Deprecated
-	public final void setObject(Component component, Object object)
+	public final void setObject(Component<?> component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -30,9 +30,11 @@ import org.slf4j.LoggerFactory;
  * An <code>IModel</code> change operation.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of component's model object
  * @since 1.2.6
  */
-class ModelChange extends Change
+class ModelChange<T> extends Change
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,10 +42,10 @@ class ModelChange extends Change
 	private static final Logger log = LoggerFactory.getLogger(ModelChange.class);
 
 	/** the subject <code>Component</code> */
-	private final Component component;
+	private final Component<T> component;
 
 	/** the original <code>IModel</code> */
-	private IModel originalModel;
+	private IModel<T> originalModel;
 
 	/**
 	 * Constructor.
@@ -51,7 +53,8 @@ class ModelChange extends Change
 	 * @param component
 	 *            the subject <code>Component</code>
 	 */
-	ModelChange(final Component component)
+	@SuppressWarnings("unchecked")
+	ModelChange(final Component<T> component)
 	{
 		if (component == null)
 		{
@@ -62,7 +65,7 @@ class ModelChange extends Change
 		this.component = component;
 
 		// Get component model
-		final IModel model = component.getModel();
+		final IModel<T> model = component.getModel();
 
 		// If the component has a model, it's about to change!
 		if (model != null)
@@ -76,7 +79,7 @@ class ModelChange extends Change
 				if (component instanceof FormComponent)
 				{
 					// and it's using the same model as the form
-					if (((FormComponent)component).getForm().getModel() == model)
+					if (((FormComponent<T>)component).getForm().getModel() == model)
 					{
 						// we don't need to clone the model, because it will
 						// be re-initialized using initModel()
@@ -99,7 +102,7 @@ class ModelChange extends Change
 			if (cloneModel)
 			{
 				model.detach();
-				originalModel = (IModel)Objects.cloneModel(model);
+				originalModel = (IModel<T>)Objects.cloneModel(model);
 			}
 			else
 			{
@@ -110,19 +113,20 @@ class ModelChange extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD MODEL CHANGE: changed model of " + " (" +
-					Classes.simpleName(component.getClass()) + "@" + component.hashCode() + ")");
+				Classes.simpleName(component.getClass()) + "@" + component.hashCode() + ")");
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.version.undo.Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO MODEL CHANGE: setting original model " + originalModel + " to " +
-					component.getPath() + "@" + component.hashCode() + ")");
+				component.getPath() + "@" + component.hashCode() + ")");
 		}
 
 		component.setModel(originalModel);
@@ -131,6 +135,7 @@ class ModelChange extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "ModelChange[component: " + component.getPath() + "]";

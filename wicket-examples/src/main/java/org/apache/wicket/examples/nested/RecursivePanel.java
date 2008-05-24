@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public final class RecursivePanel extends Panel
+public final class RecursivePanel extends Panel<Object>
 {
 	/**
 	 * Constructor.
@@ -41,7 +41,7 @@ public final class RecursivePanel extends Panel
 	 * @param list
 	 *            a list where each element is either a string or another list
 	 */
-	public RecursivePanel(final String id, List list)
+	public RecursivePanel(final String id, List<Object> list)
 	{
 		super(id);
 		add(new Rows("rows", list));
@@ -51,7 +51,7 @@ public final class RecursivePanel extends Panel
 	/**
 	 * The list class.
 	 */
-	private static class Rows extends ListView
+	private static class Rows extends ListView<Object>
 	{
 		/**
 		 * Construct.
@@ -61,7 +61,7 @@ public final class RecursivePanel extends Panel
 		 * @param list
 		 *            a list where each element is either a string or another list
 		 */
-		public Rows(String name, List list)
+		public Rows(String name, List<Object> list)
 		{
 			super(name, list);
 		}
@@ -69,23 +69,25 @@ public final class RecursivePanel extends Panel
 		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
 		 */
-		protected void populateItem(ListItem listItem)
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void populateItem(ListItem<Object> listItem)
 		{
 			Object modelObject = listItem.getModelObject();
 
 			if (modelObject instanceof List)
 			{
-				// create a panel that renders the sub lis
-				RecursivePanel nested = new RecursivePanel("nested", (List)modelObject);
+				// create a panel that renders the sub list
+				RecursivePanel nested = new RecursivePanel("nested", (List<Object>)modelObject);
 				listItem.add(nested);
 				// if the current element is a list, we create a dummy row/
 				// label element
 				// as we have to confirm to our HTML definition, and set it's
 				// visibility
 				// property to false as we do not want LI tags to be rendered.
-				WebMarkupContainer row = new WebMarkupContainer("row");
+				WebMarkupContainer<?> row = new WebMarkupContainer<Void>("row");
 				row.setVisible(false);
-				row.add(new WebMarkupContainer("label"));
+				row.add(new WebMarkupContainer<Void>("label"));
 				listItem.add(row);
 			}
 			else
@@ -101,8 +103,8 @@ public final class RecursivePanel extends Panel
 				// add the row (with the LI element attached, and the label with
 				// the
 				// row's actual value to display
-				WebMarkupContainer row = new WebMarkupContainer("row");
-				row.add(new Label("label", modelObject.toString()));
+				WebMarkupContainer<?> row = new WebMarkupContainer<Void>("row");
+				row.add(new Label<String>("label", modelObject.toString()));
 				listItem.add(row);
 			}
 		}

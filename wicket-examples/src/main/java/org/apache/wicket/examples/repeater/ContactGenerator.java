@@ -37,14 +37,14 @@ public class ContactGenerator
 		return instance;
 	}
 
-	private String[] firstNames = { "Jacob", "Emily", "Michael", "Sarah", "Matthew", "Brianna",
-			"Nicholas", "Samantha", "Christopher", "Hailey", "Abner", "Abby", "Joshua", "Douglas",
-			"Jack", "Keith", "Gerald", "Samuel", "Willie", "Larry", "Jose", "Timothy", "Sandra",
-			"Kathleen", "Pamela", "Virginia", "Debra", "Maria", "Linda" };
-	private String[] lastNames = { "Smiith", "Johnson", "Williams", "Jones", "Brown", "Donahue",
-			"Bailey", "Rose", "Allen", "Black", "Davis", "Clark", "Hall", "Lee", "Baker",
-			"Gonzalez", "Nelson", "Moore", "Wilson", "Graham", "Fisher", "Cruz", "Ortiz", "Gomez",
-			"Murray" };
+	private final String[] firstNames = { "Jacob", "Emily", "Michael", "Sarah", "Matthew",
+			"Brianna", "Nicholas", "Samantha", "Christopher", "Hailey", "Abner", "Abby", "Joshua",
+			"Douglas", "Jack", "Keith", "Gerald", "Samuel", "Willie", "Larry", "Jose", "Timothy",
+			"Sandra", "Kathleen", "Pamela", "Virginia", "Debra", "Maria", "Linda" };
+	private final String[] lastNames = { "Smiith", "Johnson", "Williams", "Jones", "Brown",
+			"Donahue", "Bailey", "Rose", "Allen", "Black", "Davis", "Clark", "Hall", "Lee",
+			"Baker", "Gonzalez", "Nelson", "Moore", "Wilson", "Graham", "Fisher", "Cruz", "Ortiz",
+			"Gomez", "Murray" };
 
 	private ContactGenerator()
 	{
@@ -80,7 +80,7 @@ public class ContactGenerator
 	 * @param collection
 	 * @param count
 	 */
-	public void generate(Collection collection, int count)
+	public void generate(Collection<Contact> collection, int count)
 	{
 		for (int i = 0; i < count; i++)
 		{
@@ -90,9 +90,15 @@ public class ContactGenerator
 
 	private String generatePhoneNumber()
 	{
-		return new StringBuffer().append(rint(2, 9)).append(rint(0, 9)).append(rint(0, 9)).append(
-				"-555-").append(rint(1, 9)).append(rint(0, 9)).append(rint(0, 9))
-				.append(rint(0, 9)).toString();
+		return new StringBuffer().append(rint(2, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.append("-555-")
+			.append(rint(1, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.toString();
 	}
 
 	private int rint(int min, int max)

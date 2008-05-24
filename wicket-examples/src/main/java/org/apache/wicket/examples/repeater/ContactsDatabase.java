@@ -31,11 +31,11 @@ import java.util.Map;
  */
 public class ContactsDatabase
 {
-	private Map map = Collections.synchronizedMap(new HashMap());
-	private List fnameIdx = Collections.synchronizedList(new ArrayList());
-	private List lnameIdx = Collections.synchronizedList(new ArrayList());
-	private List fnameDescIdx = Collections.synchronizedList(new ArrayList());
-	private List lnameDescIdx = Collections.synchronizedList(new ArrayList());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
 	/**
 	 * Constructor
@@ -60,7 +60,7 @@ public class ContactsDatabase
 	 */
 	public Contact get(long id)
 	{
-		Contact c = (Contact)map.get(id);
+		Contact c = map.get(id);
 		if (c == null)
 		{
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
@@ -86,13 +86,13 @@ public class ContactsDatabase
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
 	{
-		List sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
+		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
 		return sublist;
 	}
 
-	protected List getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(String prop, boolean asc)
 	{
 		if (prop == null)
 		{
@@ -107,7 +107,7 @@ public class ContactsDatabase
 			return (asc) ? lnameIdx : lnameDescIdx;
 		}
 		throw new RuntimeException("uknown sort option [" + prop +
-				"]. valid options: [firstName] , [lastName]");
+			"]. valid options: [firstName] , [lastName]");
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class ContactsDatabase
 		else
 		{
 			throw new IllegalArgumentException("contact [" + contact.getFirstName() +
-					"] is already persistent");
+				"] is already persistent");
 		}
 	}
 
@@ -145,7 +145,7 @@ public class ContactsDatabase
 	 */
 	public void delete(final Contact contact)
 	{
-		Contact c = (Contact)map.remove(contact.getId());
+		Contact c = map.remove(contact.getId());
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);
@@ -157,35 +157,35 @@ public class ContactsDatabase
 
 	private void updateIndecies()
 	{
-		Collections.sort(fnameIdx, new Comparator()
+		Collections.sort(fnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getFirstName().compareTo(((Contact)arg1).getFirstName());
+				return (arg0).getFirstName().compareTo((arg1).getFirstName());
 			}
 		});
 
-		Collections.sort(lnameIdx, new Comparator()
+		Collections.sort(lnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getLastName().compareTo(((Contact)arg1).getLastName());
+				return (arg0).getLastName().compareTo((arg1).getLastName());
 			}
 		});
 
-		Collections.sort(fnameDescIdx, new Comparator()
+		Collections.sort(fnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getFirstName().compareTo(((Contact)arg0).getFirstName());
+				return (arg1).getFirstName().compareTo((arg0).getFirstName());
 			}
 		});
 
-		Collections.sort(lnameDescIdx, new Comparator()
+		Collections.sort(lnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getLastName().compareTo(((Contact)arg0).getLastName());
+				return (arg1).getLastName().compareTo((arg0).getLastName());
 			}
 		});
 

@@ -63,9 +63,9 @@ public final class Strings
 
 	static
 	{
-		LINE_SEPARATOR = (String)AccessController.doPrivileged(new PrivilegedAction()
+		LINE_SEPARATOR = AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
-			public Object run()
+			public String run()
 			{
 				return System.getProperty("line.separator");
 			}
@@ -1138,9 +1138,9 @@ public final class Strings
 	 *            the location where the component was created or added in the java code.
 	 * @return a string giving the line precise location where the component was added or created.
 	 */
-	public static String toString(final Component< ? > component, final Throwable location)
+	public static String toString(final Component<?> component, final Throwable location)
 	{
-		Class componentClass = component.getClass();
+		Class<?> componentClass = component.getClass();
 
 		// try to find the component type, if it is an inner element, then get
 		// the parent component.

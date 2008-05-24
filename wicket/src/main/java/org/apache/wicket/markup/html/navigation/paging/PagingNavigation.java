@@ -309,7 +309,7 @@ public class PagingNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final Link< ? > link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		final Link<?> link = newPagingNavigationLink("pageLink", pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -322,7 +322,7 @@ public class PagingNavigation extends Loop
 		{
 			label = String.valueOf(pageIndex + 1);
 		}
-		link.add(new Label("pageNumber", label));
+		link.add(new Label<String>("pageNumber", label));
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new PagingNavigationLink(id, pageable, pageIndex);
 	}

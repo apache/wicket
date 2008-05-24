@@ -27,8 +27,10 @@ import org.apache.wicket.util.value.ValueMap;
 /**
  * @author marrink
  */
-public class AjaxFormSubmitTestPage extends WebPage
+public class AjaxFormSubmitTestPage extends WebPage<ValueMap>
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Indicates form handled submit.
 	 */
@@ -55,24 +57,26 @@ public class AjaxFormSubmitTestPage extends WebPage
 	 */
 	public AjaxFormSubmitTestPage()
 	{
-		super(new CompoundPropertyModel(new ValueMap("txt1=foo,txt2=bar")));
-		Form form = new Form("form")
+		super(new CompoundPropertyModel<ValueMap>(new ValueMap("txt1=foo,txt2=bar")));
+		Form<?> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				formSubmitted = formSubmitted | FORM;
 			}
 		};
 		add(form);
-		form.add(new TextField("txt1"));
-		form.add(new TextField("txt2"));
-		form.add(new AjaxFallbackButton("submit", form)
+		form.add(new TextField<String>("txt1"));
+		form.add(new TextField<String>("txt2"));
+		form.add(new AjaxFallbackButton<Void>("submit", form)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				formSubmitted = formSubmitted | BUTTON;
 			}

@@ -29,7 +29,7 @@ import org.apache.wicket.model.StringResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public class LabelPage extends WicketExamplePage
+public class LabelPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -37,14 +37,14 @@ public class LabelPage extends WicketExamplePage
 	public LabelPage()
 	{
 		// add a static label
-		add(new Label("staticLabel", "static text"));
+		add(new Label<String>("staticLabel", "static text"));
 
 		// add a dynamic label. For this example, we create an annonymous
 		// subclass
 		// of Model (just because it is less work then directly implementing
 		// IModel)
 		// that returns a new java.util.Date on each invocation
-		add(new Label("dynamicLabel", new Model<Date>()
+		add(new Label<Date>("dynamicLabel", new Model<Date>()
 		{
 			@Override
 			public Date getObject()
@@ -61,7 +61,7 @@ public class LabelPage extends WicketExamplePage
 		// parameter substitution.
 		StringResourceModel stringResourceModel = new StringResourceModel("label.current.locale",
 			this, null, new Object[] { getLocale() });
-		add(new Label("resourceLabel", stringResourceModel));
+		add(new Label<String>("resourceLabel", stringResourceModel));
 
 		// and here we add a label that contains markup. Normally, this markup
 		// would be converted
@@ -72,7 +72,7 @@ public class LabelPage extends WicketExamplePage
 		// our browser to interpret it as real markup, so we set the
 		// escapeModelString property
 		// to false
-		Label markupLabel = new Label("markupLabel",
+		Label<String> markupLabel = new Label<String>("markupLabel",
 			"now <i>that</i> is a pretty <b>bold</b> statement!");
 		markupLabel.setEscapeModelStrings(false);
 		add(markupLabel);

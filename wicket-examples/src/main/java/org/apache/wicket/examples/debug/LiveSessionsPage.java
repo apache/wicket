@@ -19,6 +19,7 @@ package org.apache.wicket.examples.debug;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
@@ -28,6 +29,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
@@ -39,7 +42,7 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * @author jcompagner
  */
-public class LiveSessionsPage extends WebPage
+public class LiveSessionsPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,11 +51,11 @@ public class LiveSessionsPage extends WebPage
 	 */
 	public LiveSessionsPage()
 	{
-		add(new Image("bug"));
+		add(new Image<Void>("bug"));
 
 		add(new ApplicationView("application", Application.get()));
 
-		Link link = new Link("togglelink")
+		Link<?> link = new Link<Void>("togglelink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -66,7 +69,7 @@ public class LiveSessionsPage extends WebPage
 				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}
 		};
-		link.add(new Label("toggletext", new Model<String>()
+		link.add(new Label<String>("toggletext", new Model<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -86,7 +89,7 @@ public class LiveSessionsPage extends WebPage
 			}
 		}));
 		add(link);
-		add(new Label("totalSessions", new Model<Integer>()
+		add(new Label<Integer>("totalSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -96,7 +99,7 @@ public class LiveSessionsPage extends WebPage
 				return getRequestLogger().getTotalCreatedSessions();
 			}
 		}));
-		add(new Label("peakSessions", new Model<Integer>()
+		add(new Label<Integer>("peakSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -106,7 +109,7 @@ public class LiveSessionsPage extends WebPage
 				return getRequestLogger().getPeakSessions();
 			}
 		}));
-		add(new Label("liveSessions", new Model<Integer>()
+		add(new Label<Integer>("liveSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -117,28 +120,29 @@ public class LiveSessionsPage extends WebPage
 			}
 		}));
 
-		Model<ArrayList<SessionData>> sessionModel = new Model<ArrayList<SessionData>>()
+		IModel<List<SessionData>> sessionModel = new AbstractReadOnlyModel<List<SessionData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public ArrayList<SessionData> getObject()
+			public List<SessionData> getObject()
 			{
 				return new ArrayList<SessionData>(
 					Arrays.asList(getRequestLogger().getLiveSessions()));
 			}
 		};
-		PageableListView listView = new PageableListView("sessions", sessionModel, 50)
+		PageableListView<SessionData> listView = new PageableListView<SessionData>("sessions",
+			sessionModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
 
 			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
 
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<SessionData> item)
 			{
-				final SessionData sd = (SessionData)item.getModelObject();
-				Link link = new Link("id")
+				final SessionData sd = item.getModelObject();
+				Link<?> link = new Link<Void>("id")
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -151,13 +155,13 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add(new Label("id", new Model<String>(sd.getSessionId())));
+				link.add(new Label<String>("id", new Model<String>(sd.getSessionId())));
 				item.add(link);
-				item.add(new Label("lastRequestTime", new Model<String>(
+				item.add(new Label<String>("lastRequestTime", new Model<String>(
 					sdf.format(sd.getLastActive()))));
-				item.add(new Label("requestCount", new Model<Long>(sd.getNumberOfRequests())));
-				item.add(new Label("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
-				item.add(new Label("sessionSize",
+				item.add(new Label<Long>("requestCount", new Model<Long>(sd.getNumberOfRequests())));
+				item.add(new Label<Long>("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
+				item.add(new Label<Bytes>("sessionSize",
 					new Model<Bytes>(Bytes.bytes(sd.getSessionSize()))));
 			}
 		};

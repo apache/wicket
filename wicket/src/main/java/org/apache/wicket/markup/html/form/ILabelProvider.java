@@ -22,8 +22,10 @@ import org.apache.wicket.model.IModel;
  * Provider of labels for FormComponents and others.
  * 
  * @author almaw
+ * @param <T>
+ *            the label's model object type
  */
-public interface ILabelProvider
+public interface ILabelProvider<T>
 {
 	/**
 	 * The value will be made available to the validator property by means of ${label}. It does not
@@ -31,5 +33,5 @@ public interface ILabelProvider
 	 * 
 	 * @return labelModel
 	 */
-	public IModel getLabel();
+	public IModel<T> getLabel();
 }

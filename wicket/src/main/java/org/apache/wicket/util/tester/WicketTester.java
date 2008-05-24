@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * // production page
- * public class MyPage extends WebPage
+ * public class MyPage extends WebPage<Void>
  * {
  * 	public MyPage()
  * 	{
@@ -92,7 +92,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * // production page
- * public class YourPage extends WebPage
+ * public class YourPage extends WebPage<Void>
  * {
  * 	public YourPage(String message)
  * 	{

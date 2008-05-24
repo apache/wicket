@@ -25,7 +25,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * Note that this component doesn't work with CompoundPropertyModel's lazy initialization.
  */
-public class StockQuoteLabel2 extends Label
+public class StockQuoteLabel2 extends Label<String>
 {
 	/**
 	 * Constructor taking the symbol directly.
@@ -37,12 +37,13 @@ public class StockQuoteLabel2 extends Label
 	 */
 	public StockQuoteLabel2(String id, final String symbol)
 	{
-		super(id, new AbstractReadOnlyModel()
+		super(id, new AbstractReadOnlyModel<String>()
 		{
 			/**
 			 * Gets the stockquote for the given symbol.
 			 */
-			public Object getObject()
+			@Override
+			public String getObject()
 			{
 				final StockQuote quote = new StockQuote(symbol);
 				return quote.getQuote();

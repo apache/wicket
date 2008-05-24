@@ -76,6 +76,7 @@ public class ToString
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer s = new StringBuffer();
@@ -105,7 +106,7 @@ public class ToString
 	public static String[] stringToArray(String value)
 	{
 		BufferedReader reader = new BufferedReader(new StringReader(value));
-		List l = new LinkedList();
+		List<String> l = new LinkedList<String>();
 		String s;
 		try
 		{
@@ -117,7 +118,7 @@ public class ToString
 		catch (java.io.IOException e)
 		{
 		}
-		return (String[])l.toArray(new String[l.size()]);
+		return l.toArray(new String[l.size()]);
 	}
 
 	/**

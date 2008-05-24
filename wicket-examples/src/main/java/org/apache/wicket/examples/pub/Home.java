@@ -44,7 +44,7 @@ public final class Home extends WicketExamplePage<Void>
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Image("beer"));
+		add(new Image<Void>("beer"));
 
 		// create a dummy object to serve as our substitution model
 		ValueMap map = new ValueMap();
@@ -57,14 +57,15 @@ public final class Home extends WicketExamplePage<Void>
 		// variable ${user} will be regconized as a property variable, and will
 		// be substituted with the given model (the wrapped map). Hence,
 		// ${user} will be replaced by map.get('user'), which is 'Jonathan'.
-		StringResourceModel labelModel = new StringResourceModel("salutation", this, new Model(map));
+		StringResourceModel labelModel = new StringResourceModel("salutation", this,
+			new Model<ValueMap>(map));
 
 		// Add the label with the dynamic model
-		add(new Label("salutation", labelModel));
+		add(new Label<String>("salutation", labelModel));
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link("goCanadian")
+		add(new Link<Void>("goCanadian")
 		{
 			@Override
 			public void onClick()
@@ -72,7 +73,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(Locale.CANADA);
 			}
 		});
-		add(new Link("goUS")
+		add(new Link<Void>("goUS")
 		{
 			@Override
 			public void onClick()
@@ -80,7 +81,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(Locale.US);
 			}
 		});
-		add(new Link("goDutch")
+		add(new Link<Void>("goDutch")
 		{
 			@Override
 			public void onClick()
@@ -88,7 +89,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("nl", "NL"));
 			}
 		});
-		add(new Link("goGerman")
+		add(new Link<Void>("goGerman")
 		{
 			@Override
 			public void onClick()
@@ -96,7 +97,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-		add(new Link("goChinese")
+		add(new Link<Void>("goChinese")
 		{
 			@Override
 			public void onClick()
@@ -104,7 +105,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("zh", "CN"));
 			}
 		});
-		add(new Link("goDanish")
+		add(new Link<Void>("goDanish")
 		{
 			@Override
 			public void onClick()
@@ -112,7 +113,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("da", "DK"));
 			}
 		});
-		add(new Link("goKorean")
+		add(new Link<Void>("goKorean")
 		{
 			@Override
 			public void onClick()

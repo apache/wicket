@@ -32,11 +32,11 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class ListChoicePage extends WicketExamplePage
+public class ListChoicePage extends WicketExamplePage<ListChoicePage.Input>
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
 
 	/**
 	 * Constructor
@@ -44,15 +44,16 @@ public class ListChoicePage extends WicketExamplePage
 	public ListChoicePage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel(input));
+		setModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -64,20 +65,21 @@ public class ListChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		ListChoice listChoice = new ListChoice("site", SITES);
+		ListChoice<String> listChoice = new ListChoice<String>("site", SITES);
 		listChoice.setMaxRows(4);
 		form.add(listChoice);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		/** the selected site. */
-		public String site = (String)SITES.get(0);
+		public String site = SITES.get(0);
 
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "site = '" + site + "'";
@@ -87,17 +89,18 @@ public class ListChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"site\">\n" + "    <option>site 1</option>\n"
-				+ "    <option>site 2</option>\n" + "</select>";
+			+ "    <option>site 2</option>\n" + "</select>";
 		String code = "private static final List SITES = Arrays.asList(new String[] { \"The Server Side\", \"Java Lobby\", \"Java.Net\" });\n"
-				+ "...\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Add a list choice component that uses the model object's 'site' property to designate the\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListChoice listChoice = new ListChoice(\"site\", SITES);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;listChoice.setMaxRows(4);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(listChoice);";
+			+ "...\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// Add a list choice component that uses the model object's 'site' property to designate the\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;ListChoice listChoice = new ListChoice(\"site\", SITES);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;listChoice.setMaxRows(4);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(listChoice);";
 		add(new ExplainPanel(html, code));
 
 	}

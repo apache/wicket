@@ -71,7 +71,7 @@ public class TesterTest extends TestCase
 		}
 	}
 
-	private class MyPage extends WebPage
+	private class MyPage extends WebPage<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

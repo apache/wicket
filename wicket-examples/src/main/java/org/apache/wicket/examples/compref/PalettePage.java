@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,22 +33,23 @@ import org.apache.wicket.model.Model;
  * 
  * @author ivaynberg
  */
-public class PalettePage extends WicketExamplePage
+public class PalettePage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
 	 */
 	public PalettePage()
 	{
-		List persons = ComponentReferenceApplication.getPersons();
-		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
+		List<Person> persons = ComponentReferenceApplication.getPersons();
+		IChoiceRenderer<Person> renderer = new ChoiceRenderer<Person>("fullName", "fullName");
 
-		final Palette palette = new Palette("palette", new Model(new ArrayList()), new Model(
-				(Serializable)persons), renderer, 10, true);
+		final Palette<Person> palette = new Palette<Person>("palette",
+			Model.valueOf(new ArrayList<Person>()), Model.valueOf(persons), renderer, 10, true);
 
 
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("selected person(s): " + palette.getModelObjectAsString());
@@ -62,16 +62,17 @@ public class PalettePage extends WicketExamplePage
 		add(new FeedbackPanel("feedback"));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<form wicket:id=\"form\">\n" + "<span wicket:id=\"palette\">\n"
-				+ "</span>\n</form>";
+			+ "</span>\n</form>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;Form f=new Form(\"form\");<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;List persons = ComponentReferenceApplication.getPersons();;<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;List persons = ComponentReferenceApplication.getPersons();;<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
 		add(new ExplainPanel(html, code));
 	}
 }

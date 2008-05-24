@@ -30,7 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,6 +37,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Generics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,22 +80,27 @@ public final class SerializableChecker extends ObjectOutputStream
 	 */
 	private static class NoopOutputStream extends OutputStream
 	{
+		@Override
 		public void close()
 		{
 		}
 
+		@Override
 		public void flush()
 		{
 		}
 
+		@Override
 		public void write(byte[] b)
 		{
 		}
 
+		@Override
 		public void write(byte[] b, int i, int l)
 		{
 		}
 
+		@Override
 		public void write(int b)
 		{
 		}
@@ -183,6 +188,7 @@ public final class SerializableChecker extends ObjectOutputStream
 			this.fieldDescription = fieldDescription;
 		}
 
+		@Override
 		public String toString()
 		{
 			return object.getClass() + " - " + fieldDescription;
@@ -228,26 +234,26 @@ public final class SerializableChecker extends ObjectOutputStream
 			LOOKUP_METHOD.setAccessible(true);
 
 			GET_CLASS_DATA_LAYOUT_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getClassDataLayout", null);
+				"getClassDataLayout", (Class[])null);
 			GET_CLASS_DATA_LAYOUT_METHOD.setAccessible(true);
 
 			GET_NUM_OBJ_FIELDS_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getNumObjFields", null);
+				"getNumObjFields", (Class[])null);
 			GET_NUM_OBJ_FIELDS_METHOD.setAccessible(true);
 
 			GET_OBJ_FIELD_VALUES_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getObjFieldValues", new Class[] { Object.class, Object[].class });
+				"getObjFieldValues", new Class[] { Object.class, Object[].class });
 			GET_OBJ_FIELD_VALUES_METHOD.setAccessible(true);
 
-			GET_FIELD_METHOD = ObjectStreamField.class.getDeclaredMethod("getField", null);
+			GET_FIELD_METHOD = ObjectStreamField.class.getDeclaredMethod("getField", (Class[])null);
 			GET_FIELD_METHOD.setAccessible(true);
 
 			HAS_WRITE_REPLACE_METHOD_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"hasWriteReplaceMethod", null);
+				"hasWriteReplaceMethod", (Class[])null);
 			HAS_WRITE_REPLACE_METHOD_METHOD.setAccessible(true);
 
 			INVOKE_WRITE_REPLACE_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"invokeWriteReplace", new Class[] { Object.class });
+				"invokeWriteReplace", new Class[] { Object.class });
 			INVOKE_WRITE_REPLACE_METHOD.setAccessible(true);
 		}
 		catch (SecurityException e)
@@ -276,19 +282,19 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	/** object stack that with the trace path. */
-	private final LinkedList traceStack = new LinkedList();
+	private final LinkedList<TraceSlot> traceStack = new LinkedList<TraceSlot>();
 
 	/** set for checking circular references. */
-	private final Map checked = new IdentityHashMap();
+	private final Map<Object, Object> checked = new IdentityHashMap<Object, Object>();
 
 	/** string stack with current names pushed. */
-	private final LinkedList nameStack = new LinkedList();
+	private final LinkedList<String> nameStack = new LinkedList<String>();
 
 	/** root object being analyzed. */
 	private Object root;
 
 	/** cache for classes - writeObject methods. */
-	private final Map writeObjectMethodCache = new HashMap();
+	private final Map<Class<?>, Object> writeObjectMethodCache = Generics.newHashMap();
 
 	/** current simple field name. */
 	private String simpleName = "";
@@ -315,6 +321,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#reset()
 	 */
+	@Override
 	public void reset() throws IOException
 	{
 		root = null;
@@ -333,14 +340,14 @@ public final class SerializableChecker extends ObjectOutputStream
 			return;
 		}
 
-		Class cls = obj.getClass();
+		Class<?> cls = obj.getClass();
 		nameStack.add(simpleName);
 		traceStack.add(new TraceSlot(obj, fieldDescription));
 
 		if (!(obj instanceof Serializable) && (!Proxy.isProxyClass(cls)))
 		{
 			throw new WicketNotSerializableException(
-				  toPrettyPrintedStack(obj.getClass().getName()), exception);
+				toPrettyPrintedStack(obj.getClass().getName()), exception);
 		}
 
 		ObjectStreamClass desc;
@@ -350,10 +357,10 @@ public final class SerializableChecker extends ObjectOutputStream
 			{
 				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, new Object[] { cls,
 						Boolean.TRUE });
-				Class repCl;
-				if (!((Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, null)).booleanValue() ||
-						(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, new Object[] { obj })) == null ||
-						(repCl = obj.getClass()) == cls)
+				Class<?> repCl;
+				if (!((Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[])null)).booleanValue() ||
+					(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, new Object[] { obj })) == null ||
+					(repCl = obj.getClass()) == cls)
 				{
 					break;
 				}
@@ -376,7 +383,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		else if (cls.isArray())
 		{
 			checked.put(obj, null);
-			Class ccl = cls.getComponentType();
+			Class<?> ccl = cls.getComponentType();
 			if (!(ccl.isPrimitive()))
 			{
 				Object[] objs = (Object[])obj;
@@ -422,7 +429,7 @@ public final class SerializableChecker extends ObjectOutputStream
 					throw (WicketNotSerializableException)e;
 				}
 				log.warn("error delegating to Externalizable : " + e.getMessage() + ", path: " +
-						currentPath());
+					currentPath());
 			}
 		}
 		else
@@ -441,7 +448,7 @@ public final class SerializableChecker extends ObjectOutputStream
 				try
 				{
 					writeObjectMethod = cls.getDeclaredMethod("writeObject",
-							new Class[] { java.io.ObjectOutputStream.class });
+						new Class[] { java.io.ObjectOutputStream.class });
 				}
 				catch (SecurityException e)
 				{
@@ -468,6 +475,7 @@ public final class SerializableChecker extends ObjectOutputStream
 						enableReplaceObject(true);
 					}
 
+					@Override
 					protected Object replaceObject(Object streamObj) throws IOException
 					{
 						if (streamObj == original)
@@ -502,7 +510,7 @@ public final class SerializableChecker extends ObjectOutputStream
 						throw (WicketNotSerializableException)e;
 					}
 					log.warn("error delegating to writeObject : " + e.getMessage() + ", path: " +
-							currentPath());
+						currentPath());
 				}
 			}
 			else
@@ -510,7 +518,7 @@ public final class SerializableChecker extends ObjectOutputStream
 				Object[] slots;
 				try
 				{
-					slots = (Object[])GET_CLASS_DATA_LAYOUT_METHOD.invoke(desc, null);
+					slots = (Object[])GET_CLASS_DATA_LAYOUT_METHOD.invoke(desc, (Object[])null);
 				}
 				catch (Exception e)
 				{
@@ -544,7 +552,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		int numFields;
 		try
 		{
-			numFields = ((Integer)GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, null)).intValue();
+			numFields = ((Integer)GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[])null)).intValue();
 		}
 		catch (IllegalAccessException e)
 		{
@@ -576,8 +584,8 @@ public final class SerializableChecker extends ObjectOutputStream
 			for (int i = 0; i < objVals.length; i++)
 			{
 				if (objVals[i] instanceof String || objVals[i] instanceof Number ||
-						objVals[i] instanceof Date || objVals[i] instanceof Boolean ||
-						objVals[i] instanceof Class)
+					objVals[i] instanceof Date || objVals[i] instanceof Boolean ||
+					objVals[i] instanceof Class)
 				{
 					// filter out common cases
 					continue;
@@ -593,7 +601,7 @@ public final class SerializableChecker extends ObjectOutputStream
 				Field field;
 				try
 				{
-					field = (Field)GET_FIELD_METHOD.invoke(fieldDesc, null);
+					field = (Field)GET_FIELD_METHOD.invoke(fieldDesc, (Object[])null);
 				}
 				catch (IllegalAccessException e)
 				{
@@ -618,7 +626,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	private StringBuffer currentPath()
 	{
 		StringBuffer b = new StringBuffer();
-		for (Iterator it = nameStack.iterator(); it.hasNext();)
+		for (Iterator<String> it = nameStack.iterator(); it.hasNext();)
 		{
 			b.append(it.next());
 			if (it.hasNext())
@@ -643,15 +651,15 @@ public final class SerializableChecker extends ObjectOutputStream
 		result.append("Unable to serialize class: ");
 		result.append(type);
 		result.append("\nField hierarchy is:");
-		for (Iterator i = traceStack.listIterator(); i.hasNext();)
+		for (Iterator<TraceSlot> i = traceStack.listIterator(); i.hasNext();)
 		{
 			spaces.append("  ");
-			TraceSlot slot = (TraceSlot)i.next();
+			TraceSlot slot = i.next();
 			result.append("\n").append(spaces).append(slot.fieldDescription);
 			result.append(" [class=").append(slot.object.getClass().getName());
 			if (slot.object instanceof Component)
 			{
-				Component component = (Component)slot.object;
+				Component<?> component = (Component<?>)slot.object;
 				result.append(", path=").append(component.getPath());
 			}
 			result.append("]");
@@ -663,6 +671,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeObjectOverride(java.lang.Object)
 	 */
+	@Override
 	protected final void writeObjectOverride(Object obj) throws IOException
 	{
 		if (!available)
@@ -672,7 +681,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		root = obj;
 		if (fieldDescription == null)
 		{
-			fieldDescription = (root instanceof Component) ? ((Component)root).getPath() : "";
+			fieldDescription = (root instanceof Component) ? ((Component<?>)root).getPath() : "";
 		}
 
 		check(root);

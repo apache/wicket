@@ -37,9 +37,9 @@ import org.apache.wicket.validation.validator.StringValidator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class FormPage extends BasePage
+public class FormPage extends BasePage<Void>
 {
-	private Bean bean = new Bean();
+	private final Bean bean = new Bean();
 
 	/**
 	 * Constructor
@@ -52,22 +52,22 @@ public class FormPage extends BasePage
 		add(feedback);
 
 		// add form with markup id setter so it can be updated via ajax
-		Form form = new Form("form", new CompoundPropertyModel(bean));
+		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<Bean>(bean));
 		add(form);
 		form.setOutputMarkupId(true);
 
-		FormComponent fc;
+		FormComponent<?> fc;
 
 		// add form components to the form as usual
 
-		fc = new RequiredTextField("name");
+		fc = new RequiredTextField<String>("name");
 		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
 
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("name-label", fc));
 
-		fc = new RequiredTextField("email");
+		fc = new RequiredTextField<String>("email");
 		fc.add(EmailAddressValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
 
@@ -80,15 +80,17 @@ public class FormPage extends BasePage
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxButton("ajax-button", form)
+		form.add(new AjaxButton<Void>("ajax-button", form)
 		{
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				// repaint the feedback panel so that it is hidden
 				target.addComponent(feedback);
 			}
 
-			protected void onError(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
 				// repaint the feedback panel so errors are shown
 				target.addComponent(feedback);

@@ -85,7 +85,7 @@ import java.util.ListIterator;
 public class Revision extends ToString
 {
 
-	List deltas_ = new LinkedList();
+	List<Delta> deltas_ = new LinkedList<Delta>();
 
 	/**
 	 * Creates an empty Revision.
@@ -133,7 +133,7 @@ public class Revision extends ToString
 	 */
 	public Delta getDelta(int i)
 	{
-		return (Delta)deltas_.get(i);
+		return deltas_.get(i);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Revision extends ToString
 	 */
 	public Object[] patch(Object[] src) throws PatchFailedException
 	{
-		List target = new ArrayList(Arrays.asList(src));
+		List<Object> target = new ArrayList<Object>(Arrays.asList(src));
 		applyTo(target);
 		return target.toArray();
 	}
@@ -170,12 +170,12 @@ public class Revision extends ToString
 	 * @throws PatchFailedException
 	 *             if any of the patches cannot be applied.
 	 */
-	public synchronized void applyTo(List target) throws PatchFailedException
+	public synchronized void applyTo(List<Object> target) throws PatchFailedException
 	{
-		ListIterator i = deltas_.listIterator(deltas_.size());
+		ListIterator<Delta> i = deltas_.listIterator(deltas_.size());
 		while (i.hasPrevious())
 		{
-			Delta delta = (Delta)i.previous();
+			Delta delta = i.previous();
 			delta.patch(target);
 		}
 	}
@@ -187,12 +187,13 @@ public class Revision extends ToString
 	 *            a {@link StringBuffer StringBuffer} to which the string representation will be
 	 *            appended.
 	 */
+	@Override
 	public synchronized void toString(StringBuffer s)
 	{
-		Iterator i = deltas_.iterator();
+		Iterator<Delta> i = deltas_.iterator();
 		while (i.hasNext())
 		{
-			((Delta)i.next()).toString(s);
+			(i.next()).toString(s);
 		}
 	}
 
@@ -207,10 +208,10 @@ public class Revision extends ToString
 	 */
 	public synchronized void toRCSString(StringBuffer s, String EOL)
 	{
-		Iterator i = deltas_.iterator();
+		Iterator<Delta> i = deltas_.iterator();
 		while (i.hasNext())
 		{
-			((Delta)i.next()).toRCSString(s, EOL);
+			(i.next()).toRCSString(s, EOL);
 		}
 	}
 
@@ -260,10 +261,10 @@ public class Revision extends ToString
 	public void accept(RevisionVisitor visitor)
 	{
 		visitor.visit(this);
-		Iterator iter = deltas_.iterator();
+		Iterator<Delta> iter = deltas_.iterator();
 		while (iter.hasNext())
 		{
-			((Delta)iter.next()).accept(visitor);
+			(iter.next()).accept(visitor);
 		}
 	}
 

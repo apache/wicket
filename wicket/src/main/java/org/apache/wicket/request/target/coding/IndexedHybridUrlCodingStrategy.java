@@ -55,7 +55,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(urlEncode(value)).append("/");
+			url.append(urlEncodePathComponent(value)).append("/");
 			i++;
 		}
 
@@ -68,7 +68,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap))
+			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncodePathComponent(pageMap))
 					.append("/");
 		}
 
@@ -103,11 +103,11 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			{
 				i++;
 				params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-						.decodePageMapName(urlDecode(parts[i])));
+						.decodePageMapName(urlDecodePathComponent(parts[i])));
 			}
 			else
 			{
-				params.put(String.valueOf(i), urlDecode(parts[i]));
+				params.put(String.valueOf(i), urlDecodePathComponent(parts[i]));
 			}
 		}
 		return params;

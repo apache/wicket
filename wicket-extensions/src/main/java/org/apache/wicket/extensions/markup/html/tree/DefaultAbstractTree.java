@@ -40,7 +40,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.EnumeratedType;
 
-
 /**
  * Tree class that contains convenient functions related to presentation of the tree, which includes
  * junction link, tree item selection link, spacers (with lines) and default tree item and folder
@@ -50,8 +49,9 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * implement populateTreeItem() on your own. If you want to use an existing (complete) tree class,
  * use {@link Tree}
  * <p>
- * This class allows you to choose between 3 types of links.
- * {@link DefaultAbstractTree#setLinkType(org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
+ * This class allows you to choose between 3 types of links. {@link
+ * DefaultAbstractTree#setLinkType(org
+ * .apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
  * 
  * @author Matej Knopp
  */
@@ -296,9 +296,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-			 *      org.apache.wicket.markup.ComponentTag)
+			 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.
+			 *      MarkupStream, org.apache.wicket.markup.ComponentTag)
 			 */
+			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				Response response = RequestCycle.get().getResponse();
@@ -352,6 +353,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			/**
 			 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 			 */
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -426,8 +428,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+				 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag )
 				 */
+				@Override
 				protected void onComponentTag(ComponentTag tag)
 				{
 					super.onComponentTag(tag);
@@ -457,18 +460,19 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The link call back
 	 * @return The link component
 	 */
-	protected MarkupContainer newLink(MarkupContainer parent, String id,
+	protected <S> MarkupContainer<S> newLink(MarkupContainer<?> parent, String id,
 		final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link(id)
+			return new Link<S>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
 				/**
 				 * @see org.apache.wicket.markup.html.link.Link#onClick()
 				 */
+				@Override
 				public void onClick()
 				{
 					callback.onClick(null);
@@ -477,13 +481,15 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink(id)
+			return new AjaxLink<S>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
+				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.
+				 *      AjaxRequestTarget)
 				 */
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					callback.onClick(target);
@@ -492,13 +498,15 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink(id)
+			return new AjaxFallbackLink<S>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
+				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket
+				 *      .ajax.AjaxRequestTarget)
 				 */
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					callback.onClick(target);
@@ -525,6 +533,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -546,7 +555,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The parent node
 	 * @return The component that represents the link
 	 */
-	protected MarkupContainer newNodeLink(MarkupContainer parent, String id, final TreeNode node)
+	protected MarkupContainer<?> newNodeLink(MarkupContainer<?> parent, String id,
+		final TreeNode node)
 	{
 		return newLink(parent, id, new ILinkCallback()
 		{

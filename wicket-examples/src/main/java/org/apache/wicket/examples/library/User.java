@@ -33,7 +33,7 @@ public final class User implements IClusterable
 	private String name;
 
 	// The user's personal book list
-	private List books = new ArrayList();
+	private List<Book> books = new ArrayList<Book>();
 
 	/**
 	 * @return User name
@@ -55,7 +55,7 @@ public final class User implements IClusterable
 	/**
 	 * @return User's book list
 	 */
-	public final List getBooks()
+	public final List<Book> getBooks()
 	{
 		return books;
 	}
@@ -64,7 +64,7 @@ public final class User implements IClusterable
 	 * @param books
 	 *            New book list
 	 */
-	public void setBooks(final List books)
+	public void setBooks(final List<Book> books)
 	{
 		this.books = books;
 	}

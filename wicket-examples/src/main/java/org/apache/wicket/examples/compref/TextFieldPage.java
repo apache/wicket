@@ -29,7 +29,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextFieldPage extends WicketExamplePage
+public class TextFieldPage extends WicketExamplePage<TextFieldPage.Input>
 {
 	/**
 	 * Constructor
@@ -50,15 +50,16 @@ public class TextFieldPage extends WicketExamplePage
 		// property model's actual object is an instance of 'Input', it will map
 		// to
 		// Input's 'text' property.
-		setModel(new CompoundPropertyModel(input));
+		setModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -68,7 +69,7 @@ public class TextFieldPage extends WicketExamplePage
 
 		// add a simple text field that uses Input's 'text' property. Nothing
 		// can go wrong here
-		form.add(new TextField("text"));
+		form.add(new TextField<String>("text"));
 
 		// here we add a text field that uses Input's 'integer' property.
 		// Something could go
@@ -93,13 +94,13 @@ public class TextFieldPage extends WicketExamplePage
 		// with key 'form.integer.IConverter'. Read more about how this works
 		// in the javadocs
 		// of AbstractValidator
-		form.add(new TextField("integer", Integer.class));
+		form.add(new TextField<Integer>("integer", Integer.class));
 	}
 
 	/**
 	 * Simple data class that acts as a holder for the data for the input fields.
 	 */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		// Normally we would have played nice and made it a proper JavaBean with
 		// getters and
@@ -115,6 +116,7 @@ public class TextFieldPage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "text = '" + text + "', integer = '" + integer + "'";
@@ -124,27 +126,28 @@ public class TextFieldPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<input type=\"text\" wicket:id=\"text\" />\n"
-				+ "<input type=\"text\" wicket:id=\"integer\" />";
+			+ "<input type=\"text\" wicket:id=\"integer\" />";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a simple text field that uses Input's 'text' property. Nothing can go wrong here\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"text\"));\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// here we add a text field that uses Input's 'integer' property. Something could go\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// wrong here, as the user's (textual) input might be an invalid value for an\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Integer object. If we provide the class constructor argument like we do here, we\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// get two things:\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// 1. A type validator is added, so that before any actual updating is tried, first the\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// &nbsp;&nbsp;&nbsp;&nbsp;user input is checked for validity. When the user input is wrong for an integer,\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;the model updating is cancelled, and an error message is displayed to the user\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// 2.When updating the model, the given type is explicitly used instead of trying\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;to figure out what type should be converted to.\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Note that the default validation message mechanism uses resource bundles for the actual\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// message lookup. The message for this component can be found in TextFieldPage.properties\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.IConverter'. Read more about how this works in the javadocs\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// of AbstractValidator\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"integer\", Integer.class));";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"text\"));\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// here we add a text field that uses Input's 'integer' property. Something could go\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// wrong here, as the user's (textual) input might be an invalid value for an\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// Integer object. If we provide the class constructor argument like we do here, we\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// get two things:\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// 1. A type validator is added, so that before any actual updating is tried, first the\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// &nbsp;&nbsp;&nbsp;&nbsp;user input is checked for validity. When the user input is wrong for an integer,\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;the model updating is cancelled, and an error message is displayed to the user\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// 2.When updating the model, the given type is explicitly used instead of trying\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;to figure out what type should be converted to.\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// Note that the default validation message mechanism uses resource bundles for the actual\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// message lookup. The message for this component can be found in TextFieldPage.properties\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.IConverter'. Read more about how this works in the javadocs\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// of AbstractValidator\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"integer\", Integer.class));";
 		add(new ExplainPanel(html, code));
 
 	}

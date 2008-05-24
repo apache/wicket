@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
@@ -54,56 +53,62 @@ import org.apache.wicket.util.template.TextTemplate;
 import org.joda.time.DateTime;
 
 /**
- * Pops up a YUI calendar component so that the user can select a date. On selection, the date is
- * set in the component it is coupled to, after which the popup is closed again. This behavior can
- * only be used with components that either implement {@link ITextFormatProvider} or that use
- * {@link DateConverter} configured with an instance of {@link SimpleDateFormat} (like Wicket's
- * default configuration has).<br/>
+ * Pops up a YUI calendar component so that the user can select a date. On
+ * selection, the date is set in the component it is coupled to, after which the
+ * popup is closed again. This behavior can only be used with components that
+ * either implement {@link ITextFormatProvider} or that use
+ * {@link DateConverter} configured with an instance of {@link SimpleDateFormat}
+ * (like Wicket's default configuration has).<br/>
  * 
- * To use, simply add a new instance to your component, which would typically a TextField, like
- * {@link DateTextField}.<br/>
+ * To use, simply add a new instance to your component, which would typically a
+ * TextField, like {@link DateTextField}.<br/>
  * 
- * The CalendarNavigator can be configured by overriding {@link #configure(Map)} and setting the
- * property or by returning <code>true</code> for {@link #enableMonthYearSelection()}.
+ * The CalendarNavigator can be configured by overriding {@link #configure(Map)}
+ * and setting the property or by returning <code>true</code> for
+ * {@link #enableMonthYearSelection()}.
  * 
- * @see <a href="http://developer.yahoo.com/yui/calendar/">http://developer.yahoo.com/yui/calendar/</a>
+ * @see <a
+ *      href="http://developer.yahoo.com/yui/calendar/">http://developer.yahoo.com/yui/calendar/</a>
  * 
  * @author eelcohillenius
  */
-public class DatePicker extends AbstractBehavior implements IHeaderContributor
-{
+public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	/**
-	 * Exception thrown when the bound component does not produce a format this date picker can work
-	 * with.
+	 * Exception thrown when the bound component does not produce a format this
+	 * date picker can work with.
 	 */
-	private static final class UnableToDetermineFormatException extends WicketRuntimeException
-	{
+	private static final class UnableToDetermineFormatException extends
+			WicketRuntimeException {
 		private static final long serialVersionUID = 1L;
 
-		public UnableToDetermineFormatException()
-		{
-			super("This behavior can only be added to components that either implement " +
-					ITextFormatProvider.class.getName() +
-					" AND produce a non-null format, or that use" +
-					" converters that this datepicker can use to determine" +
-					" the pattern being used. Alternatively, you can extend " +
-					" the date picker and override getDatePattern to provide your own");
+		public UnableToDetermineFormatException() {
+			super(
+					"This behavior can only be added to components that either implement "
+							+ ITextFormatProvider.class.getName()
+							+ " AND produce a non-null format, or that use"
+							+ " converters that this datepicker can use to determine"
+							+ " the pattern being used. Alternatively, you can extend "
+							+ " the date picker and override getDatePattern to provide your own");
 		}
 	}
 
 	/**
-	 * Format to be used when configuring YUI calendar. Can be used when using the
-	 * &quot;selected&quot; property.
+	 * Format to be used when configuring YUI calendar. Can be used when using
+	 * the &quot;selected&quot; property.
 	 */
-	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
+	public static final DateFormat FORMAT_DATE = new SimpleDateFormat(
+			"MM/dd/yyyy");
 
 	/**
-	 * For specifying which page (month/year) to show in the calendar, use this format for the date.
-	 * This is to be used together with the property &quot;pagedate&quot;
+	 * For specifying which page (month/year) to show in the calendar, use this
+	 * format for the date. This is to be used together with the property
+	 * &quot;pagedate&quot;
 	 */
-	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
+	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat(
+			"MM/yyyy");
 
-	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
+	private static final ResourceReference YUI = new JavascriptResourceReference(
+			YuiLib.class, "");
 
 	private static final ResourceReference WICKET_DATE = new JavascriptResourceReference(
 			DatePicker.class, "wicket-date.js");
@@ -116,16 +121,14 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Construct.
 	 */
-	public DatePicker()
-	{
+	public DatePicker() {
 	}
 
 	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
-	public void bind(Component component)
-	{
+	public void bind(Component<?> component) {
 		this.component = component;
 		checkComponentProvidesDateFormat(component);
 		component.setOutputMarkupId(true);
@@ -135,20 +138,16 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(Component component)
-	{
+	public void onRendered(Component<?> component) {
 		super.onRendered(component);
 		// Append the span and img icon right after the rendering of the
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
 		response.write("\n<span class=\"yui-skin-sam\">&nbsp;<span style=\"");
-		if (renderOnLoad())
-		{
+		if (renderOnLoad()) {
 			response.write("display:block;");
-		}
-		else
-		{
+		} else {
 			response.write("display:none;");
 			response.write("position:absolute;");
 		}
@@ -160,10 +159,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.write(getIconId());
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
-		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl.toString() : ""));
+		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl
+				.toString() : ""));
 		response.write("\" alt=\"\"/>");
-		if (renderOnLoad())
-		{
+		if (renderOnLoad()) {
 			response.write("<br style=\"clear:left;\"/>");
 		}
 		response.write("</span>");
@@ -173,131 +172,119 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
-	{
+	public void renderHead(IHeaderResponse response) {
 		YuiLib.load(response);
 		// variables for the initialization script
-		Map variables = new HashMap();
+		Map<String, Object> variables = new HashMap<String, Object>();
 		String widgetId = getEscapedComponentMarkupId();
 		variables.put("componentId", getComponentMarkupId());
 		variables.put("widgetId", widgetId);
 		variables.put("datePattern", getDatePattern());
-		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
-		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
-		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
+		variables.put("fireChangeEvent", notifyComponentOnDateSelected());
+		variables.put("alignWithIcon", alignWithIcon());
+		variables.put("hideOnSelect", hideOnSelect());
 		// variables for YUILoader
-		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().urlFor(YUI)));
-		variables.put("wicketDatePath", Strings.stripJSessionId(RequestCycle.get().urlFor(
-				WICKET_DATE)));
-		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
-		{
+		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get()
+				.urlFor(YUI)));
+		variables.put("wicketDatePath", Strings.stripJSessionId(RequestCycle
+				.get().urlFor(WICKET_DATE)));
+		if (Application.DEVELOPMENT.equals(Application.get()
+				.getConfigurationType())) {
 			variables.put("filter", "filter: \"RAW\",");
-			variables.put("allowRollup", Boolean.FALSE);
-		}
-		else
-		{
+			variables.put("allowRollup", false);
+		} else {
 			variables.put("filter", "");
-			variables.put("allowRollup", Boolean.TRUE);
+			variables.put("allowRollup", true);
 		}
 
 		String script = getAdditionalJavascript();
-		if (script != null)
-		{
-			variables.put("additionalJavascript", Strings.replaceAll(script, "${calendar}",
-					"YAHOO.wicket." + widgetId + "DpJs"));
+		if (script != null) {
+			variables.put("additionalJavascript", Strings.replaceAll(script,
+					"${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
 		}
 		// print out the initialization properties
-		Properties p = new Properties();
+		Map<String, Object> p = new HashMap<String, Object>();
 		configure(p);
-		if (!p.containsKey("navigator") && enableMonthYearSelection())
-		{
+		if (!p.containsKey("navigator") && enableMonthYearSelection()) {
 			p.put("navigator", Boolean.TRUE);
 		}
 
-		if (enableMonthYearSelection() && p.containsKey("pages") &&
-				Objects.longValue(p.get("pages")) > 1)
-		{
+		if (enableMonthYearSelection() && p.containsKey("pages")
+				&& Objects.longValue(p.get("pages")) > 1) {
 			throw new IllegalStateException(
 					"You cannot use a CalendarGroup with month/year selection!");
 		}
 
 		// ${calendarInit}
 		StringBuffer calendarInit = new StringBuffer();
-		for (Iterator i = p.entrySet().iterator(); i.hasNext();)
-		{
-			Entry entry = (Entry)i.next();
+		for (Iterator<Entry<String, Object>> i = p.entrySet().iterator(); i
+				.hasNext();) {
+			Entry<String, Object> entry = i.next();
 			calendarInit.append(entry.getKey());
 			Object value = entry.getValue();
-			if (value instanceof CharSequence)
-			{
+			if (value instanceof CharSequence) {
 				calendarInit.append(":\"");
 				calendarInit.append(Strings.toEscapedUnicode(value.toString()));
 				calendarInit.append("\"");
-			}
-			else if (value instanceof CharSequence[])
-			{
+			} else if (value instanceof CharSequence[]) {
 				calendarInit.append(":[");
-				CharSequence[] valueArray = (CharSequence[])value;
-				for (int j = 0; j < valueArray.length; j++)
-				{
+				CharSequence[] valueArray = (CharSequence[]) value;
+				for (int j = 0; j < valueArray.length; j++) {
 					CharSequence tmpValue = valueArray[j];
-					if (j > 0)
-					{
+					if (j > 0) {
 						calendarInit.append(",");
 					}
-					if (tmpValue != null)
-					{
+					if (tmpValue != null) {
 						calendarInit.append("\"");
-						calendarInit.append(Strings.toEscapedUnicode(tmpValue.toString()));
+						calendarInit.append(Strings.toEscapedUnicode(tmpValue
+								.toString()));
 						calendarInit.append("\"");
 					}
 				}
 				calendarInit.append("]");
-			}
-			else
-			{
+			} else {
 				calendarInit.append(":");
-				calendarInit.append(Strings.toEscapedUnicode(String.valueOf(value)));
+				calendarInit.append(Strings.toEscapedUnicode(String
+						.valueOf(value)));
 			}
-			if (i.hasNext())
-			{
+			if (i.hasNext()) {
 				calendarInit.append(",");
 			}
 		}
 		variables.put("calendarInit", calendarInit.toString());
 
 		// render initialization script with the variables interpolated
-		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class, "DatePicker.js");
+		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class,
+				"DatePicker.js");
 		datePickerJs.interpolate(variables);
 		response.renderOnDomReadyJavascript(datePickerJs.asString());
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
-		if (AjaxRequestTarget.get() != null)
-		{
-			final String javascript = "var e = Wicket.$('" + getEscapedComponentMarkupId() + "Dp" +
-					"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
-					"typeof(e.parentNode.parentNode != 'undefined')) " +
-					"e.parentNode.parentNode.removeChild(e.parentNode);";
+		if (AjaxRequestTarget.get() != null) {
+			final String javascript = "var e = Wicket.$('"
+					+ getEscapedComponentMarkupId()
+					+ "Dp"
+					+ "'); if (e != null && typeof(e.parentNode) != 'undefined' && "
+					+ "typeof(e.parentNode.parentNode != 'undefined')) "
+					+ "e.parentNode.parentNode.removeChild(e.parentNode);";
 
 			response.renderJavascript(javascript, null);
 		}
 	}
 
 	/**
-	 * Check that this behavior can get a date format out of the component it is coupled to. It
-	 * checks whether {@link #getDatePattern()} produces a non-null value. If that method returns
-	 * null, and exception will be thrown
+	 * Check that this behavior can get a date format out of the component it is
+	 * coupled to. It checks whether {@link #getDatePattern()} produces a
+	 * non-null value. If that method returns null, and exception will be thrown
 	 * 
 	 * @param component
 	 *            the component this behavior is being coupled to
 	 * @throws UnableToDetermineFormatException
 	 *             if this date picker is unable to determine a format.
 	 */
-	private final void checkComponentProvidesDateFormat(Component component)
-	{
-		if (getDatePattern() == null)
-		{
+	private final void checkComponentProvidesDateFormat(Component<?> component) {
+		if (getDatePattern() == null) {
 			throw new UnableToDetermineFormatException();
 		}
 	}
@@ -309,10 +296,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @param key
 	 * @param array
 	 */
-	private void setWidgetProperty(Map widgetProperties, String key, String[] array)
-	{
-		if (array != null && array.length > 0)
-		{
+	private void setWidgetProperty(Map<String, Object> widgetProperties,
+			String key, String[] array) {
+		if (array != null && array.length > 0) {
 			widgetProperties.put(key, array);
 		}
 	}
@@ -320,19 +306,19 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Whether to position the date picker relative to the trigger icon.
 	 * 
-	 * @return If true, the date picker is aligned with the left position of the icon, and with the
-	 *         top right under. If false, the date picker will skip positioning and will let you do
-	 *         the positioning yourself. Returns true by default.
+	 * @return If true, the date picker is aligned with the left position of the
+	 *         icon, and with the top right under. If false, the date picker
+	 *         will skip positioning and will let you do the positioning
+	 *         yourself. Returns true by default.
 	 */
-	protected boolean alignWithIcon()
-	{
+	protected boolean alignWithIcon() {
 		return true;
 	}
 
 	/**
-	 * Append javascript to the initialization function for the YUI widget. Can be used by
-	 * subclasses to conveniently extend configuration without having to write a separate
-	 * contribution.
+	 * Append javascript to the initialization function for the YUI widget. Can
+	 * be used by subclasses to conveniently extend configuration without having
+	 * to write a separate contribution.
 	 * 
 	 * @param markupId
 	 *            The markup id of the calendar component
@@ -343,34 +329,33 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @param b
 	 *            the buffer to append the script to
 	 */
-	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
-			StringBuffer b)
-	{
+	protected void appendToInit(String markupId, String javascriptId,
+			String javascriptWidgetId, StringBuffer b) {
 	}
 
 	/**
-	 * Gives overriding classes the option of adding (or even changing/ removing) configuration
-	 * properties for the javascript widget. See <a
-	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
-	 * available options. If you want to override/ remove properties, you should call
-	 * super.configure(properties) first. If you don't call that, be aware that you will have to
-	 * call {@link #localize(Map)} manually if you like localized strings to be added.
+	 * Gives overriding classes the option of adding (or even changing/
+	 * removing) configuration properties for the javascript widget. See <a
+	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
+	 * documentation</a> for the available options. If you want to override/
+	 * remove properties, you should call super.configure(properties) first. If
+	 * you don't call that, be aware that you will have to call
+	 * {@link #localize(Map)} manually if you like localized strings to be
+	 * added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void configure(Map widgetProperties)
-	{
-		widgetProperties.put("close", Boolean.TRUE);
+	protected void configure(Map<String, Object> widgetProperties) {
+		widgetProperties.put("close", true);
 
 		// localize date fields
 		localize(widgetProperties);
 
 		Object modelObject = component.getModelObject();
 		// null and cast check
-		if (modelObject instanceof Date)
-		{
-			Date date = (Date)modelObject;
+		if (modelObject instanceof Date) {
+			Date date = (Date) modelObject;
 			widgetProperties.put("selected", FORMAT_DATE.format(date));
 			widgetProperties.put("pagedate", FORMAT_PAGEDATE.format(date));
 		}
@@ -381,83 +366,76 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	// TODO remove this very ugly named method
 	@Deprecated
-	protected final void configureWidgetProperties(Map widgetProperties)
-	{
+	protected final void configureWidgetProperties(
+			Map<String, Object> widgetProperties) {
 		throw new UnsupportedOperationException("");
 	}
 
 	/**
-	 * Filter all empty elements (workaround for {@link DateFormatSymbols} returning arrays with
-	 * empty elements).
+	 * Filter all empty elements (workaround for {@link DateFormatSymbols}
+	 * returning arrays with empty elements).
 	 * 
 	 * @param array
 	 *            array to filter
 	 * @return filtered array (without null or empty string elements)
 	 */
-	protected final String[] filterEmpty(String[] array)
-	{
-		if (array == null)
-		{
+	protected final String[] filterEmpty(String[] array) {
+		if (array == null) {
 			return null;
 		}
-		List l = new ArrayList(array.length);
-		for (int i = 0; i < array.length; i++)
-		{
-			if (!Strings.isEmpty(array[i]))
-			{
+		List<String> l = new ArrayList<String>(array.length);
+		for (int i = 0; i < array.length; i++) {
+			if (!Strings.isEmpty(array[i])) {
 				l.add(array[i]);
 			}
 		}
-		return (String[])l.toArray(new String[l.size()]);
+		return l.toArray(new String[l.size()]);
 	}
 
 	/**
-	 * Gets the id of the component that the calendar widget will get attached to.
+	 * Gets the id of the component that the calendar widget will get attached
+	 * to.
 	 * 
 	 * @return The DOM id of the component
 	 */
-	protected final String getComponentMarkupId()
-	{
+	protected final String getComponentMarkupId() {
 		return component.getMarkupId();
 	}
 
 	/**
-	 * Gets the date pattern to use for putting selected values in the coupled component.
+	 * Gets the date pattern to use for putting selected values in the coupled
+	 * component.
 	 * 
 	 * @return The date pattern
 	 */
-	protected String getDatePattern()
-	{
+	protected String getDatePattern() {
 		String format = null;
-		if (component instanceof ITextFormatProvider)
-		{
-			format = ((ITextFormatProvider)component).getTextFormat();
+		if (component instanceof ITextFormatProvider) {
+			format = ((ITextFormatProvider) component).getTextFormat();
 			// it is possible that components implement ITextFormatProvider but
 			// don't provide a format
 		}
 
-		if (format == null)
-		{
-			IConverter converter = component.getConverter(DateTime.class);
-			if (!(converter instanceof DateConverter))
-			{
+		if (format == null) {
+			IConverter<?> converter = component.getConverter(DateTime.class);
+			if (!(converter instanceof DateConverter)) {
 				converter = component.getConverter(Date.class);
 			}
-			format = ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component
-					.getLocale())).toPattern();
+			format = ((SimpleDateFormat) ((DateConverter) converter)
+					.getDateFormat(component.getLocale())).toPattern();
 		}
 
 		return format;
 	}
 
 	/**
-	 * Gets the escaped DOM id that the calendar widget will get attached to. All non word
-	 * characters (\W) will be removed from the string.
+	 * Gets the escaped DOM id that the calendar widget will get attached to.
+	 * All non word characters (\W) will be removed from the string.
 	 * 
-	 * @return The DOM id of the calendar widget - same as the component's markup id + 'Dp'}
+	 * @return The DOM id of the calendar widget - same as the component's
+	 *         markup id + 'Dp'}
 	 */
-	protected final String getEscapedComponentMarkupId()
-	{
+	protected final String getEscapedComponentMarkupId() {
 		return component.getMarkupId().replaceAll("\\W", "");
 	}
 
@@ -466,8 +444,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * 
 	 * @return The id of the icon
 	 */
-	protected final String getIconId()
-	{
+	protected final String getIconId() {
 		return getEscapedComponentMarkupId() + "Icon";
 	}
 
@@ -476,19 +453,19 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * 
 	 * @return The style of the icon, e.g. 'cursor: point' etc.
 	 */
-	protected String getIconStyle()
-	{
+	protected String getIconStyle() {
 		return "cursor: pointer; border: none;";
 	}
 
 	/**
-	 * Gets the url for the popup button. Users can override to provide their own icon URL.
+	 * Gets the url for the popup button. Users can override to provide their
+	 * own icon URL.
 	 * 
 	 * @return the url to use for the popup button/ icon
 	 */
-	protected CharSequence getIconUrl()
-	{
-		return RequestCycle.get().urlFor(new ResourceReference(DatePicker.class, "icon1.gif"));
+	protected CharSequence getIconUrl() {
+		return RequestCycle.get().urlFor(
+				new ResourceReference(DatePicker.class, "icon1.gif"));
 	}
 
 	/**
@@ -496,70 +473,75 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * 
 	 * @return By default the locale of the bound component.
 	 */
-	protected Locale getLocale()
-	{
+	protected Locale getLocale() {
 		return component.getLocale();
 	}
 
 	/**
-	 * Configure the localized strings for the datepicker widget. This implementation uses
-	 * {@link DateFormatSymbols} and some slight string manupilation to get the strings for months
-	 * and week days. Also, the first week day is set according to the {@link Locale} returned by
+	 * Configure the localized strings for the datepicker widget. This
+	 * implementation uses {@link DateFormatSymbols} and some slight string
+	 * manupilation to get the strings for months and week days. Also, the first
+	 * week day is set according to the {@link Locale} returned by
 	 * {@link #getLocale()}. It should work well for most locales.
 	 * <p>
-	 * This method is called from {@link #configureWidgetProperties(Map)} and can be overridden if
-	 * you want to customize setting up the localized strings but are happy with the rest of
-	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can call (overridable)
-	 * method {@link #getLocale()} to get the locale that should be used for setting up the widget.
+	 * This method is called from {@link #configureWidgetProperties(Map)} and
+	 * can be overridden if you want to customize setting up the localized
+	 * strings but are happy with the rest of
+	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can
+	 * call (overridable) method {@link #getLocale()} to get the locale that
+	 * should be used for setting up the widget.
 	 * </p>
 	 * <p>
-	 * See YUI Calendar's <a href="http://developer.yahoo.com/yui/examples/calendar/germany/1.html">
+	 * See YUI Calendar's <a
+	 * href="http://developer.yahoo.com/yui/examples/calendar/germany/1.html">
 	 * German</a> and <a
-	 * href="http://developer.yahoo.com/yui/examples/calendar/japan/1.html">Japanese</a> examples
-	 * for more info.
+	 * href="http://developer.yahoo.com/yui/examples/calendar/japan/1.html">Japanese</a>
+	 * examples for more info.
 	 * </p>
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void localize(Map widgetProperties)
-	{
+	protected void localize(Map<String, Object> widgetProperties) {
 		DateFormatSymbols dfSymbols = new DateFormatSymbols(getLocale());
-		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()))
-		{
-			dfSymbols.setShortWeekdays(new String[] { "", "\u65E5", "\u4E00", "\u4E8C", "\u4E09",
-					"\u56DB", "\u4E94", "\u516D" });
+		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale())) {
+			dfSymbols.setShortWeekdays(new String[] { "", "\u65E5", "\u4E00",
+					"\u4E8C", "\u4E09", "\u56DB", "\u4E94", "\u516D" });
 		}
-		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
-		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
-				.getShortWeekdays(), 1)));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
-				.getShortWeekdays(), 2)));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM", filterEmpty(dfSymbols
-				.getShortWeekdays()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
+		setWidgetProperty(widgetProperties, "MONTHS_SHORT",
+				filterEmpty(dfSymbols.getShortMonths()));
+		setWidgetProperty(widgetProperties, "MONTHS_LONG",
+				filterEmpty(dfSymbols.getMonths()));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 1)));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT",
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 2)));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM",
+				filterEmpty(dfSymbols.getShortWeekdays()));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG",
+				filterEmpty(dfSymbols.getWeekdays()));
 
-		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(getLocale())
-				.getFirstDayOfWeek() - 1));
+		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(
+				getLocale()).getFirstDayOfWeek() - 1));
 	}
 
 	/**
-	 * Whether to notify the associated component when a date is selected. Notifying is done by
-	 * calling the associated component's onchange Javascript event handler. You can for instance
-	 * attach an {@link AjaxEventBehavior} to that component to get a call back to the server. The
-	 * default is true.
+	 * Whether to notify the associated component when a date is selected.
+	 * Notifying is done by calling the associated component's onchange
+	 * Javascript event handler. You can for instance attach an
+	 * {@link AjaxEventBehavior} to that component to get a call back to the
+	 * server. The default is true.
 	 * 
-	 * @return if true, notifies the associated component when a date is selected
+	 * @return if true, notifies the associated component when a date is
+	 *         selected
 	 */
-	protected boolean notifyComponentOnDateSelected()
-	{
+	protected boolean notifyComponentOnDateSelected() {
 		return true;
 	}
 
 	/**
-	 * Makes a copy of the provided array and for each element copy the substring 0..len to the new
-	 * array
+	 * Makes a copy of the provided array and for each element copy the
+	 * substring 0..len to the new array
 	 * 
 	 * @param array
 	 *            array to copy from
@@ -567,22 +549,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 *            size of substring for each element to copy
 	 * @return copy of the array filled with substrings.
 	 */
-	protected final String[] substring(String[] array, int len)
-	{
-		if (array != null)
-		{
+	protected final String[] substring(String[] array, int len) {
+		if (array != null) {
 			String[] copy = new String[array.length];
-			for (int i = 0; i < array.length; i++)
-			{
+			for (int i = 0; i < array.length; i++) {
 				String el = array[i];
-				if (el != null)
-				{
-					if (el.length() > len)
-					{
+				if (el != null) {
+					if (el.length() > len) {
 						copy[i] = el.substring(0, len);
-					}
-					else
-					{
+					} else {
 						copy[i] = el;
 					}
 				}
@@ -593,50 +568,52 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Indicates whether plain text is rendered or two select boxes are used to allow direct
-	 * selection of month and year.
+	 * Indicates whether plain text is rendered or two select boxes are used to
+	 * allow direct selection of month and year.
 	 * 
-	 * @return <code>true</code> if select boxes should be rendered to allow month and year
-	 *         selection.<br/><code>false</code> to render just plain text.
+	 * @return <code>true</code> if select boxes should be rendered to allow
+	 *         month and year selection.<br/><code>false</code> to render
+	 *         just plain text.
 	 */
-	protected boolean enableMonthYearSelection()
-	{
+	protected boolean enableMonthYearSelection() {
 		return false;
 	}
 
 	/**
-	 * Indicates whether the calendar should be hidden after a date was selected.
+	 * Indicates whether the calendar should be hidden after a date was
+	 * selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden after the date
-	 *         selection <br/><code>false</code> if the calendar should remain visible after the
-	 *         date selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden
+	 *         after the date selection <br/><code>false</code> if the
+	 *         calendar should remain visible after the date selection.
 	 */
-	protected boolean hideOnSelect()
-	{
+	protected boolean hideOnSelect() {
 		return true;
 	}
 
 	/**
-	 * Indicates whether the calendar should be rendered after it has been loaded.
+	 * Indicates whether the calendar should be rendered after it has been
+	 * loaded.
 	 * 
-	 * @return <code>true</code> if the calendar should be rendered after it has been loaded.<br/><code>false</code>
-	 *         (default) if it's initially hidden.
+	 * @return <code>true</code> if the calendar should be rendered after it
+	 *         has been loaded.<br/><code>false</code> (default) if it's
+	 *         initially hidden.
 	 */
-	protected boolean renderOnLoad()
-	{
+	protected boolean renderOnLoad() {
 		return false;
 	}
 
 	/**
-	 * Override this method to further customize the YUI Calendar with additional Javascript code.
-	 * The code returned by this method is executed right after the Calendar has been constructed
-	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code>
-	 * in your code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
+	 * Override this method to further customize the YUI Calendar with
+	 * additional Javascript code. The code returned by this method is executed
+	 * right after the Calendar has been constructed and initialized. To refer
+	 * to the actual Calendar DOM object, use <code>${calendar}</code> in your
+	 * code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the
+	 * widget's documentation</a> for more information about the YUI Calendar.<br/>
+	 * Example:
 	 * 
 	 * <pre>
-	 * protected String getAdditionalJavascript()
-	 * {
+	 * protected String getAdditionalJavascript() {
 	 * 	return &quot;${calendar}.addRenderer(\&quot;10/3\&quot;, ${calendar}.renderCellStyleHighlight1);&quot;;
 	 * }
 	 * </pre>
@@ -644,8 +621,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @return a String containing additional Javascript code
 	 * 
 	 */
-	protected String getAdditionalJavascript()
-	{
+	protected String getAdditionalJavascript() {
 		return "";
 	}
 
@@ -653,8 +629,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
 	 */
 	@Override
-	public boolean isEnabled(Component component)
-	{
+	public boolean isEnabled(Component<?> component) {
 		return component.isEnabled() && component.isEnableAllowed();
 	}
 }

@@ -111,8 +111,8 @@ public final class Tester implements CommandRunnerObserver
 	private String host = "localhost";
 
 	/**
-	 * if true, each thread will represent a seperate session. If false, the
-	 * test behaves like one client issuing multiple concurrent requests.
+	 * if true, each thread will represent a seperate session. If false, the test behaves like one
+	 * client issuing multiple concurrent requests.
 	 */
 	private final boolean multipleSessions;
 
@@ -126,12 +126,10 @@ public final class Tester implements CommandRunnerObserver
 	 * @param command
 	 *            Command to execute
 	 * @param numberOfThreads
-	 *            Number of threads to run the commands. Each thread runs all
-	 *            commands
+	 *            Number of threads to run the commands. Each thread runs all commands
 	 * @param multipleSessions
-	 *            if true, each thread will represent a seperate session. If
-	 *            false, the test behaves like one client issuing multiple
-	 *            concurrent requests
+	 *            if true, each thread will represent a seperate session. If false, the test behaves
+	 *            like one client issuing multiple concurrent requests
 	 */
 	public Tester(Command command, int numberOfThreads, boolean multipleSessions)
 	{
@@ -144,12 +142,10 @@ public final class Tester implements CommandRunnerObserver
 	 * @param commands
 	 *            Commands to execute
 	 * @param numberOfThreads
-	 *            Number of threads to run the commands. Each thread runs all
-	 *            commands
+	 *            Number of threads to run the commands. Each thread runs all commands
 	 * @param multipleSessions
-	 *            if true, each thread will represent a seperate session. If
-	 *            false, the test behaves like one client issuing multiple
-	 *            concurrent requests
+	 *            if true, each thread will represent a separate session. If false, the test behaves
+	 *            like one client issuing multiple concurrent requests
 	 */
 	public Tester(List<Command> commands, int numberOfThreads, boolean multipleSessions)
 	{
@@ -269,8 +265,8 @@ public final class Tester implements CommandRunnerObserver
 
 			long end = System.currentTimeMillis();
 			long time = end - start;
-			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time
-					+ " milis)");
+			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time +
+				" milis)");
 
 		}
 		finally

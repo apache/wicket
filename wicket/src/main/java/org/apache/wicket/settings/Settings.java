@@ -93,7 +93,7 @@ public final class Settings
 		IRequestLoggerSettings
 {
 	/** Class of access denied page. */
-	private WeakReference<Class< ? extends Page>> accessDeniedPage;
+	private WeakReference<Class<? extends Page<?>>> accessDeniedPage;
 
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
@@ -161,7 +161,7 @@ public final class Settings
 	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Class of internal error page. */
-	private WeakReference<Class< ? extends Page>> internalErrorPage;
+	private WeakReference<Class<? extends Page<?>>> internalErrorPage;
 
 	/**
 	 * whether wicket should track line precise additions of components for error reporting.
@@ -195,7 +195,7 @@ public final class Settings
 	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
 
 	/** The error page displayed when an expired page is accessed. */
-	private WeakReference<Class< ? extends Page>> pageExpiredErrorPage;
+	private WeakReference<Class<? extends Page<?>>> pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -276,7 +276,7 @@ public final class Settings
 		 * @param component
 		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
-		public void onUnauthorizedInstantiation(final Component< ? > component)
+		public void onUnauthorizedInstantiation(final Component<?> component)
 		{
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
@@ -311,6 +311,11 @@ public final class Settings
 
 	/** */
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
+
+	/**
+	 * escape string for '..' within resource keys
+	 */
+	private CharSequence parentFolderPlaceholder = "$up$";
 
 	/**
 	 * Create the application settings, carrying out any necessary initializations.
@@ -394,7 +399,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
 	 */
-	public Class< ? extends Page> getAccessDeniedPage()
+	public Class<? extends Page<?>> getAccessDeniedPage()
 	{
 		return accessDeniedPage.get();
 	}
@@ -537,7 +542,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getInternalErrorPage()
 	 */
-	public Class< ? extends Page> getInternalErrorPage()
+	public Class<? extends Page<?>> getInternalErrorPage()
 	{
 		return internalErrorPage.get();
 	}
@@ -593,7 +598,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
 	 */
-	public Class< ? extends Page> getPageExpiredErrorPage()
+	public Class<? extends Page<?>> getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage.get();
 	}
@@ -817,7 +822,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
-	public void setAccessDeniedPage(Class< ? extends Page> accessDeniedPage)
+	public <C extends Page<?>> void setAccessDeniedPage(Class<C> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
 		{
@@ -825,7 +830,7 @@ public final class Settings
 		}
 		checkPageClass(accessDeniedPage);
 
-		this.accessDeniedPage = new WeakReference<Class< ? extends Page>>(accessDeniedPage);
+		this.accessDeniedPage = new WeakReference<Class<? extends Page<?>>>(accessDeniedPage);
 	}
 
 	/**
@@ -968,7 +973,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
-	public void setInternalErrorPage(final Class< ? extends Page> internalErrorPage)
+	public <C extends Page<?>> void setInternalErrorPage(final Class<C> internalErrorPage)
 	{
 		if (internalErrorPage == null)
 		{
@@ -976,7 +981,7 @@ public final class Settings
 		}
 		checkPageClass(internalErrorPage);
 
-		this.internalErrorPage = new WeakReference<Class< ? extends Page>>(internalErrorPage);
+		this.internalErrorPage = new WeakReference<Class<? extends Page<?>>>(internalErrorPage);
 	}
 
 	/**
@@ -1015,7 +1020,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
-	public void setPageExpiredErrorPage(final Class< ? extends Page> pageExpiredErrorPage)
+	public <C extends Page<?>> void setPageExpiredErrorPage(final Class<C> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{
@@ -1023,7 +1028,8 @@ public final class Settings
 		}
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = new WeakReference<Class< ? extends Page>>(pageExpiredErrorPage);
+		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page<?>>>(
+			pageExpiredErrorPage);
 	}
 
 	/**
@@ -1174,10 +1180,12 @@ public final class Settings
 	/**
 	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the page class to check
 	 */
-	private void checkPageClass(final Class< ? extends Page> pageClass)
+	private <C extends Page<?>> void checkPageClass(final Class<C> pageClass)
 	{
 		// NOTE: we can't really check on whether it is a bookmarkable page
 		// here, as - though the default is that a bookmarkable page must
@@ -1397,5 +1405,21 @@ public final class Settings
 	public void setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
+	 */
+	public CharSequence getParentFolderPlaceholder()
+	{
+		return parentFolderPlaceholder;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
+	 */
+	public void setParentFolderPlaceholder(final CharSequence sequence)
+	{
+		parentFolderPlaceholder = sequence;
 	}
 }

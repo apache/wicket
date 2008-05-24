@@ -54,7 +54,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass)
+	public <C extends Page<?>> BookmarkablePageLink(final String id, final Class<C> pageClass)
 	{
 		this(id, pageClass, null);
 	}
@@ -97,6 +97,8 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	/**
 	 * Constructor.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageClass
@@ -104,7 +106,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * @param parameters
 	 *            The parameters to pass to the new page when the link is clicked
 	 */
-	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
+	public <C extends Page<?>> BookmarkablePageLink(final String id, final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		super(id);
@@ -156,7 +158,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
-	public boolean linksTo(final Page page)
+	public boolean linksTo(final Page<?> page)
 	{
 		return page.getClass() == getPageClass();
 	}
@@ -190,7 +192,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 		if (pageMap != null)
 		{
 			pageMapName = pageMap.getName();
-			add(new AttributeModifier("target", true, new Model(pageMapName)));
+			add(new AttributeModifier("target", true, new Model<String>(pageMapName)));
 		}
 		return this;
 	}

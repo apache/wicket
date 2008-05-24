@@ -72,13 +72,14 @@ public class AuthorizationTest extends WicketTestCase
 	public void testCreateDisallowedComponent() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new DummyAuthorizationStrategy()
+			new DummyAuthorizationStrategy()
+			{
+				@Override
+				public boolean isInstantiationAuthorized(Class c)
 				{
-					public boolean isInstantiationAuthorized(Class c)
-					{
-						return false;
-					}
-				});
+					return false;
+				}
+			});
 		try
 		{
 			new WebComponent("test");
@@ -99,7 +100,7 @@ public class AuthorizationTest extends WicketTestCase
 	public void testRenderAllowedComponent() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new DummyAuthorizationStrategy());
+			new DummyAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -114,21 +115,22 @@ public class AuthorizationTest extends WicketTestCase
 	public void testRenderDisallowedComponent() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new DummyAuthorizationStrategy()
+			new DummyAuthorizationStrategy()
+			{
+				/**
+				 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
+				 *      org.apache.wicket.authorization.Action)
+				 */
+				@Override
+				public boolean isActionAuthorized(Component component, Action action)
 				{
-					/**
-					 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-					 *      org.apache.wicket.authorization.Action)
-					 */
-					public boolean isActionAuthorized(Component component, Action action)
+					if (action == Component.RENDER && component instanceof Label)
 					{
-						if (action == Component.RENDER && component instanceof Label)
-						{
-							return false;
-						}
-						return true;
+						return false;
 					}
-				});
+					return true;
+				}
+			});
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
 		tester.assertInvisible("label");
@@ -142,7 +144,7 @@ public class AuthorizationTest extends WicketTestCase
 	public void testEnabledAllowedComponent() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new DummyAuthorizationStrategy());
+			new DummyAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -164,22 +166,23 @@ public class AuthorizationTest extends WicketTestCase
 	public void testEnabledDisallowedComponent() throws Exception
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				new DummyAuthorizationStrategy()
+			new DummyAuthorizationStrategy()
+			{
+				/**
+				 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
+				 *      org.apache.wicket.authorization.Action)
+				 */
+				@Override
+				public boolean isActionAuthorized(Component c, Action action)
 				{
-					/**
-					 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-					 *      org.apache.wicket.authorization.Action)
-					 */
-					public boolean isActionAuthorized(Component c, Action action)
+					if (action == Component.ENABLE && c instanceof TextField &&
+						c.getId().equals("stringInput"))
 					{
-						if (action == Component.ENABLE && c instanceof TextField &&
-								c.getId().equals("stringInput"))
-						{
-							return false;
-						}
-						return true;
+						return false;
 					}
-				});
+					return true;
+				}
+			});
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
 		tester.setParameterForNextRequest("form:stringInput", "test");
@@ -221,7 +224,7 @@ public class AuthorizationTest extends WicketTestCase
 	/**
 	 * Test page for authentication tests.
 	 */
-	public static class AuthTestPage1 extends WebPage
+	public static class AuthTestPage1 extends WebPage<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -279,6 +282,7 @@ public class AuthorizationTest extends WicketTestCase
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				submitted = true;

@@ -17,9 +17,8 @@
 package org.apache.wicket.util.license;
 
 /**
- * Test that the license headers are in place in this project. The tests are run
- * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
- * tests here if needed.
+ * Test that the license headers are in place in this project. The tests are run from {@link
+ * ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
  */

@@ -128,9 +128,10 @@ public class PatternValidator extends StringValidator
 	 * @param validatable
 	 *            the <code>IValidatable</code> to check
 	 */
-	protected Map variablesMap(IValidatable validatable)
+	@Override
+	protected Map<String, Object> variablesMap(IValidatable validatable)
 	{
-		final Map map = super.variablesMap(validatable);
+		final Map<String, Object> map = super.variablesMap(validatable);
 		map.put("pattern", pattern.pattern());
 		return map;
 	}
@@ -138,6 +139,7 @@ public class PatternValidator extends StringValidator
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[PatternValidator pattern = " + pattern + "]";
@@ -149,6 +151,7 @@ public class PatternValidator extends StringValidator
 	 * @param validatable
 	 *            the <code>IValidatable</code> to check
 	 */
+	@Override
 	protected void onValidate(IValidatable validatable)
 	{
 		// Check value against pattern

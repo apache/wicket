@@ -36,7 +36,7 @@ public class PackageName implements IClusterable
 	 *            The class to get a PackageName object for
 	 * @return The PackageName object
 	 */
-	public static PackageName forClass(final Class c)
+	public static PackageName forClass(final Class<?> c)
 	{
 		return new PackageName(Packages.extractPackageName(c));
 	}
@@ -65,11 +65,12 @@ public class PackageName implements IClusterable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object that)
 	{
 		if (that instanceof PackageName)
 		{
-			return ((PackageName)that).name.equals(this.name);
+			return ((PackageName)that).name.equals(name);
 		}
 		return false;
 	}
@@ -85,6 +86,7 @@ public class PackageName implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return name;

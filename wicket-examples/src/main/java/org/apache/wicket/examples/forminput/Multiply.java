@@ -32,15 +32,15 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author eelcohillenius
  */
-public class Multiply extends FormComponentPanel
+public class Multiply extends FormComponentPanel<Integer>
 {
-	private TextField left;
+	private TextField<Integer> left;
 
 	private int lhs = 0;
 
 	private int rhs = 0;
 
-	private TextField right;
+	private TextField<Integer> right;
 
 	/**
 	 * Construct.
@@ -62,7 +62,7 @@ public class Multiply extends FormComponentPanel
 	 * @param model
 	 *            The model
 	 */
-	public Multiply(String id, IModel model)
+	public Multiply(String id, IModel<Integer> model)
 	{
 		super(id, model);
 		init();
@@ -104,8 +104,8 @@ public class Multiply extends FormComponentPanel
 
 	private void init()
 	{
-		add(left = new TextField("left", new PropertyModel(this, "lhs")));
-		add(right = new TextField("right", new PropertyModel(this, "rhs")));
+		add(left = new TextField<Integer>("left", new PropertyModel<Integer>(this, "lhs")));
+		add(right = new TextField<Integer>("right", new PropertyModel<Integer>(this, "rhs")));
 		left.setRequired(true);
 		right.setRequired(true);
 	}
@@ -119,8 +119,8 @@ public class Multiply extends FormComponentPanel
 		// note that earlier versions did override updateModel, which looked
 		// somewhat better, but wasn't useful for when you want to do
 		// validations with either normal validators or form validators
-		Integer lhs = (Integer)left.getConvertedInput();
-		Integer rhs = (Integer)right.getConvertedInput();
+		Integer lhs = left.getConvertedInput();
+		Integer rhs = right.getConvertedInput();
 		setConvertedInput(lhs * rhs);
 	}
 }

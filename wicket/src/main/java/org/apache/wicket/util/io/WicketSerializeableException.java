@@ -30,7 +30,7 @@ public class WicketSerializeableException extends NotSerializableException
 {
 	private static final long serialVersionUID = 1L;
 
-	private final List list;
+	private final List<String> list;
 
 	/**
 	 * Construct.
@@ -40,7 +40,7 @@ public class WicketSerializeableException extends NotSerializableException
 	public WicketSerializeableException(String message)
 	{
 		super(message);
-		list = new ArrayList();
+		list = new ArrayList<String>();
 	}
 
 	/**
@@ -58,6 +58,7 @@ public class WicketSerializeableException extends NotSerializableException
 	/**
 	 * @see java.lang.Throwable#getMessage()
 	 */
+	@Override
 	public String getMessage()
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer(super.getMessage());
@@ -66,18 +67,18 @@ public class WicketSerializeableException extends NotSerializableException
 			asb.append("\n");
 			for (int i = list.size(); --i >= 0;)
 			{
-				String element = (String)list.get(i);
+				String element = list.get(i);
 				asb.append(element);
 				asb.append("->");
 			}
 			asb.setLength(asb.length() - 2);
 		}
 		asb.append("\nNOTE: if you feel Wicket is at fault with this exception").append(
-				", please report to the mailing list. You can switch to ").append(
-				"JDK based serialization by calling: ").append(
-				"org.apache.wicket.util.lang.Objects.setObjectStreamFactory(").append(
-				"new IObjectStreamFactory.DefaultObjectStreamFactory()) ").append(
-				"e.g. in the init method of your application");
+			", please report to the mailing list. You can switch to ").append(
+			"JDK based serialization by calling: ").append(
+			"org.apache.wicket.util.lang.Objects.setObjectStreamFactory(").append(
+			"new IObjectStreamFactory.DefaultObjectStreamFactory()) ").append(
+			"e.g. in the init method of your application");
 		return asb.toString();
 	}
 

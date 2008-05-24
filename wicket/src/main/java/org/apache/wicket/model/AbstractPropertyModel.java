@@ -89,11 +89,11 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel< ? > getChainedModel()
+	public IModel<?> getChainedModel()
 	{
 		if (target instanceof IModel)
 		{
-			return (IModel< ? >)target;
+			return (IModel<?>)target;
 		}
 		return null;
 	}
@@ -132,7 +132,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
-	public void setChainedModel(IModel< ? > model)
+	public void setChainedModel(IModel<?> model)
 	{
 		target = model;
 	}
@@ -142,9 +142,10 @@ public abstract class AbstractPropertyModel<T>
 	 * 
 	 * @param object
 	 *            The object that will be used when setting a value on the model object
-	 * @see IModel#setObject(Object)
+	 * @see IModel#setObject(T)
 	 */
-	public void setObject(Object object)
+	@SuppressWarnings("unchecked")
+	public void setObject(T object)
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
@@ -153,7 +154,7 @@ public abstract class AbstractPropertyModel<T>
 			// why not just set the target to the object?
 			if (target instanceof IModel)
 			{
-				((IModel)target).setObject(object);
+				((IModel<T>)target).setObject(object);
 			}
 			else
 			{
@@ -189,7 +190,7 @@ public abstract class AbstractPropertyModel<T>
 		Object object = target;
 		while (object instanceof IModel)
 		{
-			Object tmp = ((IModel)object).getObject();
+			Object tmp = ((IModel<?>)object).getObject();
 			if (tmp == object)
 				break;
 			object = tmp;
@@ -216,7 +217,7 @@ public abstract class AbstractPropertyModel<T>
 		{
 			try
 			{
-				return PropertyResolver.getPropertyClass(expression, target);
+				return (Class<T>)PropertyResolver.getPropertyClass(expression, target);
 			}
 			catch (Exception e)
 			{
@@ -307,7 +308,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #getObject()} instead
 	 */
 	@Deprecated
-	protected final Object onGetObject(Component component)
+	protected final Object onGetObject(Component<?> component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -320,7 +321,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #setObject(Object)} instead
 	 */
 	@Deprecated
-	protected final void onSetObject(Component component, Object object)
+	protected final void onSetObject(Component<?> component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

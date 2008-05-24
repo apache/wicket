@@ -23,13 +23,15 @@ import org.apache.wicket.model.IModel;
  * Filter that can be represented by a text field
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The {@link TextField}'s model object
  * 
  */
-public class TextFilter extends AbstractFilter
+public class TextFilter<T> extends AbstractFilter<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final TextField filter;
+	private final TextField<T> filter;
 
 	/**
 	 * Constructor
@@ -41,10 +43,10 @@ public class TextFilter extends AbstractFilter
 	 * @param form
 	 *            filter form this filter will be added to
 	 */
-	public TextFilter(String id, IModel model, FilterForm form)
+	public TextFilter(String id, IModel<T> model, FilterForm form)
 	{
 		super(id, form);
-		filter = new TextField("filter", model);
+		filter = new TextField<T>("filter", model);
 		enableFocusTracking(filter);
 		add(filter);
 	}
@@ -52,7 +54,7 @@ public class TextFilter extends AbstractFilter
 	/**
 	 * @return underlying {@link TextField} form component that represents this filter
 	 */
-	public final TextField getFilter()
+	public final TextField<T> getFilter()
 	{
 		return filter;
 	}

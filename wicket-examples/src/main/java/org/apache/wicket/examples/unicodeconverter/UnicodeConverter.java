@@ -35,18 +35,18 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class UnicodeConverter extends WicketExamplePage
+public class UnicodeConverter extends WicketExamplePage<Void>
 {
 	private static final String FROM_ESCAPED_UNICODE = "from escaped unicode";
 
 	private static final String TO_ESCAPED_UNICODE = "to escaped unicode";
 
-	private static List translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
+	private static List<String> translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
 			FROM_ESCAPED_UNICODE });
 
 	private String source = "";
 
-	private String translationType = (String)translationTypes.get(0);
+	private String translationType = translationTypes.get(0);
 
 	/**
 	 * Model that does the conversion. Note that as we 'pull' the value every time we render (we get
@@ -97,10 +97,11 @@ public class UnicodeConverter extends WicketExamplePage
 	 */
 	public UnicodeConverter()
 	{
-		Form form = new Form("form", new CompoundPropertyModel(this));
-		form.add(new TextArea("source"));
-		form.add(new DropDownChoice("translationType", translationTypes));
-		form.add(new TextArea("target", new ConverterModel()));
+		Form<UnicodeConverter> form = new Form<UnicodeConverter>("form",
+			new CompoundPropertyModel<UnicodeConverter>(this));
+		form.add(new TextArea<String>("source"));
+		form.add(new DropDownChoice<String>("translationType", translationTypes));
+		form.add(new TextArea<String>("target", new ConverterModel()));
 		add(form);
 	}
 

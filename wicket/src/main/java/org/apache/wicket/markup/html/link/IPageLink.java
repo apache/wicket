@@ -44,7 +44,7 @@ public interface IPageLink extends IClusterable
 	 * 
 	 * @return The page to go to.
 	 */
-	Page< ? > getPage();
+	Page<?> getPage();
 
 	/**
 	 * Gets the class of the destination page, which serves as a form of identity that can be used
@@ -67,8 +67,10 @@ public interface IPageLink extends IClusterable
 	 * }
 	 * </pre>
 	 * 
+	 * @param <C>
+	 * 
 	 * @return The class of page linked to, as a form of identity
 	 * @see Link#linksTo(Page)
 	 */
-	Class< ? > getPageIdentity();
+	Class<? extends Page<?>> getPageIdentity();
 }

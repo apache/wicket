@@ -45,7 +45,7 @@ import org.apache.wicket.util.value.ValueMap;
 public final class GuestBook extends WicketExamplePage<Void>
 {
 	/** A global list of all comments from all users across all sessions */
-	private static final List commentList = new ArrayList();
+	private static final List<Comment> commentList = new ArrayList<Comment>();
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -56,13 +56,13 @@ public final class GuestBook extends WicketExamplePage<Void>
 		add(new CommentForm("commentForm"));
 
 		// Add commentListView of existing comments
-		add(new PropertyListView("comments", commentList)
+		add(new PropertyListView<Comment>("comments", commentList)
 		{
 			@Override
-			public void populateItem(final ListItem listItem)
+			public void populateItem(final ListItem<Comment> listItem)
 			{
-				listItem.add(new Label("date"));
-				listItem.add(new MultiLineLabel("text"));
+				listItem.add(new Label<Date>("date"));
+				listItem.add(new MultiLineLabel<String>("text"));
 			}
 		}).setVersioned(false);
 	}
@@ -72,7 +72,7 @@ public final class GuestBook extends WicketExamplePage<Void>
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class CommentForm extends Form
+	public final class CommentForm extends Form<ValueMap>
 	{
 		/**
 		 * Constructor
@@ -83,16 +83,16 @@ public final class GuestBook extends WicketExamplePage<Void>
 		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new ValueMap()));
+			super(id, new CompoundPropertyModel<ValueMap>(new ValueMap()));
 
 			// this is just to make the unit test happy
 			setMarkupId("commentForm");
 
 			// Add text entry widget
-			add(new TextArea("text"));
+			add(new TextArea<String>("text").setType(String.class));
 
 			// Add simple automated spam prevention measure.
-			add(new TextField("comment"));
+			add(new TextField<String>("comment").setType(String.class));
 		}
 
 		/**
@@ -101,7 +101,7 @@ public final class GuestBook extends WicketExamplePage<Void>
 		@Override
 		public final void onSubmit()
 		{
-			ValueMap values = (ValueMap)getModelObject();
+			ValueMap values = getModelObject();
 
 			// check if the honey pot is filled
 			if (StringUtils.isNotBlank((String)values.get("comment")))

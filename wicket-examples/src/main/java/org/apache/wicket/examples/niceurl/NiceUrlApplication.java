@@ -46,12 +46,13 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
 
-	private void mountBookmarkablePageWithUrlCoding(String path, Class pageClass)
+	private <C extends Page<?>> void mountBookmarkablePageWithUrlCoding(String path,
+		Class<C> pageClass)
 	{
 		mount(new QueryStringUrlCodingStrategy(path, pageClass));
 	}

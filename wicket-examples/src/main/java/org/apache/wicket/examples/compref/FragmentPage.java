@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.compref;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -26,12 +27,12 @@ import org.apache.wicket.markup.html.panel.Fragment;
  * 
  * @author Eelco Hillenius
  */
-public class FragmentPage extends WicketExamplePage
+public class FragmentPage extends WicketExamplePage<Void>
 {
 	/**
 	 * A fragment,
 	 */
-	private class MyFragment extends Fragment
+	private class MyFragment extends Fragment<Void>
 	{
 		/**
 		 * Construct.
@@ -40,11 +41,13 @@ public class FragmentPage extends WicketExamplePage
 		 *            The component Id
 		 * @param markupId
 		 *            The id in the markup
+		 * @param markupProvider
+		 *            The markup provider
 		 */
-		public MyFragment(String id, String markupId)
+		public MyFragment(String id, String markupId, MarkupContainer<?> markupProvider)
 		{
-			super(id, markupId);
-			add(new Label("label", "yep, this is from a component proper"));
+			super(id, markupId, markupProvider);
+			add(new Label<String>("label", "yep, this is from a component proper"));
 			add(new AnotherPanel("otherPanel"));
 		}
 	}
@@ -54,14 +57,15 @@ public class FragmentPage extends WicketExamplePage
 	 */
 	public FragmentPage()
 	{
-		add(new MyFragment("fragment", "fragmentid"));
+		add(new MyFragment("fragment", "fragmentid", this));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<wicket:fragment wicket:id=\"fragmentid\">...</wicket:fragment>";
 		String code = "private class MyFragment extends Fragment {\n ...\n"
-				+ "add(new MyFragment(\"fragment\", \"fragmentid\"));";
+			+ "add(new MyFragment(\"fragment\", \"fragmentid\"));";
 		add(new ExplainPanel(html, code));
 	}
 }

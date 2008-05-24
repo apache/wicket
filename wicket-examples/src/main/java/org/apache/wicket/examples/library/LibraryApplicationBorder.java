@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.border.BoxBorder;
  * 
  * @author Jonathan Locke
  */
-public class LibraryApplicationBorder extends Border
+public class LibraryApplicationBorder extends Border<Void>
 {
 	/**
 	 * Constructor
@@ -35,6 +35,6 @@ public class LibraryApplicationBorder extends Border
 	public LibraryApplicationBorder(final String id)
 	{
 		super(id);
-		add(new BoxBorder("boxBorder"));
+		add(new BoxBorder<Void>("boxBorder"));
 	}
 }

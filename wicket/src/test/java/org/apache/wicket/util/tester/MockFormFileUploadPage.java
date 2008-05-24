@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Bytes;
  * 
  * @author frankbille
  */
-public class MockFormFileUploadPage extends WebPage
+public class MockFormFileUploadPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

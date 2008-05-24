@@ -80,7 +80,7 @@ public abstract class AbstractPageStore implements IPageStore
 		 * 
 		 * @param page
 		 */
-		public SerializedPage(Page page)
+		public SerializedPage(Page<?> page)
 		{
 			pageId = page.getNumericId();
 			pageMapName = page.getPageMapName();
@@ -89,7 +89,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		/**
-		 * @return
+		 * @return the page id
 		 */
 		public int getPageId()
 		{
@@ -97,7 +97,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		/**
-		 * @return
+		 * @return the pagemap name
 		 */
 		public String getPageMapName()
 		{
@@ -105,7 +105,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		/**
-		 * @return
+		 * @return the version number
 		 */
 		public int getVersionNumber()
 		{
@@ -113,7 +113,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		/**
-		 * @return
+		 * @return the ajax version number
 		 */
 		public int getAjaxVersionNumber()
 		{
@@ -121,7 +121,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 
 		/**
-		 * @return
+		 * @return the data
 		 */
 		public byte[] getData()
 		{
@@ -259,9 +259,9 @@ public abstract class AbstractPageStore implements IPageStore
 	{
 		private SerializedPage current;
 
-		private final List completed = new ArrayList();
+		private final List<SerializedPage> completed = new ArrayList<SerializedPage>();
 
-		public Object getPageReplacementObject(Page callingPage)
+		public Object getPageReplacementObject(Page<?> callingPage)
 		{
 			SerializedPage calling = new SerializedPage(callingPage);
 
@@ -314,13 +314,13 @@ public abstract class AbstractPageStore implements IPageStore
 		 *      java.io.ObjectOutputStream)
 		 */
 
-		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
+		public void serializePage(Page<?> page, ObjectOutputStream stream) throws IOException
 		{
 			stream.defaultWriteObject();
 		}
 
-		public void deserializePage(int id, String pageMapName, Page page, ObjectInputStream stream)
-			throws IOException, ClassNotFoundException
+		public void deserializePage(int id, String pageMapName, Page<?> page,
+			ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{
 			// get the page instance registry
 			IntHashMap<Page<?>> pages = SecondLevelCacheSessionStore.getUsedPages(pageMapName);
@@ -345,7 +345,7 @@ public abstract class AbstractPageStore implements IPageStore
 		private final int pageid;
 		private final String pagemap;
 
-		PageHolder(Page page)
+		PageHolder(Page<?> page)
 		{
 			pageid = page.getNumericId();
 			pagemap = page.getPageMapName();

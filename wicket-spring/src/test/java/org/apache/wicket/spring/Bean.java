@@ -25,5 +25,6 @@ import org.apache.wicket.IClusterable;
  */
 public class Bean implements IClusterable
 {
+	private static final long serialVersionUID = 1L;
 
 }

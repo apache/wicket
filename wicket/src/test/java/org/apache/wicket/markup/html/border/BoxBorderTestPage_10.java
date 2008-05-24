@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Chris Turner
  */
-public class BoxBorderTestPage_10 extends WebPage
+public class BoxBorderTestPage_10 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

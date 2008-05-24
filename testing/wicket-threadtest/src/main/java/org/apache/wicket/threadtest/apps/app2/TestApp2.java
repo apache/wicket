@@ -17,10 +17,14 @@
 package org.apache.wicket.threadtest.apps.app2;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
 
+/**
+ * Test application
+ */
 public class TestApp2 extends WebApplication
 {
 
@@ -29,12 +33,15 @@ public class TestApp2 extends WebApplication
 		return (TestApp2)Application.get();
 	}
 
+	/**
+	 * Construct.
+	 */
 	public TestApp2()
 	{
 	}
 
 	@Override
-	public Class getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}

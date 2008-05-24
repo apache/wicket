@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
 public class MapVariableInterpolator extends VariableInterpolator
 {
 	/** Map of variables */
-	private Map variables;
+	private Map<?, ?> variables;
 
 	/**
 	 * Constructor.
@@ -40,7 +40,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 * @param variables
 	 *            the variables to substitute
 	 */
-	public MapVariableInterpolator(final String string, final Map variables)
+	public MapVariableInterpolator(final String string, final Map<?, ?> variables)
 	{
 		super(string);
 		this.variables = variables;
@@ -59,7 +59,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            <code>${varname}</code> string will be left in the <code>String</code> so that
 	 *            multiple interpolators can be chained
 	 */
-	public MapVariableInterpolator(String string, final Map variables,
+	public MapVariableInterpolator(String string, final Map<?, ?> variables,
 		boolean exceptionOnNullVarValue)
 	{
 		super(string, exceptionOnNullVarValue);
@@ -72,7 +72,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 * @param variables
 	 *            the <code>Map</code> of variables
 	 */
-	public final void setVariables(final Map variables)
+	public final void setVariables(final Map<?, ?> variables)
 	{
 		this.variables = variables;
 	}
@@ -84,6 +84,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            the variable name
 	 * @return the value
 	 */
+	@Override
 	protected String getValue(final String variableName)
 	{
 		return Strings.toString(variables.get(variableName));
@@ -98,7 +99,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            the variables to substitute
 	 * @return the interpolated <code>String</code>
 	 */
-	public static String interpolate(String string, Map variables)
+	public static String interpolate(String string, Map<?, ?> variables)
 	{
 		return new MapVariableInterpolator(string, variables).toString();
 	}

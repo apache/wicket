@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Matej Knopp
  * 
  */
-public class ModalContent2Page extends WebPage
+public class ModalContent2Page extends WebPage<Void>
 {
 
 	/**
@@ -34,8 +34,11 @@ public class ModalContent2Page extends WebPage
 	 */
 	public ModalContent2Page(final ModalWindow window)
 	{
-		add(new AjaxLink("close")
+		add(new AjaxLink<Void>("close")
 		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				window.close(target);

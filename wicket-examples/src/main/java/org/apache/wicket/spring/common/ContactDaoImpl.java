@@ -34,21 +34,18 @@ import java.util.Map;
  */
 public class ContactDaoImpl implements ContactDao
 {
-	private Map map = Collections.synchronizedMap(new HashMap());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
 
-	private List fnameIdx = Collections.synchronizedList(new ArrayList());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List lnameIdx = Collections.synchronizedList(new ArrayList());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List fnameDescIdx = Collections.synchronizedList(new ArrayList());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
-	private List lnameDescIdx = Collections.synchronizedList(new ArrayList());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
 	/**
-	 * Constructor
-	 * 
-	 * @param count
-	 *            number of contacts to generate at startup
+	 * Construct.
 	 */
 	public ContactDaoImpl()
 	{
@@ -67,7 +64,7 @@ public class ContactDaoImpl implements ContactDao
 	 */
 	public Contact get(long id)
 	{
-		Contact c = (Contact)map.get(id);
+		Contact c = map.get(id);
 		if (c == null)
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
 		return c;
@@ -85,20 +82,19 @@ public class ContactDaoImpl implements ContactDao
 	/**
 	 * select contacts and apply sort
 	 * 
-	 * @param first
-	 * @param count
-	 * @param sortProperty
-	 * @param sortAsc
+	 * @param qp
+	 *            the query parameter
+	 * 
 	 * @return list of contacts
 	 */
-	public Iterator find(QueryParam qp)
+	public Iterator<Contact> find(QueryParam qp)
 	{
-		List sublist = getIndex(qp.getSort(), qp.isSortAsc()).subList(qp.getFirst(),
-				qp.getFirst() + qp.getCount());
+		List<Contact> sublist = getIndex(qp.getSort(), qp.isSortAsc()).subList(qp.getFirst(),
+			qp.getFirst() + qp.getCount());
 		return sublist.iterator();
 	}
 
-	protected List getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(String prop, boolean asc)
 	{
 		if (prop == null)
 			return fnameIdx;
@@ -111,7 +107,7 @@ public class ContactDaoImpl implements ContactDao
 			return (asc) ? lnameIdx : lnameDescIdx;
 		}
 		throw new RuntimeException("uknown sort option [" + prop +
-				"]. valid options: [firstName] , [lastName]");
+			"]. valid options: [firstName] , [lastName]");
 	}
 
 	/**
@@ -138,7 +134,7 @@ public class ContactDaoImpl implements ContactDao
 		else
 		{
 			throw new IllegalArgumentException("contact [" + contact.getFirstName() +
-					"] is already persistent");
+				"] is already persistent");
 		}
 	}
 
@@ -161,35 +157,35 @@ public class ContactDaoImpl implements ContactDao
 
 	private void updateIndecies()
 	{
-		Collections.sort(fnameIdx, new Comparator()
+		Collections.sort(fnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getFirstName().compareTo(((Contact)arg1).getFirstName());
+				return (arg0).getFirstName().compareTo((arg1).getFirstName());
 			}
 		});
 
-		Collections.sort(lnameIdx, new Comparator()
+		Collections.sort(lnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getLastName().compareTo(((Contact)arg1).getLastName());
+				return (arg0).getLastName().compareTo((arg1).getLastName());
 			}
 		});
 
-		Collections.sort(fnameDescIdx, new Comparator()
+		Collections.sort(fnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getFirstName().compareTo(((Contact)arg0).getFirstName());
+				return (arg1).getFirstName().compareTo((arg0).getFirstName());
 			}
 		});
 
-		Collections.sort(lnameDescIdx, new Comparator()
+		Collections.sort(lnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getLastName().compareTo(((Contact)arg0).getLastName());
+				return (arg1).getLastName().compareTo((arg0).getLastName());
 			}
 		});
 

@@ -53,7 +53,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean isInstantiationAuthorized(Class< ? extends Component> componentClass)
+	public final <T extends Component<?>> boolean isInstantiationAuthorized(Class<T> componentClass)
 	{
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)
@@ -71,7 +71,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public final boolean isActionAuthorized(Component< ? > component, Action action)
+	public final boolean isActionAuthorized(Component<?> component, Action action)
 	{
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)

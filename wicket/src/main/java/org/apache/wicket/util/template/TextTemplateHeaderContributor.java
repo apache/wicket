@@ -37,7 +37,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	/**
 	 * This model holds the template and returns the interpolation of the template.
 	 */
-	private static final class TemplateModel extends LoadableDetachableModel
+	private static final class TemplateModel extends LoadableDetachableModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * The <code>IModel</code> that holds any variables for interpolation. It should return a
 		 * {@link Map} or <code>null</code>.
 		 */
-		private final IModel variablesModel;
+		private final IModel<Map<String, Object>> variablesModel;
 
 		/**
 		 * Constructor.
@@ -61,7 +61,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 *            the <code>IModel</code> that holds any variables for interpolation. It
 		 *            should return a {@link Map} or <code>null</code>.
 		 */
-		protected TemplateModel(TextTemplate template, IModel variablesModel)
+		protected TemplateModel(TextTemplate template, IModel<Map<String, Object>> variablesModel)
 		{
 			if (template == null)
 			{
@@ -75,6 +75,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		/**
 		 * @see org.apache.wicket.model.IModel#detach()
 		 */
+		@Override
 		public void detach()
 		{
 			if (variablesModel != null)
@@ -84,11 +85,12 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 			super.detach();
 		}
 
-		protected Object load()
+		@Override
+		protected String load()
 		{
 			if (variablesModel != null)
 			{
-				Map variables = (Map)variablesModel.getObject();
+				Map<String, Object> variables = variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);
@@ -109,7 +111,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            the variables to interpolate
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
-	public static TextTemplateHeaderContributor forCss(TextTemplate template, IModel variablesModel)
+	public static TextTemplateHeaderContributor forCss(TextTemplate template,
+		IModel<Map<String, Object>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
 	}
@@ -129,8 +132,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            the variables to interpolate
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
-	public static TextTemplateHeaderContributor forCss(final Class clazz, final String fileName,
-			IModel variablesModel)
+	public static TextTemplateHeaderContributor forCss(final Class<?> clazz, final String fileName,
+		IModel<Map<String, Object>> variablesModel)
 	{
 		return forCss(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -147,7 +150,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
 	public static TextTemplateHeaderContributor forJavaScript(TextTemplate template,
-			IModel variablesModel)
+		IModel<Map<String, Object>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new JavaScriptTemplate(template), variablesModel);
 	}
@@ -167,8 +170,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            the variables to interpolate
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
-	public static TextTemplateHeaderContributor forJavaScript(final Class clazz,
-			final String fileName, IModel variablesModel)
+	public static TextTemplateHeaderContributor forJavaScript(final Class<?> clazz,
+		final String fileName, IModel<Map<String, Object>> variablesModel)
 	{
 		return forJavaScript(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -181,7 +184,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @param variablesModel
 	 *            optional <code>IModel</code> for variable substitution
 	 */
-	protected TextTemplateHeaderContributor(TextTemplate template, IModel variablesModel)
+	protected TextTemplateHeaderContributor(TextTemplate template,
+		IModel<Map<String, Object>> variablesModel)
 	{
 		super(new TemplateModel(template, variablesModel));
 	}

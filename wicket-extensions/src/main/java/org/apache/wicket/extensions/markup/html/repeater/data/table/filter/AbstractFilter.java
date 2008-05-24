@@ -24,13 +24,15 @@ import org.apache.wicket.model.IModel;
  * Base class for filters that provides some useful functionality
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model object type
  * 
  */
-public class AbstractFilter extends Panel
+public class AbstractFilter<T> extends Panel<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private FilterForm form;
+	private final FilterForm form;
 
 	/**
 	 * @param id
@@ -52,7 +54,7 @@ public class AbstractFilter extends Panel
 	 * @param fc
 	 *            form component for which focus tracking will be enabled
 	 */
-	protected void enableFocusTracking(FormComponent fc)
+	protected void enableFocusTracking(FormComponent<?> fc)
 	{
 		form.enableFocusTracking(fc);
 	}
@@ -62,7 +64,7 @@ public class AbstractFilter extends Panel
 		return form.getStateLocator();
 	}
 
-	protected IModel getStateModel()
+	protected IModel<Object> getStateModel()
 	{
 		return form.getModel();
 	}

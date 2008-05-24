@@ -30,7 +30,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class StockQuotePage extends WicketExamplePage
+public class StockQuotePage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -49,15 +49,15 @@ public class StockQuotePage extends WicketExamplePage
 
 		// shared model to get and set the symbol property on the
 		// quote instance
-		final IModel model = new PropertyModel(quote, "symbol");
+		final IModel<String> model = new PropertyModel<String>(quote, "symbol");
 
 		// form holding the input field.
-		final Form form = new Form("form");
+		final Form<?> form = new Form<Void>("form");
 		add(form);
-		form.add(new TextField("symbol", model));
+		form.add(new TextField<String>("symbol", model));
 
 		// labels for displaying the chosen symbol
-		add(new Label("symbol", model));
+		add(new Label<String>("symbol", model));
 
 		// and its quote
 		add(new StockQuoteLabel("quote", model));

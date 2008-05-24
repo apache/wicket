@@ -35,10 +35,10 @@ import org.apache.wicket.request.IRequestCycleProcessor;
 public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget
 {
 	/** the page that was created in response for cleanup */
-	private Page page;
+	private Page<?> page;
 
 	/** the class of the page. */
-	private final WeakReference/* <Class> */pageClassRef;
+	private final WeakReference<Class<? extends Page<?>>> pageClassRef;
 
 	/** optional page map name. */
 	private final String pageMapName;
@@ -49,10 +49,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass)
 	{
 		this(null, pageClass);
 	}
@@ -60,12 +62,15 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass, PageParameters pageParameters)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass,
+		PageParameters pageParameters)
 	{
 		this(null, pageClass, pageParameters);
 	}
@@ -73,13 +78,15 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageMapName
 	 *            optional page map name
 	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass)
 	{
 		this(null, pageClass, null);
 	}
@@ -94,8 +101,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-		PageParameters pageParameters)
+	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName,
+		Class<C> pageClass, PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -107,7 +114,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			throw new IllegalArgumentException("Argument pageClass must be an instance of " +
 				Page.class.getName());
 		}
-		this.pageClassRef = new WeakReference(pageClass);
+		pageClassRef = new WeakReference<Class<? extends Page<?>>>(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
@@ -126,6 +133,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
@@ -154,12 +162,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @return The page that was created, null if the response did not happen yet
 	 */
-	public final Page getPage()
+	public final Page<?> getPage()
 	{
 		return page;
 	}
 
-	protected final void setPage(Page page)
+	protected final void setPage(Page<?> page)
 	{
 		this.page = page;
 	}
@@ -168,9 +176,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
 	 */
-	public final Class<? extends Page> getPageClass()
+	public final Class<? extends Page<?>> getPageClass()
 	{
-		return (Class<? extends Page>)pageClassRef.get();
+		return pageClassRef.get();
 	}
 
 	/**
@@ -192,6 +200,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "BookmarkablePageRequestTarget".hashCode();
@@ -222,7 +231,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
 				String redirectUrl = processor.getRequestCodingStrategy()
-					.encode(requestCycle, this).toString();
+					.encode(requestCycle, this)
+					.toString();
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -236,6 +246,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" +
@@ -251,10 +262,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            request cycle
 	 * @return new instance of page
 	 */
-	protected Page newPage(final Class pageClass, final RequestCycle requestCycle)
+	protected <C extends Page<?>> Page<?> newPage(final Class<C> pageClass,
+		final RequestCycle requestCycle)
 	{
 		// Construct a new instance using the default page factory
-		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
+		IPageFactory pageFactory = requestCycle.getApplication()
+			.getSessionSettings()
 			.getPageFactory();
 
 		if (pageParameters == null || pageParameters.size() == 0)
@@ -276,7 +289,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            the request cycle
 	 * @return the page
 	 */
-	protected final Page getPage(RequestCycle requestCycle)
+	protected final Page<?> getPage(RequestCycle requestCycle)
 	{
 		if (page == null && !requestCycle.isRedirect())
 		{

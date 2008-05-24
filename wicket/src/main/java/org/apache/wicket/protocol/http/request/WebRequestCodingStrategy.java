@@ -42,6 +42,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.IActivePageBehaviorListener;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -293,7 +294,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					boolean forceActionURL = prc.isAjax();
 					if (forceActionURL)
 					{
-						List behaviors = iliRequestTarget.getTarget().getBehaviors();
+						List<IBehavior> behaviors = iliRequestTarget.getTarget().getBehaviors();
 						for (int i = 0, size = behaviors.size(); i < size; i++)
 						{
 							if (AbstractAjaxBehavior.class.isAssignableFrom(behaviors.get(i)
@@ -379,7 +380,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		synchronized (mountsOnPath)
 		{
-			return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
+			return mountsOnPath.strategies().toArray(
 				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
 		}
 	}
@@ -720,7 +721,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 
 		// Get page Class
-		final Class<? extends Page> pageClass = requestTarget.getPageClass();
+		final Class<? extends Page<?>> pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
 		// Find pagemap name
@@ -730,7 +731,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			IRequestTarget currentTarget = requestCycle.getRequestTarget();
 			if (currentTarget instanceof IPageRequestTarget)
 			{
-				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
+				Page<?> currentPage = ((IPageRequestTarget)currentTarget).getPage();
 				final IPageMap pageMap = currentPage.getPageMap();
 				if (pageMap.isDefault())
 				{
@@ -868,8 +869,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		url.append('=');
 
 		// Get component and page for request target
-		final Component component = requestTarget.getTarget();
-		final Page page = component.getPage();
+		final Component<?> component = requestTarget.getTarget();
+		final Page<?> page = component.getPage();
 
 		// Add pagemap
 		final IPageMap pageMap = page.getPageMap();
@@ -937,7 +938,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	protected CharSequence encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
 		// Get the page we want a url from:
-		Page page = requestTarget.getPage();
+		Page<?> page = requestTarget.getPage();
 
 		// A url to a page is the IRedirectListener interface:
 		CharSequence urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
@@ -962,9 +963,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 			// cache lookup results
-			for (Iterator i = mountsOnPath.strategies().iterator(); i.hasNext();)
+			for (IRequestTargetUrlCodingStrategy encoder : mountsOnPath.strategies())
 			{
-				IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
 				if (encoder.matches(requestTarget))
 				{
 					return encoder;
@@ -1001,7 +1001,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		private final boolean caseSensitiveMounts;
 
 		/** backing map */
-		private final TreeMap map;
+		private final TreeMap<String, IRequestTargetUrlCodingStrategy> map;
 
 		/**
 		 * Constructor
@@ -1011,7 +1011,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		 */
 		public MountsMap(boolean caseSensitiveMounts)
 		{
-			map = new TreeMap(LENGTH_COMPARATOR);
+			map = new TreeMap<String, IRequestTargetUrlCodingStrategy>(LENGTH_COMPARATOR);
 			this.caseSensitiveMounts = caseSensitiveMounts;
 		}
 
@@ -1035,13 +1035,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			{
 				path = path.toLowerCase();
 			}
-			for (final Iterator it = map.entrySet().iterator(); it.hasNext();)
+			for (Entry<String, IRequestTargetUrlCodingStrategy> entry : map.entrySet())
 			{
-				final Map.Entry entry = (Entry)it.next();
-				final String key = (String)entry.getKey();
+				final String key = entry.getKey();
 				if (path.startsWith(key))
 				{
-					IRequestTargetUrlCodingStrategy strategy = (IRequestTargetUrlCodingStrategy)entry.getValue();
+					IRequestTargetUrlCodingStrategy strategy = entry.getValue();
 					if (strategy.matches(path))
 					{
 						return strategy;
@@ -1063,7 +1062,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		/**
 		 * @return collection of coding strategies associated with every mount
 		 */
-		public Collection strategies()
+		public Collection<IRequestTargetUrlCodingStrategy> strategies()
 		{
 			return map.values();
 		}
@@ -1099,7 +1098,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				mount = mount.toLowerCase();
 			}
 
-			return (IRequestTargetUrlCodingStrategy)map.get(mount);
+			return map.get(mount);
 		}
 
 		/**
@@ -1116,14 +1115,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			{
 				mount = mount.toLowerCase();
 			}
-			return (IRequestTargetUrlCodingStrategy)map.put(mount, encoder);
+			return map.put(mount, encoder);
 		}
 
 
 		/** Comparator implementation that sorts longest strings first */
-		private static final Comparator LENGTH_COMPARATOR = new Comparator()
+		private static final Comparator<String> LENGTH_COMPARATOR = new Comparator<String>()
 		{
-			public int compare(Object o1, Object o2)
+			public int compare(String o1, String o2)
 			{
 				// longer first
 				if (o1 == o2)
@@ -1140,8 +1139,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 				else
 				{
-					final String lhs = (String)o1;
-					final String rhs = (String)o2;
+					final String lhs = o1;
+					final String rhs = o2;
 					return rhs.compareTo(lhs);
 				}
 			}

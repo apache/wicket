@@ -27,7 +27,7 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
  * 
  * @author svenmeier
  */
-public class ComponentResolvingPage extends WebPage implements IComponentResolver
+public class ComponentResolvingPage extends WebPage<Void>implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 

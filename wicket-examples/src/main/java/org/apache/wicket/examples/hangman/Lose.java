@@ -25,16 +25,17 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Lose extends HangmanPage
+public class Lose extends HangmanPage<Void>
 {
 	/**
 	 * Create the lose page and its associated components.
 	 */
 	public Lose()
 	{
-		add(new Label("currentWord", getGame().getWord().asString()));
-		add(new Link("playAgain")
+		add(new Label<String>("currentWord", getGame().getWord().asString()));
+		add(new Link<Void>("playAgain")
 		{
+			@Override
 			public void onClick()
 			{
 				getGame().newGame();

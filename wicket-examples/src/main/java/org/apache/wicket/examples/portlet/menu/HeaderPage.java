@@ -26,20 +26,22 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author Ate Douma
  */
-public class HeaderPage extends WebPage
+public class HeaderPage extends WebPage<Void>
 {
+	/**
+	 * Construct.
+	 */
 	public HeaderPage()
 	{
-		add(new Link("menu")
+		add(new Link<Void>("menu")
 		{
 			@Override
 			public void onClick()
 			{
 				this.setResponsePage(MenuPage.class);
-				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication
-						.getExamples().get(0);
-				PortletSession session = ((PortletRequestContext)RequestContext.get())
-						.getPortletRequest().getPortletSession();
+				ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(0);
+				PortletSession session = ((PortletRequestContext)RequestContext.get()).getPortletRequest()
+					.getPortletSession();
 				session.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, ea);
 			}
 		});

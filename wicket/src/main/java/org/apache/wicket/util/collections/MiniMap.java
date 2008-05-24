@@ -57,6 +57,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	 * @param maxEntries
 	 *            The maximum number of entries this map can hold
 	 */
+	@SuppressWarnings("unchecked")
 	public MiniMap(final int maxEntries)
 	{
 		keys = (K[])new Object[maxEntries];
@@ -71,7 +72,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	 * @param maxEntries
 	 *            The maximum number of entries this map can hold
 	 */
-	public MiniMap(final Map< ? extends K, ? extends V> map, final int maxEntries)
+	public MiniMap(final Map<? extends K, ? extends V> map, final int maxEntries)
 	{
 		this(maxEntries);
 		putAll(map);
@@ -196,12 +197,12 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(Map< ? extends K, ? extends V> map)
+	public void putAll(Map<? extends K, ? extends V> map)
 	{
-		for (final Iterator< ? extends Entry< ? extends K, ? extends V>> iterator = map.entrySet()
+		for (final Iterator<? extends Entry<? extends K, ? extends V>> iterator = map.entrySet()
 			.iterator(); iterator.hasNext();)
 		{
-			final Map.Entry< ? extends K, ? extends V> e = iterator.next();
+			final Map.Entry<? extends K, ? extends V> e = iterator.next();
 			put(e.getKey(), e.getValue());
 		}
 	}

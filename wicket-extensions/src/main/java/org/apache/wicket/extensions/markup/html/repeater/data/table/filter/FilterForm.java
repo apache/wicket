@@ -34,11 +34,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @author igor
  * 
  */
-public class FilterForm extends Form
+public class FilterForm extends Form<Object>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final HiddenField hidden;
+	private final HiddenField<?> hidden;
 	private final IFilterStateLocator locator;
 
 	/**
@@ -54,14 +54,14 @@ public class FilterForm extends Form
 		this.locator = locator;
 
 		// add hidden field used for managing current focus
-		hidden = new HiddenField("focus-tracker", new Model());
+		hidden = new HiddenField<Void>("focus-tracker", new Model());
 
 		hidden.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
+			public void onComponentTag(Component<?> component, ComponentTag tag)
 			{
 				tag.put("id", getFocusTrackerFieldCssId());
 				super.onComponentTag(component, tag);
@@ -70,7 +70,7 @@ public class FilterForm extends Form
 		add(hidden);
 
 		// add javascript to restore focus to a filter component
-		add(new WebMarkupContainer("focus-restore")
+		add(new WebMarkupContainer<Void>("focus-restore")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -109,14 +109,14 @@ public class FilterForm extends Form
 	 * @param fc
 	 *            form component
 	 */
-	public final void enableFocusTracking(FormComponent fc)
+	public final void enableFocusTracking(FormComponent<?> fc)
 	{
 		fc.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
+			public void onComponentTag(Component<?> component, ComponentTag tag)
 			{
 				tag.put("id", component.getMarkupId());
 				tag.put("onfocus", getFocusTrackingHandler(component));
@@ -139,7 +139,7 @@ public class FilterForm extends Form
 	 * @return the javascript focus handler necessary to notify the form of focus tracking changes
 	 *         on the component
 	 */
-	public final String getFocusTrackingHandler(Component component)
+	public final String getFocusTrackingHandler(Component<?> component)
 	{
 		return ("_filter_focus(this, '" + getFocusTrackerFieldCssId() + "');");
 	}

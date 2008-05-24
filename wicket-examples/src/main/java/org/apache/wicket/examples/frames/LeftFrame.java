@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.frames;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.examples.linkomatic.Home;
 import org.apache.wicket.markup.html.WebPage;
@@ -31,7 +32,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class LeftFrame extends WebPage
+public class LeftFrame extends WebPage<Void>
 {
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as that is a shared
@@ -40,7 +41,7 @@ public class LeftFrame extends WebPage
 	 * Tags that use this link should have a <code>target="_parent"</code> attribute, so that the
 	 * top frame will be refreshed.
 	 */
-	private static final class ChangeFramePageLink extends Link
+	private static final class ChangeFramePageLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -48,16 +49,19 @@ public class LeftFrame extends WebPage
 		private final BodyFrame bodyFrame;
 
 		/** this link's target. */
-		private final Class pageClass;
+		private final Class<? extends Page<?>> pageClass;
 
 		/**
 		 * Construct.
+		 * 
+		 * @param <C>
 		 * 
 		 * @param id
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(String id, BodyFrame bodyFrame, Class pageClass)
+		public <C extends Page<?>> ChangeFramePageLink(String id, BodyFrame bodyFrame,
+			Class<C> pageClass)
 		{
 			super(id);
 			this.bodyFrame = bodyFrame;
@@ -67,6 +71,7 @@ public class LeftFrame extends WebPage
 		/**
 		 * @see org.apache.wicket.markup.html.link.Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
 			// change frame class
@@ -99,6 +104,7 @@ public class LeftFrame extends WebPage
 	 * 
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

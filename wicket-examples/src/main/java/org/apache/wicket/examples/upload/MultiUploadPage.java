@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,12 +49,12 @@ import org.apache.wicket.util.lang.Bytes;
  * 
  * @author Eelco Hillenius
  */
-public class MultiUploadPage extends WicketExamplePage
+public class MultiUploadPage extends WicketExamplePage<Void>
 {
 	/**
 	 * List view for files in upload folder.
 	 */
-	private class FileListView extends ListView
+	private class FileListView extends ListView<File>
 	{
 		/**
 		 * Construct.
@@ -63,7 +64,7 @@ public class MultiUploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(String name, final IModel files)
+		public FileListView(String name, final IModel<List<File>> files)
 		{
 			super(name, files);
 		}
@@ -71,16 +72,18 @@ public class MultiUploadPage extends WicketExamplePage
 		/**
 		 * @see ListView#populateItem(ListItem)
 		 */
-		protected void populateItem(ListItem listItem)
+		@Override
+		protected void populateItem(ListItem<File> listItem)
 		{
-			final File file = (File)listItem.getModelObject();
-			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link("delete")
+			final File file = listItem.getModelObject();
+			listItem.add(new Label<String>("file", file.getName()));
+			listItem.add(new Link<Void>("delete")
 			{
+				@Override
 				public void onClick()
 				{
 					Files.remove(file);
-					MultiUploadPage.this.info("Deleted " + file);
+					info("Deleted " + file);
 				}
 			});
 		}
@@ -89,17 +92,17 @@ public class MultiUploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends Form
+	private class FileUploadForm extends Form<Void>
 	{
 		// collection that will hold uploaded FileUpload objects
-		private final Collection uploads = new ArrayList();
+		private final Collection<FileUpload> uploads = new ArrayList<FileUpload>();
 
 		/**
 		 * TODO
 		 * 
 		 * @return Collection
 		 */
-		public Collection getUploads()
+		public Collection<FileUpload> getUploads()
 		{
 			return uploads;
 		}
@@ -118,7 +121,8 @@ public class MultiUploadPage extends WicketExamplePage
 			setMultiPart(true);
 
 			// Add one multi-file upload field
-			add(new MultiFileUploadField("fileInput", new PropertyModel(this, "uploads"), 5));
+			add(new MultiFileUploadField("fileInput", new PropertyModel<List<FileUpload>>(this,
+				"uploads"), 5));
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
@@ -127,12 +131,13 @@ public class MultiUploadPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
-			Iterator it = uploads.iterator();
+			Iterator<FileUpload> it = uploads.iterator();
 			while (it.hasNext())
 			{
-				final FileUpload upload = (FileUpload)it.next();
+				final FileUpload upload = it.next();
 				// Create a new file
 				File newFile = new File(getUploadFolder(), upload.getClientFileName());
 
@@ -158,7 +163,7 @@ public class MultiUploadPage extends WicketExamplePage
 	private static final Log log = LogFactory.getLog(MultiUploadPage.class);
 
 	/** Reference to listview for easy access. */
-	private FileListView fileListView;
+	private final FileListView fileListView;
 
 	/**
 	 * Constructor.
@@ -182,10 +187,11 @@ public class MultiUploadPage extends WicketExamplePage
 		add(simpleUploadForm);
 
 		// Add folder view
-		add(new Label("dir", uploadFolder.getAbsolutePath()));
-		fileListView = new FileListView("fileList", new LoadableDetachableModel()
+		add(new Label<String>("dir", uploadFolder.getAbsolutePath()));
+		fileListView = new FileListView("fileList", new LoadableDetachableModel<List<File>>()
 		{
-			protected Object load()
+			@Override
+			protected List<File> load()
 			{
 				return Arrays.asList(getUploadFolder().listFiles());
 			}

@@ -27,7 +27,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class SimplePage_14 extends WebPage
+public class SimplePage_14 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * @author Igor Vaynberg
  * 
  */
-public class CheckGroupSelector extends LabeledWebMarkupContainer
+public class CheckGroupSelector extends LabeledWebMarkupContainer<Void>
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
+		CheckGroup<?> group = findParent(CheckGroup.class);
 		if (group == null)
 		{
 			throw new WicketRuntimeException(

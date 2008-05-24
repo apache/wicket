@@ -34,7 +34,7 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 	 * 
 	 * @return the target component
 	 */
-	Component getTarget();
+	Component<?> getTarget();
 
 	/**
 	 * Gets listener method.

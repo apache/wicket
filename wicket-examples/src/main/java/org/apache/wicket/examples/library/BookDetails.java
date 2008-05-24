@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.examples.library;
 
-import java.util.Iterator;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class BookDetails extends AuthenticatedWebPage
+public final class BookDetails extends AuthenticatedWebPage<Void>
 {
 	/**
 	 * Constructor for calls from external page links
@@ -54,26 +54,24 @@ public final class BookDetails extends AuthenticatedWebPage
 	 */
 	public BookDetails(final Book book)
 	{
-		add(new Label("title", book.getTitle()));
-		add(new Label("author", book.getAuthor()));
-		add(new Label("fiction", Boolean.toString(book.getFiction())));
+		add(new Label<String>("title", book.getTitle()));
+		add(new Label<String>("author", book.getAuthor()));
+		add(new Label<String>("fiction", Boolean.toString(book.getFiction())));
 		add(BookDetails.link("companion", book.getCompanionBook(), getLocalizer().getString(
-				"noBookTitle", this)));
+			"noBookTitle", this)));
 		add(BookDetails.link("related", book.getRelatedBook(), getLocalizer().getString(
-				"noBookTitle", this)));
+			"noBookTitle", this)));
 
 		String writingStyles;
 		final boolean hasStyles = (book.getWritingStyles() != null) &&
-				(book.getWritingStyles().size() > 0);
+			(book.getWritingStyles().size() > 0);
 
 		if (hasStyles)
 		{
 			StringList styles = new StringList();
 
-			for (Iterator iterator = book.getWritingStyles().iterator(); iterator.hasNext();)
+			for (WritingStyle style : book.getWritingStyles())
 			{
-				Book.WritingStyle style = (Book.WritingStyle)iterator.next();
-
 				styles.add(getLocalizer().getString(style.toString(), this));
 			}
 
@@ -84,9 +82,9 @@ public final class BookDetails extends AuthenticatedWebPage
 			writingStyles = getLocalizer().getString("noWritingStyles", this);
 		}
 
-		Label writingStylesLabel = new Label("writingStyles", writingStyles);
+		Label<String> writingStylesLabel = new Label<String>("writingStyles", writingStyles);
 
-		final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
+		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"));
 		italic.setEnabled(!hasStyles);
 
 		add(writingStylesLabel.add(italic));
@@ -105,18 +103,18 @@ public final class BookDetails extends AuthenticatedWebPage
 	 * @return The external page link
 	 */
 	public static BookmarkablePageLink link(final String name, final Book book,
-			final String noBookTitle)
+		final String noBookTitle)
 	{
 		final BookmarkablePageLink link = new BookmarkablePageLink(name, BookDetails.class);
 
 		if (book != null)
 		{
 			link.setParameter("id", book.getId());
-			link.add(new Label("title", new Model(book)));
+			link.add(new Label<Book>("title", new Model<Book>(book)));
 		}
 		else
 		{
-			link.add(new Label("title", noBookTitle));
+			link.add(new Label<String>("title", noBookTitle));
 			link.setEnabled(false);
 		}
 

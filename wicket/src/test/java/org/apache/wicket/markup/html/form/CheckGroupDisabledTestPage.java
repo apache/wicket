@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author igor
  */
-public class CheckGroupDisabledTestPage extends WebPage
+public class CheckGroupDisabledTestPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -22,8 +22,9 @@ import org.apache.wicket.model.IModel;
  * Concrete, extending panel.
  * 
  * @author Eelco Hillenius
+ * @param <T>
  */
-public class Panel1 extends TemplatePanel
+public class Panel1<T> extends TemplatePanel<T>
 {
 	/**
 	 * Construct.
@@ -44,7 +45,7 @@ public class Panel1 extends TemplatePanel
 	 * @param model
 	 *            the model
 	 */
-	public Panel1(String id, IModel model)
+	public Panel1(String id, IModel<T> model)
 	{
 		super(id, model);
 	}

@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.staticpages;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import org.apache.wicket.request.RequestParameters;
@@ -34,8 +35,11 @@ import org.apache.wicket.util.resource.XSLTResourceStream;
  */
 public class Application extends WebApplication
 {
+	/**
+	 * @see org.apache.wicket.Application#getHomePage()
+	 */
 	@Override
-	public Class getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
@@ -62,7 +66,7 @@ public class Application extends WebApplication
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
 				IResourceStream xslStream = new PackageResourceStream(Application.class,
-						"layout.xsl");
+					"layout.xsl");
 				IResourceStream docStream = new WebExternalResourceStream(path);
 				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
 			}
@@ -71,6 +75,6 @@ public class Application extends WebApplication
 		// All requests to bookmarkable page "Page" will be captured, and the
 		// "Sent" page is shown instead
 		mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage",
-				EmailPage.class, Sent.class));
+			EmailPage.class, Sent.class));
 	}
 }

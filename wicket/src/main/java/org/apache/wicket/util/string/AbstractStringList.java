@@ -93,13 +93,13 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	 * 
 	 * @return An array containing exactly this sequence of Strings
 	 */
-	public final List toList()
+	public final List<String> toList()
 	{
 		// Get number of Strings
 		final int size = size();
 
 		// Allocate list of exactly the right size
-		final List strings = new ArrayList(size);
+		final List<String> strings = new ArrayList<String>(size);
 
 		// Add strings to list
 		for (int i = 0; i < size; i++)
@@ -190,6 +190,7 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public String toString()
 	{
 		return "[" + join() + "]";

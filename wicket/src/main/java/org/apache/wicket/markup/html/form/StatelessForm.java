@@ -27,6 +27,8 @@ import org.apache.wicket.model.IModel;
  * 
  * 
  * @author jcompagner
+ * @param <T>
+ *            The type of the {@link Form}'s model object
  */
 public class StatelessForm<T> extends Form<T>
 {

@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.border.Border;
  * 
  * @author pz65n8
  */
-public abstract class AbstractTest14WebPage extends WebPage
+public abstract class AbstractTest14WebPage extends WebPage<Void>
 {
 	/**
 	 * 

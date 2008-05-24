@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Frank Bille
  */
-public class MockPageWithOneComponent extends WebPage
+public class MockPageWithOneComponent extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

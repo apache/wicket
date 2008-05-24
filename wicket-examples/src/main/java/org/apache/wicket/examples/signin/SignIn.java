@@ -64,7 +64,7 @@ public final class SignIn extends WicketExamplePage<Void>
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class SignInForm extends Form
+	public final class SignInForm extends Form<Void>
 	{
 		// El-cheapo model for form
 		private final ValueMap properties = new ValueMap();
@@ -80,8 +80,8 @@ public final class SignIn extends WicketExamplePage<Void>
 			super(id);
 
 			// Attach textfield components that edit properties map model
-			add(new TextField("username", new PropertyModel(properties, "username")));
-			add(new PasswordTextField("password", new PropertyModel(properties, "password")));
+			add(new TextField<String>("username", new PropertyModel<String>(properties, "username")));
+			add(new PasswordTextField("password", new PropertyModel<String>(properties, "password")));
 		}
 
 		/**

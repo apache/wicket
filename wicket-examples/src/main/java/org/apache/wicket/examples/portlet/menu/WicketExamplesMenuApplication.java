@@ -32,23 +32,27 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  */
 public class WicketExamplesMenuApplication extends WebApplication
 {
-	private static List examples;
+	private static List<ExampleApplication> examples;
 	private static ServletContext servletContext;
 
-	public static List getExamples()
+	/**
+	 * @return a list containing {@link ExampleApplication} objects
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<ExampleApplication> getExamples()
 	{
 		if (examples == null)
 		{
-			examples = (List)servletContext.getAttribute(WicketExamplesMenuPortlet.EXAMPLES);
+			examples = (List<ExampleApplication>)servletContext.getAttribute(WicketExamplesMenuPortlet.EXAMPLES);
 		}
-		return examples != null ? examples : Collections.EMPTY_LIST;
+		return examples != null ? examples : Collections.<ExampleApplication> emptyList();
 	}
 
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
 		if (PortletMode.EDIT.equals(prc.getPortletRequest().getPortletMode()))

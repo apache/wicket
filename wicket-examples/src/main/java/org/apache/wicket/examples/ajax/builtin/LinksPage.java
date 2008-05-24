@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class LinksPage extends BasePage
+public class LinksPage extends BasePage<Void>
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
@@ -66,20 +66,24 @@ public class LinksPage extends BasePage
 	 */
 	public LinksPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
+		final Label<Integer> c1 = new Label<Integer>("c1", new PropertyModel<Integer>(this,
+			"counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel(this, "counter2"));
+		final Label<Integer> c2 = new Label<Integer>("c2", new PropertyModel<Integer>(this,
+			"counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		final Label c3 = new Label("c3", new PropertyModel(this, "counter3"));
+		final Label<Integer> c3 = new Label<Integer>("c3", new PropertyModel<Integer>(this,
+			"counter3"));
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new AjaxLink("c1-link")
+		add(new AjaxLink<Void>("c1-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
@@ -87,8 +91,9 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink("c2-link")
+		add(new AjaxFallbackLink<Void>("c2-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;
@@ -103,8 +108,9 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new IndicatingAjaxLink("c3-link")
+		add(new IndicatingAjaxLink<Void>("c3-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter3++;
@@ -121,26 +127,31 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("success-link")
+		add(new AjaxLink<Void>("success-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 			}
 
+			@Override
 			protected org.apache.wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateOnSuccessScript(CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
+					@Override
 					public CharSequence decorateOnFailureScript(CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
@@ -149,27 +160,32 @@ public class LinksPage extends BasePage
 			};
 		});
 
-		add(new AjaxLink("failure-link")
+		add(new AjaxLink<Void>("failure-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				throw new WicketRuntimeException("Failure link clicked");
 			}
 
+			@Override
 			protected org.apache.wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateOnSuccessScript(CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
+					@Override
 					public CharSequence decorateOnFailureScript(CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
@@ -178,16 +194,18 @@ public class LinksPage extends BasePage
 			};
 		});
 
-		add(new AjaxLink("set-response-page")
+		add(new AjaxLink<Void>("set-response-page")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				setResponsePage(new LinksPage());
 			}
 		});
 
-		add(new AjaxLink("exception")
+		add(new AjaxLink<Void>("exception")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				throw new RuntimeException("test whether the exception handling works");

@@ -25,14 +25,14 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Eelco Hillenius
  */
-public class BorderPage extends WicketExamplePage
+public class BorderPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
 	 */
 	public BorderPage()
 	{
-		Label label = new Label("label", "I am the label");
+		Label<String> label = new Label<String>("label", "I am the label");
 		MyBorder border = new MyBorder("border");
 		border.add(label);
 		add(border);
@@ -41,18 +41,18 @@ public class BorderPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"border\" class=\"mark\">\n"
-				+ "<span wicket:id=\"label\" class=\"mark\">label contents here</span>\n"
-				+ "</span>";
+			+ "<span wicket:id=\"label\" class=\"mark\">label contents here</span>\n" + "</span>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public BorderPage()\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label label = new Label(\"label\", \"I am the label\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBorder border = new MyBorder(\"border\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border.add(label);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(border);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label label = new Label(\"label\", \"I am the label\");\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBorder border = new MyBorder(\"border\");\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border.add(label);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(border);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
 		add(new ExplainPanel(html, code));
 
 	}

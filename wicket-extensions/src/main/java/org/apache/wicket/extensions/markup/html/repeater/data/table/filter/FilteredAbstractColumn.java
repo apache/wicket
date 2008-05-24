@@ -24,9 +24,12 @@ import org.apache.wicket.model.IModel;
  * A helper implementation for a filtered column.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
-public abstract class FilteredAbstractColumn extends AbstractColumn implements IFilteredColumn
+public abstract class FilteredAbstractColumn<T> extends AbstractColumn<T>
+	implements
+		IFilteredColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +42,7 @@ public abstract class FilteredAbstractColumn extends AbstractColumn implements I
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public FilteredAbstractColumn(IModel displayModel, String sortProperty)
+	public FilteredAbstractColumn(IModel<String> displayModel, String sortProperty)
 	{
 		super(displayModel, sortProperty);
 	}
@@ -50,7 +53,7 @@ public abstract class FilteredAbstractColumn extends AbstractColumn implements I
 	 * @param displayModel
 	 *            model used to display the header text of this column
 	 */
-	public FilteredAbstractColumn(IModel displayModel)
+	public FilteredAbstractColumn(IModel<String> displayModel)
 	{
 		super(displayModel);
 	}

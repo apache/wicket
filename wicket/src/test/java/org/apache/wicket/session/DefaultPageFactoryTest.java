@@ -34,7 +34,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage1 extends Page
+	public static class AbortAndRespondPage1 extends Page<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage2 extends Page
+	public static class AbortAndRespondPage2 extends Page<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -85,7 +85,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage3 extends Page
+	public static class AbortAndRespondPage3 extends Page<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -125,7 +125,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 
 	}
 
-	public static class PageThrowingCheckedException extends Page
+	public static class PageThrowingCheckedException extends Page<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

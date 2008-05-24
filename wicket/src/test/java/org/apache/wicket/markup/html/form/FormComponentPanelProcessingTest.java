@@ -112,7 +112,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 	}
 
 
-	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class TestPage extends WebPage<Void>implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 

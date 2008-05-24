@@ -41,12 +41,14 @@ public class PageLink<T> extends Link<T>
 	 * Constructs a link that instantiates the given Page class when the link is clicked. The
 	 * instantiated Page is used to render a response to the user.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(final String id, final Class< ? extends Page< ? >> c)
+	public <C extends Page<?>> PageLink(final String id, final Class<C> c)
 	{
 		super(id);
 
@@ -60,13 +62,13 @@ public class PageLink<T> extends Link<T>
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page< ? > getPage()
+			public Page<?> getPage()
 			{
 				// Create page using page factory
 				return PageLink.this.getPage().getPageFactory().newPage(c);
 			}
 
-			public Class< ? > getPageIdentity()
+			public Class<? extends Page<?>> getPageIdentity()
 			{
 				return c;
 			}
@@ -106,7 +108,7 @@ public class PageLink<T> extends Link<T>
 	 *             setResponsePage in their {@link Link#onClick() onClick} methods.
 	 */
 	@Deprecated
-	public PageLink(final String id, final Page< ? > page)
+	public PageLink(final String id, final Page<?> page)
 	{
 		super(id);
 
@@ -114,15 +116,16 @@ public class PageLink<T> extends Link<T>
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page< ? > getPage()
+			public Page<?> getPage()
 			{
 				// Create page using page factory
 				return page;
 			}
 
-			public Class< ? > getPageIdentity()
+			@SuppressWarnings("unchecked")
+			public Class<? extends Page<?>> getPageIdentity()
 			{
-				return page.getClass();
+				return (Class<? extends Page<?>>)page.getClass();
 			}
 		};
 	}
@@ -134,7 +137,7 @@ public class PageLink<T> extends Link<T>
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
-	public boolean linksTo(final Page< ? > page)
+	public boolean linksTo(final Page<?> page)
 	{
 		return page.getClass() == pageLink.getPageIdentity();
 	}

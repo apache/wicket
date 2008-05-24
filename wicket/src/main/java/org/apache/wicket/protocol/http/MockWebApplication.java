@@ -90,10 +90,10 @@ public class MockWebApplication
 	private static final Logger log = LoggerFactory.getLogger(MockWebApplication.class);
 
 	/** The last rendered page. */
-	private Page lastRenderedPage;
+	private Page<?> lastRenderedPage;
 
 	/** The previously rendered page */
-	private Page previousRenderedPage;
+	private Page<?> previousRenderedPage;
 
 	/** Mock http servlet request. */
 	private final MockHttpServletRequest servletRequest;
@@ -108,7 +108,7 @@ public class MockWebApplication
 	private WebRequest wicketRequest;
 
 	/** Parameters to be set on the next request. */
-	private Map parametersForNextRequest = new HashMap();
+	private Map<String, Object> parametersForNextRequest = new HashMap<String, Object>();
 
 	/** Response. */
 	private WebResponse wicketResponse;
@@ -163,7 +163,7 @@ public class MockWebApplication
 					return context;
 				}
 
-				public Enumeration getInitParameterNames()
+				public Enumeration<?> getInitParameterNames()
 				{
 					return null;
 				}
@@ -263,7 +263,7 @@ public class MockWebApplication
 	 * 
 	 * @return The last rendered page
 	 */
-	public Page getLastRenderedPage()
+	public Page<?> getLastRenderedPage()
 	{
 		return lastRenderedPage;
 	}
@@ -273,7 +273,7 @@ public class MockWebApplication
 	 * 
 	 * @return The last rendered page
 	 */
-	public Page getPreviousRenderedPage()
+	public Page<?> getPreviousRenderedPage()
 	{
 		return previousRenderedPage;
 	}
@@ -343,7 +343,7 @@ public class MockWebApplication
 	 * 
 	 * @param component
 	 */
-	public void processRequestCycle(final Component component)
+	public void processRequestCycle(final Component<?> component)
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
@@ -351,7 +351,7 @@ public class MockWebApplication
 
 		if (component instanceof Page)
 		{
-			lastRenderedPage = (Page)component;
+			lastRenderedPage = (Page<?>)component;
 		}
 		postProcessRequestCycle(cycle);
 	}
@@ -359,9 +359,11 @@ public class MockWebApplication
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 */
-	public void processRequestCycle(final Class pageClass)
+	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass)
 	{
 		processRequestCycle(pageClass, null);
 	}
@@ -369,10 +371,13 @@ public class MockWebApplication
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 * @param params
 	 */
-	public void processRequestCycle(final Class pageClass, PageParameters params)
+	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass,
+		PageParameters params)
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
@@ -395,7 +400,7 @@ public class MockWebApplication
 				IRequestTarget currentTarget = cycle.getRequestTarget();
 				if (currentTarget instanceof IPageRequestTarget)
 				{
-					Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
+					Page<?> currentPage = ((IPageRequestTarget)currentTarget).getPage();
 					final IPageMap pageMap = currentPage.getPageMap();
 					if (pageMap.isDefault())
 					{
@@ -416,10 +421,10 @@ public class MockWebApplication
 					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
 				if (params != null)
 				{
-					final Iterator iterator;
+					final Iterator<String> iterator;
 					if (UnitTestSettings.getSortUrlParameters())
 					{
-						iterator = new TreeSet(params.keySet()).iterator();
+						iterator = new TreeSet<String>(params.keySet()).iterator();
 					}
 					else
 					{
@@ -427,7 +432,7 @@ public class MockWebApplication
 					}
 					while (iterator.hasNext())
 					{
-						final String key = (String)iterator.next();
+						final String key = iterator.next();
 						final String values[] = params.getStringArray(key);
 						if (values != null)
 						{
@@ -539,12 +544,12 @@ public class MockWebApplication
 	 * @param cycle
 	 * @return Last page
 	 */
-	private Page generateLastRenderedPage(WebRequestCycle cycle)
+	private Page<?> generateLastRenderedPage(WebRequestCycle cycle)
 	{
-		Page newLastRenderedPage = cycle.getResponsePage();
+		Page<?> newLastRenderedPage = cycle.getResponsePage();
 		if (newLastRenderedPage == null)
 		{
-			Class responseClass = cycle.getResponsePageClass();
+			Class<? extends Page<?>> responseClass = cycle.getResponsePageClass();
 			if (responseClass != null)
 			{
 				Session.set(cycle.getSession());
@@ -558,7 +563,7 @@ public class MockWebApplication
 					// create a new request cycle for the newPage call
 					createRequestCycle();
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
-					Class< ? extends Page> pageClass = pageClassRequestTarget.getPageClass();
+					Class<? extends Page<?>> pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
@@ -613,6 +618,7 @@ public class MockWebApplication
 	 * @param isAjax
 	 *            indicates whether the request should be initialized as an ajax request (ajax
 	 *            header "Wicket-Ajax" is set)
+	 * @return the constructed {@link WebRequestCycle}
 	 */
 	public WebRequestCycle setupRequestAndResponse(boolean isAjax)
 	{
@@ -637,6 +643,8 @@ public class MockWebApplication
 	 * Reset the request and the response back to a starting state and recreate the necessary wicket
 	 * request, response and session objects. The request and response objects can be accessed and
 	 * Initialized at this point.
+	 * 
+	 * @return the constructed {@link WebRequestCycle}
 	 */
 	public WebRequestCycle setupRequestAndResponse()
 	{
@@ -648,7 +656,7 @@ public class MockWebApplication
 	 * 
 	 * @return the parameters to be set on the next request
 	 */
-	public Map getParametersForNextRequest()
+	public Map<String, Object> getParametersForNextRequest()
 	{
 		return parametersForNextRequest;
 	}
@@ -659,7 +667,7 @@ public class MockWebApplication
 	 * @param parametersForNextRequest
 	 *            the parameters to be set on the next request
 	 */
-	public void setParametersForNextRequest(Map parametersForNextRequest)
+	public void setParametersForNextRequest(Map<String, Object> parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}

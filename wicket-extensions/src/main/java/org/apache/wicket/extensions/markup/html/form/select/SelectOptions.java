@@ -34,18 +34,20 @@ import org.apache.wicket.model.Model;
  * 
  * Example markup:
  * 
- * <pre><code>
+ * <pre>
+ * &lt;code&gt;
  * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:contaner&gt;
- * </code></pre>
+ * &lt;/code&gt;
+ * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class SelectOptions extends RepeatingView
+public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 {
 	private static final long serialVersionUID = 1L;
 	private boolean recreateChoices = false;
-	private final IOptionRenderer renderer;
+	private final IOptionRenderer<T> renderer;
 
 	/**
 	 * Constructor
@@ -54,7 +56,8 @@ public class SelectOptions extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(String id, IModel model, IOptionRenderer renderer)
+	public SelectOptions(String id, IModel<Collection<? extends T>> model,
+		IOptionRenderer<T> renderer)
 	{
 		super(id, model);
 		this.renderer = renderer;
@@ -68,7 +71,7 @@ public class SelectOptions extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(String id, Collection elements, IOptionRenderer renderer)
+	public SelectOptions(String id, Collection<? extends T> elements, IOptionRenderer<T> renderer)
 	{
 		this(id, new Model((Serializable)elements), renderer);
 	}
@@ -79,7 +82,7 @@ public class SelectOptions extends RepeatingView
 	 * @param refresh
 	 * @return this for chaining
 	 */
-	public SelectOptions setRecreateChoices(boolean refresh)
+	public SelectOptions<T> setRecreateChoices(boolean refresh)
 	{
 		recreateChoices = refresh;
 		return this;
@@ -96,7 +99,7 @@ public class SelectOptions extends RepeatingView
 			// populate this repeating view with SelectOption components
 			removeAll();
 
-			Object modelObject = getModelObject();
+			Collection<? extends T> modelObject = getModelObject();
 
 			if (modelObject != null)
 			{
@@ -107,19 +110,19 @@ public class SelectOptions extends RepeatingView
 				}
 
 				// iterator over model objects for SelectOption components
-				Iterator it = ((Collection)modelObject).iterator();
+				Iterator<? extends T> it = modelObject.iterator();
 
 				while (it.hasNext())
 				{
 					// we need a container to represent a row in repeater
-					WebMarkupContainer row = new WebMarkupContainer(newChildId());
+					WebMarkupContainer<?> row = new WebMarkupContainer<Void>(newChildId());
 					row.setRenderBodyOnly(true);
 					add(row);
 
 					// we add our actual SelectOption component to the row
 					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
-					IModel model = renderer.getModel(value);
+					IModel<T> model = renderer.getModel(value);
 					row.add(newOption(text, model));
 				}
 			}
@@ -132,15 +135,16 @@ public class SelectOptions extends RepeatingView
 	 * 
 	 * @param text
 	 * @param model
-	 * @return
+	 * @return a {@link SelectOption}
 	 */
-	protected SelectOption newOption(String text, IModel model)
+	protected SelectOption<T> newOption(String text, IModel<T> model)
 	{
-		return new SimpleSelectOption("option", model, text);
+		return new SimpleSelectOption<T>("option", model, text);
 	}
 
-	private static class SimpleSelectOption extends SelectOption
+	private static class SimpleSelectOption<S> extends SelectOption<S>
 	{
+		private static final long serialVersionUID = 1L;
 
 		private final String text;
 
@@ -149,7 +153,7 @@ public class SelectOptions extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(String id, IModel model, String text)
+		public SimpleSelectOption(String id, IModel<S> model, String text)
 		{
 			super(id, model);
 			this.text = text;
@@ -160,10 +164,5 @@ public class SelectOptions extends RepeatingView
 		{
 			replaceComponentTagBody(markupStream, openTag, text);
 		}
-
-
-		private static final long serialVersionUID = 1L;
-
-
 	}
 }

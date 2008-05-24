@@ -39,13 +39,13 @@ public interface IPageMapEntry extends IClusterable
 	/**
 	 * @return Gets the page, possibly creating it on the fly.
 	 */
-	Page getPage();
+	Page<?> getPage();
 
 	/**
 	 * @return The class of page stored in this page map entry (which can be used by an eviction
 	 *         strategy to prioritize evictions)
 	 */
-	Class<? extends Page> getPageClass();
+	Class<? extends Page<?>> getPageClass();
 
 	/**
 	 * @param id

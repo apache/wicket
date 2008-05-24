@@ -44,7 +44,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
@@ -55,7 +55,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	@Override
 	public Session newSession(Request request, Response response)
 	{
-		return new LibrarySession(LibraryApplication.this, request);
+		return new LibrarySession(request);
 	}
 
 	/**

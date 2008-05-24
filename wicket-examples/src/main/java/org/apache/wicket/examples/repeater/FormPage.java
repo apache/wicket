@@ -28,8 +28,8 @@ import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 
 
 /**
@@ -39,58 +39,62 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class FormPage extends BasePage
 {
-	final Form form;
+	final Form<?> form;
 
 	/**
 	 * constructor
 	 */
 	public FormPage()
 	{
-		form = new Form("form");
+		form = new Form<Void>("form");
 		add(form);
 
 		// create a repeater that will display the list of contacts.
-		RefreshingView refreshingView = new RefreshingView("simple")
+		RefreshingView<Contact> refreshingView = new RefreshingView<Contact>("simple")
 		{
-			protected Iterator getItemModels()
+			@Override
+			protected Iterator<IModel<Contact>> getItemModels()
 			{
 				// for simplicity we only show the first 10 contacts
-				Iterator contacts = DatabaseLocator.getDatabase().find(0, 10, "firstName", true)
-						.iterator();
+				Iterator<Contact> contacts = DatabaseLocator.getDatabase().find(0, 10, "firstName",
+					true).iterator();
 
 				// the iterator returns contact objects, but we need it to
 				// return models, we use this handy adapter class to perform
 				// on-the-fly conversion.
-				return new ModelIteratorAdapter(contacts)
+				return new ModelIteratorAdapter<Contact>(contacts)
 				{
 
-					protected IModel model(Object object)
+					@Override
+					protected IModel<Contact> model(Contact object)
 					{
-						return new DetachableContactModel((Contact)object);
+						return new CompoundPropertyModel<Contact>(
+							new DetachableContactModel(object));
 					}
 
 				};
 
 			}
 
-			protected void populateItem(final Item item)
+			@Override
+			protected void populateItem(final Item<Contact> item)
 			{
 				// populate the row of the repeater
-				IModel contact = item.getModel();
+				IModel<Contact> contact = item.getModel();
 				item.add(new ActionPanel("actions", contact));
-				// FIXME use CompoundPropertyModel!
-				item.add(new TextField("id", new PropertyModel(contact, "id")));
-				item.add(new TextField("firstName", new PropertyModel(contact, "firstName")));
-				item.add(new TextField("lastName", new PropertyModel(contact, "lastName")));
-				item.add(new TextField("homePhone", new PropertyModel(contact, "homePhone")));
-				item.add(new TextField("cellPhone", new PropertyModel(contact, "cellPhone")));
+				item.add(new TextField<Long>("id"));
+				item.add(new TextField<String>("firstName"));
+				item.add(new TextField<String>("lastName"));
+				item.add(new TextField<String>("homePhone"));
+				item.add(new TextField<String>("cellPhone"));
 			}
 
-			protected Item newItem(String id, int index, IModel model)
+			@Override
+			protected Item<Contact> newItem(String id, int index, IModel<Contact> model)
 			{
 				// this item sets markup class attribute to either 'odd' or
 				// 'even' for decoration
-				return new OddEvenItem(id, index, model);
+				return new OddEvenItem<Contact>(id, index, model);
 			}
 		};
 
@@ -107,7 +111,7 @@ public class FormPage extends BasePage
 	/**
 	 * Panel that houses row-actions
 	 */
-	private class ActionPanel extends Panel
+	private class ActionPanel extends Panel<Contact>
 	{
 		/**
 		 * @param id
@@ -115,22 +119,24 @@ public class FormPage extends BasePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(String id, IModel model)
+		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link("select")
+			add(new Link<Void>("select")
 			{
+				@Override
 				public void onClick()
 				{
-					FormPage.this.setSelected((Contact)getParent().getModelObject());
+					setSelected(ActionPanel.this.getModelObject());
 				}
 			});
 
-			SubmitLink removeLink = new SubmitLink("remove", form)
+			SubmitLink<?> removeLink = new SubmitLink<Void>("remove", form)
 			{
+				@Override
 				public void onSubmit()
 				{
-					Contact contact = (Contact)getParent().getModelObject();
+					Contact contact = ActionPanel.this.getModelObject();
 					info("Removed contact " + contact);
 					DatabaseLocator.getDatabase().delete(contact);
 				}

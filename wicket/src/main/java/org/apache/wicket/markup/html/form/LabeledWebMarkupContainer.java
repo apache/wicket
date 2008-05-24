@@ -30,7 +30,7 @@ import org.apache.wicket.model.IWrapModel;
  */
 public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	implements
-		ILabelProvider
+		ILabelProvider<String>
 {
 	/**
 	 * 

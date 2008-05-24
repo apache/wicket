@@ -108,9 +108,9 @@ public class ComponentTag extends MarkupElement
 	 * based on this XmlTag.
 	 * 
 	 * @param name
-	 * 		The name of html tag
+	 *            The name of html tag
 	 * @param type
-	 * 		The type of tag
+	 *            The type of tag
 	 */
 	public ComponentTag(final String name, final XmlTag.Type type)
 	{
@@ -124,7 +124,7 @@ public class ComponentTag extends MarkupElement
 	 * Construct.
 	 * 
 	 * @param tag
-	 * 		The underlying xml tag
+	 *            The underlying xml tag
 	 */
 	public ComponentTag(final XmlTag tag)
 	{
@@ -177,7 +177,7 @@ public class ComponentTag extends MarkupElement
 	 * Gets whether this tag closes the provided open tag.
 	 * 
 	 * @param open
-	 * 		The open tag
+	 *            The open tag
 	 * @return True if this tag closes the given open tag
 	 */
 	@Override
@@ -196,7 +196,7 @@ public class ComponentTag extends MarkupElement
 	 * bookmarkable URLs.
 	 * 
 	 * @param autolink
-	 * 		enable/disable automatic href conversion
+	 *            enable/disable automatic href conversion
 	 */
 	public final void enableAutolink(final boolean autolink)
 	{
@@ -281,7 +281,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#getString(String)
 	 * @param key
-	 * 		The key
+	 *            The key
 	 * @return The string value
 	 */
 	public final CharSequence getString(String key)
@@ -331,7 +331,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param id
-	 * 		Required component id
+	 *            Required component id
 	 * @return True if this tag is an open tag with the given component name
 	 * @see org.apache.wicket.markup.parser.XmlTag#isOpen()
 	 */
@@ -351,7 +351,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param id
-	 * 		Required component id
+	 *            Required component id
 	 * @return True if this tag is an openclose tag with the given component id
 	 * @see org.apache.wicket.markup.parser.XmlTag#isOpenClose()
 	 */
@@ -400,11 +400,11 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Copies all internal properties from this tag to <code>dest</code>. This is basically cloning
-	 * without instance creation.
+	 * Copies all internal properties from this tag to <code>dest</code>. This is basically
+	 * cloning without instance creation.
 	 * 
 	 * @param dest
-	 * 		tag whose properties will be set
+	 *            tag whose properties will be set
 	 */
 	void copyPropertiesTo(final ComponentTag dest)
 	{
@@ -426,9 +426,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, boolean)
 	 * @param key
-	 * 		The key
+	 *            The key
 	 * @param value
-	 * 		The value
+	 *            The value
 	 */
 	public final void put(final String key, final boolean value)
 	{
@@ -438,9 +438,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, int)
 	 * @param key
-	 * 		The key
+	 *            The key
 	 * @param value
-	 * 		The value
+	 *            The value
 	 */
 	public final void put(final String key, final int value)
 	{
@@ -450,9 +450,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, CharSequence)
 	 * @param key
-	 * 		The key
+	 *            The key
 	 * @param value
-	 * 		The value
+	 *            The value
 	 */
 	public final void put(String key, CharSequence value)
 	{
@@ -462,9 +462,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, StringValue)
 	 * @param key
-	 * 		The key
+	 *            The key
 	 * @param value
-	 * 		The value
+	 *            The value
 	 */
 	public final void put(String key, StringValue value)
 	{
@@ -474,7 +474,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#putAll(Map)
 	 * @param map
-	 * 		a key/value map
+	 *            a key/value map
 	 */
 	public final void putAll(final Map<String, Object> map)
 	{
@@ -484,7 +484,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#remove(String)
 	 * @param key
-	 * 		The key to remove
+	 *            The key to remove
 	 */
 	public final void remove(String key)
 	{
@@ -513,7 +513,7 @@ public class ComponentTag extends MarkupElement
 	 * wicket:id="componentId".
 	 * 
 	 * @param id
-	 * 		The component's id assigned to the tag.
+	 *            The component's id assigned to the tag.
 	 */
 	public final void setId(final String id)
 	{
@@ -523,7 +523,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#setName(String)
 	 * @param name
-	 * 		New tag name
+	 *            New tag name
 	 */
 	public final void setName(String name)
 	{
@@ -533,7 +533,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#setNamespace(String)
 	 * @param namespace
-	 * 		New tag name namespace
+	 *            New tag name namespace
 	 */
 	public final void setNamespace(String namespace)
 	{
@@ -544,9 +544,9 @@ public class ComponentTag extends MarkupElement
 	 * Assuming this is a close tag, assign it's corresponding open tag.
 	 * 
 	 * @param tag
-	 * 		the open-tag
+	 *            the open-tag
 	 * @throws RuntimeException
-	 * 		if 'this' is not a close tag
+	 *             if 'this' is not a close tag
 	 */
 	public final void setOpenTag(final ComponentTag tag)
 	{
@@ -558,7 +558,7 @@ public class ComponentTag extends MarkupElement
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param type
-	 * 		The new type
+	 *            The new type
 	 */
 	public final void setType(final Type type)
 	{
@@ -605,11 +605,11 @@ public class ComponentTag extends MarkupElement
 	 * Write the tag to the response
 	 * 
 	 * @param response
-	 * 		The response to write to
+	 *            The response to write to
 	 * @param stripWicketAttributes
-	 * 		if true, wicket:id are removed from output
+	 *            if true, wicket:id are removed from output
 	 * @param namespace
-	 * 		Wicket's namespace to use
+	 *            Wicket's namespace to use
 	 */
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
 		final String namespace)
@@ -726,7 +726,7 @@ public class ComponentTag extends MarkupElement
 	 * Sets the component path of wicket elements
 	 * 
 	 * @param path
-	 * 		path
+	 *            path
 	 */
 	void setPath(final String path)
 	{
@@ -767,10 +767,12 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * Set the class of wicket component which contains the wicket:head tag.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param wicketHeaderClass
-	 * 		wicketHeaderClass
+	 *            wicketHeaderClass
 	 */
-	public void setMarkupClass(Class<? extends Component<?>> wicketHeaderClass)
+	public <C extends Component<?>> void setMarkupClass(Class<C> wicketHeaderClass)
 	{
 		if (wicketHeaderClass == null)
 		{
@@ -810,7 +812,7 @@ public class ComponentTag extends MarkupElement
 	 * Sets ignore.
 	 * 
 	 * @param ignore
-	 * 		If true than MarkupParser will remove it from the markup
+	 *            If true than MarkupParser will remove it from the markup
 	 */
 	public void setIgnore(boolean ignore)
 	{
@@ -827,7 +829,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param auto
-	 * 		True, if wicket:id has been automatically created (internal component)
+	 *            True, if wicket:id has been automatically created (internal component)
 	 */
 	public void setAutoComponentTag(boolean auto)
 	{
@@ -838,7 +840,7 @@ public class ComponentTag extends MarkupElement
 	 * Gets userData.
 	 * 
 	 * @param key
-	 * 		The key to store and retrieve the value
+	 *            The key to store and retrieve the value
 	 * @return userData
 	 */
 	public Object getUserData(final String key)
@@ -855,9 +857,9 @@ public class ComponentTag extends MarkupElement
 	 * Sets userData.
 	 * 
 	 * @param key
-	 * 		The key to store and retrieve the value
+	 *            The key to store and retrieve the value
 	 * @param value
-	 * 		The user specific value to store
+	 *            The user specific value to store
 	 */
 	public void setUserData(final String key, final Object value)
 	{

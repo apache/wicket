@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -42,41 +43,44 @@ public class RefreshingPage extends BasePage
 	 */
 	public RefreshingPage()
 	{
-		final List contacts = new ArrayList(10);
+		final List<IModel<Contact>> contacts = new ArrayList<IModel<Contact>>(10);
 
 		// populate list of contacts to be displayed
 		ContactDataProvider dp = new ContactDataProvider();
-		Iterator it = dp.iterator(0, 10);
+		Iterator<Contact> it = dp.iterator(0, 10);
 		while (it.hasNext())
 		{
 			contacts.add(dp.model(it.next()));
 		}
 
 		// create the refreshing view
-		RefreshingView view = new RefreshingView("view")
+		RefreshingView<Contact> view = new RefreshingView<Contact>("view")
 		{
 			/**
 			 * Return an iterator over models for items in the view
 			 */
-			protected Iterator getItemModels()
+			@Override
+			protected Iterator<IModel<Contact>> getItemModels()
 			{
 				return contacts.iterator();
 			}
 
-			protected void populateItem(final Item item)
+			@Override
+			protected void populateItem(final Item<Contact> item)
 			{
-				Contact contact = (Contact)item.getModelObject();
-				item.add(new Label("itemid", item.getId()));
+				Contact contact = item.getModelObject();
+				item.add(new Label<String>("itemid", item.getId()));
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
+				item.add(new Label<String>("firstname", contact.getFirstName()));
+				item.add(new Label<String>("lastname", contact.getLastName()));
+				item.add(new Label<String>("homephone", contact.getHomePhone()));
+				item.add(new Label<String>("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
-					public Object getObject()
+					@Override
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
@@ -86,8 +90,9 @@ public class RefreshingPage extends BasePage
 
 		add(view);
 
-		add(new Link("refreshLink")
+		add(new Link<Void>("refreshLink")
 		{
+			@Override
 			public void onClick()
 			{
 				// noop

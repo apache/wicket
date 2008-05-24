@@ -35,7 +35,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final Component< ? > component, final Action action)
+	public boolean isActionAuthorized(final Component<?> component, final Action action)
 	{
 		return true;
 	}
@@ -43,11 +43,13 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean isInstantiationAuthorized(final Class< ? extends Component> componentClass)
+	@SuppressWarnings("unchecked")
+	public final <T extends Component<?>> boolean isInstantiationAuthorized(
+		final Class<T> componentClass)
 	{
 		if (instanceOf(componentClass, Page.class))
 		{
-			return isPageAuthorized((Class< ? extends Page>)componentClass);
+			return isPageAuthorized((Class<? extends Page<?>>)componentClass);
 		}
 		return true;
 	}
@@ -62,7 +64,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The interface or superclass that the type needs to implement or extend
 	 * @return True if the type is an instance of the superType
 	 */
-	protected boolean instanceOf(final Class< ? > type, final Class< ? > superType)
+	protected boolean instanceOf(final Class<?> type, final Class<?> superType)
 	{
 		return superType.isAssignableFrom(type);
 	}
@@ -70,11 +72,14 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	/**
 	 * Whether to page may be created. Returns true by default.
 	 * 
+	 * @param <T>
+	 *            the type of the page
+	 * 
 	 * @param pageClass
 	 *            The Page class
 	 * @return True if to page may be created
 	 */
-	protected boolean isPageAuthorized(Class< ? extends Page> pageClass)
+	protected <T extends Page<?>> boolean isPageAuthorized(Class<T> pageClass)
 	{
 		return true;
 	}

@@ -24,9 +24,9 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Represents a text template that can do variable interpolation.
- *
+ * 
  * @see org.apache.wicket.util.string.interpolator.VariableInterpolator
- *
+ * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * @since 1.2.6
@@ -64,7 +64,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 *            the variables to interpolate
 	 * @return the result of the interpolation
 	 */
-	public String asString(Map variables)
+	public String asString(Map<String, Object> variables)
 	{
 		if (variables != null)
 		{
@@ -76,6 +76,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();
@@ -86,6 +87,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 * 
 	 * @return the <code>String</code> resource
 	 */
+	@Override
 	public abstract String getString();
 
 	/**
@@ -95,5 +97,5 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 *            variables to interpolate into this <code>TextTemplate</code>
 	 * @return <code>this</code>, for chaining purposes
 	 */
-	public abstract TextTemplate interpolate(Map variables);
+	public abstract TextTemplate interpolate(Map<String, Object> variables);
 }

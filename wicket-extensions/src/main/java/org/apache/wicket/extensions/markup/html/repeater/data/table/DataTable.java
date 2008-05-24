@@ -86,7 +86,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 		 * @see IBehavior#onComponentTag(Component, ComponentTag)
 		 */
 		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
+		public void onComponentTag(Component<?> component, ComponentTag tag)
 		{
 			String className = getCssClass();
 			if (!Strings.isEmpty(className))
@@ -111,12 +111,12 @@ public class DataTable<T> extends Panel<T> implements IPageable
 
 	private static final long serialVersionUID = 1L;
 
-	private final DataGridView datagrid;
+	private final DataGridView<T> datagrid;
 
-	private final IColumn<T>[] columns;
+	private final IColumn<?>[] columns;
 
-	private final RepeatingView topToolbars;
-	private final RepeatingView bottomToolbars;
+	private final RepeatingView<?> topToolbars;
+	private final RepeatingView<?> bottomToolbars;
 
 	/**
 	 * Constructor
@@ -130,7 +130,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, IColumn<T>[] columns, IDataProvider<T> dataProvider, int rowsPerPage)
+	public DataTable(String id, IColumn<?>[] columns, IDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id);
 
@@ -149,7 +149,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 			protected Item newCellItem(String id, int index, IModel model)
 			{
 				Item item = DataTable.this.newCellItem(id, index, model);
-				final IColumn column = DataTable.this.columns[index];
+				final IColumn<?> column = DataTable.this.columns[index];
 				if (column instanceof IStyledColumn)
 				{
 					item.add(new DataTable.CssAttributeBehavior()
@@ -159,7 +159,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 						@Override
 						protected String getCssClass()
 						{
-							return ((IStyledColumn)column).getCssClass();
+							return ((IStyledColumn<?>)column).getCssClass();
 						}
 					});
 				}
@@ -175,7 +175,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new RepeatingView("topToolbars")
+		topToolbars = new RepeatingView<Void>("topToolbars")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -187,7 +187,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 
 		};
 
-		bottomToolbars = new RepeatingView("bottomToolbars")
+		bottomToolbars = new RepeatingView<Void>("bottomToolbars")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -211,7 +211,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addBottomToolbar(AbstractToolbar toolbar)
+	public void addBottomToolbar(AbstractToolbar<?> toolbar)
 	{
 		addToolbar(toolbar, bottomToolbars);
 	}
@@ -224,7 +224,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addTopToolbar(AbstractToolbar toolbar)
+	public void addTopToolbar(AbstractToolbar<?> toolbar)
 	{
 		addToolbar(toolbar, topToolbars);
 	}
@@ -232,7 +232,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final IColumn<T>[] getColumns()
+	public final IColumn<?>[] getColumns()
 	{
 		return columns;
 	}
@@ -307,7 +307,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 		datagrid.setRowsPerPage(items);
 	}
 
-	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
+	private void addToolbar(AbstractToolbar<?> toolbar, RepeatingView<?> container)
 	{
 		if (toolbar == null)
 		{
@@ -323,7 +323,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 		toolbar.setRenderBodyOnly(true);
 
 		// create a container item for the toolbar (required by repeating view)
-		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
+		WebMarkupContainer<?> item = new WebMarkupContainer<Void>(container.newChildId());
 		item.setRenderBodyOnly(true);
 		item.add(toolbar);
 

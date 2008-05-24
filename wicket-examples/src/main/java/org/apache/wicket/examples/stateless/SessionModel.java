@@ -25,16 +25,17 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * @author Eelco Hillenius
  */
-public class SessionModel extends AbstractReadOnlyModel
+public class SessionModel extends AbstractReadOnlyModel<String>
 {
 	/**
 	 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 	 */
-	public Object getObject()
+	@Override
+	public String getObject()
 	{
 		final String msg;
 		String sessionId = Application.get().getSessionStore().getSessionId(
-				RequestCycle.get().getRequest(), false);
+			RequestCycle.get().getRequest(), false);
 		if (sessionId == null)
 		{
 			msg = "no concrete session is created yet (only a volatile one)";

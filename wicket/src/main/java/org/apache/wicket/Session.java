@@ -414,9 +414,8 @@ public abstract class Session implements IClusterable
 
 			if (temporarySessionAttributes != null)
 			{
-				for (Iterator i = temporarySessionAttributes.entrySet().iterator(); i.hasNext();)
+				for (Entry<String, Object> entry : temporarySessionAttributes.entrySet())
 				{
-					Entry entry = (Entry)i.next();
 					store.setAttribute(request, String.valueOf(entry.getKey()), entry.getValue());
 				}
 				temporarySessionAttributes = null;
@@ -655,14 +654,13 @@ public abstract class Session implements IClusterable
 				"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
 		}
 
-		List<Object> pageMaps = getPageMaps();
+		List<IPageMap> pageMaps = getPageMaps();
 
-		for (Iterator<Object> i = pageMaps.iterator(); i.hasNext();)
+		for (IPageMap pageMap : pageMaps)
 		{
-			IPageMap pm = (IPageMap)i.next();
-			if (pm.containsPage(pageId, versionNumber))
+			if (pageMap.containsPage(pageId, versionNumber))
 			{
-				return getPage(pm.getName(), "" + pageId, versionNumber);
+				return getPage(pageMap.getName(), "" + pageId, versionNumber);
 			}
 		}
 
@@ -815,15 +813,14 @@ public abstract class Session implements IClusterable
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */
-	public final List<Object> getPageMaps()
+	public final List<IPageMap> getPageMaps()
 	{
-		final List<Object> list = new ArrayList<Object>();
-		for (final Iterator<String> iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		final List<IPageMap> list = new ArrayList<IPageMap>();
+		for (String attribute : getAttributeNames())
 		{
-			final String attribute = iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				list.add(getAttribute(attribute));
+				list.add((IPageMap)getAttribute(attribute));
 			}
 		}
 		return list;
@@ -835,9 +832,8 @@ public abstract class Session implements IClusterable
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (final Iterator<Object> iterator = getPageMaps().iterator(); iterator.hasNext();)
+		for (IPageMap pageMap : getPageMaps())
 		{
-			final IPageMap pageMap = (IPageMap)iterator.next();
 			size += pageMap.getSizeInBytes();
 		}
 		return size;
@@ -1458,10 +1454,9 @@ public abstract class Session implements IClusterable
 		// in case we have dirty attributes, set them to session
 		if (tempMap.isEmpty() == false)
 		{
-			for (Iterator i = tempMap.entrySet().iterator(); i.hasNext();)
+			for (Entry<String, Object> entry : tempMap.entrySet())
 			{
-				Map.Entry entry = (Map.Entry)i.next();
-				setAttribute((String)entry.getKey(), entry.getValue());
+				setAttribute(entry.getKey(), entry.getValue());
 			}
 		}
 
@@ -1470,11 +1465,12 @@ public abstract class Session implements IClusterable
 			synchronized (pageMapsUsedInRequest)
 			{
 				Thread t = Thread.currentThread();
-				Iterator it = pageMapsUsedInRequest.entrySet().iterator();
+				Iterator<Entry<IPageMap, PageMapsUsedInRequestEntry>> it = pageMapsUsedInRequest.entrySet()
+					.iterator();
 				while (it.hasNext())
 				{
-					Entry entry = (Entry)it.next();
-					if (((PageMapsUsedInRequestEntry)entry.getValue()).thread == t)
+					Entry<IPageMap, PageMapsUsedInRequestEntry> entry = it.next();
+					if ((entry.getValue()).thread == t)
 					{
 						it.remove();
 					}
@@ -1486,7 +1482,7 @@ public abstract class Session implements IClusterable
 
 	/**
 	 * 
-	 * @return
+	 * @return the next page id
 	 */
 	synchronized protected int nextPageId()
 	{

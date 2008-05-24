@@ -33,7 +33,7 @@ public abstract class AbstractTab implements ITab
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	IModel title;
+	IModel<String> title;
 
 	/**
 	 * Constructor
@@ -41,7 +41,7 @@ public abstract class AbstractTab implements ITab
 	 * @param title
 	 *            IModel used to represent the title of the tab. Must contain a string
 	 */
-	public AbstractTab(IModel title)
+	public AbstractTab(IModel<String> title)
 	{
 		this.title = title;
 	}
@@ -49,13 +49,18 @@ public abstract class AbstractTab implements ITab
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getTitle()
 	 */
-	public IModel getTitle()
+	public IModel<String> getTitle()
 	{
 		return title;
 	}
 
+	public boolean isVisible()
+	{
+		return true;
+	}
+	
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public abstract Panel getPanel(final String panelId);
+	public abstract Panel<?> getPanel(final String panelId);
 }

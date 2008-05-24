@@ -23,8 +23,9 @@ import org.apache.wicket.model.IModel;
  * Base panel to be extended.
  * 
  * @author Eelco Hillenius
+ * @param <T>
  */
-public abstract class TemplatePanel extends Panel
+public abstract class TemplatePanel<T> extends Panel<T>
 {
 	/**
 	 * Construct.
@@ -45,7 +46,7 @@ public abstract class TemplatePanel extends Panel
 	 * @param model
 	 *            the model
 	 */
-	public TemplatePanel(String id, IModel model)
+	public TemplatePanel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}

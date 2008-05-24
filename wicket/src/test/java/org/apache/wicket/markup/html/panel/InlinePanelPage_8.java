@@ -28,11 +28,11 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class InlinePanelPage_8 extends WebPage
+public class InlinePanelPage_8 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	private int number = 0;
-	private final List nodes = new ArrayList();
+	private final List<ListNode> nodes = new ArrayList<ListNode>();
 
 	/**
 	 * Construct.
@@ -42,13 +42,14 @@ public class InlinePanelPage_8 extends WebPage
 		ListNode first = new ListNode("first", number++);
 		nodes.add(first);
 		add(first);
-		add(new AjaxLink("add")
+		add(new AjaxLink<Void>("add")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				ListNode last = (ListNode)nodes.get(nodes.size() - 1);
+				ListNode last = nodes.get(nodes.size() - 1);
 				ListNode newLast = last.addNext(target, number++);
 				nodes.add(newLast);
 			}
@@ -58,11 +59,11 @@ public class InlinePanelPage_8 extends WebPage
 	/**
 	 * 
 	 */
-	public class ListNode extends Fragment
+	public class ListNode extends Fragment<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WebMarkupContainer nextContainer;
+		private final WebMarkupContainer<?> nextContainer;
 
 		/**
 		 * Construct.
@@ -73,8 +74,8 @@ public class InlinePanelPage_8 extends WebPage
 		public ListNode(String id, int number)
 		{
 			super(id, "node", InlinePanelPage_8.this);
-			add(new Label("number", Integer.toString(number)));
-			nextContainer = new WebMarkupContainer("nextContainer");
+			add(new Label<String>("number", Integer.toString(number)));
+			nextContainer = new WebMarkupContainer<Void>("nextContainer");
 			nextContainer.setOutputMarkupPlaceholderTag(true);
 			nextContainer.setVisible(false);
 			add(nextContainer);
@@ -84,7 +85,7 @@ public class InlinePanelPage_8 extends WebPage
 		 * 
 		 * @param target
 		 * @param number
-		 * @return
+		 * @return the added {@link ListNode}
 		 */
 		public ListNode addNext(AjaxRequestTarget target, int number)
 		{

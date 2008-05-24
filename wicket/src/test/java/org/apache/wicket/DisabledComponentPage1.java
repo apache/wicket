@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Chris Turner
  */
-public class DisabledComponentPage1 extends WebPage
+public class DisabledComponentPage1 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 	Link link;

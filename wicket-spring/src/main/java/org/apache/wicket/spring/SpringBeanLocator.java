@@ -36,6 +36,8 @@ import org.springframework.context.ApplicationContext;
  */
 public class SpringBeanLocator implements IProxyTargetLocator
 {
+	private static final long serialVersionUID = 1L;
+
 	// Weak reference so we don't hold up WebApp classloader garbage collection.
 	private transient WeakReference<Class< ? >> beanTypeCache;
 
@@ -51,9 +53,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Constructor
 	 * 
 	 * @param beanType
-	 *            bean class
+	 * 		bean class
 	 * @param locator
-	 *            spring context locator
+	 * 		spring context locator
 	 */
 	public SpringBeanLocator(Class< ? > beanType, ISpringContextLocator locator)
 	{
@@ -64,11 +66,11 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Constructor
 	 * 
 	 * @param beanName
-	 *            bean name
+	 * 		bean name
 	 * @param beanType
-	 *            bean class
+	 * 		bean class
 	 * @param locator
-	 *            spring context locator
+	 * 		spring context locator
 	 */
 	public SpringBeanLocator(String beanName, Class< ? > beanType, ISpringContextLocator locator)
 	{
@@ -93,9 +95,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * or more then one beans are found.
 	 * 
 	 * @param ctx
-	 *            spring application context
+	 * 		spring application context
 	 * @param clazz
-	 *            bean class
+	 * 		bean class
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
@@ -124,7 +126,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	/**
 	 * @return returns whether the bean (the locator is supposed to istantiate) is a singleton or
-	 *         not
+	 * 	not
 	 */
 	public boolean isSingletonBean()
 	{
@@ -209,10 +211,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * are found.
 	 * 
 	 * @param ctx
-	 *            spring application context
+	 * 		spring application context
 	 * 
 	 * @param clazz
-	 *            bean class
+	 * 		bean class
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
@@ -225,12 +227,12 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Looks up a bean by its name and class. Throws IllegalState exception if bean not found.
 	 * 
 	 * @param ctx
-	 *            spring application context
+	 * 		spring application context
 	 * 
 	 * @param name
-	 *            bean name
+	 * 		bean name
 	 * @param clazz
-	 *            bean class
+	 * 		bean class
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */

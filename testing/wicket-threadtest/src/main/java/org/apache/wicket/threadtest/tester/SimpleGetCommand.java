@@ -80,8 +80,8 @@ public class SimpleGetCommand extends AbstractGetCommand
 	}
 
 	/**
-	 * @see org.apache.wicket.threadtest.tester.AbstractGetCommand#doGet(org.apache.commons.httpclient.HttpClient,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.threadtest.tester.AbstractGetCommand#doGet(org.apache
+	 *      .commons.httpclient.HttpClient, java.lang.String)
 	 */
 	@Override
 	protected void doGet(HttpClient client, String url) throws Exception
@@ -91,11 +91,16 @@ public class SimpleGetCommand extends AbstractGetCommand
 		method.setFollowRedirects(true);
 		try
 		{
+			if (url.contains("bookmarkable"))
+			{
+				log.info(url);
+			}
 			int code = client.executeMethod(method);
 			if (code != 200)
 			{
 				log.error("ERROR! code: " + code);
-				log.error(Streams.readString(method.getResponseBodyAsStream()));
+				log.error(url);
+// log.error(Streams.readString(method.getResponseBodyAsStream()));
 				// TODO rather than failing, just gather statistics
 				// throw new Exception(new String(method.getResponseBody()));
 			}

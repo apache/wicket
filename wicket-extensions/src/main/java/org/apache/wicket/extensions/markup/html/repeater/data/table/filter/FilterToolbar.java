@@ -31,7 +31,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class FilterToolbar extends AbstractToolbar
+public class FilterToolbar extends AbstractToolbar<Void>
 {
 	private static final long serialVersionUID = 1L;
 	private static final String FILTER_COMPONENT_ID = "filter";
@@ -41,10 +41,12 @@ public class FilterToolbar extends AbstractToolbar
 	 * 
 	 * @param table
 	 *            data table this toolbar will be added to
+	 * @param form
+	 *            the filter form
 	 * @param stateLocator
 	 *            locator responsible for finding object used to store filter's state
 	 */
-	public FilterToolbar(final DataTable table, final FilterForm form,
+	public FilterToolbar(final DataTable<?> table, final FilterForm form,
 		final IFilterStateLocator stateLocator)
 	{
 		super(table);
@@ -60,22 +62,22 @@ public class FilterToolbar extends AbstractToolbar
 
 		// populate the toolbar with components provided by filtered columns
 
-		RepeatingView filters = new RepeatingView("filters");
+		RepeatingView<?> filters = new RepeatingView<Void>("filters");
 		filters.setRenderBodyOnly(true);
 		add(filters);
 
-		IColumn[] cols = table.getColumns();
+		IColumn<?>[] cols = table.getColumns();
 		for (int i = 0; i < cols.length; i++)
 		{
-			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
+			WebMarkupContainer<?> item = new WebMarkupContainer<Void>(filters.newChildId());
 			item.setRenderBodyOnly(true);
 
-			IColumn col = cols[i];
-			Component filter = null;
+			IColumn<?> col = cols[i];
+			Component<?> filter = null;
 
 			if (col instanceof IFilteredColumn)
 			{
-				IFilteredColumn filteredCol = (IFilteredColumn)col;
+				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
 				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
 			}
 
@@ -103,6 +105,7 @@ public class FilterToolbar extends AbstractToolbar
 
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		if (findParent(FilterForm.class) == null)

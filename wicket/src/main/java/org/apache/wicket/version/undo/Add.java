@@ -36,7 +36,7 @@ class Add extends Change
 	private static final Logger log = LoggerFactory.getLogger(Add.class);
 
 	/** the subject <code>Component</code> */
-	private final Component component;
+	private final Component<?> component;
 
 	/**
 	 * Constructor.
@@ -44,7 +44,7 @@ class Add extends Change
 	 * @param component
 	 *            the subject <code>Component</code>
 	 */
-	Add(final Component component)
+	Add(final Component<?> component)
 	{
 		if (component == null)
 		{
@@ -59,8 +59,8 @@ class Add extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD ADD: added " + component.getPath() + " (" +
-					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
-					") to parent");
+				Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+				") to parent");
 		}
 
 		this.component = component;
@@ -69,13 +69,14 @@ class Add extends Change
 	/**
 	 * @see Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO ADD: removing " + component.getPath() + " (" +
-					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
-					") from parent");
+				Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+				") from parent");
 		}
 
 		// Check if somehow the Component isn't already removed.
@@ -88,6 +89,7 @@ class Add extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Add[component: " + component.getPath() + "]";

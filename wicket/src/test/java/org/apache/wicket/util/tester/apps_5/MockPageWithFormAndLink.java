@@ -27,7 +27,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Frank Bille
  */
-public class MockPageWithFormAndLink extends WebPage
+public class MockPageWithFormAndLink extends WebPage<Void>
 {
 	/**
 	 * @author Frank Bille
@@ -54,9 +54,9 @@ public class MockPageWithFormAndLink extends WebPage
 	}
 
 	private static final long serialVersionUID = 1L;
-	private Form form;
+	private Form<MockPojo> form;
 
-	private TextField nameField;
+	private TextField<String> nameField;
 
 
 	/**
@@ -66,9 +66,9 @@ public class MockPageWithFormAndLink extends WebPage
 	 */
 	public MockPageWithFormAndLink(MockPojo mockPojo)
 	{
-		form = new Form("form", new CompoundPropertyModel(mockPojo));
+		form = new Form<MockPojo>("form", new CompoundPropertyModel<MockPojo>(mockPojo));
 		add(form);
-		nameField = new TextField("name");
+		nameField = new TextField<String>("name");
 		form.add(nameField);
 	}
 
@@ -76,7 +76,7 @@ public class MockPageWithFormAndLink extends WebPage
 	/**
 	 * @return the form component
 	 */
-	public Form getForm()
+	public Form<MockPojo> getForm()
 	{
 		return form;
 	}
@@ -85,7 +85,7 @@ public class MockPageWithFormAndLink extends WebPage
 	/**
 	 * @return the name text field
 	 */
-	public TextField getNameField()
+	public TextField<String> getNameField()
 	{
 		return nameField;
 	}
@@ -94,7 +94,7 @@ public class MockPageWithFormAndLink extends WebPage
 	/**
 	 * @param form
 	 */
-	public void setForm(Form form)
+	public void setForm(Form<MockPojo> form)
 	{
 		this.form = form;
 	}
@@ -103,8 +103,8 @@ public class MockPageWithFormAndLink extends WebPage
 	/**
 	 * @param name
 	 */
-	public void setNameField(TextField name)
+	public void setNameField(TextField<String> name)
 	{
-		this.nameField = name;
+		nameField = name;
 	}
 }

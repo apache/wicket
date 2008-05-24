@@ -81,7 +81,7 @@ public class DatesPage extends WicketExamplePage<Void>
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel<List< ? extends Locale>>()
+			setChoices(new AbstractReadOnlyModel<List<? extends Locale>>()
 			{
 				@Override
 				public List<Locale> getObject()
@@ -139,9 +139,9 @@ public class DatesPage extends WicketExamplePage<Void>
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form localeForm = new Form("localeForm");
+		Form<?> localeForm = new Form<Void>("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
-		localeForm.add(new Link("localeUSLink")
+		localeForm.add(new Link<Void>("localeUSLink")
 		{
 			@Override
 			public void onClick()
@@ -150,8 +150,8 @@ public class DatesPage extends WicketExamplePage<Void>
 			}
 		});
 		add(localeForm);
-		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel(this,
-			"date"), new StyleDateConverter("S-", true))
+		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel<Date>(
+			this, "date"), new StyleDateConverter("S-", true))
 		{
 			@Override
 			public Locale getLocale()
@@ -159,7 +159,7 @@ public class DatesPage extends WicketExamplePage<Void>
 				return selectedLocale;
 			}
 		};
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()

@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import org.apache.wicket.util.collections.IntHashMap;
+import org.apache.wicket.util.lang.Generics;
 
 
 /**
@@ -36,14 +37,14 @@ import org.apache.wicket.util.collections.IntHashMap;
 public final class WicketObjectInputStream extends ObjectInputStream
 {
 
-	private final IntHashMap handledObjects = new IntHashMap();
+	private final IntHashMap<Object> handledObjects = new IntHashMap<Object>();
 	private short handleCounter = 0;
 
 
 	private final DataInputStream in;
 	private ClassStreamHandler currentStreamHandler;
-	private HandleArrayListStack stack = new HandleArrayListStack();
-	private HandleArrayListStack defaultRead = new HandleArrayListStack();
+	private HandleArrayListStack<Object> stack = new HandleArrayListStack<Object>();
+	private HandleArrayListStack<Object> defaultRead = new HandleArrayListStack<Object>();
 
 	/**
 	 * Construct.
@@ -60,6 +61,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#readObjectOverride()
 	 */
+	@Override
 	protected Object readObjectOverride() throws IOException, ClassNotFoundException
 	{
 		Object value = null;
@@ -156,6 +158,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#defaultReadObject()
 	 */
+	@Override
 	public void defaultReadObject() throws IOException, ClassNotFoundException
 	{
 		Object currentObject = stack.peek();
@@ -170,6 +173,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		stack = null;
@@ -187,6 +191,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public boolean readBoolean() throws IOException
 	{
 		return in.readBoolean();
@@ -201,6 +206,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public byte readByte() throws IOException
 	{
 		return in.readByte();
@@ -215,6 +221,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public int readUnsignedByte() throws IOException
 	{
 		return in.readUnsignedByte();
@@ -229,6 +236,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public char readChar() throws IOException
 	{
 		return in.readChar();
@@ -243,6 +251,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public short readShort() throws IOException
 	{
 		return in.readShort();
@@ -257,6 +266,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public int readUnsignedShort() throws IOException
 	{
 		return in.readUnsignedShort();
@@ -271,6 +281,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public int readInt() throws IOException
 	{
 		return in.readInt();
@@ -285,6 +296,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public long readLong() throws IOException
 	{
 		return in.readLong();
@@ -299,6 +311,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public float readFloat() throws IOException
 	{
 		return in.readFloat();
@@ -313,6 +326,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public double readDouble() throws IOException
 	{
 		return in.readDouble();
@@ -328,6 +342,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public void readFully(byte[] buf) throws IOException
 	{
 		in.readFully(buf, 0, buf.length);
@@ -347,6 +362,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 * @throws IOException
 	 *             If other I/O error has occurred.
 	 */
+	@Override
 	public void readFully(byte[] buf, int off, int len) throws IOException
 	{
 		int endoff = off + len;
@@ -360,6 +376,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#readUTF()
 	 */
+	@Override
 	public String readUTF() throws IOException
 	{
 		String s = in.readUTF();
@@ -369,6 +386,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#read()
 	 */
+	@Override
 	public int read() throws IOException
 	{
 		return in.read();
@@ -377,6 +395,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.InputStream#read(byte[])
 	 */
+	@Override
 	public int read(byte[] b) throws IOException
 	{
 		return in.read(b);
@@ -385,6 +404,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#read(byte[], int, int)
 	 */
+	@Override
 	public int read(byte[] buf, int off, int len) throws IOException
 	{
 		return in.read(buf, off, len);
@@ -393,6 +413,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	/**
 	 * @see java.io.ObjectInputStream#readFields()
 	 */
+	@Override
 	public GetField readFields() throws IOException, ClassNotFoundException
 	{
 		GetFieldImpl field = new GetFieldImpl();
@@ -403,7 +424,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 
 	private class GetFieldImpl extends GetField
 	{
-		private final HashMap values = new HashMap();
+		private final HashMap<String, Object> values = Generics.newHashMap();
 
 		private void read() throws IOException, ClassNotFoundException
 		{
@@ -548,6 +569,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#defaulted(java.lang.String)
 		 */
+		@Override
 		public boolean defaulted(String name) throws IOException
 		{
 			return values.get(name) == null;
@@ -556,6 +578,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, byte)
 		 */
+		@Override
 		public byte get(String name, byte val) throws IOException
 		{
 			Object o = values.get(name);
@@ -569,6 +592,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, char)
 		 */
+		@Override
 		public char get(String name, char val) throws IOException
 		{
 			Object o = values.get(name);
@@ -582,6 +606,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, double)
 		 */
+		@Override
 		public double get(String name, double val) throws IOException
 		{
 			Object o = values.get(name);
@@ -595,6 +620,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, float)
 		 */
+		@Override
 		public float get(String name, float val) throws IOException
 		{
 			Object o = values.get(name);
@@ -608,6 +634,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, int)
 		 */
+		@Override
 		public int get(String name, int val) throws IOException
 		{
 			Object o = values.get(name);
@@ -621,6 +648,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, long)
 		 */
+		@Override
 		public long get(String name, long val) throws IOException
 		{
 			Object o = values.get(name);
@@ -634,6 +662,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, short)
 		 */
+		@Override
 		public short get(String name, short val) throws IOException
 		{
 			Object o = values.get(name);
@@ -647,6 +676,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, boolean)
 		 */
+		@Override
 		public boolean get(String name, boolean val) throws IOException
 		{
 			Object o = values.get(name);
@@ -660,6 +690,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, java.lang.Object)
 		 */
+		@Override
 		public Object get(String name, Object val) throws IOException
 		{
 			Object o = values.get(name);
@@ -673,6 +704,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		/**
 		 * @see java.io.ObjectInputStream.GetField#getObjectStreamClass()
 		 */
+		@Override
 		public ObjectStreamClass getObjectStreamClass()
 		{
 			return null;

@@ -18,6 +18,7 @@ package org.apache.wicket.examples.upload;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,12 +46,12 @@ import org.apache.wicket.util.lang.Bytes;
  * 
  * @author Eelco Hillenius
  */
-public class UploadPage extends WicketExamplePage
+public class UploadPage extends WicketExamplePage<Void>
 {
 	/**
 	 * List view for files in upload folder.
 	 */
-	private class FileListView extends ListView
+	private class FileListView extends ListView<File>
 	{
 		/**
 		 * Construct.
@@ -60,7 +61,7 @@ public class UploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(String name, final IModel files)
+		public FileListView(String name, final IModel<List<File>> files)
 		{
 			super(name, files);
 		}
@@ -68,16 +69,18 @@ public class UploadPage extends WicketExamplePage
 		/**
 		 * @see ListView#populateItem(ListItem)
 		 */
-		protected void populateItem(ListItem listItem)
+		@Override
+		protected void populateItem(ListItem<File> listItem)
 		{
-			final File file = (File)listItem.getModelObject();
-			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link("delete")
+			final File file = listItem.getModelObject();
+			listItem.add(new Label<String>("file", file.getName()));
+			listItem.add(new Link<Void>("delete")
 			{
+				@Override
 				public void onClick()
 				{
 					Files.remove(file);
-					UploadPage.this.info("Deleted " + file);
+					info("Deleted " + file);
 				}
 			});
 		}
@@ -86,7 +89,7 @@ public class UploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends Form
+	private class FileUploadForm extends Form<Void>
 	{
 		private FileUploadField fileUploadField;
 
@@ -113,6 +116,7 @@ public class UploadPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
 			final FileUpload upload = fileUploadField.getFileUpload();
@@ -143,7 +147,7 @@ public class UploadPage extends WicketExamplePage
 	private static final Log log = LogFactory.getLog(UploadPage.class);
 
 	/** Reference to listview for easy access. */
-	private FileListView fileListView;
+	private final FileListView fileListView;
 
 	/**
 	 * Constructor.
@@ -167,10 +171,11 @@ public class UploadPage extends WicketExamplePage
 		add(simpleUploadForm);
 
 		// Add folder view
-		add(new Label("dir", uploadFolder.getAbsolutePath()));
-		fileListView = new FileListView("fileList", new LoadableDetachableModel()
+		add(new Label<String>("dir", uploadFolder.getAbsolutePath()));
+		fileListView = new FileListView("fileList", new LoadableDetachableModel<List<File>>()
 		{
-			protected Object load()
+			@Override
+			protected List<File> load()
 			{
 				return Arrays.asList(getUploadFolder().listFiles());
 			}

@@ -41,15 +41,15 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class SelectPage extends WicketExamplePage
+public class SelectPage extends WicketExamplePage<SelectPage.Input>
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
 
 	/** available choices for large selection box. */
-	private static final List MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
-			"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
+	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1",
+			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
 	 * Constructor
@@ -57,15 +57,16 @@ public class SelectPage extends WicketExamplePage
 	public SelectPage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel(input));
+		setModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -75,10 +76,10 @@ public class SelectPage extends WicketExamplePage
 
 		Select site = new Select("site");
 		form.add(site);
-		site.add(new SelectOption("site1", new Model("tss")));
-		site.add(new SelectOption("site2", new Model("jl")));
-		site.add(new SelectOption("site3", new Model("sd")));
-		site.add(new SelectOption("site4", new Model("bn")));
+		site.add(new SelectOption<String>("site1", new Model<String>("tss")));
+		site.add(new SelectOption<String>("site2", new Model<String>("jl")));
+		site.add(new SelectOption<String>("site3", new Model<String>("sd")));
+		site.add(new SelectOption<String>("site4", new Model<String>("bn")));
 
 		Select choices = new Select("choices");
 		form.add(choices);
@@ -90,25 +91,25 @@ public class SelectPage extends WicketExamplePage
 				return object.toString();
 			}
 
-			public IModel getModel(Object value)
+			public IModel<Serializable> getModel(Object value)
 			{
-				return new Model((Serializable)value);
+				return new Model<Serializable>((Serializable)value);
 			}
 
 		};
 		choices.add(new SelectOptions("manychoices", new Model((Serializable)MANY_CHOICES),
-				renderer));
+			renderer));
 
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements IClusterable
+	public static class Input implements IClusterable
 	{
 		/** the selected sites. */
 		public String site = "sd";
 
 		/** the selected choices. */
-		public List choices = new ArrayList();
+		public List<String> choices = new ArrayList<String>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()
@@ -121,15 +122,16 @@ public class SelectPage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "site = '" + site + "', choices='" + listAsString(choices) + "'";
 		}
 
-		private String listAsString(List list)
+		private String listAsString(List<String> list)
 		{
 			StringBuffer b = new StringBuffer();
-			for (Iterator i = list.iterator(); i.hasNext();)
+			for (Iterator<String> i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
 				if (i.hasNext())
@@ -144,22 +146,22 @@ public class SelectPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"sites\">\n" + "    <option>site 1</option>\n"
-				+ "    <option>site 2</option>\n" + "</select>\n"
-				+ "<select wicket:id=\"choices\">\n" + "    <option>choice 1</option>\n"
-				+ "    <option>choice 2</option>\n" + "</select>";
+			+ "    <option>site 2</option>\n" + "</select>\n" + "<select wicket:id=\"choices\">\n"
+			+ "    <option>choice 1</option>\n" + "    <option>choice 2</option>\n" + "</select>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// Add a multiple list choice component that uses the model object's 'site'\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// property to designate the current selection, and that uses the SITES\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// list for the available options.\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Note that our model here holds a Collection, as we need to store\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// multiple values too\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice siteChoice = new ListMultipleChoice(\"sites\", SITES);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(siteChoice);\n"
-				+ "\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// property to designate the current selection, and that uses the SITES\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// list for the available options.\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// Note that our model here holds a Collection, as we need to store\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;// multiple values too\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice siteChoice = new ListMultipleChoice(\"sites\", SITES);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(siteChoice);\n"
+			+ "\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
 
 		html = "SEE INSIDE FOR NOW";
 		code = "SEE INSIDE FOR NOW";

@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.image.Image;
  * Mock page for testing.
  * 
  */
-public class BorderRenderWrappedTestPage_1 extends WebPage
+public class BorderRenderWrappedTestPage_1 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

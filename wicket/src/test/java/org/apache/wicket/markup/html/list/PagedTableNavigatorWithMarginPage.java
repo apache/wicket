@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTableNavigatorWithMarginPage extends WebPage
+public class PagedTableNavigatorWithMarginPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

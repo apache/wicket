@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Guess extends HangmanPage
+public class Guess extends HangmanPage<Void>
 {
 	/**
 	 * Create the guess page.
@@ -39,10 +39,11 @@ public class Guess extends HangmanPage
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label("guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
+		add(new Label<Integer>("guessesRemaining", new PropertyModel<Integer>(getGame(),
+			"guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("word", new Model<String>()
+		add(new Label<String>("word", new Model<String>()
 		{
 			@Override
 			public String getObject()
@@ -52,13 +53,13 @@ public class Guess extends HangmanPage
 		}));
 
 		// Show the game's letters
-		add(new ListView("letters", getGame().getLetters())
+		add(new ListView<Letter>("letters", getGame().getLetters())
 		{
 			@Override
-			protected void populateItem(final ListItem listItem)
+			protected void populateItem(final ListItem<Letter> listItem)
 			{
-				final Letter letter = (Letter)listItem.getModelObject();
-				final Link link = new Link("letter")
+				final Letter letter = listItem.getModelObject();
+				final Link<?> link = new Link<Void>("letter")
 				{
 					@Override
 					protected void onBeforeRender()
@@ -93,7 +94,7 @@ public class Guess extends HangmanPage
 					}
 				};
 
-				link.add(new Image("image", letter.getSharedImageResource()));
+				link.add(new Image<Void>("image", letter.getSharedImageResource()));
 				listItem.add(link);
 
 				// append id attribute to link for unit tests

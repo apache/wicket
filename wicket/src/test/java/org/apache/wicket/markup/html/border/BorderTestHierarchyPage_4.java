@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Joseph Toth
  */
-public class BorderTestHierarchyPage_4 extends WebPage
+public class BorderTestHierarchyPage_4 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

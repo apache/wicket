@@ -19,7 +19,6 @@ package org.apache.wicket.examples.library;
 import java.util.List;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
 
@@ -35,14 +34,12 @@ public final class LibrarySession extends WebSession
 	/**
 	 * Constructor
 	 * 
-	 * @param application
-	 *            The application
 	 * @param request
 	 *            The current request object
 	 */
-	protected LibrarySession(final WebApplication application, Request request)
+	protected LibrarySession(Request request)
 	{
-		super(application, request);
+		super(request);
 	}
 
 	/**
@@ -67,7 +64,7 @@ public final class LibrarySession extends WebSession
 
 				user.setName(username);
 
-				final List books = user.getBooks();
+				final List<Book> books = user.getBooks();
 
 				books.add(new Book("Effective Java", "Joshua Bloch", Book.NON_FICTION));
 				books.add(new Book("The Illiad", "Homer Simpson", Book.FICTION));

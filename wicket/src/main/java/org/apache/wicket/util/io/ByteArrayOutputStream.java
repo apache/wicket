@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class ByteArrayOutputStream extends OutputStream
 {
-	private final List buffers = new java.util.ArrayList();
+	private final List<byte[]> buffers = new java.util.ArrayList<byte[]>();
 	private int count;
 	private byte[] currentBuffer;
 	private int currentBufferIndex;
@@ -82,6 +82,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @throws IOException
 	 *             in case an I/O error occurs
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		// nop
@@ -136,6 +137,7 @@ public class ByteArrayOutputStream extends OutputStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return new String(toByteArray());
@@ -157,10 +159,11 @@ public class ByteArrayOutputStream extends OutputStream
 	/**
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
+	@Override
 	public synchronized void write(byte[] b, int off, int len)
 	{
 		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) ||
-				((off + len) < 0))
+			((off + len) < 0))
 		{
 			throw new IndexOutOfBoundsException();
 		}
@@ -190,6 +193,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
+	@Override
 	public synchronized void write(int b)
 	{
 		write(new byte[] { (byte)b }, 0, 1);
@@ -221,7 +225,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	private byte[] getBuffer(int index)
 	{
-		return (byte[])buffers.get(index);
+		return buffers.get(index);
 	}
 
 	private void needNewBuffer(int newcount)

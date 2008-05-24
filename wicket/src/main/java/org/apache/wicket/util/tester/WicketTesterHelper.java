@@ -65,7 +65,7 @@ public class WicketTesterHelper
 	 *            the <code>Page</code> to analyze
 	 * @return a <code>List</code> of <code>Component</code> data objects
 	 */
-	public static List getComponentData(final Page page)
+	public static List<WicketTesterHelper.ComponentData> getComponentData(final Page page)
 	{
 		final List data = new ArrayList();
 
@@ -133,7 +133,7 @@ public class WicketTesterHelper
 	public static void failWithVerboseMessage(final Collection expects, final Collection actuals)
 	{
 		Assert.fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was (" +
-				actuals.size() + "):\n" + asLined(actuals));
+			actuals.size() + "):\n" + asLined(actuals));
 	}
 
 	/**

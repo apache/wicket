@@ -39,7 +39,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public class SignInPanel extends Panel
+public class SignInPanel extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,12 +53,12 @@ public class SignInPanel extends Panel
 	private boolean rememberMe = true;
 
 	/** Field for user name. */
-	private TextField username;
+	private TextField<String> username;
 
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends Form
+	public final class SignInForm extends Form<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -77,17 +77,19 @@ public class SignInPanel extends Panel
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField("username", new PropertyModel(properties, "username")));
-			add(password = new PasswordTextField("password", new PropertyModel(properties,
-					"password")));
+			add(username = new TextField<String>("username", new PropertyModel<String>(properties,
+				"username")));
+			add(password = new PasswordTextField("password", new PropertyModel<String>(properties,
+				"password")));
 
 			// MarkupContainer row for remember me checkbox
-			final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
+			final WebMarkupContainer<?> rememberMeRow = new WebMarkupContainer<Void>(
+				"rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(SignInPanel.this,
-					"rememberMe")));
+			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel<Boolean>(
+				SignInPanel.this, "rememberMe")));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -99,6 +101,7 @@ public class SignInPanel extends Panel
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			if (signIn(getUsername(), getPassword()))
@@ -201,7 +204,7 @@ public class SignInPanel extends Panel
 	public void setRememberMe(final boolean rememberMe)
 	{
 		this.rememberMe = rememberMe;
-		this.setPersistent(rememberMe);
+		setPersistent(rememberMe);
 	}
 
 	/**
@@ -233,7 +236,7 @@ public class SignInPanel extends Panel
 		if (!continueToOriginalDestination())
 		{
 			setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
-					getApplication().getHomePage(), (PageParameters)null));
+				getApplication().getHomePage(), (PageParameters)null));
 		}
 	}
 

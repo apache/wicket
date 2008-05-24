@@ -67,29 +67,31 @@ public final class Home extends WicketExamplePage<Void>
 	public Home()
 	{
 		// Image as package resource
-		add(new Image("image2"));
+		add(new Image<Void>("image2"));
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.
-		add(new Image("image3", new CircleDynamicImageResource(100, 100)));
+		add(new Image<Void>("image3", new CircleDynamicImageResource(100, 100)));
 
 		// Simple model
-		add(new Image("image4", new Model("Image2.gif")));
+		add(new Image<String>("image4", new Model<String>("Image2.gif")));
 
 		// Dynamically created buffered image
-		add(new Image("image5", getImage5Resource()));
+		add(new Image<Void>("image5", getImage5Resource()));
 
 		// Add okay button image
-		add(new Image("okButton", getOkButtonImage()));
+		add(new Image<Void>("okButton", getOkButtonImage()));
 
 		// Add cancel button image
-		add(new Image("cancelButton", new ResourceReference("cancelButton")));
+		add(new Image<Void>("cancelButton", new ResourceReference("cancelButton")));
 
 		// image loaded as resource ref via model.
-		add(new Image("imageModelResourceReference", new Model(RESOURCE_REF)));
+		add(new Image<ResourceReference>("imageModelResourceReference",
+			new Model<ResourceReference>(RESOURCE_REF)));
 
 		// image loaded as resource via model.
-		add(new Image("imageModelResource", new Model(new CircleDynamicImageResource(100, 100))));
+		add(new Image<CircleDynamicImageResource>("imageModelResource",
+			new Model<CircleDynamicImageResource>(new CircleDynamicImageResource(100, 100))));
 
 	}
 

@@ -27,9 +27,10 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
  * @see IColumn
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
-public interface IFilteredColumn extends IColumn
+public interface IFilteredColumn<T> extends IColumn<T>
 {
 	/**
 	 * Returns the component used by user to filter the column. If null is returned, no filter will
@@ -40,11 +41,11 @@ public interface IFilteredColumn extends IColumn
 	 * @param form
 	 *            FilterForm object for the toolbar. components can use this form's model to access
 	 *            properties of the state object (<code>PropertyModel(form.getModel(), "property"</code>)
-	 *            or retrieve the {@link IFilterStateLocator} object by using
-	 *            {@link FilterForm#getStateLocator() }
+	 *            or retrieve the {@link IFilterStateLocator} object by using {@link
+	 *            FilterForm#getStateLocator()}
 	 * @return component that will be used to represent a filter for this column, or null if no such
 	 *         component is desired
 	 */
-	Component getFilter(String componentId, FilterForm form);
+	Component<T> getFilter(String componentId, FilterForm form);
 
 }

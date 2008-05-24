@@ -52,7 +52,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 
 
 	/** Stack of entry accesses by id */
-	private final ArrayListStack accessStack = new ArrayListStack(8);
+	private final ArrayListStack<Access> accessStack = new ArrayListStack<Access>(8);
 
 
 	/**
@@ -70,6 +70,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof Access)
@@ -103,6 +104,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return id + (version << 16);
@@ -111,6 +113,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "[Access id=" + id + ", version=" + version + "]";
@@ -131,6 +134,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	/**
 	 * Removes all pages from this map
 	 */
+	@Override
 	public final void clear()
 	{
 		super.clear();
@@ -145,7 +149,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
-	public final ArrayListStack getAccessStack()
+	public final ArrayListStack<Access> getAccessStack()
 	{
 		return accessStack;
 	}
@@ -176,11 +180,12 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * @param entry
 	 *            The entry to remove
 	 */
+	@Override
 	public final void removeEntry(final IPageMapEntry entry)
 	{
 		if (entry == null)
 		{
-			// TODO this shouldn't happen but to many people are still getting
+			// TODO this shouldn't happen but too many people are still getting
 			// this now and then/
 			// so first this "fix"
 			log.warn("PageMap.removeEntry called with an null entry");
@@ -193,10 +198,10 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 			session.removeAttribute(attributeForId(entry.getNumericId()));
 
 			// Remove page from acccess stack
-			final Iterator stack = accessStack.iterator();
+			final Iterator<Access> stack = accessStack.iterator();
 			while (stack.hasNext())
 			{
-				final Access access = (Access)stack.next();
+				final Access access = stack.next();
 				if (access.id == entry.getNumericId())
 				{
 					stack.remove();
@@ -217,13 +222,14 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 *            The version to get
 	 * @return Any page having the given id
 	 */
-	public final Page get(final int id, int versionNumber)
+	@Override
+	public final Page<?> get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 		if (entry != null)
 		{
 			// Get page as dirty
-			Page page = entry.getPage();
+			Page<?> page = entry.getPage();
 
 			// TODO Performance: Is this really the case is a page always dirty
 			// even if we just render it again? POSSIBLE ANSWER: The page could
@@ -239,7 +245,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 			access(entry, versionNumber);
 
 			// Get the version of the page requested from the page
-			final Page version = page.getVersion(versionNumber);
+			final Page<?> version = page.getVersion(versionNumber);
 
 
 			// Is the requested version available?
@@ -272,7 +278,8 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * @param page
 	 *            The page to put into this map
 	 */
-	public final void put(final Page page)
+	@Override
+	public final void put(final Page<?> page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isPageStateless())
@@ -317,7 +324,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		int id = entry.getNumericId();
 		for (int i = accessStack.size() - 1; i >= 0; i--)
 		{
-			final Access access = (Access)accessStack.get(i);
+			final Access access = accessStack.get(i);
 
 			// If we found id and version in access stack
 			if (access.id == id && access.version == version)
@@ -339,14 +346,14 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 					if (top instanceof Page)
 					{
 						// If there's more than one version
-						Page topPage = (Page)top;
+						Page<?> topPage = (Page<?>)top;
 						if (topPage.getVersions() > 1)
 						{
 							// Remove version the top access version (-1)
 							topPage.getVersion(topAccess.getVersion() - 1);
 						}
 						else if (topPage.getNumericId() != access.id &&
-								topPage.getCurrentVersionNumber() != access.version)
+							topPage.getCurrentVersionNumber() != access.version)
 						{
 							// Remove whole page
 							remove(topPage);
@@ -374,7 +381,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 */
 	private final Access peekAccess()
 	{
-		return (Access)accessStack.peek();
+		return accessStack.peek();
 	}
 
 	/**
@@ -385,7 +392,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	private final Access popAccess()
 	{
 		dirty();
-		return (Access)accessStack.pop();
+		return accessStack.pop();
 	}
 
 	/**
@@ -416,9 +423,8 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 
 	public boolean containsPage(int id, int versionNumber)
 	{
-		for (Iterator i = accessStack.iterator(); i.hasNext();)
+		for (Access access : accessStack)
 		{
-			Access access = (Access)i.next();
 			if (access.id == id && access.version == versionNumber)
 			{
 				return true;
@@ -436,7 +442,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	{
 		if (entry instanceof Page)
 		{
-			return ((Page)entry).getCurrentVersionNumber();
+			return ((Page<?>)entry).getCurrentVersionNumber();
 		}
 
 		// If entry is not a page, it cannot have versions because the Page

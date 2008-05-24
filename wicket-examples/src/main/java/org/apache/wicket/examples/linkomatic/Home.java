@@ -58,7 +58,7 @@ public class Home extends WicketExamplePage<Void>
 	public Home()
 	{
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
+		final Link<?> actionLink = new Link<Void>("actionLink")
 		{
 			@Override
 			public void onClick()
@@ -66,11 +66,12 @@ public class Home extends WicketExamplePage<Void>
 				linkClickCount++;
 			}
 		};
-		actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
+		actionLink.add(new Label<Integer>("linkClickCount", new PropertyModel<Integer>(this,
+			"linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link actionOnClickLink = new Link("actionOnClickLink")
+		final Link<?> actionOnClickLink = new Link<Void>("actionOnClickLink")
 		{
 			@Override
 			public void onClick()
@@ -80,7 +81,8 @@ public class Home extends WicketExamplePage<Void>
 		};
 
 		add(actionOnClickLink);
-		add(new Label("onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount")));
+		add(new Label<Integer>("onClickLinkClickCount", new PropertyModel<Integer>(this,
+			"onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
 		add(new BookmarkablePageLink("page1Link", Page1.class));
@@ -91,35 +93,35 @@ public class Home extends WicketExamplePage<Void>
 			"3++2 & 5 � >< space + �"));
 
 		// Link to BookDetails page
-		add(new PageLink("bookDetailsLink", new IPageLink()
+		add(new PageLink<Void>("bookDetailsLink", new IPageLink()
 		{
-			public Page getPage()
+			public Page<?> getPage()
 			{
 				return new BookDetails(new Book("The Hobbit"));
 			}
 
-			public Class getPageIdentity()
+			public Class<? extends Page<?>> getPageIdentity()
 			{
 				return BookDetails.class;
 			}
 		}));
 
 		// Delayed link to BookDetails page
-		add(new PageLink("bookDetailsLink2", new IPageLink()
+		add(new PageLink<Void>("bookDetailsLink2", new IPageLink()
 		{
-			public Page getPage()
+			public Page<?> getPage()
 			{
 				return new BookDetails(new Book("Inside The Matrix"));
 			}
 
-			public Class getPageIdentity()
+			public Class<? extends Page<?>> getPageIdentity()
 			{
 				return BookDetails.class;
 			}
 		}));
 
 		// Image map link example
-		add(new ImageMap("imageMap").addRectangleLink(0, 0, 100, 100,
+		add(new ImageMap<CharSequence>("imageMap").addRectangleLink(0, 0, 100, 100,
 			new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
 			new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
 			new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
@@ -144,14 +146,14 @@ public class Home extends WicketExamplePage<Void>
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
-		add(new ResourceLink("cancelButtonLink", new ResourceReference("cancelButton")));
+		add(new ResourceLink<Void>("cancelButtonLink", new ResourceReference("cancelButton")));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
 
-		Link linkToAnchor = new Link("linkToAnchor")
+		Link<?> linkToAnchor = new Link<Void>("linkToAnchor")
 		{
 			@Override
 			public void onClick()
@@ -159,7 +161,7 @@ public class Home extends WicketExamplePage<Void>
 			}
 		};
 		add(linkToAnchor);
-		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
+		Link<?> anotherlinkToAnchor = new Link<Void>("anotherlinkToAnchor")
 		{
 			@Override
 			public void onClick()
@@ -167,7 +169,7 @@ public class Home extends WicketExamplePage<Void>
 			}
 		};
 		add(anotherlinkToAnchor);
-		Component anchorLabel = new Label("anchorLabel",
+		Component<String> anchorLabel = new Label<String>("anchorLabel",
 			"this label is here to function as an anchor for a link").setOutputMarkupId(true);
 		add(anchorLabel);
 		linkToAnchor.setAnchor(anchorLabel);
@@ -176,7 +178,7 @@ public class Home extends WicketExamplePage<Void>
 	/**
 	 * Form that handles a redirect.
 	 */
-	private final class RedirectForm extends Form
+	private final class RedirectForm extends Form<RedirectForm>
 	{
 		/** receives form input. */
 		private String redirectUrl = "http://www.theserverside.com";
@@ -190,8 +192,8 @@ public class Home extends WicketExamplePage<Void>
 		public RedirectForm(String id)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel(this));
-			add(new TextField("redirectUrl"));
+			setModel(new CompoundPropertyModel<RedirectForm>(this));
+			add(new TextField<String>("redirectUrl"));
 		}
 
 		/**

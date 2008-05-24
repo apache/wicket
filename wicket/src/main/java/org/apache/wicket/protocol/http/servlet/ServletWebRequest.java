@@ -27,9 +27,9 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -161,7 +161,7 @@ public class ServletWebRequest extends WebRequest
 		String tmp = getRelativePathPrefixToWicketHandler();
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
 
-		String path = RequestUtils.decode(getPath());
+		String path = WicketURLDecoder.PATH_INSTANCE.decode(getPath());
 
 		if (path == null || path.length() == 0)
 		{
@@ -174,7 +174,9 @@ public class ServletWebRequest extends WebRequest
 		String wicketPath = "";
 
 		// We're running as a filter.
-		String servletPath = RequestUtils.decode(getServletPath());
+        // Note: do not call RequestUtils.decode() on getServletPath ... it is
+        //       already url-decoded (JIRA WICKET-1624)
+        String servletPath = getServletPath();
 
 		// We need to substitute the %3A (or the other way around) to be able to
 		// get a good match, as parts of the path may have been escaped while

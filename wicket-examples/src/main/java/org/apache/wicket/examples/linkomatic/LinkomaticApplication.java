@@ -28,19 +28,12 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
  */
 public class LinkomaticApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor
-	 */
-	public LinkomaticApplication()
-	{
-		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
-	}
 
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class<? extends Page<?>> getHomePage()
 	{
 		return Home.class;
 	}
@@ -51,6 +44,7 @@ public class LinkomaticApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 		// log host name and server time in the browser's status bar
 		getRequestCycleSettings().addResponseFilter(new ServerHostNameAndTimeFilter());
 	}

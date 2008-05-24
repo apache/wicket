@@ -59,7 +59,7 @@ import org.apache.wicket.util.upload.FileItem;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class MultiFileUploadField extends FormComponentPanel implements IHeaderContributor
+public class MultiFileUploadField extends FormComponentPanel<Object> implements IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -94,8 +94,8 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 
-	private final WebComponent upload;
-	private final WebMarkupContainer container;
+	private final WebComponent<FileUpload> upload;
+	private final WebMarkupContainer<?> container;
 
 	private final int max;
 
@@ -149,15 +149,15 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 		this.max = max;
 
-		upload = new WebComponent("upload");
+		upload = new WebComponent<FileUpload>("upload");
 		upload.setOutputMarkupId(true);
 		add(upload);
 
-		container = new WebMarkupContainer("container");
+		container = new WebMarkupContainer<Void>("container");
 		container.setOutputMarkupId(true);
 		add(container);
 
-		container.add(new Label("caption", new CaptionModel()));
+		container.add(new Label<String>("caption", new CaptionModel()));
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		super.onBeforeRender();
 
 		// auto toggle form's multipart property
-		Form form = (Form)findParent(Form.class);
+		Form<?> form = findParent(Form.class);
 		if (form == null)
 		{
 			// woops
@@ -225,15 +225,15 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			if (request instanceof IMultipartWebRequest)
 			{
 				// retrieve the filename->FileItem map from request
-				final Map itemNameToItem = ((IMultipartWebRequest)request).getFiles();
-				Iterator it = itemNameToItem.entrySet().iterator();
+				final Map<String, FileItem> itemNameToItem = ((IMultipartWebRequest)request).getFiles();
+				Iterator<Entry<String, FileItem>> it = itemNameToItem.entrySet().iterator();
 				while (it.hasNext())
 				{
 					// iterate over the map and build the list of filenames
 
-					final Entry entry = (Entry)it.next();
-					final String name = (String)entry.getKey();
-					final FileItem item = (FileItem)entry.getValue();
+					final Entry<String, FileItem> entry = it.next();
+					final String name = entry.getKey();
+					final FileItem item = entry.getValue();
 
 					if (!Strings.isEmpty(name) &&
 						name.startsWith(getInputName() + MAGIC_SEPARATOR) &&
@@ -266,7 +266,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	{
 		// convert the array of filenames into a collection of FileItems
 
-		Collection uploads = null;
+		Collection<FileUpload> uploads = null;
 
 		final String[] filenames = getInputAsArray();
 
@@ -274,7 +274,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		{
 			final IMultipartWebRequest request = (IMultipartWebRequest)getRequest();
 
-			uploads = new ArrayList(filenames.length);
+			uploads = new ArrayList<FileUpload>(filenames.length);
 
 			for (int i = 0; i < filenames.length; i++)
 			{
@@ -314,11 +314,11 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			else
 			{
 				// refresh the existing collection
-				Collection collection = (Collection)object;
+				Collection<FileUpload> collection = (Collection<FileUpload>)object;
 				collection.clear();
 				if (getConvertedInput() != null)
 				{
-					collection.addAll((Collection)getConvertedInput());
+					collection.addAll((Collection<FileUpload>)getConvertedInput());
 				}
 
 				// push the collection in case the model is listening to
@@ -335,13 +335,13 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	protected void onDetach()
 	{
 		// cleanup any opened filestreams
-		Collection uploads = (Collection)getConvertedInput();
+		Collection<FileUpload> uploads = (Collection<FileUpload>)getConvertedInput();
 		if (uploads != null)
 		{
-			Iterator it = uploads.iterator();
+			Iterator<FileUpload> it = uploads.iterator();
 			while (it.hasNext())
 			{
-				final FileUpload upload = (FileUpload)it.next();
+				final FileUpload upload = it.next();
 				upload.closeStreams();
 			}
 		}
@@ -353,7 +353,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		Object modelObject = getModelObject();
 		if (modelObject != null && (modelObject instanceof Collection))
 		{
-			((Collection)modelObject).clear();
+			((Collection<FileUpload>)modelObject).clear();
 		}
 
 		super.onDetach();

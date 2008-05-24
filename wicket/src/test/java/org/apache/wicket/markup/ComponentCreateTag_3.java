@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Chris Turner
  */
-public class ComponentCreateTag_3 extends WebPage
+public class ComponentCreateTag_3 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

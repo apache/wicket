@@ -29,6 +29,8 @@ import org.apache.wicket.markup.html.link.Link;
 public class InterceptPage extends WebPage<Void>
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

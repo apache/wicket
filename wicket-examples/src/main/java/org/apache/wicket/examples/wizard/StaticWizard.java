@@ -31,7 +31,7 @@ import org.apache.wicket.extensions.wizard.WizardModel;
  * 
  * @author Eelco Hillenius
  */
-public class StaticWizard extends Wizard
+public class StaticWizard extends Wizard<Void>
 {
 
 	/**
@@ -47,11 +47,11 @@ public class StaticWizard extends Wizard
 		// create a model with the stupidest steps you can think of
 		WizardModel model = new WizardModel();
 		model.add(new StaticContentStep("One", "The first step",
-				"The <span style=\"color:red\">first step</span> in the "
-						+ "<i>wonderful world</i> of <strong>wizards</strong>", true));
+			"The <span style=\"color:red\">first step</span> in the "
+				+ "<i>wonderful world</i> of <strong>wizards</strong>", true));
 		model.add(new StaticContentStep("Two", "The second step", "Aren't we having fun?", true));
 		model.add(new StaticContentStep("Three", "The third and last step",
-				"Owk, I'm done with this wizard", true));
+			"Owk, I'm done with this wizard", true));
 
 		// and initialize the wizard
 		init(model);
@@ -60,6 +60,7 @@ public class StaticWizard extends Wizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.Wizard#onCancel()
 	 */
+	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
@@ -68,6 +69,7 @@ public class StaticWizard extends Wizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.Wizard#onFinish()
 	 */
+	@Override
 	public void onFinish()
 	{
 		setResponsePage(Index.class);

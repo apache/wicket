@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.stateless;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -26,7 +27,7 @@ import org.apache.wicket.markup.html.link.StatelessLink;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WebPage
+public class Index extends WebPage<Void>
 {
 	/**
 	 * Constructor
@@ -34,20 +35,36 @@ public class Index extends WebPage
 	public Index()
 	{
 		setStatelessHint(true);
-		add(new Label("message", new SessionModel()));
+		add(new Label<String>("message", new SessionModel()));
 		// First a normal bookmarkable link (which is stateless by default)
 		add(new BookmarkablePageLink("linkToStatelessPage", StatelessPage.class));
+		add(new BookmarkablePageLink("linkToStatelessPage1", StatelessPage1.class));
+		add(new BookmarkablePageLink("linkToStatelessPage2", StatelessPage2.class));
+		add(new BookmarkablePageLink("linkToStatelessPage3", StatelessPage3.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
-		add(new StatelessLink("linkToStatefulPage")
+		add(new StatelessLink<Void>("linkToStatefulPage")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				setResponsePage(StatefulPage.class);
 			}
+		});
+		add(new StatelessLink<Void>("invalidatesession")
+		{
+
+			@Override
+			public void onClick()
+			{
+				Session.get().invalidate();
+				setResponsePage(Index.class);
+				setRedirect(true);
+			}
+
 		});
 	}
 }

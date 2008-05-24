@@ -45,6 +45,7 @@ public final class CssTemplate extends TextTemplateDecorator
 	/**
 	 * @see org.apache.wicket.util.template.TextTemplateDecorator#getBeforeTemplateContents()
 	 */
+	@Override
 	public String getBeforeTemplateContents()
 	{
 		return CssUtils.INLINE_OPEN_TAG;
@@ -53,6 +54,7 @@ public final class CssTemplate extends TextTemplateDecorator
 	/**
 	 * @see org.apache.wicket.util.template.TextTemplateDecorator#getAfterTemplateContents()
 	 */
+	@Override
 	public String getAfterTemplateContents()
 	{
 		return CssUtils.INLINE_CLOSE_TAG;
@@ -66,7 +68,8 @@ public final class CssTemplate extends TextTemplateDecorator
 	 *            ignored
 	 * @return <code>this</code>, for chaining purposes
 	 */
-	public TextTemplate interpolate(final Map variables)
+	@Override
+	public TextTemplate interpolate(final Map<String, Object> variables)
 	{
 		return this;
 	}

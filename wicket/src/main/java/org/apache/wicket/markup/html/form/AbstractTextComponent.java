@@ -77,7 +77,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractTextComponent(final String id, final IModel< ? > model)
+	public AbstractTextComponent(final String id, final IModel<?> model)
 	{
 		super(id, model);
 		setConvertEmptyInputStringToNull(true);
@@ -140,7 +140,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
 			// Otherwise, getConvertEmptyInputStringToNull() won't work.
-			Class< ? > type = getModelType(getModel());
+			Class<?> type = getModelType(getModel());
 			if (!String.class.equals(type))
 			{
 				setType(type);
@@ -152,13 +152,13 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * 
 	 * @param model
-	 * @return
+	 * @return the type of the model object or <code>null</code>
 	 */
-	private Class< ? > getModelType(IModel< ? > model)
+	private Class<?> getModelType(IModel<?> model)
 	{
 		if (model instanceof IObjectClassAwareModel)
 		{
-			Class< ? > objectClass = ((IObjectClassAwareModel< ? >)model).getObjectClass();
+			Class<?> objectClass = ((IObjectClassAwareModel<?>)model).getObjectClass();
 			if (objectClass == null)
 			{
 				log.warn("Couldn't resolve model type of " + model + " for " + this +
@@ -179,7 +179,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 *            the value to set this flag.
 	 * @return this
 	 */
-	public final FormComponent< ? > setConvertEmptyInputStringToNull(boolean flag)
+	public final FormComponent<?> setConvertEmptyInputStringToNull(boolean flag)
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;

@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.link.StatelessLink;
 /**
  * @author jcompagner
  */
-public class StatelessComponentPageWithParams extends WebPage
+public class StatelessComponentPageWithParams extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -59,7 +59,7 @@ public class GuestbookTest extends TestCase
 		tester.assertContains("Wicket Examples - guestbook");
 
 		// check if the list of comments is empty
-		tester.assertListView("comments", new ArrayList());
+		tester.assertListView("comments", new ArrayList<Comment>());
 		tester.assertComponent("commentForm", Form.class);
 		FormTester formTester = tester.newFormTester("commentForm");
 		formTester.setValue("text", "test-1");

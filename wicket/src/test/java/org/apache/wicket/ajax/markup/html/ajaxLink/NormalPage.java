@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Simple page used to test redirecting to a normal request from an ajax request.
  */
-public class NormalPage extends WebPage
+public class NormalPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

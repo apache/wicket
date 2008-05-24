@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
-class AjaxHeaderContribution extends Panel
+class AjaxHeaderContribution extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +33,7 @@ class AjaxHeaderContribution extends Panel
 		super(id);
 	}
 
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		super.renderHead(container);

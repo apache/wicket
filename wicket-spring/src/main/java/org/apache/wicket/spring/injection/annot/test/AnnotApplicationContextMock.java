@@ -22,13 +22,13 @@ import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
 
 /**
- * Spring application context mock that does all the initialization required to setup an
- * {@link AnnotSpringInjector} that will use this mock context as its source of beans.
+ * Spring application context mock that does all the initialization required to setup an {@link
+ * AnnotSpringInjector} that will use this mock context as its source of beans.
  * <p>
  * Example
  * 
  * <pre>
- *  AnnotApplicationContextMock appctx = new AnnotApplicationContextMock();
+ * AnnotApplicationContextMock appctx = new AnnotApplicationContextMock();
  *  appctx.putBean(&quot;contactDao&quot;, dao);
  *  
  *  WicketTester app = new WicketTester();

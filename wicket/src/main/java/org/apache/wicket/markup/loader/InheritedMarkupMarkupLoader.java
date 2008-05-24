@@ -54,7 +54,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 *      org.apache.wicket.markup.MarkupResourceStream,
 	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
-	public final Markup loadMarkup(final MarkupContainer< ? > container,
+	public final Markup loadMarkup(final MarkupContainer<?> container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
 	{
@@ -79,7 +79,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * @return A markup object with the the base markup elements resolved.
 	 * @TODO move into IMarkupLoader
 	 */
-	private Markup checkForMarkupInheritance(final MarkupContainer< ? > container,
+	private Markup checkForMarkupInheritance(final MarkupContainer<?> container,
 		final Markup markup, final boolean enforceReload)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
@@ -113,10 +113,9 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * @param container
 	 * @param markup
 	 * @param enforceReload
-	 * @return
+	 * @return the base markup
 	 */
-	@SuppressWarnings("unchecked")
-	private Markup getBaseMarkup(final MarkupContainer< ? > container, final Markup markup,
+	private Markup getBaseMarkup(final MarkupContainer<?> container, final Markup markup,
 		final boolean enforceReload)
 	{
 		// get the base markup

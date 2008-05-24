@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author dashorst
  */
-public class FormMethodTestPage extends WebPage
+public class FormMethodTestPage extends WebPage<Void>
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;

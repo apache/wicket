@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 /**
  * @author dashorst
  */
-public class LocalizedMessagePage extends WebPage
+public class LocalizedMessagePage extends WebPage<Void>
 {
 	/** */
 	private static final long serialVersionUID = 1L;

@@ -37,18 +37,22 @@ public interface IPageFactory
 	/**
 	 * Creates a new page using a page class.
 	 * 
+	 * @param <C>
+	 * 
 	 * @param pageClass
 	 *            The page class to instantiate
 	 * @return The page
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	Page newPage(final Class< ? extends Page> pageClass);
+	<C extends Page<?>> Page<?> newPage(final Class<C> pageClass);
 
 	/**
 	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
 	 * exists. If no such constructor exists and the parameters argument is null or empty, then any
 	 * available default constructor will be used.
+	 * 
+	 * @param <C>
 	 * 
 	 * @param pageClass
 	 *            The class of Page to create
@@ -58,5 +62,5 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	Page newPage(final Class< ? extends Page> pageClass, final PageParameters parameters);
+	<C extends Page<?>> Page<?> newPage(final Class<C> pageClass, final PageParameters parameters);
 }

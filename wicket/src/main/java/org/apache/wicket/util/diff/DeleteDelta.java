@@ -83,7 +83,8 @@ public class DeleteDelta extends Delta
 	/**
 	 * @see org.apache.wicket.util.diff.Delta#verify(java.util.List)
 	 */
-	public void verify(List target) throws PatchFailedException
+	@Override
+	public void verify(List<Object> target) throws PatchFailedException
 	{
 		if (!original.verify(target))
 		{
@@ -94,7 +95,8 @@ public class DeleteDelta extends Delta
 	/**
 	 * @see org.apache.wicket.util.diff.Delta#applyTo(java.util.List)
 	 */
-	public void applyTo(List target)
+	@Override
+	public void applyTo(List<Object> target)
 	{
 		original.applyDelete(target);
 	}
@@ -102,6 +104,7 @@ public class DeleteDelta extends Delta
 	/**
 	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
 	 */
+	@Override
 	public void toString(StringBuffer s)
 	{
 		s.append(original.rangeString());
@@ -114,6 +117,7 @@ public class DeleteDelta extends Delta
 	/**
 	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
 	 */
+	@Override
 	public void toRCSString(StringBuffer s, String EOL)
 	{
 		s.append("d");
@@ -126,6 +130,7 @@ public class DeleteDelta extends Delta
 	/**
 	 * @see org.apache.wicket.util.diff.Delta#accept(org.apache.wicket.util.diff.RevisionVisitor)
 	 */
+	@Override
 	public void accept(RevisionVisitor visitor)
 	{
 		visitor.visit(this);

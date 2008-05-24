@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class DisabledComponentPage2 extends WebPage
+public class DisabledComponentPage2 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

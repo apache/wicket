@@ -53,7 +53,7 @@ public interface IPageMap extends IClusterable
 	 *            The version to get
 	 * @return Any page having the given id
 	 */
-	Page get(final int id, int versionNumber);
+	Page<?> get(final int id, int versionNumber);
 
 	/**
 	 * Retrieves entry with given id.
@@ -89,7 +89,7 @@ public interface IPageMap extends IClusterable
 	 * @param page
 	 *            The page to put into this map
 	 */
-	void put(final Page page);
+	void put(final Page<?> page);
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's URL
@@ -97,10 +97,12 @@ public interface IPageMap extends IClusterable
 	 * use this method when you plan to continue to the current URL at some later time; otherwise
 	 * just use setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
+	 * @param <T>
+	 * 
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	void redirectToInterceptPage(final Class< ? extends Page> pageClazz);
+	<T extends Page<?>> void redirectToInterceptPage(final Class<T> pageClazz);
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's url
@@ -113,7 +115,7 @@ public interface IPageMap extends IClusterable
 	 * 
 	 * @see Component#continueToOriginalDestination()
 	 */
-	void redirectToInterceptPage(final Page page);
+	void redirectToInterceptPage(final Page<?> page);
 
 	/**
 	 * Removes this PageMap from the Session.
@@ -126,7 +128,7 @@ public interface IPageMap extends IClusterable
 	 * @param page
 	 *            page to be removed from the pagemap
 	 */
-	void remove(final Page page);
+	void remove(final Page<?> page);
 
 	/**
 	 * @param entry
@@ -139,7 +141,7 @@ public interface IPageMap extends IClusterable
 	 * 
 	 * @param id
 	 * @param versionNumber
-	 * @return
+	 * @return true if the {@link PageMap} contains a page with the given id and versionNumber
 	 */
 	public boolean containsPage(int id, int versionNumber);
 }

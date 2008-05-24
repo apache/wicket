@@ -31,6 +31,8 @@ import org.apache.wicket.model.IModel;
  * </ul>
  * 
  * @author Cameron Braid
+ * @param <T>
+ *            the model object's type
  */
 public class HiddenField<T> extends TextField<T>
 {

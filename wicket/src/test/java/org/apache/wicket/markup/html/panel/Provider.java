@@ -24,11 +24,11 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class Provider extends Panel
+public class Provider extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	private Label fragmentContent;
+	private Label<String> fragmentContent;
 
 	/**
 	 * Construct.
@@ -38,10 +38,11 @@ public class Provider extends Panel
 	public Provider(String id)
 	{
 		super(id);
-		add(new AjaxLink("ajaxRefresh")
+		add(new AjaxLink<Void>("ajaxRefresh")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				target.addComponent(fragmentContent);
@@ -54,10 +55,10 @@ public class Provider extends Panel
 	 * @param container
 	 * @param id
 	 */
-	public void addFragment(WebMarkupContainer container, String id)
+	public void addFragment(WebMarkupContainer<?> container, String id)
 	{
-		Fragment fragment = new Fragment(id, "fragment", this);
-		fragmentContent = new Label("fragmentContent", "foo");
+		Fragment<?> fragment = new Fragment<Void>(id, "fragment", this);
+		fragmentContent = new Label<String>("fragmentContent", "foo");
 		fragmentContent.setOutputMarkupId(true);
 		fragment.add(fragmentContent);
 		container.add(fragment);

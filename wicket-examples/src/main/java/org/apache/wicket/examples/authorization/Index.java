@@ -43,14 +43,14 @@ public class Index extends BasePage<Void>
 	 */
 	public Index()
 	{
-		add(new Label("currentUser", new PropertyModel(this, "session.user")));
-		add(new ListView("users", RolesApplication.USERS)
+		add(new Label<User>("currentUser", new PropertyModel<User>(this, "session.user")));
+		add(new ListView<User>("users", RolesApplication.USERS)
 		{
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<User> item)
 			{
-				final User user = (User)item.getModelObject();
-				item.add(new Link("selectUserLink")
+				final User user = item.getModelObject();
+				item.add(new Link<Void>("selectUserLink")
 				{
 					@Override
 					public void onClick()
@@ -58,13 +58,13 @@ public class Index extends BasePage<Void>
 						RolesSession session = (RolesSession)Session.get();
 						session.setUser(user);
 					}
-				}.add(new Label("userId", new Model(user))));
+				}.add(new Label<User>("userId", new Model<User>(user))));
 			}
 		});
 
 		// pages that are protected using wicket meta data
 		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
-		add(new Link("adminInternalLink")
+		add(new Link<Void>("adminInternalLink")
 		{
 			@Override
 			public void onClick()
@@ -77,7 +77,7 @@ public class Index extends BasePage<Void>
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink("adminAnnotBookmarkableLink",
 			AdminAnnotationsBookmarkablePage.class));
-		add(new Link("adminAnnotInternalLink")
+		add(new Link<Void>("adminAnnotInternalLink")
 		{
 			@Override
 			public void onClick()

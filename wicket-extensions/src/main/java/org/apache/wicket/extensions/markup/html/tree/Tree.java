@@ -81,6 +81,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param item
 	 * @param level
 	 */
+	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
 		final TreeNode node = (TreeNode)item.getModelObject();
@@ -98,6 +99,7 @@ public class Tree extends DefaultAbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Object getObject()
 			{
 				return renderNode(node);
@@ -112,9 +114,10 @@ public class Tree extends DefaultAbstractTree
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
-			 *      org.apache.wicket.markup.ComponentTag)
+			 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.
+			 *      Component, org.apache.wicket.markup.ComponentTag)
 			 */
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				super.onComponentTag(component, tag);

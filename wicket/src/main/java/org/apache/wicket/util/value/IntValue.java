@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Primitives;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public class IntValue implements Comparable, Serializable
+public class IntValue implements Comparable<IntValue>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,10 +52,8 @@ public class IntValue implements Comparable, Serializable
 	 *            The object to compare with
 	 * @return 0 if equal, -1 if less than or 1 if greater than
 	 */
-	public final int compareTo(final Object object)
+	public final int compareTo(final IntValue that)
 	{
-		final IntValue that = (IntValue)object;
-
 		if (value < that.value)
 		{
 			return -1;
@@ -77,6 +75,7 @@ public class IntValue implements Comparable, Serializable
 	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
 	 *         than given <code>Object</code>'s value
 	 */
+	@Override
 	public final boolean equals(final Object that)
 	{
 		if (that instanceof IntValue)
@@ -118,6 +117,7 @@ public class IntValue implements Comparable, Serializable
 	 * 
 	 * @return hash code for this <code>Object</code>
 	 */
+	@Override
 	public final int hashCode()
 	{
 		return Primitives.hashCode(value);
@@ -154,6 +154,7 @@ public class IntValue implements Comparable, Serializable
 	 * 
 	 * @return a <code>String</code> representation of this <code>LongValue</code>
 	 */
+	@Override
 	public String toString()
 	{
 		return String.valueOf(value);

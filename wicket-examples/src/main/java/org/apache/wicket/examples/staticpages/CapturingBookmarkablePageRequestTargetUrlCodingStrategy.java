@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.staticpages;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 import org.apache.wicket.response.StringResponse;
@@ -27,24 +28,30 @@ import org.apache.wicket.response.StringResponse;
 public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy extends
 	BookmarkablePageRequestTargetUrlCodingStrategy
 {
-	Class capturedPageClass;
-	Class displayedPageClass;
+	Class<? extends Page<?>> capturedPageClass;
+	Class<? extends Page<?>> displayedPageClass;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param <C>
+	 * @param <D>
 	 * 
 	 * @param mountPath
 	 * @param capturedPageClass
 	 * @param displayedPageClass
 	 */
-	public CapturingBookmarkablePageRequestTargetUrlCodingStrategy(String mountPath,
-		Class capturedPageClass, Class displayedPageClass)
+	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTargetUrlCodingStrategy(
+		String mountPath, Class<C> capturedPageClass, Class<D> displayedPageClass)
 	{
 		super(mountPath, capturedPageClass, null);
 		this.displayedPageClass = displayedPageClass;
 		this.capturedPageClass = capturedPageClass;
 	}
 
+	/**
+	 * @see org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 */
 	@Override
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{

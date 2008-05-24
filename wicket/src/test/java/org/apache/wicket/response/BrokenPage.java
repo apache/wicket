@@ -18,7 +18,7 @@ package org.apache.wicket.response;
 
 import org.apache.wicket.markup.html.WebPage;
 
-public class BrokenPage extends WebPage
+public class BrokenPage extends WebPage<Void>
 {
 
 	/**

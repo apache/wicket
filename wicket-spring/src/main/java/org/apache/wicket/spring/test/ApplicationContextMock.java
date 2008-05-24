@@ -40,9 +40,8 @@ import org.springframework.core.io.Resource;
  * Mock application context object. This mock context allows easy creation of unit tests by allowing
  * the user to put bean instances into the context.
  * 
- * Only {@link #getBean(String)}, {@link #getBean(String, Class)}, and
- * {@link #getBeansOfType(Class)} are implemented so far. Any other method throws
- * {@link UnsupportedOperationException}.
+ * Only {@link #getBean(String)}, {@link #getBean(String, Class)}, and {@link #getBeansOfType(Class)
+ * } are implemented so far. Any other method throws {@link UnsupportedOperationException}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -50,6 +49,8 @@ import org.springframework.core.io.Resource;
 @SuppressWarnings("unchecked")
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private final Map beans = new HashMap();
 
 	/**
@@ -105,7 +106,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType( java.lang.Class)
 	 */
 	public Map getBeansOfType(Class type) throws BeansException
 	{
@@ -149,7 +150,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.context.ApplicationContext#publishEvent(org.springframework.context.ApplicationEvent)
+	 * @see org.springframework.context.ApplicationContext#publishEvent(org.
+	 * 	springframework.context.ApplicationEvent)
 	 */
 	public void publishEvent(ApplicationEvent event)
 	{
@@ -157,7 +159,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#containsBeanDefinition(java.lang.String)
+	 * @see org.springframework.beans.factory.ListableBeanFactory#
+	 * 	containsBeanDefinition(java.lang.String)
 	 */
 	public boolean containsBeanDefinition(String beanName)
 	{
@@ -165,7 +168,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionCount()
+	 * @see org.springframework.beans.factory.ListableBeanFactory# getBeanDefinitionCount()
 	 */
 	public int getBeanDefinitionCount()
 	{
@@ -173,7 +176,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames()
+	 * @see org.springframework.beans.factory.ListableBeanFactory# getBeanDefinitionNames()
 	 */
 	public String[] getBeanDefinitionNames()
 	{
@@ -181,7 +184,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanNamesForType(java.lang.Class)
+	 * @see org.springframework.beans.factory.ListableBeanFactory#
+	 * 	getBeanNamesForType(java.lang.Class)
 	 */
 	public String[] getBeanNamesForType(Class type)
 	{
@@ -202,8 +206,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanNamesForType(java.lang.Class,
-	 *      boolean, boolean)
+	 * @see org.springframework.beans.factory.ListableBeanFactory#
+	 * 	getBeanNamesForType(java.lang.Class, boolean, boolean)
 	 */
 	public String[] getBeanNamesForType(Class type, boolean includePrototypes,
 			boolean includeFactoryBeans)
@@ -212,8 +216,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class,
-	 *      boolean, boolean)
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType( java.lang.Class,
+	 * 	boolean, boolean)
 	 */
 	public Map getBeansOfType(Class type, boolean includePrototypes, boolean includeFactoryBeans)
 			throws BeansException
@@ -222,7 +226,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.BeanFactory#containsBean(java.lang.String)
+	 * @see org.springframework.beans.factory.BeanFactory#containsBean(java.lang. String)
 	 */
 	public boolean containsBean(String name)
 	{
@@ -230,7 +234,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.BeanFactory#isSingleton(java.lang.String)
+	 * @see org.springframework.beans.factory.BeanFactory#isSingleton(java.lang. String)
 	 */
 	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException
 	{
@@ -246,7 +250,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.BeanFactory#getAliases(java.lang.String)
+	 * @see org.springframework.beans.factory.BeanFactory#getAliases(java.lang. String)
 	 */
 	public String[] getAliases(String name) throws NoSuchBeanDefinitionException
 	{
@@ -254,7 +258,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory()
+	 * @see org.springframework.beans.factory.HierarchicalBeanFactory# getParentBeanFactory()
 	 */
 	public BeanFactory getParentBeanFactory()
 	{
@@ -263,7 +267,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 
 	/**
 	 * @see org.springframework.context.MessageSource#getMessage(java.lang.String,
-	 *      java.lang.Object[], java.lang.String, java.util.Locale)
+	 * 	java.lang.Object[], java.lang.String, java.util.Locale)
 	 */
 	public String getMessage(String code, Object[] args, String defaultMessage, Locale locale)
 	{
@@ -272,7 +276,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 
 	/**
 	 * @see org.springframework.context.MessageSource#getMessage(java.lang.String,
-	 *      java.lang.Object[], java.util.Locale)
+	 * 	java.lang.Object[], java.util.Locale)
 	 */
 	public String getMessage(String code, Object[] args, Locale locale)
 			throws NoSuchMessageException
@@ -281,8 +285,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.context.MessageSource#getMessage(org.springframework.context.MessageSourceResolvable,
-	 *      java.util.Locale)
+	 * @see org.springframework.context.MessageSource#getMessage(org.springframework
+	 * 	.context.MessageSourceResolvable, java.util.Locale)
 	 */
 	public String getMessage(MessageSourceResolvable resolvable, Locale locale)
 			throws NoSuchMessageException
@@ -291,7 +295,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.core.io.support.ResourcePatternResolver#getResources(java.lang.String)
+	 * @see org.springframework.core.io.support.ResourcePatternResolver#getResources
+	 * 	(java.lang.String)
 	 */
 	public Resource[] getResources(String locationPattern) throws IOException
 	{
@@ -307,7 +312,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
+	 * @see org.springframework.context.ApplicationContext# getAutowireCapableBeanFactory()
 	 */
 	public AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException
 	{
@@ -315,7 +320,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#containsLocalBean(java.lang.String)
+	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#
+	 * 	containsLocalBean(java.lang.String)
 	 */
 	public boolean containsLocalBean(String arg0)
 	{

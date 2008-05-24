@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.util.lang;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -42,7 +44,7 @@ public class Generics
 	 * @return <code>delegate</code> iterator cast to proper generics type
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Iterator<T> iterator(Iterator< ? > delegate)
+	public static <T> Iterator<T> iterator(Iterator<?> delegate)
 	{
 		return (Iterator<T>)delegate;
 	}
@@ -55,7 +57,7 @@ public class Generics
 	 * @return <code>model</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> model(Model< ? > model)
+	public static <T> IModel<T> model(Model<?> model)
 	{
 		return (IModel<T>)model;
 	}
@@ -65,11 +67,76 @@ public class Generics
 	 * 
 	 * @param <K>
 	 * @param <V>
-	 * @return
+	 * @return new hash map
 	 */
 	public static <K, V> HashMap<K, V> newHashMap()
 	{
 		return new HashMap<K, V>();
 	}
+
+	/**
+	 * Creates a new HashMap
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param capacity
+	 *            initial capacity
+	 * @return new hash map
+	 */
+	public static <K, V> HashMap<K, V> newHashMap(int capacity)
+	{
+		return new HashMap<K, V>(capacity);
+	}
+
+	/**
+	 * Creates a new ArrayList
+	 * 
+	 * @param <T>
+	 * @param capacity
+	 *            initial capacity
+	 * @return array list
+	 */
+	public static <T> ArrayList<T> newArrayList(int capacity)
+	{
+		return new ArrayList<T>(capacity);
+	}
+
+	/**
+	 * Creates a new ArrayList
+	 * 
+	 * @param <T>
+	 * @return array list
+	 */
+	public static <T> ArrayList<T> newArrayList()
+	{
+		return new ArrayList<T>();
+	}
+
+	/**
+	 * Creates a new ConcurrentHashMap
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @return new hash map
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap()
+	{
+		return new ConcurrentHashMap<K, V>();
+	}
+
+	/**
+	 * Creates a new ConcurrentHashMap
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param initialCapacity
+	 *            initial capacity
+	 * @return new hash map
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity)
+	{
+		return new ConcurrentHashMap<K, V>(initialCapacity);
+	}
+
 
 }

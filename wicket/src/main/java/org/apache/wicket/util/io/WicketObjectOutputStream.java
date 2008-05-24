@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.wicket.util.lang.Generics;
+
 
 /**
  * @author jcompagner
@@ -110,7 +112,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		 * assigned in ascending order starting at 0.
 		 * 
 		 * @param obj
-		 * @return
+		 * @return size
 		 */
 		int assign(Object obj)
 		{
@@ -142,7 +144,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		 * Looks up and returns handle associated with given object, or -1 if no mapping found.
 		 * 
 		 * @param obj
-		 * @return
+		 * @return position, or -1 if not found
 		 */
 		int lookup(Object obj)
 		{
@@ -169,24 +171,25 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 
 	private class PutFieldImpl extends PutField
 	{
-		private HashMap mapBytes;
-		private HashMap mapChar;
-		private HashMap mapDouble;
-		private HashMap mapFloat;
-		private HashMap mapInt;
-		private HashMap mapLong;
-		private HashMap mapShort;
-		private HashMap mapBoolean;
-		private HashMap mapObject;
+		private HashMap<String, Byte> mapBytes;
+		private HashMap<String, Character> mapChar;
+		private HashMap<String, Double> mapDouble;
+		private HashMap<String, Float> mapFloat;
+		private HashMap<String, Integer> mapInt;
+		private HashMap<String, Long> mapLong;
+		private HashMap<String, Short> mapShort;
+		private HashMap<String, Boolean> mapBoolean;
+		private HashMap<String, Object> mapObject;
 
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, boolean)
 		 */
+		@Override
 		public void put(String name, boolean val)
 		{
 			if (mapBoolean == null)
 			{
-				mapBoolean = new HashMap(4);
+				mapBoolean = Generics.newHashMap(4);
 			}
 			mapBoolean.put(name, val ? Boolean.TRUE : Boolean.FALSE);
 		}
@@ -194,11 +197,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, byte)
 		 */
+		@Override
 		public void put(String name, byte val)
 		{
 			if (mapBytes == null)
 			{
-				mapBytes = new HashMap(4);
+				mapBytes = Generics.newHashMap(4);
 			}
 			mapBytes.put(name, new Byte(val));
 		}
@@ -206,11 +210,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, char)
 		 */
+		@Override
 		public void put(String name, char val)
 		{
 			if (mapChar == null)
 			{
-				mapChar = new HashMap(4);
+				mapChar = Generics.newHashMap(4);
 			}
 			mapChar.put(name, new Character(val));
 		}
@@ -218,11 +223,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, double)
 		 */
+		@Override
 		public void put(String name, double val)
 		{
 			if (mapDouble == null)
 			{
-				mapDouble = new HashMap(4);
+				mapDouble = Generics.newHashMap(4);
 			}
 			mapDouble.put(name, new Double(val));
 		}
@@ -230,11 +236,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, float)
 		 */
+		@Override
 		public void put(String name, float val)
 		{
 			if (mapFloat == null)
 			{
-				mapFloat = new HashMap(4);
+				mapFloat = Generics.newHashMap(4);
 			}
 			mapFloat.put(name, new Float(val));
 		}
@@ -242,11 +249,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, int)
 		 */
+		@Override
 		public void put(String name, int val)
 		{
 			if (mapInt == null)
 			{
-				mapInt = new HashMap(4);
+				mapInt = Generics.newHashMap(4);
 			}
 			mapInt.put(name, new Integer(val));
 		}
@@ -254,11 +262,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, long)
 		 */
+		@Override
 		public void put(String name, long val)
 		{
 			if (mapLong == null)
 			{
-				mapLong = new HashMap(4);
+				mapLong = Generics.newHashMap(4);
 			}
 			mapLong.put(name, new Long(val));
 		}
@@ -266,11 +275,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, java.lang.Object)
 		 */
+		@Override
 		public void put(String name, Object val)
 		{
 			if (mapObject == null)
 			{
-				mapObject = new HashMap(4);
+				mapObject = Generics.newHashMap(4);
 			}
 			mapObject.put(name, val);
 		}
@@ -278,11 +288,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, short)
 		 */
+		@Override
 		public void put(String name, short val)
 		{
 			if (mapShort == null)
 			{
-				mapShort = new HashMap(4);
+				mapShort = Generics.newHashMap(4);
 			}
 			mapShort.put(name, new Short(val));
 		}
@@ -290,6 +301,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		/**
 		 * @see java.io.ObjectOutputStream.PutField#write(java.io.ObjectOutput)
 		 */
+		@Override
 		public void write(ObjectOutput out) throws IOException
 		{
 			// i don't know if all the fields (names in the map)
@@ -301,13 +313,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(boolean.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapBoolean.size());
-				Iterator it = mapBoolean.entrySet().iterator();
+				Iterator<Entry<String, Boolean>> it = mapBoolean.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Map.Entry<String, Boolean> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeBoolean(((Boolean)entry.getValue()).booleanValue());
+					writeBoolean((entry.getValue()).booleanValue());
 				}
 			}
 			if (mapBytes != null)
@@ -315,13 +327,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(byte.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapBytes.size());
-				Iterator it = mapBytes.entrySet().iterator();
+				Iterator<Entry<String, Byte>> it = mapBytes.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Byte> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeByte(((Byte)entry.getValue()).byteValue());
+					writeByte((entry.getValue()).byteValue());
 				}
 			}
 			if (mapShort != null)
@@ -329,13 +341,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(short.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapShort.size());
-				Iterator it = mapShort.entrySet().iterator();
+				Iterator<Entry<String, Short>> it = mapShort.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Short> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeShort(((Short)entry.getValue()).shortValue());
+					writeShort((entry.getValue()).shortValue());
 				}
 			}
 			if (mapChar != null)
@@ -343,13 +355,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(char.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapChar.size());
-				Iterator it = mapChar.entrySet().iterator();
+				Iterator<Entry<String, Character>> it = mapChar.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Character> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeChar(((Character)entry.getValue()).charValue());
+					writeChar((entry.getValue()).charValue());
 				}
 			}
 			if (mapInt != null)
@@ -357,13 +369,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(int.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapInt.size());
-				Iterator it = mapInt.entrySet().iterator();
+				Iterator<Entry<String, Integer>> it = mapInt.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Integer> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeInt(((Integer)entry.getValue()).intValue());
+					writeInt((entry.getValue()).intValue());
 				}
 			}
 			if (mapLong != null)
@@ -371,13 +383,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(long.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapLong.size());
-				Iterator it = mapLong.entrySet().iterator();
+				Iterator<Entry<String, Long>> it = mapLong.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Long> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeLong(((Long)entry.getValue()).longValue());
+					writeLong((entry.getValue()).longValue());
 				}
 			}
 			if (mapFloat != null)
@@ -385,13 +397,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(float.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapFloat.size());
-				Iterator it = mapFloat.entrySet().iterator();
+				Iterator<Entry<String, Float>> it = mapFloat.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Float> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeFloat(((Float)entry.getValue()).floatValue());
+					writeFloat((entry.getValue()).floatValue());
 				}
 			}
 			if (mapDouble != null)
@@ -399,13 +411,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(double.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapDouble.size());
-				Iterator it = mapDouble.entrySet().iterator();
+				Iterator<Entry<String, Double>> it = mapDouble.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Double> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
-					writeDouble(((Double)entry.getValue()).doubleValue());
+					writeDouble((entry.getValue()).doubleValue());
 				}
 			}
 			if (mapObject != null)
@@ -413,10 +425,10 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(Serializable.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapObject.size());
-				Iterator it = mapObject.entrySet().iterator();
+				Iterator<Entry<String, Object>> it = mapObject.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Entry<String, Object> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeObjectOverride(entry.getValue());
@@ -430,7 +442,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 
 	private final HandleTable handledObjects = new HandleTable();
 
-	private final HandleArrayListStack defaultWrite = new HandleArrayListStack();
+	private final HandleArrayListStack<Object> defaultWrite = new HandleArrayListStack<Object>();
 	private final DataOutputStream out;
 
 	private ClassStreamHandler classHandler;
@@ -455,6 +467,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		classHandler = null;
@@ -468,6 +481,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#defaultWriteObject()
 	 */
+	@Override
 	public void defaultWriteObject() throws IOException
 	{
 		if (!defaultWrite.contains(curObject))
@@ -480,6 +494,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#putFields()
 	 */
+	@Override
 	public PutField putFields() throws IOException
 	{
 		if (curPut == null)
@@ -499,6 +514,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#write(byte[])
 	 */
+	@Override
 	public void write(byte[] buf) throws IOException
 	{
 		out.write(buf);
@@ -507,6 +523,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#write(byte[], int, int)
 	 */
+	@Override
 	public void write(byte[] buf, int off, int len) throws IOException
 	{
 		out.write(buf, off, len);
@@ -515,6 +532,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#write(int)
 	 */
+	@Override
 	public void write(int val) throws IOException
 	{
 		out.write(val);
@@ -528,6 +546,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeBoolean(boolean val) throws IOException
 	{
 		out.writeBoolean(val);
@@ -541,6 +560,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeByte(int val) throws IOException
 	{
 		out.writeByte(val);
@@ -554,6 +574,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeBytes(String str) throws IOException
 	{
 		out.writeBytes(str);
@@ -567,6 +588,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeChar(int val) throws IOException
 	{
 		out.writeChar(val);
@@ -580,6 +602,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeChars(String str) throws IOException
 	{
 		out.writeChars(str);
@@ -593,6 +616,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeDouble(double val) throws IOException
 	{
 		out.writeDouble(val);
@@ -601,6 +625,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeFields()
 	 */
+	@Override
 	public void writeFields() throws IOException
 	{
 		if (curPut != null)
@@ -624,6 +649,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeFloat(float val) throws IOException
 	{
 		out.writeFloat(val);
@@ -637,6 +663,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeInt(int val) throws IOException
 	{
 		out.writeInt(val);
@@ -650,6 +677,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeLong(long val) throws IOException
 	{
 		out.writeLong(val);
@@ -663,6 +691,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 *             if I/O errors occur while writing to the underlying stream
 	 */
+	@Override
 	public void writeShort(int val) throws IOException
 	{
 		out.writeShort(val);
@@ -671,6 +700,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeUTF(java.lang.String)
 	 */
+	@Override
 	public void writeUTF(String str) throws IOException
 	{
 		out.writeUTF(str);
@@ -679,6 +709,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeObjectOverride(java.lang.Object)
 	 */
+	@Override
 	protected final void writeObjectOverride(Object obj) throws IOException
 	{
 		if (obj == null)
@@ -696,18 +727,18 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		{
 			if (obj instanceof Class)
 			{
-				ClassStreamHandler classHandler = ClassStreamHandler.lookup((Class)obj);
+				ClassStreamHandler classHandler = ClassStreamHandler.lookup((Class<?>)obj);
 				out.write(ClassStreamHandler.CLASS);
 				out.writeShort(classHandler.getClassId());
 			}
 			else
 			{
-				Class cls = obj.getClass();
+				Class<?> cls = obj.getClass();
 				handledObjects.assign(obj);
 
 				if (cls.isArray())
 				{
-					Class componentType = cls.getComponentType();
+					Class<?> componentType = cls.getComponentType();
 					ClassStreamHandler classHandler = ClassStreamHandler.lookup(componentType);
 					if (componentType.isPrimitive())
 					{
@@ -719,16 +750,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						}
 						catch (WicketSerializeableException wse)
 						{
-							wse
-									.addTrace(componentType.getName() + "[" + Array.getLength(obj) +
-											"]");
+							wse.addTrace(componentType.getName() + "[" + Array.getLength(obj) + "]");
 							throw wse;
 						}
 						catch (Exception e)
 						{
 							throw new WicketSerializeableException(
-									"Error writing primitive array of " + componentType.getName() +
-											"[" + Array.getLength(obj) + "]", e);
+								"Error writing primitive array of " + componentType.getName() +
+									"[" + Array.getLength(obj) + "]", e);
 						}
 					}
 					else
@@ -752,14 +781,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						catch (Exception e)
 						{
 							throw new WicketSerializeableException("Error writing array of " +
-									componentType.getName() + "[" + length + "]", e);
+								componentType.getName() + "[" + length + "]", e);
 						}
 					}
 					return;
 				}
 				else
 				{
-					Class realClz = cls;
+					Class<?> realClz = cls;
 					classHandler = ClassStreamHandler.lookup(realClz);
 
 					Object object = classHandler.writeReplace(obj);
@@ -795,7 +824,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 							if (realClz != cls)
 							{
 								wse.addTrace(realClz.getName() + "(ReplaceOf:" + cls.getName() +
-										")");
+									")");
 							}
 							else
 							{
@@ -808,13 +837,13 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 							if (realClz != cls)
 							{
 								throw new WicketSerializeableException("Error writing fields for " +
-										realClz.getName() + "(ReplaceOf:" + cls.getName() + ")", e);
+									realClz.getName() + "(ReplaceOf:" + cls.getName() + ")", e);
 
 							}
 							else
 							{
 								throw new WicketSerializeableException("Error writing fields for " +
-										realClz.getName(), e);
+									realClz.getName(), e);
 							}
 						}
 						finally

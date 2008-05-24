@@ -39,7 +39,7 @@ public final class Classes
 	 *            The class
 	 * @return The class name
 	 */
-	public static String name(final Class< ? > c)
+	public static String name(final Class<?> c)
 	{
 		return (c != null) ? c.getName() : null;
 	}
@@ -56,7 +56,7 @@ public final class Classes
 	 * @return The class
 	 * @throws ClassNotFoundException
 	 */
-	public static Class< ? > relativeClass(final Class< ? > scope, final String path)
+	public static Class<?> relativeClass(final Class<?> scope, final String path)
 		throws ClassNotFoundException
 	{
 		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
@@ -97,11 +97,13 @@ public final class Classes
 	/**
 	 * Gets the name of a given class without the prefixed package path
 	 * 
+	 * @param <C>
+	 * 
 	 * @param c
 	 *            The class
 	 * @return The class name
 	 */
-	public static String simpleName(final Class< ? > c)
+	public static <C> String simpleName(final Class<C> c)
 	{
 		return Strings.lastPathComponent(c.getName(), '.');
 	}

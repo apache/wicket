@@ -26,7 +26,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class SimplePage_3 extends WebPage
+public class SimplePage_3 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

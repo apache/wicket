@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.link.ResourceLink;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public class TextTemplateLink extends ResourceLink
+public class TextTemplateLink extends ResourceLink<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class TextTemplateLink extends ResourceLink
 	 *            variables to interpolate into the template held by the shared resource factory
 	 */
 	public TextTemplateLink(final String id, final TextTemplateSharedResourceFactory factory,
-			final Map variables)
+		final Map<String, Object> variables)
 	{
 		super(id, factory.resourceReference(variables));
 	}

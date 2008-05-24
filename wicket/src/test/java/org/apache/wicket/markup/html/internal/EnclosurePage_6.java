@@ -23,8 +23,10 @@ import org.apache.wicket.markup.html.link.Link;
 /**
  * @author ivaynberg
  */
-public class EnclosurePage_6 extends WebPage
+public class EnclosurePage_6 extends WebPage<Void>
 {
+	private static final long serialVersionUID = 1L;
+
 	private int counter;
 
 	/**

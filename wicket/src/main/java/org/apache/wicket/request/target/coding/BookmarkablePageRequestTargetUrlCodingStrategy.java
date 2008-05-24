@@ -32,9 +32,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePageRequestTargetUrlCodingStrategy
-		extends
-			AbstractRequestTargetUrlCodingStrategy
+public class BookmarkablePageRequestTargetUrlCodingStrategy extends
+	AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
 	protected final WeakReference/* <Class> */bookmarkablePageClassRef;
@@ -53,7 +52,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	 *            the page map name if any
 	 */
 	public BookmarkablePageRequestTargetUrlCodingStrategy(final String mountPath,
-			final Class bookmarkablePageClass, String pageMapName)
+		final Class bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
 
@@ -72,38 +71,48 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
-				getMountPath().length());
+			getMountPath().length());
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
-				requestParameters.getParameters()));
-		String pageMapName = WebRequestCodingStrategy.decodePageMapName((String)parameters
-				.remove(WebRequestCodingStrategy.PAGEMAP));
-		if (requestParameters.getPageMapName() == null)
-		{
-			requestParameters.setPageMapName(pageMapName);
-		}
-		else
-		{
-			pageMapName = requestParameters.getPageMapName();
-		}
+			requestParameters.getParameters()));
 
 		// do some extra work for checking whether this is a normal request to a
 		// bookmarkable page, or a request to a stateless page (in which case a
 		// wicket:interface parameter should be available
-		final String interfaceParameter = (String)parameters
-				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 
-		if (interfaceParameter != null)
+		// the page map name can be defined already by logic done in
+		// WebRequestCodingStrategy.decode(),
+		// but it could also be done by the decodeParameters() call
+		// So we always remove the pagemap parameter just in case.
+		String pageMapNameEncoded = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		if (requestParameters.getPageMapName() == null)
+		{
+			requestParameters.setPageMapName(pageMapNameEncoded);
+		}
+
+		// the interface can be defined already by logic done in
+		// WebRequestCodingStrategy.decode(),
+		// but it could also be done by the decodeParameters() call
+		// So we always remove the interface parameter just in case.
+		String interfaceParameter = (String)parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+		if (requestParameters.getInterfaceName() == null)
 		{
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
-			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName(),
-					requestParameters.getVersionNumber());
 		}
+
+		// if an interface name was set prior to this method or in the
+		// above block, process it
+		if (requestParameters.getInterfaceName() != null)
+		{
+			return new BookmarkableListenerInterfaceRequestTarget(
+				requestParameters.getPageMapName(), (Class)bookmarkablePageClassRef.get(),
+				parameters, requestParameters.getComponentPath(),
+				requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
+		}
+		// otherwise process as a normal bookmark page request
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef
-					.get(), parameters);
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
+				(Class)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
 
@@ -115,7 +124,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
 			throw new IllegalArgumentException("This encoder can only be used with " +
-					"instances of " + IBookmarkablePageRequestTarget.class.getName());
+				"instances of " + IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -129,8 +138,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-					.encodePageMapName(pagemap));
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP,
+				WebRequestCodingStrategy.encodePageMapName(pagemap));
 		}
 		appendParameters(url, pageParameters);
 		return url;
@@ -162,6 +171,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "BookmarkablePageEncoder[page=" + bookmarkablePageClassRef.get() + "]";

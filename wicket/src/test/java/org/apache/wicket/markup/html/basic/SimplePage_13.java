@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class SimplePage_13 extends WebPage
+public class SimplePage_13 extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,15 +40,16 @@ public class SimplePage_13 extends WebPage
 	public SimplePage_13()
 	{
 // Component header = new WebMarkupContainer("html");
-		Component header = new AjaxLink("html", new Model("test"))
+		Component<String> header = new AjaxLink<String>("html", new Model<String>("test"))
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 			}
 		};
-		header.add(new AttributeModifier("lang", new Model("de")));
+		header.add(new AttributeModifier("lang", new Model<String>("de")));
 		add(header);
 
 		// HeaderContributions must work with <html> components in place as well

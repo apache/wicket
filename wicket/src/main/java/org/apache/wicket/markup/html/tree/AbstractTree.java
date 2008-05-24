@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
@@ -52,7 +51,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractTree extends Panel implements ITreeStateListener, TreeModelListener, AjaxRequestTarget.ITargetRespondListener
+public abstract class AbstractTree extends Panel
+	implements
+		ITreeStateListener,
+		TreeModelListener,
+		AjaxRequestTarget.ITargetRespondListener
 {
 
 	/**
@@ -78,7 +81,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * This class represents one row in rendered tree (TreeNode). Only TreeNodes that are visible
 	 * (all their parent are expanded) have TreeItem created for them.
 	 */
-	private final class TreeItem extends WebMarkupContainer
+	private final class TreeItem extends WebMarkupContainer<Object>
 	{
 		/**
 		 * whether this tree item should also render it's children to response. this is set if we
@@ -93,10 +96,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		/**
 		 * tree item children - we need this to traverse items in correct order when rendering
 		 */
-		private List children = null;
+		private List<TreeItem> children = null;
 
 		/** tree item level - how deep is this item in tree */
 		private final int level;
+
+		private final TreeItem parent;
 
 		/**
 		 * Construct.
@@ -107,10 +112,13 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		 *            tree node
 		 * @param level
 		 *            current level
+		 * @param parent
 		 */
-		public TreeItem(String id, final Object node, int level)
+		public TreeItem(TreeItem parent, String id, final Object node, int level)
 		{
 			super(id, new Model((Serializable)node));
+
+			this.parent = parent;
 
 			nodeToItemMap.put(node, this);
 			this.level = level;
@@ -123,10 +131,15 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			}
 		}
 
+		public TreeItem getParentItem()
+		{
+			return parent;
+		}
+
 		/**
 		 * @return The children
 		 */
-		public List getChildren()
+		public List<TreeItem> getChildren()
 		{
 			return children;
 		}
@@ -152,20 +165,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		}
 
 		/**
-		 * @return parent item
-		 */
-		public TreeItem getParentItem()
-		{
-			return (TreeItem)nodeToItemMap.get(getParentNode(getModelObject()));
-		}
-
-		/**
 		 * Sets the children.
 		 * 
 		 * @param children
 		 *            The children
 		 */
-		public void setChildren(List children)
+		public void setChildren(List<TreeItem> children)
 		{
 			this.children = children;
 		}
@@ -217,10 +222,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							item.onRender(markupStream);
 
 							// go through the behaviors and invoke IBehavior.afterRender
-							List behaviors = item.getBehaviors();
-							for (Iterator i = behaviors.iterator(); i.hasNext();)
+							List<IBehavior> behaviors = item.getBehaviors();
+							for (IBehavior behavior : behaviors)
 							{
-								IBehavior behavior = (IBehavior)i.next();
 								behavior.afterRender(item);
 							}
 						}
@@ -335,7 +339,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * Components that holds tree items. This is similar to ListView, but it renders tree items in
 	 * the right order.
 	 */
-	private class TreeItemContainer extends WebMarkupContainer
+	private class TreeItemContainer extends WebMarkupContainer<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -354,7 +358,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		 * @see org.apache.wicket.MarkupContainer#remove(org.apache.wicket.Component)
 		 */
 		@Override
-		public void remove(Component component)
+		public void remove(Component<?> component)
 		{
 			// when a treeItem is removed, remove reference to it from
 			// nodeToItemMAp
@@ -427,12 +431,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * list of dirty items. if children property of these items is null, the children will be
 	 * rebuild.
 	 */
-	private final List dirtyItems = new ArrayList();
+	private final List<TreeItem> dirtyItems = new ArrayList<TreeItem>();
 
 	/**
 	 * list of dirty items which need the DOM structure to be created for them (added items)
 	 */
-	private final List dirtyItemsCreateDOM = new ArrayList();
+	private final List<TreeItem> dirtyItemsCreateDOM = new ArrayList<TreeItem>();
 
 	/** counter for generating unique ids of every tree item. */
 	private int idCounter = 0;
@@ -444,7 +448,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * map that maps TreeNode to TreeItem. TreeItems only exists for TreeNodes, that are visible
 	 * (their parents are not collapsed).
 	 */
-	private final Map nodeToItemMap = new HashMap();
+	private final Map<Object, TreeItem> nodeToItemMap = new HashMap<Object, TreeItem>();
 
 	/**
 	 * we need to track previous model. if the model changes, we unregister the tree from listeners
@@ -556,11 +560,11 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				{
 					if (isRootLess())
 					{
-						rootItem = newTreeItem(rootNode, -1);
+						rootItem = newTreeItem(null, rootNode, -1);
 					}
 					else
 					{
-						rootItem = newTreeItem(rootNode, 0);
+						rootItem = newTreeItem(null, rootNode, 0);
 					}
 					itemContainer.add(rootItem);
 					buildItemChildren(rootItem);
@@ -615,7 +619,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	};
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(javax.swing.tree.
+	 *      TreeNode)
 	 */
 	public final void nodeCollapsed(Object node)
 	{
@@ -626,7 +631,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode )
 	 */
 	public final void nodeExpanded(Object node)
 	{
@@ -637,7 +642,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode )
 	 */
 	public final void nodeSelected(Object node)
 	{
@@ -648,7 +653,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(javax.swing.tree.
+	 *      TreeNode)
 	 */
 	public final void nodeUnselected(Object node)
 	{
@@ -740,7 +746,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			// item
 			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
 			{
-				TreeItem item = (TreeItem)parent.getChildren().get(i);
+				TreeItem item = parent.getChildren().get(i);
 
 				// invalidate the node and it's children, so that they are
 				// redrawn
@@ -760,7 +766,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		if (isNodeVisible(parent) && isNodeExpanded(parent))
 		{
-			TreeItem parentItem = (TreeItem)nodeToItemMap.get(parent);
+			TreeItem parentItem = nodeToItemMap.get(parent);
 
 			if (parentItem.getChildren().isEmpty())
 			{
@@ -771,7 +777,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				Object node = e.getChildren()[i];
 				int index = e.getChildIndices()[i];
-				TreeItem item = newTreeItem(node, parentItem.getLevel() + 1);
+				TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
 				itemContainer.add(item);
 				parentItem.getChildren().add(index, item);
 
@@ -793,7 +799,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		// get the parent node of inserted nodes
 		Object parent = e.getTreePath().getLastPathComponent();
-		TreeItem parentItem = (TreeItem)nodeToItemMap.get(parent);
+		TreeItem parentItem = nodeToItemMap.get(parent);
 
 		if (isNodeVisible(parent) && isNodeExpanded(parent))
 		{
@@ -802,7 +808,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				Object node = e.getChildren()[i];
 
-				TreeItem item = (TreeItem)nodeToItemMap.get(node);
+				TreeItem item = nodeToItemMap.get(node);
 				if (item != null)
 				{
 					markTheLastButOneChildDirty(parentItem, item);
@@ -922,12 +928,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					}
 					else
 					{
-						previous = (TreeItem)parent.getChildren().get(index - 1);
+						previous = parent.getChildren().get(index - 1);
 						// get the last item of previous item subtree
 						while (previous.getChildren() != null && previous.getChildren().size() > 0)
 						{
-							previous = (TreeItem)previous.getChildren().get(
-								previous.getChildren().size() - 1);
+							previous = previous.getChildren()
+								.get(previous.getChildren().size() - 1);
 						}
 					}
 					// check if the previous item isn't waiting to be inserted
@@ -975,7 +981,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			updated();
 		}
 	}
-	
+
 	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
 	 * you modified the tree model during an ajax request target and you want to partially update
@@ -1057,18 +1063,18 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void buildItemChildren(TreeItem item)
 	{
-		List items;
+		List<TreeItem> items;
 
 		// if the node is expanded
 		if (isNodeExpanded(item.getModelObject()))
 		{
 			// build the items for children of the items' treenode.
-			items = buildTreeItems(nodeChildren(item.getModelObject()), item.getLevel() + 1);
+			items = buildTreeItems(item, nodeChildren(item.getModelObject()), item.getLevel() + 1);
 		}
 		else
 		{
 			// it's not expanded, just set children to an empty list
-			items = new ArrayList(0);
+			items = new ArrayList<TreeItem>(0);
 		}
 
 		item.setChildren(items);
@@ -1077,22 +1083,23 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Builds (recursively) TreeItems for the given Iterator of TreeNodes.
 	 * 
+	 * @param parent
 	 * @param nodes
 	 *            The nodes to build tree items for
 	 * @param level
 	 *            The current level
 	 * @return List with new tree items
 	 */
-	private final List buildTreeItems(Iterator nodes, int level)
+	private final List<TreeItem> buildTreeItems(TreeItem parent, Iterator<Object> nodes, int level)
 	{
-		List result = new ArrayList();
+		List<TreeItem> result = new ArrayList<TreeItem>();
 
 		// for each node
 		while (nodes.hasNext())
 		{
 			Object node = nodes.next();
 			// create tree item
-			TreeItem item = newTreeItem(node, level);
+			TreeItem item = newTreeItem(parent, node, level);
 			itemContainer.add(item);
 
 			// builds it children (recursively)
@@ -1241,7 +1248,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		if (dirtyAll == false)
 		{
 			// get item for this node
-			TreeItem item = (TreeItem)nodeToItemMap.get(node);
+			TreeItem item = nodeToItemMap.get(node);
 
 			if (item != null)
 			{
@@ -1267,7 +1274,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 					item.remove();
 
-					item = newTreeItem(node, level, id);
+					item = newTreeItem(parent, node, level, id);
 					itemContainer.add(item);
 
 					item.setChildren(children);
@@ -1306,7 +1313,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		if (dirtyAll == false)
 		{
 			// get item for this node
-			TreeItem item = (TreeItem)nodeToItemMap.get(node);
+			TreeItem item = nodeToItemMap.get(node);
 
 			// is the item visible?
 			if (item != null)
@@ -1361,38 +1368,37 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	public Object getParentNode(Object node)
 	{
-		if (getModelObject() instanceof ExtendedTreeModel)
+		TreeItem item = nodeToItemMap.get(node);
+		if (item == null)
 		{
-			return ((ExtendedTreeModel)getModelObject()).getParent(node);
-		}
-		else if (node instanceof TreeNode)
-		{
-			return ((TreeNode)node).getParent();
+			return null;
 		}
 		else
 		{
-			throw new IllegalStateException(
-				"Couldn't determine node parent. Either the tree model must implement ParentTreeModel or Node must implement TreeNode.");
+			TreeItem parent = item.getParentItem();
+			return parent == null ? null : parent.getModelObject();
 		}
 	}
 
 	/**
 	 * Creates a tree item for given node.
 	 * 
+	 * @param parent
 	 * @param node
 	 *            The tree node
 	 * @param level
-	 *            The level
+	 *            The level *
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(Object node, int level)
+	private final TreeItem newTreeItem(TreeItem parent, Object node, int level)
 	{
-		return new TreeItem("" + idCounter++, node, level);
+		return new TreeItem(parent, "" + idCounter++, node, level);
 	}
 
 	/**
 	 * Creates a tree item for given node with specified id.
 	 * 
+	 * @param parent
 	 * @param node
 	 *            The tree node
 	 * @param level
@@ -1401,9 +1407,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 *            the component id
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(Object node, int level, String id)
+	private final TreeItem newTreeItem(TreeItem parent, Object node, int level, String id)
 	{
-		return new TreeItem(id, node, level);
+		return new TreeItem(parent, id, node, level);
 	}
 
 	/**
@@ -1550,6 +1556,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	public Component getNodeComponent(Object node)
 	{
-		return (Component)nodeToItemMap.get(node);
+		return nodeToItemMap.get(node);
 	}
 }

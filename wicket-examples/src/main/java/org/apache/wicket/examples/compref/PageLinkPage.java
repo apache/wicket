@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.link.PageLink;
  * 
  * @author Eelco Hillenius
  */
-public class PageLinkPage extends WicketExamplePage
+public class PageLinkPage extends WicketExamplePage<Void>
 {
 	/**
 	 * Constructor
@@ -47,14 +47,14 @@ public class PageLinkPage extends WicketExamplePage
 		// anonymous class, which will create the page instance only when
 		// needed.
 
-		add(new PageLink("pageLink", new IPageLink()
+		add(new PageLink<Void>("pageLink", new IPageLink()
 		{
-			public Page getPage()
+			public Page<?> getPage()
 			{
 				return new NonBookmarkablePage(PageLinkPage.this);
 			}
 
-			public Class getPageIdentity()
+			public Class<? extends Page<?>> getPageIdentity()
 			{
 				return NonBookmarkablePage.class;
 			}
@@ -79,17 +79,18 @@ public class PageLinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<a wicket:id=\"pageLink\">go to our private/ non bookmarkable page</a>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;add(new PageLink(\"pageLink\", new IPageLink() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Page getPage() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return new NonBookmarkablePage(PageLinkPage.this);\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Class getPageIdentity() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return NonBookmarkablePage.class;\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;}));";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Page getPage() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return new NonBookmarkablePage(PageLinkPage.this);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Class getPageIdentity() {\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return NonBookmarkablePage.class;\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;}));";
 		add(new ExplainPanel(html, code));
 
 	}

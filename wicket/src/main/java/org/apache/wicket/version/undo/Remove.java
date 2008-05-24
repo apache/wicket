@@ -37,10 +37,10 @@ class Remove extends Change
 	private static final Logger log = LoggerFactory.getLogger(Remove.class);
 
 	/** the subject <code>Component</code> */
-	private final Component component;
+	private final Component<?> component;
 
 	/** the parent <code>MarkupContainer</code> */
-	private final MarkupContainer container;
+	private final MarkupContainer<?> container;
 
 	/**
 	 * Constructor.
@@ -48,7 +48,7 @@ class Remove extends Change
 	 * @param component
 	 *            the subject <code>Component</code>
 	 */
-	Remove(final Component component)
+	Remove(final Component<?> component)
 	{
 		if (component == null)
 		{
@@ -56,9 +56,9 @@ class Remove extends Change
 		}
 
 		this.component = component;
-		this.container = component.getParent();
+		container = component.getParent();
 
-		if (this.container == null)
+		if (container == null)
 		{
 			throw new IllegalArgumentException("component must have a parent");
 		}
@@ -66,21 +66,22 @@ class Remove extends Change
 		if (log.isDebugEnabled())
 		{
 			log.debug("RECORD REMOVE: removed " + component.getPath() + " (" +
-					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
-					") from parent");
+				Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+				") from parent");
 		}
 	}
 
 	/**
 	 * @see Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("UNDO REMOVE: re-adding " + component.getPath() + " (" +
-					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
-					") to parent");
+				Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+				") to parent");
 		}
 
 		container.internalAdd(component);
@@ -89,6 +90,7 @@ class Remove extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Remove[component: " + component.getPath() + "]";

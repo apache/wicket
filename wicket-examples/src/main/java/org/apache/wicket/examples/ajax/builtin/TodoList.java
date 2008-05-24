@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
@@ -39,13 +38,15 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class TodoList extends BasePage
+public class TodoList extends BasePage<Void>
 {
 	/**
 	 * The todo object.
 	 */
 	public static class TodoItem implements IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** Is the item done? */
 		private boolean checked;
 
@@ -65,7 +66,7 @@ public class TodoList extends BasePage
 		 */
 		public TodoItem(TodoItem item)
 		{
-			this.text = item.text;
+			text = item.text;
 		}
 
 		/**
@@ -112,7 +113,7 @@ public class TodoList extends BasePage
 	/**
 	 * Container for displaying the todo items in a list.
 	 */
-	public class TodoItemsContainer extends WebMarkupContainer
+	public class TodoItemsContainer extends WebMarkupContainer<Void>
 	{
 		/**
 		 * Constructor.
@@ -129,14 +130,16 @@ public class TodoList extends BasePage
 			setOutputMarkupId(true);
 
 			// add the listview to the container
-			add(new ListView("item", items)
+			add(new ListView<TodoItem>("item", items)
 			{
-				protected void populateItem(ListItem item)
+				@Override
+				protected void populateItem(ListItem<TodoItem> item)
 				{
 					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox("check",
-							new PropertyModel(item.getModel(), "checked"))
+					item.add(new AjaxCheckBox("check", new PropertyModel<Boolean>(item.getModel(),
+						"checked"))
 					{
+						@Override
 						protected void onUpdate(AjaxRequestTarget target)
 						{
 							// no need to do anything, the model is updated by
@@ -146,7 +149,8 @@ public class TodoList extends BasePage
 						}
 					});
 					// display the text of the todo item
-					item.add(new Label("text", new PropertyModel(item.getModel(), "text")));
+					item.add(new Label<String>("text", new PropertyModel<String>(item.getModel(),
+						"text")));
 				}
 			});
 		}
@@ -155,13 +159,13 @@ public class TodoList extends BasePage
 	/**
 	 * Container for showing either the add link, or the addition form.
 	 */
-	public class AddItemsContainer extends WebMarkupContainer
+	public class AddItemsContainer extends WebMarkupContainer<Void>
 	{
 		/** Visibility toggle so that either the link or the form is visible. */
 		private boolean linkVisible = true;
 
 		/** Link for displaying the AddTodo form. */
-		private final class AddTodoLink extends AjaxFallbackLink
+		private final class AddTodoLink extends AjaxFallbackLink<Void>
 		{
 			/** Constructor. */
 			private AddTodoLink(String id)
@@ -175,6 +179,7 @@ public class TodoList extends BasePage
 			 * @param target
 			 *            the request target.
 			 */
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				onShowForm(target);
@@ -185,6 +190,7 @@ public class TodoList extends BasePage
 			 * 
 			 * @return <code>true</code> when the add links is visible and the form isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return linkVisible;
@@ -195,7 +201,7 @@ public class TodoList extends BasePage
 		 * Link for removing all completed todos from the list, this link follows the same
 		 * visibility rules as the add link.
 		 */
-		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
+		private final class RemoveCompletedTodosLink extends AjaxFallbackLink<Void>
 		{
 			/**
 			 * Constructor.
@@ -211,6 +217,7 @@ public class TodoList extends BasePage
 			/**
 			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
 			 */
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				onRemoveCompletedTodos(target);
@@ -221,6 +228,7 @@ public class TodoList extends BasePage
 			 * 
 			 * @return <code>true</code> when the add links is visible and the form isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return linkVisible;
@@ -232,7 +240,7 @@ public class TodoList extends BasePage
 		 * and one for canceling the addition. The visibility of this component is mutual exclusive
 		 * with the visibility of the add-link.
 		 */
-		private final class AddTodoForm extends Form
+		private final class AddTodoForm extends Form<TodoItem>
 		{
 			/**
 			 * Constructor.
@@ -242,12 +250,13 @@ public class TodoList extends BasePage
 			 */
 			public AddTodoForm(String id)
 			{
-				super(id, new CompoundPropertyModel(new TodoItem()));
+				super(id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
 				setOutputMarkupId(true);
-				add(new TextField("text"));
-				add(new AjaxButton("add", this)
+				add(new TextField<String>("text"));
+				add(new AjaxButton<Void>("add", this)
 				{
-					protected void onSubmit(AjaxRequestTarget target, Form form)
+					@Override
+					protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						// retrieve the todo item
 						TodoItem item = (TodoItem)getParent().getModelObject();
@@ -257,9 +266,10 @@ public class TodoList extends BasePage
 					}
 				});
 
-				add(new AjaxButton("cancel", this)
+				add(new AjaxButton<Void>("cancel", this)
 				{
-					public void onSubmit(AjaxRequestTarget target, Form form)
+					@Override
+					public void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						onCancelTodo(target);
 					}
@@ -271,6 +281,7 @@ public class TodoList extends BasePage
 			 * 
 			 * @return true when the form is visible and the link isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return !linkVisible;
@@ -311,10 +322,10 @@ public class TodoList extends BasePage
 
 		void onRemoveCompletedTodos(AjaxRequestTarget target)
 		{
-			List ready = new ArrayList();
-			for (Iterator iter = items.iterator(); iter.hasNext();)
+			List<TodoItem> ready = new ArrayList<TodoItem>();
+			for (TodoItem todoItem : items)
 			{
-				TodoItem todo = (TodoItem)iter.next();
+				TodoItem todo = todoItem;
 				if (todo.isChecked())
 				{
 					ready.add(todo);
@@ -375,12 +386,12 @@ public class TodoList extends BasePage
 	/**
 	 * Container for redrawing the todo items list with an AJAX call.
 	 */
-	private WebMarkupContainer showItems;
+	private final WebMarkupContainer<?> showItems;
 
 	/**
 	 * The list of todo items.
 	 */
-	final List items = new ArrayList();
+	final List<TodoItem> items = new ArrayList<TodoItem>();
 
 	/**
 	 * Constructor.
@@ -391,11 +402,12 @@ public class TodoList extends BasePage
 		showItems = new TodoItemsContainer("showItems");
 		add(showItems);
 
-		add(new AjaxFallbackLink("ajaxback")
+		add(new AjaxFallbackLink<Void>("ajaxback")
 		{
 			/**
 			 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 			 */
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				setResponsePage(getPage().rollbackPage(1));

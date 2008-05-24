@@ -25,17 +25,18 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Win extends HangmanPage
+public class Win extends HangmanPage<Void>
 {
 	/**
 	 * Create the win page and its associated components.
 	 */
 	public Win()
 	{
-		add(new Label("guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
-		add(new Label("currentWord", getGame().getWord().asString()));
-		add(new Link("playAgain")
+		add(new Label<String>("guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
+		add(new Label<String>("currentWord", getGame().getWord().asString()));
+		add(new Link<Void>("playAgain")
 		{
+			@Override
 			public void onClick()
 			{
 				getGame().newGame();

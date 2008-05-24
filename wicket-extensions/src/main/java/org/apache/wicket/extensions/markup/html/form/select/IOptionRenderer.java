@@ -20,10 +20,12 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
 
 /**
+ * @param <T>
+ *            the model object's type
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IOptionRenderer extends IClusterable
+public interface IOptionRenderer<T> extends IClusterable
 {
 	/**
 	 * Get the value for displaying to the user.
@@ -42,5 +44,5 @@ public interface IOptionRenderer extends IClusterable
 	 * @param value
 	 * @return model that will contain the value object
 	 */
-	public IModel getModel(Object value);
+	public IModel<T> getModel(Object value);
 }

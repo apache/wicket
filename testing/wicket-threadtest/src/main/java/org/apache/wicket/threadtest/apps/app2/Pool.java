@@ -33,28 +33,37 @@ public class Pool
 
 	private static Log log = LogFactory.getLog(Pool.class);
 
+	/**
+	 * @return the connection
+	 */
 	public static Connection getConnection()
 	{
 		return getInstance().doGetConnection();
 	}
 
+	/**
+	 * @return the {@link Pool} instance
+	 */
 	public static Pool getInstance()
 	{
 		return _instance;
 	}
 
+	/**
+	 * Releases the pool
+	 */
 	public static void release()
 	{
 		getInstance().doRelease();
 	}
 
-	private Connection[] allConnections;
+	private final Connection[] allConnections;
 
-	private Stack<Connection> available = new Stack<Connection>();
+	private final Stack<Connection> available = new Stack<Connection>();
 
-	private ThreadLocal<Connection> locks = new ThreadLocal<Connection>();
+	private final ThreadLocal<Connection> locks = new ThreadLocal<Connection>();
 
-	private int size = 3;
+	private final int size = 3;
 
 	private Pool()
 	{

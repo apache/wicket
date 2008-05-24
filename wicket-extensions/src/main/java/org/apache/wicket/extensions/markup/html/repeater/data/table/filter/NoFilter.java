@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NoFilter extends Panel
+public class NoFilter extends Panel<Void>
 {
 	private static final long serialVersionUID = 1L;
 

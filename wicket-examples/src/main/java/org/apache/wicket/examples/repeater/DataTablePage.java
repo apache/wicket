@@ -19,6 +19,7 @@ package org.apache.wicket.examples.repeater;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -42,17 +43,18 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List<IColumn> columns = new ArrayList<IColumn>();
+		List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
 
-		columns.add(new AbstractColumn(new Model("Actions"))
+		columns.add(new AbstractColumn<Contact>(new Model<String>("Actions"))
 		{
-			public void populateItem(Item cellItem, String componentId, IModel model)
+			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
+				IModel<Contact> model)
 			{
 				cellItem.add(new ActionPanel(componentId, model));
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("ID"), "id")
+		columns.add(new PropertyColumn(new Model<String>("ID"), "id")
 		{
 			@Override
 			public String getCssClass()
@@ -61,9 +63,9 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("First Name"), "firstName", "firstName"));
+		columns.add(new PropertyColumn(new Model<String>("First Name"), "firstName", "firstName"));
 
-		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName")
+		columns.add(new PropertyColumn(new Model<String>("Last Name"), "lastName", "lastName")
 		{
 			@Override
 			public String getCssClass()
@@ -72,8 +74,8 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn(new Model<String>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn(new Model<String>("Cell Phone"), "cellPhone"));
 
 		add(new DefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
 	}

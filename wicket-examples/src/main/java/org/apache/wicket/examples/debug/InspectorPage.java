@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class InspectorPage extends WebPage
+public final class InspectorPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,14 +57,15 @@ public final class InspectorPage extends WebPage
 			// Ignore
 		}
 		add(new PageView("page", entry == null ? null : entry.getPage()));
-		add(new Image("bug"));
+		add(new Image<Void>("bug"));
 		add(new BookmarkablePageLink("allsessions", LiveSessionsPage.class));
-		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
+		add(new Label<String>("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

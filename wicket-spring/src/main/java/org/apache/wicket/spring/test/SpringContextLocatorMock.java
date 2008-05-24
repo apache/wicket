@@ -28,7 +28,9 @@ import org.springframework.context.ApplicationContext;
  */
 public class SpringContextLocatorMock implements ISpringContextLocator
 {
-	private ApplicationContext context;
+	private static final long serialVersionUID = 1L;
+
+	private final ApplicationContext context;
 
 	/**
 	 * Constructor

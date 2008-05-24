@@ -36,10 +36,10 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class AnnotationsPanelsPage extends BasePage
+public class AnnotationsPanelsPage extends BasePage<Void>
 {
 	@AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
-	private static class AdminLabel extends Label
+	private static class AdminLabel extends Label<String>
 	{
 		/**
 		 * @param id
@@ -55,7 +55,7 @@ public class AnnotationsPanelsPage extends BasePage
 	 * A panel that is only visible for users with role ADMIN.
 	 */
 	@AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
-	private static final class ForAdmins extends Panel
+	private static final class ForAdmins extends Panel<Void>
 	{
 		/**
 		 * Construct.
@@ -72,7 +72,7 @@ public class AnnotationsPanelsPage extends BasePage
 	 * A panel that is only visible for users with role ADMIN or USER.
 	 */
 	@AuthorizeAction(action = Action.RENDER, roles = { Roles.ADMIN, Roles.USER })
-	private static final class ForAdminsAndUsers extends Panel
+	private static final class ForAdminsAndUsers extends Panel<Void>
 	{
 		/**
 		 * Construct.
@@ -88,7 +88,7 @@ public class AnnotationsPanelsPage extends BasePage
 	/**
 	 * A panel that is visible for all users.
 	 */
-	private static final class ForAllUsers extends Panel
+	private static final class ForAllUsers extends Panel<Void>
 	{
 		/**
 		 * Construct.
@@ -105,7 +105,7 @@ public class AnnotationsPanelsPage extends BasePage
 	 * A panel that is only visible for users with role ADMIN or USER.
 	 */
 	@AuthorizeAction(action = Action.RENDER, roles = { Roles.ADMIN, Roles.USER })
-	private static final class Test extends Panel
+	private static final class Test extends Panel<Void>
 	{
 		/**
 		 * Construct.
@@ -115,11 +115,11 @@ public class AnnotationsPanelsPage extends BasePage
 		public Test(String id)
 		{
 			super(id);
-			List l = Arrays.asList("1", "2", "3", "4", "5");
-			ListView listView = new ListView("list", l)
+			List<String> l = Arrays.asList("1", "2", "3", "4", "5");
+			ListView<String> listView = new ListView<String>("list", l)
 			{
 				@Override
-				protected void populateItem(ListItem item)
+				protected void populateItem(ListItem<String> item)
 				{
 					String i = item.getModelObjectAsString();
 					item.add(new UserLabel("userLabel", i));
@@ -132,7 +132,7 @@ public class AnnotationsPanelsPage extends BasePage
 	}
 
 	@AuthorizeAction(action = Action.RENDER, roles = Roles.USER)
-	private static class UserLabel extends Label
+	private static class UserLabel extends Label<String>
 	{
 		/**
 		 * @param id
@@ -144,7 +144,7 @@ public class AnnotationsPanelsPage extends BasePage
 		}
 	}
 
-	private WebMarkupContainer outer;
+	private WebMarkupContainer<?> outer;
 
 	private boolean showDummy = true;
 
@@ -156,11 +156,11 @@ public class AnnotationsPanelsPage extends BasePage
 		add(new ForAllUsers("forAllUsersPanel"));
 		add(new ForAdminsAndUsers("forAdminsAndUsersPanel"));
 		add(new ForAdmins("forAdminsPanel"));
-		add(outer = new WebMarkupContainer("outer"));
+		add(outer = new WebMarkupContainer<Void>("outer"));
 		outer.setOutputMarkupId(true);
 
-		outer.add(new WebMarkupContainer("test").setOutputMarkupId(true));
-		add(new AjaxLink("link")
+		outer.add(new WebMarkupContainer<Void>("test").setOutputMarkupId(true));
+		add(new AjaxLink<Void>("link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -168,7 +168,7 @@ public class AnnotationsPanelsPage extends BasePage
 				showDummy = !showDummy;
 				if (showDummy)
 				{
-					outer.replace(new WebMarkupContainer("test"));
+					outer.replace(new WebMarkupContainer<Void>("test"));
 				}
 				else
 				{

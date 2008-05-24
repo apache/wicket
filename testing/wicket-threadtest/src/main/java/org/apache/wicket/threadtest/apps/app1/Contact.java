@@ -26,6 +26,8 @@ import java.io.Serializable;
  */
 public class Contact implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private String cellPhone;
 
 	private String firstName;
@@ -73,10 +75,10 @@ public class Contact implements Serializable
 		if (obj instanceof Contact)
 		{
 			Contact other = (Contact)obj;
-			return other.getFirstName().equals(getFirstName())
-					&& other.getLastName().equals(getLastName())
-					&& other.getHomePhone().equals(getHomePhone())
-					&& other.getCellPhone().equals(getCellPhone());
+			return other.getFirstName().equals(getFirstName()) &&
+				other.getLastName().equals(getLastName()) &&
+				other.getHomePhone().equals(getHomePhone()) &&
+				other.getCellPhone().equals(getCellPhone());
 
 		}
 		else
@@ -171,8 +173,8 @@ public class Contact implements Serializable
 	@Override
 	public String toString()
 	{
-		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName
-				+ " homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
+		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName +
+			" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
 }

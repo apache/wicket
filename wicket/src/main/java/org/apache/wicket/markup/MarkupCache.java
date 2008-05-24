@@ -203,7 +203,7 @@ public class MarkupCache implements IMarkupCache
 	 * @see org.apache.wicket.markup.IMarkupCache#getMarkupStream(org.apache.wicket.MarkupContainer,
 	 *      boolean, boolean)
 	 */
-	public final MarkupStream getMarkupStream(final MarkupContainer< ? > container,
+	public final MarkupStream getMarkupStream(final MarkupContainer<?> container,
 		final boolean enforceReload, final boolean throwException)
 	{
 		if (container == null)
@@ -234,7 +234,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#hasAssociatedMarkup(org.apache.wicket.MarkupContainer)
 	 */
-	public final boolean hasAssociatedMarkup(final MarkupContainer< ? > container)
+	public final boolean hasAssociatedMarkup(final MarkupContainer<?> container)
 	{
 		return getMarkup(container, container.getClass(), false) != Markup.NO_MARKUP;
 	}
@@ -267,10 +267,10 @@ public class MarkupCache implements IMarkupCache
 	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class, boolean)
 	 */
-	public final Markup getMarkup(final MarkupContainer< ? > container, final Class< ? > clazz,
+	public final Markup getMarkup(final MarkupContainer<?> container, final Class<?> clazz,
 		final boolean enforceReload)
 	{
-		Class< ? > containerClass = clazz;
+		Class<?> containerClass = clazz;
 		if (clazz == null)
 		{
 			containerClass = container.getClass();
@@ -338,7 +338,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param container
 	 * @return Markup.NO_MARKUP
 	 */
-	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer< ? > container)
+	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer<?> container)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -393,7 +393,7 @@ public class MarkupCache implements IMarkupCache
 	 * @return null, if not found or to enforce reloading the markup
 	 */
 	protected Markup getMarkupFromCache(final CharSequence cacheKey,
-		final MarkupContainer< ? > container)
+		final MarkupContainer<?> container)
 	{
 		if (cacheKey != null)
 		{
@@ -418,7 +418,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup
 	 */
-	private final Markup loadMarkup(final MarkupContainer< ? > container,
+	private final Markup loadMarkup(final MarkupContainer<?> container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		String cacheKey = markupResourceStream.getCacheKey();
@@ -436,7 +436,8 @@ public class MarkupCache implements IMarkupCache
 
 			if (cacheKey != null)
 			{
-				if (markup.locationAsString() != null) {
+				if (markup.locationAsString() != null)
+				{
 					locationString = markup.locationAsString();
 				}
 				// add the markup to the cache.
@@ -477,7 +478,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup in the stream
 	 */
-	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer< ? > container,
+	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer<?> container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		final String cacheKey = markupResourceStream.getCacheKey();
@@ -535,7 +536,7 @@ public class MarkupCache implements IMarkupCache
 	 *            The MarkupContainer requesting the markup resource stream
 	 * @return IMarkupResourceStreamProvider
 	 */
-	public IMarkupCacheKeyProvider getMarkupCacheKeyProvider(final MarkupContainer< ? > container)
+	public IMarkupCacheKeyProvider getMarkupCacheKeyProvider(final MarkupContainer<?> container)
 	{
 		if (container instanceof IMarkupCacheKeyProvider)
 		{
@@ -557,7 +558,7 @@ public class MarkupCache implements IMarkupCache
 	 * @return IMarkupResourceStreamProvider
 	 */
 	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
-		final MarkupContainer< ? > container)
+		final MarkupContainer<?> container)
 	{
 		if (container instanceof IMarkupResourceStreamProvider)
 		{

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
@@ -28,12 +30,14 @@ import org.apache.wicket.model.PropertyModel;
  * the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            The model object type
  * 
  */
-public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
+public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 {
 	private static final long serialVersionUID = 1L;
-	private IModel filterChoices;
+	private final IModel<List<? extends T>> filterChoices;
 
 	/**
 	 * @param displayModel
@@ -42,8 +46,8 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @param filterChoices
 	 *            collection choices used in the choice filter
 	 */
-	public ChoiceFilteredPropertyColumn(IModel displayModel, String sortProperty,
-			String propertyExpression, IModel filterChoices)
+	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
+		String propertyExpression, IModel<List<? extends T>> filterChoices)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -55,8 +59,8 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @param filterChoices
 	 *            collection of choices used in the choice filter
 	 */
-	public ChoiceFilteredPropertyColumn(IModel displayModel, String propertyExpression,
-			IModel filterChoices)
+	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String propertyExpression,
+		IModel<List<? extends T>> filterChoices)
 	{
 		super(displayModel, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -65,6 +69,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		super.detach();
@@ -78,12 +83,12 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component<T> getFilter(String componentId, FilterForm form)
 	{
-		ChoiceFilter filter = new ChoiceFilter(componentId, getFilterModel(form), form,
-				filterChoices, enableAutoSubmit());
+		ChoiceFilter<T> filter = new ChoiceFilter<T>(componentId, getFilterModel(form), form,
+			filterChoices, enableAutoSubmit());
 
-		IChoiceRenderer renderer = getChoiceRenderer();
+		IChoiceRenderer<T> renderer = getChoiceRenderer();
 		if (renderer != null)
 		{
 			filter.getChoice().setChoiceRenderer(renderer);
@@ -99,9 +104,9 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel getFilterModel(FilterForm form)
+	protected IModel<T> getFilterModel(FilterForm form)
 	{
-		return new PropertyModel(form.getModel(), getPropertyExpression());
+		return new PropertyModel<T>(form.getModel(), getPropertyExpression());
 	}
 
 	/**
@@ -120,7 +125,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * 
 	 * @return choice renderer that will be used to create the choice filter
 	 */
-	protected IChoiceRenderer getChoiceRenderer()
+	protected IChoiceRenderer<T> getChoiceRenderer()
 	{
 		return null;
 	}
@@ -128,7 +133,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	/**
 	 * @return filter choices model
 	 */
-	protected final IModel getFilterChoices()
+	protected final IModel<List<? extends T>> getFilterChoices()
 	{
 		return filterChoices;
 	}

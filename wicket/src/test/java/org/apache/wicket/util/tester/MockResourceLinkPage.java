@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.ResourceLink;
  * 
  * @author frankbille
  */
-public class MockResourceLinkPage extends WebPage
+public class MockResourceLinkPage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Gwyn Evans
  */
-class ExplainPanel extends Panel
+class ExplainPanel extends Panel<Void>
 {
 	/**
 	 * Construct.
@@ -35,7 +35,7 @@ class ExplainPanel extends Panel
 	public ExplainPanel(String html, String code)
 	{
 		super("explainPanel");
-		add(new MultiLineLabel("html", html));
-		add(new MultiLineLabel("code", code).setEscapeModelStrings(false));
+		add(new MultiLineLabel<String>("html", html));
+		add(new MultiLineLabel<String>("code", code).setEscapeModelStrings(false));
 	}
 }

@@ -58,7 +58,7 @@ public class TextTemplateSharedResourceFactory
 	/**
 	 * Shared resource scope.
 	 */
-	private final WeakReference/* <Class> */scopeRef;
+	private final WeakReference<Class<?>> scopeRef;
 
 	/**
 	 * <code>TextTemplate</code> to use to create resources.
@@ -84,10 +84,10 @@ public class TextTemplateSharedResourceFactory
 	 * @param scope
 	 *            the scope in shared resources at which to add resources
 	 */
-	public TextTemplateSharedResourceFactory(final TextTemplate template, final Class scope)
+	public TextTemplateSharedResourceFactory(final TextTemplate template, final Class<?> scope)
 	{
 		this.template = template;
-		scopeRef = new WeakReference(scope);
+		scopeRef = new WeakReference<Class<?>>(scope);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class TextTemplateSharedResourceFactory
 	 * @return a <code>ResourceReference</code> to the template encoded as a resource with the
 	 *         given variables interpolated
 	 */
-	public ResourceReference resourceReference(final Map variables)
+	public ResourceReference resourceReference(final Map<String, Object> variables)
 	{
 		final String uniqueName = sharedResourceName(variables);
 		final String templateValue = template.asString(variables);
@@ -114,17 +114,20 @@ public class TextTemplateSharedResourceFactory
 				/**
 				 * @see org.apache.wicket.Resource#getResourceStream()
 				 */
+				@Override
 				public IResourceStream getResourceStream()
 				{
 					return new AbstractStringResourceStream()
 					{
 						private static final long serialVersionUID = 1L;
 
+						@Override
 						protected String getString()
 						{
 							return templateValue;
 						}
 
+						@Override
 						public long length()
 						{
 							return templateValue.length();
@@ -134,7 +137,7 @@ public class TextTemplateSharedResourceFactory
 			};
 			sharedResources.add(uniqueName, newResource);
 		}
-		return new ResourceReference((Class)scopeRef.get(), uniqueName);
+		return new ResourceReference(scopeRef.get(), uniqueName);
 	}
 
 	/**
@@ -144,10 +147,10 @@ public class TextTemplateSharedResourceFactory
 	 *            variables that parameterize the linked-to resource
 	 * @return a unique name for the variables to use as a resource key
 	 */
-	protected String sharedResourceName(final Map variables)
+	protected String sharedResourceName(final Map<String, Object> variables)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (final Iterator iterator = variables.values().iterator(); iterator.hasNext();)
+		for (final Iterator<Object> iterator = variables.values().iterator(); iterator.hasNext();)
 		{
 			final String value = iterator.next().toString();
 			buffer.append(encodeValue(value));

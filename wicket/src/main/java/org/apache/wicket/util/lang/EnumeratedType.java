@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.util.string.StringValue;
 
@@ -41,7 +40,7 @@ public abstract class EnumeratedType extends StringValue
 	 */
 	private static final long serialVersionUID = 1L;
 	/** Map of type values by class */
-	private static final Map<String, List> valueListByClass = new ConcurrentHashMap<String, List>();
+	private static final Map<String, List<EnumeratedType>> valueListByClass = Generics.newConcurrentHashMap();
 
 	/**
 	 * Constructor.
@@ -64,7 +63,7 @@ public abstract class EnumeratedType extends StringValue
 	 *            The enumerated type subclass to get values for
 	 * @return List of all values of the given subclass
 	 */
-	public static List<EnumeratedType> getValues(final Class< ? extends EnumeratedType> c)
+	public static List<EnumeratedType> getValues(final Class<? extends EnumeratedType> c)
 	{
 		// Get values for class
 		List<EnumeratedType> valueList = valueListByClass.get(c.getName());

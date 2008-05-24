@@ -38,7 +38,7 @@ public interface IFormSubmittingComponent
 	 * 
 	 * @return form submitted by this component
 	 */
-	Form getForm();
+	Form<?> getForm();
 
 	/**
 	 * Returns the name that is unique to this component, at least within the form.

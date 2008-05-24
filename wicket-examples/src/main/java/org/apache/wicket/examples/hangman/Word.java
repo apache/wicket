@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.hangman;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
@@ -31,7 +30,7 @@ import org.apache.wicket.IClusterable;
 public class Word implements IClusterable
 {
 	/** The word */
-	final List letters = new ArrayList();
+	final List<Letter> letters = new ArrayList<Letter>();
 
 	/**
 	 * Constructor
@@ -63,9 +62,8 @@ public class Word implements IClusterable
 	public String asString(final boolean hideUnguessed)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter letter : letters)
 		{
-			final Letter letter = (Letter)iterator.next();
 			if (hideUnguessed)
 			{
 				buffer.append(letter.isGuessed() ? letter.asString() : "_");
@@ -81,6 +79,7 @@ public class Word implements IClusterable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object object)
 	{
 		if (object instanceof Word)
@@ -99,9 +98,8 @@ public class Word implements IClusterable
 	public boolean guess(final Letter letter)
 	{
 		boolean correct = false;
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter current : letters)
 		{
-			final Letter current = (Letter)iterator.next();
 			if (current.equals(letter))
 			{
 				current.guess();
@@ -115,6 +113,7 @@ public class Word implements IClusterable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return asString().hashCode();
@@ -125,9 +124,8 @@ public class Word implements IClusterable
 	 */
 	public boolean isGuessed()
 	{
-		for (final Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter letter : letters)
 		{
-			final Letter letter = (Letter)iterator.next();
 			if (!letter.isGuessed())
 			{
 				return false;
@@ -139,6 +137,7 @@ public class Word implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Word letters = " + letters + "]";

@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * <p>
  * 
  * <pre>
- *     Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ * Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
  *     f.add(new TextField(&quot;value1&quot;));
  *     f.add(new SubmitLink(&quot;link1&quot;) {
  *         protected void onSubmit() {
@@ -97,7 +97,7 @@ public class SubmitLink<T> extends AbstractSubmitLink<T>
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, Form form)
+	public SubmitLink(String id, Form<?> form)
 	{
 		super(id, form);
 	}
@@ -133,7 +133,7 @@ public class SubmitLink<T> extends AbstractSubmitLink<T>
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, IModel<T> model, Form form)
+	public SubmitLink(String id, IModel<T> model, Form<?> form)
 	{
 		super(id, model, form);
 	}
@@ -193,7 +193,7 @@ public class SubmitLink<T> extends AbstractSubmitLink<T>
 		if (getForm() != null)
 		{
 			// find the root form - the one we are really going to submit
-			Form root = getForm().getRootForm();
+			Form<?> root = getForm().getRootForm();
 			StringBuffer sb = new StringBuffer(100);
 			sb.append("var e=document.getElementById('");
 			sb.append(root.getHiddenFieldId());

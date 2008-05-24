@@ -40,9 +40,11 @@ import org.apache.wicket.model.PropertyModel;
  * @see PropertyModel
  * 
  * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            The type of the property
  * 
  */
-public class PropertyColumn extends AbstractColumn
+public class PropertyColumn<T> extends AbstractColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +60,8 @@ public class PropertyColumn extends AbstractColumn
 	 * @param propertyExpression
 	 *            wicket property expression used by PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String sortProperty, String propertyExpression)
+	public PropertyColumn(IModel<String> displayModel, String sortProperty,
+		String propertyExpression)
 	{
 		super(displayModel, sortProperty);
 		this.propertyExpression = propertyExpression;
@@ -73,7 +76,7 @@ public class PropertyColumn extends AbstractColumn
 	 *            wicket property expression
 	 * @see PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String propertyExpression)
+	public PropertyColumn(IModel<String> displayModel, String propertyExpression)
 	{
 		super(displayModel, null);
 		this.propertyExpression = propertyExpression;

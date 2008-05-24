@@ -17,6 +17,7 @@
 package org.apache.wicket.threadtest.apps.app1;
 
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
+import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.LoadableDetachableModel;
 
 /**
@@ -25,9 +26,11 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends LoadableDetachableModel
+public class DetachableContactModel extends LoadableDetachableModel<Contact>
 {
-	private long id;
+	private static final long serialVersionUID = 1L;
+
+	private final long id;
 
 	/**
 	 * @param c
@@ -59,7 +62,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
-	 * @see org.apache.wicket.markup.repeater.PageableRefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see RefreshingView# setItemReuseStrategy(IItemReuseStrategy)
 	 * @see org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -77,7 +80,7 @@ public class DetachableContactModel extends LoadableDetachableModel
 		else if (obj instanceof DetachableContactModel)
 		{
 			DetachableContactModel other = (DetachableContactModel)obj;
-			return other.id == this.id;
+			return other.id == id;
 		}
 		return false;
 	}

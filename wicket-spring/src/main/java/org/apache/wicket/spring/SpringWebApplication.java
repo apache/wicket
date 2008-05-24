@@ -30,13 +30,13 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Base class for spring aware wicket web application object. This class has helper methods to
- * create lazy init proxies based on spring beans, as well as an implementation of
- * {@link ISpringContextLocator}.
+ * create lazy init proxies based on spring beans, as well as an implementation of {@link
+ * ISpringContextLocator}.
  * 
  * @deprecated when using java5 it is preferrable to use {@link SpringBean} annotations for
- *             injection rather then this spring-specific application subclass with its helpers. To
- *             setup {@link SpringBean} add the following line to your {@link WebApplication}
- *             subclass init method <code>add(new SpringComponentInjector(this));</code>
+ * 	injection rather then this spring-specific application subclass with its helpers. To setup
+ * 	{@link SpringBean} add the following line to your {@link WebApplication} subclass init method
+ * 	<code>add(new SpringComponentInjector(this));</code>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -52,6 +52,7 @@ public abstract class SpringWebApplication extends WebApplication
 	 */
 	private final static ISpringContextLocator contextLocator = new ISpringContextLocator()
 	{
+		private static final long serialVersionUID = 1L;
 
 		public ApplicationContext getSpringContext()
 		{
@@ -88,7 +89,8 @@ public abstract class SpringWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.
+	 * 	springframework.context.ApplicationContext)
 	 */
 	public final void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException
@@ -123,9 +125,9 @@ public abstract class SpringWebApplication extends WebApplication
 	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
-	 *            class of spring bean
+	 * 		class of spring bean
 	 * @param beanName
-	 *            name of spring bean
+	 * 		name of spring bean
 	 * @return proxy representing the spring bean
 	 */
 	protected Object createSpringBeanProxy(Class< ? > clazz, String beanName)
@@ -138,7 +140,7 @@ public abstract class SpringWebApplication extends WebApplication
 	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
-	 *            class of spring bean
+	 * 		class of spring bean
 	 * @return proxy representing the spring bean
 	 */
 	protected Object createSpringBeanProxy(Class< ? > clazz)

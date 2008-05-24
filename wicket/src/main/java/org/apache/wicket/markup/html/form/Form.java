@@ -41,6 +41,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
@@ -1597,7 +1598,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			}
 			else
 			{
-				tag.put("action", Strings.replaceAll(url, "&", "&amp;"));
+                tag.put("action", Strings.escapeMarkup(url));
 			}
 
 			if (multiPart)
@@ -1698,14 +1699,23 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			String[] pair = params[j].split("=");
 
 			buffer.append("<input type=\"hidden\" name=\"")
-				.append(pair[0])
+				.append(recode(pair[0]))
 				.append("\" value=\"")
-				.append(pair.length > 1 ? pair[1] : "")
+				.append(pair.length > 1 ? recode(pair[1]) : "")
 				.append("\" />");
 		}
 	}
 
-	/**
+    /**
+     * Take URL-encoded query string value, unencode it and return HTML-escaped version
+     */
+    private String recode(String s)
+    {
+        String un = WicketURLDecoder.QUERY_INSTANCE.decode(s);
+        return Strings.escapeMarkup(un).toString();
+    }
+
+    /**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	@Override

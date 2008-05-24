@@ -69,7 +69,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 */
 	public ListChoice(final String id)
 	{
-		this(id, null, (List)null, null, defaultMaxRows);
+		this(id, null, (List<T>)null, null, defaultMaxRows);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public ListChoice(String id, IModel<List< ? extends T>> choices)
+	public ListChoice(String id, IModel<List<? extends T>> choices)
 	{
 		this(id, null, choices, null, defaultMaxRows);
 	}
@@ -175,7 +175,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public ListChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
+	public ListChoice(String id, IModel<T> model, IModel<List<? extends T>> choices)
 	{
 		this(id, model, choices, null, defaultMaxRows);
 	}
@@ -184,7 +184,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+	public ListChoice(String id, IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		this(id, null, choices, renderer, defaultMaxRows);
 	}
@@ -194,7 +194,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
+	public ListChoice(String id, IModel<T> model, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
@@ -204,7 +204,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
+	public ListChoice(String id, IModel<T> model, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer, int maxRows)
 	{
 		super(id, model, choices, renderer);

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester.apps_3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ import org.apache.wicket.util.tester.apps_1.Book;
 /**
  * @author Ingram Chen
  */
-public class ChoicePage extends WebPage
+public class ChoicePage extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -63,22 +64,22 @@ public class ChoicePage extends WebPage
 	public boolean checkBox;
 
 	/** test CheckGroup initial value */
-	public List initialCheckGroup = new ArrayList();
+	public List<Book> initialCheckGroup = new ArrayList<Book>();
 
 	/** test ListMultipleChoice initial values */
-	public List initialListMultipleChoice = new ArrayList();
+	public List<Book> initialListMultipleChoice = new ArrayList<Book>();
 
 	/** test CheckBoxMultipleChoice initial values */
-	public List initialCheckBoxMultipleChoice = new ArrayList();
+	public List<Book> initialCheckBoxMultipleChoice = new ArrayList<Book>();
 
 	/** test CheckBoxMultipleChoice */
-	public List checkBoxMultipleChoice = new ArrayList();
+	public List<Book> checkBoxMultipleChoice = new ArrayList<Book>();
 
 	/** test CheckGroup */
-	public List checkGroup = new ArrayList();
+	public List<Book> checkGroup = new ArrayList<Book>();
 
 	/** test ListMultipleChoice */
-	public List listMultipleChoice = new ArrayList();
+	public List<Book> listMultipleChoice = new ArrayList<Book>();
 
 	/** test multiple button */
 	public boolean anotherButtonPressed;
@@ -88,19 +89,19 @@ public class ChoicePage extends WebPage
 	 * 
 	 * @param candidateChoices
 	 */
-	public ChoicePage(List candidateChoices)
+	public ChoicePage(List<Book> candidateChoices)
 	{
-		ChoiceRenderer bookChoiceRenderer = new ChoiceRenderer("name", "id");
+		ChoiceRenderer<Book> bookChoiceRenderer = new ChoiceRenderer<Book>("name", "id");
 
-		Form form = new Form("choiceForm");
+		Form<ChoicePage> form = new Form<ChoicePage>("choiceForm");
 		add(form);
 
-		form.setModel(new CompoundPropertyModel(this));
+		form.setModel(new CompoundPropertyModel<ChoicePage>(this));
 
 		// setting initial values
-		dropDownChoice = (Book)candidateChoices.get(1);
-		listChoice = (Book)candidateChoices.get(3);
-		radioChoice = (Book)candidateChoices.get(2);
+		dropDownChoice = candidateChoices.get(1);
+		listChoice = candidateChoices.get(3);
+		radioChoice = candidateChoices.get(2);
 		checkBox = true;
 		initialListMultipleChoice.add(candidateChoices.get(1));
 		initialListMultipleChoice.add(candidateChoices.get(2));
@@ -110,27 +111,28 @@ public class ChoicePage extends WebPage
 		initialCheckGroup.add(candidateChoices.get(3));
 
 		// single select family
-		form.add(new DropDownChoice("dropDownChoice", candidateChoices, bookChoiceRenderer));
-		form.add(new ListChoice("listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4));
-		form.add(new RadioChoice("radioChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new DropDownChoice<Book>("dropDownChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new ListChoice<Book>("listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4));
+		form.add(new RadioChoice<Book>("radioChoice", candidateChoices, bookChoiceRenderer));
 		form.add(new CheckBox("checkBox"));
 		form.add(newRadioGroup(candidateChoices));
 
 		// multiple select family
-		form.add(new ListMultipleChoice("initialListMultipleChoice", candidateChoices,
-				bookChoiceRenderer));
-		form.add(new CheckBoxMultipleChoice("initialCheckBoxMultipleChoice", candidateChoices,
-				bookChoiceRenderer));
+		form.add(new ListMultipleChoice<Book>("initialListMultipleChoice", candidateChoices,
+			bookChoiceRenderer));
+		form.add(new CheckBoxMultipleChoice<Book>("initialCheckBoxMultipleChoice",
+			candidateChoices, bookChoiceRenderer));
 		form.add(newCheckGroup("initialCheckGroup", candidateChoices));
-		form.add(new ListMultipleChoice("listMultipleChoice", candidateChoices, bookChoiceRenderer)
-				.setMaxRows(4));
-		form.add(new CheckBoxMultipleChoice("checkBoxMultipleChoice", candidateChoices,
-				bookChoiceRenderer));
+		form.add(new ListMultipleChoice<Book>("listMultipleChoice", candidateChoices,
+			bookChoiceRenderer).setMaxRows(4));
+		form.add(new CheckBoxMultipleChoice<Book>("checkBoxMultipleChoice", candidateChoices,
+			bookChoiceRenderer));
 		form.add(newCheckGroup("checkGroup", candidateChoices));
-		form.add(new Button("anotherButton")
+		form.add(new Button<Void>("anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onSubmit()
 			{
 				anotherButtonPressed = true;
@@ -138,16 +140,18 @@ public class ChoicePage extends WebPage
 		});
 	}
 
-	private CheckGroup newCheckGroup(final String id, List candidateChoices)
+	private <S extends Serializable> CheckGroup<S> newCheckGroup(final String id,
+		List<S> candidateChoices)
 	{
-		CheckGroup checkGroupComponent = new CheckGroup(id);
-		ListView listView = new ListView("loop", candidateChoices)
+		CheckGroup<S> checkGroupComponent = new CheckGroup<S>(id);
+		ListView<S> listView = new ListView<S>("loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(ListItem item)
+			@Override
+			protected void populateItem(ListItem<S> item)
 			{
-				item.add(new Check("check", new Model((Book)item.getModelObject())));
+				item.add(new Check<S>("check", new Model<S>(item.getModelObject())));
 			}
 
 		};
@@ -155,16 +159,17 @@ public class ChoicePage extends WebPage
 		return checkGroupComponent;
 	}
 
-	private RadioGroup newRadioGroup(List candidateChoices)
+	private RadioGroup<Book> newRadioGroup(List<Book> candidateChoices)
 	{
-		RadioGroup radioGroupComponent = new RadioGroup("radioGroup");
-		ListView listView = new ListView("loop", candidateChoices)
+		RadioGroup<Book> radioGroupComponent = new RadioGroup<Book>("radioGroup");
+		ListView<Book> listView = new ListView<Book>("loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(ListItem item)
+			@Override
+			protected void populateItem(ListItem<Book> item)
 			{
-				item.add(new Radio("radio", new Model((Book)item.getModelObject())));
+				item.add(new Radio<Book>("radio", new Model<Book>(item.getModelObject())));
 			}
 
 		};

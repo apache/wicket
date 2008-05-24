@@ -10,10 +10,16 @@
 	<body>
 		<span wicket:id="message" id="message">Message goes here</span>
 		<br />
-		<a wicket:id="linkToStatelessPage" href="#">go to another
-			stateless page</a>
+		<a wicket:id="linkToStatelessPage" href="#">go to another default stateless page</a>
 		<br />
-		<a wicket:id="linkToStatefulPage" href="#">go to a stateful page
-			(triggers session creation if not already done so)</a>
+		<a wicket:id="linkToStatelessPage1" href="#">go to another query strategy mounted stateless page</a>
+		<br />
+		<a wicket:id="linkToStatelessPage2" href="#">go to another mixed strategy mounted stateless page</a>
+		<br />
+		<a wicket:id="linkToStatelessPage3" href="#">go to another index strategy mounted stateless page</a>
+		<br />
+		<a wicket:id="linkToStatefulPage" href="#">go to a stateful page (triggers session creation if not already done so)</a>
+		<br />
+		<a wicket:id="invalidatesession" href="#">Invalidate the session</a>
 	</body>
 </html>

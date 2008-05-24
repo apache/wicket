@@ -75,6 +75,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof SharedResourceRequestTarget)
@@ -105,6 +106,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "SharedResourceRequestTarget".hashCode();
@@ -133,7 +135,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			{
 				String className = resourceKey.substring(0, ix);
 				IClassResolver resolver = application.getApplicationSettings().getClassResolver();
-				Class scope = null;
+				Class<?> scope = null;
 				try
 				{
 					// First try to match mounted resources.
@@ -145,7 +147,11 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					{
 						scope = resolver.resolveClass(className);
 					}
-					String path = resourceKey.substring(ix + 1);
+					final CharSequence escapeString = application.getResourceSettings()
+						.getParentFolderPlaceholder();
+					// get path component of resource key, replace '..' with escape sequence to
+					// prevent crippled urls in browser
+					String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
 
 					if (PackageResource.exists(scope, path, null, null))
 					{
@@ -196,6 +202,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +

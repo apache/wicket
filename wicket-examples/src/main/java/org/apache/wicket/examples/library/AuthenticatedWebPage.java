@@ -30,10 +30,11 @@ import org.apache.wicket.markup.html.border.Border;
  * they are not hardwired to page navigation structure details
  * 
  * @author Jonathan Locke
+ * @param <T>
  */
 public class AuthenticatedWebPage<T> extends WicketExamplePage<T>
 {
-	private final Border border;
+	private final Border<?> border;
 
 	/**
 	 * Contruct

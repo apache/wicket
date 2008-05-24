@@ -77,33 +77,33 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		executeHeaderTest(MockComponent3.class, "MockComponent3-expected.html");
 	}
 
-	private void executeHeaderTest(final Class componentClass) throws IOException
+	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass)
+		throws IOException
 	{
 		executeHeaderTest(componentClass, null);
 	}
 
-	private void executeHeaderTest(final Class componentClass, String expectedFile)
-			throws IOException
+	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass,
+		String expectedFile) throws IOException
 	{
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID)
-				.setOutputMarkupId(true));
+		page.add(new WebComponent<Void>(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
-		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				// Create an instance of the component
 				try
 				{
-					Constructor con = componentClass.getConstructor(new Class[] { String.class });
+					Constructor<? extends Component<?>> con = componentClass.getConstructor(new Class[] { String.class });
 
-					Component comp = (Component)con
-							.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
+					Component<?> comp = con.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
 					page.replace(comp);
 					comp.setOutputMarkupId(true);
 
@@ -120,7 +120,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}
@@ -134,7 +134,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		String document = tester.getServletResponse().getDocument();
 
 		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",
-				Pattern.DOTALL);
+			Pattern.DOTALL);
 		Matcher mat = pat.matcher(document);
 
 		String headerContribution = null;
@@ -150,7 +150,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		if (expectedFile == null)
 		{
 			assertNull("There was a header contribution on the response: <" + headerContribution +
-					">", headerContribution);
+				">", headerContribution);
 		}
 		else
 		{

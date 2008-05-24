@@ -22,27 +22,27 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 
 /**
- * Implementation of IDataProvider that retrieves contacts from the contact
- * database.
+ * Implementation of IDataProvider that retrieves contacts from the contact database.
  * 
  * @author igor
  * 
  */
-public class ContactDataProvider implements IDataProvider
+public class ContactDataProvider implements IDataProvider<Contact>
 {
+	private static final long serialVersionUID = 1L;
+
 	protected ContactsDatabase getContactsDB()
 	{
 		return DatabaseLocator.getDatabase();
 	}
 
 	/**
-	 * retrieves contacts from database starting with index <code>first</code>
-	 * and ending with <code>first+count</code>
+	 * retrieves contacts from database starting with index <code>first</code> and ending with
+	 * <code>first+count</code>
 	 * 
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int,
-	 *      int)
+	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
 	 */
-	public Iterator iterator(int first, int count)
+	public Iterator<Contact> iterator(int first, int count)
 	{
 		return getContactsDB().find(first, count, "firstName", true).iterator();
 	}
@@ -60,11 +60,11 @@ public class ContactDataProvider implements IDataProvider
 	/**
 	 * wraps retrieved contact pojo with a wicket model
 	 * 
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
+	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang. Object)
 	 */
-	public IModel model(Object object)
+	public IModel<Contact> model(Contact object)
 	{
-		return new DetachableContactModel((Contact)object);
+		return new DetachableContactModel(object);
 	}
 
 	/**

@@ -48,9 +48,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 * Reacts on unbinding from the session by cleaning up the session related application data.
 	 */
 	protected static final class SessionBindingListener
-			implements
-				HttpSessionBindingListener,
-				Serializable
+		implements
+			HttpSessionBindingListener,
+			Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -123,7 +123,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		if (!(application instanceof WebApplication))
 		{
 			throw new IllegalStateException(getClass().getName() +
-					" can only operate in the context of web applications");
+				" can only operate in the context of web applications");
 		}
 		this.application = (WebApplication)application;
 	}
@@ -143,7 +143,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		// register an unbinding listener for cleaning up
 		String applicationKey = application.getApplicationKey();
 		httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-				new SessionBindingListener(applicationKey, httpSession.getId()));
+			new SessionBindingListener(applicationKey, httpSession.getId()));
 
 		// register the session object itself
 		setAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME, newSession);
@@ -157,6 +157,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 * @return
 	 * @deprecated remove after deprecation release
 	 */
+	@Deprecated
 	public final IPageMap createPageMap(String name, Session session)
 	{
 		throw new UnsupportedOperationException("obsolete method");
@@ -207,8 +208,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 			String applicationKey = application.getApplicationKey();
 			try
 			{
-				SessionBindingListener l = (SessionBindingListener)httpSession
-						.getAttribute("Wicket:SessionUnbindingListener-" + applicationKey);
+				SessionBindingListener l = (SessionBindingListener)httpSession.getAttribute("Wicket:SessionUnbindingListener-" +
+					applicationKey);
 				if (l != null)
 				{
 					l.unbound = true;
@@ -245,9 +246,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#newVersionManager(Page)
 	 */
-	public IPageVersionManager newVersionManager(Page page)
+	public <T> IPageVersionManager<T> newVersionManager(Page<T> page)
 	{
-		return new UndoPageVersionManager(page, 20);
+		return new UndoPageVersionManager<T>(page, 20);
 	}
 
 	/**
@@ -339,7 +340,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		if (!(request instanceof WebRequest))
 		{
 			throw new IllegalArgumentException(getClass().getName() +
-					" can only work with WebRequests");
+				" can only work with WebRequests");
 		}
 		return (WebRequest)request;
 	}

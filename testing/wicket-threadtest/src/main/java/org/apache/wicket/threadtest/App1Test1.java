@@ -26,7 +26,6 @@ import org.apache.wicket.threadtest.tester.Tester;
 import org.apache.wicket.util.io.WicketObjectStreamFactory;
 import org.apache.wicket.util.lang.Objects;
 
-
 /**
  * @author eelcohillenius
  */
