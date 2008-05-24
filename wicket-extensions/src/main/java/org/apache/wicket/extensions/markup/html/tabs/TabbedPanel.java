@@ -172,7 +172,7 @@ public class TabbedPanel extends Panel<Integer>
 	 * @param tabIndex
 	 * @return new loop item
 	 */
-	protected LoopItem newTabContainer(int tabIndex)
+	protected LoopItem newTabContainer(final int tabIndex)
 	{
 		return new LoopItem(tabIndex)
 		{
@@ -199,6 +199,12 @@ public class TabbedPanel extends Panel<Integer>
 				}
 				tag.put("class", cssClass.trim());
 			}
+			
+			@Override
+			public boolean isVisible()
+			{
+				return getTabs().get(tabIndex).isVisible();
+			}
 
 		};
 	}
@@ -208,12 +214,20 @@ public class TabbedPanel extends Panel<Integer>
 	@Override
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
 		if (!hasBeenRendered() && getSelectedTab() == -1)
-		{
-			// select the first tab by default
-			setSelectedTab(0);
-		}
+        {
+            List<ITab> tabs = getTabs();
+            for (int i = 0; i < tabs.size(); ++i)
+            {
+                ITab tab = tabs.get(i);
+                if (tab.isVisible())
+                {
+                    setSelectedTab(i);
+                    break;
+                }
+            }
+        }
+        super.onBeforeRender();
 	}
 
 	/**
@@ -320,20 +334,25 @@ public class TabbedPanel extends Panel<Integer>
 
 		ITab tab = tabs.get(index);
 
-		Panel<?> panel = tab.getPanel(TAB_PANEL_ID);
+		final Component<?> component;
+		
+		if (tab.isVisible())		
+			component = tab.getPanel(TAB_PANEL_ID);
+		else
+			component = new WebMarkupContainer<Void>(TAB_PANEL_ID);
 
-		if (panel == null)
+		if (component == null)
 		{
 			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
 				getPath() + "] ITab index [" + index + "]");
 
 		}
 
-		if (!panel.getId().equals(TAB_PANEL_ID))
+		if (!component.getId().equals(TAB_PANEL_ID))
 		{
 			throw new WicketRuntimeException(
 				"ITab.getPanel() returned a panel with invalid id [" +
-					panel.getId() +
+					component.getId() +
 					"]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel [" +
 					getPath() + "] ITab index [" + index + "]");
 		}
@@ -341,11 +360,11 @@ public class TabbedPanel extends Panel<Integer>
 
 		if (get(TAB_PANEL_ID) == null)
 		{
-			add(panel);
+			add(component);
 		}
 		else
 		{
-			replace(panel);
+			replace(component);
 		}
 	}
 

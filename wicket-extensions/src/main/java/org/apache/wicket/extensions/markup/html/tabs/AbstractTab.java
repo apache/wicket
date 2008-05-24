@@ -54,6 +54,11 @@ public abstract class AbstractTab implements ITab
 		return title;
 	}
 
+	public boolean isVisible()
+	{
+		return true;
+	}
+	
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
