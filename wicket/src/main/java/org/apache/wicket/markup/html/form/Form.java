@@ -16,8 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -589,6 +593,34 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			return getRootForm().getDefaultButton();
 		}
+	}
+
+	/**
+	 * Gets all {@link IFormValidator}s added to this form
+	 * 
+	 * @return unmodifiable collection of {@link IFormValidator}s
+	 */
+	public final Collection<IFormValidator> getFormValidators()
+	{
+		final int size = formValidators_size();
+
+		List<IFormValidator> validators = null;
+
+		if (size == 0)
+		{
+			// form has no validators, use empty collection
+			validators = Collections.emptyList();
+		}
+		else
+		{
+			// form has validators, copy all into collection
+			validators = new ArrayList<IFormValidator>(size);
+			for (int i = 0; i < size; i++)
+			{
+				validators.add(formValidators_get(i));
+			}
+		}
+		return Collections.unmodifiableCollection(validators);
 	}
 
 	/**
@@ -1598,7 +1630,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			}
 			else
 			{
-                tag.put("action", Strings.escapeMarkup(url));
+				tag.put("action", Strings.escapeMarkup(url));
 			}
 
 			if (multiPart)
@@ -1698,24 +1730,21 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			String[] pair = params[j].split("=");
 
-			buffer.append("<input type=\"hidden\" name=\"")
-				.append(recode(pair[0]))
-				.append("\" value=\"")
-				.append(pair.length > 1 ? recode(pair[1]) : "")
-				.append("\" />");
+			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0])).append(
+				"\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "").append("\" />");
 		}
 	}
 
-    /**
-     * Take URL-encoded query string value, unencode it and return HTML-escaped version
-     */
-    private String recode(String s)
-    {
-        String un = WicketURLDecoder.QUERY_INSTANCE.decode(s);
-        return Strings.escapeMarkup(un).toString();
-    }
+	/**
+	 * Take URL-encoded query string value, unencode it and return HTML-escaped version
+	 */
+	private String recode(String s)
+	{
+		String un = WicketURLDecoder.QUERY_INSTANCE.decode(s);
+		return Strings.escapeMarkup(un).toString();
+	}
 
-    /**
+	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	@Override
