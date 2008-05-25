@@ -122,7 +122,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 
 			Session session = Session.get();
 
-			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session.getMetaData(Session.PAGEMAP_ACCESS_MDK);
+			Session.PageMapAccessMetaData meta = session.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
 				meta = new Session.PageMapAccessMetaData();
@@ -310,10 +310,10 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	public void onNewBrowserWindow()
 	{
 		// if the browser reports a history of 0 then make a new webpage
-		WebPage< ? > clonedPage = this;
+		WebPage<?> clonedPage = this;
 		try
 		{
-			clonedPage = (WebPage< ? >)Objects.cloneObject(this);
+			clonedPage = (WebPage<?>)Objects.cloneObject(this);
 		}
 		catch (Exception e)
 		{
@@ -397,11 +397,11 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	protected void onAfterRender()
 	{
 		super.onAfterRender();
-		if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
+		if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
 		{
-			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component< ? >>()
+			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component<?>>()
 			{
-				public Object component(Component< ? > component)
+				public Object component(Component<?> component)
 				{
 					if (component instanceof HtmlHeaderContainer)
 					{
@@ -431,12 +431,12 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 					// Make sure all Components interested in contributing to the header
 					// and there attached behaviors are asked.
 					final HtmlHeaderContainer finalHeader = header;
-					visitChildren(new IVisitor<Component< ? >>()
+					visitChildren(new IVisitor<Component<?>>()
 					{
 						/**
 						 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 						 */
-						public Object component(Component< ? > component)
+						public Object component(Component<?> component)
 						{
 							component.renderHead(finalHeader);
 							return CONTINUE_TRAVERSAL;
