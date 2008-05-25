@@ -41,6 +41,8 @@ import org.apache.wicket.util.tester.apps_1.CreateBook;
 import org.apache.wicket.util.tester.apps_1.MyMockApplication;
 import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
+import org.apache.wicket.util.tester.apps_6.LinkPage;
+import org.apache.wicket.util.tester.apps_6.ResultPage;
 
 /**
  * 
@@ -156,6 +158,34 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("linkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("linkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
 	}
 
 	/**
