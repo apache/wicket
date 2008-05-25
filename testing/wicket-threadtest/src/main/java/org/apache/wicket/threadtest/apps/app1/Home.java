@@ -174,9 +174,9 @@ public class Home extends WebPage<Void>
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public IConverter<URL> getConverter(Class<URL> clazz)
+				public <X> IConverter<X> getConverter(Class<X> clazz)
 				{
-					return new IConverter<URL>()
+					return (IConverter<X>)new IConverter<URL>()
 					{
 						private static final long serialVersionUID = 1L;
 
@@ -213,9 +213,10 @@ public class Home extends WebPage<Void>
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public IConverter<UsPhoneNumber> getConverter(Class<UsPhoneNumber> clazz)
+				public <X> IConverter<X> getConverter(Class<X> clazz)
 				{
-					return new MaskConverter<UsPhoneNumber>("(###) ###-####", UsPhoneNumber.class);
+					return (IConverter<X>)new MaskConverter<UsPhoneNumber>("(###) ###-####",
+						UsPhoneNumber.class);
 				}
 			});
 

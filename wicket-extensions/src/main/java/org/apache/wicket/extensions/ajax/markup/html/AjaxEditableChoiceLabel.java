@@ -47,7 +47,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	private static final long serialVersionUID = 1L;
 
 	/** The list of objects. */
-	private IModel< ? extends List< ? extends T>> choices;
+	private IModel<? extends List<? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
 	private IChoiceRenderer<T> renderer;
@@ -84,7 +84,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, List< ? extends T> choices)
+	public AjaxEditableChoiceLabel(String id, List<? extends T> choices)
 	{
 		this(id, null, choices);
 	}
@@ -100,7 +100,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The collection of choices in the dropdown
 	 */
 	public AjaxEditableChoiceLabel(String id, IModel<T> model,
-		IModel< ? extends List< ? extends T>> choices)
+		IModel<? extends List<? extends T>> choices)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -119,7 +119,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(String id, IModel<T> model,
-		IModel< ? extends List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -137,7 +137,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The collection of choices in the dropdown
 	 */
 	@SuppressWarnings("unchecked")
-	public AjaxEditableChoiceLabel(String id, IModel<T> model, List< ? extends T> choices)
+	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices)
 	{
 		this(id, model, Model.valueOf(choices));
 	}
@@ -155,7 +155,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	@SuppressWarnings("unchecked")
-	public AjaxEditableChoiceLabel(String id, IModel<T> model, List< ? extends T> choices,
+	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		this(id, model, Model.valueOf(choices), renderer);
@@ -167,16 +167,16 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
+	protected FormComponent<T> newEditor(MarkupContainer<?> parent, String componentId,
 		IModel<T> model)
 	{
-		IModel<List< ? extends T>> choiceModel = new AbstractReadOnlyModel<List< ? extends T>>()
+		IModel<List<? extends T>> choiceModel = new AbstractReadOnlyModel<List<? extends T>>()
 		{
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List< ? extends T> getObject()
+			public List<? extends T> getObject()
 			{
 				return choices.getObject();
 			}
@@ -222,7 +222,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	@Override
-	protected WebComponent<T> newLabel(MarkupContainer< ? > parent, String componentId,
+	protected WebComponent<T> newLabel(MarkupContainer<?> parent, String componentId,
 		IModel<T> model)
 	{
 		Label<T> label = new Label<T>(componentId, model)
@@ -230,9 +230,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter<T> getConverter(Class<T> type)
+			public <X> IConverter<X> getConverter(Class<X> type)
 			{
-				IConverter<T> c = AjaxEditableChoiceLabel.this.getConverter(type);
+				IConverter<X> c = AjaxEditableChoiceLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 
@@ -243,8 +243,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				if (renderer != null)
 				{
 					Object displayObject = renderer.getDisplayValue(getModelObject());
-					Class< ? > objectClass = (displayObject == null ? null
-						: displayObject.getClass());
+					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
 
 					if (objectClass != null && objectClass != String.class)

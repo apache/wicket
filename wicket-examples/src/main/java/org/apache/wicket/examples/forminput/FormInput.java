@@ -144,39 +144,57 @@ public class FormInput extends WicketExamplePage<Void>
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
+				@SuppressWarnings("unchecked")
 				@Override
-				public IConverter<URL> getConverter(final Class<URL> type)
+				public <X> IConverter<X> getConverter(final Class<X> type)
 				{
-					return new IConverter<URL>()
+					if (URL.class.isAssignableFrom(type))
 					{
-						public URL convertToObject(String value, Locale locale)
+						return (IConverter<X>)new IConverter<URL>()
 						{
-							try
+							public URL convertToObject(String value, Locale locale)
 							{
-								return new URL(value.toString());
+								try
+								{
+									return new URL(value.toString());
+								}
+								catch (MalformedURLException e)
+								{
+									throw new ConversionException("'" + value +
+										"' is not a valid URL");
+								}
 							}
-							catch (MalformedURLException e)
-							{
-								throw new ConversionException("'" + value + "' is not a valid URL");
-							}
-						}
 
-						public String convertToString(URL value, Locale locale)
-						{
-							return value != null ? value.toString() : null;
-						}
-					};
+							public String convertToString(URL value, Locale locale)
+							{
+								return value != null ? value.toString() : null;
+							}
+						};
+					}
+					else
+					{
+						return super.getConverter(type);
+					}
 				}
 			});
 
 			// TextField using a mask converter
 			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
+				@SuppressWarnings("unchecked")
 				@Override
-				public IConverter<UsPhoneNumber> getConverter(final Class<UsPhoneNumber> type)
+				public <X> IConverter<X> getConverter(final Class<X> type)
 				{
-					// US telephone number mask
-					return new MaskConverter<UsPhoneNumber>("(###) ###-####", UsPhoneNumber.class);
+					if (UsPhoneNumber.class.isAssignableFrom(type))
+					{
+						// US telephone number mask
+						return (IConverter<X>)new MaskConverter<UsPhoneNumber>("(###) ###-####",
+							UsPhoneNumber.class);
+					}
+					else
+					{
+						return super.getConverter(type);
+					}
 				}
 			});
 

@@ -30,17 +30,19 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author jcompagner
  * 
- * @param <T>
- *            The converter object type
+ * The converter object type
  */
-public interface IConverterLocator<T> extends IClusterable
+public interface IConverterLocator extends IClusterable
 {
 
 	/**
 	 * Returns the Converter for the class that is given.
 	 * 
+	 * @param <T>
+	 *            converter type
+	 * 
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public IConverter<T> getConverter(Class<T> type);
+	public <T> IConverter<T> getConverter(Class<T> type);
 }

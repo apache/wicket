@@ -128,9 +128,14 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * 
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
-	public IConverter<Boolean> getConverter(Class<Boolean> type)
+	@Override
+	public <X> IConverter<X> getConverter(Class<X> type)
 	{
-		return BooleanConverter.INSTANCE;
+		/*
+		 * FIXME johan: why is this override here? it doesnt make any sense. if i say
+		 * checkbox.getconverter(Integer.class) why is it still giving me a boolean converter???
+		 */
+		return (IConverter<X>)BooleanConverter.INSTANCE;
 	}
 
 	/**
@@ -173,7 +178,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		{
 			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			Form< ? > form = findParent(Form.class);
+			Form<?> form = findParent(Form.class);
 			if (form != null)
 			{
 				RequestContext rc = RequestContext.get();

@@ -214,7 +214,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	public IConverter<T> getConverter(Class<T> type)
+	public <X> IConverter<X> getConverter(Class<X> type)
 	{
 		return null;
 	}
@@ -280,7 +280,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The model
 	 * @return The editor
 	 */
-	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
+	protected FormComponent<T> newEditor(MarkupContainer<?> parent, String componentId,
 		IModel<T> model)
 	{
 		TextField<T> editor = new TextField<T>(componentId, model)
@@ -288,9 +288,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter<T> getConverter(Class<T> type)
+			public <X> IConverter<X> getConverter(Class<X> type)
 			{
-				IConverter<T> c = AjaxEditableLabel.this.getConverter(type);
+				IConverter<X> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 
@@ -325,7 +325,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The model
 	 * @return The editor
 	 */
-	protected WebComponent<T> newLabel(MarkupContainer< ? > parent, String componentId,
+	protected WebComponent<T> newLabel(MarkupContainer<?> parent, String componentId,
 		IModel<T> model)
 	{
 		Label<T> label = new Label<T>(componentId, model)
@@ -333,9 +333,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter<T> getConverter(Class<T> type)
+			public <X> IConverter<X> getConverter(Class<X> type)
 			{
-				IConverter<T> c = AjaxEditableLabel.this.getConverter(type);
+				IConverter<X> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 
@@ -512,7 +512,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		// check that a model was found
 		if (m == null)
 		{
-			Component< ? > parent = getParent();
+			Component<?> parent = getParent();
 			String msg = "No model found for this component, either pass one explicitly or "
 				+ "make sure an inheritable model is available.";
 			if (parent == null)

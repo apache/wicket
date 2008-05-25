@@ -202,7 +202,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            Model object type
  */
-public abstract class Component<T> implements IClusterable, IConverterLocator<T>
+public abstract class Component<T> implements IClusterable, IConverterLocator
 {
 	/**
 	 * Change record of a model.
@@ -1320,7 +1320,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator<T>
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter<T> getConverter(Class<T> type)
+	public <X> IConverter<X> getConverter(Class<X> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
