@@ -67,6 +67,18 @@ public class PagingNavigator extends Panel<Object>
 		this.labelProvider = labelProvider;
 	}
 
+
+	/**
+	 * {@link IPageable} this navigator is linked with
+	 * 
+	 * @return {@link IPageable} instance
+	 */
+	public final IPageable getPageable()
+	{
+		return pageable;
+	}
+
+
 	@Override
 	protected void onBeforeRender()
 	{
