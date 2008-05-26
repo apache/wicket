@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.form.upload;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,7 +59,9 @@ import org.apache.wicket.util.upload.FileItem;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class MultiFileUploadField extends FormComponentPanel<Object> implements IHeaderContributor
+public class MultiFileUploadField extends FormComponentPanel<Collection<FileUpload>>
+	implements
+		IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -129,7 +131,7 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 	 * @param id
 	 * @param model
 	 */
-	public MultiFileUploadField(String id, IModel model)
+	public MultiFileUploadField(String id, IModel<Collection<FileUpload>> model)
 	{
 		this(id, model, UNLIMITED);
 	}
@@ -143,7 +145,7 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 	 *            max number of files a user can upload
 	 * 
 	 */
-	public MultiFileUploadField(String id, IModel model, int max)
+	public MultiFileUploadField(String id, IModel<Collection<FileUpload>> model, int max)
 	{
 		super(id, model);
 
@@ -262,7 +264,7 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
 	 */
 	@Override
-	protected Object convertValue(String[] value) throws ConversionException
+	protected Collection<FileUpload> convertValue(String[] value) throws ConversionException
 	{
 		// convert the array of filenames into a collection of FileItems
 
@@ -292,39 +294,27 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 	@Override
 	public void updateModel()
 	{
-		final Object object = getModelObject();
+		final Collection<FileUpload> collection = getModelObject();
 
 		// figure out if there is an existing model object collection for us to
 		// reuse
-		if (object == null)
+		if (collection == null)
 		{
 			// no existing collection, push the one we created
 			setModelObject(getConvertedInput());
 		}
 		else
 		{
-			if (!(object instanceof Collection))
+			// refresh the existing collection
+			collection.clear();
+			if (getConvertedInput() != null)
 			{
-				// fail early if there is something interesting in the model
-				throw new IllegalStateException("Model object of " + getClass().getName() +
-					" component must be of type `" + Collection.class.getName() + "<" +
-					FileUpload.class.getName() + ">` but is of type `" +
-					object.getClass().getName() + "`");
+				collection.addAll(getConvertedInput());
 			}
-			else
-			{
-				// refresh the existing collection
-				Collection<FileUpload> collection = (Collection<FileUpload>)object;
-				collection.clear();
-				if (getConvertedInput() != null)
-				{
-					collection.addAll((Collection<FileUpload>)getConvertedInput());
-				}
 
-				// push the collection in case the model is listening to
-				// setobject calls
-				setModelObject(collection);
-			}
+			// push the collection in case the model is listening to
+			// setobject calls
+			setModelObject(collection);
 		}
 	}
 
@@ -335,7 +325,7 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 	protected void onDetach()
 	{
 		// cleanup any opened filestreams
-		Collection<FileUpload> uploads = (Collection<FileUpload>)getConvertedInput();
+		Collection<FileUpload> uploads = getConvertedInput();
 		if (uploads != null)
 		{
 			Iterator<FileUpload> it = uploads.iterator();
@@ -350,10 +340,10 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 		inputArrayCache = null;
 
 		// clean up the model because we don't want FileUpload objects in session
-		Object modelObject = getModelObject();
-		if (modelObject != null && (modelObject instanceof Collection))
+		Collection<FileUpload> modelObject = getModelObject();
+		if (modelObject != null)
 		{
-			((Collection<FileUpload>)modelObject).clear();
+			modelObject.clear();
 		}
 
 		super.onDetach();
@@ -381,8 +371,9 @@ public class MultiFileUploadField extends FormComponentPanel<Object> implements 
 			}
 			else
 			{
-				return getString(RESOURCE_LIMITED, Model.valueOf(Collections.singletonMap("max",
-					new Integer(max))));
+				HashMap<String, Object> vars = new HashMap<String, Object>(1);
+				vars.put("max", max);
+				return getString(RESOURCE_LIMITED, Model.of(vars));
 			}
 		}
 
