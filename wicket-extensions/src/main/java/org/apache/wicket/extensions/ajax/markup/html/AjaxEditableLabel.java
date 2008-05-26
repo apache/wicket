@@ -226,7 +226,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setLabel(final IModel<T> labelModel)
+	public final AjaxEditableLabel<T> setLabel(final IModel<String> labelModel)
 	{
 		getEditor().setLabel(labelModel);
 		return this;

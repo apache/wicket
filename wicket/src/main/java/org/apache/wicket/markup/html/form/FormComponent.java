@@ -233,17 +233,17 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		 *            original params map
 		 * @return new params map
 		 */
-		private Map<String, String> addDefaultVars(Map params)
+		private Map<String, Object> addDefaultVars(Map<String, Object> params)
 		{
 			// create and fill the new params map
-			final HashMap<String, String> fullParams;
+			final HashMap<String, Object> fullParams;
 			if (params == null)
 			{
-				fullParams = new HashMap<String, String>(6);
+				fullParams = new HashMap<String, Object>(6);
 			}
 			else
 			{
-				fullParams = new HashMap<String, String>(params.size() + 6);
+				fullParams = new HashMap<String, Object>(params.size() + 6);
 				fullParams.putAll(params);
 			}
 
@@ -380,7 +380,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param visitor
 	 *            The visitor to call
 	 */
-	public static final void visitFormComponentsPostOrder(Component component,
+	public static final void visitFormComponentsPostOrder(Component<?> component,
 		final FormComponent.IVisitor visitor)
 	{
 		if (visitor == null)
@@ -392,12 +392,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	}
 
 
-	private static final Object visitFormComponentsPostOrderHelper(Component component,
+	private static final Object visitFormComponentsPostOrderHelper(Component<?> component,
 		final FormComponent.IVisitor visitor)
 	{
 		if (component instanceof MarkupContainer)
 		{
-			final MarkupContainer container = (MarkupContainer)component;
+			final MarkupContainer<?> container = (MarkupContainer<?>)component;
 			if (container.size() > 0)
 			{
 				boolean visitChildren = true;
@@ -407,10 +407,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 				}
 				if (visitChildren)
 				{
-					final Iterator children = container.iterator();
+					final Iterator<Component<?>> children = container.iterator();
 					while (children.hasNext())
 					{
-						final Component child = (Component)children.next();
+						final Component<?> child = children.next();
 						Object value = visitFormComponentsPostOrderHelper(child, visitor);
 						if (value == Component.IVisitor.STOP_TRAVERSAL)
 						{
@@ -423,7 +423,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 
 		if (component instanceof FormComponent)
 		{
-			final FormComponent fc = (FormComponent)component;
+			final FormComponent<?> fc = (FormComponent<?>)component;
 			return visitor.formComponent(fc);
 		}
 
@@ -462,7 +462,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(final String id, IModel model)
+	public FormComponent(final String id, IModel<T> model)
 	{
 		super(id, model);
 		// the form decides whether form components are versioned or not
@@ -581,7 +581,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 			buffer.append(" and error: ");
 			buffer.append(error.toString());
 			buffer.append(". Tried keys: ");
-			Iterator/* <String> */keys = source.triedKeys.iterator();
+			Iterator<String> keys = source.triedKeys.iterator();
 			while (keys.hasNext())
 			{
 				buffer.append(keys.next());
@@ -624,24 +624,24 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	/**
 	 * @return The parent form for this form component
 	 */
-	public Form getForm()
+	public Form<?> getForm()
 	{
-		class FindFormVisitor implements Component.IVisitor
+		class FindFormVisitor implements Component.IVisitor<Form<?>>
 		{
-			Form form = null;
+			Form<?> form = null;
 
-			public Object component(Component component)
+			public Object component(Form<?> component)
 			{
-				form = (Form)component;
+				form = component;
 				return Component.IVisitor.STOP_TRAVERSAL;
 			}
 		}
 
-		Form form = findParent(Form.class);
+		Form<?> form = findParent(Form.class);
 		if (form == null)
 		{
 			// check whether the form is a child of a surrounding border
-			final Border border = findParent(Border.class);
+			final Border<?> border = findParent(Border.class);
 			if (border != null)
 			{
 				FindFormVisitor formVisitor = new FindFormVisitor();
@@ -710,12 +710,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		// TODO: keep this in sync with AbstractSubmitLink#getInputName
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
-		Component c = this;
+		Component<?> c = this;
 		while (true)
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form && ((Form)c).isRootForm()) || c instanceof Page)
+			if (c == null || (c instanceof Form && ((Form<?>)c).isRootForm()) || c instanceof Page)
 			{
 				break;
 			}
@@ -729,7 +729,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		{
 			inputName.prepend(Component.PATH_SEPARATOR);
 		}
-		Form form = findParent(Form.class);
+		Form<?> form = findParent(Form.class);
 
 		if (form != null)
 		{
@@ -755,6 +755,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	/**
 	 * @return the type to use when updating the model for this form component
 	 */
+	@SuppressWarnings("unchecked")
 	public final Class<T> getType()
 	{
 		return typeName == null ? null : (Class<T>)Classes.resolveClass(typeName);
@@ -766,7 +767,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 */
 	public String getValidatorKeyPrefix()
 	{
-		Form form = findParent(Form.class);
+		Form<?> form = findParent(Form.class);
 		if (form != null)
 		{
 			return getForm().getValidatorKeyPrefix();
@@ -921,7 +922,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 
 			public Object formComponent(IFormVisitorParticipant formComponent)
 			{
-				final FormComponent fc = (FormComponent)formComponent;
+				final FormComponent<?> fc = (FormComponent<?>)formComponent;
 				if (fc.hasErrorMessage())
 				{
 					valid = false;
@@ -972,7 +973,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public FormComponent<T> setLabel(IModel labelModel)
+	public FormComponent<T> setLabel(IModel<String> labelModel)
 	{
 		setLabelInternal(labelModel);
 		return this;
@@ -1054,7 +1055,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final FormComponent<T> setType(Class type)
+	public final FormComponent<T> setType(Class<?> type)
 	{
 		typeName = type == null ? null : type.getName();
 		if (type != null && type.isPrimitive())
@@ -1255,7 +1256,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 			error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
 		}
 
-		Map variables = e.getVariables();
+		Map<String, Object> variables = e.getVariables();
 		if (variables != null)
 		{
 			error.getVariables().putAll(variables);
@@ -1277,6 +1278,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
+	@SuppressWarnings("unchecked")
 	protected T convertValue(String[] value) throws ConversionException
 	{
 		return (T)(value != null && value.length > 0 && value[0] != null ? trim(value[0]) : null);

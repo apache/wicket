@@ -57,9 +57,7 @@ import org.apache.wicket.util.string.Strings;
  * @param <T>
  *            The model object type
  */
-public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
-	implements
-		IOnChangeListener
+public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -84,7 +82,7 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	 *            collection to be used as the model
 	 * 
 	 */
-	public CheckGroup(String id, Collection<? extends T> collection)
+	public CheckGroup(String id, Collection<T> collection)
 	{
 		this(id, new Model((Serializable)collection));
 	}
@@ -159,7 +157,7 @@ public class CheckGroup<T> extends FormComponent<Collection<? extends T>>
 	@Override
 	public void updateModel()
 	{
-		Collection collection = getModelObject();
+		Collection<T> collection = getModelObject();
 		if (collection == null)
 		{
 			collection = getConvertedInput();

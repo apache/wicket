@@ -100,7 +100,8 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<T> group = findParent(CheckGroup.class);
+		CheckGroup<?> group = findParent(CheckGroup.class);
+
 		if (group == null)
 		{
 			throw new WicketRuntimeException("Check component [" + getPath() +
@@ -115,7 +116,7 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
-		Collection<? extends T> collection = group.getModelObject();
+		Collection<?> collection = group.getModelObject();
 
 		// check for npe in group's model object
 		if (collection == null)

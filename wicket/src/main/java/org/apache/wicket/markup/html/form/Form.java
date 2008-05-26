@@ -526,7 +526,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @param args
 	 *            argument replacement map for ${key} variables
 	 */
-	public final void error(String error, Map args)
+	public final void error(String error, Map<String, Object> args)
 	{
 		error(new MapVariableInterpolator(error, args).toString());
 	}
@@ -639,12 +639,12 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
 			root.getHiddenFieldId()).append("').value='").append(url).append(
-			"';document.getElementById('").append(root.getJavascriptId()).append("').submit();");
+			"';document.getElementById('").append(root.getMarkupId()).append("').submit();");
 	}
 
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.root.getJavascriptId()
 	 * 
 	 * @return the maximum size
 	 */
@@ -1144,7 +1144,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @param url
 	 *            The url which describes the component path and the interface to be called.
 	 */
-	private void dispatchEvent(final Page page, final String url)
+	private void dispatchEvent(final Page<?> page, final String url)
 	{
 		RequestCycle rc = RequestCycle.get();
 		IRequestCycleProcessor processor = rc.getProcessor();
@@ -1402,7 +1402,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	protected final String getHiddenFieldId()
 	{
-		return getInputNamePrefix() + getJavascriptId() + "_hf_0";
+		return getInputNamePrefix() + getMarkupId() + "_hf_0";
 	}
 
 	/**
@@ -1660,7 +1660,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 
 	/**
 	 * 
-	 * @return
+	 * @return true if form's method is 'get'
 	 */
 	protected boolean encodeUrlInHiddenFields()
 	{
@@ -1737,6 +1737,10 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 
 	/**
 	 * Take URL-encoded query string value, unencode it and return HTML-escaped version
+	 * 
+	 * @param s
+	 *            value to reencode
+	 * @return reencoded value
 	 */
 	private String recode(String s)
 	{

@@ -67,8 +67,6 @@ public interface IPageLink extends IClusterable
 	 * }
 	 * </pre>
 	 * 
-	 * @param <C>
-	 * 
 	 * @return The class of page linked to, as a form of identity
 	 * @see Link#linksTo(Page)
 	 */

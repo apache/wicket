@@ -429,23 +429,8 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	public ListView<T> setList(List<T> list)
 	{
-		return setModel(new Model((Serializable)list));
-	}
-
-	/**
-	 * Sets the model and removes all current children, so that the next render will be using the
-	 * contents of the model.
-	 * 
-	 * @param model
-	 *            The new model
-	 * @return This for chaining
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
-	 */
-	@Override
-	public ListView<T> setModel(IModel<List<T>> model)
-	{
-		return (ListView<T>)super.setModel(model);
+		setModel(new Model((Serializable)list));
+		return this;
 	}
 
 	/**
@@ -539,6 +524,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected final void onPopulate()
 	{
@@ -553,7 +539,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				for (final Iterator<Component<?>> iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
-					final ListItem<T> child = (ListItem<T>)iterator.next();
+					final ListItem<?> child = (ListItem<?>)iterator.next();
 					if (child != null)
 					{
 						final int index = child.getIndex();
@@ -642,7 +628,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	@Override
 	protected final void renderChild(Component<?> child)
 	{
-		renderItem((ListItem<T>)child);
+		renderItem((ListItem<?>)child);
 	}
 
 
@@ -652,7 +638,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * @param item
 	 *            The item to be rendered
 	 */
-	protected void renderItem(final ListItem<T> item)
+	protected void renderItem(final ListItem<?> item)
 	{
 		item.render(getMarkupStream());
 	}

@@ -233,7 +233,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List< ? extends T>> choices)
+	public CheckBoxMultipleChoice(String id, IModel<List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -252,7 +252,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
-		IModel<List< ? extends T>> choices)
+		IModel<List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -270,7 +270,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List< ? extends T>> choices,
+	public CheckBoxMultipleChoice(String id, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
@@ -293,7 +293,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
-		IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -314,7 +314,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	public final CheckBoxMultipleChoice<T> setPrefix(final String prefix)
 	{
 		// Tell the page that this component's prefix was changed
-		final Page page = findPage();
+		final Page<?> page = findPage();
 		if (page != null)
 		{
 			addStateChange(new PrefixChange(this.prefix));
@@ -340,7 +340,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	public final CheckBoxMultipleChoice<T> setSuffix(final String suffix)
 	{
 		// Tell the page that this component's suffix was changed
-		final Page page = findPage();
+		final Page<?> page = findPage();
 		if (page != null)
 		{
 			addStateChange(new SuffixChange(this.suffix));
@@ -373,7 +373,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List< ? extends T> choices = getChoices();
+		final List<? extends T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(70 * (choices.size() + 1));
@@ -388,7 +388,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			final T choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class objectClass = displayValue == null ? null : displayValue.getClass();
+			Class<?> objectClass = displayValue == null ? null : displayValue.getClass();
 			// Get label for choice
 			String label = "";
 			if (objectClass != null && objectClass != String.class)
@@ -459,7 +459,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	/**
 	 * Overridable method to determine whether the label markup should be escaped.
 	 * 
-	 * @return
+	 * @return true if label markup should be escaped
 	 */
 	protected boolean isEscapeLabelMarkup()
 	{
