@@ -23,9 +23,9 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -234,7 +234,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public RadioChoice(String id, IModel<List< ? extends T>> choices)
+	public RadioChoice(String id, IModel<List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -251,7 +251,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public RadioChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
+	public RadioChoice(String id, IModel<T> model, IModel<List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -269,7 +269,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      IModel,IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public RadioChoice(String id, IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+	public RadioChoice(String id, IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -290,7 +290,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
+	public RadioChoice(String id, IModel<T> model, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
@@ -410,7 +410,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 		final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List< ? extends T> choices = getChoices();
+		final List<? extends T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);
@@ -424,20 +424,23 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			// Get next choice
 			final T choice = choices.get(index);
 
-      T displayValue = (T) getChoiceRenderer().getDisplayValue(choice);
-      Class<T> objectClass = (Class<T>) (displayValue == null ? null : displayValue.getClass());
+			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
+			Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
 
 			// Get label for choice
 			String label = "";
 
 			if (objectClass != null && objectClass != String.class)
 			{
-        final IConverter<T> converter = getConverter(objectClass);
+				final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
 
-        if(!converter.getClass().isAssignableFrom(objectClass))
-          throw new IllegalArgumentException("converter can not convert " + objectClass.getName() + " to string");
+				if (!converter.getClass().isAssignableFrom(objectClass))
+				{
+					throw new IllegalArgumentException("converter can not convert " +
+						objectClass.getName() + " to string");
+				}
 
-        label = converter.convertToString(displayValue, getLocale());
+				label = converter.convertToString(displayValue, getLocale());
 			}
 			else if (displayValue != null)
 			{
@@ -475,7 +478,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-					Form form = (Form)findParent(Form.class);
+					Form<?> form = findParent(Form.class);
 					if (form != null)
 					{
 						RequestContext rc = RequestContext.get();

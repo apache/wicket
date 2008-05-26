@@ -201,6 +201,11 @@ public class ListChoice<T> extends DropDownChoice<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
+	 * @param choices
+	 * @param renderer
+	 * @param maxRows
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */

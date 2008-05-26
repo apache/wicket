@@ -188,7 +188,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 	 * default. If you wish to manage the stream yourself (e.g. you want to use it in another
 	 * thread) then you can override this method to prevent this behavior.
 	 * 
-	 * @return
+	 * @return <code>true</code> if stream should be closed at the end of request
 	 */
 	protected boolean forceCloseStreamsOnDetach()
 	{
