@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.util.tester.apps_6;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -32,6 +37,7 @@ public class LinkPage extends WebPage<Void>
 	 */
 	public LinkPage()
 	{
+		// Link
 		add(new Link<Void>("linkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
@@ -53,5 +59,66 @@ public class LinkPage extends WebPage<Void>
 				getRequestCycle().setResponsePage(new ResultPage("A special label"));
 			}
 		});
+
+		// AjaxLink
+		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePageClass")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				getRequestCycle().setResponsePage(ResultPage.class);
+			}
+		});
+
+		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePage")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				getRequestCycle().setResponsePage(new ResultPage("A special label"));
+			}
+		});
+
+		// AjaxFallbackLink
+		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePageClass")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				getRequestCycle().setResponsePage(ResultPage.class);
+			}
+		});
+
+		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePage")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				getRequestCycle().setResponsePage(new ResultPage("A special label"));
+			}
+		});
+
+		// AjaxSubmitLink
+		final Form<Void> form = new Form<Void>("form");
+		add(form);
+		final AjaxSubmitLink<Void> submit = new AjaxSubmitLink<Void>("submit")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
+			{
+				getRequestCycle().setResponsePage(new ResultPage("A form label"));
+			}
+		};
+		form.add(submit);
 	}
 }
