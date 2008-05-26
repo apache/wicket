@@ -201,7 +201,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param parent
 	 * @param info
 	 * @param component
-	 * @return
+	 * @return <code>component</code> if it is a markup container, null otherwise
 	 */
 	private static MarkupContainer<?> applyComponentInfo(MarkupContainer<?> parent, String info,
 		Component<?> component)
@@ -271,7 +271,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 *            component itself) during reconstruction
 	 * @param parent
 	 * @param info
-	 * @return
+	 * @return length of component info
 	 */
 	private static int parseComponentInfo(MarkupContainer<?> parent, String info,
 		Component<?> component)
