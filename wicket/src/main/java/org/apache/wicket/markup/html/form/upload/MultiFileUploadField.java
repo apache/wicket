@@ -373,7 +373,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			{
 				HashMap<String, Object> vars = new HashMap<String, Object>(1);
 				vars.put("max", max);
-				return getString(RESOURCE_LIMITED, Model.of(vars));
+				return getString(RESOURCE_LIMITED, new Model<HashMap<String, Object>>(vars));
 			}
 		}
 
