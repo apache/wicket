@@ -92,10 +92,22 @@ public abstract class RefreshingView<T> extends RepeatingView<Collection<T>>
 	@Override
 	protected final void onPopulate()
 	{
+		Iterator<IModel<T>> models = getItemModels();
+		Iterator<Item<T>> items = getItemReuseStrategy().getItems(newItemFactory(), models,
+			getItems());
+		removeAll();
+		addItems(items);
+	}
 
-		IItemFactory<T> itemFactory = new IItemFactory<T>()
+	/**
+	 * Create a new IItemFactory based upon the RefreshingView
+	 * 
+	 * @return An Item factory that delegates to the RefreshingView
+	 */
+	protected IItemFactory<T> newItemFactory()
+	{
+		return new IItemFactory<T>()
 		{
-
 			public Item<T> newItem(int index, IModel<T> model)
 			{
 				String id = RefreshingView.this.newChildId();
@@ -103,14 +115,9 @@ public abstract class RefreshingView<T> extends RepeatingView<Collection<T>>
 				RefreshingView.this.populateItem(item);
 				return item;
 			}
-
 		};
-
-		Iterator<IModel<T>> models = getItemModels();
-		Iterator<Item<T>> items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
-		removeAll();
-		addItems(items);
 	}
+
 
 	/**
 	 * Returns an iterator over models for items that will be added to this view
