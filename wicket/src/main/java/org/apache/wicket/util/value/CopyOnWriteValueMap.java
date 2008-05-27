@@ -105,7 +105,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see java.util.Map#equals(Object)
 	 */
 	@Override
-    public boolean equals(Object o)
+	public boolean equals(Object o)
 	{
 		return wrapped.equals(o);
 	}
@@ -274,7 +274,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#put(Object, Object)
 	 */
-	public Object put(Object key, Object value)
+	public Object put(String key, Object value)
 	{
 		checkAndCopy();
 		return wrapped.put(key, value);
@@ -318,134 +318,134 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 * @see IValueMap#toString()
 	 */
 	@Override
-    public String toString()
+	public String toString()
 	{
 		return super.toString();
 	}
 
-    ////
-    //// getAs convenience methods
-    ////
+	// //
+	// // getAs convenience methods
+	// //
 
-    /**
-     * @see IValueMap#getAsBoolean(String)
-     *
-     */
-    public Boolean getAsBoolean(String key)
-    {
-        return wrapped.getAsBoolean(key);
-    }
+	/**
+	 * @see IValueMap#getAsBoolean(String)
+	 * 
+	 */
+	public Boolean getAsBoolean(String key)
+	{
+		return wrapped.getAsBoolean(key);
+	}
 
-    /**
-     * @see IValueMap#getAsBoolean(String, boolean)
-     *
-     */
-    public boolean getAsBoolean(String key, boolean defaultValue)
-    {
-        return wrapped.getAsBoolean(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsBoolean(String, boolean)
+	 * 
+	 */
+	public boolean getAsBoolean(String key, boolean defaultValue)
+	{
+		return wrapped.getAsBoolean(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsInteger(String)
-     */
-    public Integer getAsInteger(String key)
-    {
-        return wrapped.getAsInteger(key);
-    }
+	/**
+	 * @see IValueMap#getAsInteger(String)
+	 */
+	public Integer getAsInteger(String key)
+	{
+		return wrapped.getAsInteger(key);
+	}
 
-    /**
-     * @see IValueMap#getAsInteger(String, int)
-     */
-    public int getAsInteger(String key, int defaultValue)
-    {
-        return wrapped.getAsInteger(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsInteger(String, int)
+	 */
+	public int getAsInteger(String key, int defaultValue)
+	{
+		return wrapped.getAsInteger(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsLong(String)
-     */
-    public Long getAsLong(String key)
-    {
-        return wrapped.getAsLong(key);
-    }
+	/**
+	 * @see IValueMap#getAsLong(String)
+	 */
+	public Long getAsLong(String key)
+	{
+		return wrapped.getAsLong(key);
+	}
 
-    /**
-     * @see IValueMap#getAsLong(String, long)
-     */
-    public long getAsLong(String key, long defaultValue)
-    {
-        return wrapped.getAsLong(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsLong(String, long)
+	 */
+	public long getAsLong(String key, long defaultValue)
+	{
+		return wrapped.getAsLong(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsDouble(String)
-     */
-    public Double getAsDouble(String key)
-    {
-        return wrapped.getAsDouble(key);
-    }
+	/**
+	 * @see IValueMap#getAsDouble(String)
+	 */
+	public Double getAsDouble(String key)
+	{
+		return wrapped.getAsDouble(key);
+	}
 
-    /**
-     * @see IValueMap#getAsDouble(String, double)
-     */
-    public double getAsDouble(String key, double defaultValue)
-    {
-        return wrapped.getAsDouble(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsDouble(String, double)
+	 */
+	public double getAsDouble(String key, double defaultValue)
+	{
+		return wrapped.getAsDouble(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsDuration(String)
-     */
-    public Duration getAsDuration(String key)
-    {
-        return wrapped.getAsDuration(key);
-    }
+	/**
+	 * @see IValueMap#getAsDuration(String)
+	 */
+	public Duration getAsDuration(String key)
+	{
+		return wrapped.getAsDuration(key);
+	}
 
-    /**
-     * @see IValueMap#getAsDuration(String, Duration)
-     */
-    public Duration getAsDuration(String key, Duration defaultValue)
-    {
-        return wrapped.getAsDuration(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsDuration(String, Duration)
+	 */
+	public Duration getAsDuration(String key, Duration defaultValue)
+	{
+		return wrapped.getAsDuration(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsTime(String)
-     */
-    public Time getAsTime(String key)
-    {
-        return wrapped.getAsTime(key);
-    }
+	/**
+	 * @see IValueMap#getAsTime(String)
+	 */
+	public Time getAsTime(String key)
+	{
+		return wrapped.getAsTime(key);
+	}
 
-    /**
-     * @see IValueMap#getAsTime(String, Time)
-     */
-    public Time getAsTime(String key, Time defaultValue)
-    {
-        return wrapped.getAsTime(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsTime(String, Time)
+	 */
+	public Time getAsTime(String key, Time defaultValue)
+	{
+		return wrapped.getAsTime(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsEnum(String, Class<T>)
-     */
-    public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass)
-    {
-        return wrapped.getAsEnum(key, eClass);
-    }
+	/**
+	 * @see IValueMap#getAsEnum(String, Class<T>)
+	 */
+	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass)
+	{
+		return wrapped.getAsEnum(key, eClass);
+	}
 
-    /**
-     * @see IValueMap#getAsEnum
-     */
-    public <T extends Enum<T>> T getAsEnum(String key, T defaultValue)
-    {
-        return wrapped.getAsEnum(key, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsEnum
+	 */
+	public <T extends Enum<T>> T getAsEnum(String key, T defaultValue)
+	{
+		return wrapped.getAsEnum(key, defaultValue);
+	}
 
-    /**
-     * @see IValueMap#getAsEnum(String, Class<T>, T)
-     */
-    public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue)
-    {
-        return wrapped.getAsEnum(key, eClass, defaultValue);
-    }
+	/**
+	 * @see IValueMap#getAsEnum(String, Class<T>, T)
+	 */
+	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue)
+	{
+		return wrapped.getAsEnum(key, eClass, defaultValue);
+	}
 }

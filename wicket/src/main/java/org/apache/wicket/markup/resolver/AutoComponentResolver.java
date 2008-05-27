@@ -65,7 +65,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	 * the children are nested inside <wicket:component>, their respective Java components are not.
 	 * They must be added to the parent container of <wicket:component>.
 	 */
-	private final Map<Component< ? >, MarkupContainer< ? >> nestedComponents = new HashMap<Component< ? >, MarkupContainer< ? >>();
+	private final Map<Component<?>, MarkupContainer<?>> nestedComponents = new HashMap<Component<?>, MarkupContainer<?>>();
 
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
@@ -78,7 +78,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public final boolean resolve(final MarkupContainer< ? > container,
+	public final boolean resolve(final MarkupContainer<?> container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// It must be <wicket:...>
@@ -89,13 +89,13 @@ public final class AutoComponentResolver implements IComponentResolver
 			if (wicketTag.isComponentTag())
 			{
 				// Create and initialize the component
-				final Component< ? > component = createComponent(container, wicketTag);
+				final Component<?> component = createComponent(container, wicketTag);
 				if (component != null)
 				{
 					// 1. push the current component onto the stack
 					if (component instanceof Border)
 					{
-						nestedComponents.put(((Border< ? >)component).getBodyContainer(), container);
+						nestedComponents.put(((Border<?>)component).getBodyContainer(), container);
 					}
 					else
 					{
@@ -122,10 +122,10 @@ public final class AutoComponentResolver implements IComponentResolver
 		if ((tag.getId() != null) && nestedComponents.containsKey(container))
 		{
 			// Make sure you handle nested auto-components properly
-			MarkupContainer< ? > parent = nestedComponents.get(container);
+			MarkupContainer<?> parent = nestedComponents.get(container);
 			while (parent != null)
 			{
-				Component< ? > component = parent.get(tag.getId());
+				Component<?> component = parent.get(tag.getId());
 				if (component != null)
 				{
 					component.render(markupStream);
@@ -156,7 +156,7 @@ public final class AutoComponentResolver implements IComponentResolver
 	 *             in case the component could not be created
 	 */
 	// Wicket is current not using any bean util jar, which is why ...
-	private final Component< ? > createComponent(final MarkupContainer< ? > container,
+	private final Component<?> createComponent(final MarkupContainer<?> container,
 		final WicketTag tag)
 	{
 		// If no component name is given, create a page-unique one yourself.
@@ -175,19 +175,18 @@ public final class AutoComponentResolver implements IComponentResolver
 
 		// construct the component. It must have a constructor with a single
 		// String (componentId) parameter.
-		final Component< ? > component;
+		final Component<?> component;
 		try
 		{
 			// Load the class. In case a Groovy Class Resolver has been provided,
 			// the name might be a Groovy file.
 			// Note: Spring based components are not supported this way. May be we
 			// should provide a ComponentFactory like we provide a PageFactory.
-			final Class< ? > componentClass = container.getSession()
-				.getClassResolver()
-				.resolveClass(classname);
+			final Class<?> componentClass = container.getSession().getClassResolver().resolveClass(
+				classname);
 
-			final Constructor< ? > constructor = componentClass.getConstructor(new Class[] { String.class });
-			component = (Component< ? >)constructor.newInstance(new Object[] { componentId });
+			final Constructor<?> constructor = componentClass.getConstructor(new Class[] { String.class });
+			component = (Component<?>)constructor.newInstance(new Object[] { componentId });
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -226,12 +225,12 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 
 		// Get all remaining attributes and invoke the component's setters
-		Iterator<Map.Entry<String, String>> iter = tag.getAttributes().entrySet().iterator();
+		Iterator<Map.Entry<String, Object>> iter = tag.getAttributes().entrySet().iterator();
 		while (iter.hasNext())
 		{
-			final Map.Entry<String, String> entry = iter.next();
+			final Map.Entry<String, Object> entry = iter.next();
 			final String key = entry.getKey();
-			final String value = entry.getValue();
+			final String value = entry.getValue().toString();
 
 			// Ignore attributes 'name' and 'class'
 			if ("name".equalsIgnoreCase(key) || ("class".equalsIgnoreCase(key)))
@@ -283,7 +282,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 
 		// The method must have a single parameter
-		final Class< ? >[] parameterClasses = method.getParameterTypes();
+		final Class<?>[] parameterClasses = method.getParameterTypes();
 		if (parameterClasses.length != 1)
 		{
 			throw new MarkupException("Unable to initialize Component. Method with name " +
@@ -292,7 +291,7 @@ public final class AutoComponentResolver implements IComponentResolver
 
 		// Convert the parameter if necessary, depending on the setter's
 		// attribute
-		final Class< ? > paramClass = parameterClasses[0];
+		final Class<?> paramClass = parameterClasses[0];
 		try
 		{
 			final IConverter<?> converter = Application.get().getConverterLocator().getConverter(

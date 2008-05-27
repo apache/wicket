@@ -855,11 +855,11 @@ public abstract class RequestCycle
 
 			if (params != null)
 			{
-				Iterator<Map.Entry> it = params.entrySet().iterator();
+				Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
 				while (it.hasNext())
 				{
-					final Map.Entry entry = it.next();
-					final String key = entry.getKey().toString();
+					final Map.Entry<String, Object> entry = it.next();
+					final String key = entry.getKey();
 					final String value = entry.getValue().toString();
 					// Do not encode values here. It is the encoder's job
 					// to do the endoding. This leads to double encoding
@@ -893,11 +893,11 @@ public abstract class RequestCycle
 			if (params != null)
 			{
 				AppendingStringBuffer buff = new AppendingStringBuffer(url);
-				Iterator<Map.Entry> it = params.entrySet().iterator();
+				Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
 				while (it.hasNext())
 				{
-					final Map.Entry entry = it.next();
-					final String key = entry.getKey().toString();
+					final Map.Entry<String, Object> entry = it.next();
+					final String key = entry.getKey();
 					final String value = entry.getValue().toString();
 					buff.append("&");
 					buff.append(encodeQueryStringItem(key));

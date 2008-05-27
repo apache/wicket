@@ -17,6 +17,8 @@
 package org.apache.wicket.request.target.component;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
@@ -93,6 +95,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
+	 * 
+	 * @param <C>
+	 *            type of page
 	 * 
 	 * @param pageMapName
 	 *            optional page map name
@@ -256,6 +261,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * Constructs a new instance of a page given its class name
 	 * 
+	 * @param <C>
+	 *            type of page
+	 * 
 	 * @param pageClass
 	 *            class name of the page to be created
 	 * @param requestCycle
@@ -277,7 +285,25 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		else
 		{
 			// Add bookmarkable params in for WICKET-400.
-			requestCycle.getRequest().getParameterMap().putAll(pageParameters);
+			final Map<String, String[]> requestMap = requestCycle.getRequest().getParameterMap();
+			for (Entry<String, Object> entry : pageParameters.entrySet())
+			{
+				final Object value = entry.getValue();
+				if (value.getClass().isArray())
+				{
+					final Object[] objects = (Object[])value;
+					final String[] strings = new String[objects.length];
+					for (int i = 0; i < objects.length; i++)
+					{
+						strings[i] = objects[i].toString();
+					}
+					requestMap.put(entry.getKey(), strings);
+				}
+				else
+				{
+					requestMap.put(entry.getKey(), new String[] { value.toString() });
+				}
+			}
 			return pageFactory.newPage(pageClass, pageParameters);
 		}
 	}

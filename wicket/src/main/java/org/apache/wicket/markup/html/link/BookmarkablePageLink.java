@@ -44,7 +44,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	protected MiniMap parameters;
+	protected MiniMap<String, Object> parameters;
 
 	/**
 	 * Constructor.
@@ -78,9 +78,9 @@ public class BookmarkablePageLink extends Link<CharSequence>
 		PageParameters result = new PageParameters();
 		if (parameters != null)
 		{
-			for (Iterator i = parameters.entrySet().iterator(); i.hasNext();)
+			for (Iterator<Entry<String, Object>> i = parameters.entrySet().iterator(); i.hasNext();)
 			{
-				Entry entry = (Entry)i.next();
+				Entry<String, Object> entry = i.next();
 				result.put(entry.getKey(), entry.getValue());
 			}
 		}

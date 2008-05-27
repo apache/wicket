@@ -121,8 +121,8 @@ public class MultiUploadPage extends WicketExamplePage<Void>
 			setMultiPart(true);
 
 			// Add one multi-file upload field
-			add(new MultiFileUploadField("fileInput", new PropertyModel<List<FileUpload>>(this,
-				"uploads"), 5));
+			add(new MultiFileUploadField("fileInput", new PropertyModel<Collection<FileUpload>>(
+				this, "uploads"), 5));
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));

@@ -32,7 +32,7 @@ import org.apache.wicket.util.time.Time;
  * @author Doug Donohoe
  * @since 1.2.6
  */
-public interface IValueMap extends Map
+public interface IValueMap extends Map<String, Object>
 {
 	/**
 	 * @see java.util.Map#clear()
@@ -70,7 +70,7 @@ public interface IValueMap extends Map
 	 * @throws StringValueConversionException
 	 */
 	double getDouble(final String key, final double defaultValue)
-			throws StringValueConversionException;
+		throws StringValueConversionException;
 
 	/**
 	 * Retrieves a <code>Duration</code> by key.
@@ -207,7 +207,7 @@ public interface IValueMap extends Map
 	/**
 	 * @see java.util.Map#put(Object, Object)
 	 */
-	Object put(final Object key, final Object value);
+	Object put(final String key, final Object value);
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
@@ -230,217 +230,217 @@ public interface IValueMap extends Map
 	 */
 	String getKey(final String key);
 
-    ////
-    //// getAs convenience methods
-    ////
+	// //
+	// // getAs convenience methods
+	// //
 
-    /**
-     * Retrieves a <code>Boolean</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid boolean or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Boolean getAsBoolean(String key);
+	/**
+	 * Retrieves a <code>Boolean</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid boolean or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Boolean getAsBoolean(String key);
 
-    /**
-     * Retrieves a <code>boolean</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid boolean or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    boolean getAsBoolean(String key, boolean defaultValue);
+	/**
+	 * Retrieves a <code>boolean</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid boolean or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	boolean getAsBoolean(String key, boolean defaultValue);
 
-    /**
-     * Retrieves an <code>Integer</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid integer or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Integer getAsInteger(String key);
+	/**
+	 * Retrieves an <code>Integer</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid integer or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Integer getAsInteger(String key);
 
-    /**
-     * Retrieves an <code>integer</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid integer or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    int getAsInteger(String key, int defaultValue);
+	/**
+	 * Retrieves an <code>integer</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid integer or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	int getAsInteger(String key, int defaultValue);
 
-    /**
-     * Retrieves a <code>Long</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid long or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Long getAsLong(String key);
+	/**
+	 * Retrieves a <code>Long</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid long or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Long getAsLong(String key);
 
-    /**
-     * Retrieves a <code>long</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid long or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    long getAsLong(String key, long defaultValue);
+	/**
+	 * Retrieves a <code>long</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid long or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	long getAsLong(String key, long defaultValue);
 
-    /**
-     * Retrieves a <code>Double</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid double or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Double getAsDouble(String key);
+	/**
+	 * Retrieves a <code>Double</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid double or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Double getAsDouble(String key);
 
-    /**
-     * Retrieves a <code>double</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid double or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    double getAsDouble(String key, double defaultValue);
+	/**
+	 * Retrieves a <code>double</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid double or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	double getAsDouble(String key, double defaultValue);
 
-    /**
-     * Retrieves a <code>Duration</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid Duration or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Duration getAsDuration(String key);
+	/**
+	 * Retrieves a <code>Duration</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid Duration or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Duration getAsDuration(String key);
 
-    /**
-     * Retrieves a <code>Duration</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid Duration or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Duration getAsDuration(String key, Duration defaultValue);
+	/**
+	 * Retrieves a <code>Duration</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid Duration or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Duration getAsDuration(String key, Duration defaultValue);
 
-    /**
-     * Retrieves a <code>Time</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @return  the value or null if value is not a valid Time or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Time getAsTime(String key);
+	/**
+	 * Retrieves a <code>Time</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @return the value or null if value is not a valid Time or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Time getAsTime(String key);
 
-    /**
-     * Retrieves a <code>Time</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default to return
-     *
-     * @return  the value or defaultValue if value is not a valid Time or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    Time getAsTime(String key, Time defaultValue);
+	/**
+	 * Retrieves a <code>Time</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default to return
+	 * 
+	 * @return the value or defaultValue if value is not a valid Time or no value is in this
+	 *         <code>IValueMap</code>
+	 * 
+	 */
+	Time getAsTime(String key, Time defaultValue);
 
-    /**
-     * Retrieves an <code>Enum</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param eClass
-     *            the enumeration class
-     *
-     * @return  the value or null if value is not a valid value of the Enumeration or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass);
+	/**
+	 * Retrieves an <code>Enum</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param eClass
+	 *            the enumeration class
+	 * 
+	 * @return the value or null if value is not a valid value of the Enumeration or no value is in
+	 *         this <code>IValueMap</code>
+	 * 
+	 */
+	<T extends Enum<T>> T getAsEnum(String key, Class<T> eClass);
 
-    /**
-     * Retrieves an <code>Enum</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param defaultValue
-     *            the default value from the Enumeration (cannot be null)
-     *
-     * @return  the value or defaultValue if value is not a valid value of the Enumeration or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    <T extends Enum<T>> T getAsEnum(String key, T defaultValue);
+	/**
+	 * Retrieves an <code>Enum</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param defaultValue
+	 *            the default value from the Enumeration (cannot be null)
+	 * 
+	 * @return the value or defaultValue if value is not a valid value of the Enumeration or no
+	 *         value is in this <code>IValueMap</code>
+	 * 
+	 */
+	<T extends Enum<T>> T getAsEnum(String key, T defaultValue);
 
-    /**
-     * Retrieves an <code>Enum</code> value by key.
-     *
-     * @param key
-     *            the key
-     *
-     * @param eClass
-     *            the enumeration class
-     *
-     * @param defaultValue
-     *            the default value from the Enumeration (may be null)
-     *
-     * @return  the value or defaultValue if value is not a valid value of the Enumeration or
-     *          no value is in this <code>IValueMap</code>
-     *
-     */
-    <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue);
+	/**
+	 * Retrieves an <code>Enum</code> value by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * 
+	 * @param eClass
+	 *            the enumeration class
+	 * 
+	 * @param defaultValue
+	 *            the default value from the Enumeration (may be null)
+	 * 
+	 * @return the value or defaultValue if value is not a valid value of the Enumeration or no
+	 *         value is in this <code>IValueMap</code>
+	 * 
+	 */
+	<T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue);
 }

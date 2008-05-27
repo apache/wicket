@@ -92,6 +92,7 @@ public final class PageParameters extends ValueMap
 	 * @deprecated Please use {@link RequestUtils#decodeParameters(String, ValueMap)} to decode a
 	 *             request URL, or {@link ValueMap#ValueMap(String, String)} for other usecases.
 	 */
+	@Deprecated
 	public PageParameters(final String keyValuePairs, final String delimiter)
 	{
 		super();
@@ -135,7 +136,8 @@ public final class PageParameters extends ValueMap
 		}
 	}
 
-	public Object put(Object key, Object value)
+	@Override
+	public Object put(String key, Object value)
 	{
 		return super.put(key, value);
 /*
