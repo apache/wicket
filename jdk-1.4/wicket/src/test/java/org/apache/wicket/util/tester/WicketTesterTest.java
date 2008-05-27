@@ -41,6 +41,8 @@ import org.apache.wicket.util.tester.apps_1.CreateBook;
 import org.apache.wicket.util.tester.apps_1.MyMockApplication;
 import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
+import org.apache.wicket.util.tester.apps_6.LinkPage;
+import org.apache.wicket.util.tester.apps_6.ResultPage;
 
 /**
  * 
@@ -154,6 +156,104 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("linkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("linkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("ajaxLinkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("ajaxLinkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxFallbackLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("ajaxFallbackLinkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxFallbackLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("ajaxFallbackLinkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxSubmitLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the form submit
+		tester.clickLink("form:submit");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A form label");
 	}
 
 	/**
