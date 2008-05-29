@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.tree;
 import java.io.Serializable;
 
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -77,18 +76,21 @@ public class LinkTree extends LabelTree
 	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
 	 *      org.apache.wicket.model.IModel)
 	 */
+	@Override
 	protected Component newNodeComponent(String id, IModel model)
 	{
 		return new LinkIconPanel(id, model, LinkTree.this)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onNodeLinkClicked(TreeNode node, BaseTree tree, AjaxRequestTarget target)
+			@Override
+			protected void onNodeLinkClicked(Object node, BaseTree tree, AjaxRequestTarget target)
 			{
 				super.onNodeLinkClicked(node, tree, target);
 				LinkTree.this.onNodeLinkClicked(node, tree, target);
 			}
 
+			@Override
 			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
 			{
 				return new Label(componentId, getNodeTextModel(model));
@@ -103,7 +105,7 @@ public class LinkTree extends LabelTree
 	 * @param tree
 	 * @param target
 	 */
-	protected void onNodeLinkClicked(TreeNode node, BaseTree tree, AjaxRequestTarget target)
+	protected void onNodeLinkClicked(Object node, BaseTree tree, AjaxRequestTarget target)
 	{
 
 	}
