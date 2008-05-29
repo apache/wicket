@@ -18,6 +18,7 @@ package org.apache.wicket.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +72,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @deprecated see {@link Model#ofMap(Map)}
 	 * @return A Model object wrapping the Map
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static Model valueOf(final Map map)
 	{
@@ -83,10 +85,29 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @deprecated see {@link Model#of(List)}
 	 * @return A Model object wrapping the List
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static Model valueOf(final List list)
 	{
 		return new Model(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
+	}
+
+	/**
+	 * Factory method for models that contain lists. This factory method will automatically rebuild
+	 * a nonserializable <code>list</code> into a serializable one.
+	 * 
+	 * @param <V>
+	 *            value type in list
+	 * @param <T>
+	 *            model type
+	 * @param list
+	 *            The List, which may or may not be Serializable
+	 * @return A Model object wrapping the List
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> IModel<List<T>> of(final List<T> list)
+	{
+		return new Model((Serializable)(list instanceof Serializable ? list : new ArrayList(list)));
 	}
 
 	/**
@@ -104,28 +125,11 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @return A Model object wrapping the Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V, T extends Map<K, V> & Serializable> Model<T> of(final Map<K, V> map)
+	public static <K, V> IModel<Map<K, V>> of(final Map<K, V> map)
 	{
-		return new Model<T>((T)(map instanceof Serializable ? map : new HashMap<K, V>(map)));
+		return new Model((Serializable)(map instanceof Serializable ? map : new HashMap<K, V>(map)));
 	}
 
-	/**
-	 * Factory method for models that contain lists. This factory method will automatically rebuild
-	 * a nonserializable <code>list</code> into a serializable one.
-	 * 
-	 * @param <V>
-	 *            value type in list
-	 * @param <T>
-	 *            model type
-	 * @param list
-	 *            The List, which may or may not be Serializable
-	 * @return A Model object wrapping the List
-	 */
-	@SuppressWarnings("unchecked")
-	public static <V, T extends List<V> & Serializable> Model<T> of(final List<V> list)
-	{
-		return new Model<T>((T)(list instanceof Serializable ? list : new ArrayList<V>(list)));
-	}
 
 	/**
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
@@ -140,9 +144,27 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @return A Model object wrapping the Set
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V, T extends Set<V> & Serializable> Model<T> of(final Set<V> set)
+	public static <T> IModel<Set<T>> of(final Set<T> set)
 	{
-		return new Model<T>((T)(set instanceof Serializable ? set : new HashSet<V>(set)));
+		return new Model((Serializable)(set instanceof Serializable ? set : new HashSet<T>(set)));
+	}
+
+	/**
+	 * Factory method for models that contain collections. This factory method will automatically
+	 * rebuild a nonserializable <code>collection</code> into a serializable {@link ArrayList}.
+	 * 
+	 * @param <V>
+	 *            value type in set
+	 * @param <T>
+	 *            model type
+	 * @param set
+	 *            The Set, which may or may not be Serializable
+	 * @return A Model object wrapping the Set
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> IModel<Collection<T>> of(final Collection<T> set)
+	{
+		return new Model((Serializable)(set instanceof Serializable ? set : new ArrayList<T>(set)));
 	}
 
 

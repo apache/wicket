@@ -161,7 +161,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	public ListView(final String id, final List<T> list)
 	{
-		this(id, new Model((Serializable)list));
+		this(id, Model.of(list));
 	}
 
 	/**
@@ -429,7 +429,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	public ListView<T> setList(List<T> list)
 	{
-		setModel(new Model((Serializable)list));
+		setModel(Model.of(list));
 		return this;
 	}
 

@@ -64,7 +64,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 
 			String txt = Application.get().getResourceSettings().getLocalizer().getString(
-				"ServerAndClientTimeFilter.statustext", null, Model.valueOf(map),
+				"ServerAndClientTimeFilter.statustext", null, Model.of(map),
 				defaultValue.toString());
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
 			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);

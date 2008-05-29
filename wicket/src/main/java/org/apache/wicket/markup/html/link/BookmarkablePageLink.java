@@ -49,6 +49,9 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	/**
 	 * Constructor.
 	 * 
+	 * @param <C>
+	 *            type of page
+	 * 
 	 * @param id
 	 *            The name of this component
 	 * @param pageClass
@@ -59,11 +62,12 @@ public class BookmarkablePageLink extends Link<CharSequence>
 		this(id, pageClass, null);
 	}
 
-	private MiniMap pageParametersToMiniMap(PageParameters parameters)
+	private MiniMap<String, Object> pageParametersToMiniMap(PageParameters parameters)
 	{
 		if (parameters != null)
 		{
-			MiniMap map = new MiniMap(parameters, parameters.keySet().size());
+			MiniMap<String, Object> map = new MiniMap<String, Object>(parameters,
+				parameters.keySet().size());
 			return map;
 		}
 		else
@@ -73,6 +77,9 @@ public class BookmarkablePageLink extends Link<CharSequence>
 
 	}
 
+	/**
+	 * @return page parameters
+	 */
 	public PageParameters getPageParameters()
 	{
 		PageParameters result = new PageParameters();
