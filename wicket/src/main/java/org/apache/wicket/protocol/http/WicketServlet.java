@@ -118,6 +118,7 @@ public class WicketServlet extends HttpServlet
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
+	@Override
 	public final void doGet(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
@@ -139,6 +140,7 @@ public class WicketServlet extends HttpServlet
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
+	@Override
 	public final void doPost(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
@@ -188,6 +190,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * Servlet initialization
 	 */
+	@Override
 	public void init() throws ServletException
 	{
 		wicketFilter = newWicketFilter();
@@ -204,7 +207,8 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getInitParameterNames()
 			 */
-			public Enumeration getInitParameterNames()
+			@SuppressWarnings("unchecked")
+			public Enumeration<String> getInitParameterNames()
 			{
 				return WicketServlet.this.getInitParameterNames();
 			}
@@ -242,6 +246,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * Servlet cleanup.
 	 */
+	@Override
 	public void destroy()
 	{
 		wicketFilter.destroy();
@@ -251,6 +256,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
 		return wicketFilter.getLastModified(servletRequest);

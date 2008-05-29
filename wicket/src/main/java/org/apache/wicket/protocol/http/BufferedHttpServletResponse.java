@@ -201,6 +201,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addHeaderObject(String name, Object object)
 	{
 		Object previousObject = headers.get(name);
@@ -210,7 +211,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (previousObject instanceof List)
 		{
-			((List<Object>)previousObject).add(object);
+			((List)previousObject).add(object);
 		}
 		else
 		{
@@ -523,7 +524,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 				Object value = entry.getValue();
 				if (value instanceof List)
 				{
-					List<Object> lst = (List<Object>)value;
+					List<?> lst = (List<?>)value;
 					for (int i = 0; i < lst.size(); i++)
 					{
 						addHeader(name, lst.get(i), servletResponse);

@@ -91,6 +91,7 @@ public abstract class WebRequest extends Request
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
+	@Override
 	public abstract Locale getLocale();
 
 	/**
@@ -100,6 +101,7 @@ public abstract class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter value
 	 */
+	@Override
 	public abstract String getParameter(final String key);
 
 	/**
@@ -107,7 +109,8 @@ public abstract class WebRequest extends Request
 	 * 
 	 * @return Map of parameters
 	 */
-	public abstract Map getParameterMap();
+	@Override
+	public abstract Map<String, String[]> getParameterMap();
 
 	/**
 	 * Gets the request parameters with the given key.
@@ -116,6 +119,7 @@ public abstract class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter values
 	 */
+	@Override
 	public abstract String[] getParameters(final String key);
 
 	/**

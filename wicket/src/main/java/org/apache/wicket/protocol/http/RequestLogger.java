@@ -340,7 +340,7 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = getCurrentRequest();
 		if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof IPageMap)
@@ -367,7 +367,7 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = getCurrentRequest();
 		if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof IPageMap)
@@ -399,7 +399,7 @@ public class RequestLogger implements IRequestLogger
 		}
 		else if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof IPageMap)

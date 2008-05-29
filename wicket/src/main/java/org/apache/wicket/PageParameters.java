@@ -16,7 +16,9 @@
  */
 package org.apache.wicket;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.string.IStringIterator;
@@ -165,5 +167,37 @@ public final class PageParameters extends ValueMap
 		{
 			cycle.setPageParameters(this);
 		}
+	}
+
+	/**
+	 * Converts page parameters to servlet request parameters
+	 * 
+	 * @return request parameters map
+	 */
+	public Map<String, String[]> toRequestParameters()
+	{
+		Map<String, String[]> params = new HashMap<String, String[]>(size());
+		for (Entry<String, Object> entry : entrySet())
+		{
+			if (entry.getValue() == null)
+			{
+				params.put(entry.getKey(), null);
+			}
+			else if (entry.getValue().getClass().isArray())
+			{
+				final Object[] arr = (Object[])entry.getValue();
+				final String[] str = new String[arr.length];
+				for (int i = 0; i < arr.length; i++)
+				{
+					str[i] = arr[i].toString();
+				}
+				params.put(entry.getKey(), str);
+			}
+			else
+			{
+				params.put(entry.getKey(), new String[] { entry.getValue().toString() });
+			}
+		}
+		return params;
 	}
 }

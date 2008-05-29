@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -49,6 +48,7 @@ import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -129,7 +129,7 @@ public abstract class WebApplication extends Application
 	 * Map of buffered responses that are in progress per session. Buffered responses are
 	 * temporarily stored
 	 */
-	private final Map bufferedResponses = new HashMap();
+	private final Map<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = Generics.newHashMap();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -312,18 +312,25 @@ public abstract class WebApplication extends Application
 	/**
 	 * Mounts a bookmarkable page class to the given path.
 	 * 
+	 * @param <T>
+	 *            type of page
+	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final Class bookmarkablePageClass)
+	public final <T extends Page<?>> void mountBookmarkablePage(final String path,
+		final Class<T> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass, null));
 	}
 
 	/**
 	 * Mounts a bookmarkable page class to the given pagemap and path.
+	 * 
+	 * @param <T>
+	 *            type of page
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
@@ -332,8 +339,8 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final String pageMapName,
-		final Class bookmarkablePageClass)
+	public final <T extends Page<?>> void mountBookmarkablePage(final String path,
+		final String pageMapName, final Class<T> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 			pageMapName));
@@ -650,7 +657,7 @@ public abstract class WebApplication extends Application
 	 *            page on which ajax response is made
 	 * @return non-null ajax request target instance
 	 */
-	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
+	public AjaxRequestTarget newAjaxRequestTarget(final Page<?> page)
 	{
 		return new AjaxRequestTarget(page);
 	}
@@ -679,10 +686,10 @@ public abstract class WebApplication extends Application
 	final void addBufferedResponse(String sessionId, String bufferId,
 		BufferedHttpServletResponse renderedResponse)
 	{
-		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
 		if (responsesPerSession == null)
 		{
-			responsesPerSession = new MostRecentlyUsedMap(4);
+			responsesPerSession = new MostRecentlyUsedMap<String, BufferedHttpServletResponse>(4);
 			bufferedResponses.put(sessionId, responsesPerSession);
 		}
 		responsesPerSession.put(bufferId, renderedResponse);
@@ -741,10 +748,10 @@ public abstract class WebApplication extends Application
 	 */
 	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
 	{
-		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
 		if (responsesPerSession != null)
 		{
-			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession.remove(bufferId);
+			BufferedHttpServletResponse buffered = responsesPerSession.remove(bufferId);
 			if (responsesPerSession.size() == 0)
 			{
 				bufferedResponses.remove(sessionId);

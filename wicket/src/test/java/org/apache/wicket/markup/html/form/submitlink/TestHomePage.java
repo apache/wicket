@@ -40,7 +40,7 @@ public class TestHomePage extends WicketTestCase
 		HomePage home = (HomePage)tester.getLastRenderedPage();
 		tester.setParameterForNextRequest("form:text", "Hello");
 		// Pretend we clicked on "link"
-		tester.getParametersForNextRequest().put("link", "");
+		tester.getParametersForNextRequest().put("link", new String[] { "" });
 		tester.submitForm("form");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());

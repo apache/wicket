@@ -126,7 +126,7 @@ public class WebRequestCycle extends RequestCycle
 	 *            The page to redirect to
 	 */
 	@Override
-	public final void redirectTo(final Page page)
+	public final void redirectTo(final Page<?> page)
 	{
 		String redirectUrl = null;
 

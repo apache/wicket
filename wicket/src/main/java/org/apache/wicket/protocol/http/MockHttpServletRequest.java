@@ -163,7 +163,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final List cookies = new ArrayList();
+	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
 	private final ValueMap headers = new ValueMap();
 
@@ -177,7 +177,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String url;
 
-	private Map/* <String, UploadedFile> */uploadedFiles;
+	private Map<String, UploadedFile> uploadedFiles;
 
 	private boolean useMultiPartContentType;
 
@@ -245,7 +245,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (uploadedFiles == null)
 		{
-			uploadedFiles = new HashMap/* <String, UploadedFile> */();
+			uploadedFiles = new HashMap<String, UploadedFile>();
 		}
 
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
@@ -263,10 +263,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addHeader(String name, String value)
 	{
-		List list = (List)headers.get(name);
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList(1);
+			list = new ArrayList<String>(1);
 			headers.put(name, list);
 		}
 		list.add(value);
@@ -289,7 +290,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The names
 	 */
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
 	}
@@ -382,7 +383,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 		Cookie[] result = new Cookie[cookies.size()];
-		return (Cookie[])cookies.toArray(result);
+		return cookies.toArray(result);
 	}
 
 	/**
@@ -423,14 +424,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getHeader(final String name)
 	{
-		final List l = (List)headers.get(name);
+		@SuppressWarnings("unchecked")
+		final List<String> l = (List<String>)headers.get(name);
 		if (l == null || l.size() < 1)
 		{
 			return null;
 		}
 		else
 		{
-			return (String)l.get(0);
+			return l.get(0);
 		}
 	}
 
@@ -439,7 +441,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The header names
 	 */
-	public Enumeration getHeaderNames()
+	public Enumeration<String> getHeaderNames()
 	{
 		return Collections.enumeration(headers.keySet());
 	}
@@ -451,12 +453,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The name
 	 * @return The header values
 	 */
-	public Enumeration getHeaders(final String name)
+	public Enumeration<String> getHeaders(final String name)
 	{
-		List list = (List)headers.get(name);
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList();
+			list = new ArrayList<String>();
 		}
 		return Collections.enumeration(list);
 	}
@@ -562,9 +565,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The locales
 	 */
-	public Enumeration getLocales()
+	public Enumeration<Locale> getLocales()
 	{
-		List list = new ArrayList(1);
+		List<Locale> list = new ArrayList<Locale>(1);
 		list.add(getLocale());
 		return Collections.enumeration(list);
 	}
@@ -596,7 +599,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameters
 	 */
-	public Map getParameterMap()
+	public Map<String, Object> getParameterMap()
 	{
 		return parameters;
 	}
@@ -606,7 +609,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameter names
 	 */
-	public Enumeration getParameterNames()
+	public Enumeration<String> getParameterNames()
 	{
 		return Collections.enumeration(parameters.keySet());
 	}
@@ -682,21 +685,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		else
 		{
 			final StringBuffer buf = new StringBuffer();
-            for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-            {
-                final String name = (String)iterator.next();
-                final String value = parameters.getString(name);
-                if (name != null)
-                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
-                buf.append('=');
-                if (value != null)
-                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
-                if (iterator.hasNext())
-                {
-                    buf.append('&');
-                }
-            }
-            return buf.toString();
+			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String name = iterator.next();
+				final String value = parameters.getString(name);
+				if (name != null)
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
+				buf.append('=');
+				if (value != null)
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
+				if (iterator.hasNext())
+				{
+					buf.append('&');
+				}
+			}
+			return buf.toString();
 		}
 	}
 
@@ -1093,7 +1096,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public void setParameters(final Map parameters)
+	public void setParameters(final Map<String, String[]> parameters)
 	{
 		this.parameters.putAll(parameters);
 	}
@@ -1153,7 +1156,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param params
 	 *            Additional parameters
 	 */
-	public void setRequestToBookmarkablePage(final Page page, final Map params)
+	public void setRequestToBookmarkablePage(final Page<?> page, final Map<String, Object> params)
 	{
 		parameters.putAll(params);
 		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
@@ -1166,20 +1169,20 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param component
 	 *            The component
 	 */
-	public void setRequestToComponent(final Component component)
+	public void setRequestToComponent(final Component<?> component)
 	{
 		final IPageMap pageMap = component.getPage().getPageMap();
 		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{
-			final Class< ? extends Page> clazz = ((BookmarkablePageLink)component).getPageClass();
+			final Class<? extends Page<?>> clazz = ((BookmarkablePageLink)component).getPageClass();
 			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
 				':' + clazz.getName());
 		}
 		else
 		{
 			int version = component.getPage().getCurrentVersionNumber();
-			Class clazz = null;
+			Class<?> clazz = null;
 			if (component instanceof IRedirectListener)
 			{
 				clazz = IRedirectListener.class;
@@ -1229,24 +1232,20 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param values
 	 *            The values for each of the form components
 	 */
-	public void setRequestToFormComponent(final Form form, final Map values)
+	public void setRequestToFormComponent(final Form<?> form, final Map<String, Object> values)
 	{
 		setRequestToComponent(form);
 
-		final Map valuesApplied = new HashMap();
-		form.visitChildren(new Component.IVisitor()
+		final Map<String, Object> valuesApplied = new HashMap<String, Object>();
+		form.visitChildren(FormComponent.class, new Component.IVisitor<FormComponent<?>>()
 		{
-			public Object component(final Component component)
+			public Object component(final FormComponent<?> component)
 			{
-				if (component instanceof FormComponent)
+				String value = (String)values.get(component);
+				if (value != null)
 				{
-					String value = (String)values.get(component);
-					if (value != null)
-					{
-						parameters.put(((FormComponent)component).getInputName(),
-							values.get(component));
-						valuesApplied.put(component.getId(), component);
-					}
+					parameters.put(component.getInputName(), values.get(component));
+					valuesApplied.put(component.getId(), component);
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -1254,10 +1253,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (values.size() != valuesApplied.size())
 		{
-			Map diff = new HashMap();
+			Map<String, Object> diff = new HashMap<String, Object>();
 			diff.putAll(values);
 
-			Iterator iter = valuesApplied.keySet().iterator();
+			Iterator<String> iter = valuesApplied.keySet().iterator();
 			while (iter.hasNext())
 			{
 				diff.remove(iter.next());
@@ -1336,9 +1335,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 			// Add parameters
-			for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
-				final String name = (String)iterator.next();
+				final String name = iterator.next();
 				newAttachment(out);
 				out.write("; name=\"".getBytes());
 				out.write(name.getBytes());
@@ -1352,11 +1351,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 			// Add files
 			if (uploadedFiles != null)
 			{
-				for (Iterator iterator = uploadedFiles.keySet().iterator(); iterator.hasNext();)
+				for (Iterator<String> iterator = uploadedFiles.keySet().iterator(); iterator.hasNext();)
 				{
-					String fieldName = (String)iterator.next();
+					String fieldName = iterator.next();
 
-					UploadedFile uf = (UploadedFile)uploadedFiles.get(fieldName);
+					UploadedFile uf = uploadedFiles.get(fieldName);
 
 					newAttachment(out);
 					out.write("; name=\"".getBytes());
@@ -1390,21 +1389,33 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 	}
 
+	/**
+	 * @return local address
+	 */
 	public String getLocalAddr()
 	{
 		return "127.0.0.1";
 	}
 
+	/**
+	 * @return local host name
+	 */
 	public String getLocalName()
 	{
 		return "127.0.0.1";
 	}
 
+	/**
+	 * @return local port
+	 */
 	public int getLocalPort()
 	{
 		return 80;
 	}
 
+	/**
+	 * @return remote port
+	 */
 	public int getRemotePort()
 	{
 		return 80;

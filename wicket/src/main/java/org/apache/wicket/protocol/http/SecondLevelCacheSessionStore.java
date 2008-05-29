@@ -75,6 +75,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * touched (saved) page version with given id.
 		 * </ul>
 		 * 
+		 * @param <T>
+		 *            type of page
+		 * 
 		 * @param sessionId
 		 * @param pagemap
 		 * @param id
@@ -82,7 +85,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param ajaxVersionNumber
 		 * @return The page
 		 */
-		Page<?> getPage(String sessionId, String pagemap, int id, int versionNumber,
+		<T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
 			int ajaxVersionNumber);
 
 		/**
@@ -180,7 +183,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * 
 		 * @param page
-		 * @return
+		 * @return page
 		 */
 		public Page<?> convertToPage(Object page);
 	};
@@ -586,8 +589,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				// current page version.
 				if (ajaxNumber >= numberOfVersions)
 				{
-					return (Page<T>)store.getPage(sessionId, page.getPageMapName(),
-						page.getNumericId(), versionNumber, ajaxNumber - numberOfVersions);
+					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
+						versionNumber, ajaxNumber - numberOfVersions);
 				}
 				else
 				{
@@ -603,8 +606,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
-					return (Page<T>)store.getPage(sessionId, page.getPageMapName(),
-						page.getNumericId(), versionNumber, ajaxNumber);
+					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
+						versionNumber, ajaxNumber);
 				}
 			}
 
@@ -634,7 +637,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 	/**
 	 * @param pageMapName
-	 * @return
+	 * @return used pages map
 	 */
 	public static IntHashMap<Page<?>> getUsedPages(String pageMapName)
 	{

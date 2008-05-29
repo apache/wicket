@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,18 +49,24 @@ public final class RequestUtils
 		for (int t = 0; t < paramTuples.length; t++)
 		{
 			final String[] bits = paramTuples[t].split("=");
-            if (bits.length == 2)
-            {
-                params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
-                           WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
-            }
-            else
-            {
-                params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
-            }
-        }
+			if (bits.length == 2)
+			{
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
+					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
+			}
+			else
+			{
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
+			}
+		}
 	}
 
+	/**
+	 * decores url parameters form <code>queryString</code> into <code>parameters</code> map
+	 * 
+	 * @param queryString
+	 * @param parameters
+	 */
 	public static void decodeUrlParameters(String queryString, Map<String, String[]> parameters)
 	{
 		Map<String, List<String>> temp = new HashMap<String, List<String>>();
@@ -73,49 +76,48 @@ public final class RequestUtils
 			final String[] bits = paramTuples[t].split("=");
 			final String key;
 			final String value;
-            key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
-            if (bits.length == 2)
-            {
-                value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
-            }
-            else
-            {
-                value = "";
-            }
-            List<String> l = temp.get(key);
-            if (l == null)
-            {
-                l = new ArrayList<String>();
-                temp.put(key, l);
-            }
-            l.add(value);
-        }
-	
+			key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
+			if (bits.length == 2)
+			{
+				value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
+			}
+			else
+			{
+				value = "";
+			}
+			List<String> l = temp.get(key);
+			if (l == null)
+			{
+				l = new ArrayList<String>();
+				temp.put(key, l);
+			}
+			l.add(value);
+		}
+
 		for (Map.Entry<String, List<String>> entry : temp.entrySet())
 		{
 			String s[] = new String[entry.getValue().size()];
 			entry.getValue().toArray(s);
 			parameters.put(entry.getKey(), s);
-		}	
+		}
 	}
 
 	/**
 	 * Remove occurrences of ".." from the path
 	 * 
 	 * @param path
-	 * @return
+	 * @return path string with double dots removed
 	 */
 	static String removeDoubleDots(String path)
 	{
-		List newcomponents = new ArrayList(Arrays.asList(path.split("/")));
+		List<String> newcomponents = new ArrayList<String>(Arrays.asList(path.split("/")));
 
 		for (int i = 0; i < newcomponents.size(); i++)
 		{
 			if (i < newcomponents.size() - 1)
 			{
 				// Verify for a ".." component at next iteration
-				if (((String)newcomponents.get(i)).length() > 0 &&
-					newcomponents.get(i + 1).equals(".."))
+				if ((newcomponents.get(i)).length() > 0 && newcomponents.get(i + 1).equals(".."))
 				{
 					newcomponents.remove(i);
 					newcomponents.remove(i);
@@ -125,7 +127,7 @@ public final class RequestUtils
 				}
 			}
 		}
-		String newpath = Strings.join("/", (String[])newcomponents.toArray(new String[0]));
+		String newpath = Strings.join("/", newcomponents.toArray(new String[0]));
 		if (path.endsWith("/"))
 			return newpath + "/";
 		return newpath;
@@ -138,20 +140,26 @@ public final class RequestUtils
 	{
 	}
 
-    /**
+	/**
+	 * @param path
+	 * @return decoded path
 	 * @deprecated Use {@link WicketURLDecoder} instead.
 	 */
+	@Deprecated
 	public static String decode(String path)
 	{
-        return WicketURLDecoder.QUERY_INSTANCE.decode(path);
+		return WicketURLDecoder.QUERY_INSTANCE.decode(path);
 	}
 
 	/**
+	 * @param value
+	 * @return encoded value
 	 * @deprecated Use {@link WicketURLEncoder} instead.
 	 */
+	@Deprecated
 	public static String encode(String value)
 	{
-        return WicketURLEncoder.QUERY_INSTANCE.encode(value);
+		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**

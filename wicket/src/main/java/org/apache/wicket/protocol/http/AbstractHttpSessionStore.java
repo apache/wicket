@@ -154,7 +154,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 * 
 	 * @param name
 	 * @param session
-	 * @return
+	 * @return created pagemap
 	 * @deprecated remove after deprecation release
 	 */
 	@Deprecated

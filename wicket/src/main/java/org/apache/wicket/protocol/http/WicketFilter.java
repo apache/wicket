@@ -634,7 +634,7 @@ public class WicketFilter implements Filter
 		{
 			try
 			{
-				Class portletClass = Class.forName("javax.portlet.PortletContext");
+				Class<?> portletClass = Class.forName("javax.portlet.PortletContext");
 				return true;
 			}
 			catch (ClassNotFoundException e)
@@ -670,7 +670,7 @@ public class WicketFilter implements Filter
 		// <url-pattern>/*</url-pattern> <...> <filter-mapping>
 		try
 		{
-			ArrayList urlPatterns = new ArrayList();
+			ArrayList<String> urlPatterns = new ArrayList<String>();
 			XmlPullParser parser = new XmlPullParser();
 			parser.parse(is);
 
@@ -732,7 +732,7 @@ public class WicketFilter implements Filter
 					" - you have no <" + mapping + "> element with a url-pattern that uses " +
 					prefix + ": " + filterName);
 			}
-			String urlPattern = (String)urlPatterns.get(0);
+			String urlPattern = urlPatterns.get(0);
 
 			// Check for leading '/' and trailing '*'.
 			if (!urlPattern.startsWith("/") || !urlPattern.endsWith("*"))
@@ -834,7 +834,7 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Try to find the specified factory class
-				final Class factoryClass = Thread.currentThread()
+				final Class<?> factoryClass = Thread.currentThread()
 					.getContextClassLoader()
 					.loadClass(appFactoryClassName);
 

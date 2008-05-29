@@ -108,7 +108,7 @@ public class MockWebApplication
 	private WebRequest wicketRequest;
 
 	/** Parameters to be set on the next request. */
-	private Map<String, Object> parametersForNextRequest = new HashMap<String, Object>();
+	private Map<String, String[]> parametersForNextRequest = new HashMap<String, String[]>();
 
 	/** Response. */
 	private WebResponse wicketResponse;
@@ -656,7 +656,7 @@ public class MockWebApplication
 	 * 
 	 * @return the parameters to be set on the next request
 	 */
-	public Map<String, Object> getParametersForNextRequest()
+	public Map<String, String[]> getParametersForNextRequest()
 	{
 		return parametersForNextRequest;
 	}
@@ -667,7 +667,7 @@ public class MockWebApplication
 	 * @param parametersForNextRequest
 	 *            the parameters to be set on the next request
 	 */
-	public void setParametersForNextRequest(Map<String, Object> parametersForNextRequest)
+	public void setParametersForNextRequest(Map<String, String[]> parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}

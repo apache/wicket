@@ -63,7 +63,7 @@ public class TestFilePageStore implements IPageStore
 	public TestFilePageStore()
 	{
 		this((File)((WebApplication)Application.get()).getServletContext().getAttribute(
-				"javax.servlet.context.tempdir"));
+			"javax.servlet.context.tempdir"));
 	}
 
 	/**
@@ -87,14 +87,14 @@ public class TestFilePageStore implements IPageStore
 		private final String pageMap;
 		private final String pageClassName;
 
-		SessionPageKey(String sessionId, Page page)
+		SessionPageKey(String sessionId, Page<?> page)
 		{
-			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page
-					.getAjaxVersionNumber(), page.getPageMapName(), page.getClass());
+			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(),
+				page.getAjaxVersionNumber(), page.getPageMapName(), page.getClass());
 		}
 
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber,
-				String pagemap, Class pageClass)
+		<T extends Page<?>> SessionPageKey(String sessionId, int id, int versionNumber,
+			int ajaxVersionNumber, String pagemap, Class<T> pageClass)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
@@ -107,6 +107,7 @@ public class TestFilePageStore implements IPageStore
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return sessionId.hashCode() + id + versionNumber;
@@ -115,16 +116,17 @@ public class TestFilePageStore implements IPageStore
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof SessionPageKey)
 			{
 				SessionPageKey key = (SessionPageKey)obj;
 				return id == key.id &&
-						versionNumber == key.versionNumber &&
-						ajaxVersionNumber == key.ajaxVersionNumber &&
-						((pageMap != null && pageMap.equals(key.pageMap)) || (pageMap == null && key.pageMap == null)) &&
-						sessionId.equals(key.sessionId);
+					versionNumber == key.versionNumber &&
+					ajaxVersionNumber == key.ajaxVersionNumber &&
+					((pageMap != null && pageMap.equals(key.pageMap)) || (pageMap == null && key.pageMap == null)) &&
+					sessionId.equals(key.sessionId);
 			}
 			return false;
 		}
@@ -132,18 +134,20 @@ public class TestFilePageStore implements IPageStore
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "SessionPageKey[" + sessionId + "," + id + "," + versionNumber + "," +
-					ajaxVersionNumber + ", " + pageMap + "]";
+				ajaxVersionNumber + ", " + pageMap + "]";
 		}
 	}
 
-	public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
-			int ajaxVersionNumber)
+
+	public <T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
+		int ajaxVersionNumber)
 	{
 		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
-				ajaxVersionNumber, pagemap, null);
+			ajaxVersionNumber, pagemap, null);
 		File sessionDir = new File(getWorkDir(), sessionId);
 		File pageFile = getPageFile(currentKey, sessionDir);
 		if (pageFile.exists())
@@ -167,18 +171,19 @@ public class TestFilePageStore implements IPageStore
 					bb.get(pageData);
 				}
 				long t2 = System.currentTimeMillis();
-				Page page = (Page)Objects.byteArrayToObject(pageData);
+				Page<?> page = (Page<?>)Objects.byteArrayToObject(pageData);
 				page = page.getVersion(versionNumber);
 				if (page != null && log.isDebugEnabled())
 				{
 					long t3 = System.currentTimeMillis();
 					log.debug("restoring page " + page.getClass() + "[" + page.getNumericId() +
-							"," + page.getCurrentVersionNumber() + "] size: " + pageData.length +
-							" for session " + sessionId + " took " + (t2 - t1) +
-							" miliseconds to read in and " + (t3 - t2) +
-							" miliseconds to deserialize");
+						"," + page.getCurrentVersionNumber() + "] size: " + pageData.length +
+						" for session " + sessionId + " took " + (t2 - t1) +
+						" miliseconds to read in and " + (t3 - t2) + " miliseconds to deserialize");
 				}
-				return page;
+				@SuppressWarnings("unchecked")
+				final Page<T> ret = (Page<T>)page;
+				return ret;
 			}
 			catch (Exception e)
 			{
@@ -188,7 +193,7 @@ public class TestFilePageStore implements IPageStore
 		return null;
 	}
 
-	public void pageAccessed(String sessionId, Page page)
+	public void pageAccessed(String sessionId, Page<?> page)
 	{
 
 	}
@@ -197,7 +202,7 @@ public class TestFilePageStore implements IPageStore
 	{
 	}
 
-	public void storePage(String sessionId, Page page)
+	public void storePage(String sessionId, Page<?> page)
 	{
 		SessionPageKey key = new SessionPageKey(sessionId, page);
 		byte[] serialized = Objects.objectToByteArray(page);
@@ -212,7 +217,7 @@ public class TestFilePageStore implements IPageStore
 	private File getPageFile(SessionPageKey key, File sessionDir)
 	{
 		return new File(sessionDir, appName + "-pm-" + key.pageMap + "-p-" + key.id + "-v-" +
-				key.versionNumber + "-a-" + key.ajaxVersionNumber);
+			key.versionNumber + "-a-" + key.ajaxVersionNumber);
 	}
 
 	private File getWorkDir()
@@ -239,7 +244,7 @@ public class TestFilePageStore implements IPageStore
 		catch (Exception e)
 		{
 			log.error("Error saving page " + key.pageClassName + " [" + key.id + "," +
-					key.versionNumber + "] for the sessionid " + key.sessionId);
+				key.versionNumber + "] for the sessionid " + key.sessionId);
 		}
 		finally
 		{
@@ -259,8 +264,8 @@ public class TestFilePageStore implements IPageStore
 		if (log.isDebugEnabled())
 		{
 			log.debug("storing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber +
-					"] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1) +
-					" miliseconds to save");
+				"] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1) +
+				" miliseconds to save");
 		}
 		totalSavingTime += (t3 - t1);
 		saved++;

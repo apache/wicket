@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.pagestore.AbstractPageStore.SerializedPage;
 
 /**
  * Cache that stores serialized pages. This is important to make sure that a single page is not
@@ -60,7 +61,7 @@ class SerializedPagesCache
 			{
 				for (Iterator i = cache.iterator(); i.hasNext();)
 				{
-					SoftReference ref = (SoftReference) i.next();					
+					SoftReference ref = (SoftReference)i.next();
 					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
 					if (entry != null && entry.page.get() == page)
 					{
@@ -112,9 +113,9 @@ class SerializedPagesCache
 				{
 					SoftReference ref = (SoftReference)i.next();
 					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
-					if (entry != null && entry.sessionId.equals(sessionId) && entry.pageId == pageId &&
-						entry.pageMapName.equals(pageMapName) && entry.versionNumber == version &&
-						entry.ajaxVersionNumber == ajaxVersion)
+					if (entry != null && entry.sessionId.equals(sessionId) &&
+						entry.pageId == pageId && entry.pageMapName.equals(pageMapName) &&
+						entry.versionNumber == version && entry.ajaxVersionNumber == ajaxVersion)
 					{
 						return entry;
 					}
@@ -168,7 +169,7 @@ class SerializedPagesCache
 		final transient WeakReference /* <Page> */page;
 
 		// list of serialized pages
-		final List pages;
+		final List<SerializedPage> pages;
 
 		final String sessionId;
 
@@ -203,6 +204,7 @@ class SerializedPagesCache
 
 		static Object NO_PAGE = new Object();
 
+		@Override
 		public String toString()
 		{
 			return getClass().getName() + " [ pageId:" + pageId + ", pageMapName: " + pageMapName +

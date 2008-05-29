@@ -157,7 +157,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		 * 
 		 * @param pageMapName
 		 * @param create
-		 * @return
+		 * @return page map entry
 		 */
 		public PageMapEntry getPageMapEntry(String pageMapName, boolean create)
 		{
@@ -277,7 +277,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		 * 
 		 * @param window
 		 * @param pageMapFileName
-		 * @return
+		 * @return serialized page data
 		 */
 		public byte[] loadPage(PageWindow window, String pageMapFileName)
 		{
@@ -355,7 +355,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		 * @param pageMapName
 		 * @param pageId
 		 * @param versionNumber
-		 * @return
+		 * @return true if page exists
 		 */
 		public synchronized boolean exists(String pageMapName, int pageId, int versionNumber)
 		{
@@ -377,7 +377,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * 
 	 * @param sessionId
 	 * @param create
-	 * @return
+	 * @return folder used to store session data
 	 */
 	private File getSessionFolder(String sessionId, boolean create)
 	{
@@ -444,7 +444,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Return maximum pagemap file size (in bytes).
 	 * 
-	 * @return
+	 * @return max sie of page map
 	 */
 	protected int getMaxSizePerPageMap()
 	{
@@ -457,7 +457,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * Returns maximum size per session (in bytes). After the session exceeds this size, appropriate
 	 * number of last recently used pagemap files will be removed.
 	 * 
-	 * @return
+	 * @return max size of session
 	 */
 	protected int getMaxSizePerSession()
 	{
@@ -471,7 +471,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the "root" file store folder.
 	 * 
-	 * @return
+	 * @return file store folder
 	 */
 	protected File getFileStoreFolder()
 	{
@@ -653,7 +653,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * 
 	 * @param sessionId
 	 * @param createIfDoesNotExist
-	 * @return
+	 * @return session entry
 	 */
 	protected SessionEntry getSessionEntry(String sessionId, boolean createIfDoesNotExist)
 	{
@@ -678,7 +678,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
 	 *      java.lang.String, int, int, int)
 	 */
-	public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
+
+	public <T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
 		int ajaxVersionNumber)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, false);
@@ -704,7 +705,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 			if (data != null)
 			{
-				return deserializePage(data, versionNumber);
+				@SuppressWarnings("unchecked")
+				final Page<T> ret = deserializePage(data, versionNumber);
+				return ret;
 			}
 		}
 
@@ -715,7 +718,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#pageAccessed(java.lang.String,
 	 *      org.apache.wicket.Page)
 	 */
-	public void pageAccessed(String sessionId, Page page)
+	public void pageAccessed(String sessionId, Page<?> page)
 	{
 	}
 
@@ -773,15 +776,15 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param sessionId
 	 * @param pages
 	 */
-	protected void storeSerializedPages(String sessionId, List /* <SerializedPage> */pages)
+	protected void storeSerializedPages(String sessionId, List<SerializedPage> pages)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, true);
 
 		if (isSynchronous())
 		{
-			for (Iterator i = pages.iterator(); i.hasNext();)
+			for (Iterator<SerializedPage> i = pages.iterator(); i.hasNext();)
 			{
-				SerializedPage serializedPage = (SerializedPage)i.next();
+				SerializedPage serializedPage = i.next();
 				entry.savePage(serializedPage);
 			}
 		}
@@ -797,7 +800,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param sessionId
 	 * @param pages
 	 */
-	protected void onPagesSerialized(String sessionId, List /* <SerializedPage */pages)
+	protected void onPagesSerialized(String sessionId, List<SerializedPage> pages)
 	{
 
 	}
@@ -806,9 +809,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#storePage(java.lang.String,
 	 *      org.apache.wicket.Page)
 	 */
-	public void storePage(String sessionId, Page page)
+	public void storePage(String sessionId, Page<?> page)
 	{
-		List pages = serializePage(page);
+		List<SerializedPage> pages = serializePage(page);
 
 		serializedPagesCache.storePage(sessionId, page, pages);
 
@@ -854,7 +857,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * new list is created.
 	 * 
 	 * @param sessionId
-	 * @return
+	 * @return pages to save
 	 */
 	protected List<SerializedPage> getPagesToSaveList(String sessionId)
 	{
@@ -908,9 +911,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param sessionId
 	 * @param pages
 	 */
-	private void schedulePagesSave(String sessionId, List/* <SerializedPage> */pages)
+	private void schedulePagesSave(String sessionId, List<SerializedPage> pages)
 	{
-		List list = getPagesToSaveList(sessionId);
+		List<SerializedPage> list = getPagesToSaveList(sessionId);
 		synchronized (list)
 		{
 			list.addAll(pages);
@@ -949,11 +952,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				}
 
 				// iterate through lists of pages to be saved
-				for (Iterator i = pagesToSaveActive.entrySet().iterator(); i.hasNext();)
+				for (Iterator<Entry<String, List<SerializedPage>>> i = pagesToSaveActive.entrySet()
+					.iterator(); i.hasNext();)
 				{
-					Map.Entry entry = (Map.Entry)i.next();
-					String sessionId = (String)entry.getKey();
-					List<SerializedPage> pages = (List<SerializedPage>)entry.getValue();
+					Entry<String, List<SerializedPage>> entry = i.next();
+					String sessionId = entry.getKey();
+					List<SerializedPage> pages = entry.getValue();
 
 					synchronized (pages)
 					{
@@ -1020,7 +1024,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * Returns the amount time in milliseconds for the saving thread to sleep between checking
 	 * whether there are pending serialized pages to be saved.
 	 * 
-	 * @return
+	 * @return sleep time
 	 */
 	protected int getSavingThreadSleepTime()
 	{
@@ -1031,7 +1035,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * Returns whether the {@link DiskPageStore} should work in synchronous or asynchronous mode.
 	 * Asynchronous mode uses a worker thread to save pages, which results in smoother performance.
 	 * 
-	 * @return
+	 * @return <code>true</code> store is synchronous
 	 */
 	protected boolean isSynchronous()
 	{
@@ -1052,7 +1056,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * @return
+	 * @return size
 	 */
 	protected int getLastRecentlySerializedPagesCacheSize()
 	{
@@ -1068,14 +1072,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * The data can be stripped because it's already stored on disk
 	 * 
 	 * @param page
-	 * @return
+	 * @return SerializedPageWithSession data
 	 */
 	private SerializedPageWithSession stripSerializedPage(SerializedPageWithSession page)
 	{
 		List<SerializedPage> pages = new ArrayList<SerializedPage>(page.pages.size());
-		for (Iterator i = page.pages.iterator(); i.hasNext();)
+		for (Iterator<SerializedPage> i = page.pages.iterator(); i.hasNext();)
 		{
-			SerializedPage sp = (SerializedPage)i.next();
+			SerializedPage sp = i.next();
 			pages.add(new SerializedPage(sp.getPageId(), sp.getPageMapName(),
 				sp.getVersionNumber(), sp.getAjaxVersionNumber(), null));
 		}
@@ -1119,14 +1123,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}.
 	 * 
 	 * @param page
-	 * @return
+	 * @return SerializedPageWithSession isntance
 	 */
 	private SerializedPageWithSession restoreStrippedSerializedPage(SerializedPageWithSession page)
 	{
 		List<SerializedPage> pages = new ArrayList<SerializedPage>(page.pages.size());
-		for (Iterator i = page.pages.iterator(); i.hasNext();)
+		for (Iterator<SerializedPage> i = page.pages.iterator(); i.hasNext();)
 		{
-			SerializedPage sp = (SerializedPage)i.next();
+			SerializedPage sp = i.next();
 			byte data[] = getPageData(page.sessionId, sp.getPageId(), sp.getPageMapName(),
 				sp.getVersionNumber(), sp.getAjaxVersionNumber());
 
@@ -1147,11 +1151,11 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		SerializedPageWithSession result = null;
 		if (page instanceof Page)
 		{
-			result = serializedPagesCache.getPage((Page)page);
+			result = serializedPagesCache.getPage((Page<?>)page);
 			if (result == null)
 			{
-				List serialized = serializePage((Page)page);
-				result = serializedPagesCache.storePage(sessionId, (Page)page, serialized);
+				List<SerializedPage> serialized = serializePage((Page<?>)page);
+				result = serializedPagesCache.storePage(sessionId, (Page<?>)page, serialized);
 			}
 		}
 		else if (page instanceof SerializedPageWithSession)
@@ -1212,11 +1216,11 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 	}
 
-	public Page convertToPage(Object page)
+	public Page<?> convertToPage(Object page)
 	{
 		if (page instanceof Page)
 		{
-			return (Page)page;
+			return (Page<?>)page;
 		}
 		else if (page instanceof SerializedPageWithSession)
 		{

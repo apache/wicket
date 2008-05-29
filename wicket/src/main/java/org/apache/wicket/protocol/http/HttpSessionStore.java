@@ -74,18 +74,19 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#getAttributeNames(Request)
 	 */
-	public List getAttributeNames(Request request)
+	public List<String> getAttributeNames(Request request)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			final Enumeration names = httpSession.getAttributeNames();
+			@SuppressWarnings("unchecked")
+			final Enumeration<String> names = httpSession.getAttributeNames();
 			final String prefix = getSessionAttributePrefix(webRequest);
 			while (names.hasMoreElements())
 			{
-				final String name = (String)names.nextElement();
+				final String name = names.nextElement();
 				if (name.startsWith(prefix))
 				{
 					list.add(name.substring(prefix.length()));

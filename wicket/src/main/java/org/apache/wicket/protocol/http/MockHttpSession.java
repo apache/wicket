@@ -45,7 +45,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	private final String id = (new UID()).toString().replace(':', '_').replace('-', '_');
 
 	private long lastAccessedTime = 0;
-	
+
 	private boolean temporary = true;
 
 	/**
@@ -75,7 +75,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The attribute names
 	 */
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
 
@@ -137,6 +137,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return Always null
 	 * @deprecated
 	 */
+	@Deprecated
 	public javax.servlet.http.HttpSessionContext getSessionContext()
 	{
 		return null;
@@ -150,6 +151,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return The value or null
 	 * @deprecated use getAttribute(String) instead
 	 */
+	@Deprecated
 	public Object getValue(final String name)
 	{
 		return getAttribute(name);
@@ -161,10 +163,11 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return The names of the attributes
 	 * @deprecated use getAttributeNames() instead
 	 */
+	@Deprecated
 	public String[] getValueNames()
 	{
 		String[] result = new String[attributes.size()];
-		return (String[])attributes.keySet().toArray(result);
+		return attributes.keySet().toArray(result);
 	}
 
 	/**
@@ -194,6 +197,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 *            The value
 	 * @deprecated Use setAttribute(String, Object) instead
 	 */
+	@Deprecated
 	public void putValue(final String name, final Object o)
 	{
 		setAttribute(name, o);
@@ -217,6 +221,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 *            The name of the value
 	 * @deprecated Use removeAttribute(String) instead
 	 */
+	@Deprecated
 	public void removeValue(String name)
 	{
 		removeAttribute(name);
@@ -252,7 +257,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	{
 		lastAccessedTime = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * Indicates the state of the session. Temporary or persisted.
 	 * 
@@ -264,9 +269,11 @@ public class MockHttpSession implements HttpSession, Serializable
 	}
 
 	/**
-	 * Changes the state of this session. Temporary or persisted.
-	 * Uppon creation all sessions are temporary.
-	 * @param temporary trur, for a temporary session, false for a persisted session
+	 * Changes the state of this session. Temporary or persisted. Uppon creation all sessions are
+	 * temporary.
+	 * 
+	 * @param temporary
+	 *            trur, for a temporary session, false for a persisted session
 	 */
 	public final void setTemporary(boolean temporary)
 	{

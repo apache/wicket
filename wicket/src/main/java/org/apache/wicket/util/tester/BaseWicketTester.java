@@ -755,7 +755,7 @@ public class BaseWicketTester extends MockWebApplication
 			SubmitLink<?> submitLink = (SubmitLink<?>)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
-			getParametersForNextRequest().put(pageRelativePath, "x");
+			getParametersForNextRequest().put(pageRelativePath, new String[] { "x" });
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
 		// if the link is a normal link (or ResourceLink)
@@ -779,7 +779,7 @@ public class BaseWicketTester extends MockWebApplication
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
 						bookmarkablePageLink, (Object[])null);
-					setParametersForNextRequest(parameters);
+					setParametersForNextRequest(parameters.toRequestParameters());
 				}
 				catch (Exception e)
 				{
@@ -836,11 +836,12 @@ public class BaseWicketTester extends MockWebApplication
 
 		if (c instanceof FormComponent)
 		{
-			getParametersForNextRequest().put(((FormComponent<?>)c).getInputName(), value);
+			getParametersForNextRequest().put(((FormComponent<?>)c).getInputName(),
+				new String[] { value.toString() });
 		}
 		else
 		{
-			getParametersForNextRequest().put(c.getPath(), value);
+			getParametersForNextRequest().put(c.getPath(), new String[] { value.toString() });
 		}
 
 	}

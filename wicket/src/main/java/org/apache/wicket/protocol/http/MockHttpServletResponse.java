@@ -58,7 +58,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	private int code = HttpServletResponse.SC_OK;
 
-	private final List cookies = new ArrayList();
+	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
 	private String errorMessage = null;
 
@@ -124,12 +124,13 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * @param value
 	 *            The value for the header
 	 */
+	@SuppressWarnings("unchecked")
 	public void addHeader(final String name, final String value)
 	{
-		List list = (List)headers.get(name);
+		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList(1);
+			list = new ArrayList<String>(1);
 			headers.put(name, list);
 		}
 		list.add(value);
@@ -275,7 +276,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * 
 	 * @return The collection of cookies
 	 */
-	public Collection getCookies()
+	public Collection<Cookie> getCookies()
 	{
 		return cookies;
 	}
@@ -314,16 +315,17 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 *            The header name
 	 * @return The value, or null
 	 */
+	@SuppressWarnings("unchecked")
 	public String getHeader(final String name)
 	{
-		List l = (List)headers.get(name);
+		List<String> l = (List<String>)headers.get(name);
 		if (l == null || l.size() < 1)
 		{
 			return null;
 		}
 		else
 		{
-			return (String)l.get(0);
+			return l.get(0);
 		}
 	}
 
@@ -332,7 +334,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * 
 	 * @return The header names
 	 */
-	public Set getHeaderNames()
+	public Set<String> getHeaderNames()
 	{
 		return headers.keySet();
 	}
@@ -416,6 +418,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 		byteStream = new ByteArrayOutputStream();
 		servletStream = new ServletOutputStream()
 		{
+			@Override
 			public void write(int b)
 			{
 				byteStream.write(b);
@@ -424,11 +427,13 @@ public class MockHttpServletResponse implements HttpServletResponse
 		stringWriter = new StringWriter();
 		printWriter = new PrintWriter(stringWriter)
 		{
+			@Override
 			public void close()
 			{
 				// Do nothing
 			}
 
+			@Override
 			public void flush()
 			{
 				// Do nothing
@@ -521,6 +526,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
+	 * @return url
 	 * @see org.apache.wicket.Request#getURL()
 	 */
 	private String getURL()
@@ -635,6 +641,9 @@ public class MockHttpServletResponse implements HttpServletResponse
 		setHeader("Content-Type", type);
 	}
 
+	/**
+	 * @return value of content-type header
+	 */
 	public String getContentType()
 	{
 		return getHeader("Content-Type");
@@ -655,7 +664,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * @param l
-	 * @return
+	 * @return formatted date
 	 */
 	public static String formatDate(long l)
 	{
@@ -751,7 +760,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void setHeader(final String name, final String value)
 	{
-		List l = new ArrayList(1);
+		List<String> l = new ArrayList<String>(1);
 		l.add(value);
 		headers.put(name, l);
 	}
@@ -800,6 +809,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 *            The message
 	 * @deprecated
 	 */
+	@Deprecated
 	public void setStatus(final int status, final String msg)
 	{
 		setStatus(status);

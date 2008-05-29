@@ -73,7 +73,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * Set the default value for autolinking
 	 * 
 	 * @param enable
-	 * 		if true, autolinks are enabled
+	 *            if true, autolinks are enabled
 	 */
 	public void setAutomaticLinking(final boolean enable)
 	{
@@ -170,7 +170,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * tag handler with the markup parser through Application.newMarkupParser().
 	 * 
 	 * @param tag
-	 * 		The current tag being parsed
+	 *            The current tag being parsed
 	 * @return If true, tag will become auto-component
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
@@ -196,7 +196,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/**
 	 * 
 	 * @param ref
-	 * @return
+	 * @return true if ref is not null and does nto contain namespace
 	 */
 	private final boolean checkRef(String ref)
 	{

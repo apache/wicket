@@ -158,7 +158,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return The attribute names
 	 */
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
 	}
@@ -194,7 +194,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return The init parameter names
 	 */
-	public Enumeration getInitParameterNames()
+	public Enumeration<String> getInitParameterNames()
 	{
 		return Collections.enumeration(initParameters.keySet());
 	}
@@ -290,13 +290,13 @@ public class MockServletContext implements ServletContext
 		return new RequestDispatcher()
 		{
 			public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
-					throws IOException
+				throws IOException
 			{
 				servletResponse.getWriter().write("FORWARD TO RESOURCE: " + name);
 			}
 
 			public void include(ServletRequest servletRequest, ServletResponse servletResponse)
-					throws IOException
+				throws IOException
 			{
 				servletResponse.getWriter().write("INCLUDE OF RESOURCE: " + name);
 			}
@@ -381,11 +381,11 @@ public class MockServletContext implements ServletContext
 	 *            The starting name
 	 * @return The set of resource paths at this location
 	 */
-	public Set getResourcePaths(String name)
+	public Set<String> getResourcePaths(String name)
 	{
 		if (webappRoot == null)
 		{
-			return new HashSet();
+			return new HashSet<String>();
 		}
 
 		if (name.startsWith("/"))
@@ -427,7 +427,7 @@ public class MockServletContext implements ServletContext
 		}
 
 		File[] files = current.listFiles();
-		Set result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		int stripLength = webappRoot.getPath().length();
 		for (int f = 0; f < files.length; f++)
 		{
@@ -480,7 +480,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return null
 	 */
-	public Enumeration getServletNames()
+	public Enumeration<String> getServletNames()
 	{
 		return null;
 	}
@@ -490,7 +490,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return null
 	 */
-	public Enumeration getServlets()
+	public Enumeration<Servlet> getServlets()
 	{
 		return null;
 	}
@@ -556,6 +556,9 @@ public class MockServletContext implements ServletContext
 		attributes.put(name, o);
 	}
 
+	/**
+	 * @return context path
+	 */
 	public String getContextPath()
 	{
 		return "";
