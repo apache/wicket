@@ -19,6 +19,7 @@ package org.apache.wicket.request.target.coding;
 import java.lang.ref.WeakReference;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
@@ -36,13 +37,16 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	protected final WeakReference/* <Class> */bookmarkablePageClassRef;
+	protected final WeakReference<Class<? extends Page<?>>> bookmarkablePageClassRef;
 
 	/** page map name. */
 	private final String pageMapName;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param <C>
+	 *            type of page.
 	 * 
 	 * @param mountPath
 	 *            the mount path
@@ -51,8 +55,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	 * @param pageMapName
 	 *            the page map name if any
 	 */
-	public BookmarkablePageRequestTargetUrlCodingStrategy(final String mountPath,
-		final Class bookmarkablePageClass, String pageMapName)
+	public <C extends Page<?>> BookmarkablePageRequestTargetUrlCodingStrategy(
+		final String mountPath, final Class<C> bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
 
@@ -61,7 +65,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
-		bookmarkablePageClassRef = new WeakReference(bookmarkablePageClass);
+		bookmarkablePageClassRef = new WeakReference<Class<? extends Page<?>>>(
+			bookmarkablePageClass);
 		this.pageMapName = pageMapName;
 	}
 
@@ -104,15 +109,15 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		if (requestParameters.getInterfaceName() != null)
 		{
 			return new BookmarkableListenerInterfaceRequestTarget(
-				requestParameters.getPageMapName(), (Class)bookmarkablePageClassRef.get(),
-				parameters, requestParameters.getComponentPath(),
-				requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
+				requestParameters.getPageMapName(), bookmarkablePageClassRef.get(), parameters,
+				requestParameters.getComponentPath(), requestParameters.getInterfaceName(),
+				requestParameters.getVersionNumber());
 		}
 		// otherwise process as a normal bookmark page request
 		else
 		{
 			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
-				(Class)bookmarkablePageClassRef.get(), parameters);
+				(Class<? extends Page<?>>)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
 
@@ -153,7 +158,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if (((Class)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
+			if (((Class<? extends Page<?>>)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
 			{
 				if (pageMapName == null)
 				{
