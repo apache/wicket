@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.form.palette;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
@@ -72,7 +73,7 @@ import org.apache.wicket.model.ResourceModel;
  *            Type of model object
  * 
  */
-public class Palette<T> extends Panel<Collection<T>> implements IHeaderContributor
+public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -168,7 +169,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel<Collection<T>> model, IModel<Collection<T>> choicesModel,
+	public Palette(String id, IModel<List<T>> model, IModel<Collection<T>> choicesModel,
 		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
 	{
 		super(id, model);
@@ -512,7 +513,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	protected final void updateModel()
 	{
 		// prepare model
-		Collection<T> model = getModelObject();
+		List<T> model = getModelObject();
 		model.clear();
 
 		// update model
