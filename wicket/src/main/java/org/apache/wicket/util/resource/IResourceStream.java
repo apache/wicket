@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.resource;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -38,7 +39,7 @@ import org.apache.wicket.util.watch.IModifiable;
  * 
  * @author Jonathan Locke
  */
-public interface IResourceStream extends IModifiable, IClusterable
+public interface IResourceStream extends IModifiable, IClusterable, Closeable
 {
 	/**
 	 * Gets the mime type of this resource
