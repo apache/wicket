@@ -81,7 +81,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	private static final long serialVersionUID = 1L;
 
 	/** collection containing all available choices */
-	private final IModel<Collection<? extends T>> choicesModel;
+	private final IModel<Collection<T>> choicesModel;
 
 	/**
 	 * choice render used to render the choices in both available and selected collections
@@ -147,7 +147,7 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel<Collection<? extends T>> choicesModel,
+	public Palette(String id, IModel<Collection<T>> choicesModel,
 		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
@@ -168,9 +168,8 @@ public class Palette<T> extends Panel<Collection<T>> implements IHeaderContribut
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel<Collection<T>> model,
-		IModel<Collection<? extends T>> choicesModel, IChoiceRenderer<T> choiceRenderer, int rows,
-		boolean allowOrder)
+	public Palette(String id, IModel<Collection<T>> model, IModel<Collection<T>> choicesModel,
+		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
 	{
 		super(id, model);
 
