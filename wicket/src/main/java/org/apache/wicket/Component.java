@@ -967,7 +967,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 
 	/**
 	 * 
-	 * @return
+	 * @return list of behaviors
 	 */
 	private List<IBehavior> getBehaviorsImpl()
 	{
@@ -1542,9 +1542,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return key.get(getMetaData());
 	}
 
-	private MetaDataEntry[] getMetaData()
+	private MetaDataEntry<?>[] getMetaData()
 	{
-		MetaDataEntry[] metaData = null;
+		MetaDataEntry<?>[] metaData = null;
 
 		// index where we should expect the entry
 		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
@@ -1560,7 +1560,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 			}
 			else if (object instanceof MetaDataEntry)
 			{
-				metaData = new MetaDataEntry[] { (MetaDataEntry)object };
+				metaData = new MetaDataEntry[] { (MetaDataEntry<?>)object };
 			}
 		}
 
@@ -2811,10 +2811,10 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 */
 	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
-		MetaDataEntry[] old = getMetaData();
+		MetaDataEntry<?>[] old = getMetaData();
 
 		Object metaData = null;
-		MetaDataEntry[] metaDataArray = key.set(getMetaData(), object);
+		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
 		if (metaDataArray != null && metaDataArray.length > 0)
 		{
 			metaData = (metaDataArray.length > 1) ? (Object)metaDataArray : metaDataArray[0];
@@ -3204,6 +3204,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param <C>
+	 * 
+	 * 
 	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
 	 * 
 	 * @param pageMap
@@ -3266,6 +3269,8 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	/**
 	 * Traverses all parent components of the given class in this container, calling the visitor's
 	 * visit method at each one.
+	 * 
+	 * @param <C>
 	 * 
 	 * @param c
 	 *            Class
@@ -4120,7 +4125,7 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 
 	/**
 	 * 
-	 * @return
+	 * @return <code>true</code> if component has been prepared for render
 	 */
 	boolean isPreparedForRender()
 	{
