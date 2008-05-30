@@ -44,7 +44,7 @@ public abstract class IndicatingAjaxButton<T> extends AjaxButton<T> implements I
 	 */
 	public IndicatingAjaxButton(String id)
 	{
-		super(id);
+		this(id, null);
 	}
 
 	/**
