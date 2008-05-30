@@ -57,7 +57,16 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 	// it is computed when the menu is first rendered, and then reused.
 	var initialDelta = -1;
 
-    function initialize(){    	
+    function initialize(){
+		// Remove the autocompletion menu if still present from
+		// a previous call. This is required to properly register
+		// the mouse event handler again (using the new stateful 'mouseactive'
+		// variable which just gets created)
+        var choiceDiv=document.getElementById(getMenuId());
+        if (choiceDiv != null) {
+            choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
+        } 
+        	
         var obj=wicketGet(elementId);
 
         objonkeydown=obj.onkeydown;
