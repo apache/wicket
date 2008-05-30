@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.time;
 
+import org.apache.wicket.util.lang.Objects;
+
 /**
  * Immutable class which represents an interval of time with a beginning and an end. The beginning
  * value is inclusive and the end value is exclusive. In other words, the time frame of 1pm to 2pm
@@ -63,7 +65,7 @@ public final class TimeFrame implements ITimeFrameSource
 	 *         <code>TimeFrame</code> each day
 	 */
 	public static ITimeFrameSource eachDay(final TimeOfDay startTimeOfDay,
-			final TimeOfDay endTimeOfDay)
+		final TimeOfDay endTimeOfDay)
 	{
 		check(startTimeOfDay, endTimeOfDay);
 
@@ -125,7 +127,7 @@ public final class TimeFrame implements ITimeFrameSource
 		if (end.lessThan(start))
 		{
 			throw new IllegalArgumentException("Start time of time frame " + start +
-					" was after end time " + end);
+				" was after end time " + end);
 		}
 	}
 
@@ -209,7 +211,32 @@ public final class TimeFrame implements ITimeFrameSource
 	public boolean overlaps(final TimeFrame timeframe)
 	{
 		return contains(timeframe.start) || contains(timeframe.end) || timeframe.contains(start) ||
-				timeframe.contains(end);
+			timeframe.contains(end);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(start, end);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		TimeFrame other = (TimeFrame)obj;
+		return Objects.equal(start, other.start) && Objects.equal(end, other.end);
 	}
 
 	/**
@@ -217,6 +244,7 @@ public final class TimeFrame implements ITimeFrameSource
 	 * 
 	 * @return a <code>String</code> representation of this object
 	 */
+	@Override
 	public String toString()
 	{
 		return "[start=" + start + ", end=" + end + "]";
