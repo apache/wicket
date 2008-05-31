@@ -261,7 +261,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
 	 * <p>
 	 * Instead of subclassing IValidator, you should use one of the existing validators, which cover
-	 * a huge number of cases, or if none satisfies your need, subclass CustomValidator.
+	 * a huge number of cases, or if none satisfies your need, subclass AbstractValidator.
 	 * <p>
 	 * Validates the given input. The input corresponds to the input from the request for a
 	 * component.
