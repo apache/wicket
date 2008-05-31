@@ -226,6 +226,11 @@ public class TabbedPanel extends Panel<Integer>
                     break;
                 }
             }
+            
+            if (tabs.size() == 0)
+            {
+            	add(new WebMarkupContainer<Void>(TAB_PANEL_ID)).setVisible(false);
+            }
         }
         super.onBeforeRender();
 	}
