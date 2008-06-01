@@ -63,7 +63,7 @@ public final class PageParameters extends ValueMap
 	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
-	public PageParameters(final Map parameterMap)
+	public PageParameters(final Map<String, Object> parameterMap)
 	{
 		super(parameterMap);
 
