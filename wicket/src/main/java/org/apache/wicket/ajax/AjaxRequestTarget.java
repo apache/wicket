@@ -732,7 +732,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
-		final Page<?> page = component.getPage();
+		final Page page = (Page)component.findParent(Page.class);
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
