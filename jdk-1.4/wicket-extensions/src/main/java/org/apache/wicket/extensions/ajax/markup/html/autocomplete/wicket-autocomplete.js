@@ -57,6 +57,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 	// it is computed when the menu is first rendered, and then reused.
 	var initialDelta = -1;
 
+	// holds a throttler, for not sending many requests if the user types
+	// too quickly.
+	var localThrottler = new Wicket.Throttler(true);
+	var throttleDelay = 300;
+
     function initialize(){
 		// Remove the autocompletion menu if still present from
 		// a previous call. This is required to properly register
@@ -236,6 +241,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         else{
         	selected=-1;
         }
+        localThrottler.throttle(getMenuId(), throttleDelay, actualUpdateChoices);
+    }
+
+    function actualUpdateChoices()
+    {
         var value = wicketGet(elementId).value;
        	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();
@@ -380,12 +390,14 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 		var re = /\bselected\b/gi;
         for(var i=0;i<elementCount;i++)
 		{
-			var classNames = node.className.replace(re, "");
+            var origClassNames = node.className;
+			var classNames = origClassNames.replace(re, "");
 			if(selected==i){
 				classNames += " selected";
 				adjustScrollOffset(menu.parentNode, node);
 			}
-			node.className = classNames;
+			if (classNames != origClassNames)
+                node.className = classNames;
 	
 			if ((cfg.maxHeight > -1) && (height < cfg.maxHeight))
 				height+=node.offsetHeight;

@@ -1554,6 +1554,7 @@ Wicket.ThrottlerEntry.prototype = {
 	initialize: function(func) {
 		this.func = func;
 		this.timestamp = new Date().getTime();
+		this.timeoutVar = undefined;
 	},
 	
 	getTimestamp: function() {
@@ -1566,13 +1567,30 @@ Wicket.ThrottlerEntry.prototype = {
 	
 	setFunc: function(func) {
 		this.func = func;
+	},
+
+	getTimeoutVar: function() {
+        return this.timeoutVar;
+	},
+
+	setTimeoutVar: function(timeoutVar) {
+        this.timeoutVar = timeoutVar;
 	}
 };
 
 Wicket.Throttler = Wicket.Class.create();
 Wicket.Throttler.prototype = {
-	initialize: function() {
+
+    /* "postponeTimerOnUpdate" is an optional parameter. If it is set to true, then the timer is
+       reset each time the throttle function gets called. Use this behaviour if you want something
+       to happen at X milliseconds after the *last* call to throttle.
+       If the parameter is not set, or set to false, then the timer is not reset. */
+	initialize: function(postponeTimerOnUpdate) {
 		this.entries = new Array();
+		if (postponeTimerOnUpdate != undefined)
+            this.postponeTimerOnUpdate = postponeTimerOnUpdate;
+        else
+            this.postponeTimerOnUpdate = false;
 	},
 	
 	throttle: function(id, millis, func) {
@@ -1580,10 +1598,15 @@ Wicket.Throttler.prototype = {
 		var me = this;
 		if (entry == undefined) {
 			entry = new Wicket.ThrottlerEntry(func);
+			entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
 			this.entries[id] = entry;
-			window.setTimeout(function() { me.execute(id); }, millis);
 		} else {
 			entry.setFunc(func);
+            if (this.postponeTimerOnUpdate == true)
+            {
+                window.clearTimeout(entry.getTimeoutVar());
+                entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
+            }
 		}	
 	},
 	
@@ -1591,10 +1614,9 @@ Wicket.Throttler.prototype = {
 		var entry = this.entries[id];
 		if (entry != undefined) {
 			var func = entry.getFunc();
+            this.entries[id] = undefined;	
 			var tmp = func();
 		}
-		
-		this.entries[id] = undefined;	
 	}
 };
 
