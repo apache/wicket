@@ -825,7 +825,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	public void unbind(String sessionId)
 	{
-		SessionEntry entry = sessionIdToEntryMap.get(sessionId);
+		SessionEntry entry = sessionIdToEntryMap.remove(sessionId);
 		if (entry != null)
 		{
 			if (isSynchronous())
