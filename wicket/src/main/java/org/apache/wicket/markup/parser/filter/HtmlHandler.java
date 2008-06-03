@@ -173,11 +173,11 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 * Gets whether this tag does not require a closing tag.
 	 * 
 	 * @param name
-	 * 		The tag's name, e.g. a, br, div, etc.
+	 *            The tag's name, e.g. a, br, div, etc.
 	 * @return True if this tag does not require a closing tag
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
 	}
 }
