@@ -91,7 +91,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				else
 				{
 					throw new ParseException("Tag " + top + " at " + top.getPos() +
-							" did not have a close tag", top.getPos());
+						" did not have a close tag", top.getPos());
 				}
 			}
 
@@ -142,8 +142,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 					if (mismatch)
 					{
 						throw new ParseException("Tag " + top.toUserDebugString() +
-								" has a mismatched close tag at " + tag.toUserDebugString(), top
-								.getPos());
+							" has a mismatched close tag at " + tag.toUserDebugString(),
+							top.getPos());
 					}
 				}
 
@@ -153,7 +153,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			else
 			{
 				throw new ParseException("Tag " + tag.toUserDebugString() +
-						" does not have a matching open tag", tag.getPos());
+					" does not have a matching open tag", tag.getPos());
 			}
 		}
 		else if (tag.isOpenClose())
@@ -174,6 +174,6 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
 	}
 }
