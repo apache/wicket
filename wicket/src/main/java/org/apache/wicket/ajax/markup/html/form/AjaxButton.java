@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A button that submits the form via ajax. Since this button takes the form as a constructor
@@ -111,9 +112,16 @@ public abstract class AjaxButton<T> extends Button<T>
 			@Override
 			protected CharSequence getEventHandler()
 			{
+				final String script = AjaxButton.this.getOnClickScript();
+
 				AppendingStringBuffer handler = new AppendingStringBuffer();
-				handler.append(AjaxButton.this.getOnClickScript());
-				handler.append(";").append(super.getEventHandler());
+
+				if (!Strings.isEmpty(script))
+				{
+					handler.append(script).append(";");
+				}
+
+				handler.append(super.getEventHandler());
 				handler.append("; return false;");
 				return handler;
 			}
