@@ -436,7 +436,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (markupIdToComponent.size() > 0)
 		{
 			final Component component = (Component)markupIdToComponent.values().iterator().next();
-			component.getPage().detach();
+			final Page page = (Page)component.findParent(Page.class);
+			if (page != null)
+			{
+				page.detach();
+			}
 		}
 	}
 
