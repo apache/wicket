@@ -91,9 +91,9 @@ public class RequestLogger implements IRequestLogger
 	}
 
 
-	private int totalCreatedSessions;
+	private final AtomicInteger totalCreatedSessions = new AtomicInteger();
 
-	private int peakSessions;
+	private final AtomicInteger peakSessions = new AtomicInteger();
 
 	private final List<RequestData> requests;
 
@@ -101,7 +101,7 @@ public class RequestLogger implements IRequestLogger
 
 	private final ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
 
-	private AtomicInteger active;
+	private final AtomicInteger active = new AtomicInteger();
 
 	/**
 	 * Construct.
@@ -133,7 +133,7 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public int getTotalCreatedSessions()
 	{
-		return totalCreatedSessions;
+		return totalCreatedSessions.get();
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public int getPeakSessions()
 	{
-		return peakSessions;
+		return peakSessions.get();
 	}
 
 	/**
@@ -182,11 +182,11 @@ public class RequestLogger implements IRequestLogger
 	public void sessionCreated(String sessionId)
 	{
 		liveSessions.put(sessionId, new SessionData(sessionId));
-		if (liveSessions.size() > peakSessions)
+		if (liveSessions.size() > peakSessions.get())
 		{
-			peakSessions = liveSessions.size();
+			peakSessions.set(liveSessions.size());
 		}
-		totalCreatedSessions++;
+		totalCreatedSessions.incrementAndGet();
 	}
 
 	RequestData getCurrentRequest()
