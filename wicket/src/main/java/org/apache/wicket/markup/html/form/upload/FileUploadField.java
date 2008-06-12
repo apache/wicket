@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.upload.FileItem;
 
 /**
@@ -130,7 +131,18 @@ public class FileUploadField extends FormComponent<FileUpload>
 		return null;
 	}
 
-	/**
+    @Override
+    protected FileUpload convertValue(String[] value) throws ConversionException
+    {
+        final String[] filenames = getInputAsArray();
+        if (filenames == null)
+        {
+            return null;
+        }
+        return getFileUpload();
+    }
+
+    /**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
 	@Override
