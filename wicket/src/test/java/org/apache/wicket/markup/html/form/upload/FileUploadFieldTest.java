@@ -53,8 +53,6 @@ public class FileUploadFieldTest extends WicketTestCase
 
 	/**
 	 * Test that detach closes the streams
-	 * 
-	 * @throws Exception
 	 */
 	public void testInternalDetach() throws Exception
 	{
@@ -64,7 +62,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
+			public Page<?> getTestPage()
 			{
 				return page;
 			}

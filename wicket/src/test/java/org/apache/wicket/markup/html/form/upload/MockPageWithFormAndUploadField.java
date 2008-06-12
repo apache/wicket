@@ -28,7 +28,7 @@ public class MockPageWithFormAndUploadField extends WebPage<Void>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Form form;
+	private final Form<?> form;
 	private final FileUploadField fileUploadField;
 	private FileUpload fileUpload;
 
@@ -44,7 +44,8 @@ public class MockPageWithFormAndUploadField extends WebPage<Void>
 			 */
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit()
+			@Override
+            protected void onSubmit()
 			{
 				fileUpload = fileUploadField.getFileUpload();
 			}
@@ -57,7 +58,7 @@ public class MockPageWithFormAndUploadField extends WebPage<Void>
 	/**
 	 * @return The form to attach the FileUploadField to.
 	 */
-	public Form getForm()
+	public Form<?> getForm()
 	{
 		return form;
 	}
