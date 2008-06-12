@@ -18,17 +18,18 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
@@ -865,7 +866,6 @@ public abstract class RequestCycle
 					// to do the endoding. This leads to double encoding
 					// - Doug Donohoe
 					// @see https://issues.apache.org/jira/browse/WICKET-1627
-					// pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
 					pageParameters.add(key, value);
 				}
 			}
@@ -893,17 +893,13 @@ public abstract class RequestCycle
 			if (params != null)
 			{
 				AppendingStringBuffer buff = new AppendingStringBuffer(url);
-				Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
-				while (it.hasNext())
-				{
-					final Map.Entry<String, Object> entry = it.next();
-					final String key = entry.getKey();
-					final String value = entry.getValue().toString();
-					buff.append("&");
-					buff.append(encodeQueryStringItem(key));
-					buff.append("=");
-					buff.append(encodeQueryStringItem(value));
-				}
+                WebRequestEncoder encoder = new WebRequestEncoder(buff);
+                for (Entry<String, Object> stringObjectEntry : params.entrySet())
+                {
+                    final String key = stringObjectEntry.getKey();
+                    final String value = stringObjectEntry.getValue().toString();
+                    encoder.addValue(key, value);
+                }
 
 				url = buff;
 			}
@@ -911,19 +907,7 @@ public abstract class RequestCycle
 		}
 	}
 
-	/**
-	 * Url encodes value using UTF-8
-	 * 
-	 * @param value
-	 *            value to encode
-	 * @return encoded value
-	 */
-	private static String encodeQueryStringItem(String value)
-	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
-	}
-
-	/**
+    /**
 	 * Returns a URL that references a given interface on a component. When the URL is requested
 	 * from the server at a later time, the interface will be called. A URL returned by this method
 	 * will not be stable across sessions and cannot be bookmarked by a user.
