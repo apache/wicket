@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.util.value;
 
+import java.io.NotSerializableException;
+
 import junit.framework.TestCase;
+import org.apache.wicket.util.io.SerializableChecker;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.time.Duration;
 
@@ -228,4 +231,15 @@ public class ValueMapTest extends TestCase
         assertNull(vm.getAsDuration("duration.missing"));
         assertEquals(defDuration, vm.getAsDuration("duration.missing", defDuration));
     }
+
+	/**
+	 * Make sure that ValueMap is serializable.
+	 * 
+	 * @throws Exception
+	 */
+	public void testSerializable() throws Exception
+	{
+		SerializableChecker checker = new SerializableChecker(new NotSerializableException());
+		checker.writeObject(new ValueMap());
+	}
 }

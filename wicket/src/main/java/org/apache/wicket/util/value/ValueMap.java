@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.value;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,8 +54,8 @@ import org.apache.wicket.util.time.Time;
  * The <code>makeImmutable</code> method will make the underlying <code>Map</code> immutable.
  * Further attempts to change the <code>Map</code> will result in a <code>RuntimeException</code>.
  * <p>
- * The <code>toString</code> method converts a <code>ValueMap</code> object to a readable
- * key/value string for diagnostics.
+ * The <code>toString</code> method converts a <code>ValueMap</code> object to a readable key/value
+ * string for diagnostics.
  * 
  * @author Jonathan Locke
  * @author Doug Donohoe
@@ -70,8 +71,10 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	 * {@link HashMap}, so we must provide a null safe comparator to avoid null pointer exceptions
 	 * with null keys.
 	 */
-	private static class NullSafeKeyComparator implements Comparator<String>
+	private static class NullSafeKeyComparator implements Comparator<String>, Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		public int compare(String o1, String o2)
 		{
 			int compare = 0;
