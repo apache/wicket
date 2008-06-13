@@ -58,7 +58,7 @@ public class CompressedPackageResource extends PackageResource
 		private static final long serialVersionUID = 1L;
 
 		/** Cache for compressed data */
-		private SoftReference<byte[]> cache = new SoftReference<byte[]>(null);
+		private transient SoftReference<byte[]> cache = new SoftReference<byte[]>(null);
 
 		/** Timestamp of the cache */
 		private Time timeStamp = null;
@@ -140,15 +140,18 @@ public class CompressedPackageResource extends PackageResource
 			IResourceStream stream = getOriginalResourceStream();
 			try
 			{
-				byte ret[] = cache.get();
-				if (ret != null && timeStamp != null)
+				byte ret[];
+				if (cache != null)
 				{
-					if (timeStamp.equals(stream.lastModifiedTime()))
+					ret = cache.get();
+					if (ret != null && timeStamp != null)
 					{
-						return ret;
+						if (timeStamp.equals(stream.lastModifiedTime()))
+						{
+							return ret;
+						}
 					}
 				}
-
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				GZIPOutputStream zout = new GZIPOutputStream(out);
 				Streams.copy(stream.getInputStream(), zout);
@@ -188,11 +191,11 @@ public class CompressedPackageResource extends PackageResource
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return The resource
 	 * @throws PackageResourceBlockedException
-	 *             when the target resource is not accepted by
-	 *             {@link IPackageResourceGuard the package resource guard}.
+	 *             when the target resource is not accepted by {@link IPackageResourceGuard the
+	 *             package resource guard}.
 	 */
-	public static PackageResource get(final Class< ? > scope, final String path,
-		final Locale locale, final String style)
+	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
+		final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 
@@ -219,7 +222,7 @@ public class CompressedPackageResource extends PackageResource
 	 * @param style
 	 *            The style of the resource
 	 */
-	protected CompressedPackageResource(Class< ? > scope, String path, Locale locale, String style)
+	protected CompressedPackageResource(Class<?> scope, String path, Locale locale, String style)
 	{
 		super(scope, path, locale, style);
 		resourceStream = newResourceStream();
