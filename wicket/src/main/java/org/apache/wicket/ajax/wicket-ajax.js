@@ -95,7 +95,7 @@ if (typeof DOMParser == "undefined" && Wicket.Browser.isSafari()) {
    DOMParser = function () {}
 
    DOMParser.prototype.parseFromString = function (str, contentType) {
-   		s('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
+   		alert('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
    }
 }
 
@@ -327,7 +327,10 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// go through newly added elements and try to find javascripts that 
 	// need to be executed	
 	while (element != next) {
-	//	Wicket.Head.addJavascripts(element);
+		try {
+			Wicket.Head.addJavascripts(element);
+		} catch (ignore) {
+		}
 		element = element.nextSibling;
 	}	
 }
