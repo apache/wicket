@@ -112,7 +112,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 		// Only update the model if one was passed in
 		if (hasExplicitModel)
 		{
-			setModelObject(getFileUpload());
+			setModelObject(getConvertedInput());
 		}
 	}
 
@@ -131,18 +131,18 @@ public class FileUploadField extends FormComponent<FileUpload>
 		return null;
 	}
 
-    @Override
-    protected FileUpload convertValue(String[] value) throws ConversionException
-    {
-        final String[] filenames = getInputAsArray();
-        if (filenames == null)
-        {
-            return null;
-        }
-        return getFileUpload();
-    }
+	@Override
+	protected FileUpload convertValue(String[] value) throws ConversionException
+	{
+		final String[] filenames = getInputAsArray();
+		if (filenames == null)
+		{
+			return null;
+		}
+		return getFileUpload();
+	}
 
-    /**
+	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
 	@Override
