@@ -95,7 +95,7 @@ if (typeof DOMParser == "undefined" && Wicket.Browser.isSafari()) {
    DOMParser = function () {}
 
    DOMParser.prototype.parseFromString = function (str, contentType) {
-   		alert('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
+   		s('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
    }
 }
 
@@ -1409,11 +1409,12 @@ Wicket.Head.Contributor.prototype = {
 			
 			// determine whether it is external javascript (has src attribute set)
 			var src = node.getAttribute("src");
+			
 			if (src != null && src != "") {
 				// load the external javascript using Wicket.Ajax.Request
 				
 				// callback when script is loaded
-				var onLoad = function(content) {
+				var onLoad = function(content) {					
 					Wicket.Head.addJavascript(content, null, src);
 					Wicket.Ajax.invokePostCallHandlers();
 
@@ -1476,9 +1477,15 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 		return false;
 
 	var head = document.getElementsByTagName("head")[0];
+	
+	if (element.tagName == "script")
+		head = document;
+	
 	var nodes = head.getElementsByTagName(element.tagName);
+	
 	for (var i = 0; i < nodes.length; ++i) {
-		var node = nodes[i];		
+		var node = nodes[i];				
+		
 		// check node names and mandatory attribute values
 		// we also have to check for attribute name that is suffixed by "_".
 		// this is necessary for filtering script references
