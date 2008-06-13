@@ -197,7 +197,11 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		var script = tempDiv.childNodes[0].childNodes[0].innerHTML;
 		
 		element.outerHtml = text;
-		eval(script);
+		try {
+			eval(script);
+		} catch (e) {
+			Wicket.Log.error(e);
+		}
 		return;
 	}  
 	
@@ -290,7 +294,6 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// if we are replacing a single <script> element
 	if (element.tagName == "SCRIPT") {
-
 		// create temporal div and add script as inner HTML		
 		var tempDiv = document.createElement("div");
 		tempDiv.innerHTML = text;
@@ -302,10 +305,14 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 		}
 		
 		element.outerHTML = text;
-		eval(script);
+		try {
+			eval(script);
+		} catch (e) {
+			Wicket.Log.error(e);
+		}
 		return;
 	}
-	var parent = element.parentNode;	
+	var parent = element.parentNode;
 	var next = element.nextSibling;
 	
 	var index = 0;
@@ -320,9 +327,12 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// go through newly added elements and try to find javascripts that 
 	// need to be executed	
 	while (element != next) {
-		Wicket.Head.addJavascripts(element);
+		try {
+			Wicket.Head.addJavascripts(element);
+		} catch (ignore) {
+		}
 		element = element.nextSibling;
-	}
+	}	
 }
 
 /**
@@ -900,7 +910,7 @@ Wicket.Ajax.Request.prototype = {
 	stateChangeCallback: function() {	
 		var t = this.transport;
 		var status;
-
+		
 		if (t != null && t.readyState == 4) {
 			try {
 				status = t.status;
@@ -1402,11 +1412,12 @@ Wicket.Head.Contributor.prototype = {
 			
 			// determine whether it is external javascript (has src attribute set)
 			var src = node.getAttribute("src");
+			
 			if (src != null && src != "") {
 				// load the external javascript using Wicket.Ajax.Request
 				
 				// callback when script is loaded
-				var onLoad = function(content) {
+				var onLoad = function(content) {					
 					Wicket.Head.addJavascript(content, null, src);
 					Wicket.Ajax.invokePostCallHandlers();
 
@@ -1469,9 +1480,15 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 		return false;
 
 	var head = document.getElementsByTagName("head")[0];
+	
+	if (element.tagName == "script")
+		head = document;
+	
 	var nodes = head.getElementsByTagName(element.tagName);
+	
 	for (var i = 0; i < nodes.length; ++i) {
-		var node = nodes[i];		
+		var node = nodes[i];				
+		
 		// check node names and mandatory attribute values
 		// we also have to check for attribute name that is suffixed by "_".
 		// this is necessary for filtering script references
