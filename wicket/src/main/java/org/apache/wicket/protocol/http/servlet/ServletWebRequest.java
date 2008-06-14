@@ -76,6 +76,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return the wrapped http serlvet request object.
 	 */
+	@Override
 	public final HttpServletRequest getHttpServletRequest()
 	{
 		return httpServletRequest;
@@ -88,6 +89,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return httpServletRequest.getLocale();
@@ -100,6 +102,7 @@ public class ServletWebRequest extends WebRequest
 	 *            Parameter name
 	 * @return Parameter value
 	 */
+	@Override
 	public String getParameter(final String key)
 	{
 		return httpServletRequest.getParameter(key);
@@ -110,6 +113,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Map of parameters
 	 */
+	@Override
 	public Map getParameterMap()
 	{
 		// Lazy-init parameter map. Only make one copy. It's more efficient, and
@@ -129,6 +133,7 @@ public class ServletWebRequest extends WebRequest
 	 *            Parameter name
 	 * @return Parameter values
 	 */
+	@Override
 	public String[] getParameters(final String key)
 	{
 		return httpServletRequest.getParameterValues(key);
@@ -139,12 +144,14 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Any servlet path info
 	 */
+	@Override
 	public String getPath()
 	{
 		return ((WebApplication)Application.get()).getWicketFilter().getRelativePath(
 			httpServletRequest);
 	}
 
+	@Override
 	public String getRelativePathPrefixToContextRoot()
 	{
 		if (relativePathPrefixToContextRoot != null)
@@ -174,9 +181,9 @@ public class ServletWebRequest extends WebRequest
 		String wicketPath = "";
 
 		// We're running as a filter.
-        // Note: do not call RequestUtils.decode() on getServletPath ... it is
-        //       already url-decoded (JIRA WICKET-1624)
-        String servletPath = getServletPath();
+		// Note: do not call RequestUtils.decode() on getServletPath ... it is
+		// already url-decoded (JIRA WICKET-1624)
+		String servletPath = getServletPath();
 
 		// We need to substitute the %3A (or the other way around) to be able to
 		// get a good match, as parts of the path may have been escaped while
@@ -221,6 +228,7 @@ public class ServletWebRequest extends WebRequest
 		return depthRelativeToWicketHandler;
 	}
 
+	@Override
 	public String getRelativePathPrefixToWicketHandler()
 	{
 		if (relativePathPrefixToWicketHandler != null)
@@ -346,6 +354,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * @see org.apache.wicket.Request#getURL()
 	 */
+	@Override
 	public String getURL()
 	{
 		/*
@@ -388,6 +397,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Servlet path
 	 */
+	@Override
 	public String getServletPath()
 	{
 		return httpServletRequest.getServletPath();
@@ -400,6 +410,7 @@ public class ServletWebRequest extends WebRequest
 	 */
 	// TODO matej? should we have a simple way of supporting other ajax things?
 	// or should they just set that same header??
+	@Override
 	public boolean isAjax()
 	{
 		boolean ajax = false;
@@ -430,15 +441,37 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @see org.apache.wicket.Request#mergeVersion()
 	 */
+	@Override
 	public boolean mergeVersion()
 	{
-		RequestListenerInterface intface = getRequestParameters().getInterface();
-		return isAjax() || intface == IRedirectListener.INTERFACE;
+		if (forceNewVersion == true)
+		{
+			return false;
+		}
+		else
+		{
+			RequestListenerInterface intface = getRequestParameters().getInterface();
+			return isAjax() || intface == IRedirectListener.INTERFACE;
+		}
 	}
+
+	/**
+	 * Allows to create new versions even on AJAX request. This can come handly when the AJAX
+	 * response does a real redirect.
+	 * 
+	 * @param forceNewVersion
+	 */
+	public void setForceNewVersion(boolean forceNewVersion)
+	{
+		this.forceNewVersion = forceNewVersion;
+	}
+
+	private boolean forceNewVersion = false;
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
+	@Override
 	public WebRequest newMultipartWebRequest(Bytes maxsize)
 	{
 		try
@@ -454,6 +487,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[method = " + httpServletRequest.getMethod() + ", protocol = " +
@@ -493,7 +527,7 @@ public class ServletWebRequest extends WebRequest
 		}
 
 	}
-	
+
 	@Override
 	public String getQueryString()
 	{
