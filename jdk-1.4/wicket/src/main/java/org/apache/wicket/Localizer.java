@@ -16,11 +16,13 @@
  */
 package org.apache.wicket;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -56,6 +58,8 @@ public class Localizer
 
 	/** Cache properties */
 	private Map cache = newCache();
+
+	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
 
 	/**
 	 * Create the utils instance class backed by the configuration information contained within the
@@ -324,16 +328,32 @@ public class Localizer
 		String cacheKey = key;
 		if (component != null)
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer(key);
+			AppendingStringBuffer buffer = new AppendingStringBuffer(200);
+			buffer.append(key);
 
 			Component cursor = component;
 			while (cursor != null)
 			{
-				buffer.append("-").append(cursor.getClass().getName());
-				buffer.append(":").append(cursor.getId());
-				cursor = cursor.getParent();
+				buffer.append("-").append(metaDatabase.id(cursor.getClass()));
+
 				if (cursor instanceof Page)
+				{
 					break;
+				}
+
+				if (cursor.getParent() != null && !(cursor.getParent() instanceof AbstractRepeater))
+				{
+					/*
+					 * only append component id if parent is not a repeater because
+					 * 
+					 * (a) these ids are irrelevant when generating resource cache keys
+					 * 
+					 * (b) they cause a lot of redundant keys to be generated
+					 */
+					buffer.append(":").append(cursor.getId());
+				}
+				cursor = cursor.getParent();
+
 			}
 
 			buffer.append("-").append(component.getLocale());
@@ -397,4 +417,37 @@ public class Localizer
 	{
 		return new ConcurrentHashMap();
 	}
+
+	/**
+	 * Database that maps class names to an integer id. This is used to make localizer keys shorter
+	 * because sometimes they can contain a large number of class names.
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private static class ClassMetaDatabase
+	{
+		private final Map nameToId = new HashMap();
+		private long nameCounter = 0;
+
+		/**
+		 * Returns a unique id that represents this class' name. This can be used for compressing
+		 * class names. Notice this id should not be used across cluster nodes.
+		 * 
+		 * @param clazz
+		 * @return long id of class name
+		 */
+		public synchronized long id(Class clazz)
+		{
+			final String name = clazz.getName();
+			Long id = (Long)nameToId.get(name);
+			if (id == null)
+			{
+				id = new Long(nameCounter);
+				nameToId.put(name, id);
+				nameCounter++;
+			}
+			return id.longValue();
+		}
+	}
+
 }
