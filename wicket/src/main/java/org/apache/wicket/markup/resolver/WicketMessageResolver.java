@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
@@ -108,8 +109,6 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
-	/** If true, than throw an exception if the property key was not found */
-	private static boolean throwExceptionIfPropertyNotFound = false;
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container and render it.
@@ -125,7 +124,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer<?> container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
@@ -163,21 +162,9 @@ public class WicketMessageResolver implements IComponentResolver
 	 * 
 	 * @return throwExceptionIfPropertyNotFound
 	 */
-	public static boolean isThrowExceptionIfPropertyNotFound()
+	private static boolean isThrowExceptionIfPropertyNotFound()
 	{
-		return throwExceptionIfPropertyNotFound;
-	}
-
-	/**
-	 * If true, than throw an exception if a property key is not found. If false, just a warning is
-	 * issued in the logged.
-	 * 
-	 * @param throwExceptionIfPropertyNotFound
-	 *            throwExceptionIfPropertyNotFound
-	 */
-	public static void setThrowExceptionIfPropertyNotFound(boolean throwExceptionIfPropertyNotFound)
-	{
-		WicketMessageResolver.throwExceptionIfPropertyNotFound = throwExceptionIfPropertyNotFound;
+		return Application.get().getResourceSettings().getThrowExceptionOnMissingResource();
 	}
 
 	/**
@@ -372,7 +359,7 @@ public class WicketMessageResolver implements IComponentResolver
 							final StringResponse response = new StringResponse();
 							getRequestCycle().setResponse(response);
 
-							Component< ? > component = getParent().get(id);
+							Component<?> component = getParent().get(id);
 							if (component != null)
 							{
 								component.render(markupStream);

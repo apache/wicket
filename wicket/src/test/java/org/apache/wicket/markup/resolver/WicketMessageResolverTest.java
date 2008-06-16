@@ -39,6 +39,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		executeTest(SimplePage_1.class, "SimplePageExpectedResult_1.html");
 	}
 
@@ -74,7 +75,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	{
 		try
 		{
-			WicketMessageResolver.setThrowExceptionIfPropertyNotFound(true);
+			tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
 			executeTest(SimplePage_4.class, "SimplePageExpectedResult_4.html");
 		}
 		catch (WicketRuntimeException ex)
