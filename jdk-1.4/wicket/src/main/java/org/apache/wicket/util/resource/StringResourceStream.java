@@ -85,7 +85,9 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	 */
 	public long length()
 	{
-		return string.length();
+		// WICKET-1705: we cannot use string.length() because we need number of bytes rather then
+		// number of characters
+		return string.toString().getBytes().length;
 	}
 
 }
