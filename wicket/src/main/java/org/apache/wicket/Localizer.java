@@ -16,14 +16,13 @@
  */
 package org.apache.wicket;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
@@ -429,9 +428,8 @@ public class Localizer
 	 */
 	private static class ClassMetaDatabase
 	{
-		private final Map<String, Long> nameToId = new HashMap<String, Long>();
-		private final ReadWriteLock nameToIdLock = new ReentrantReadWriteLock();
-		private long nameCounter = 0;
+		private final ConcurrentMap<String, Long> nameToId = new ConcurrentHashMap<String, Long>();
+		private final AtomicLong nameCounter = new AtomicLong();
 
 		/**
 		 * Returns a unique id that represents this class' name. This can be used for compressing
@@ -443,32 +441,17 @@ public class Localizer
 		public long id(Class<?> clazz)
 		{
 			final String name = clazz.getName();
-			nameToIdLock.readLock().lock();
-			try
+			Long id = nameToId.get(name);
+			if (id == null)
 			{
-				Long id = nameToId.get(name);
-				if (id == null)
+				id = nameCounter.incrementAndGet();
+				Long previousId = nameToId.putIfAbsent(name, id);
+				if (previousId != null)
 				{
-					nameToIdLock.readLock().unlock();
-					nameToIdLock.writeLock().lock();
-					try
-					{
-						nameToId.put(name, nameCounter);
-						id = nameCounter;
-						nameCounter++;
-					}
-					finally
-					{
-						nameToIdLock.readLock().lock();
-						nameToIdLock.writeLock().unlock();
-					}
+					id = previousId;
 				}
-				return id;
 			}
-			finally
-			{
-				nameToIdLock.readLock().unlock();
-			}
+			return id;
 		}
 	}
 
