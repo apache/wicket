@@ -59,6 +59,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return string.toString();
@@ -67,6 +68,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	protected String getString()
 	{
 		return toString();
@@ -75,6 +77,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();
@@ -83,9 +86,12 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
-		return string.length();
+		// WICKET-1705: we cannot use string.length() because we need number of bytes rather then
+		// number of characters
+		return string.toString().getBytes().length;
 	}
 
 }
