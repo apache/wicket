@@ -37,8 +37,8 @@ import org.apache.wicket.model.Model;
  * content panels inside the TabbedPanel panel.
  * 
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
- * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
+ * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
  * <p>
  * 
  * Example:
@@ -95,6 +95,8 @@ public class TabbedPanel extends Panel<Integer>
 
 
 	private final List<ITab> tabs;
+
+	private transient Boolean[] tabsVisibilityCache;
 
 	/**
 	 * Constructor
@@ -199,7 +201,7 @@ public class TabbedPanel extends Panel<Integer>
 				}
 				tag.put("class", cssClass.trim());
 			}
-			
+
 			@Override
 			public boolean isVisible()
 			{
@@ -214,25 +216,34 @@ public class TabbedPanel extends Panel<Integer>
 	@Override
 	protected void onBeforeRender()
 	{
-		if (!hasBeenRendered() && getSelectedTab() == -1)
-        {
-            List<ITab> tabs = getTabs();
-            for (int i = 0; i < tabs.size(); ++i)
-            {
-                ITab tab = tabs.get(i);
-                if (tab.isVisible())
-                {
-                    setSelectedTab(i);
-                    break;
-                }
-            }
-            
-            if (tabs.size() == 0)
-            {
-            	add(new WebMarkupContainer<Void>(TAB_PANEL_ID)).setVisible(false);
-            }
-        }
-        super.onBeforeRender();
+		if (getSelectedTab() == -1 || isTabVisible(getSelectedTab()) == false)
+		{
+			// find first visible selected tab
+			int selected = 0;
+			for (int i = 0; i < tabs.size(); i++)
+			{
+				if (isTabVisible(i))
+				{
+					selected = i;
+					break;
+				}
+			}
+
+			if (selected == tabs.size())
+			{
+				/*
+				 * none of the tabs are selected...
+				 * 
+				 * we do not need to do anything special because the check in setSelectedTab() will
+				 * replace the current tab panel with an empty one
+				 */
+				selected = 0;
+			}
+
+			setSelectedTab(selected);
+		}
+
+		super.onBeforeRender();
 	}
 
 	/**
@@ -302,8 +313,8 @@ public class TabbedPanel extends Panel<Integer>
 	 * @param linkId
 	 *            component id with which the link should be created
 	 * @param index
-	 *            index of the tab that should be activated when this link is clicked. See {@link
-	 *            #setSelectedTab(int)}.
+	 *            index of the tab that should be activated when this link is clicked. See
+	 *            {@link #setSelectedTab(int)}.
 	 * @param <S>
 	 * @return created link component
 	 */
@@ -330,28 +341,34 @@ public class TabbedPanel extends Panel<Integer>
 	 */
 	public void setSelectedTab(int index)
 	{
-		if (index < 0 || index >= tabs.size())
+		if (index < 0 || (index >= tabs.size() && index > 0))
 		{
 			throw new IndexOutOfBoundsException();
 		}
 
 		setModelObject(new Integer(index));
 
-		ITab tab = tabs.get(index);
-
 		final Component<?> component;
-		
-		if (tab.isVisible())		
-			component = tab.getPanel(TAB_PANEL_ID);
-		else
-			component = new WebMarkupContainer<Void>(TAB_PANEL_ID);
 
-		if (component == null)
+
+		if (tabs.size() == 0 || !isTabVisible(index))
 		{
-			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
-				getPath() + "] ITab index [" + index + "]");
-
+			// no tabs or the currently selected tab is not visible
+			component = new WebMarkupContainer<Void>(TAB_PANEL_ID);
 		}
+		else
+		{
+			// show panel from selected tab
+			ITab tab = tabs.get(index);
+			component = tab.getPanel(TAB_PANEL_ID);
+			if (component == null)
+			{
+				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
+					getPath() + "] ITab index [" + index + "]");
+
+			}
+		}
+
 
 		if (!component.getId().equals(TAB_PANEL_ID))
 		{
@@ -362,15 +379,7 @@ public class TabbedPanel extends Panel<Integer>
 					getPath() + "] ITab index [" + index + "]");
 		}
 
-
-		if (get(TAB_PANEL_ID) == null)
-		{
-			add(component);
-		}
-		else
-		{
-			replace(component);
-		}
+		addOrReplace(component);
 	}
 
 	/**
@@ -379,6 +388,29 @@ public class TabbedPanel extends Panel<Integer>
 	public final int getSelectedTab()
 	{
 		return (getModelObject()).intValue();
+	}
+
+	private boolean isTabVisible(int tabIndex)
+	{
+		if (tabsVisibilityCache == null)
+		{
+			tabsVisibilityCache = new Boolean[tabs.size()];
+		}
+
+		Boolean visible = tabsVisibilityCache[tabIndex];
+		if (visible == null)
+		{
+			visible = tabs.get(tabIndex).isVisible();
+			tabsVisibilityCache[tabIndex] = visible;
+		}
+		return visible;
+	}
+
+	@Override
+	protected void onDetach()
+	{
+		tabsVisibilityCache = null;
+		super.onDetach();
 	}
 
 }
