@@ -96,7 +96,9 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				return Objects.convertValue(value, theType);
+				// FIXME figure out what to do here. if the object cannot be converted to the type
+				// then either it becomes null or classcastexception. see WICKET-1706. */
+				return (X)Objects.convertValue(value, theType);
 			}
 			catch (Exception e)
 			{
@@ -115,7 +117,7 @@ public class ConverterLocator implements IConverterLocator
 				return "";
 			}
 
-			return Objects.convertValue(value, String.class);
+			return (String)Objects.convertValue(value, String.class);
 		}
 	}
 
