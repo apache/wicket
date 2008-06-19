@@ -127,7 +127,13 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 		Field field = obj.getClass().getDeclaredField("nonExisting");
 		try
 		{
-			factory.getFieldValue(field, obj);
+			final Bean bean = (Bean)factory.getFieldValue(field, obj);
+			/*
+			 * returned bean will not be null even though the bean is not found. what we get instead
+			 * is a proxy. we invoke a method on the proxy in order to cause it to try to locate the
+			 * bean and that is when it will fail
+			 */
+			bean.method();
 			fail();
 		}
 		catch (RuntimeException e)
