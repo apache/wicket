@@ -96,9 +96,16 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				// FIXME figure out what to do here. if the object cannot be converted to the type
-				// then either it becomes null or classcastexception. see WICKET-1706. */
-				return (X)Objects.convertValue(value, theType);
+				Object converted = Objects.convertValue(value, theType);
+				if (theType.isAssignableFrom(converted.getClass()))
+				{
+					return theType.cast(converted);
+				}
+				else
+				{
+					throw new ConversionException("Could not convert value: " + value +
+						" to type: " + theType.getName() + "(Could not find compatible converter).").setSourceValue(value);
+				}
 			}
 			catch (Exception e)
 			{
