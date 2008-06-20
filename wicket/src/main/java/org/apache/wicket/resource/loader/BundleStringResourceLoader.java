@@ -21,6 +21,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 
 
 /**
@@ -61,12 +62,16 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 *            Not used for this implementation (see {@link org.apache.wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	public final String loadStringResource(final Class< ? > clazz, final String key, Locale locale,
+	public final String loadStringResource(final Class<?> clazz, final String key, Locale locale,
 		final String style)
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Session.get().getLocale();
+			if (locale == null)
+			{
+				locale = Locale.getDefault();
+			}
 		}
 		try
 		{
@@ -89,7 +94,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 *            The key to obtain the string for
 	 * @return The string resource value or null if resource not found
 	 */
-	public final String loadStringResource(final Component< ? > component, final String key)
+	public final String loadStringResource(final Component<?> component, final String key)
 	{
 		final Locale locale = (component != null) ? component.getLocale() : null;
 		return loadStringResource(null, key, locale, null);
