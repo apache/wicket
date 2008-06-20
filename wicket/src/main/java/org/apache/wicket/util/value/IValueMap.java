@@ -35,11 +35,6 @@ import org.apache.wicket.util.time.Time;
 public interface IValueMap extends Map<String, Object>
 {
 	/**
-	 * @see java.util.Map#clear()
-	 */
-	void clear();
-
-	/**
 	 * Retrieves a <code>boolean</code> value by key.
 	 * 
 	 * @param key
@@ -203,21 +198,6 @@ public interface IValueMap extends Map<String, Object>
 	 * @return this <code>IValueMap</code>
 	 */
 	IValueMap makeImmutable();
-
-	/**
-	 * @see java.util.Map#put(Object, Object)
-	 */
-	Object put(final String key, final Object value);
-
-	/**
-	 * @see java.util.Map#putAll(java.util.Map)
-	 */
-	void putAll(final Map map);
-
-	/**
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
-	Object remove(final Object key);
 
 	/**
 	 * Provided that the hash key is a <code>String</code> and you need to access the value
