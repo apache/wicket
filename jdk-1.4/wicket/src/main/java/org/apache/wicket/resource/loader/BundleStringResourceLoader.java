@@ -21,6 +21,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 
 
 /**
@@ -66,7 +67,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Session.get().getLocale();
 		}
 		try
 		{
