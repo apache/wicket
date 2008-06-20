@@ -621,7 +621,7 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
-	public static String join(String separator, String[] fragments)
+	public static String join(String separator, String... fragments)
 	{
 		if (fragments.length < 1)
 		{
@@ -1093,9 +1093,9 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string. Does special conversion for
-	 * {@link Throwable throwables} and String arrays of length 1 (in which case it just returns to
-	 * string in that array, as this is a common thing to have in the Servlet API).
+	 * Converts the given object to a string. Does special conversion for {@link Throwable
+	 * throwables} and String arrays of length 1 (in which case it just returns to string in that
+	 * array, as this is a common thing to have in the Servlet API).
 	 * 
 	 * @param object
 	 *            The object
