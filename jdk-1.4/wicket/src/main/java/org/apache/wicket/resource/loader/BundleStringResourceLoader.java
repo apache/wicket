@@ -68,6 +68,10 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 		if (locale == null)
 		{
 			locale = Session.get().getLocale();
+			if (locale == null)
+			{
+				locale = Locale.getDefault();
+			}
 		}
 		try
 		{
