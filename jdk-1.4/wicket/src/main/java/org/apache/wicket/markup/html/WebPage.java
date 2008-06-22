@@ -387,7 +387,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected void onAfterRender()
 	{
 		super.onAfterRender();
-		if (getApplication().getConfigurationType() == Application.DEVELOPMENT)
+		if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
 		{
 			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor()
 			{

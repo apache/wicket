@@ -54,7 +54,7 @@ public class CompressedPackageResource extends PackageResource
 		private static final long serialVersionUID = 1L;
 
 		/** Cache for compressed data */
-		private SoftReference cache = new SoftReference(null);
+		private transient SoftReference cache = new SoftReference(null);
 
 		/** Timestamp of the cache */
 		private Time timeStamp = null;
@@ -136,15 +136,18 @@ public class CompressedPackageResource extends PackageResource
 			IResourceStream stream = getOriginalResourceStream();
 			try
 			{
-				byte ret[] = (byte[])cache.get();
-				if (ret != null && timeStamp != null)
+				byte ret[];
+				if (cache != null)
 				{
-					if (timeStamp.equals(stream.lastModifiedTime()))
+					ret = (byte[])cache.get();
+					if (ret != null && timeStamp != null)
 					{
-						return ret;
+						if (timeStamp.equals(stream.lastModifiedTime()))
+						{
+							return ret;
+						}
 					}
 				}
-
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				GZIPOutputStream zout = new GZIPOutputStream(out);
 				Streams.copy(stream.getInputStream(), zout);
@@ -186,16 +189,16 @@ public class CompressedPackageResource extends PackageResource
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return The resource
 	 * @throws PackageResourceBlockedException
-	 *             when the target resource is not accepted by
-	 *             {@link IPackageResourceGuard the package resource guard}.
+	 *             when the target resource is not accepted by {@link IPackageResourceGuard the
+	 *             package resource guard}.
 	 */
 	public static PackageResource get(final Class scope, final String path, final Locale locale,
-			final String style)
+		final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
+			true);
 		if (resource == null)
 		{
 			resource = new CompressedPackageResource(scope, path, locale, style);

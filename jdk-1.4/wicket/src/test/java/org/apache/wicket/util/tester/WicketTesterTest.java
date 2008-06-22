@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
@@ -41,6 +42,8 @@ import org.apache.wicket.util.tester.apps_1.CreateBook;
 import org.apache.wicket.util.tester.apps_1.MyMockApplication;
 import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
+import org.apache.wicket.util.tester.apps_6.LinkPage;
+import org.apache.wicket.util.tester.apps_6.ResultPage;
 
 /**
  * 
@@ -159,6 +162,104 @@ public class WicketTesterTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testClickLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("linkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("linkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("ajaxLinkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("ajaxLinkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxFallbackLink_setResponsePageClass() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page class in the link callback
+		tester.clickLink("ajaxFallbackLinkWithSetResponsePageClass");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "No Parameter");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxFallbackLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the link callback
+		tester.clickLink("ajaxFallbackLinkWithSetResponsePage");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A special label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxSubmitLink_setResponsePage() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		// Set the response page instance in the form submit
+		tester.clickLink("form:submit");
+		tester.assertRenderedPage(ResultPage.class);
+		tester.assertLabel("label", "A form label");
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testPageConstructor() throws Exception
 	{
 		Book mockBook = new Book("xxId", "xxName");
@@ -236,11 +337,80 @@ public class WicketTesterTest extends TestCase
 		// The link must be a Link :)
 		tester.assertComponent(MockPageWithLink.LINK_ID, Link.class);
 
-		// Get the new link component
-		Component component = tester.getComponentFromLastRenderedPage(MockPageWithLink.LINK_ID);
+		// This must not fail
+		tester.assertComponentOnAjaxResponse(MockPageWithLink.LINK_ID);
+
+		tester.dumpPage();
+	}
+
+	/**
+	 * Test that testing if a component is on the ajax response can handle if the response is
+	 * encoded.
+	 */
+	public void testAssertComponentOnAjaxResponse_encoding()
+	{
+		final IModel labelModel = new IModel()
+		{
+			private static final long serialVersionUID = 1L;
+
+			private String value;
+
+			public Object getObject()
+			{
+				return value;
+			}
+
+			public void setObject(Object object)
+			{
+				value = (String)object;
+			}
+
+			public void detach()
+			{
+			}
+		};
+
+		labelModel.setObject("Label 1");
+		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, labelModel);
+		label.setOutputMarkupId(true);
+
+		final Page page = new MockPageWithLinkAndLabel();
+		AjaxLink ajaxLink = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick(AjaxRequestTarget target)
+			{
+				labelModel.setObject("Label which needs encoding: [] ][");
+				target.addComponent(label);
+			}
+		};
+		ajaxLink.setOutputMarkupId(true);
+
+		page.add(ajaxLink);
+		ajaxLink.add(label);
+
+		tester.startPage(new ITestPageSource()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+
+
+		// Click the link
+		tester.clickLink(MockPageWithLinkAndLabel.LINK_ID);
+
+		tester.assertComponent(MockPageWithLinkAndLabel.LABEL_PATH, Label.class);
+
+		tester.dumpPage();
 
 		// This must not fail
-		tester.assertComponentOnAjaxResponse(component);
+		tester.assertComponentOnAjaxResponse(MockPageWithLinkAndLabel.LABEL_PATH);
+
 	}
 
 	/**

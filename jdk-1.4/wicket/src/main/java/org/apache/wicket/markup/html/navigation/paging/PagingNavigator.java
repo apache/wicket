@@ -70,6 +70,17 @@ public class PagingNavigator extends Panel
 
 	}
 
+
+	/**
+	 * {@link IPageable} this navigator is linked with
+	 * 
+	 * @return {@link IPageable} instance
+	 */
+	public final IPageable getPageable()
+	{
+		return pageable;
+	}
+
 	protected void onBeforeRender()
 	{
 		if (get("first") == null)

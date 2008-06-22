@@ -48,7 +48,7 @@ public class StringRequestTarget implements IRequestTarget
 	 */
 	public StringRequestTarget(String string)
 	{
-		this("text", string);
+		this("text/plain", string);
 	}
 
 	/**
@@ -84,6 +84,7 @@ public class StringRequestTarget implements IRequestTarget
 	{
 		// Get servlet response to use when responding with resource
 		final Response response = requestCycle.getResponse();
+		response.setContentType(contentType);
 		final StringBufferResourceStream stream = new StringBufferResourceStream(contentType);
 		stream.append(string);
 

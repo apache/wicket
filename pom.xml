@@ -29,6 +29,14 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
+	<distributionManagement>
+	  <snapshotRepository>
+	    <id>repo</id>
+	    <name>Local Bamboo/Tomcat repository</name>
+	    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+	    <uniqueVersion>false</uniqueVersion>
+	  </snapshotRepository>
+	</distributionManagement>			
 	<profiles>
 		<profile>
 			<id>jdk-1.4</id>
@@ -60,14 +68,6 @@
 				<module>jdk-1.4</module>
 				<module>archetypes/quickstart</module>
 			</modules>
-			<distributionManagement>
-			  <snapshotRepository>
-			    <id>repo</id>
-			    <name>Local Bamboo/Tomcat repository</name>
-			    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
-			    <uniqueVersion>false</uniqueVersion>
-			  </snapshotRepository>
-			</distributionManagement>			
 			<build>
 				<plugins>
 					<plugin>
@@ -117,14 +117,6 @@
 					<modules>
 						<module>jdk-1.5</module>
 					</modules>
-					<distributionManagement>
-					  <snapshotRepository>
-					    <id>repo</id>
-					    <name>Local Bamboo/Tomcat repository</name>
-					    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
-					    <uniqueVersion>false</uniqueVersion>
-					  </snapshotRepository>
-					</distributionManagement>			
 					<build>
 						<plugins>
 							<plugin>
@@ -797,7 +789,7 @@
                             <configuration>
                                 <instructions>
                                     <Import-Package>org.apache.wicket*</Import-Package>
-                                    <Dynamic-ImportPackage>*</Dynamic-ImportPackage>
+                                    <DynamicImport-Package>*</DynamicImport-Package>
                                     <_nouses>true</_nouses>
                                 </instructions>
                             </configuration>

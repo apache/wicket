@@ -661,7 +661,7 @@ public class BaseWicketTester extends MockWebApplication
 			AjaxLink link = (AjaxLink)linkComponent;
 
 			setupRequestAndResponse(true);
-			RequestCycle requestCycle = createRequestCycle();
+			WebRequestCycle requestCycle = createRequestCycle();
 			callOnBeginRequest(requestCycle);
 			AjaxRequestTarget target = new AjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
@@ -669,8 +669,7 @@ public class BaseWicketTester extends MockWebApplication
 			link.onClick(target);
 
 			// process the request target
-			target.respond(requestCycle);
-			requestCycle.detach();
+			processRequestCycle(requestCycle);
 		}
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
@@ -680,15 +679,14 @@ public class BaseWicketTester extends MockWebApplication
 			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
 
 			setupRequestAndResponse(true);
-			RequestCycle requestCycle = createRequestCycle();
+			WebRequestCycle requestCycle = createRequestCycle();
 			AjaxRequestTarget target = new AjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
 
 			link.onClick(target);
 
 			// process the request target
-			target.respond(requestCycle);
-			requestCycle.detach();
+			processRequestCycle(requestCycle);
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
@@ -721,7 +719,7 @@ public class BaseWicketTester extends MockWebApplication
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
 			setupRequestAndResponse(true);
-			RequestCycle requestCycle = createRequestCycle();
+			WebRequestCycle requestCycle = createRequestCycle();
 
 			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 
@@ -729,8 +727,7 @@ public class BaseWicketTester extends MockWebApplication
 			ajaxFormSubmitBehavior.onRequest();
 
 			// process the request target
-			requestCycle.getRequestTarget().respond(requestCycle);
-			requestCycle.detach();
+			processRequestCycle(requestCycle);
 		}
 		/*
 		 * If the link is a submitlink then we pretend to have clicked it
@@ -1038,7 +1035,7 @@ public class BaseWicketTester extends MockWebApplication
 
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
-			markupId + "\" ?>.*");
+			markupId + "\"[^>]*?>.*");
 		failMessage = "Component wasn't found in the AJAX response";
 		return isTrue(failMessage, isComponentInAjaxResponse);
 	}

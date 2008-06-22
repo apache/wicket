@@ -63,7 +63,7 @@ public final class TimeFrame implements ITimeFrameSource
 	 *         <code>TimeFrame</code> each day
 	 */
 	public static ITimeFrameSource eachDay(final TimeOfDay startTimeOfDay,
-			final TimeOfDay endTimeOfDay)
+		final TimeOfDay endTimeOfDay)
 	{
 		check(startTimeOfDay, endTimeOfDay);
 
@@ -125,7 +125,7 @@ public final class TimeFrame implements ITimeFrameSource
 		if (end.lessThan(start))
 		{
 			throw new IllegalArgumentException("Start time of time frame " + start +
-					" was after end time " + end);
+				" was after end time " + end);
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class TimeFrame implements ITimeFrameSource
 	public boolean overlaps(final TimeFrame timeframe)
 	{
 		return contains(timeframe.start) || contains(timeframe.end) || timeframe.contains(start) ||
-				timeframe.contains(end);
+			timeframe.contains(end);
 	}
 
 	/**
@@ -221,4 +221,41 @@ public final class TimeFrame implements ITimeFrameSource
 	{
 		return "[start=" + start + ", end=" + end + "]";
 	}
+
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TimeFrame other = (TimeFrame)obj;
+		if (end == null)
+		{
+			if (other.end != null)
+				return false;
+		}
+		else if (!end.equals(other.end))
+			return false;
+		if (start == null)
+		{
+			if (other.start != null)
+				return false;
+		}
+		else if (!start.equals(other.start))
+			return false;
+		return true;
+	}
+
+
 }

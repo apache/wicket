@@ -436,7 +436,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		if (markupIdToComponent.size() > 0)
 		{
 			final Component component = (Component)markupIdToComponent.values().iterator().next();
-			component.getPage().detach();
+			final Page page = (Page)component.findParent(Page.class);
+			if (page != null)
+			{
+				page.detach();
+			}
 		}
 	}
 
@@ -726,7 +730,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
-		final Page page = component.getPage();
+		final Page page = (Page)component.findParent(Page.class);
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow it got

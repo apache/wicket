@@ -621,7 +621,7 @@ public final class Objects
 	 * @return converted value of the type given, or value if the value cannot be converted to the
 	 *         given type.
 	 */
-	public static Object convertValue(Object value, Class toType)
+	public static Object convertValue(final Object value, final Class toType)
 	{
 		Object result = null;
 
@@ -693,7 +693,8 @@ public final class Objects
 				result = primitiveDefaults.get(toType);
 			}
 		}
-		return result;
+
+		return (result != null) ? result : value;
 	}
 
 	/**

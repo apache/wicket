@@ -23,5 +23,11 @@ package org.apache.wicket.spring.injection.util;
  */
 public class Bean
 {
+	/**
+	 * method
+	 */
+	public void method()
+	{
 
+	}
 }

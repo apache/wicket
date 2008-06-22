@@ -28,7 +28,6 @@ import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 
-
 /**
  * 
  * Url coding strategy for bookmarkable pages that encodes a set of given parameters
@@ -68,7 +67,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param mountPath
 	 *            mount path
 	 * @param bookmarkablePageClass
@@ -87,7 +86,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param mountPath
 	 *            mount path (not empty)
 	 * @param bookmarkablePageClass
@@ -130,7 +129,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				{
 					value = "";
 				}
-				url.append(urlEncode(value)).append("/");
+				url.append(urlEncodePathComponent(value)).append("/");
 				parameterNamesToAdd.remove(parameterName);
 			}
 		}
@@ -153,7 +152,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				String parameterName = (String)iterator.next();
 				final Object param = parameters.get(parameterName);
 				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
-				url.append(urlEncode(parameterName)).append("=").append(urlEncode(value));
+				url.append(urlEncodeQueryComponent(parameterName)).append("=").append(urlEncodeQueryComponent(value));
 				first = false;
 			}
 		}
@@ -182,7 +181,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 			for (int i = 0; i < pathParts.length; i++)
 			{
-				params.put(parameterNames[i], urlDecode(pathParts[i]));
+				params.put(parameterNames[i], urlDecodePathComponent(pathParts[i]));
 			}
 		}
 

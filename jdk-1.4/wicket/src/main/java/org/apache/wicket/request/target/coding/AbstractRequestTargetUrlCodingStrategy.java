@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -126,7 +124,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 
 	private void appendValue(AppendingStringBuffer url, String key, String value)
 	{
-		String escapedValue = urlEncode(value);
+		String escapedValue = urlEncodePathComponent(value);
 		if (!Strings.isEmpty(escapedValue))
 		{
 			if (!url.endsWith("/"))
@@ -181,7 +179,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		for (int i = 0; i < pairs.length; i += 2)
 		{
 			String value = pairs[i + 1];
-			value = urlDecode(value);
+			value = urlDecodePathComponent(value);
 			parameters.add(pairs[i], value);
 		}
 
@@ -194,49 +192,76 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		return parameters;
 	}
 
-	/**
-	 * Returns a decoded value of the given value
-	 * 
+    /**
+     * Url encodes a string that is mean for a URL path (e.g., between slashes)
+     *
+     * @param string
+     *            string to be encoded
+     * @return encoded string
+     */
+    protected String urlEncodePathComponent(String string)
+    {
+        return WicketURLEncoder.PATH_INSTANCE.encode(string);
+    }
+
+    /**
+	 * Returns a decoded value of the given value (taken from a URL path section)
+	 *
 	 * @param value
 	 * @return Decodes the value
 	 */
-	protected String urlDecode(String value)
+	protected String urlDecodePathComponent(String value)
 	{
-		try
-		{
-			value = URLDecoder.decode(value, Application.get().getRequestCycleSettings()
-					.getResponseRequestEncoding());
-		}
-		catch (UnsupportedEncodingException ex)
-		{
-			log.error("error decoding parameter", ex);
-		}
-		return value;
+        return WicketURLDecoder.PATH_INSTANCE.decode(value);
 	}
 
-	/**
-	 * Url encodes a string
-	 * 
+    /**
+	 * Url encodes a string mean for a URL query string
+	 *
 	 * @param string
 	 *            string to be encoded
 	 * @return encoded string
 	 */
-	protected String urlEncode(String string)
+	protected String urlEncodeQueryComponent(String string)
 	{
-		try
-		{
-			return URLEncoder.encode(string, Application.get().getRequestCycleSettings()
-					.getResponseRequestEncoding());
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			log.error(e.getMessage(), e);
-			return string;
-		}
-
+        return WicketURLEncoder.QUERY_INSTANCE.encode(string);
 	}
 
-	public boolean matches(String path)
+    /**
+     * Returns a decoded value of the given value (taken from a URL query string)
+     *
+     * @param value
+     * @return Decodes the value
+     */
+    protected String urlDecodeQueryComponent(String value)
+    {
+        return WicketURLDecoder.QUERY_INSTANCE.decode(value);
+    }
+
+    /**
+	 * @deprecated  Use urlEncodePathComponent or urlEncodeQueryComponent instead
+	 */
+	protected String urlDecode(String value)
+	{
+        return urlDecodePathComponent(value);
+	}
+
+	/**
+	 * @deprecated  Use urlEncodePathComponent or urlEncodeQueryComponent instead
+	 */
+	protected String urlEncode(String string)
+	{
+        return urlEncodePathComponent(string);
+	}
+
+    /**
+     * Does given path match this mount? We match /mount/point or /mount/point/with/extra/path, but not
+	 * /mount/pointXXX.
+     *
+     * @param path
+     * @return true if matches, false otherwise
+     */
+    public boolean matches(String path)
 	{
 		if (path.startsWith(mountPath))
 		{
