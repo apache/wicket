@@ -1236,6 +1236,26 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * INTERNAL
+	 * 
+	 * @param node
+	 */
+	public final void markNodeChildrenDirty(Object node)
+	{
+		TreeItem item = nodeToItemMap.get(node);
+		if (item != null)
+		{
+			visitItemChildren(item, new IItemCallback()
+			{
+				public void visitItem(TreeItem item)
+				{
+					invalidateNode(item.getModelObject(), false);
+				}
+			});
+		}
+	}
+
+	/**
 	 * Invalidates single node (without children). On the next render, this node will be updated.
 	 * Node will not be rebuilt, unless forceRebuild is true.
 	 * 
