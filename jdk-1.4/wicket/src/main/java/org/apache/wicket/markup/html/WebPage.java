@@ -397,7 +397,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					{
 						return component;
 					}
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
 			if (header == null)
