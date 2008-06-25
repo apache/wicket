@@ -124,15 +124,18 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 	return killEvent(event);
                		break;
                 case KEY_ENTER:
-	                if(selected>-1){
-    	                obj.value=getSelectedValue();
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-          		        if(typeof objonchange=="function")objonchange();
-					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection==true) {
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-					}
+                    if(selected > -1) {
+                        var value = getSelectedValue();
+                        if(value = handleSelection(value)) {
+                          obj.value = value;
+                          if(typeof objonchange=="function") objonchange();
+                        }
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    } else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    }
 	                mouseactive=0;
 	                if(typeof objonkeydown=="function")objonkeydown();
 
@@ -177,6 +180,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         }
     }
 
+    function handleSelection(input) {
+    	var menu = getAutocompleteMenu();
+    	var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
+    	return attr ? eval(attr.value) : input;
+    }
+    
     function getMenuId() {
         return elementId+"-autocomplete";
     }
@@ -216,6 +225,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         return node;
     }
     
+    function handleSelection(input) {
+        var menu = getAutocompleteMenu();
+        var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
+        return attr ? eval(attr.value) : input;
+    }
+
     function killEvent(event){
         if(!event)event=window.event;
         if(!event)return false;
@@ -306,9 +321,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 
 		var clickFunc = function(event){
 			mouseactive=0;
-			wicketGet(elementId).value=getSelectedValue();
-			if(typeof objonchange=="function")objonchange();
+			var value = getSelectedValue();
+			if(value = handleSelection(value)) {
+				wicketGet(elementId).value=value;
+				if (typeof objonchange=="function") {objonchange();}
 				hideAutoComplete();
+			}
 		};
 			
 		var mouseOverFunc = function(event){
