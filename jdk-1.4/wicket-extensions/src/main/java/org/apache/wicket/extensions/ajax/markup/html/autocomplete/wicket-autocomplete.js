@@ -124,22 +124,21 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 	return killEvent(event);
                		break;
                 case KEY_ENTER:
-	                if(selected>-1){
-    	                obj.value=getSelectedValue();
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-          		        if(typeof objonchange=="function")objonchange();
-					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection==true) {
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-					}
-	                mouseactive=0;
-	                if(typeof objonkeydown=="function")objonkeydown();
-
-	                if(selected>-1){
-	                	//return killEvent(event);
-            	    }
-            	    return true;
+                    if(selected > -1) {
+                        var value = getSelectedValue();
+                        if(handleSelection(value)) {
+                          obj.value = value;
+                          if(typeof objonchange=="function") objonchange();
+                        }
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    } else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    }
+                    mouseactive = 0;
+                    if(typeof objonkeydown=="function") objonkeydown();
+                    return true;
                 break;
                 default:
             }
@@ -175,6 +174,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
             }
 			if(typeof objonkeypress=="function")objonkeypress();
         }
+    }
+
+    function handleSelection(input) {
+        var menu = getAutocompleteMenu();
+        var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
+        return attr ? eval(attr.value) : input;
     }
 
     function getMenuId() {
@@ -302,27 +307,30 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         var element = getAutocompleteMenu();
         element.innerHTML=resp;
         if(element.firstChild && element.firstChild.childNodes) {
-		elementCount=element.firstChild.childNodes.length;
+		    elementCount=element.firstChild.childNodes.length;
 
-		var clickFunc = function(event){
-			mouseactive=0;
-			wicketGet(elementId).value=getSelectedValue();
-			if(typeof objonchange=="function")objonchange();
-				hideAutoComplete();
-		};
+            var clickFunc = function(event) {
+                mouseactive = 0;
+                var value = getSelectedValue();
+                if(value = handleSelection(value)) {
+                  wicketGet(elementId).value = value;
+                  if(typeof objonchange=="function") objonchange();
+                }
+                hideAutoComplete();
+            };
 			
-		var mouseOverFunc = function(event){
-			selected = getElementIndex(this);
-			render();
-		 	showAutoComplete();
-		};
+            var mouseOverFunc = function(event) {
+                selected = getElementIndex(this);
+                render();
+                showAutoComplete();
+            };
 
-		var node=element.firstChild.childNodes[0];
-		for(var i=0;i<elementCount;i++){
-			node.onclick = clickFunc;
-			node.onmouseover = mouseOverFunc;
-			node = node.nextSibling;
-       		}
+            var node=element.firstChild.childNodes[0];
+            for(var i=0;i<elementCount;i++) {
+                node.onclick = clickFunc;
+                node.onmouseover = mouseOverFunc;
+                node = node.nextSibling;
+            }
         } else {
             elementCount=0;
         }
