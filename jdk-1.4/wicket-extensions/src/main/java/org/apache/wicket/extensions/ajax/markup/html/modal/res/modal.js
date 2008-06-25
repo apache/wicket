@@ -1421,19 +1421,18 @@ Wicket.Window.Mask.prototype = {
 		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME", "SELECT");
 		if (Wicket.Browser.isIE()) {
 			var win = Wicket.Window.current;			
-			var i = 0;			
-			this.tabIndexes = new Array();
+			this.tabsAreDisabled = 'true';
 			for (var j = 0; j < this.tabbableTags.length; j++) {
 				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
 					
 					// if this is not an iframe window and the element is child of window content,
 					// don't disable tab on it
-					if (win.isIframe() == true || this.isParent(tagElements[k], win.content) == false) {				
-						this.tabIndexes[i] = tagElements[k].tabIndex;
-						tagElements[k].tabIndex="-1";
+						if (win.isIframe() == true || this.isParent(tagElements[k], win.content) == false) {
+						var element = tagElements[k];
+						element.hiddenTabIndex = element.tabIndex;
+						element.tabIndex="-1";
 					}
-					i++;
 				}
 			}
 		}
@@ -1443,17 +1442,17 @@ Wicket.Window.Mask.prototype = {
 	 * Restore tab indexes if they were disabled.
 	 */
 	restoreTabs: function() {
-		if (typeof(this.tabIndexes) != 'undefined') {
-			var i = 0;
+		if (typeof(this.tabsAreDisabled) != 'undefined') {
 			for (var j = 0; j < this.tabbableTags.length; j++) {
 				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
-					tagElements[k].tabIndex = this.tabIndexes[i];
-					tagElements[k].tabEnabled = true;
-					i++;
+					var element = tagElements[k];
+					element.tabIndex = element.hiddenTabIndex;
+					element.hiddenTabIndex = null;
+					element.tabEnabled = true;
 				}
 			}
-			this.tabIndexes = null;
+			this.tabsAreDisabled = null;
 		}
 	}
 
