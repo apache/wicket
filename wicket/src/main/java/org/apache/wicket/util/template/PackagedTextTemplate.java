@@ -27,7 +27,6 @@ import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.JavascriptStripper;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
@@ -88,9 +87,6 @@ public class PackagedTextTemplate extends TextTemplate
 
 	private static final long serialVersionUID = 1L;
 
-	/** class loader stream locator. */
-	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();
-
 	private static final MetaDataKey<TextTemplateCache> TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey<TextTemplateCache>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -122,7 +118,8 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param fileName
 	 *            the name of the file, relative to the <code>clazz</code> position
 	 * @param contentType
-	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
+	 *            <code>text/html</code>"
 	 */
 	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
 		final String contentType)
@@ -139,7 +136,8 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param fileName
 	 *            the name of the file, relative to the <code>clazz</code> position
 	 * @param contentType
-	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
+	 *            <code>text/html</code>"
 	 * @param encoding
 	 *            the file's encoding, for example, "<code>UTF-8</code>"
 	 */
@@ -154,7 +152,12 @@ public class PackagedTextTemplate extends TextTemplate
 		TextTemplateCache cache = app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
 		// TODO implement cache
 
-		IResourceStream stream = streamLocator.locate(clazz, path);
+		// first try default class loading locator to find the resource
+		IResourceStream stream = new ResourceStreamLocator().locate(clazz, path);
+
+		// if default locator couldnt find the resource allow the application specific one to try
+		stream = Application.get().getResourceSettings().getResourceStreamLocator().locate(clazz,
+			path);
 
 		if (stream == null)
 		{
@@ -214,8 +217,8 @@ public class PackagedTextTemplate extends TextTemplate
 	/**
 	 * Interpolates a <code>Map</code> of variables with the content and replaces the content with
 	 * the result. Variables are denoted in the <code>String</code> by the
-	 * <code>syntax ${variableName}</code>. The contents will be altered by replacing each
-	 * variable of the form <code>${variableName}</code> with the value returned by
+	 * <code>syntax ${variableName}</code>. The contents will be altered by replacing each variable
+	 * of the form <code>${variableName}</code> with the value returned by
 	 * <code>variables.getValue("variableName")</code>.
 	 * <p>
 	 * WARNING: there is no going back to the original contents after the interpolation is done. If
