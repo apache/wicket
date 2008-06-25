@@ -844,8 +844,11 @@ Wicket.Ajax.Request.prototype = {
 				t.open("GET", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
-				t.setRequestHeader("Wicket-Ajax", "true");				
-				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
+				t.setRequestHeader("Wicket-Ajax", "true");
+				if (Wicket.Focus.lastFocusId)
+				{			
+					t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);
+				}
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(null);
 				return true;
@@ -893,7 +896,10 @@ Wicket.Ajax.Request.prototype = {
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
-				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
+				if (Wicket.Focus.lastFocusId)
+				{
+					t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);
+				}
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(body);
 				return true;
