@@ -225,12 +225,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         return node;
     }
     
-    function handleSelection(input) {
-        var menu = getAutocompleteMenu();
-        var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
-        return attr ? eval(attr.value) : input;
-    }
-
     function killEvent(event){
         if(!event)event=window.event;
         if(!event)return false;
