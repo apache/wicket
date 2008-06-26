@@ -54,7 +54,11 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean showListOnEmptyInput = false;
 
-	/**
+    private String cssClassName = null;
+
+    private boolean adjustInputWidth = true;
+
+  /**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
 	 * 
@@ -136,4 +140,52 @@ public final class AutoCompleteSettings implements IClusterable
 		this.showListOnEmptyInput = showListOnEmptyInput;
 		return this;
 	}
+
+    /**
+     * Get CSS class name to add to the autocompleter markup container
+     *
+     * @return CSS class name, or <code>null</code> if not used
+     */
+    public String getCssClassName()
+    {
+        return cssClassName;
+    }
+
+    /**
+     * Sets an CSS class name to add to the autocompleter markup container
+     * <p/>
+     * This makes it easier to have multiple autocompleters in your application
+     * with different style and layout.
+     *
+     * @param cssClassName valid CSS class name
+     */
+    public void setCssClassName(final String cssClassName)
+    {
+        this.cssClassName = cssClassName;
+    }
+
+    /**
+     * Tells if wicket should adjust the width of the autocompleter selection window
+     * to the width of the related input field.
+     *
+     * @return   <code>true</code> if the autocompleter should have the same size as
+     *             the input field, <code>false</code> for default browser behavior
+     */
+    public boolean isAdjustInputWidth()
+    {
+        return adjustInputWidth;
+    }
+
+  /**
+   * Adjust the width of the autocompleter selection window to the width of the related input field.
+   * <p/>
+   * Otherwise the size will depend on the default browser behavior and CSS.
+   *
+    * @param adjustInputWidth  <code>true</code> if the autocompleter should have the same size  as
+   *                           the input field, <code>false</code> for default browser behavior
+   */
+    public void setAdjustInputWidth(final boolean adjustInputWidth)
+    {
+        this.adjustInputWidth = adjustInputWidth;
+    }
 }
