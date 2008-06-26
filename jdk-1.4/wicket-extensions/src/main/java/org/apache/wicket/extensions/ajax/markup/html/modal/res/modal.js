@@ -1447,8 +1447,10 @@ Wicket.Window.Mask.prototype = {
 				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
 					var element = tagElements[k];
-					element.tabIndex = element.hiddenTabIndex;
-					element.hiddenTabIndex = null;
+					if (typeof(element.hiddenTabIndex) != 'undefined') {
+						element.tabIndex = element.hiddenTabIndex;
+						element.hiddenTabIndex = null;
+					}
 					element.tabEnabled = true;
 				}
 			}
