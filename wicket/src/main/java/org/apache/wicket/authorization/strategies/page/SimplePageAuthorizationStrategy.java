@@ -57,7 +57,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * The supertype (class or interface) of Pages that require authorization to be instantiated.
 	 */
-	private final WeakReference<Class<? extends Component<?>>> securePageSuperTypeRef;
+	private final WeakReference<Class<?>> securePageSuperTypeRef;
 
 	/**
 	 * Construct.
@@ -71,16 +71,15 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
-	public <C extends Component<?>, S extends Page<?>> SimplePageAuthorizationStrategy(
-		final Class<C> securePageSuperType, final Class<S> signInPageClass)
+	public <S extends Page<?>> SimplePageAuthorizationStrategy(final Class<?> securePageSuperType,
+		final Class<S> signInPageClass)
 	{
 		if (securePageSuperType == null)
 		{
 			throw new IllegalArgumentException("Secure page super type must not be null");
 		}
 
-		securePageSuperTypeRef = new WeakReference<Class<? extends Component<?>>>(
-			securePageSuperType);
+		securePageSuperTypeRef = new WeakReference<Class<?>>(securePageSuperType);
 
 		// Handle unauthorized access to pages
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
