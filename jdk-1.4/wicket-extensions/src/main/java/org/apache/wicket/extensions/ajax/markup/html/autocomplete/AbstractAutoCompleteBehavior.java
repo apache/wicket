@@ -68,10 +68,14 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	protected final String constructSettingsJS()
 	{
-		StringBuffer sb = new StringBuffer();
-		sb.append("{preselect:").append(settings.getPreselect()).append(",maxHeight:").append(
-			settings.getMaxHeightInPx()).append(",showListOnEmptyInput:").append(
-			settings.getShowListOnEmptyInput()).append("}");
+		final StringBuffer sb = new StringBuffer();
+        sb.append("{preselect: ").append(settings.getPreselect());
+        sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
+        sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
+        sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
+        if(settings.getCssClassName() != null)
+            sb.append(",className: '").append(settings.getCssClassName()).append('\'');
+        sb.append('}');
 		return sb.toString();
 	}
 
