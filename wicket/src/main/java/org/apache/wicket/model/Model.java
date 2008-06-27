@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Objects;
 
 
 /**
@@ -254,5 +255,24 @@ public class Model<T extends Serializable> implements IModel<T>
 	public final void setObject(Component<?> component, Object object)
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(object);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj instanceof Model == false)
+		{
+			return false;
+		}
+		Model<?> that = (Model<?>)obj;
+		return Objects.equal(object, that.object);
 	}
 }
