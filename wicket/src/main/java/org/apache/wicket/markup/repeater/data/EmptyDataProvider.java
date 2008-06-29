@@ -33,7 +33,8 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static EmptyDataProvider< ? > INSTANCE = new EmptyDataProvider<Void>();
+	@SuppressWarnings("unchecked")
+	private static EmptyDataProvider<?> INSTANCE = new EmptyDataProvider();
 
 	/**
 	 * @param <T>

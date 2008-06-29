@@ -37,7 +37,7 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * @author Jonathan Locke
  * 
  */
-public abstract class Loop extends AbstractRepeater<Integer>
+public abstract class Loop extends AbstractRepeater
 {
 	/**
 	 * 
@@ -49,7 +49,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public static class LoopItem extends WebMarkupContainer<Void>
+	public static class LoopItem extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -110,7 +110,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 */
 	public final int getIterations()
 	{
-		return (getModelObject()).intValue();
+		return ((Integer)getDefaultModelObject()).intValue();
 	}
 
 	/**
@@ -156,11 +156,11 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	@Override
-	protected Iterator<Component<?>> renderIterator()
+	protected Iterator<Component> renderIterator()
 	{
 		final int iterations = size();
 
-		return new ReadOnlyIterator<Component<?>>()
+		return new ReadOnlyIterator<Component>()
 		{
 			private int index = 0;
 
@@ -169,7 +169,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 				return index < iterations;
 			}
 
-			public Component<?> next()
+			public Component next()
 			{
 				return get(Integer.toString(index++));
 			}
@@ -189,7 +189,7 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	 * @param child
 	 */
 	@Override
-	protected final void renderChild(Component<?> child)
+	protected final void renderChild(Component child)
 	{
 		renderItem((LoopItem)child);
 	}

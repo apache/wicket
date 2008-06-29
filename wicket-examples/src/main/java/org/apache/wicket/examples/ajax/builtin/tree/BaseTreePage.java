@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
  * 
  * @author Matej Knopp
  */
-public abstract class BaseTreePage extends BasePage<Void>
+public abstract class BaseTreePage extends BasePage
 {
 
 	/**
@@ -43,7 +43,7 @@ public abstract class BaseTreePage extends BasePage<Void>
 	 */
 	public BaseTreePage()
 	{
-		add(new AjaxLink<Void>("expandAll")
+		add(new AjaxLink("expandAll")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -53,7 +53,7 @@ public abstract class BaseTreePage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("collapseAll")
+		add(new AjaxLink("collapseAll")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -63,7 +63,7 @@ public abstract class BaseTreePage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("switchRootless")
+		add(new AjaxLink("switchRootless")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

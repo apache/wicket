@@ -25,14 +25,14 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Eelco Hillenius
  */
-public class BorderPage extends WicketExamplePage<Void>
+public class BorderPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
 	 */
 	public BorderPage()
 	{
-		Label<String> label = new Label<String>("label", "I am the label");
+		Label label = new Label("label", "I am the label");
 		MyBorder border = new MyBorder("border");
 		border.add(label);
 		add(border);

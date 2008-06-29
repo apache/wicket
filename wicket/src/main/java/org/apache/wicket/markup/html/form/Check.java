@@ -40,7 +40,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * @param <T>
  *            The model object type
  */
-public class Check<T> extends LabeledWebMarkupContainer<T>
+public class Check<T> extends LabeledWebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -116,7 +116,7 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
-		Collection<?> collection = group.getModelObject();
+		Collection<?> collection = (Collection<?>)group.getDefaultModelObject();
 
 		// check for npe in group's model object
 		if (collection == null)
@@ -140,7 +140,7 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 				}
 			}
 		}
-		else if (collection.contains(getModelObject()))
+		else if (collection.contains(getDefaultModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
@@ -195,4 +195,49 @@ public class Check<T> extends LabeledWebMarkupContainer<T>
 		setLabelInternal(labelModel);
 		return this;
 	}
+
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
+
 }

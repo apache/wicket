@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class SubmitLinkPage extends WicketExamplePage<Void>
+public class SubmitLinkPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -39,10 +39,10 @@ public class SubmitLinkPage extends WicketExamplePage<Void>
 		add(feedbackPanel);
 
 		// Add a form with 2 SubmitLinks that can be called
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form("form");
 		add(form);
 
-		SubmitLink<?> internal = new SubmitLink<Void>("internal")
+		SubmitLink internal = new SubmitLink("internal")
 		{
 			@Override
 			public void onSubmit()
@@ -52,7 +52,7 @@ public class SubmitLinkPage extends WicketExamplePage<Void>
 		};
 		form.add(internal);
 
-		SubmitLink<?> external = new SubmitLink<Void>("external", form)
+		SubmitLink external = new SubmitLink("external", form)
 		{
 			@Override
 			public void onSubmit()

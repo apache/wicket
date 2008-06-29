@@ -43,7 +43,7 @@ import org.apache.wicket.util.value.ValueMap;
 public class LocalizerTest extends WicketTestCase
 {
 
-	private static class MyMockPage extends WebPage<Void>
+	private static class MyMockPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 

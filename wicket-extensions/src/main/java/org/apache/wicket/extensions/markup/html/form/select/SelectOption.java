@@ -28,10 +28,11 @@ import org.apache.wicket.model.IModel;
  * TODO Post 1.2: General: Example
  * 
  * @see Select
+ * @param <T>
  * 
  * @author Igor Vaynberg
  */
-public class SelectOption<T> extends WebMarkupContainer<T>
+public class SelectOption<T> extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,6 +45,8 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public SelectOption(String id, IModel<T> model)
@@ -55,12 +58,11 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
 	 * @param tag
-	 * 		the abstraction representing html tag of this component
+	 *            the abstraction representing html tag of this component
 	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
-
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 

@@ -24,8 +24,8 @@ import org.apache.wicket.Component;
  * {@link StringResourceModel}. It lacks parameter substitutions, but is generally easier to use.
  * <p>
  * If you don't use this model as primary component model (you don't specify it in component
- * constructor and don't assign it to component using {@link Component#setModel(IModel)}), you will
- * need to connect the model with a component using {@link #wrapOnAssignment(Component)}.
+ * constructor and don't assign it to component using {@link Component#setDefaultModel(IModel)}),
+ * you will need to connect the model with a component using {@link #wrapOnAssignment(Component)}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -74,14 +74,14 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	{
 		// this shouldn't be called always wrapped!
 		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-			(Component<String>)null, defaultValue);
+			(Component)null, defaultValue);
 	}
 
 
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel<String> wrapOnAssignment(final Component<String> component)
+	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
 	}
@@ -93,7 +93,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component<String> component;
+		private final Component component;
 
 		/**
 		 * Construct.
@@ -102,8 +102,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		 * @param defaultValue
 		 * @param component
 		 */
-		public AssignmentWrapper(String resourceKey, String defaultValue,
-			Component<String> component)
+		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
 		{
 			super(resourceKey, defaultValue);
 			this.component = component;

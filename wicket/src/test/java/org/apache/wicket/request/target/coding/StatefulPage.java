@@ -32,7 +32,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class StatefulPage extends WebPage<Void>
+public class StatefulPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -70,7 +70,7 @@ public class StatefulPage extends WebPage<Void>
 			 */
 			protected void onSubmit()
 			{
-				info("Submitted text: " + field.getModelObject() + ", link click count: " +
+				info("Submitted text: " + field.getDefaultModelObject() + ", link click count: " +
 					linkClickCount);
 			}
 		};

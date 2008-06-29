@@ -34,7 +34,7 @@ public class GoAndClearFilter extends GoFilter
 
 	protected static final IModel<String> defaultClearModel = new Model<String>("clear");
 
-	private final Button<String> clear;
+	private final Button clear;
 
 	private final Object originalState;
 
@@ -70,9 +70,9 @@ public class GoAndClearFilter extends GoFilter
 	{
 		super(id, goModel);
 
-		originalState = Objects.cloneModel(form.getModelObject());
+		originalState = Objects.cloneModel(form.getDefaultModelObject());
 
-		clear = new Button<String>("clear", clearModel)
+		clear = new Button("clear", clearModel)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -91,7 +91,7 @@ public class GoAndClearFilter extends GoFilter
 	/**
 	 * @return button component representing the clear button
 	 */
-	protected Button<String> getClearButton()
+	protected Button getClearButton()
 	{
 		return clear;
 	}
@@ -104,10 +104,10 @@ public class GoAndClearFilter extends GoFilter
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	protected void onClearSubmit(Button<String> button)
+	protected void onClearSubmit(Button button)
 	{
 		Form<Object> form = (Form<Object>)button.getForm();
-		form.setModelObject(Objects.cloneModel(originalState));
+		form.setDefaultModelObject(Objects.cloneModel(originalState));
 	}
 
 }

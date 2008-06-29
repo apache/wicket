@@ -31,8 +31,6 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            The model object type
  */
 public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 {

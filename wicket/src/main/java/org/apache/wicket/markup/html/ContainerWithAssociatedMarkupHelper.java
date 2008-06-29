@@ -43,14 +43,14 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
 	/** The markup container the helper is associated with */
-	private final WebMarkupContainer<?> container;
+	private final WebMarkupContainer container;
 
 	/**
 	 * @param container
 	 */
 	public ContainerWithAssociatedMarkupHelper(final IHeaderPartContainerProvider container)
 	{
-		this.container = (WebMarkupContainer<?>)container;
+		this.container = (WebMarkupContainer)container;
 	}
 
 	/**

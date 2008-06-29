@@ -33,7 +33,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class RadioGroupPage extends WicketExamplePage<Void>
+public class RadioGroupPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -42,12 +42,12 @@ public class RadioGroupPage extends WicketExamplePage<Void>
 	{
 
 		final RadioGroup<Person> group = new RadioGroup<Person>("group", new Model<Person>());
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person: " + group.getModelObjectAsString());
+				info("selected person: " + group.getDefaultModelObjectAsString());
 			}
 		};
 
@@ -62,9 +62,9 @@ public class RadioGroupPage extends WicketExamplePage<Void>
 			protected void populateItem(ListItem<Person> item)
 			{
 				item.add(new Radio<Person>("radio", item.getModel()));
-				item.add(new Label<String>("name", new PropertyModel<String>(item.getModel(),
-					"name")));
-				item.add(new Label<String>("lastName", new PropertyModel<String>(item.getModel(),
+				item.add(new Label("name",
+					new PropertyModel<String>(item.getDefaultModel(), "name")));
+				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
 					"lastName")));
 			}
 

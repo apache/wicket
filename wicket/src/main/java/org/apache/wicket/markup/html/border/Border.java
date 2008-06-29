@@ -104,10 +104,8 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * 
- * @param <T>
- *            The model object type
  */
-public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T>
+public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	implements
 		IComponentResolver
 {
@@ -158,7 +156,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Border(final String id, final IModel<T> model)
+	public Border(final String id, final IModel<?> model)
 	{
 		super(id, model);
 
@@ -189,7 +187,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @deprecated 1.3 please use #getBodyContainer().setVisible(false) instead
 	 */
 	@Deprecated
-	public Border<T> setBorderBodyVisible(boolean bodyVisible)
+	public Border setBorderBodyVisible(boolean bodyVisible)
 	{
 		body.setVisible(false);
 		return this;
@@ -204,7 +202,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 *            true, to enable transparent resolving
 	 * @return this for chaining
 	 */
-	public final Border<T> setTransparentResolver(final boolean enable)
+	public final Border setTransparentResolver(final boolean enable)
 	{
 		transparentResolver = enable;
 		return this;
@@ -224,14 +222,14 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// In case of nested Borders, the outer border is no longer able to find
 		// its body container easily. Thus we need to help resolve it.
 
 		// The container is the body component. Get the Border component.
-		MarkupContainer< ? > border = container.getParent();
+		MarkupContainer border = container.getParent();
 		while ((border != null) && !(border instanceof Border))
 		{
 			border = border.getParent();
@@ -321,9 +319,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends WebMarkupContainer<Object>
-		implements
-			IComponentResolver
+	public class BorderBodyContainer extends WebMarkupContainer implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -388,15 +384,15 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
-		public boolean resolve(final MarkupContainer< ? > container,
-			final MarkupStream markupStream, final ComponentTag tag)
+		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+			final ComponentTag tag)
 		{
 			// Usually you add child components to Border instead of Body. Hence
 			// we need to help Body to properly resolve the children.
 			String id = tag.getId();
 			if (!id.equals(BODY_ID))
 			{
-				Component< ? > component = Border.this.get(id);
+				Component component = get(id);
 				if (component != null)
 				{
 					component.render(markupStream);

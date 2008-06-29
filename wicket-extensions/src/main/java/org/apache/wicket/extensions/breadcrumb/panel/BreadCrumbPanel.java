@@ -97,7 +97,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param model
 	 *            The model
 	 */
-	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel, IModel model)
+	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel, IModel<?> model)
 	{
 		super(id, model);
 		this.breadCrumbModel = breadCrumbModel;
@@ -139,6 +139,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void undo()
 			{
 				breadCrumbModel.setActive(active);

@@ -63,17 +63,17 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent<Void>(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
+		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
-		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				WebMarkupContainer<?> wmc = new WebMarkupContainer<Void>(
+				WebMarkupContainer wmc = new WebMarkupContainer(
 					MockPageWithLinkAndComponent.COMPONENT_ID);
 				wmc.setOutputMarkupId(true);
 				wmc.add(timer);
@@ -86,7 +86,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -107,9 +107,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		Duration dur = Duration.seconds(20);
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
-		Label<String> label = new Label<String>(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
 		page.add(label);
-		page.add(new Link<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new Link(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -126,7 +126,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}

@@ -34,7 +34,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class ListMultipleChoicePage extends WicketExamplePage<ListMultipleChoicePage.Input>
+public class ListMultipleChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
@@ -50,14 +50,14 @@ public class ListMultipleChoicePage extends WicketExamplePage<ListMultipleChoice
 	public ListMultipleChoicePage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -91,7 +91,7 @@ public class ListMultipleChoicePage extends WicketExamplePage<ListMultipleChoice
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	public static class Input implements IClusterable
+	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
 		public List<String> sites = new ArrayList<String>();

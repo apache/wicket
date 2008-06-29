@@ -118,7 +118,7 @@ public class ModelToStringTest extends WicketTestCase
 			innerPOJO + "]:bindings=[]";
 		assertEquals(expected, pojoProperty.toString());
 
-		Component<?> component1 = pojoProperty.bind(new Label<Object>("label"));
+		Component component1 = pojoProperty.bind(new Label("label"));
 		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[" +
 			innerPOJO + "]:bindings=[Binding(:component=[" + component1 + "]:expression=[label])]";
 		assertEquals(expected, pojoProperty.toString());
@@ -195,7 +195,7 @@ public class ModelToStringTest extends WicketTestCase
 	 */
 	public void testPropertyModel()
 	{
-		PropertyModel<Void> emptyModel = new PropertyModel<Void>("", null);
+		PropertyModel emptyModel = new PropertyModel("", null);
 		String expected = "Model:classname=[org.apache.wicket.model.PropertyModel]:nestedModel=[]:expression=[null]";
 		assertEquals(expected, emptyModel.toString());
 

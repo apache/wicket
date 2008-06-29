@@ -35,11 +35,8 @@ import org.apache.wicket.response.StringResponse;
  * @see org.apache.wicket.markup.transformer.ITransformer
  * 
  * @author Juergen Donnerstag
- * 
- * @param <T>
- *            The model data type
- */
-public abstract class AbstractOutputTransformerContainer<T> extends MarkupContainer<T>
+ * */
+public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	implements
 		ITransformer
 {
@@ -63,7 +60,7 @@ public abstract class AbstractOutputTransformerContainer<T> extends MarkupContai
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractOutputTransformerContainer(final String id, final IModel<T> model)
+	public AbstractOutputTransformerContainer(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -76,7 +73,7 @@ public abstract class AbstractOutputTransformerContainer<T> extends MarkupContai
 	 *            If true, only the body is applied to transformation.
 	 * @return this
 	 */
-	public MarkupContainer<T> setTransformBodyOnly(final boolean value)
+	public MarkupContainer setTransformBodyOnly(final boolean value)
 	{
 		transformBodyOnly = value;
 		return this;
@@ -98,7 +95,7 @@ public abstract class AbstractOutputTransformerContainer<T> extends MarkupContai
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public abstract CharSequence transform(final Component< ? > component, final CharSequence output)
+	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 
 	/**

@@ -75,7 +75,7 @@ public class InheritanceHeadTest extends WicketTestCase
 			}
 
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class< ? extends Page> getHomePage()
 			{
 				return ConcretePage2.class;
 			}

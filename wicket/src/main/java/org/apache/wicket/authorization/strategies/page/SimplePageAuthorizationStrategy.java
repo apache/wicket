@@ -71,7 +71,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
-	public <S extends Page<?>> SimplePageAuthorizationStrategy(final Class<?> securePageSuperType,
+	public <S extends Page> SimplePageAuthorizationStrategy(final Class<?> securePageSuperType,
 		final Class<S> signInPageClass)
 	{
 		if (securePageSuperType == null)
@@ -85,7 +85,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
 			new IUnauthorizedComponentInstantiationListener()
 			{
-				public void onUnauthorizedInstantiation(final Component<?> component)
+				public void onUnauthorizedInstantiation(final Component component)
 				{
 					// If there is a sign in page class declared, and the
 					// unauthorized component is a page, but it's not the
@@ -108,7 +108,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * @see org.apache.wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isPageAuthorized(java.lang.Class)
 	 */
 	@Override
-	protected <T extends Page<?>> boolean isPageAuthorized(final Class<T> pageClass)
+	protected <T extends Page> boolean isPageAuthorized(final Class<T> pageClass)
 	{
 		if (instanceOf(pageClass, securePageSuperTypeRef.get()))
 		{

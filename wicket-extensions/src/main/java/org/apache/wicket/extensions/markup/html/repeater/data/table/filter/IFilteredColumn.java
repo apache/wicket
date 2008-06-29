@@ -46,6 +46,6 @@ public interface IFilteredColumn<T> extends IColumn<T>
 	 * @return component that will be used to represent a filter for this column, or null if no such
 	 *         component is desired
 	 */
-	Component<T> getFilter(String componentId, FilterForm form);
+	Component getFilter(String componentId, FilterForm form);
 
 }

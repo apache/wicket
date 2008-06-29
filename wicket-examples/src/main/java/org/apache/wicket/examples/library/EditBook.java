@@ -43,7 +43,7 @@ import org.apache.wicket.validation.validator.StringValidator;
  * 
  * @author Jonathan Locke
  */
-public final class EditBook extends AuthenticatedWebPage<Void>
+public final class EditBook extends AuthenticatedWebPage
 {
 	static final Book otherBook = new Book("Frisbee Techniques", "Marty van Hoff", Book.FICTION);
 
@@ -73,16 +73,16 @@ public final class EditBook extends AuthenticatedWebPage<Void>
 	 *            The id of the book that the page will edit
 	 * @return The page link
 	 */
-	public static PageLink<?> link(final String name, final long id)
+	public static PageLink link(final String name, final long id)
 	{
-		return new PageLink<Void>(name, new IPageLink()
+		return new PageLink(name, new IPageLink()
 		{
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				return new EditBook(Book.get(id));
 			}
 
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
 				return EditBook.class;
 			}

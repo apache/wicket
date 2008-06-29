@@ -90,7 +90,7 @@ import org.slf4j.LoggerFactory;
  *            The model object type
  * 
  */
-public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
+public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	implements
 		IFormVisitorParticipant
 {
@@ -207,7 +207,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 			return message;
 		}
 
-		private String getString(Localizer localizer, String key, Component<?> component)
+		private String getString(Localizer localizer, String key, Component component)
 		{
 			triedKeys.add(key);
 			return localizer.getString(key, component, "");
@@ -380,7 +380,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @param visitor
 	 *            The visitor to call
 	 */
-	public static final void visitFormComponentsPostOrder(Component<?> component,
+	public static final void visitFormComponentsPostOrder(Component component,
 		final FormComponent.IVisitor visitor)
 	{
 		if (visitor == null)
@@ -392,12 +392,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	}
 
 
-	private static final Object visitFormComponentsPostOrderHelper(Component<?> component,
+	private static final Object visitFormComponentsPostOrderHelper(Component component,
 		final FormComponent.IVisitor visitor)
 	{
 		if (component instanceof MarkupContainer)
 		{
-			final MarkupContainer<?> container = (MarkupContainer<?>)component;
+			final MarkupContainer container = (MarkupContainer)component;
 			if (container.size() > 0)
 			{
 				boolean visitChildren = true;
@@ -407,10 +407,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 				}
 				if (visitChildren)
 				{
-					final Iterator<Component<?>> children = container.iterator();
+					final Iterator<? extends Component> children = container.iterator();
 					while (children.hasNext())
 					{
-						final Component<?> child = children.next();
+						final Component child = children.next();
 						Object value = visitFormComponentsPostOrderHelper(child, visitor);
 						if (value == Component.IVisitor.STOP_TRAVERSAL)
 						{
@@ -460,6 +460,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public FormComponent(final String id, IModel<T> model)
@@ -481,7 +483,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 * @see IValidator
 	 * @see IValidatorAddListener
 	 */
-	public final FormComponent<T> add(final IValidator... validators)
+	public final FormComponent<?> add(final IValidator... validators)
 	{
 		if (validators == null)
 		{
@@ -641,7 +643,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		if (form == null)
 		{
 			// check whether the form is a child of a surrounding border
-			final Border<?> border = findParent(Border.class);
+			final Border border = findParent(Border.class);
 			if (border != null)
 			{
 				FindFormVisitor formVisitor = new FindFormVisitor();
@@ -710,7 +712,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 		// TODO: keep this in sync with AbstractSubmitLink#getInputName
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
-		Component<?> c = this;
+		Component c = this;
 		while (true)
 		{
 			inputName.prepend(id);
@@ -1081,7 +1083,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 */
 	public void updateModel()
 	{
-		setModelObject(getConvertedInput());
+		setDefaultModelObject(getConvertedInput());
 	}
 
 
@@ -1289,7 +1291,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 	 */
 	protected String getModelValue()
 	{
-		return getModelObjectAsString();
+		return getDefaultModelObjectAsString();
 	}
 
 	/**
@@ -1522,5 +1524,49 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer<T>
 				validator.getClass().getName() + " on component " + getPath(), e);
 		}
 	}
+
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
 
 }

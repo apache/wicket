@@ -82,7 +82,7 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
 	@Deprecated
-	public final Object getObject(Component<?> component)
+	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}

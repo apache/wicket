@@ -35,7 +35,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class CheckGroupPage extends WicketExamplePage<Void>
+public class CheckGroupPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -44,12 +44,12 @@ public class CheckGroupPage extends WicketExamplePage<Void>
 	{
 
 		final CheckGroup<Person> group = new CheckGroup<Person>("group", new ArrayList<Person>());
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person(s): " + group.getModelObjectAsString());
+				info("selected person(s): " + group.getDefaultModelObjectAsString());
 			}
 		};
 
@@ -64,9 +64,9 @@ public class CheckGroupPage extends WicketExamplePage<Void>
 			protected void populateItem(ListItem<Person> item)
 			{
 				item.add(new Check<Person>("checkbox", item.getModel()));
-				item.add(new Label<String>("name", new PropertyModel<String>(item.getModel(),
-					"name")));
-				item.add(new Label<String>("lastName", new PropertyModel<String>(item.getModel(),
+				item.add(new Label("name",
+					new PropertyModel<String>(item.getDefaultModel(), "name")));
+				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
 					"lastName")));
 			}
 

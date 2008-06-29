@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Mock page containing a link with a label inside
  */
-public class MockPageWithLinkAndLabel extends WebPage<Void>
+public class MockPageWithLinkAndLabel extends WebPage
 {
 
 	/**

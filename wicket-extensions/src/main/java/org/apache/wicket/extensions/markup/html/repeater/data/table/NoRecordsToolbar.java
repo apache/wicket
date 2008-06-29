@@ -34,7 +34,7 @@ import org.apache.wicket.model.ResourceModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NoRecordsToolbar extends AbstractToolbar<Void>
+public class NoRecordsToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,12 +61,12 @@ public class NoRecordsToolbar extends AbstractToolbar<Void>
 	public NoRecordsToolbar(final DataTable<?> table, IModel<String> messageModel)
 	{
 		super(table);
-		WebMarkupContainer<?> td = new WebMarkupContainer<Void>("td");
+		WebMarkupContainer td = new WebMarkupContainer("td");
 		add(td);
 
 		td.add(new AttributeModifier("colspan", true, new Model<String>(
 			String.valueOf(table.getColumns().length))));
-		td.add(new Label<String>("msg", messageModel));
+		td.add(new Label("msg", messageModel));
 	}
 
 	/**

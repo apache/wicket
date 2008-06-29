@@ -43,7 +43,7 @@ import org.apache.wicket.model.Model;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class FeedbackPanel extends Panel<Void> implements IFeedback
+public class FeedbackPanel extends Panel implements IFeedback
 {
 	/**
 	 * List for messages.
@@ -58,13 +58,12 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 		public MessageListView(final String id)
 		{
 			super(id);
-			setModel(newFeedbackMessagesModel());
+			setDefaultModel(newFeedbackMessagesModel());
 		}
 
 		/**
-		 * @see
-		 * 	org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html
-		 * 	.list.ListItem)
+		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html
+		 *      .list.ListItem)
 		 */
 		@Override
 		protected void populateItem(final ListItem<FeedbackMessage> listItem)
@@ -88,7 +87,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 				}
 			};
 
-			final Component<?> label = newMessageDisplayComponent("message", message);
+			final Component label = newMessageDisplayComponent("message", message);
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
@@ -118,7 +117,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
 	{
 		super(id);
-		WebMarkupContainer<?> messagesContainer = new WebMarkupContainer<Void>("feedbackul")
+		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -166,7 +165,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * level.
 	 * 
 	 * @param level
-	 * 		the level, see FeedbackMessage
+	 *            the level, see FeedbackMessage
 	 * @return whether there is any message for this panel of the given level
 	 */
 	public final boolean anyMessage(int level)
@@ -202,7 +201,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 */
 	public final FeedbackMessagesModel getFeedbackMessagesModel()
 	{
-		return (FeedbackMessagesModel)messageListView.getModel();
+		return (FeedbackMessagesModel)messageListView.getDefaultModel();
 	}
 
 	/**
@@ -234,7 +233,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * Sets whether model messages should be HTML escaped. Default is true.
 	 * 
 	 * @param escapeMessages
-	 * 		whether model messages should be HTML escaped
+	 *            whether model messages should be HTML escaped
 	 * 
 	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
 	 */
@@ -248,7 +247,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * Sets a filter to use on the feedback messages model
 	 * 
 	 * @param filter
-	 * 		The message filter to install on the feedback messages model
+	 *            The message filter to install on the feedback messages model
 	 */
 	public final void setFilter(IFeedbackMessageFilter filter)
 	{
@@ -257,7 +256,8 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 
 	/**
 	 * @param maxMessages
-	 * 		The maximum number of feedback messages that this feedback panel should show at one time
+	 *            The maximum number of feedback messages that this feedback panel should show at
+	 *            one time
 	 */
 	public final void setMaxMessages(int maxMessages)
 	{
@@ -268,7 +268,7 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * Sets the comparator used for sorting the messages.
 	 * 
 	 * @param sortingComparator
-	 * 		comparator used for sorting the messages.
+	 *            comparator used for sorting the messages.
 	 */
 	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
@@ -279,9 +279,9 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * Gets the css class for the given message.
 	 * 
 	 * @param message
-	 * 		the message
+	 *            the message
 	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
-	 * 	'feedbackPanelERROR', but you can override this method to provide your own
+	 *         'feedbackPanelERROR', but you can override this method to provide your own
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
@@ -315,18 +315,18 @@ public class FeedbackPanel extends Panel<Void> implements IFeedback
 	 * 
 	 * By default a {@link Label} is used.
 	 * 
-	 * Note that the created component is expected to respect feedback panel's {@link
-	 * #getEscapeModelStrings()} value
+	 * Note that the created component is expected to respect feedback panel's
+	 * {@link #getEscapeModelStrings()} value
 	 * 
 	 * @param id
-	 * 		parent id
+	 *            parent id
 	 * @param message
-	 * 		feedback message
+	 *            feedback message
 	 * @return component used to display the message
 	 */
-	protected Component<?> newMessageDisplayComponent(String id, FeedbackMessage message)
+	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
-		Label<String> label = new Label<String>(id, message.getMessage().toString());
+		Label label = new Label(id, message.getMessage().toString());
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}

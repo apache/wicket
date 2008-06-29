@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author ivaynberg
  */
-public class Index extends WicketExamplePage<Void>
+public class Index extends WicketExamplePage
 {
 	/** Click count. */
 	private int count = 0;

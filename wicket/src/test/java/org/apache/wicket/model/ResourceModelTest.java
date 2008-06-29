@@ -28,7 +28,7 @@ public class ResourceModelTest extends WicketTestCase
 	/**
 	 * Test page.
 	 */
-	public static class TestPage extends WebPage<Void>	{
+	public static class TestPage extends WebPage	{
 		private static final long serialVersionUID = 1L;
 
 		/**

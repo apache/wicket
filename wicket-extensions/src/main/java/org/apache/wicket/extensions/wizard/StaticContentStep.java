@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author eelcohillenius
  */
-public class StaticContentStep extends WizardStep<Void>
+public class StaticContentStep extends WizardStep
 {
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,7 @@ public class StaticContentStep extends WizardStep<Void>
 	private final boolean allowHtml;
 
 	/** The model that provided the actual content. */
-	private IModel< ? > content;
+	private IModel<?> content;
 
 	/**
 	 * Constructor for if you want to set all the properties yourself.
@@ -47,14 +47,11 @@ public class StaticContentStep extends WizardStep<Void>
 	public StaticContentStep(boolean allowHtml)
 	{
 		this.allowHtml = allowHtml;
-		add(new Label<String>("content", ""));
+		add(new Label("content", ""));
 	}
 
 	/**
 	 * Construct.
-	 * 
-	 * @param <T>
-	 *            The model object type of the static content model
 	 * 
 	 * @param title
 	 *            The title of this step
@@ -66,13 +63,13 @@ public class StaticContentStep extends WizardStep<Void>
 	 *            If true, any html of the content will be rendered as is. Otherwise, it will be
 	 *            escaped.
 	 */
-	public <T> StaticContentStep(IModel<String> title, IModel<String> summary, IModel<T> content,
+	public StaticContentStep(IModel<String> title, IModel<String> summary, IModel<?> content,
 		boolean allowHtml)
 	{
 		super(title, summary);
 		this.content = content;
 		this.allowHtml = allowHtml;
-		add(new Label<T>("content", content).setEscapeModelStrings(!allowHtml));
+		add(new Label("content", content).setEscapeModelStrings(!allowHtml));
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class StaticContentStep extends WizardStep<Void>
 	 *            If true, any html of the content will be rendered as is. Otherwise, it will be
 	 *            escaped.
 	 */
-	public StaticContentStep(String title, String summary, IModel< ? > content, boolean allowHtml)
+	public StaticContentStep(String title, String summary, IModel<?> content, boolean allowHtml)
 	{
 		this(new Model<String>(title), new Model<String>(summary), content, allowHtml);
 	}
@@ -155,7 +152,7 @@ public class StaticContentStep extends WizardStep<Void>
 	 * 
 	 * @return The content model
 	 */
-	public final IModel< ? > getContentModel()
+	public final IModel<?> getContentModel()
 	{
 		return content;
 	}
@@ -172,6 +169,6 @@ public class StaticContentStep extends WizardStep<Void>
 	public final <T> void setContentModel(IModel<T> content)
 	{
 		this.content = content;
-		replace(new Label<T>("content", content).setEscapeModelStrings(!allowHtml));
+		replace(new Label("content", content).setEscapeModelStrings(!allowHtml));
 	}
 }

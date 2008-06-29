@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WicketExamplePage<Void>
+public class Index extends WicketExamplePage
 {
 	/**
 	 * Link to the wizard. It's an internal link instead of a bookmarkable page to help us with
@@ -36,9 +36,9 @@ public class Index extends WicketExamplePage<Void>
 	 * wizard, there is still the first access to the wizard. But if you link to the page that
 	 * renders it using and internal link, you'll circumvent that.
 	 */
-	private static final class WizardLink extends Link<Void>
+	private static final class WizardLink extends Link
 	{
-		private final Class<? extends Wizard<?>> wizardClass;
+		private final Class<? extends Wizard> wizardClass;
 
 		/**
 		 * Construct.
@@ -50,7 +50,7 @@ public class Index extends WicketExamplePage<Void>
 		 * @param wizardClass
 		 *            Class of the wizard to instantiate
 		 */
-		public <C extends Wizard<?>> WizardLink(String id, Class<C> wizardClass)
+		public <C extends Wizard> WizardLink(String id, Class<C> wizardClass)
 		{
 			super(id);
 			this.wizardClass = wizardClass;

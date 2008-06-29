@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.border.Border;
  * 
  * @author Eelco Hillenius
  */
-class MyBorder extends Border<Void>
+class MyBorder extends Border
 {
 	/**
 	 * Construct.

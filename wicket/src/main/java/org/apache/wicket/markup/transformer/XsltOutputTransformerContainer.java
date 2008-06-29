@@ -40,7 +40,7 @@ import org.apache.wicket.model.Model;
  * @param <T>
  *            The model data type
  */
-public class XsltOutputTransformerContainer<T> extends AbstractOutputTransformerContainer<T>
+public class XsltOutputTransformerContainer extends AbstractOutputTransformerContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,12 +60,12 @@ public class XsltOutputTransformerContainer<T> extends AbstractOutputTransformer
 	 * @param xslFilePath
 	 *            XSL input file path
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel<T> model,
+	public XsltOutputTransformerContainer(final String id, final IModel<?> model,
 		final String xslFilePath)
 	{
 		super(id);
 
-		this.xslFile = xslFilePath;
+		xslFile = xslFilePath;
 
 		// The containers tag will be transformed as well. Thus we make sure that
 		// the xml provided to the xsl processor is well formed (has a single
@@ -87,7 +87,7 @@ public class XsltOutputTransformerContainer<T> extends AbstractOutputTransformer
 	 *            the model (unused)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel<T> model)
+	public XsltOutputTransformerContainer(final String id, final IModel<?> model)
 	{
 		this(id, model, null);
 	}
@@ -120,9 +120,9 @@ public class XsltOutputTransformerContainer<T> extends AbstractOutputTransformer
 	 *      CharSequence)
 	 */
 	@Override
-	public CharSequence transform(final Component< ? > component, final CharSequence output)
+	public CharSequence transform(final Component component, final CharSequence output)
 		throws Exception
 	{
-		return new XsltTransformer(this.xslFile).transform(component, output);
+		return new XsltTransformer(xslFile).transform(component, output);
 	}
 }

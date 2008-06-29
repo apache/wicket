@@ -49,7 +49,7 @@ import org.apache.wicket.util.lang.Bytes;
  * 
  * @author Eelco Hillenius
  */
-public class MultiUploadPage extends WicketExamplePage<Void>
+public class MultiUploadPage extends WicketExamplePage
 {
 	/**
 	 * List view for files in upload folder.
@@ -76,8 +76,8 @@ public class MultiUploadPage extends WicketExamplePage<Void>
 		protected void populateItem(ListItem<File> listItem)
 		{
 			final File file = listItem.getModelObject();
-			listItem.add(new Label<String>("file", file.getName()));
-			listItem.add(new Link<Void>("delete")
+			listItem.add(new Label("file", file.getName()));
+			listItem.add(new Link("delete")
 			{
 				@Override
 				public void onClick()
@@ -92,7 +92,7 @@ public class MultiUploadPage extends WicketExamplePage<Void>
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends Form<Void>
+	private class FileUploadForm extends Form
 	{
 		// collection that will hold uploaded FileUpload objects
 		private final Collection<FileUpload> uploads = new ArrayList<FileUpload>();
@@ -187,7 +187,7 @@ public class MultiUploadPage extends WicketExamplePage<Void>
 		add(simpleUploadForm);
 
 		// Add folder view
-		add(new Label<String>("dir", uploadFolder.getAbsolutePath()));
+		add(new Label("dir", uploadFolder.getAbsolutePath()));
 		fileListView = new FileListView("fileList", new LoadableDetachableModel<List<File>>()
 		{
 			@Override

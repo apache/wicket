@@ -62,7 +62,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	public void testBasicAjaxLinkClick()
 	{
 		// Create a link, which we test is actually invoked
-		final AjaxLink<?> ajaxLink = new AjaxLink<Void>("ajaxLink")
+		final AjaxLink ajaxLink = new AjaxLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -81,9 +81,9 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
-				Page<?> page = new MockPageWithLink();
+				Page page = new MockPageWithLink();
 				page.add(ajaxLink);
 
 				return page;
@@ -104,10 +104,10 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 */
 	public void testAjaxFallbackLinkClick()
 	{
-		final Page<?> page = new MockPageWithLink();
+		final Page page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink<Void>("ajaxLink")
+		page.add(new AjaxFallbackLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -126,7 +126,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -144,10 +144,10 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 */
 	public void testFallbackLinkWithAjaxDisabled()
 	{
-		final Page<?> page = new MockPageWithLink();
+		final Page page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink<Void>("ajaxLink")
+		page.add(new AjaxFallbackLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -166,7 +166,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}

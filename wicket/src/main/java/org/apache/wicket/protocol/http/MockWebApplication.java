@@ -90,10 +90,10 @@ public class MockWebApplication
 	private static final Logger log = LoggerFactory.getLogger(MockWebApplication.class);
 
 	/** The last rendered page. */
-	private Page<?> lastRenderedPage;
+	private Page lastRenderedPage;
 
 	/** The previously rendered page */
-	private Page<?> previousRenderedPage;
+	private Page previousRenderedPage;
 
 	/** Mock http servlet request. */
 	private final MockHttpServletRequest servletRequest;
@@ -263,7 +263,7 @@ public class MockWebApplication
 	 * 
 	 * @return The last rendered page
 	 */
-	public Page<?> getLastRenderedPage()
+	public Page getLastRenderedPage()
 	{
 		return lastRenderedPage;
 	}
@@ -273,7 +273,7 @@ public class MockWebApplication
 	 * 
 	 * @return The last rendered page
 	 */
-	public Page<?> getPreviousRenderedPage()
+	public Page getPreviousRenderedPage()
 	{
 		return previousRenderedPage;
 	}
@@ -343,7 +343,7 @@ public class MockWebApplication
 	 * 
 	 * @param component
 	 */
-	public void processRequestCycle(final Component<?> component)
+	public void processRequestCycle(final Component component)
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
@@ -351,7 +351,7 @@ public class MockWebApplication
 
 		if (component instanceof Page)
 		{
-			lastRenderedPage = (Page<?>)component;
+			lastRenderedPage = (Page)component;
 		}
 		postProcessRequestCycle(cycle);
 	}
@@ -363,7 +363,7 @@ public class MockWebApplication
 	 * 
 	 * @param pageClass
 	 */
-	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass)
+	public <C extends Page> void processRequestCycle(final Class<C> pageClass)
 	{
 		processRequestCycle(pageClass, null);
 	}
@@ -376,7 +376,7 @@ public class MockWebApplication
 	 * @param pageClass
 	 * @param params
 	 */
-	public <C extends Page<?>> void processRequestCycle(final Class<C> pageClass,
+	public <C extends Page> void processRequestCycle(final Class<C> pageClass,
 		PageParameters params)
 	{
 		setupRequestAndResponse();
@@ -400,7 +400,7 @@ public class MockWebApplication
 				IRequestTarget currentTarget = cycle.getRequestTarget();
 				if (currentTarget instanceof IPageRequestTarget)
 				{
-					Page<?> currentPage = ((IPageRequestTarget)currentTarget).getPage();
+					Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
 					final IPageMap pageMap = currentPage.getPageMap();
 					if (pageMap.isDefault())
 					{
@@ -544,12 +544,12 @@ public class MockWebApplication
 	 * @param cycle
 	 * @return Last page
 	 */
-	private Page<?> generateLastRenderedPage(WebRequestCycle cycle)
+	private Page generateLastRenderedPage(WebRequestCycle cycle)
 	{
-		Page<?> newLastRenderedPage = cycle.getResponsePage();
+		Page newLastRenderedPage = cycle.getResponsePage();
 		if (newLastRenderedPage == null)
 		{
-			Class<? extends Page<?>> responseClass = cycle.getResponsePageClass();
+			Class<? extends Page> responseClass = cycle.getResponsePageClass();
 			if (responseClass != null)
 			{
 				Session.set(cycle.getSession());
@@ -563,7 +563,7 @@ public class MockWebApplication
 					// create a new request cycle for the newPage call
 					createRequestCycle();
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
-					Class<? extends Page<?>> pageClass = pageClassRequestTarget.getPageClass();
+					Class<? extends Page> pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{

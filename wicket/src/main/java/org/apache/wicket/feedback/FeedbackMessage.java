@@ -79,7 +79,7 @@ public class FeedbackMessage implements IClusterable
 	private final Serializable message;
 
 	/** The reporting component. */
-	private final Component< ? > reporter;
+	private final Component reporter;
 
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
@@ -94,7 +94,7 @@ public class FeedbackMessage implements IClusterable
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component< ? > reporter, final Serializable message,
+	public FeedbackMessage(final Component reporter, final Serializable message,
 		final int level)
 	{
 		this.reporter = reporter;
@@ -158,7 +158,7 @@ public class FeedbackMessage implements IClusterable
 	 * 
 	 * @return the reporting component.
 	 */
-	public final Component< ? > getReporter()
+	public final Component getReporter()
 	{
 		return reporter;
 	}

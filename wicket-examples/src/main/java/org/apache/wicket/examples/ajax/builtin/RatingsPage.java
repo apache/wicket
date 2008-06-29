@@ -74,7 +74,7 @@ public class RatingsPage extends BasePage
 		 */
 		public void onClick()
 		{
-			RatingModel rating = (RatingModel)getModelObject();
+			RatingModel rating = (RatingModel)getDefaultModelObject();
 			rating.nrOfVotes = 0;
 			rating.rating = 0;
 			rating.sumOfRatings = 0;

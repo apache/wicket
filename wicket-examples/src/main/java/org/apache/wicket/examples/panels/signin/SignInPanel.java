@@ -37,7 +37,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class SignInPanel extends Panel<Void>
+public abstract class SignInPanel extends Panel
 {
 	/** True if the panel should display a remember-me checkbox */
 	private boolean includeRememberMe = true;
@@ -54,7 +54,7 @@ public abstract class SignInPanel extends Panel<Void>
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends Form<Void>
+	public final class SignInForm extends Form
 	{
 		/** El-cheapo model for form. */
 		private final ValueMap properties = new ValueMap();
@@ -80,7 +80,7 @@ public abstract class SignInPanel extends Panel<Void>
 			password.setType(String.class);
 
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer<?> rememberMeRow = new WebMarkupContainer<Void>("rememberMeRow");
+			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
@@ -169,7 +169,7 @@ public abstract class SignInPanel extends Panel<Void>
 	 */
 	public String getPassword()
 	{
-		return password.getModelObjectAsString();
+		return password.getDefaultModelObjectAsString();
 	}
 
 	/**
@@ -189,7 +189,7 @@ public abstract class SignInPanel extends Panel<Void>
 	 */
 	public String getUsername()
 	{
-		return username.getModelObjectAsString();
+		return username.getDefaultModelObjectAsString();
 	}
 
 	/**

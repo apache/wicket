@@ -42,9 +42,6 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class DataViewBase<T> extends AbstractPageableView<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final IDataProvider<T> dataProvider;
 
@@ -89,7 +86,7 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 	 */
 	private static final class ModelIterator<T> implements Iterator<IModel<T>>
 	{
-		private final Iterator< ? extends T> items;
+		private final Iterator<? extends T> items;
 		private final IDataProvider<T> dataProvider;
 		private final int max;
 		private int index;

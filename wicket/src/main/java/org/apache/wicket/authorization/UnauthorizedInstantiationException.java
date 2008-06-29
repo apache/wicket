@@ -41,7 +41,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	 * @param componentClass
 	 *            The unauthorized component class
 	 */
-	public <T extends Component<?>> UnauthorizedInstantiationException(final Class<T> componentClass)
+	public <T extends Component> UnauthorizedInstantiationException(final Class<T> componentClass)
 	{
 		super("Not authorized to instantiate class " + componentClass.getName());
 		componentClassName = componentClass.getName();
@@ -50,7 +50,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	/**
 	 * @return The component class that could not be instantiated
 	 */
-	public Class<? extends Component<?>> getComponentClass()
+	public Class<? extends Component> getComponentClass()
 	{
 		return Classes.resolveClass(componentClassName);
 	}

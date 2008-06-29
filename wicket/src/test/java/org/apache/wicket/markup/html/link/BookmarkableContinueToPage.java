@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class BookmarkableContinueToPage extends WebPage<Void>
+public class BookmarkableContinueToPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -71,7 +71,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
 
@@ -85,7 +85,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 *      CharSequence)
 	 */
 	@Override
-	public CharSequence transform(final Component< ? > component, final CharSequence output)
+	public CharSequence transform(final Component component, final CharSequence output)
 		throws Exception
 	{
 		return new XsltTransformer(xslFile).transform(component, output);
@@ -95,7 +95,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
-	public void bind(final Component< ? > component)
+	public void bind(final Component component)
 	{
 		if (component instanceof Page)
 		{

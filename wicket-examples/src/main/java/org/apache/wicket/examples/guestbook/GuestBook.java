@@ -42,7 +42,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Martijn Dashorst
  */
-public final class GuestBook extends WicketExamplePage<Void>
+public final class GuestBook extends WicketExamplePage
 {
 	/** A global list of all comments from all users across all sessions */
 	private static final List<Comment> commentList = new ArrayList<Comment>();
@@ -61,8 +61,8 @@ public final class GuestBook extends WicketExamplePage<Void>
 			@Override
 			public void populateItem(final ListItem<Comment> listItem)
 			{
-				listItem.add(new Label<Date>("date"));
-				listItem.add(new MultiLineLabel<String>("text"));
+				listItem.add(new Label("date"));
+				listItem.add(new MultiLineLabel("text"));
 			}
 		}).setVersioned(false);
 	}

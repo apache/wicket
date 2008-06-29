@@ -320,7 +320,7 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final <T extends Page<?>> void mountBookmarkablePage(final String path,
+	public final <T extends Page> void mountBookmarkablePage(final String path,
 		final Class<T> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass, null));
@@ -339,7 +339,7 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final <T extends Page<?>> void mountBookmarkablePage(final String path,
+	public final <T extends Page> void mountBookmarkablePage(final String path,
 		final String pageMapName, final Class<T> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
@@ -657,7 +657,7 @@ public abstract class WebApplication extends Application
 	 *            page on which ajax response is made
 	 * @return non-null ajax request target instance
 	 */
-	public AjaxRequestTarget newAjaxRequestTarget(final Page<?> page)
+	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
 		return new AjaxRequestTarget(page);
 	}

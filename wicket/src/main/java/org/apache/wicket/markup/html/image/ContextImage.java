@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  * @author Alastair Maw
  * @author Igor Vaynberg (ivaynberg)
  */
-public class ContextImage extends WebComponent<String>
+public class ContextImage extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 

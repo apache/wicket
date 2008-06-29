@@ -46,12 +46,12 @@ class SerializedPagesCache
 	public SerializedPagesCache(final int size)
 	{
 		this.size = size;
-		cache = new ArrayList(size);
+		cache = new ArrayList<SoftReference<SerializedPageWithSession>>(size);
 	}
 
 	private final int size;
 
-	private final List /* SerializedPageWithSession */cache;
+	private final List<SoftReference<SerializedPageWithSession>> cache;
 
 	SerializedPageWithSession removePage(Page page)
 	{
@@ -59,10 +59,10 @@ class SerializedPagesCache
 		{
 			synchronized (cache)
 			{
-				for (Iterator i = cache.iterator(); i.hasNext();)
+				for (Iterator<SoftReference<SerializedPageWithSession>> i = cache.iterator(); i.hasNext();)
 				{
-					SoftReference ref = (SoftReference)i.next();
-					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
+					SoftReference<SerializedPageWithSession> ref = i.next();
+					SerializedPageWithSession entry = ref.get();
 					if (entry != null && entry.page.get() == page)
 					{
 						i.remove();
@@ -81,10 +81,10 @@ class SerializedPagesCache
 		{
 			synchronized (cache)
 			{
-				for (Iterator i = cache.iterator(); i.hasNext();)
+				for (Iterator<SoftReference<SerializedPageWithSession>> i = cache.iterator(); i.hasNext();)
 				{
-					SoftReference ref = (SoftReference)i.next();
-					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
+					SoftReference<SerializedPageWithSession> ref = i.next();
+					SerializedPageWithSession entry = ref.get();
 					if (entry != null && entry.page.get() == page)
 					{
 						i.remove();
@@ -95,7 +95,7 @@ class SerializedPagesCache
 
 				if (result != null)
 				{
-					cache.add(new SoftReference(result));
+					cache.add(new SoftReference<SerializedPageWithSession>(result));
 				}
 			}
 		}
@@ -109,10 +109,10 @@ class SerializedPagesCache
 		{
 			synchronized (cache)
 			{
-				for (Iterator i = cache.iterator(); i.hasNext();)
+				for (Iterator<SoftReference<SerializedPageWithSession>> i = cache.iterator(); i.hasNext();)
 				{
-					SoftReference ref = (SoftReference)i.next();
-					SerializedPageWithSession entry = (SerializedPageWithSession)ref.get();
+					SoftReference<SerializedPageWithSession> ref = i.next();
+					SerializedPageWithSession entry = ref.get();
 					if (entry != null && entry.sessionId.equals(sessionId) &&
 						entry.pageId == pageId && entry.pageMapName.equals(pageMapName) &&
 						entry.versionNumber == version && entry.ajaxVersionNumber == ajaxVersion)
@@ -133,11 +133,11 @@ class SerializedPagesCache
 	 * @param page
 	 * @param pagesList
 	 */
-	SerializedPageWithSession storePage(String sessionId, Page page,
-		List /* <SerializedPage> */pagesList)
+	SerializedPageWithSession storePage(String sessionId, Page page, List<SerializedPage> pagesList)
 	{
 		SerializedPageWithSession entry = new SerializedPageWithSession(sessionId, page, pagesList);
-		SoftReference ref = new SoftReference(entry);
+		SoftReference<SerializedPageWithSession> ref = new SoftReference<SerializedPageWithSession>(
+			entry);
 
 		if (size > 0)
 		{
@@ -166,7 +166,7 @@ class SerializedPagesCache
 		// this is used for lookup on pagemap serialization. We don't have the
 		// session id at that point, because it can happen outside the request
 		// thread. We only have the page instance and we need to use it as a key
-		final transient WeakReference /* <Page> */page;
+		final transient WeakReference<Page> page;
 
 		// list of serialized pages
 		final List<SerializedPage> pages;
@@ -179,22 +179,22 @@ class SerializedPagesCache
 		final int versionNumber;
 		final int ajaxVersionNumber;
 
-		SerializedPageWithSession(String sessionId, Page page, List /* <SerializablePage> */pages)
+		SerializedPageWithSession(String sessionId, Page page, List<SerializedPage> pages)
 		{
 			this.sessionId = sessionId;
 			pageId = page.getNumericId();
 			pageMapName = page.getPageMapName();
 			versionNumber = page.getCurrentVersionNumber();
 			ajaxVersionNumber = page.getAjaxVersionNumber();
-			this.pages = new ArrayList(pages);
-			this.page = new WeakReference(page);
+			this.pages = new ArrayList<SerializedPage>(pages);
+			this.page = new WeakReference<Page>(page);
 		}
 
 		SerializedPageWithSession(String sessionId, int pageId, String pageMapName,
-			int versionNumber, int ajaxVersionNumber, List /* <SerializablePage> */pages)
+			int versionNumber, int ajaxVersionNumber, List<SerializedPage> pages)
 		{
 			this.sessionId = sessionId;
-			page = new WeakReference(NO_PAGE);
+			page = new WeakReference<Page>(NO_PAGE);
 			this.pageId = pageId;
 			this.pageMapName = pageMapName;
 			this.versionNumber = versionNumber;
@@ -202,7 +202,9 @@ class SerializedPagesCache
 			this.pages = pages;
 		}
 
-		static Object NO_PAGE = new Object();
+		static final Page NO_PAGE = new Page()
+		{
+		};
 
 		@Override
 		public String toString()

@@ -25,7 +25,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * Note that this component doesn't work with CompoundPropertyModel's lazy initialization.
  */
-public class StockQuoteLabel2 extends Label<String>
+public class StockQuoteLabel2 extends Label
 {
 	/**
 	 * Constructor taking the symbol directly.

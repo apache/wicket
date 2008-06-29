@@ -101,10 +101,10 @@ public final class Objects
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private final ClassLoader classloader;
-		private final HashMap<String, Component<?>> replacedComponents;
+		private final HashMap<String, Component> replacedComponents;
 
 		private ReplaceObjectInputStream(InputStream in,
-			HashMap<String, Component<?>> replacedComponents, ClassLoader classloader)
+			HashMap<String, Component> replacedComponents, ClassLoader classloader)
 			throws IOException
 		{
 			super(in);
@@ -169,10 +169,10 @@ public final class Objects
 
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
 	{
-		private final HashMap<String, Component<?>> replacedComponents;
+		private final HashMap<String, Component> replacedComponents;
 
 		private ReplaceObjectOutputStream(OutputStream out,
-			HashMap<String, Component<?>> replacedComponents) throws IOException
+			HashMap<String, Component> replacedComponents) throws IOException
 		{
 			super(out);
 			this.replacedComponents = replacedComponents;
@@ -184,7 +184,7 @@ public final class Objects
 		{
 			if (obj instanceof Component)
 			{
-				final Component<?> component = (Component<?>)obj;
+				final Component component = (Component)obj;
 				String name = component.getPath();
 				replacedComponents.put(name, component);
 				return name;
@@ -438,7 +438,7 @@ public final class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap<String, Component<?>> replacedObjects = Generics.newHashMap();
+				final HashMap<String, Component> replacedObjects = Generics.newHashMap();
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(

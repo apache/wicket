@@ -31,7 +31,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class FilterToolbar extends AbstractToolbar<Void>
+public class FilterToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 	private static final String FILTER_COMPONENT_ID = "filter";
@@ -62,18 +62,18 @@ public class FilterToolbar extends AbstractToolbar<Void>
 
 		// populate the toolbar with components provided by filtered columns
 
-		RepeatingView<?> filters = new RepeatingView<Void>("filters");
+		RepeatingView filters = new RepeatingView("filters");
 		filters.setRenderBodyOnly(true);
 		add(filters);
 
 		IColumn<?>[] cols = table.getColumns();
 		for (int i = 0; i < cols.length; i++)
 		{
-			WebMarkupContainer<?> item = new WebMarkupContainer<Void>(filters.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
 			item.setRenderBodyOnly(true);
 
 			IColumn<?> col = cols[i];
-			Component<?> filter = null;
+			Component filter = null;
 
 			if (col instanceof IFilteredColumn)
 			{

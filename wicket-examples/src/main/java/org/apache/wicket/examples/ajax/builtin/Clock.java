@@ -29,7 +29,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Clock extends Label<String>
+public class Clock extends Label
 {
 	/**
 	 * Constructor

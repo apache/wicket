@@ -51,7 +51,8 @@ import org.apache.wicket.util.upload.FileItem;
  * be processed within the request they were uploaded.
  * 
  * Uses javascript implementation from
- * http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
+ * http://the-stickman.com/web-development/javascript/upload-multiple
+ * -files-with-a-single-file-element/
  * 
  * For customizing caption text see {@link #RESOURCE_LIMITED} and {@link #RESOURCE_UNLIMITED}
  * 
@@ -96,8 +97,8 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 
-	private final WebComponent<FileUpload> upload;
-	private final WebMarkupContainer<?> container;
+	private final WebComponent upload;
+	private final WebMarkupContainer container;
 
 	private final int max;
 
@@ -151,15 +152,15 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 		this.max = max;
 
-		upload = new WebComponent<FileUpload>("upload");
+		upload = new WebComponent("upload");
 		upload.setOutputMarkupId(true);
 		add(upload);
 
-		container = new WebMarkupContainer<Void>("container");
+		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
 		add(container);
 
-		container.add(new Label<String>("caption", new CaptionModel()));
+		container.add(new Label("caption", new CaptionModel()));
 	}
 
 	/**
@@ -301,7 +302,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		if (collection == null)
 		{
 			// no existing collection, push the one we created
-			setModelObject(getConvertedInput());
+			setDefaultModelObject(getConvertedInput());
 		}
 		else
 		{
@@ -314,7 +315,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 			// push the collection in case the model is listening to
 			// setobject calls
-			setModelObject(collection);
+			setDefaultModelObject(collection);
 		}
 	}
 

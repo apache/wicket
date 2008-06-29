@@ -33,5 +33,5 @@ public interface IUnauthorizedComponentInstantiationListener
 	 *            The partially constructed component (only the id is guaranteed to be valid).
 	 * @see org.apache.wicket.application.IComponentInstantiationListener
 	 */
-	void onUnauthorizedInstantiation(Component< ? > component);
+	void onUnauthorizedInstantiation(Component component);
 }

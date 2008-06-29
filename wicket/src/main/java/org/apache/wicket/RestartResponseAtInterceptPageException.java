@@ -42,7 +42,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPage
 	 *            redirect page
 	 */
-	public RestartResponseAtInterceptPageException(final Page<?> interceptPage)
+	public RestartResponseAtInterceptPageException(final Page interceptPage)
 	{
 		if (interceptPage == null)
 		{
@@ -60,7 +60,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPageClass
 	 *            Class of intercept page to instantiate
 	 */
-	public <C extends Page<?>> RestartResponseAtInterceptPageException(
+	public <C extends Page> RestartResponseAtInterceptPageException(
 		final Class<C> interceptPageClass)
 	{
 		if (interceptPageClass == null)
@@ -76,9 +76,9 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPage
 	 *            The intercept page to redirect to
 	 */
-	private void redirectToInterceptPage(final Page<?> interceptPage)
+	private void redirectToInterceptPage(final Page interceptPage)
 	{
-		final Page<?> requestPage = RequestCycle.get().getRequest().getPage();
+		final Page requestPage = RequestCycle.get().getRequest().getPage();
 
 		/*
 		 * requestPage can be null if we throw the restart response exception before any page is
@@ -106,10 +106,10 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPageClass
 	 *            The intercept page class to redirect to
 	 */
-	private <C extends Page<?>> void redirectToInterceptPage(final Class<C> interceptPageClass)
+	private <C extends Page> void redirectToInterceptPage(final Class<C> interceptPageClass)
 	{
 		final RequestCycle cycle = RequestCycle.get();
-		final Page<?> requestPage = cycle.getRequest().getPage();
+		final Page requestPage = cycle.getRequest().getPage();
 
 		/*
 		 * requestPage can be null if we throw the restart response exception before any page is

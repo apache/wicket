@@ -78,7 +78,8 @@ public class DataGridView<T> extends AbstractDataGridView<T>
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, List<ICellPopulator> populators, IDataProvider<T> dataProvider)
+	@SuppressWarnings("unchecked")
+	public DataGridView(String id, List<ICellPopulator<T>> populators, IDataProvider<T> dataProvider)
 	{
 		super(id, populators.toArray(new ICellPopulator[populators.size()]), dataProvider);
 	}
@@ -95,7 +96,7 @@ public class DataGridView<T> extends AbstractDataGridView<T>
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, ICellPopulator[] populators, IDataProvider<T> dataProvider)
+	public DataGridView(String id, ICellPopulator<T>[] populators, IDataProvider<T> dataProvider)
 	{
 		super(id, populators, dataProvider);
 	}
@@ -105,7 +106,7 @@ public class DataGridView<T> extends AbstractDataGridView<T>
 	 * 
 	 * @return the array of cell populators
 	 */
-	public ICellPopulator[] getPopulators()
+	public ICellPopulator<T>[] getPopulators()
 	{
 		return internalGetPopulators();
 	}

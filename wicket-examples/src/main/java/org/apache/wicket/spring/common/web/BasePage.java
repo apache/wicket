@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BasePage extends WicketExamplePage<Void>
+public class BasePage extends WicketExamplePage
 {
 	/**
 	 * Construct.

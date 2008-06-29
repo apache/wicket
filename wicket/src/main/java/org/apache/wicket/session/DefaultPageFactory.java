@@ -47,13 +47,13 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class)
 	 */
-	public final <C extends Page<?>> Page<?> newPage(final Class<C> pageClass)
+	public final <C extends Page> Page newPage(final Class<C> pageClass)
 	{
 		try
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			final Constructor<? extends Page<?>> constructor = pageClass.getConstructor((Class[])null);
+			final Constructor<? extends Page> constructor = pageClass.getConstructor((Class[])null);
 
 			return newPage(constructor, null);
 		}
@@ -76,7 +76,7 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
-	public final <C extends Page<?>> Page<?> newPage(final Class<C> pageClass,
+	public final <C extends Page> Page newPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
@@ -105,7 +105,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends Page<?>> Constructor<?> constructor(final Class<C> pageClass,
+	private final <C extends Page> Constructor<?> constructor(final Class<C> pageClass,
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
@@ -143,14 +143,14 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final Page<?> newPage(final Constructor<?> constructor, final Object argument)
+	private final Page newPage(final Constructor<?> constructor, final Object argument)
 	{
 		try
 		{
 			if (argument != null)
-				return (Page<?>)constructor.newInstance(new Object[] { argument });
+				return (Page)constructor.newInstance(new Object[] { argument });
 			else
-				return (Page<?>)constructor.newInstance(new Object[] {});
+				return (Page)constructor.newInstance(new Object[] {});
 		}
 		catch (InstantiationException e)
 		{

@@ -62,10 +62,10 @@ import org.apache.wicket.version.undo.Change;
 
 /**
  */
-public class Home extends WebPage<Void>
+public class Home extends WebPage
 {
 
-	private class ActionPanel extends Panel<Contact>
+	private class ActionPanel extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -78,14 +78,14 @@ public class Home extends WebPage<Void>
 		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link<Void>("select")
+			add(new Link("select")
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void onClick()
 				{
-					selected = ActionPanel.this.getModelObject();
+					selected = (Contact)ActionPanel.this.getDefaultModelObject();
 				}
 			});
 		}
@@ -108,7 +108,7 @@ public class Home extends WebPage<Void>
 		{
 			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 			add(new LocaleDropDownChoice("localeSelect"));
-			add(new Link<Void>("defaultLocaleLink")
+			add(new Link("defaultLocaleLink")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -126,7 +126,7 @@ public class Home extends WebPage<Void>
 				Integer.class);
 			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new TextField<Double>("doubleProperty", Double.class));
-			WebMarkupContainer<?> dateLabel = new WebMarkupContainer<Void>("dateLabel");
+			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
 			add(dateLabel);
 			TextField<Date> datePropertyTextField = new TextField<Date>("dateProperty", Date.class);
 			add(datePropertyTextField);
@@ -147,7 +147,7 @@ public class Home extends WebPage<Void>
 				protected void populateItem(ListItem<String> item)
 				{
 					item.add(new Radio<String>("radio", item.getModel()));
-					item.add(new Label<String>("number", item.getModelObjectAsString()));
+					item.add(new Label("number", item.getDefaultModelObjectAsString()));
 				};
 			};
 			group.add(numbers);
@@ -162,7 +162,7 @@ public class Home extends WebPage<Void>
 				protected void populateItem(ListItem<String> item)
 				{
 					item.add(new Check<String>("check", item.getModel()));
-					item.add(new Label<String>("number", item.getModelObjectAsString()));
+					item.add(new Label("number", item.getDefaultModelObjectAsString()));
 				};
 			};
 			checks.add(checksList);
@@ -212,6 +212,7 @@ public class Home extends WebPage<Void>
 			{
 				private static final long serialVersionUID = 1L;
 
+				@SuppressWarnings("unchecked")
 				@Override
 				public <X> IConverter<X> getConverter(Class<X> clazz)
 				{
@@ -222,9 +223,9 @@ public class Home extends WebPage<Void>
 
 			add(new LinesListView("lines"));
 
-			add(new ImageButton<Void>("saveButton"));
+			add(new ImageButton("saveButton"));
 
-			add(new Link<Void>("resetButtonLink")
+			add(new Link("resetButtonLink")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -233,7 +234,7 @@ public class Home extends WebPage<Void>
 				{
 					InputForm.this.modelChanged();
 				}
-			}.add(new Image<Void>("resetButtonImage")));
+			}.add(new Image("resetButtonImage")));
 		}
 
 		/**
@@ -242,7 +243,7 @@ public class Home extends WebPage<Void>
 		@Override
 		public void onSubmit()
 		{
-			info("Saved model " + getModelObject());
+			info("Saved model " + getDefaultModelObject());
 		}
 	}
 
@@ -265,8 +266,8 @@ public class Home extends WebPage<Void>
 		@Override
 		protected void populateItem(ListItem<Line> item)
 		{
-			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(item.getModel(),
-				"text")));
+			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(
+				item.getDefaultModel(), "text")));
 		}
 	}
 
@@ -312,7 +313,7 @@ public class Home extends WebPage<Void>
 		public LocaleDropDownChoice(String id)
 		{
 			super(id, LOCALES, new LocaleChoiceRenderer());
-			setModel(new PropertyModel<Locale>(Home.this, "locale"));
+			setDefaultModel(new PropertyModel<Locale>(Home.this, "locale"));
 		}
 
 		/**
@@ -353,7 +354,7 @@ public class Home extends WebPage<Void>
 	public Home()
 	{
 
-		add(new Link<Void>("link")
+		add(new Link("link")
 		{
 			private static final long serialVersionUID = 1L;
 			int i = 0;
@@ -374,8 +375,7 @@ public class Home extends WebPage<Void>
 			}
 		});
 
-		add(new Label<Contact>("selectedLabel", new PropertyModel<Contact>(this,
-			"selectedContactLabel")));
+		add(new Label("selectedLabel", new PropertyModel<Contact>(this, "selectedContactLabel")));
 
 		add(new DataView<Contact>("simple", new ContactDataProvider())
 		{
@@ -386,11 +386,11 @@ public class Home extends WebPage<Void>
 			{
 				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
-				item.add(new Label<String>("firstname", contact.getFirstName()));
-				item.add(new Label<String>("lastname", contact.getLastName()));
-				item.add(new Label<String>("homephone", contact.getHomePhone()));
-				item.add(new Label<String>("cellphone", contact.getCellPhone()));
+				item.add(new Label("contactid", String.valueOf(contact.getId())));
+				item.add(new Label("firstname", contact.getFirstName()));
+				item.add(new Label("lastname", contact.getLastName()));
+				item.add(new Label("homephone", contact.getHomePhone()));
+				item.add(new Label("cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{

@@ -36,10 +36,10 @@ import org.apache.wicket.request.IRequestCycleProcessor;
 public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTarget
 {
 	/** the page that was created in response for cleanup */
-	private Page<?> page;
+	private Page page;
 
 	/** the class of the page. */
-	private final WeakReference<Class<? extends Page<?>>> pageClassRef;
+	private final WeakReference<Class<? extends Page>> pageClassRef;
 
 	/** optional page map name. */
 	private final String pageMapName;
@@ -55,7 +55,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass)
+	public <C extends Page> BookmarkablePageRequestTarget(Class<C> pageClass)
 	{
 		this(null, pageClass);
 	}
@@ -70,7 +70,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public <C extends Page<?>> BookmarkablePageRequestTarget(Class<C> pageClass,
+	public <C extends Page> BookmarkablePageRequestTarget(Class<C> pageClass,
 		PageParameters pageParameters)
 	{
 		this(null, pageClass, pageParameters);
@@ -87,7 +87,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass)
+	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass)
 	{
 		this(pageMapName, pageClass, null);
 	}
@@ -105,7 +105,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public <C extends Page<?>> BookmarkablePageRequestTarget(String pageMapName,
+	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName,
 		Class<C> pageClass, PageParameters pageParameters)
 	{
 		if (pageClass == null)
@@ -118,7 +118,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			throw new IllegalArgumentException("Argument pageClass must be an instance of " +
 				Page.class.getName());
 		}
-		pageClassRef = new WeakReference<Class<? extends Page<?>>>(pageClass);
+		pageClassRef = new WeakReference<Class<? extends Page>>(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
@@ -166,12 +166,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @return The page that was created, null if the response did not happen yet
 	 */
-	public final Page<?> getPage()
+	public final Page getPage()
 	{
 		return page;
 	}
 
-	protected final void setPage(Page<?> page)
+	protected final void setPage(Page page)
 	{
 		this.page = page;
 	}
@@ -180,7 +180,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
 	 */
-	public final Class<? extends Page<?>> getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return pageClassRef.get();
 	}
@@ -269,7 +269,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            request cycle
 	 * @return new instance of page
 	 */
-	protected <C extends Page<?>> Page<?> newPage(final Class<C> pageClass,
+	protected <C extends Page> Page newPage(final Class<C> pageClass,
 		final RequestCycle requestCycle)
 	{
 		// Construct a new instance using the default page factory
@@ -297,7 +297,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            the request cycle
 	 * @return the page
 	 */
-	protected final Page<?> getPage(RequestCycle requestCycle)
+	protected final Page getPage(RequestCycle requestCycle)
 	{
 		if (page == null && !requestCycle.isRedirect())
 		{

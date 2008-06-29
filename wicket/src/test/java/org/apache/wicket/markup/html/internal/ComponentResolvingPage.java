@@ -27,7 +27,7 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
  * 
  * @author svenmeier
  */
-public class ComponentResolvingPage extends WebPage<Void>implements IComponentResolver
+public class ComponentResolvingPage extends WebPage implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class ComponentResolvingPage extends WebPage<Void>implements IComponentRe
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+		final ComponentTag tag)
 	{
 		if ("test".equals(tag.getId()))
 		{
@@ -54,6 +54,7 @@ public class ComponentResolvingPage extends WebPage<Void>implements IComponentRe
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected void onDetach()
 				{
 					onDetachWasCalledOnAutoAddedComponent = true;

@@ -1138,7 +1138,7 @@ public final class Strings
 	 *            the location where the component was created or added in the java code.
 	 * @return a string giving the line precise location where the component was added or created.
 	 */
-	public static String toString(final Component<?> component, final Throwable location)
+	public static String toString(final Component component, final Throwable location)
 	{
 		Class<?> componentClass = component.getClass();
 

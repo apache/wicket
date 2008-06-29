@@ -27,10 +27,8 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * 
- * @param <T>
- *            The model object type
  */
-public class WebMarkupContainer<T> extends MarkupContainer<T>
+public class WebMarkupContainer extends MarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +43,7 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainer(final String id, IModel<T> model)
+	public WebMarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -66,8 +64,8 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	 * 
 	 * @return WebPage
 	 */
-	public final WebPage< ? > getWebPage()
+	public final WebPage getWebPage()
 	{
-		return (WebPage< ? >)getPage();
+		return (WebPage)getPage();
 	}
 }

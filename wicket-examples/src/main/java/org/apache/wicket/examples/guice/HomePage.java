@@ -29,7 +29,7 @@ import com.google.inject.Inject;
  * 
  * @author Alastair Maw
  */
-public class HomePage extends WicketExamplePage<Void>
+public class HomePage extends WicketExamplePage
 {
 	@Inject
 	private IMyService service;
@@ -41,7 +41,7 @@ public class HomePage extends WicketExamplePage<Void>
 	 */
 	public HomePage()
 	{
-		add(new Link<Void>("link")
+		add(new Link("link")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -52,7 +52,7 @@ public class HomePage extends WicketExamplePage<Void>
 				labelValue = service.getHelloWorldText();
 			}
 		});
-		add(new Label<String>("message", new AbstractReadOnlyModel<String>()
+		add(new Label("message", new AbstractReadOnlyModel<String>()
 		{
 
 			@Override

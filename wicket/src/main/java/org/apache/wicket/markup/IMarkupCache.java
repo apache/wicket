@@ -47,7 +47,7 @@ public interface IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return Markup resource
 	 */
-	Markup getMarkup(final MarkupContainer<?> container, final Class<?> clazz,
+	Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload);
 
 	/**
@@ -62,7 +62,7 @@ public interface IMarkupCache
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	MarkupStream getMarkupStream(final MarkupContainer<?> container, final boolean enforceReload,
+	MarkupStream getMarkupStream(final MarkupContainer container, final boolean enforceReload,
 		final boolean throwException);
 
 	/**
@@ -72,7 +72,7 @@ public interface IMarkupCache
 	 *            The container the markup should be associated with
 	 * @return True if this markup container has associated markup
 	 */
-	boolean hasAssociatedMarkup(final MarkupContainer<?> container);
+	boolean hasAssociatedMarkup(final MarkupContainer container);
 
 	/**
 	 * Remove the markup associated with the cache key from the cache including all dependent

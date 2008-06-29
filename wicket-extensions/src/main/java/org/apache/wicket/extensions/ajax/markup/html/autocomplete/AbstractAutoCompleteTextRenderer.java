@@ -24,18 +24,17 @@ import org.apache.wicket.Response;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
 public abstract class AbstractAutoCompleteTextRenderer<T> extends AbstractAutoCompleteRenderer<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response, String)
 	 */
+	@Override
 	protected void renderChoice(T object, Response response, String criteria)
 	{
 		response.write(getTextValue(object));

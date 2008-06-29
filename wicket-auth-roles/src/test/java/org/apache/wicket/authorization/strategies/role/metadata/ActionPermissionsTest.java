@@ -92,7 +92,7 @@ public class ActionPermissionsTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
-		Label<String> label = new Label<String>("label", "text");
+		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
@@ -119,7 +119,7 @@ public class ActionPermissionsTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
-		Label<String> label = new Label<String>("label", "text");
+		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()

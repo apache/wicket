@@ -32,13 +32,13 @@ public interface IComponentBorder extends IClusterable
 	 * 
 	 * @param component
 	 */
-	public void renderBefore(Component< ? > component);
+	public void renderBefore(Component component);
 
 	/**
 	 * Called after the component is renderd.
 	 * 
 	 * @param component
 	 */
-	public void renderAfter(Component< ? > component);
+	public void renderAfter(Component component);
 
 }

@@ -47,24 +47,24 @@ import org.apache.wicket.response.StringResponse;
  * HtmlHeaderResolver.
  * <p>
  * <ul>
- * <li> &lt;head&gt; will be inserted in output automatically if required</li>
- * <li> &lt;head&gt; is <b>not</b> a wicket specific tag and you must use add() to add components
+ * <li>&lt;head&gt; will be inserted in output automatically if required</li>
+ * <li>&lt;head&gt; is <b>not</b> a wicket specific tag and you must use add() to add components
  * referenced in body of the head tag</li>
- * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but is <b>not</b> copied
+ * <li>&lt;head&gt; is supported by panels, borders and inherited markup, but is <b>not</b> copied
  * to the output. They are for previewability only (except on Pages)</li>
- * <li> &lt;wicket:head&gt; does not make sense in page markup (but does in inherited page markup)</li>
- * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup (of Panels, Borders
+ * <li>&lt;wicket:head&gt; does not make sense in page markup (but does in inherited page markup)</li>
+ * <li>&lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup (of Panels, Borders
  * and Pages)</li>
- * <li> components within &lt;wicket:head&gt; must be added by means of add(), like always with
+ * <li>components within &lt;wicket:head&gt; must be added by means of add(), like always with
  * Wicket. No difference.</li>
- * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components contained in
+ * <li>&lt;wicket:head&gt; and it's content is copied to the output. Components contained in
  * &lt;org.apache.wicket.head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
  * 
  */
-public class HtmlHeaderContainer extends WebMarkupContainer<Void>
+public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -205,18 +205,18 @@ public class HtmlHeaderContainer extends WebMarkupContainer<Void>
 	 * @param container
 	 *            The header component container
 	 */
-	private final void renderHeaderSections(final MarkupContainer< ? > page,
+	private final void renderHeaderSections(final MarkupContainer page,
 		final HtmlHeaderContainer container)
 	{
 		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header
 		// and there attached behaviors are asked.
-		page.visitChildren(new IVisitor<Component< ? >>()
+		page.visitChildren(new IVisitor<Component>()
 		{
 			/**
 			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 			 */
-			public Object component(Component< ? > component)
+			public Object component(Component component)
 			{
 				if (component.isVisible())
 				{

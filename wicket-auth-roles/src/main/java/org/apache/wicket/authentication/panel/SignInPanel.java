@@ -39,7 +39,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public class SignInPanel extends Panel<Void>
+public class SignInPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -83,8 +83,7 @@ public class SignInPanel extends Panel<Void>
 				"password")));
 
 			// MarkupContainer row for remember me checkbox
-			final WebMarkupContainer<?> rememberMeRow = new WebMarkupContainer<Void>(
-				"rememberMeRow");
+			final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
@@ -182,7 +181,7 @@ public class SignInPanel extends Panel<Void>
 	 */
 	public String getUsername()
 	{
-		return username.getModelObjectAsString();
+		return username.getDefaultModelObjectAsString();
 	}
 
 	/**

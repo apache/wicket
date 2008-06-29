@@ -38,12 +38,12 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @author Eelco Hillenius
  */
-public class TemplatePage extends WicketExamplePage<Void>
+public class TemplatePage extends WicketExamplePage
 {
 	/**
 	 * Form for changing the template contents.
 	 */
-	private final class TemplateForm extends Form<Void>
+	private final class TemplateForm extends Form
 	{
 		private TextArea<IStringResourceStream> templateTextArea;
 

@@ -62,7 +62,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * 
 	 * @see org.apache.wicket.IComponentBorder#renderBefore(org.apache.wicket.Component)
 	 */
-	public void renderBefore(Component< ? > component)
+	public void renderBefore(Component component)
 	{
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
@@ -122,7 +122,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * 
 	 * @see IComponentBorder#renderAfter(org.apache.wicket.Component)
 	 */
-	public void renderAfter(Component< ? > component)
+	public void renderAfter(Component component)
 	{
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
@@ -154,7 +154,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * @param component
 	 * @return markup stream
 	 */
-	private MarkupStream getMarkupStream(Component< ? > component)
+	private MarkupStream getMarkupStream(Component component)
 	{
 		if (markupStream == null)
 		{
@@ -168,7 +168,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * @param owner
 	 * @return markup stream
 	 */
-	private MarkupStream findMarkupStream(Component< ? > owner)
+	private MarkupStream findMarkupStream(Component owner)
 	{
 		final String markupType = getMarkupType(owner);
 
@@ -236,12 +236,12 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * @param component
 	 * @return markup type
 	 */
-	private String getMarkupType(Component< ? > component)
+	private String getMarkupType(Component component)
 	{
 		String extension;
 		if (component instanceof MarkupContainer)
 		{
-			extension = ((MarkupContainer< ? >)component).getMarkupType();
+			extension = ((MarkupContainer)component).getMarkupType();
 		}
 		else
 		{

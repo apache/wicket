@@ -70,7 +70,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 *      java.lang.String)
 	 */
 	@Override
-	public String loadStringResource(Component< ? > component, String key)
+	public String loadStringResource(Component component, String key)
 	{
 		if (component == null)
 		{

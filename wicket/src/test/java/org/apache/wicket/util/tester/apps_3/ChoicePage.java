@@ -44,7 +44,7 @@ import org.apache.wicket.util.tester.apps_1.Book;
 /**
  * @author Ingram Chen
  */
-public class ChoicePage extends WebPage<Void>
+public class ChoicePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,7 @@ public class ChoicePage extends WebPage<Void>
 		Form<ChoicePage> form = new Form<ChoicePage>("choiceForm");
 		add(form);
 
-		form.setModel(new CompoundPropertyModel<ChoicePage>(this));
+		form.setDefaultModel(new CompoundPropertyModel<ChoicePage>(this));
 
 		// setting initial values
 		dropDownChoice = candidateChoices.get(1);
@@ -128,7 +128,7 @@ public class ChoicePage extends WebPage<Void>
 		form.add(new CheckBoxMultipleChoice<Book>("checkBoxMultipleChoice", candidateChoices,
 			bookChoiceRenderer));
 		form.add(newCheckGroup("checkGroup", candidateChoices));
-		form.add(new Button<Void>("anotherButton")
+		form.add(new Button("anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
 

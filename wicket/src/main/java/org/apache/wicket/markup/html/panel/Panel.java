@@ -54,11 +54,8 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
- * 
- * @param <T>
- *            The model object type
  */
-public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
+public class Panel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
@@ -82,7 +79,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Panel(final String id, final IModel<T> model)
+	public Panel(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}

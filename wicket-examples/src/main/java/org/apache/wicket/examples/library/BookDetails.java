@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class BookDetails extends AuthenticatedWebPage<Void>
+public final class BookDetails extends AuthenticatedWebPage
 {
 	/**
 	 * Constructor for calls from external page links
@@ -54,9 +54,9 @@ public final class BookDetails extends AuthenticatedWebPage<Void>
 	 */
 	public BookDetails(final Book book)
 	{
-		add(new Label<String>("title", book.getTitle()));
-		add(new Label<String>("author", book.getAuthor()));
-		add(new Label<String>("fiction", Boolean.toString(book.getFiction())));
+		add(new Label("title", book.getTitle()));
+		add(new Label("author", book.getAuthor()));
+		add(new Label("fiction", Boolean.toString(book.getFiction())));
 		add(BookDetails.link("companion", book.getCompanionBook(), getLocalizer().getString(
 			"noBookTitle", this)));
 		add(BookDetails.link("related", book.getRelatedBook(), getLocalizer().getString(
@@ -82,7 +82,7 @@ public final class BookDetails extends AuthenticatedWebPage<Void>
 			writingStyles = getLocalizer().getString("noWritingStyles", this);
 		}
 
-		Label<String> writingStylesLabel = new Label<String>("writingStyles", writingStyles);
+		Label writingStylesLabel = new Label("writingStyles", writingStyles);
 
 		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"));
 		italic.setEnabled(!hasStyles);
@@ -110,11 +110,11 @@ public final class BookDetails extends AuthenticatedWebPage<Void>
 		if (book != null)
 		{
 			link.setParameter("id", book.getId());
-			link.add(new Label<Book>("title", new Model<Book>(book)));
+			link.add(new Label("title", new Model<Book>(book)));
 		}
 		else
 		{
-			link.add(new Label<String>("title", noBookTitle));
+			link.add(new Label("title", noBookTitle));
 			link.setEnabled(false);
 		}
 

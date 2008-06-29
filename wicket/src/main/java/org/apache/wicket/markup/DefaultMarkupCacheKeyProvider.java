@@ -48,7 +48,7 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	 * @return Key that uniquely identifies any markup that might be associated with this markup
 	 *         container.
 	 */
-	public String getCacheKey(final MarkupContainer< ? > container, final Class< ? > clazz)
+	public String getCacheKey(final MarkupContainer container, final Class< ? > clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();

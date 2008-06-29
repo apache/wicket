@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Chris Turner
  */
-public class WicketPanelPage extends WebPage<Void>
+public class WicketPanelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class FormPage extends WicketExamplePage<Void>
+public class FormPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -38,7 +38,7 @@ public class FormPage extends WicketExamplePage<Void>
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		add(new Form<Void>("form")
+		add(new Form("form")
 		{
 			@Override
 			protected void onSubmit()

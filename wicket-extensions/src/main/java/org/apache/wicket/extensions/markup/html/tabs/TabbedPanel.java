@@ -37,8 +37,8 @@ import org.apache.wicket.model.Model;
  * content panels inside the TabbedPanel panel.
  * 
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
- * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
+ * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
  * <p>
  * 
  * Example:
@@ -84,7 +84,7 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * 
  */
-public class TabbedPanel extends Panel<Integer>
+public class TabbedPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -128,7 +128,7 @@ public class TabbedPanel extends Panel<Integer>
 			}
 		};
 
-		WebMarkupContainer<?> tabsContainer = new WebMarkupContainer<Void>("tabs-container")
+		WebMarkupContainer tabsContainer = new WebMarkupContainer("tabs-container")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -152,7 +152,7 @@ public class TabbedPanel extends Panel<Integer>
 				final int index = item.getIteration();
 				final ITab tab = (TabbedPanel.this.tabs.get(index));
 
-				final WebMarkupContainer<?> titleLink = newLink("link", index);
+				final WebMarkupContainer titleLink = newLink("link", index);
 
 				titleLink.add(newTitle("title", tab.getTitle(), index));
 				item.add(titleLink);
@@ -273,13 +273,11 @@ public class TabbedPanel extends Panel<Integer>
 	 *            model containing tab title
 	 * @param index
 	 *            index of tab
-	 * @param <S>
-	 *            the returned component's model object type
 	 * @return title component
 	 */
-	protected <S> Component<S> newTitle(String titleId, IModel<S> titleModel, int index)
+	protected Component newTitle(String titleId, IModel<?> titleModel, int index)
 	{
-		return new Label<S>(titleId, titleModel);
+		return new Label(titleId, titleModel);
 	}
 
 
@@ -315,12 +313,11 @@ public class TabbedPanel extends Panel<Integer>
 	 * @param index
 	 *            index of the tab that should be activated when this link is clicked. See
 	 *            {@link #setSelectedTab(int)}.
-	 * @param <S>
 	 * @return created link component
 	 */
-	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(String linkId, final int index)
 	{
-		return new Link<S>(linkId)
+		return new Link(linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -346,15 +343,15 @@ public class TabbedPanel extends Panel<Integer>
 			throw new IndexOutOfBoundsException();
 		}
 
-		setModelObject(new Integer(index));
+		setDefaultModelObject(new Integer(index));
 
-		final Component<?> component;
+		final Component component;
 
 
 		if (tabs.size() == 0 || !isTabVisible(index))
 		{
 			// no tabs or the currently selected tab is not visible
-			component = new WebMarkupContainer<Void>(TAB_PANEL_ID);
+			component = new WebMarkupContainer(TAB_PANEL_ID);
 		}
 		else
 		{
@@ -387,7 +384,7 @@ public class TabbedPanel extends Panel<Integer>
 	 */
 	public final int getSelectedTab()
 	{
-		return (getModelObject()).intValue();
+		return (Integer)getDefaultModelObject();
 	}
 
 	private boolean isTabVisible(int tabIndex)

@@ -52,7 +52,7 @@ import org.apache.wicket.version.undo.Change;
  * @param <T>
  *            The model object type
  */
-public class Button<T> extends FormComponent<T> implements IFormSubmittingComponent
+public class Button extends FormComponent<String> implements IFormSubmittingComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -87,7 +87,7 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	 *            keep it's markup attribute value, don't provide a model, or let it return an empty
 	 *            string.
 	 */
-	public Button(final String id, final IModel<T> model)
+	public Button(final String id, final IModel<String> model)
 	{
 		super(id, model);
 		setVersioned(true);
@@ -95,13 +95,13 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	}
 
 	/**
-	 * Override of the default initModel behaviour. This component <strong>will not</strong> use
-	 * any compound model a parent, but only a model that is explicitly set.
+	 * Override of the default initModel behaviour. This component <strong>will not</strong> use any
+	 * compound model a parent, but only a model that is explicitly set.
 	 * 
 	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
-	protected IModel<T> initModel()
+	protected IModel<String> initModel()
 	{
 		return null;
 	}
@@ -111,7 +111,7 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
 	 */
 	@Override
-	public Form< ? > getForm()
+	public Form<?> getForm()
 	{
 		try
 		{
@@ -147,7 +147,7 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	 *            defaultFormProcessing
 	 * @return This
 	 */
-	public final Button< ? > setDefaultFormProcessing(boolean defaultFormProcessing)
+	public final Button setDefaultFormProcessing(boolean defaultFormProcessing)
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
 		{
@@ -199,9 +199,9 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 	}
 
 	/**
-	 * Processes the component tag. A <tt>value</tt> attribute is added with the value of the
-	 * model object, if available. An <tt>onclick</tt> attribute is added if the subclass
-	 * specified javascript.
+	 * Processes the component tag. A <tt>value</tt> attribute is added with the value of the model
+	 * object, if available. An <tt>onclick</tt> attribute is added if the subclass specified
+	 * javascript.
 	 * 
 	 * <p>
 	 * <b>NOTE</b>. For a <tt>&lt;button&gt;</tt> the <tt>value</tt> attribute is not rendered,
@@ -220,7 +220,7 @@ public class Button<T> extends FormComponent<T> implements IFormSubmittingCompon
 
 		try
 		{
-			String value = getModelObjectAsString();
+			String value = getDefaultModelObjectAsString();
 			if (value != null && !"".equals(value))
 			{
 				tag.put("value", value);

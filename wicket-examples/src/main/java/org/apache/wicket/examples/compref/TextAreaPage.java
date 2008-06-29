@@ -29,7 +29,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextAreaPage extends WicketExamplePage<TextAreaPage.Input>
+public class TextAreaPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -37,14 +37,14 @@ public class TextAreaPage extends WicketExamplePage<TextAreaPage.Input>
 	public TextAreaPage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -59,7 +59,7 @@ public class TextAreaPage extends WicketExamplePage<TextAreaPage.Input>
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	public static class Input implements IClusterable
+	private static class Input implements IClusterable
 	{
 		/** some plain text. */
 		public String text = "line 1\nline 2\nline 3";

@@ -42,14 +42,15 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param id
 	 *            The component id
 	 * @param caller
-	 *            The calling panel which will be used to get the
-	 *            {@link IBreadCrumbModel bread crumb model} from.
+	 *            The calling panel which will be used to get the {@link IBreadCrumbModel bread
+	 *            crumb model} from.
 	 * @param panelClass
 	 *            The class to use for creating instances. Must be of type {@link BreadCrumbPanel},
 	 *            and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelLink(final String id, final BreadCrumbPanel caller, final Class panelClass)
+	public BreadCrumbPanelLink(final String id, final BreadCrumbPanel caller,
+		final Class<? extends BreadCrumbPanel> panelClass)
 	{
 		this(id, caller.getBreadCrumbModel(), new BreadCrumbPanelFactory(panelClass));
 	}
@@ -67,7 +68,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
-			final Class panelClass)
+		final Class<BreadCrumbPanel> panelClass)
 	{
 		this(id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
 	}
@@ -83,7 +84,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            The factory to create bread crumb panels
 	 */
 	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
-			final IBreadCrumbPanelFactory breadCrumbPanelFactory)
+		final IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
 		super(id, breadCrumbModel);
 
@@ -105,6 +106,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(java.lang.String)
 	 */
+	@Override
 	protected final IBreadCrumbParticipant getParticipant(String componentId)
 	{
 		return breadCrumbPanelFactory.create(componentId, breadCrumbModel);

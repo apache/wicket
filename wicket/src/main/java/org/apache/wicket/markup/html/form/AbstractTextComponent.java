@@ -86,8 +86,8 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * Should the bound object become <code>null</code> when the input is empty?
 	 * 
-	 * @return <code>true</code> when the value will be set to <code>null</code> when the input
-	 *         is empty.
+	 * @return <code>true</code> when the value will be set to <code>null</code> when the input is
+	 *         empty.
 	 */
 	public final boolean getConvertEmptyInputStringToNull()
 	{
@@ -140,7 +140,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
 			// Otherwise, getConvertEmptyInputStringToNull() won't work.
-			Class<?> type = getModelType(getModel());
+			Class<?> type = getModelType(getDefaultModel());
 			if (!String.class.equals(type))
 			{
 				setType(type);
@@ -179,7 +179,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 *            the value to set this flag.
 	 * @return this
 	 */
-	public final FormComponent<?> setConvertEmptyInputStringToNull(boolean flag)
+	public final FormComponent setConvertEmptyInputStringToNull(boolean flag)
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;

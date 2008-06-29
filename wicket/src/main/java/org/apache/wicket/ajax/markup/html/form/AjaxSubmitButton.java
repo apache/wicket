@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.form.Form;
  * @deprecated Use {@link AjaxButton} instead.
  */
 @Deprecated
-public abstract class AjaxSubmitButton<T> extends AjaxButton<T>
+public abstract class AjaxSubmitButton extends AjaxButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public abstract class AjaxSubmitButton<T> extends AjaxButton<T>
 	 * @deprecated Use {@link AjaxButton} instead.
 	 */
 	@Deprecated
-	public AjaxSubmitButton(String id, final Form< ? > form)
+	public AjaxSubmitButton(String id, final Form<?> form)
 	{
 		super(id, form);
 	}

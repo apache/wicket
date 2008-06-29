@@ -27,10 +27,8 @@ import org.apache.wicket.util.value.ValueMap;
  * browser from caching the image.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            type of model object
  */
-public class NonCachingImage<T> extends Image<T>
+public class NonCachingImage extends Image
 {
 	/**
 	 * 
@@ -45,7 +43,7 @@ public class NonCachingImage<T> extends Image<T>
 	 * @param id
 	 * @param model
 	 */
-	public NonCachingImage(String id, IModel<T> model)
+	public NonCachingImage(String id, IModel<?> model)
 	{
 		super(id, model);
 	}

@@ -27,7 +27,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class BoxBorderTestPage_3 extends WebPage<Void>
+public class BoxBorderTestPage_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +43,6 @@ public class BoxBorderTestPage_3 extends WebPage<Void>
 		Border formBorder = new FormBorder("border");
 		add(formBorder);
 
-		formBorder.add(new TextField("name", new PropertyModel(properties, "name")));
+		formBorder.add(new TextField<String>("name", new PropertyModel<String>(properties, "name")));
 	}
 }

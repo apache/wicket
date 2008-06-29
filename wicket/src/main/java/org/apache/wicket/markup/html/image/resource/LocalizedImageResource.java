@@ -79,7 +79,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private Boolean resourceKind;
 
 	/** The component that is referencing this image resource */
-	private final Component<?> component;
+	private final Component component;
 
 	/** The image resource this image component references */
 	private Resource resource;
@@ -161,7 +161,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * @param component
 	 * 		The component that owns this localized image resource
 	 */
-	public LocalizedImageResource(final Component<?> component)
+	public LocalizedImageResource(final Component component)
 	{
 		this.component = component;
 		locale = component.getLocale();
@@ -280,7 +280,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 		// check if the model contains a resource, if so, load the resource from
 		// the model.
-		Object modelObject = component.getModelObject();
+		Object modelObject = component.getDefaultModelObject();
 		if (modelObject instanceof ResourceReference)
 		{
 			resourceReference = (ResourceReference)modelObject;
@@ -312,7 +312,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 				else
 				{
 					// Load static image using model object as the path
-					loadStaticImage(component.getModelObjectAsString());
+					loadStaticImage(component.getDefaultModelObjectAsString());
 				}
 			}
 		}

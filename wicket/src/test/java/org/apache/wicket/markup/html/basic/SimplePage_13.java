@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class SimplePage_13 extends WebPage<Void>
+public class SimplePage_13 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class SimplePage_13 extends WebPage<Void>
 	public SimplePage_13()
 	{
 // Component header = new WebMarkupContainer("html");
-		Component<String> header = new AjaxLink<String>("html", new Model<String>("test"))
+		Component header = new AjaxLink("html", new Model<String>("test"))
 		{
 			private static final long serialVersionUID = 1L;
 

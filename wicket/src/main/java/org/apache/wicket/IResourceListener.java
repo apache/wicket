@@ -40,7 +40,7 @@ public interface IResourceListener extends IRequestListener
 		IResourceListener.class)
 	{
 		@Override
-		public IRequestTarget newRequestTarget(Page< ? > page, Component< ? > component,
+		public IRequestTarget newRequestTarget(Page page, Component component,
 			RequestListenerInterface listener, RequestParameters requestParameters)
 		{
 			return new ComponentResourceRequestTarget(page, component, listener);

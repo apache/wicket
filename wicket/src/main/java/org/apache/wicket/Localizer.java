@@ -92,7 +92,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component)
+	public String getString(final String key, final Component component)
 		throws MissingResourceException
 	{
 		return getString(key, component, null, null);
@@ -111,7 +111,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model)
+	public String getString(final String key, final Component component, final IModel<?> model)
 		throws MissingResourceException
 	{
 		return getString(key, component, model, null);
@@ -130,7 +130,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component,
+	public String getString(final String key, final Component component,
 		final String defaultValue) throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
@@ -150,7 +150,7 @@ public class Localizer
 	 * 
 	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model,
+	public String getString(final String key, final Component component, final IModel<?> model,
 		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
@@ -175,7 +175,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model,
+	public String getString(final String key, final Component component, final IModel<?> model,
 		final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
@@ -325,7 +325,7 @@ public class Localizer
 	 * @param component
 	 * @return The value of the key
 	 */
-	protected String getCacheKey(final String key, final Component<?> component)
+	protected String getCacheKey(final String key, final Component component)
 	{
 		String cacheKey = key;
 		if (component != null)
@@ -333,7 +333,7 @@ public class Localizer
 			AppendingStringBuffer buffer = new AppendingStringBuffer(200);
 			buffer.append(key);
 
-			Component<?> cursor = component;
+			Component cursor = component;
 			while (cursor != null)
 			{
 				buffer.append("-").append(metaDatabase.id(cursor.getClass()));
@@ -379,7 +379,7 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	public String substitutePropertyExpressions(final Component<?> component, final String string,
+	public String substitutePropertyExpressions(final Component component, final String string,
 		final IModel<?> model)
 	{
 		if ((string != null) && (model != null))

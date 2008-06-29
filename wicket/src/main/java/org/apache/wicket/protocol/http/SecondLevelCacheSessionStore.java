@@ -85,7 +85,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param ajaxVersionNumber
 		 * @return The page
 		 */
-		<T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
+		<T> Page getPage(String sessionId, String pagemap, int id, int versionNumber,
 			int ajaxVersionNumber);
 
 		/**
@@ -96,7 +96,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 * @param page
 		 */
-		void pageAccessed(String sessionId, Page<?> page);
+		void pageAccessed(String sessionId, Page page);
 
 		/**
 		 * Removes a page from the persistent layer.
@@ -117,7 +117,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 * @param page
 		 */
-		void storePage(String sessionId, Page<?> page);
+		void storePage(String sessionId, Page page);
 
 		/**
 		 * The pagestore should cleanup all the pages for that sessionid.
@@ -185,7 +185,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param page
 		 * @return page
 		 */
-		public Page<?> convertToPage(Object page);
+		public Page convertToPage(Object page);
 	};
 
 	/**
@@ -218,12 +218,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 		}
 
-		private Page<?> getLastPage()
+		private Page getLastPage()
 		{
-			Page<?> result = null;
+			Page result = null;
 			if (lastPage instanceof Page)
 			{
-				result = (Page<?>)lastPage;
+				result = (Page)lastPage;
 			}
 			else if (lastPage != null)
 			{
@@ -236,7 +236,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			return result;
 		}
 
-		private void setLastPage(Page<?> lastPage)
+		private void setLastPage(Page lastPage)
 		{
 			this.lastPage = lastPage;
 		}
@@ -257,7 +257,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		public boolean containsPage(int id, int versionNumber)
 		{
-			Page<?> lastPage = this.lastPage instanceof Page ? (Page<?>)this.lastPage : null;
+			Page lastPage = this.lastPage instanceof Page ? (Page)this.lastPage : null;
 			if (lastPage != null && lastPage.getNumericId() == id &&
 				lastPage.getCurrentVersionNumber() == versionNumber)
 			{
@@ -273,14 +273,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @see org.apache.wicket.PageMap#get(int, int)
 		 */
 		@Override
-		public Page<?> get(int id, int versionNumber)
+		public Page get(int id, int versionNumber)
 		{
-			IntHashMap<Page<?>> pages = getUsedPages(getName());
+			IntHashMap<Page> pages = getUsedPages(getName());
 			// for now i only get by id.
 			// does it really make any sense that there are multiply instances
 			// of the
 			// same page are alive in one session??
-			Page<?> page = (Page<?>)pages.get(id);
+			Page page = (Page)pages.get(id);
 			if (page != null)
 			{
 				return page;
@@ -314,7 +314,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @see org.apache.wicket.PageMap#put(org.apache.wicket.Page)
 		 */
 		@Override
-		public void put(Page<?> page)
+		public void put(Page page)
 		{
 			if (!page.isPageStateless())
 			{
@@ -412,13 +412,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 	/**
 	 * version manager for this session store.
-	 * 
-	 * @param <T>
-	 *            The page's model object type
 	 */
-	private static final class SecondLevelCachePageVersionManager<T>
-		implements
-			IPageVersionManager<T>
+	private static final class SecondLevelCachePageVersionManager implements IPageVersionManager
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -428,7 +423,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		private short lastAjaxVersionNumber;
 
-		private final Page<T> page;
+		private final Page page;
 
 		private transient boolean versionStarted;
 
@@ -437,7 +432,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * 
 		 * @param page
 		 */
-		public SecondLevelCachePageVersionManager(Page<T> page)
+		public SecondLevelCachePageVersionManager(Page page)
 		{
 			this.page = page;
 		}
@@ -476,21 +471,21 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#componentAdded(org.apache.wicket.Component)
 		 */
-		public void componentAdded(Component<?> component)
+		public void componentAdded(Component component)
 		{
 		}
 
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#componentModelChanging(org.apache.wicket.Component)
 		 */
-		public void componentModelChanging(Component<?> component)
+		public void componentModelChanging(Component component)
 		{
 		}
 
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#componentRemoved(org.apache.wicket.Component)
 		 */
-		public void componentRemoved(Component<?> component)
+		public void componentRemoved(Component component)
 		{
 		}
 
@@ -540,7 +535,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#getVersion(int)
 		 */
-		public Page<T> getVersion(int versionNumber)
+		public Page getVersion(int versionNumber)
 		{
 			if (currentVersionNumber == versionNumber)
 			{
@@ -570,7 +565,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#rollbackPage(int)
 		 */
-		public Page<T> rollbackPage(int numberOfVersions)
+		public Page rollbackPage(int numberOfVersions)
 		{
 			String sessionId = page.getSession().getId();
 			if (sessionId != null)
@@ -630,7 +625,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 	}
 
-	private static MetaDataKey<Map<String, IntHashMap<Page<?>>>> USED_PAGES = new MetaDataKey<Map<String, IntHashMap<Page<?>>>>()
+	private static MetaDataKey<Map<String, IntHashMap<Page>>> USED_PAGES = new MetaDataKey<Map<String, IntHashMap<Page>>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -639,18 +634,18 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @param pageMapName
 	 * @return used pages map
 	 */
-	public static IntHashMap<Page<?>> getUsedPages(String pageMapName)
+	public static IntHashMap<Page> getUsedPages(String pageMapName)
 	{
-		Map<String, IntHashMap<Page<?>>> usedPages = RequestCycle.get().getMetaData(USED_PAGES);
+		Map<String, IntHashMap<Page>> usedPages = RequestCycle.get().getMetaData(USED_PAGES);
 		if (usedPages == null)
 		{
-			usedPages = new HashMap<String, IntHashMap<Page<?>>>();
+			usedPages = new HashMap<String, IntHashMap<Page>>();
 			RequestCycle.get().setMetaData(USED_PAGES, usedPages);
 		}
-		IntHashMap<Page<?>> intHashMap = usedPages.get(pageMapName);
+		IntHashMap<Page> intHashMap = usedPages.get(pageMapName);
 		if (intHashMap == null)
 		{
-			intHashMap = new IntHashMap<Page<?>>();
+			intHashMap = new IntHashMap<Page>();
 			usedPages.put(pageMapName, intHashMap);
 		}
 		return intHashMap;
@@ -724,9 +719,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see org.apache.wicket.protocol.http.HttpSessionStore#newVersionManager(org.apache.wicket.Page)
 	 */
 	@Override
-	public <T> IPageVersionManager<T> newVersionManager(Page<T> page)
+	public IPageVersionManager newVersionManager(Page page)
 	{
-		return new SecondLevelCachePageVersionManager<T>(page);
+		return new SecondLevelCachePageVersionManager(page);
 	}
 
 	/**

@@ -24,7 +24,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * @author Jonathan Locke
  * @param <T>
  */
-public class HangmanPage<T> extends WicketExamplePage<T>
+public class HangmanPage extends WicketExamplePage
 {
 	/**
 	 * @return Returns the hangman.

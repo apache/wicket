@@ -69,7 +69,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model object type
  */
-public class SubmitLink<T> extends AbstractSubmitLink<T>
+public class SubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -112,7 +112,7 @@ public class SubmitLink<T> extends AbstractSubmitLink<T>
 	 *            The model for this submitlink, It won't be used by the submit link itself, but it
 	 *            can be used for keeping state
 	 */
-	public SubmitLink(String id, IModel<T> model)
+	public SubmitLink(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -133,7 +133,7 @@ public class SubmitLink<T> extends AbstractSubmitLink<T>
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, IModel<T> model, Form<?> form)
+	public SubmitLink(String id, IModel<?> model, Form<?> form)
 	{
 		super(id, model, form);
 	}

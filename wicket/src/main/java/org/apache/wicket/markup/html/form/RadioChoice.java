@@ -315,7 +315,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getModelObject());
+		onSelectionChanged(getDefaultModelObject());
 	}
 
 	/**

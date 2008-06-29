@@ -28,15 +28,15 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * @author Matej Knopp
  */
-public class ModalWindowPage extends BasePage<Void>
+public class ModalWindowPage extends BasePage
 {
 
 	/**
 	 */
 	public ModalWindowPage()
 	{
-		final Label<String> result;
-		add(result = new Label<String>("result", new PropertyModel<String>(this, "result")));
+		final Label result;
+		add(result = new Label("result", new PropertyModel<String>(this, "result")));
 		result.setOutputMarkupId(true);
 
 		/*
@@ -51,7 +51,7 @@ public class ModalWindowPage extends BasePage<Void>
 
 		modal1.setPageCreator(new ModalWindow.PageCreator()
 		{
-			public Page<?> createPage()
+			public Page createPage()
 			{
 				return new ModalContent1Page(ModalWindowPage.this, modal1);
 			}
@@ -72,7 +72,7 @@ public class ModalWindowPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("showModal1")
+		add(new AjaxLink("showModal1")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -109,7 +109,7 @@ public class ModalWindowPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("showModal2")
+		add(new AjaxLink("showModal2")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

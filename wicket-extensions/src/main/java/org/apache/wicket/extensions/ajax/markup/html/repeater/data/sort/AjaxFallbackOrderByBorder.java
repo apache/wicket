@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxFallbackOrderByBorder extends Border<Void>
+public abstract class AjaxFallbackOrderByBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 

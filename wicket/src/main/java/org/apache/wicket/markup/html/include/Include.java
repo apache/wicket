@@ -76,7 +76,7 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * 
  * @author Eelco Hillenius
  */
-public class Include extends WebComponent<String>
+public class Include extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -143,7 +143,7 @@ public class Include extends WebComponent<String>
 	{
 		// gets the model object: should provide us with either an absolute or a
 		// relative url
-		String url = getModelObjectAsString();
+		String url = getDefaultModelObjectAsString();
 
 		if (!isAbsolute(url))
 		{

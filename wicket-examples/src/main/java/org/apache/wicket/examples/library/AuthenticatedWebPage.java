@@ -32,9 +32,9 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Jonathan Locke
  * @param <T>
  */
-public class AuthenticatedWebPage<T> extends WicketExamplePage<T>
+public class AuthenticatedWebPage extends WicketExamplePage
 {
-	private final Border<?> border;
+	private final Border border;
 
 	/**
 	 * Contruct

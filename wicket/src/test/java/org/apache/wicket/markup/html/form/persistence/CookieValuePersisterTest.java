@@ -125,7 +125,7 @@ public class CookieValuePersisterTest extends TestCase
 		// Try to load it. Because there is no Cookie matching the textfield's name
 		// it remains unchanged
 		persister.load(textField);
-		assertEquals("test", textField.getModelObjectAsString());
+		assertEquals("test", textField.getDefaultModelObjectAsString());
 
 		// Simulate loading a textfield. Initialize textfield with a new
 		// (default) value, copy the cookie from respone to request (simulating
@@ -133,15 +133,15 @@ public class CookieValuePersisterTest extends TestCase
 		// textfields value should change.
 		// save means: add it to the respone
 		// load means: take it from request
-		assertEquals("test", textField.getModelObjectAsString());
-		textField.setModelObject("new text");
-		assertEquals("new text", textField.getModelObjectAsString());
+		assertEquals("test", textField.getDefaultModelObjectAsString());
+		textField.setDefaultModelObject("new text");
+		assertEquals("new text", textField.getDefaultModelObjectAsString());
 		copyCookieFromResponseToRequest(cycle);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 
 		persister.load(textField);
-		assertEquals("test", textField.getModelObjectAsString());
+		assertEquals("test", textField.getDefaultModelObjectAsString());
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 

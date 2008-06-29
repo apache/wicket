@@ -62,7 +62,7 @@ import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
  * 
  * @author Martijn Dashorst
  */
-public class SourcesPage extends WebPage<Void>
+public class SourcesPage extends WebPage
 {
 	private static final Log log = LogFactory.getLog(SourcesPage.class);
 
@@ -360,7 +360,7 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * Displays the resources embedded in a package in a list.
 	 */
-	public class FilesBrowser extends WebMarkupContainer<Void>
+	public class FilesBrowser extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
@@ -376,13 +376,12 @@ public class SourcesPage extends WebPage<Void>
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					AjaxFallbackLink<String> link = new AjaxFallbackLink<String>("link",
-						item.getModel())
+					AjaxFallbackLink link = new AjaxFallbackLink("link", item.getModel())
 					{
 						@Override
 						public void onClick(AjaxRequestTarget target)
 						{
-							setName(getModelObjectAsString());
+							setName(getDefaultModelObjectAsString());
 
 							if (target != null)
 							{
@@ -391,7 +390,7 @@ public class SourcesPage extends WebPage<Void>
 							}
 						}
 					};
-					link.add(new Label<String>("name", item.getModelObjectAsString()));
+					link.add(new Label("name", item.getDefaultModelObjectAsString()));
 					item.add(link);
 				}
 			};
@@ -403,7 +402,7 @@ public class SourcesPage extends WebPage<Void>
 	 * Container for displaying the source of the selected page, resource or other element from the
 	 * package.
 	 */
-	public class CodePanel extends WebMarkupContainer<Void>
+	public class CodePanel extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
@@ -414,7 +413,7 @@ public class SourcesPage extends WebPage<Void>
 		public CodePanel(String id)
 		{
 			super(id);
-			Label<String> code = new Label<String>("code", new SourceModel());
+			Label code = new Label("code", new SourceModel());
 			code.setEscapeModelStrings(false);
 			code.setOutputMarkupId(true);
 			add(code);
@@ -429,14 +428,14 @@ public class SourcesPage extends WebPage<Void>
 	/**
 	 * The class of the page of which the sources need to be displayed.
 	 */
-	private final Class<? extends Page<?>> page;
+	private final Class<? extends Page> page;
 
 	/**
 	 * The panel for setting the ajax calls.
 	 */
-	private final Component<?> codePanel;
+	private final Component codePanel;
 
-	private final Label<String> filename;
+	private final Label filename;
 
 	/**
 	 * Sets the name.
@@ -475,16 +474,16 @@ public class SourcesPage extends WebPage<Void>
 	 * @param page
 	 *            the page where the sources need to be shown from.
 	 */
-	public <C extends Page<?>> SourcesPage(Class<C> page)
+	public <C extends Page> SourcesPage(Class<C> page)
 	{
 		this.page = page;
 
-		filename = new Label<String>("filename", new PropertyModel<String>(this, "name"));
+		filename = new Label("filename", new PropertyModel<String>(this, "name"));
 		filename.setOutputMarkupId(true);
 		add(filename);
 		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
 		add(codePanel);
 		add(new FilesBrowser("filespanel"));
-		add(new PopupCloseLink<Void>("close"));
+		add(new PopupCloseLink("close"));
 	}
 }

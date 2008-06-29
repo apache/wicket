@@ -65,7 +65,7 @@ public class ModelDetachTest extends TestCase
 	public void testAbstractPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel<?> model = new AbstractPropertyModel<Void>(detachable)
+		IModel<?> model = new AbstractPropertyModel(detachable)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -85,7 +85,7 @@ public class ModelDetachTest extends TestCase
 	public void testPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel<?> model = new PropertyModel<Void>(detachable, "foo");
+		IModel<?> model = new PropertyModel(detachable, "foo");
 		model.detach();
 		assertTrue(detachable.detached);
 	}

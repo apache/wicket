@@ -49,7 +49,7 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
 
 	/**

@@ -21,7 +21,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 /**
  * @author jbq
  */
-public class EmailPage extends WicketExamplePage<Void>
+public class EmailPage extends WicketExamplePage
 {
 	/**
 	 * Construct.

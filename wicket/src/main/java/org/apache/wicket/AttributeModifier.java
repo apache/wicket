@@ -176,7 +176,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            the model that initiates the detachment
 	 */
 	@Override
-	public final void detach(Component< ? > component)
+	public final void detach(Component component)
 	{
 		if (replaceModel != null)
 		{
@@ -226,7 +226,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
 	 */
 	@Override
-	public boolean isEnabled(Component< ? > component)
+	public boolean isEnabled(Component component)
 	{
 		return enabled;
 	}
@@ -236,7 +236,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public final void onComponentTag(Component< ? > component, ComponentTag tag)
+	public final void onComponentTag(Component component, ComponentTag tag)
 	{
 		if (tag.getType() != XmlTag.CLOSE)
 		{
@@ -254,7 +254,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @param tag
 	 *            The tag to replace the attribute value for
 	 */
-	public final void replaceAttibuteValue(final Component< ? > component, final ComponentTag tag)
+	public final void replaceAttibuteValue(final Component component, final ComponentTag tag)
 	{
 		if (isEnabled(component))
 		{
@@ -350,7 +350,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @param component
 	 * @return
 	 */
-	private Object getReplacementOrNull(final Component< ? > component)
+	private Object getReplacementOrNull(final Component component)
 	{
 		IModel< ? > model = replaceModel;
 		if (model instanceof IComponentAssignedModel)

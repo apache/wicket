@@ -61,7 +61,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		mockPojo.setName("Mock name");
 
 		final MockPageWithFormAndContainedLink page = new MockPageWithFormAndContainedLink(mockPojo);
-		page.addLink(new AjaxSubmitLink<Void>("link")
+		page.addLink(new AjaxSubmitLink("link")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -107,7 +107,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		mockPojo.setName("Mock name");
 
 		final MockPageWithFormAndLink page = new MockPageWithFormAndLink(mockPojo);
-		AjaxSubmitLink<?> link = new AjaxSubmitLink<Void>("link", page.getForm())
+		AjaxSubmitLink link = new AjaxSubmitLink("link", page.getForm())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -124,7 +124,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}

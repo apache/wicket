@@ -44,7 +44,7 @@ public interface IActivePageBehaviorListener extends IBehaviorListener
 		 *      org.apache.wicket.request.RequestParameters)
 		 */
 		@Override
-		public IRequestTarget newRequestTarget(Page< ? > page, Component< ? > component,
+		public IRequestTarget newRequestTarget(Page page, Component component,
 			RequestListenerInterface listener, RequestParameters requestParameters)
 		{
 			return new BehaviorRequestTarget(page, component, listener, requestParameters);

@@ -190,7 +190,7 @@ public class AuthorizationTest extends WicketTestCase
 		{
 			tester.submitForm("form");
 			Component component = tester.getComponentFromLastRenderedPage("form:stringInput");
-			assertEquals("", component.getModelObjectAsString());
+			assertEquals("", component.getDefaultModelObjectAsString());
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -224,7 +224,7 @@ public class AuthorizationTest extends WicketTestCase
 	/**
 	 * Test page for authentication tests.
 	 */
-	public static class AuthTestPage1 extends WebPage<Void>
+	public static class AuthTestPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -275,7 +275,7 @@ public class AuthorizationTest extends WicketTestCase
 			public TestForm(String id)
 			{
 				super(id);
-				setModel(new CompoundPropertyModel(input = new Input()));
+				setDefaultModel(new CompoundPropertyModel(input = new Input()));
 				add(new TextField("stringInput"));
 			}
 

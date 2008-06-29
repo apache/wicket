@@ -21,6 +21,6 @@ import org.apache.wicket.examples.WicketExamplePage;
 /**
  * Home page of this example.
  */
-public class Home extends WicketExamplePage<Void>
+public class Home extends WicketExamplePage
 {
 }

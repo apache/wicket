@@ -55,7 +55,7 @@ import org.joda.time.MutableDateTime;
  * 
  * @author eelcohillenius
  */
-public class DateField extends FormComponentPanel
+public class DateField extends FormComponentPanel<Date>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,11 +79,11 @@ public class DateField extends FormComponentPanel
 	 * @param id
 	 * @param model
 	 */
-	public DateField(String id, IModel model)
+	public DateField(String id, IModel<Date> model)
 	{
 		super(id, model);
 		setType(Date.class);
-		PropertyModel dateFieldModel = new PropertyModel(this, "date");
+		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
 		dateField.add(new DatePicker());
 	}
@@ -118,7 +118,7 @@ public class DateField extends FormComponentPanel
 	public void setDate(Date date)
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
-		setModelObject(date);
+		setDefaultModelObject(date);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class DateField extends FormComponentPanel
 		dateField.setRequired(isRequired());
 		dateField.setEnabled(isEnabled() && isEnableAllowed());
 
-		Date d = (Date)getModelObject();
+		Date d = (Date)getDefaultModelObject();
 		if (d != null)
 		{
 			date = new MutableDateTime(d);

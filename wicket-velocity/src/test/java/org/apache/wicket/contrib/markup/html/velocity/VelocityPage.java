@@ -28,7 +28,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityPage extends WebPage<Void>
+public class VelocityPage extends WebPage
 {
 	protected static final String TEST_STRING = "Hello, World!";
 

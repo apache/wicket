@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Test page for session expiry (/ page not found).
  */
-public class TestExpirePage extends WebPage<Void>
+public class TestExpirePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,7 @@ public class TestExpirePage extends WebPage<Void>
 	public TestExpirePage()
 	{
 
-		add(new AjaxLink<Void>("link")
+		add(new AjaxLink("link")
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -36,7 +36,7 @@ class Add extends Change
 	private static final Logger log = LoggerFactory.getLogger(Add.class);
 
 	/** the subject <code>Component</code> */
-	private final Component<?> component;
+	private final Component component;
 
 	/**
 	 * Constructor.
@@ -44,7 +44,7 @@ class Add extends Change
 	 * @param component
 	 *            the subject <code>Component</code>
 	 */
-	Add(final Component<?> component)
+	Add(final Component component)
 	{
 		if (component == null)
 		{

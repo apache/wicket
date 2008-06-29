@@ -60,7 +60,7 @@ public class ContextPathGenerator extends AbstractBehavior
 
 	/** {@inheritDoc} **/
 	@Override
-	public void onComponentTag(Component<?> component, ComponentTag tag)
+	public void onComponentTag(Component component, ComponentTag tag)
 	{
 		// get the path
 		final String path = contextRelativePath.getObject();
@@ -76,7 +76,7 @@ public class ContextPathGenerator extends AbstractBehavior
 
 	/** {@inheritDoc} **/
 	@Override
-	public void detach(Component<?> component)
+	public void detach(Component component)
 	{
 		contextRelativePath.detach();
 		super.detach(component);

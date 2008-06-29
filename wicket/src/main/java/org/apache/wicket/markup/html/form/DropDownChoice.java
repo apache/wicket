@@ -79,7 +79,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final List< ? extends T> choices)
+	public DropDownChoice(final String id, final List<? extends T> choices)
 	{
 		super(id, choices);
 	}
@@ -88,7 +88,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final List< ? extends T> data,
+	public DropDownChoice(final String id, final List<? extends T> data,
 		final IChoiceRenderer<T> renderer)
 	{
 		super(id, data, renderer);
@@ -97,7 +97,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel<T> model, final List< ? extends T> choices)
+	public DropDownChoice(final String id, IModel<T> model, final List<? extends T> choices)
 	{
 		super(id, model, choices);
 	}
@@ -106,7 +106,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,
 	 *      IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel<T> model, final List< ? extends T> data,
+	public DropDownChoice(final String id, IModel<T> model, final List<? extends T> data,
 		final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, data, renderer);
@@ -115,7 +115,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(String id, IModel<List< ? extends T>> choices)
+	public DropDownChoice(String id, IModel<List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -123,7 +123,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
+	public DropDownChoice(String id, IModel<T> model, IModel<List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -132,7 +132,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+	public DropDownChoice(String id, IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -142,7 +142,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices,
+	public DropDownChoice(String id, IModel<T> model, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
@@ -177,7 +177,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			// url that points to this components IOnChangeListener method
 			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			Form< ? > form = (Form< ? >)findParent(Form.class);
+			Form<?> form = findParent(Form.class);
 			if (form != null)
 			{
 				RequestContext rc = RequestContext.get();
@@ -224,8 +224,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * with each selection change, resulting in the model being updated (of just this component) and
 	 * onSelectionChanged being called. This method returns false by default. If you wish to use
 	 * Ajax instead, let {@link #wantOnSelectionChangedNotifications()} return false and add an
-	 * {@link AjaxFormComponentUpdatingBehavior} to the component using the <tt>onchange</tt>
-	 * event.
+	 * {@link AjaxFormComponentUpdatingBehavior} to the component using the <tt>onchange</tt> event.
 	 * 
 	 * @return True if this component's onSelectionChanged event handler should called using
 	 *         javascript if the selection changes

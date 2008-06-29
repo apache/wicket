@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 /**
  * @author jcompagner
  */
-public class DomReadyOrderPage extends WebPage<Void>
+public class DomReadyOrderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,7 @@ public class DomReadyOrderPage extends WebPage<Void>
 		add(new Link("test"));
 	}
 
-	private static class Link extends AjaxFallbackLink<Void>
+	private static class Link extends AjaxFallbackLink
 	{
 		private static final long serialVersionUID = 1L;
 

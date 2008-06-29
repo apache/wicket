@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 /**
  * 
  */
-public class MockComponent1 extends Panel<Void>
+public class MockComponent1 extends Panel
 {
 	private static final long serialVersionUID = 1L;
 

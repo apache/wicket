@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model data type
  */
-public class NoopOutputTransformerContainer<T> extends AbstractOutputTransformerContainer<T>
+public class NoopOutputTransformerContainer extends AbstractOutputTransformerContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class NoopOutputTransformerContainer<T> extends AbstractOutputTransformer
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public NoopOutputTransformerContainer(final String id, final IModel<T> model)
+	public NoopOutputTransformerContainer(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -57,7 +57,7 @@ public class NoopOutputTransformerContainer<T> extends AbstractOutputTransformer
 	 *      CharSequence)
 	 */
 	@Override
-	public CharSequence transform(final Component< ? > component, final CharSequence output)
+	public CharSequence transform(final Component component, final CharSequence output)
 	{
 		return output;
 	}

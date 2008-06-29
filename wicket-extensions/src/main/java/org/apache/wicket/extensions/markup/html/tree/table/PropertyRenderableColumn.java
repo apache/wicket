@@ -34,11 +34,12 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	private IConverter converter;
 
 	private Locale locale;
 
-	private String propertyExpression;
+	private final String propertyExpression;
 
 	/**
 	 * Creates the columns.
@@ -53,7 +54,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 *            Expression for property access
 	 */
 	public PropertyRenderableColumn(ColumnLocation location, String header,
-			String propertyExpression)
+		String propertyExpression)
 	{
 		super(location, header);
 		this.propertyExpression = propertyExpression;
@@ -64,7 +65,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * 
 	 * @return The converter or null
 	 */
-	public IConverter getConverter()
+	public IConverter<?> getConverter()
 	{
 		return converter;
 	}
@@ -82,6 +83,8 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	/**
 	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public String getNodeValue(TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
@@ -107,6 +110,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param converter
 	 *            any converter
 	 */
+	@SuppressWarnings("unchecked")
 	public void setConverter(IConverter converter)
 	{
 		this.converter = converter;

@@ -27,12 +27,12 @@ import org.apache.wicket.markup.html.panel.Fragment;
  * 
  * @author Eelco Hillenius
  */
-public class FragmentPage extends WicketExamplePage<Void>
+public class FragmentPage extends WicketExamplePage
 {
 	/**
 	 * A fragment,
 	 */
-	private class MyFragment extends Fragment<Void>
+	private class MyFragment extends Fragment
 	{
 		/**
 		 * Construct.
@@ -44,10 +44,10 @@ public class FragmentPage extends WicketExamplePage<Void>
 		 * @param markupProvider
 		 *            The markup provider
 		 */
-		public MyFragment(String id, String markupId, MarkupContainer<?> markupProvider)
+		public MyFragment(String id, String markupId, MarkupContainer markupProvider)
 		{
 			super(id, markupId, markupProvider);
-			add(new Label<String>("label", "yep, this is from a component proper"));
+			add(new Label("label", "yep, this is from a component proper"));
 			add(new AnotherPanel("otherPanel"));
 		}
 	}

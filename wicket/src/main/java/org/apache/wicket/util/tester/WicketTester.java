@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * // production page
- * public class MyPage extends WebPage<Void>
+ * public class MyPage extends WebPage
  * {
  * 	public MyPage()
  * 	{
@@ -92,7 +93,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * // production page
- * public class YourPage extends WebPage<Void>
+ * public class YourPage extends WebPage
  * {
  * 	public YourPage(String message)
  * 	{
@@ -161,7 +162,7 @@ public class WicketTester extends BaseWicketTester
 		 * @see org.apache.wicket.Application#getHomePage()
 		 */
 		@Override
-		public Class< ? extends Page< ? >> getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
@@ -254,7 +255,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
-	public WicketTester(final Class homePage)
+	public WicketTester(final Class<? extends Page> homePage)
 	{
 		this(new WebApplication()
 		{
@@ -262,7 +263,7 @@ public class WicketTester extends BaseWicketTester
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return homePage;
 			}
@@ -354,7 +355,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedComponentClass
 	 *            expected <code>Component</code> class
 	 */
-	public void assertComponent(String path, Class expectedComponentClass)
+	public void assertComponent(String path, Class<? extends Component> expectedComponentClass)
 	{
 		assertResult(isComponent(path, expectedComponentClass));
 	}
@@ -413,9 +414,9 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertErrorMessages(String[] expectedErrorMessages)
 	{
-		List actualMessages = getMessages(FeedbackMessage.ERROR);
-		List msgs = new ArrayList();
-		for (Iterator iterator = actualMessages.iterator(); iterator.hasNext();)
+		List<Serializable> actualMessages = getMessages(FeedbackMessage.ERROR);
+		List<Serializable> msgs = new ArrayList<Serializable>();
+		for (Iterator<Serializable> iterator = actualMessages.iterator(); iterator.hasNext();)
 		{
 			msgs.add(iterator.next().toString());
 		}
@@ -430,7 +431,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertInfoMessages(String[] expectedInfoMessages)
 	{
-		List actualMessages = getMessages(FeedbackMessage.INFO);
+		List<Serializable> actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
 	}
 
@@ -456,7 +457,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertLabel(String path, String expectedLabelText)
 	{
 		Label label = (Label)getComponentFromLastRenderedPage(path);
-		Assert.assertEquals(expectedLabelText, label.getModelObjectAsString());
+		Assert.assertEquals(expectedLabelText, label.getDefaultModelObjectAsString());
 	}
 
 	/**
@@ -470,7 +471,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertModelValue(String path, Object expectedValue)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertEquals(expectedValue, component.getModelObject());
+		Assert.assertEquals(expectedValue, component.getDefaultModelObject());
 	}
 
 	/**
@@ -482,7 +483,7 @@ public class WicketTester extends BaseWicketTester
 	 *            expected <code>List</code> in the model of the given {@link ListView}
 	 */
 	@Override
-	public void assertListView(String path, List expectedList)
+	public void assertListView(String path, List<?> expectedList)
 	{
 		ListView listView = (ListView)getComponentFromLastRenderedPage(path);
 		WicketTesterHelper.assertEquals(expectedList, listView.getList());

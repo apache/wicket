@@ -45,7 +45,7 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends Page<?>> Page<?> newPage(final Class<C> pageClass);
+	<C extends Page> Page newPage(final Class<C> pageClass);
 
 	/**
 	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
@@ -62,5 +62,5 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends Page<?>> Page<?> newPage(final Class<C> pageClass, final PageParameters parameters);
+	<C extends Page> Page newPage(final Class<C> pageClass, final PageParameters parameters);
 }

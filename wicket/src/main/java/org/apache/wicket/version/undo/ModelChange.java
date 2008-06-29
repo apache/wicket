@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *            type of component's model object
  * @since 1.2.6
  */
-class ModelChange<T> extends Change
+class ModelChange extends Change
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,10 +42,10 @@ class ModelChange<T> extends Change
 	private static final Logger log = LoggerFactory.getLogger(ModelChange.class);
 
 	/** the subject <code>Component</code> */
-	private final Component<T> component;
+	private final Component component;
 
 	/** the original <code>IModel</code> */
-	private IModel<T> originalModel;
+	private IModel<?> originalModel;
 
 	/**
 	 * Constructor.
@@ -54,7 +54,7 @@ class ModelChange<T> extends Change
 	 *            the subject <code>Component</code>
 	 */
 	@SuppressWarnings("unchecked")
-	ModelChange(final Component<T> component)
+	ModelChange(final Component component)
 	{
 		if (component == null)
 		{
@@ -65,7 +65,7 @@ class ModelChange<T> extends Change
 		this.component = component;
 
 		// Get component model
-		final IModel<T> model = component.getModel();
+		final IModel<?> model = component.getDefaultModel();
 
 		// If the component has a model, it's about to change!
 		if (model != null)
@@ -79,7 +79,7 @@ class ModelChange<T> extends Change
 				if (component instanceof FormComponent)
 				{
 					// and it's using the same model as the form
-					if (((FormComponent<T>)component).getForm().getModel() == model)
+					if (((FormComponent)component).getForm().getDefaultModel() == model)
 					{
 						// we don't need to clone the model, because it will
 						// be re-initialized using initModel()
@@ -89,7 +89,7 @@ class ModelChange<T> extends Change
 				else
 				{
 					// If the component is using the same model as the page
-					if (component.getPage().getModel() == model)
+					if (component.getPage().getDefaultModel() == model)
 					{
 						// we don't need to clone the model, because it will
 						// be re-initialized using initModel()
@@ -102,7 +102,7 @@ class ModelChange<T> extends Change
 			if (cloneModel)
 			{
 				model.detach();
-				originalModel = (IModel<T>)Objects.cloneModel(model);
+				originalModel = (IModel<?>)Objects.cloneModel(model);
 			}
 			else
 			{
@@ -129,7 +129,7 @@ class ModelChange<T> extends Change
 				component.getPath() + "@" + component.hashCode() + ")");
 		}
 
-		component.setModel(originalModel);
+		component.setDefaultModel(originalModel);
 	}
 
 	/**

@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * @author marrink
  */
-public class AjaxBehaviorEnabledPage extends WebPage<Void>
+public class AjaxBehaviorEnabledPage extends WebPage
 {
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ public class AjaxBehaviorEnabledPage extends WebPage<Void>
 	 */
 	public AjaxBehaviorEnabledPage()
 	{
-		Label<String> enabled = new Label<String>("enabled", "this label is ajax enabled");
+		Label enabled = new Label("enabled", "this label is ajax enabled");
 		enabled.add(new AjaxEventBehavior("onclick")
 		{
 
@@ -47,7 +47,7 @@ public class AjaxBehaviorEnabledPage extends WebPage<Void>
 			}
 		});
 		add(enabled);
-		Label<String> disabled = new Label<String>("disabled", "this label is not ajax enabled");
+		Label disabled = new Label("disabled", "this label is not ajax enabled");
 		disabled.add(new AjaxEventBehavior("onclick")
 		{
 			private static final long serialVersionUID = 1L;

@@ -24,6 +24,6 @@ import org.apache.wicket.examples.WicketExamplePage;
  * @author Jonathan Locke
  * @param <T>
  */
-public class AuthenticatedWebPage<T> extends WicketExamplePage<T>
+public class AuthenticatedWebPage extends WicketExamplePage
 {
 }

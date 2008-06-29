@@ -47,7 +47,7 @@ class ChangeList implements IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was added
 	 */
-	void componentAdded(Component<?> component)
+	void componentAdded(Component component)
 	{
 		changes.add(new Add(component));
 	}
@@ -55,15 +55,13 @@ class ChangeList implements IClusterable
 	/**
 	 * An <code>IModel</code> is about to change.
 	 * 
-	 * @param <T>
-	 *            type of component's model object
 	 * 
 	 * @param component
 	 *            the <code>Component</code> for which the <code>IModel</code> changed
 	 */
-	<T> void componentModelChanging(Component<T> component)
+	void componentModelChanging(Component component)
 	{
-		changes.add(new ModelChange<T>(component));
+		changes.add(new ModelChange(component));
 	}
 
 	/**
@@ -88,7 +86,7 @@ class ChangeList implements IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was removed
 	 */
-	void componentRemoved(Component<?> component)
+	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));
 	}

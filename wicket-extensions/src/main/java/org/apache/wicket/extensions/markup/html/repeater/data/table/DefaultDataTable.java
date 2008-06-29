@@ -55,7 +55,8 @@ public class DefaultDataTable<T> extends DataTable<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final List<IColumn<?>> columns,
+	@SuppressWarnings("unchecked")
+	public DefaultDataTable(String id, final List<IColumn<T>> columns,
 		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		this(id, columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
@@ -73,7 +74,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final IColumn<?>[] columns,
+	public DefaultDataTable(String id, final IColumn<T>[] columns,
 		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);

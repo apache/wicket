@@ -52,7 +52,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 */
 	public void testSubmitNoDefProcessing()
 	{
-		Class<? extends Page<?>> pageClass = AjaxFormSubmitTestPage.class;
+		Class<? extends Page> pageClass = AjaxFormSubmitTestPage.class;
 		System.out.println("=== " + pageClass.getName() + " ===");
 
 		tester.startPage(pageClass);
@@ -64,8 +64,8 @@ public class AjaxFormSubmitTest extends WicketTestCase
 		AjaxFormSubmitTestPage page = (AjaxFormSubmitTestPage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM) == AjaxFormSubmitTestPage.FORM);
 		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON) == AjaxFormSubmitTestPage.BUTTON);
-		assertEquals("foo", tester.getComponentFromLastRenderedPage("form:txt1").getModelObject());
-		assertEquals("bar", tester.getComponentFromLastRenderedPage("form:txt2").getModelObject());
+		assertEquals("foo", tester.getComponentFromLastRenderedPage("form:txt1").getDefaultModelObject());
+		assertEquals("bar", tester.getComponentFromLastRenderedPage("form:txt2").getDefaultModelObject());
 	}
 
 }

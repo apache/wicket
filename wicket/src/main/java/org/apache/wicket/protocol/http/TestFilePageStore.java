@@ -87,13 +87,13 @@ public class TestFilePageStore implements IPageStore
 		private final String pageMap;
 		private final String pageClassName;
 
-		SessionPageKey(String sessionId, Page<?> page)
+		SessionPageKey(String sessionId, Page page)
 		{
 			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(),
 				page.getAjaxVersionNumber(), page.getPageMapName(), page.getClass());
 		}
 
-		<T extends Page<?>> SessionPageKey(String sessionId, int id, int versionNumber,
+		<T extends Page> SessionPageKey(String sessionId, int id, int versionNumber,
 			int ajaxVersionNumber, String pagemap, Class<T> pageClass)
 		{
 			this.sessionId = sessionId;
@@ -143,7 +143,7 @@ public class TestFilePageStore implements IPageStore
 	}
 
 
-	public <T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
+	public <T> Page getPage(String sessionId, String pagemap, int id, int versionNumber,
 		int ajaxVersionNumber)
 	{
 		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
@@ -171,7 +171,7 @@ public class TestFilePageStore implements IPageStore
 					bb.get(pageData);
 				}
 				long t2 = System.currentTimeMillis();
-				Page<?> page = (Page<?>)Objects.byteArrayToObject(pageData);
+				Page page = (Page)Objects.byteArrayToObject(pageData);
 				page = page.getVersion(versionNumber);
 				if (page != null && log.isDebugEnabled())
 				{
@@ -182,7 +182,7 @@ public class TestFilePageStore implements IPageStore
 						" miliseconds to read in and " + (t3 - t2) + " miliseconds to deserialize");
 				}
 				@SuppressWarnings("unchecked")
-				final Page<T> ret = (Page<T>)page;
+				final Page ret = (Page)page;
 				return ret;
 			}
 			catch (Exception e)
@@ -193,7 +193,7 @@ public class TestFilePageStore implements IPageStore
 		return null;
 	}
 
-	public void pageAccessed(String sessionId, Page<?> page)
+	public void pageAccessed(String sessionId, Page page)
 	{
 
 	}
@@ -202,7 +202,7 @@ public class TestFilePageStore implements IPageStore
 	{
 	}
 
-	public void storePage(String sessionId, Page<?> page)
+	public void storePage(String sessionId, Page page)
 	{
 		SessionPageKey key = new SessionPageKey(sessionId, page);
 		byte[] serialized = Objects.objectToByteArray(page);

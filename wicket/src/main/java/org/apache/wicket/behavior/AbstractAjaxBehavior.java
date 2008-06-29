@@ -42,7 +42,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	private static final long serialVersionUID = 1L;
 
 	/** the component that this handler is bound to. */
-	private Component< ? > component;
+	private Component component;
 
 	/**
 	 * Construct.
@@ -58,7 +58,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 *            the component to bind to
 	 */
 	@Override
-	public final void bind(final Component< ? > hostComponent)
+	public final void bind(final Component hostComponent)
 	{
 		if (hostComponent == null)
 		{
@@ -129,7 +129,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public final void onComponentTag(final Component< ? > component, final ComponentTag tag)
+	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		onComponentTag(tag);
 	}
@@ -138,7 +138,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	@Override
-	public final void onRendered(final Component< ? > hostComponent)
+	public final void onRendered(final Component hostComponent)
 	{
 		onComponentRendered();
 	}
@@ -156,7 +156,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @return the component that this handler is bound to
 	 */
-	protected final Component< ? > getComponent()
+	protected final Component getComponent()
 	{
 		return component;
 	}
@@ -192,7 +192,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#getStatelessHint(Component)
 	 */
 	@Override
-	public boolean getStatelessHint(Component< ? > component)
+	public boolean getStatelessHint(Component component)
 	{
 		return false;
 	}

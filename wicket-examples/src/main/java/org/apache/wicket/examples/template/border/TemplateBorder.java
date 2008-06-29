@@ -28,10 +28,10 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class TemplateBorder extends Border<Void>
+public class TemplateBorder extends Border
 {
 	/** the current banner. */
-	private Banner<Void> currentBanner;
+	private Banner currentBanner;
 
 	/**
 	 * Constructor
@@ -41,8 +41,8 @@ public class TemplateBorder extends Border<Void>
 	public TemplateBorder(String id)
 	{
 		super(id);
-		add(currentBanner = new Banner1<Void>("ad"));
-		add(new Link<Void>("changeAdLink")
+		add(currentBanner = new Banner1("ad"));
+		add(new Link("changeAdLink")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -52,11 +52,11 @@ public class TemplateBorder extends Border<Void>
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					TemplateBorder.this.replace(currentBanner = new Banner2<Void>("ad"));
+					TemplateBorder.this.replace(currentBanner = new Banner2("ad"));
 				}
 				else
 				{
-					TemplateBorder.this.replace(currentBanner = new Banner1<Void>("ad"));
+					TemplateBorder.this.replace(currentBanner = new Banner1("ad"));
 				}
 			}
 		});

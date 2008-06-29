@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
-public class ExternalLinkPage_2 extends WebPage<Void>
+public class ExternalLinkPage_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class ExternalLinkPage_2 extends WebPage<Void>
 
 			public boolean isVisible()
 			{
-				return getModelObject() != null;
+				return getDefaultModelObject() != null;
 			}
 		});
 	}

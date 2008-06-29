@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class PanelsPage extends BasePage<Void>
+public class PanelsPage extends BasePage
 {
 	/**
 	 * Construct.
@@ -54,7 +54,7 @@ public class PanelsPage extends BasePage<Void>
 	/**
 	 * A panel that is visible for all users.
 	 */
-	private static final class ForAllUsers extends Panel<Void>
+	private static final class ForAllUsers extends Panel
 	{
 		/**
 		 * Construct.
@@ -70,7 +70,7 @@ public class PanelsPage extends BasePage<Void>
 	/**
 	 * A panel that is only visible for users with role ADMIN.
 	 */
-	private static final class ForAdminsAndUsers extends Panel<Void>
+	private static final class ForAdminsAndUsers extends Panel
 	{
 		/**
 		 * Construct.
@@ -86,7 +86,7 @@ public class PanelsPage extends BasePage<Void>
 	/**
 	 * A panel that is only visible for users with role ADMIN.
 	 */
-	private static final class ForAdmins extends Panel<Void>
+	private static final class ForAdmins extends Panel
 	{
 		/**
 		 * Construct.

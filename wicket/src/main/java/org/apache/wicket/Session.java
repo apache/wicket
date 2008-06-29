@@ -175,7 +175,7 @@ public abstract class Session implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** A store for touched pages for one request */
-	private static final ThreadLocal<List<Page<?>>> touchedPages = new ThreadLocal<List<Page<?>>>();
+	private static final ThreadLocal<List<Page>> touchedPages = new ThreadLocal<List<Page>>();
 
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
@@ -646,7 +646,7 @@ public abstract class Session implements IClusterable
 	 * @param versionNumber
 	 * @return The page of that pageid and version, null if not found
 	 */
-	public final Page<?> getPage(final int pageId, final int versionNumber)
+	public final Page getPage(final int pageId, final int versionNumber)
 	{
 		if (Application.get().getSessionSettings().isPageIdUniquePerSession() == false)
 		{
@@ -681,7 +681,7 @@ public abstract class Session implements IClusterable
 	 * @return The page based on the first path component (the page id), or null if the requested
 	 *         version of the page cannot be found.
 	 */
-	public final Page<?> getPage(final String pageMapName, final String path,
+	public final Page getPage(final String pageMapName, final String path,
 		final int versionNumber)
 	{
 		if (log.isDebugEnabled())
@@ -770,7 +770,7 @@ public abstract class Session implements IClusterable
 				newEntry.requestCycle = RequestCycle.get();
 				pageMapsUsedInRequest.put(pageMap, newEntry);
 				final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-				Page<?> page = pageMap.get(Integer.parseInt(id), versionNumber);
+				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 				if (page == null)
 				{
 					pageMapsUsedInRequest.remove(pageMap);
@@ -801,7 +801,7 @@ public abstract class Session implements IClusterable
 	 *            The page, or null if no page context is available
 	 * @return The page factory for the page, or the default page factory if page was null
 	 */
-	public final IPageFactory getPageFactory(final Page<?> page)
+	public final IPageFactory getPageFactory(final Page page)
 	{
 		if (page != null)
 		{
@@ -1059,15 +1059,15 @@ public abstract class Session implements IClusterable
 	 * 
 	 * @param page
 	 */
-	public final void touch(Page<?> page)
+	public final void touch(Page page)
 	{
 		// store it in a list, so that the pages are really pushed
 		// to the pagemap when the session does it update/detaches.
 		// all the pages are then detached
-		List<Page<?>> lst = touchedPages.get();
+		List<Page> lst = touchedPages.get();
 		if (lst == null)
 		{
-			lst = new ArrayList<Page<?>>();
+			lst = new ArrayList<Page>();
 			touchedPages.set(lst);
 			lst.add(page);
 		}
@@ -1084,9 +1084,9 @@ public abstract class Session implements IClusterable
 	 * 
 	 * @param page
 	 */
-	public final void untouch(Page<?> page)
+	public final void untouch(Page page)
 	{
-		List<Page<?>> lst = touchedPages.get();
+		List<Page> lst = touchedPages.get();
 		if (lst != null)
 		{
 			lst.remove(page);
@@ -1329,7 +1329,7 @@ public abstract class Session implements IClusterable
 	 * @param page
 	 *            The page to add to dirty objects list
 	 */
-	void dirtyPage(final Page<?> page)
+	void dirtyPage(final Page page)
 	{
 		List<IClusterable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(page))
@@ -1381,13 +1381,13 @@ public abstract class Session implements IClusterable
 	 */
 	final void requestDetached()
 	{
-		List<Page<?>> touchedPages = Session.touchedPages.get();
+		List<Page> touchedPages = Session.touchedPages.get();
 		Session.touchedPages.set(null);
 		if (touchedPages != null)
 		{
 			for (int i = 0; i < touchedPages.size(); i++)
 			{
-				Page<?> page = touchedPages.get(i);
+				Page page = touchedPages.get(i);
 				page.getPageMap().put(page);
 				dirty = true;
 			}
@@ -1424,7 +1424,7 @@ public abstract class Session implements IClusterable
 				Object object = iterator.next();
 				if (object instanceof Page)
 				{
-					final Page<?> page = (Page<?>)object;
+					final Page page = (Page)object;
 					if (page.isPageStateless())
 					{
 						// check, can it be that stateless pages where added to

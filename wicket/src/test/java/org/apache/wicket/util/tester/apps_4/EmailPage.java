@@ -25,7 +25,7 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 /**
  * @author Juergen Donnerstag
  */
-public class EmailPage extends WebPage<Void>
+public class EmailPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class EmailPage extends WebPage<Void>
 	public EmailPage()
 	{
 		Form form = new Form("form");
-		form.setModel(new CompoundPropertyModel(this));
+		form.setDefaultModel(new CompoundPropertyModel(this));
 		add(form);
 
 		TextField email = new TextField("email");

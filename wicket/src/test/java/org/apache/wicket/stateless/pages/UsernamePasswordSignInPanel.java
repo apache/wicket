@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class UsernamePasswordSignInPanel<T> extends Panel<T>
+public class UsernamePasswordSignInPanel extends Panel
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		super(id);
 
 		add(new FeedbackPanel("feedback"));
-		add(new Label<Object>("naam"));
+		add(new Label("naam"));
 		add(new SignInForm("signInForm", this));
 	}
 
@@ -84,7 +84,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		/** Moeten de inlog waarden bewaard blijven? */
 		private boolean rememberMe = true;
 
-		private final UsernamePasswordSignInPanel<?> panel;
+		private final UsernamePasswordSignInPanel panel;
 
 		/**
 		 * Constructor.
@@ -93,7 +93,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		 *            id of the form component
 		 * @param panel
 		 */
-		public SignInForm(final String id, UsernamePasswordSignInPanel<?> panel)
+		public SignInForm(final String id, UsernamePasswordSignInPanel panel)
 		{
 			super(id, new CompoundPropertyModel<IValueMap>(new ValueMap()));
 			this.panel = panel;
@@ -102,8 +102,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 			add(new TextField<String>("username").setPersistent(rememberMe));
 			add(new PasswordTextField("password"));
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer<Boolean> rememberMeRow = new WebMarkupContainer<Boolean>(
-				"rememberMeRow");
+			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
@@ -123,7 +122,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 				getPage().removePersistedFormData(SignInForm.class, true);
 			}
 
-			ValueMap values = (ValueMap)getModelObject();
+			ValueMap values = (ValueMap)getDefaultModelObject();
 			String username = values.getString("username");
 			String password = values.getString("password");
 
@@ -161,7 +160,7 @@ public class UsernamePasswordSignInPanel<T> extends Panel<T>
 		public void setRememberMe(boolean rememberMe)
 		{
 			this.rememberMe = rememberMe;
-			((FormComponent<?>)get("username")).setPersistent(rememberMe);
+			((FormComponent)get("username")).setPersistent(rememberMe);
 		}
 	}
 }

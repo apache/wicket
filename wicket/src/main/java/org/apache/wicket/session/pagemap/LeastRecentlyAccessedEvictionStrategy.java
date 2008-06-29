@@ -71,7 +71,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 					// If entry is a page (cannot be null if we're evicting)
 					if (oldestEntry instanceof Page)
 					{
-						Page<?> page = (Page<?>)oldestEntry;
+						Page page = (Page)oldestEntry;
 
 						// If there is more than one version of this page
 						if (page.getVersions() > 1)

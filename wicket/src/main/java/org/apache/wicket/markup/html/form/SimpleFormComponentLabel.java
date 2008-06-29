@@ -25,7 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleFormComponentLabel extends FormComponentLabel<String>
+public class SimpleFormComponentLabel extends FormComponentLabel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel<String>
 	 * @param labelProvider
 	 *            label provider (e.g. FormComponent, Radio, Check)
 	 */
-	public SimpleFormComponentLabel(String id, LabeledWebMarkupContainer<?> labelProvider)
+	public SimpleFormComponentLabel(String id, LabeledWebMarkupContainer labelProvider)
 	{
 		super(id, labelProvider);
 		if (labelProvider.getLabel() == null)
@@ -46,7 +46,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel<String>
 				+ "Use FormComponent.setLabel(IModel) to set the model "
 				+ "that will feed this label");
 		}
-		setModel(labelProvider.getLabel());
+		setDefaultModel(labelProvider.getLabel());
 	}
 
 	/**
@@ -56,6 +56,6 @@ public class SimpleFormComponentLabel extends FormComponentLabel<String>
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
 }

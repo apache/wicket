@@ -40,6 +40,6 @@ public interface IComponentResolver extends IClusterable
 	 *            The current component tag while parsing the markup
 	 * @return True if component-id was handled by the resolver, false otherwise.
 	 */
-	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag);
 }

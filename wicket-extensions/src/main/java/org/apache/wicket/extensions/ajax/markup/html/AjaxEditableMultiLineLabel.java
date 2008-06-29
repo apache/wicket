@@ -74,17 +74,16 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected MultiLineLabel<T> newLabel(MarkupContainer< ? > parent, String componentId,
-		IModel<T> model)
+	protected MultiLineLabel newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		MultiLineLabel<T> label = new MultiLineLabel<T>(componentId, model)
+		MultiLineLabel label = new MultiLineLabel(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				Object modelObject = getModelObject();
+				Object modelObject = getDefaultModelObject();
 				if (modelObject == null || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
@@ -117,8 +116,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer< ? > parent, String componentId,
-		IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
 		TextArea<T> editor = new TextArea<T>(componentId, model)
 		{

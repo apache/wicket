@@ -77,21 +77,21 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		executeHeaderTest(MockComponent3.class, "MockComponent3-expected.html");
 	}
 
-	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass)
+	private <C extends Component> void executeHeaderTest(final Class<C> componentClass)
 		throws IOException
 	{
 		executeHeaderTest(componentClass, null);
 	}
 
-	private <C extends Component<?>> void executeHeaderTest(final Class<C> componentClass,
+	private <C extends Component> void executeHeaderTest(final Class<C> componentClass,
 		String expectedFile) throws IOException
 	{
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent<Void>(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
+		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
-		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -101,9 +101,9 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				// Create an instance of the component
 				try
 				{
-					Constructor<? extends Component<?>> con = componentClass.getConstructor(new Class[] { String.class });
+					Constructor<? extends Component> con = componentClass.getConstructor(new Class[] { String.class });
 
-					Component<?> comp = con.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
+					Component comp = con.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
 					page.replace(comp);
 					comp.setOutputMarkupId(true);
 
@@ -120,7 +120,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}

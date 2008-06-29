@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class StatelessPage extends WebPage<Void>
+public class StatelessPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class StatelessPage extends WebPage<Void>
 			 */
 			protected void onSubmit()
 			{
-				info("Submitted text: " + field.getModelObject());
+				info("Submitted text: " + field.getDefaultModelObject());
 			}
 		};
 		statelessForm.add(field);

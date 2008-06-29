@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author igor
  */
-public abstract class AbstractCheckGroupTestPage extends WebPage<Void>
+public abstract class AbstractCheckGroupTestPage extends WebPage
 {
 	/**
 	 * 
@@ -45,9 +45,9 @@ public abstract class AbstractCheckGroupTestPage extends WebPage<Void>
 	public AbstractCheckGroupTestPage(List<String> list)
 	{
 
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form("form");
 		CheckGroup<String> group = new CheckGroup<String>("group", new Model((Serializable)list));
-		WebMarkupContainer<?> container = new WebMarkupContainer<Void>("container");
+		WebMarkupContainer container = new WebMarkupContainer("container");
 		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));
 		Check<String> check2 = new Check<String>("check2", new Model<String>("check2"));
 

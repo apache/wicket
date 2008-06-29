@@ -47,7 +47,7 @@ public class GuiceInjectorTest extends TestCase
 			}
 
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class< ? extends Page> getHomePage()
 			{
 				return null;
 			}

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author marrink
  */
-public class InterceptPage extends WebPage<Void>
+public class InterceptPage extends WebPage
 {
 
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class InterceptPage extends WebPage<Void>
 	 */
 	public InterceptPage()
 	{
-		add(new Link<Void>("link")
+		add(new Link("link")
 		{
 
 			private static final long serialVersionUID = 1L;

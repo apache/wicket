@@ -40,7 +40,7 @@ public class ParentResolver implements IComponentResolver
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// Ignore special tags like _panel, _border, _extend etc.
@@ -49,14 +49,14 @@ public class ParentResolver implements IComponentResolver
 			return false;
 		}
 
-		MarkupContainer< ? > parent = container;
+		MarkupContainer parent = container;
 		while ((parent != null) && (parent.isTransparentResolver()))
 		{
 			// Try to find the component with the parent component.
 			parent = parent.getParent();
 			if (parent != null)
 			{
-				Component< ? > component = parent.get(tag.getId());
+				Component component = parent.get(tag.getId());
 				if (component != null)
 				{
 					component.render(markupStream);

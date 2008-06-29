@@ -62,12 +62,14 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected void convertInput()
 				{
 					super.convertInput();
 					childValidated = true;
 				}
 
+				@Override
 				public void updateModel()
 				{
 					super.updateModel();
@@ -76,6 +78,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		protected void onBeforeRender()
 		{
 			super.onBeforeRender();
@@ -84,6 +87,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		}
 
+		@Override
 		protected void convertInput()
 		{
 			if (childValidated == false)
@@ -93,6 +97,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 			super.convertInput();
 		}
 
+		@Override
 		public void updateModel()
 		{
 			if (childModelUpdated == false)
@@ -112,7 +117,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 	}
 
 
-	private static class TestPage extends WebPage<Void>implements IMarkupResourceStreamProvider
+	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 

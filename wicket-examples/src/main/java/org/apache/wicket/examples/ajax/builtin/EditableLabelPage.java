@@ -33,7 +33,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class EditableLabelPage extends BasePage<EditableLabelPage>
+public class EditableLabelPage extends BasePage
 {
 	/** available sites for the multiple select. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
@@ -49,13 +49,13 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	 */
 	public EditableLabelPage()
 	{
-		setModel(new CompoundPropertyModel<EditableLabelPage>(this));
-		add(new AjaxEditableLabel<String>("text1"));
-		add(new AjaxEditableLabel<String>("text2"));
-		add(new AjaxEditableMultiLineLabel<String>("text3"));
-		add(new AjaxEditableChoiceLabel<String>("site", SITES));
+		setDefaultModel(new CompoundPropertyModel<EditableLabelPage>(this));
+		add(new AjaxEditableLabel("text1"));
+		add(new AjaxEditableLabel("text2"));
+		add(new AjaxEditableMultiLineLabel("text3"));
+		add(new AjaxEditableChoiceLabel("site", SITES));
 
-		add(new Label<String>("refresh-counter", new AbstractReadOnlyModel<String>()
+		add(new Label("refresh-counter", new AbstractReadOnlyModel<String>()
 		{
 			@Override
 			public String getObject()
@@ -64,7 +64,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 			}
 		}));
 
-		add(new Link<Void>("refresh-link")
+		add(new Link("refresh-link")
 		{
 			@Override
 			public void onClick()

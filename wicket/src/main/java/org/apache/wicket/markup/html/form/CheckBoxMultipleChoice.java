@@ -314,7 +314,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	public final CheckBoxMultipleChoice<T> setPrefix(final String prefix)
 	{
 		// Tell the page that this component's prefix was changed
-		final Page<?> page = findPage();
+		final Page page = findPage();
 		if (page != null)
 		{
 			addStateChange(new PrefixChange(this.prefix));
@@ -340,7 +340,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	public final CheckBoxMultipleChoice<T> setSuffix(final String suffix)
 	{
 		// Tell the page that this component's suffix was changed
-		final Page<?> page = findPage();
+		final Page page = findPage();
 		if (page != null)
 		{
 			addStateChange(new SuffixChange(this.suffix));

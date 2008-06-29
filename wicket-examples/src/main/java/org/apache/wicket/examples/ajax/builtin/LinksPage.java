@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class LinksPage extends BasePage<Void>
+public class LinksPage extends BasePage
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
@@ -66,22 +66,19 @@ public class LinksPage extends BasePage<Void>
 	 */
 	public LinksPage()
 	{
-		final Label<Integer> c1 = new Label<Integer>("c1", new PropertyModel<Integer>(this,
-			"counter1"));
+		final Label c1 = new Label("c1", new PropertyModel<Integer>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label<Integer> c2 = new Label<Integer>("c2", new PropertyModel<Integer>(this,
-			"counter2"));
+		final Label c2 = new Label("c2", new PropertyModel<Integer>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		final Label<Integer> c3 = new Label<Integer>("c3", new PropertyModel<Integer>(this,
-			"counter3"));
+		final Label c3 = new Label("c3", new PropertyModel<Integer>(this, "counter3"));
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new AjaxLink<Void>("c1-link")
+		add(new AjaxLink("c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -91,7 +88,7 @@ public class LinksPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxFallbackLink<Void>("c2-link")
+		add(new AjaxFallbackLink("c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -108,7 +105,7 @@ public class LinksPage extends BasePage<Void>
 			}
 		});
 
-		add(new IndicatingAjaxLink<Void>("c3-link")
+		add(new IndicatingAjaxLink("c3-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -127,7 +124,7 @@ public class LinksPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("success-link")
+		add(new AjaxLink("success-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -160,7 +157,7 @@ public class LinksPage extends BasePage<Void>
 			};
 		});
 
-		add(new AjaxLink<Void>("failure-link")
+		add(new AjaxLink("failure-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -194,7 +191,7 @@ public class LinksPage extends BasePage<Void>
 			};
 		});
 
-		add(new AjaxLink<Void>("set-response-page")
+		add(new AjaxLink("set-response-page")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -203,7 +200,7 @@ public class LinksPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("exception")
+		add(new AjaxLink("exception")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

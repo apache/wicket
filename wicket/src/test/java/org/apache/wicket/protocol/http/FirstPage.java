@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.IPageLink;
 import org.apache.wicket.markup.html.link.PageLink;
 
-public class FirstPage extends WebPage<Void>
+public class FirstPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

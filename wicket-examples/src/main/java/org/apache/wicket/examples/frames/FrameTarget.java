@@ -29,7 +29,7 @@ public final class FrameTarget implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** the class of the bookmarkable page. */
-	private Class<? extends Page<?>> frameClass;
+	private Class<? extends Page> frameClass;
 
 	/**
 	 * Construct.
@@ -45,7 +45,7 @@ public final class FrameTarget implements IClusterable
 	 * 
 	 * @param frameClass
 	 */
-	public <C extends Page<?>> FrameTarget(Class<C> frameClass)
+	public <C extends Page> FrameTarget(Class<C> frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -55,7 +55,7 @@ public final class FrameTarget implements IClusterable
 	 * 
 	 * @return lefFrameClass
 	 */
-	public Class<? extends Page<?>> getFrameClass()
+	public Class<? extends Page> getFrameClass()
 	{
 		return frameClass;
 	}
@@ -68,7 +68,7 @@ public final class FrameTarget implements IClusterable
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public <C extends Page<?>> void setFrameClass(Class<C> frameClass)
+	public <C extends Page> void setFrameClass(Class<C> frameClass)
 	{
 		this.frameClass = frameClass;
 	}

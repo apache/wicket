@@ -29,7 +29,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author igor
  */
-public class BasePage extends ExamplePage<Void>
+public class BasePage extends ExamplePage
 {
 	private Contact selected;
 
@@ -38,8 +38,7 @@ public class BasePage extends ExamplePage<Void>
 	 */
 	public BasePage()
 	{
-		add(new Label<String>("selectedLabel", new PropertyModel<String>(this,
-			"selectedContactLabel")));
+		add(new Label("selectedLabel", new PropertyModel<String>(this, "selectedContactLabel")));
 		add(new FeedbackPanel("feedback"));
 	}
 
@@ -61,7 +60,7 @@ public class BasePage extends ExamplePage<Void>
 	/**
 	 * 
 	 */
-	class ActionPanel extends Panel<Contact>
+	class ActionPanel extends Panel
 	{
 		/**
 		 * @param id
@@ -72,12 +71,12 @@ public class BasePage extends ExamplePage<Void>
 		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link<Void>("select")
+			add(new Link("select")
 			{
 				@Override
 				public void onClick()
 				{
-					selected = (Contact)getParent().getModelObject();
+					selected = (Contact)getParent().getDefaultModelObject();
 				}
 			});
 		}

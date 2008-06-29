@@ -44,14 +44,14 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#beforeRender(org.apache.wicket.Component)
 	 */
-	public void beforeRender(Component< ? > component)
+	public void beforeRender(Component component)
 	{
 	}
 
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#bind(org.apache.wicket.Component)
 	 */
-	public void bind(final Component< ? > component)
+	public void bind(final Component component)
 	{
 	}
 
@@ -67,7 +67,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#detach(Component)
 	 */
-	public void detach(Component< ? > component)
+	public void detach(Component component)
 	{
 	}
 
@@ -75,7 +75,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @see org.apache.wicket.behavior.IBehavior#exception(org.apache.wicket.Component,
 	 *      java.lang.RuntimeException)
 	 */
-	public final void exception(Component< ? > component, RuntimeException exception)
+	public final void exception(Component component, RuntimeException exception)
 	{
 		try
 		{
@@ -90,7 +90,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#getStatelessHint(org.apache.wicket.Component)
 	 */
-	public boolean getStatelessHint(Component< ? > component)
+	public boolean getStatelessHint(Component component)
 	{
 		return true;
 	}
@@ -99,7 +99,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 	}
 
@@ -113,7 +113,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @param exception
 	 *            the unexpected exception
 	 */
-	public void onException(Component< ? > component, RuntimeException exception)
+	public void onException(Component component, RuntimeException exception)
 	{
 	}
 
@@ -123,14 +123,14 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @param component
 	 *            the component that has this behavior coupled
 	 */
-	public void onRendered(Component< ? > component)
+	public void onRendered(Component component)
 	{
 	}
 
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#afterRender(org.apache.wicket.Component)
 	 */
-	public final void afterRender(final Component< ? > component)
+	public final void afterRender(final Component component)
 	{
 		try
 		{
@@ -152,7 +152,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#isEnabled(Component)
 	 */
-	public boolean isEnabled(Component< ? > component)
+	public boolean isEnabled(Component component)
 	{
 		return true;
 	}
@@ -172,7 +172,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @deprecated replaced by {@link #detach(Component)}
 	 */
 	@Deprecated
-	public final void detachModel(Component< ? > component)
+	public final void detachModel(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -182,7 +182,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 * @deprecated replaced by {@link #afterRender(Component)}
 	 */
 	@Deprecated
-	public final void rendered(Component< ? > component)
+	public final void rendered(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -169,7 +169,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * 
 	 * @return The directly associated class
 	 */
-	public Class< ? extends Component< ? >> getMarkupClass()
+	public Class< ? extends Component> getMarkupClass()
 	{
 		return Classes.resolveClass(markupClassName);
 	}

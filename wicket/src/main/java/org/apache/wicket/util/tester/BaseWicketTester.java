@@ -92,7 +92,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	private static final class TestPageSource implements ITestPageSource
 	{
-		private final Page<?> page;
+		private final Page page;
 
 		private static final long serialVersionUID = 1L;
 
@@ -101,12 +101,12 @@ public class BaseWicketTester extends MockWebApplication
 		 * 
 		 * @param page
 		 */
-		private TestPageSource(Page<?> page)
+		private TestPageSource(Page page)
 		{
 			this.page = page;
 		}
 
-		public Page<?> getTestPage()
+		public Page getTestPage()
 		{
 			return page;
 		}
@@ -118,7 +118,7 @@ public class BaseWicketTester extends MockWebApplication
 	public static class DummyWebApplication extends WebApplication
 	{
 		@Override
-		public Class<? extends Page<?>> getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return DummyHomePage.class;
 		}
@@ -155,7 +155,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
-	public <C extends Page<?>> BaseWicketTester(final Class<C> homePage)
+	public <C extends Page> BaseWicketTester(final Class<C> homePage)
 	{
 		this(new WebApplication()
 		{
@@ -163,7 +163,7 @@ public class BaseWicketTester extends MockWebApplication
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
 			@Override
-			public Class<? extends Page<?>> getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return homePage;
 			}
@@ -205,8 +205,8 @@ public class BaseWicketTester extends MockWebApplication
 	 *            the absolute path on disk to the <code>WebApplication</code>'s contents (e.g.
 	 *            war root) - may be <code>null</code>
 	 * 
-	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(
-	 *      org.apache.wicket.protocol.http.WebApplication, String)
+	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
+	 *      String)
 	 */
 	public BaseWicketTester(final WebApplication application, final String path)
 	{
@@ -233,7 +233,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            a <code>Page</code> factory that creates a test page instance
 	 * @return the rendered Page
 	 */
-	public final Page<?> startPage(final ITestPageSource testPageSource)
+	public final Page startPage(final ITestPageSource testPageSource)
 	{
 		startPage(DummyHomePage.class);
 		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
@@ -250,7 +250,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * @param component
 	 *            the listener to invoke
 	 */
-	public void executeListener(Component<?> component)
+	public void executeListener(Component component)
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
@@ -281,7 +281,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            a <code>Page</code> to render
 	 * @return the rendered <code>Page</code>
 	 */
-	public final Page<?> startPage(final Page<?> page)
+	public final Page startPage(final Page page)
 	{
 		return startPage(new TestPageSource(page));
 	}
@@ -295,7 +295,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page<?>> Page<?> startPage(Class<C> pageClass)
+	public final <C extends Page> Page startPage(Class<C> pageClass)
 	{
 		processRequestCycle(pageClass);
 		return getLastRenderedPage();
@@ -312,7 +312,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            the parameters to use for the class.
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page<?>> Page<?> startPage(Class<C> pageClass, PageParameters parameters)
+	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
 	{
 		processRequestCycle(pageClass, parameters);
 		return getLastRenderedPage();
@@ -353,7 +353,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * Renders a <code>Panel</code> defined in <code>TestPanelSource</code>. The usage is
 	 * similar to {@link #startPage(ITestPageSource)}. Please note that testing <code>Panel</code>
 	 * must use the supplied <code>panelId<code> as a <code>Component</code> id.
-	 *
+	 * 
 	 * <pre>
 	 * tester.startPanel(new TestPanelSource()
 	 * {
@@ -364,18 +364,18 @@ public class BaseWicketTester extends MockWebApplication
 	 * 	}
 	 * });
 	 * </pre>
-	 *
+	 * 
 	 * @param testPanelSource
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel<?> startPanel(final TestPanelSource testPanelSource)
+	public final Panel startPanel(final TestPanelSource testPanelSource)
 	{
-		return (Panel<?>)startPage(new ITestPageSource()
+		return (Panel)startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return new DummyPanelPage(testPanelSource);
 			}
@@ -391,23 +391,23 @@ public class BaseWicketTester extends MockWebApplication
 	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final <C extends Panel<?>> Panel<?> startPanel(final Class<C> panelClass)
+	public final <C extends Panel> Panel startPanel(final Class<C> panelClass)
 	{
-		return (Panel<?>)startPage(new ITestPageSource()
+		return (Panel)startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return new DummyPanelPage(new TestPanelSource()
 				{
 					private static final long serialVersionUID = 1L;
 
-					public Panel<?> getTestPanel(String panelId)
+					public Panel getTestPanel(String panelId)
 					{
 						try
 						{
-							Constructor<? extends Panel<?>> c = panelClass.getConstructor(new Class[] { String.class });
+							Constructor<? extends Panel> c = panelClass.getConstructor(new Class[] { String.class });
 							return c.newInstance(new Object[] { panelId });
 						}
 						catch (SecurityException e)
@@ -449,7 +449,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @param component
 	 */
-	public void startComponent(Component<?> component)
+	public void startComponent(Component component)
 	{
 		if (component instanceof FormComponent)
 		{
@@ -479,9 +479,9 @@ public class BaseWicketTester extends MockWebApplication
 	 * @return The component at the path
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
-	public Component<?> getComponentFromLastRenderedPage(String path)
+	public Component getComponentFromLastRenderedPage(String path)
 	{
-		final Component<?> component = getLastRenderedPage().get(path);
+		final Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +
@@ -506,8 +506,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public Result hasLabel(String path, String expectedLabelText)
 	{
-		Label<?> label = (Label<?>)getComponentFromLastRenderedPage(path);
-		return isEqual(expectedLabelText, label.getModelObjectAsString());
+		Label label = (Label)getComponentFromLastRenderedPage(path);
+		return isEqual(expectedLabelText, label.getDefaultModelObjectAsString());
 	}
 
 	/**
@@ -521,9 +521,9 @@ public class BaseWicketTester extends MockWebApplication
 	 *            expected page class to link
 	 * @return a <code>Result</code>
 	 */
-	public <C extends Page<?>> Result isPageLink(String path, Class<C> expectedPageClass)
+	public <C extends Page> Result isPageLink(String path, Class<C> expectedPageClass)
 	{
-		PageLink<?> pageLink = (PageLink<?>)getComponentFromLastRenderedPage(path);
+		PageLink pageLink = (PageLink)getComponentFromLastRenderedPage(path);
 		try
 		{
 			Field iPageLinkField = pageLink.getClass().getDeclaredField("pageLink");
@@ -556,9 +556,9 @@ public class BaseWicketTester extends MockWebApplication
 	 *            expected component class
 	 * @return a <code>Result</code>
 	 */
-	public <C extends Component<?>> Result isComponent(String path, Class<C> expectedComponentClass)
+	public <C extends Component> Result isComponent(String path, Class<C> expectedComponentClass)
 	{
-		Component<?> component = getComponentFromLastRenderedPage(path);
+		Component component = getComponentFromLastRenderedPage(path);
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
 			Classes.simpleName(expectedComponentClass),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
@@ -573,7 +573,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public Result isVisible(String path)
 	{
-		Component<?> component = getLastRenderedPage().get(path);
+		Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
@@ -664,7 +664,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void clickLink(String path, boolean isAjax)
 	{
-		Component<?> linkComponent = getComponentFromLastRenderedPage(path);
+		Component linkComponent = getComponentFromLastRenderedPage(path);
 
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
@@ -677,7 +677,7 @@ public class BaseWicketTester extends MockWebApplication
 					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			AjaxLink<?> link = (AjaxLink<?>)linkComponent;
+			AjaxLink link = (AjaxLink)linkComponent;
 
 			setupRequestAndResponse(true);
 			WebRequestCycle requestCycle = createRequestCycle();
@@ -695,7 +695,7 @@ public class BaseWicketTester extends MockWebApplication
 		// Link.
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
-			AjaxFallbackLink<?> link = (AjaxFallbackLink<?>)linkComponent;
+			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
 
 			setupRequestAndResponse(true);
 			WebRequestCycle requestCycle = createRequestCycle();
@@ -718,7 +718,7 @@ public class BaseWicketTester extends MockWebApplication
 					"will not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			AjaxSubmitLink<?> link = (AjaxSubmitLink<?>)linkComponent;
+			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
 
 			// We cycle through the attached behaviors and select the
 			// LAST matching behavior as the one we handle.
@@ -752,7 +752,7 @@ public class BaseWicketTester extends MockWebApplication
 		 */
 		else if (linkComponent instanceof SubmitLink)
 		{
-			SubmitLink<?> submitLink = (SubmitLink<?>)linkComponent;
+			SubmitLink submitLink = (SubmitLink)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
 			getParametersForNextRequest().put(pageRelativePath, new String[] { "x" });
@@ -761,7 +761,7 @@ public class BaseWicketTester extends MockWebApplication
 		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof AbstractLink)
 		{
-			AbstractLink<?> link = (AbstractLink<?>)linkComponent;
+			AbstractLink link = (AbstractLink)linkComponent;
 
 			/*
 			 * If the link is a bookmarkable link, then we need to transfer the parameters to the
@@ -827,7 +827,7 @@ public class BaseWicketTester extends MockWebApplication
 			fail("before using this method, at least one page has to be rendered");
 		}
 
-		Component<?> c = getComponentFromLastRenderedPage(componentPath);
+		Component c = getComponentFromLastRenderedPage(componentPath);
 		if (c == null)
 		{
 			fail("component " + componentPath + " was not found");
@@ -857,9 +857,9 @@ public class BaseWicketTester extends MockWebApplication
 	 *            expected class of last rendered page
 	 * @return a <code>Result</code>
 	 */
-	public <C extends Page<?>> Result isRenderedPage(Class<C> expectedRenderedPageClass)
+	public <C extends Page> Result isRenderedPage(Class<C> expectedRenderedPageClass)
 	{
-		Page<?> page = getLastRenderedPage();
+		Page page = getLastRenderedPage();
 		if (page == null)
 		{
 			return Result.fail("page was null");
@@ -1011,7 +1011,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            the <code>Component</code> to test
 	 * @return a <code>Result</code>
 	 */
-	public Result isComponentOnAjaxResponse(Component<?> component)
+	public Result isComponentOnAjaxResponse(Component component)
 	{
 		String failMessage = "A component which is null could not have been added to the AJAX response";
 		notNull(failMessage, component);
@@ -1076,7 +1076,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeAjaxEvent(String componentPath, String event)
 	{
-		Component<?> component = getComponentFromLastRenderedPage(componentPath);
+		Component component = getComponentFromLastRenderedPage(componentPath);
 		executeAjaxEvent(component, event);
 	}
 
@@ -1117,7 +1117,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            the event to simulate being fired. If <code>event</code> is <code>null</code>,
 	 *            the test will fail.
 	 */
-	public void executeAjaxEvent(Component<?> component, String event)
+	public void executeAjaxEvent(Component component, String event)
 	{
 		String failMessage = "Can't execute event on a component which is null.";
 		notNull(failMessage, component);
@@ -1241,8 +1241,9 @@ public class BaseWicketTester extends MockWebApplication
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(FormComponent<?> formComponent)
+			public void onFormComponent(FormComponent formComponent)
 			{
 				// !(formComponent instanceof Button) &&
 				if (!(formComponent instanceof RadioGroup) &&
@@ -1359,11 +1360,15 @@ public class BaseWicketTester extends MockWebApplication
 		throw new WicketRuntimeException(message);
 	}
 
+	/**
+	 * @param rc
+	 */
+	// FIXME 1.5: REMOVE THIS HACK. Currently there is no way to call
+	// requestcycle.onbeginrequest() from outside and since tester shortcircuits the normal
+	// workflow it is necessary to call onbeginrequest manually
+	@Deprecated
 	public static void callOnBeginRequest(RequestCycle rc)
 	{
-		// FIXME 1.5: REMOVE THIS HACK. Currently there is no way to call
-		// requestcycle.onbeginrequest() from outside and since tester shortcircuits the normal
-		// workflow it is necessary to call onbeginrequest manually
 		try
 		{
 			Method method = RequestCycle.class.getDeclaredMethod("onBeginRequest", (Class[])null);

@@ -119,7 +119,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
-	protected String propertyExpression(Component<?> component)
+	protected String propertyExpression(Component component)
 	{
 		return component.getId();
 	}
@@ -127,7 +127,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
 	 */
-	public <C> IWrapModel<C> wrapOnInheritance(Component<C> component)
+	public <C> IWrapModel<C> wrapOnInheritance(Component component)
 	{
 		return new AttachedCompoundPropertyModel<C>(component);
 	}
@@ -161,7 +161,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component<C> owner;
+		private final Component owner;
 
 		/**
 		 * Constructor
@@ -169,7 +169,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
-		public AttachedCompoundPropertyModel(Component<C> owner)
+		public AttachedCompoundPropertyModel(Component owner)
 		{
 			super(CompoundPropertyModel.this);
 			this.owner = owner;
@@ -223,7 +223,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
 	@Deprecated
-	public final Object getObject(Component<?> component)
+	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -234,7 +234,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
 	@Deprecated
-	public final void setObject(Component<?> component, Object object)
+	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

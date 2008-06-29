@@ -26,7 +26,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class SimplePage_3 extends WebPage<Void>
+public class SimplePage_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class SimplePage_3 extends WebPage<Void>
 	{
 		ValueMap modelData = new ValueMap();
 		modelData.put("testData", "123456");
-		setModel(new Model(modelData));
+		setDefaultModel(new Model(modelData));
 	}
 
 	/**

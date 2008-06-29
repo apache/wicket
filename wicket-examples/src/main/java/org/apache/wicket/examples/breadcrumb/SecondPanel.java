@@ -48,7 +48,7 @@ public class SecondPanel extends BreadCrumbPanel
 		public InputForm(String id)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel(this));
+			setDefaultModel(new CompoundPropertyModel(this));
 			add(new TextField("input"));
 			add(new Button("normalButton"));
 

@@ -59,7 +59,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, final List< ? extends T> choices)
+	public AbstractSingleSelectChoice(final String id, final List<? extends T> choices)
 	{
 		super(id, choices);
 	}
@@ -70,7 +70,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, final List< ? extends T> data,
+	public AbstractSingleSelectChoice(final String id, final List<? extends T> data,
 		final IChoiceRenderer<T> renderer)
 	{
 		super(id, data, renderer);
@@ -79,8 +79,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel<T> model,
-		final List< ? extends T> data)
+	public AbstractSingleSelectChoice(final String id, IModel<T> model, final List<? extends T> data)
 	{
 		super(id, model, data);
 	}
@@ -93,7 +92,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(final String id, IModel<T> model,
-		final List< ? extends T> data, final IChoiceRenderer<T> renderer)
+		final List<? extends T> data, final IChoiceRenderer<T> renderer)
 	{
 		super(id, model, data, renderer);
 	}
@@ -101,7 +100,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<List< ? extends T>> choices)
+	public AbstractSingleSelectChoice(String id, IModel<List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -109,7 +108,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<List< ? extends T>> choices)
+	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -118,7 +117,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<List< ? extends T>> choices,
+	public AbstractSingleSelectChoice(String id, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
@@ -130,7 +129,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<T> model,
-		IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -151,9 +150,9 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will
-	 * be displayed, typically to the user as 'choose one' or something similar. Note that this
-	 * doesn't say anything about whether a null value (not selecting a value) is permitted; use
+	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will be
+	 * displayed, typically to the user as 'choose one' or something similar. Note that this doesn't
+	 * say anything about whether a null value (not selecting a value) is permitted; use
 	 * {@link #setRequired(boolean)} for that.
 	 * 
 	 * @return <code>true</code> when the <code>null</code> value is allowed.
@@ -164,9 +163,9 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will
-	 * be displayed, typically to the user as 'choose one' or something similar. Note that this
-	 * doesn't say anything about whether a null value (not selecting a value) is permitted; use
+	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will be
+	 * displayed, typically to the user as 'choose one' or something similar. Note that this doesn't
+	 * say anything about whether a null value (not selecting a value) is permitted; use
 	 * {@link #setRequired(boolean)} for that.
 	 * 
 	 * @param nullValid
@@ -198,7 +197,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 */
 	protected T convertChoiceIdToChoice(String id)
 	{
-		final List< ? extends T> choices = getChoices();
+		final List<? extends T> choices = getChoices();
 		final IChoiceRenderer<T> renderer = getChoiceRenderer();
 		for (int index = 0; index < choices.size(); index++)
 		{

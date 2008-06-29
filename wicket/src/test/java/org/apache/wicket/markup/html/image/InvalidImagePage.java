@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.image;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
-public class InvalidImagePage extends WebPage<Void>
+public class InvalidImagePage extends WebPage
 {
 	/**
 	 * 

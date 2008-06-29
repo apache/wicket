@@ -26,7 +26,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class MarkupComponentBorderTestPage extends WebPage<Void>
+public class MarkupComponentBorderTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

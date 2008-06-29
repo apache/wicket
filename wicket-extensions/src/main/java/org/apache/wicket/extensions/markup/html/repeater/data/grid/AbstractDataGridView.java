@@ -172,7 +172,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	@Override
 	protected final void populateItem(Item<T> item)
 	{
-		RepeatingView<T> cells = new RepeatingView<T>(CELL_REPEATER_ID);
+		RepeatingView cells = new RepeatingView(CELL_REPEATER_ID);
 		item.add(cells);
 
 		ArrayIteratorAdapter<ICellPopulator<T>> populators = getPopulatorsIterator();

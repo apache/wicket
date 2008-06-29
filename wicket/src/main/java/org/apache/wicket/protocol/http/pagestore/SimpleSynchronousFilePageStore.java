@@ -65,7 +65,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	public SimpleSynchronousFilePageStore()
 	{
 		this((File)((WebApplication)Application.get()).getServletContext().getAttribute(
-				"javax.servlet.context.tempdir"));
+			"javax.servlet.context.tempdir"));
 	}
 
 	private String getFileName(String pageMapName, int pageId)
@@ -76,15 +76,15 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	// sort file by modification time
 	private void sortFiles(File[] files)
 	{
-		Arrays.sort(files, new Comparator()
+		Arrays.sort(files, new Comparator<File>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(File arg0, File arg1)
 			{
-				File f1 = (File)arg0;
-				File f2 = (File)arg1;
+				File f1 = arg0;
+				File f2 = arg1;
 
-				return f1.lastModified() < f2.lastModified() ? -1 : (f1.lastModified() == f2
-						.lastModified() ? 0 : 1);
+				return f1.lastModified() < f2.lastModified() ? -1
+					: (f1.lastModified() == f2.lastModified() ? 0 : 1);
 			}
 		});
 	}
@@ -103,13 +103,13 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	 * @return
 	 */
 	private File getPageFile(File sessionDir, String pageMapName, int pageId, int versionNumber,
-			int ajaxVersionNumber)
+		int ajaxVersionNumber)
 	{
 		final String fileNamePrefix = getFileName(pageMapName, pageId);
 		if (versionNumber != -1 && ajaxVersionNumber != -1)
 		{
 			return new File(sessionDir, fileNamePrefix + "-v-" + versionNumber + "-a-" +
-					ajaxVersionNumber);
+				ajaxVersionNumber);
 		}
 		else if (versionNumber == -1)
 		{
@@ -155,7 +155,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 			{
 				File file = files[i];
 				String ajaxVersionString = file.getName().substring(
-						file.getName().lastIndexOf('-') + 1);
+					file.getName().lastIndexOf('-') + 1);
 				int ajaxVersion = Integer.parseInt(ajaxVersionString);
 				if (lastAjaxVersion < ajaxVersion)
 				{
@@ -174,7 +174,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	}
 
 	protected byte[] loadPageData(File workDir, String sessionId, String pageMapName, int pageId,
-			int versionNumber, int ajaxVersionNumber)
+		int versionNumber, int ajaxVersionNumber)
 	{
 		File sessionDir = new File(workDir, sessionId);
 		byte[] pageData = null;
@@ -182,7 +182,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 		if (sessionDir.exists())
 		{
 			File pageFile = getPageFile(sessionDir, pageMapName, pageId, versionNumber,
-					ajaxVersionNumber);
+				ajaxVersionNumber);
 			if (pageFile.exists())
 			{
 				FileInputStream fis = null;
@@ -205,7 +205,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 				catch (Exception e)
 				{
 					log.debug("Error loading page " + pageId + "," + versionNumber +
-							" for the sessionid " + sessionId + " from disk", e);
+						" for the sessionid " + sessionId + " from disk", e);
 				}
 				finally
 				{
@@ -227,10 +227,10 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	}
 
 	public Page getPage(String sessionId, String pageMapName, int pageId, int versionNumber,
-			int ajaxVersionNumber)
+		int ajaxVersionNumber)
 	{
 		byte data[] = loadPageData(defaultWorkDir, sessionId, pageMapName, pageId, versionNumber,
-				ajaxVersionNumber);
+			ajaxVersionNumber);
 		if (data != null)
 		{
 			return deserializePage(data, versionNumber);
@@ -279,8 +279,8 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 		File sessionDir = new File(defaultWorkDir, sessionId);
 		sessionDir.mkdirs();
 
-		File pageFile = getPageFile(sessionDir, page.getPageMapName(), page.getPageId(), page
-				.getVersionNumber(), page.getAjaxVersionNumber());
+		File pageFile = getPageFile(sessionDir, page.getPageMapName(), page.getPageId(),
+			page.getVersionNumber(), page.getAjaxVersionNumber());
 		FileOutputStream fos = null;
 		int length = 0;
 		try
@@ -318,11 +318,11 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 
 	public void storePage(String sessionId, Page page)
 	{
-		List/* SerializedPage */serialized = serializePage(page);
+		List<SerializedPage> serialized = serializePage(page);
 
-		for (Iterator i = serialized.iterator(); i.hasNext();)
+		for (Iterator<SerializedPage> i = serialized.iterator(); i.hasNext();)
 		{
-			SerializedPage serializedPage = (SerializedPage)i.next();
+			SerializedPage serializedPage = i.next();
 			savePageData(sessionId, serializedPage);
 		}
 	}

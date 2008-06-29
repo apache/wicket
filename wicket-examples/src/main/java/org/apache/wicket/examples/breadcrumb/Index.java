@@ -25,7 +25,7 @@ import org.apache.wicket.extensions.breadcrumb.BreadCrumbBar;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WicketExamplePage<Void>
+public class Index extends WicketExamplePage
 {
 	/**
 	 * Construct.

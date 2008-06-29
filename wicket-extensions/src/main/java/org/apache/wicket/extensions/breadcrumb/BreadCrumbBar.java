@@ -110,7 +110,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		{
 			super(id);
 			setReuseItems(false);
-			setModel(new LoadableDetachableModel()
+			setDefaultModel(new LoadableDetachableModel()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -156,7 +156,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			// else let the listview recalculate it's children immediately;
 			// it was attached, but it needs to go through that again now
 			// as the signaling component attached after this
-			getModel().detach();
+			getDefaultModel().detach();
 			super.internalOnAttach();
 		}
 
@@ -178,7 +178,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		protected void populateItem(ListItem item)
 		{
 			int index = item.getIndex();
-			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getModelObject();
+			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getDefaultModelObject();
 			item.add(newBreadCrumbComponent("crumb", index, size, breadCrumbParticipant));
 		}
 	}

@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrement
 /**
  * Dummy page used for resource testing.
  */
-public class IncrementalTableNavigationPage extends WebPage<Void>
+public class IncrementalTableNavigationPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class IncrementalTableNavigationPage extends WebPage<Void>
 
 			protected void populateItem(ListItem listItem)
 			{
-				String txt = (String)listItem.getModelObject();
+				String txt = (String)listItem.getDefaultModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		};

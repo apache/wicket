@@ -57,9 +57,6 @@ import org.apache.wicket.util.lang.EnumeratedType;
  */
 public abstract class DefaultAbstractTree extends AbstractTree
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -161,7 +158,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public DefaultAbstractTree(String id, IModel model)
+	public DefaultAbstractTree(String id, IModel<?> model)
 	{
 		super(id, model);
 		init();
@@ -177,7 +174,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 */
 	public DefaultAbstractTree(String id, TreeModel model)
 	{
-		super(id, new Model((Serializable)model));
+		super(id, new Model<Serializable>((Serializable)model));
 		init();
 	}
 
@@ -460,12 +457,12 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The link call back
 	 * @return The link component
 	 */
-	protected <S> MarkupContainer<S> newLink(MarkupContainer<?> parent, String id,
+	protected MarkupContainer newLink(MarkupContainer parent, String id,
 		final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link<S>(id)
+			return new Link(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -481,7 +478,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink<S>(id)
+			return new AjaxLink(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -498,7 +495,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink<S>(id)
+			return new AjaxFallbackLink(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -555,8 +552,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The parent node
 	 * @return The component that represents the link
 	 */
-	protected MarkupContainer<?> newNodeLink(MarkupContainer<?> parent, String id,
-		final TreeNode node)
+	protected MarkupContainer newNodeLink(MarkupContainer parent, String id, final TreeNode node)
 	{
 		return newLink(parent, id, new ILinkCallback()
 		{

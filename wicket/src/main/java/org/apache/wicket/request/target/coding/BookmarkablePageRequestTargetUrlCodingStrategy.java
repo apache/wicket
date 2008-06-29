@@ -37,7 +37,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	protected final WeakReference<Class<? extends Page<?>>> bookmarkablePageClassRef;
+	protected final WeakReference<Class<? extends Page>> bookmarkablePageClassRef;
 
 	/** page map name. */
 	private final String pageMapName;
@@ -55,7 +55,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	 * @param pageMapName
 	 *            the page map name if any
 	 */
-	public <C extends Page<?>> BookmarkablePageRequestTargetUrlCodingStrategy(
+	public <C extends Page> BookmarkablePageRequestTargetUrlCodingStrategy(
 		final String mountPath, final Class<C> bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
@@ -65,7 +65,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
-		bookmarkablePageClassRef = new WeakReference<Class<? extends Page<?>>>(
+		bookmarkablePageClassRef = new WeakReference<Class<? extends Page>>(
 			bookmarkablePageClass);
 		this.pageMapName = pageMapName;
 	}
@@ -117,7 +117,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		else
 		{
 			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
-				(Class<? extends Page<?>>)bookmarkablePageClassRef.get(), parameters);
+				(Class<? extends Page>)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
 
@@ -158,7 +158,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if (((Class<? extends Page<?>>)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
+			if (((Class<? extends Page>)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
 			{
 				if (pageMapName == null)
 				{

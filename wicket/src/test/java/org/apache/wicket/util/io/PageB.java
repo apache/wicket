@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class PageB extends WebPage<Void>
+public class PageB extends WebPage
 {
 	/**
 	 * 

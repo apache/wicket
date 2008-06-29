@@ -48,5 +48,5 @@ public interface IValidatorAddListener extends IClusterable
 	 * @param component
 	 *            a <code>Component</code> to which the validator was just added
 	 */
-	void onAdded(Component<?> component);
+	void onAdded(Component component);
 }

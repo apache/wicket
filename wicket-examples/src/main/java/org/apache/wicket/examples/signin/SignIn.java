@@ -31,7 +31,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-public final class SignIn extends WicketExamplePage<Void>
+public final class SignIn extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -64,7 +64,7 @@ public final class SignIn extends WicketExamplePage<Void>
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class SignInForm extends Form<Void>
+	public final class SignInForm extends Form
 	{
 		// El-cheapo model for form
 		private final ValueMap properties = new ValueMap();

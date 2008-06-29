@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model object type
  */
-public class TextArea<T> extends AbstractTextComponent<T>
+public class TextArea<T> extends AbstractTextComponent
 {
 	private static final long serialVersionUID = 1L;
 

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Gerolf Seitz
  */
-public class NestedFormsPage extends WebPage<Void>
+public class NestedFormsPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 	static Logger logger = LoggerFactory.getLogger(NestedFormsPage.class);
@@ -82,7 +82,7 @@ public class NestedFormsPage extends WebPage<Void>
 		public NestableForm(String id)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel<NestableForm>(this));
+			setDefaultModel(new CompoundPropertyModel<NestableForm>(this));
 
 			TextField<String> firstField = new RequiredTextField<String>("first");
 			TextField<String> secondField = new TextField<String>("second");
@@ -90,7 +90,7 @@ public class NestedFormsPage extends WebPage<Void>
 			add(secondField);
 
 			add(new EqualInputValidator(firstField, secondField));
-			add(new AjaxSubmitLink<Void>("ajaxSubmit", this)
+			add(new AjaxSubmitLink("ajaxSubmit", this)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -107,7 +107,7 @@ public class NestedFormsPage extends WebPage<Void>
 				}
 			});
 			add(new ToggleLink("toggle", this));
-			add(new SubmitLink<Void>("submit"));
+			add(new SubmitLink("submit"));
 		}
 
 		@Override
@@ -127,7 +127,7 @@ public class NestedFormsPage extends WebPage<Void>
 		}
 	}
 
-	private class ToggleLink extends Link<Void>
+	private class ToggleLink extends Link
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -29,12 +29,10 @@ import org.apache.wicket.model.ResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public abstract class WizardButton extends Button<String>
+public abstract class WizardButton extends Button
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The enclosing wizard.
 	 */

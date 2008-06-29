@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author marrink
  * 
  */
-public class HomePage extends WebPage<Void>
+public class HomePage extends WebPage
 {
 
 	/**

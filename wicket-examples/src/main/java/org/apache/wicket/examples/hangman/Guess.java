@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Guess extends HangmanPage<Void>
+public class Guess extends HangmanPage
 {
 	/**
 	 * Create the guess page.
@@ -39,11 +39,10 @@ public class Guess extends HangmanPage<Void>
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label<Integer>("guessesRemaining", new PropertyModel<Integer>(getGame(),
-			"guessesRemaining")));
+		add(new Label("guessesRemaining", new PropertyModel<Integer>(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label<String>("word", new Model<String>()
+		add(new Label("word", new Model<String>()
 		{
 			@Override
 			public String getObject()
@@ -59,7 +58,7 @@ public class Guess extends HangmanPage<Void>
 			protected void populateItem(final ListItem<Letter> listItem)
 			{
 				final Letter letter = listItem.getModelObject();
-				final Link<?> link = new Link<Void>("letter")
+				final Link link = new Link("letter")
 				{
 					@Override
 					protected void onBeforeRender()
@@ -94,7 +93,7 @@ public class Guess extends HangmanPage<Void>
 					}
 				};
 
-				link.add(new Image<Void>("image", letter.getSharedImageResource()));
+				link.add(new Image("image", letter.getSharedImageResource()));
 				listItem.add(link);
 
 				// append id attribute to link for unit tests

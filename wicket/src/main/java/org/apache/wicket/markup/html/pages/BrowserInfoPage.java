@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Eelco Hillenius
  */
-public class BrowserInfoPage extends WebPage<Object>
+public class BrowserInfoPage extends WebPage
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
@@ -132,14 +132,14 @@ public class BrowserInfoPage extends WebPage<Object>
 	 */
 	private final void initComps()
 	{
-		WebComponent<Object> meta = new WebComponent<Object>("meta");
+		WebComponent meta = new WebComponent("meta");
 		PageParameters parameters = new PageParameters();
 		parameters.put("cto", continueTo);
 		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
 			parameters));
 		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
 		add(meta);
-		WebMarkupContainer<Object> link = new WebMarkupContainer<Object>("link");
+		WebMarkupContainer link = new WebMarkupContainer("link");
 		link.add(new AttributeModifier("href", true, new Model<Serializable>((Serializable)url)));
 		add(link);
 		add(new BrowserInfoForm("postback")

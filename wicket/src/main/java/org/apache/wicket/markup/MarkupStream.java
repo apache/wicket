@@ -224,7 +224,7 @@ public final class MarkupStream
 	 * 
 	 * @return The component's class
 	 */
-	public final Class< ? extends Component< ? >> getContainerClass()
+	public final Class< ? extends Component> getContainerClass()
 	{
 		return markup.getMarkupResourceData().getResource().getMarkupClass();
 	}

@@ -44,10 +44,10 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component< ? > component;
+		private final Component component;
 		private final String propertyExpression;
 
-		private Binding(final Component< ? > component, final String propertyExpression)
+		private Binding(final Component component, final String propertyExpression)
 		{
 			this.component = component;
 			this.propertyExpression = propertyExpression;
@@ -91,15 +91,11 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	/**
 	 * Adds a property binding, using the component's id as the property expression.
 	 * 
-	 * @param
-	 * <P>
-	 * The Model object of the component
-	 * 
 	 * @param component
 	 *            The component to bind
 	 * @return The component, for convenience in adding components
 	 */
-	public <P> Component<P> bind(final Component<P> component)
+	public Component bind(final Component component)
 	{
 		if (component == null)
 		{
@@ -113,17 +109,13 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	/**
 	 * Adds a property binding.
 	 * 
-	 * @param
-	 * <P>
-	 * The Model object of the component
-	 * 
 	 * @param component
 	 *            The component to bind
 	 * @param propertyExpression
 	 *            A property expression pointing to the property in this model
 	 * @return The component, for convenience in adding components
 	 */
-	public <P> Component<P> bind(final Component<P> component, final String propertyExpression)
+	public Component bind(final Component component, final String propertyExpression)
 	{
 		if (component == null)
 		{
@@ -175,7 +167,7 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 *            Component to get binding for
 	 * @return The binding information
 	 */
-	private Binding getBinding(final Component< ? > component)
+	private Binding getBinding(final Component component)
 	{
 		for (int i = 0; i < bindings.size(); i++)
 		{
@@ -192,7 +184,7 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 * @see org.apache.wicket.model.CompoundPropertyModel#propertyExpression(org.apache.wicket.Component)
 	 */
 	@Override
-	protected String propertyExpression(final Component< ? > component)
+	protected String propertyExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
 		if (binding != null)

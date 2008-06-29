@@ -166,7 +166,7 @@ public class InterceptTest extends TestCase
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Class< ? extends Page< ? >> getHomePage()
+		public Class< ? extends Page> getHomePage()
 		{
 			return MockHomePage.class;
 		}

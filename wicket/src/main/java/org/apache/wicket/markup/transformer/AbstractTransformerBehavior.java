@@ -61,7 +61,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
 
@@ -85,7 +85,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(final Component< ? > component)
+	public void onRendered(final Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
@@ -122,7 +122,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 *      java.lang.RuntimeException)
 	 */
 	@Override
-	public void onException(Component< ? > component, RuntimeException exception)
+	public void onException(Component component, RuntimeException exception)
 	{
 		if (webResponse != null)
 		{
@@ -136,6 +136,6 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public abstract CharSequence transform(final Component< ? > component, final CharSequence output)
+	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 }

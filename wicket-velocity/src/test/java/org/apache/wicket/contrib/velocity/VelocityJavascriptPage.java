@@ -27,7 +27,7 @@ import org.apache.wicket.velocity.VelocityJavascriptContributor;
 /**
  * Test page.
  */
-public class VelocityJavascriptPage extends WebPage<Void>
+public class VelocityJavascriptPage extends WebPage
 {
 	static final String MSG1 = "Stoopid test 1";
 

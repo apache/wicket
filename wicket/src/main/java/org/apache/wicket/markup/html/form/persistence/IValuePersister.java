@@ -38,7 +38,7 @@ public interface IValuePersister extends IClusterable
 	 * @param component
 	 *            The form component
 	 */
-	void save(FormComponent<?> component);
+	void save(FormComponent component);
 
 	/**
 	 * Loads any persisted value for a given form component
@@ -46,7 +46,7 @@ public interface IValuePersister extends IClusterable
 	 * @param component
 	 *            The form component
 	 */
-	void load(FormComponent<?> component);
+	void load(FormComponent component);
 
 	/**
 	 * Remove any persisted value for a given form component.
@@ -54,5 +54,5 @@ public interface IValuePersister extends IClusterable
 	 * @param component
 	 *            The form component
 	 */
-	void clear(FormComponent<?> component);
+	void clear(FormComponent component);
 }

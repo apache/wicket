@@ -25,7 +25,7 @@ import org.apache.wicket.model.IModel;
  * @author Eelco Hillenius
  * @param <T>
  */
-public abstract class Banner<T> extends Panel<T>
+public abstract class Banner extends Panel
 {
 	/**
 	 * Construct.
@@ -43,7 +43,7 @@ public abstract class Banner<T> extends Panel<T>
 	 * @param id
 	 * @param model
 	 */
-	public Banner(String id, IModel<T> model)
+	public Banner(String id, IModel<?> model)
 	{
 		super(id, model);
 	}

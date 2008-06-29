@@ -33,7 +33,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class Home extends WicketExamplePage<Void>
+public final class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -58,11 +58,11 @@ public final class Home extends WicketExamplePage<Void>
 			new Model<ValueMap>(map));
 
 		// Add the label with the dynamic model
-		add(new Label<String>("salutation", labelModel));
+		add(new Label("salutation", labelModel));
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link<Void>("goCanadian")
+		add(new Link("goCanadian")
 		{
 			@Override
 			public void onClick()
@@ -70,7 +70,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(Locale.CANADA);
 			}
 		});
-		add(new Link<Void>("goUS")
+		add(new Link("goUS")
 		{
 			@Override
 			public void onClick()
@@ -78,7 +78,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(Locale.US);
 			}
 		});
-		add(new Link<Void>("goDutch")
+		add(new Link("goDutch")
 		{
 			@Override
 			public void onClick()
@@ -86,7 +86,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("nl", "NL"));
 			}
 		});
-		add(new Link<Void>("goGerman")
+		add(new Link("goGerman")
 		{
 			@Override
 			public void onClick()
@@ -94,7 +94,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-		add(new Link<Void>("goChinese")
+		add(new Link("goChinese")
 		{
 			@Override
 			public void onClick()
@@ -102,7 +102,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("zh", "CN"));
 			}
 		});
-		add(new Link<Void>("goDanish")
+		add(new Link("goDanish")
 		{
 			@Override
 			public void onClick()
@@ -110,7 +110,7 @@ public final class Home extends WicketExamplePage<Void>
 				getSession().setLocale(new Locale("da", "DK"));
 			}
 		});
-		add(new Link<Void>("goKorean")
+		add(new Link("goKorean")
 		{
 			@Override
 			public void onClick()

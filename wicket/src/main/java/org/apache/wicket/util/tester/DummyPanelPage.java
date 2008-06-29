@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Ingram Chen
  * @since 1.2.6
  */
-public class DummyPanelPage extends WebPage<Void>
+public class DummyPanelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

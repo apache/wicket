@@ -37,7 +37,7 @@ import org.apache.wicket.validation.validator.StringValidator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class FormPage extends BasePage<Void>
+public class FormPage extends BasePage
 {
 	private final Bean bean = new Bean();
 
@@ -56,7 +56,7 @@ public class FormPage extends BasePage<Void>
 		add(form);
 		form.setOutputMarkupId(true);
 
-		FormComponent<?> fc;
+		FormComponent fc;
 
 		// add form components to the form as usual
 
@@ -80,7 +80,7 @@ public class FormPage extends BasePage<Void>
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxButton<Void>("ajax-button", form)
+		form.add(new AjaxButton("ajax-button", form)
 		{
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)

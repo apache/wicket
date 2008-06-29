@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * In addition to the above search order, each component that is being searched for a resource also
  * includes the resources from any parent classes that it inherits from. For example, PageA extends
- * CommonBasePage which in turn extends WebPage<Void> When a resource lookup is requested on PageA, the
+ * CommonBasePage which in turn extends WebPage When a resource lookup is requested on PageA, the
  * resource bundle for PageA is first checked. If the resource is not found in this bundle then the
  * resource bundle for CommonBasePage is checked. This allows designers of base pages and components
  * to define default sets of string resources and then developers implementing subclasses to either
@@ -170,7 +170,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
-	public String loadStringResource(final Component< ? > component, final String key)
+	public String loadStringResource(final Component component, final String key)
 	{
 		if (component == null)
 		{
@@ -226,7 +226,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 *            The component to evaluate
 	 * @return The stack of classes
 	 */
-	private List<Class< ? >> getComponentStack(final Component< ? > component)
+	private List<Class< ? >> getComponentStack(final Component component)
 	{
 		// Build the search stack
 		final List<Class< ? >> searchStack = new ArrayList<Class< ? >>();
@@ -235,7 +235,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		if (!(component instanceof Page))
 		{
 			// Add all the component on the way to the Page
-			MarkupContainer< ? > container = component.getParent();
+			MarkupContainer container = component.getParent();
 			while (container != null)
 			{
 				searchStack.add(container.getClass());

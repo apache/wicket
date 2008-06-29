@@ -308,7 +308,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #getObject()} instead
 	 */
 	@Deprecated
-	protected final Object onGetObject(Component<?> component)
+	protected final Object onGetObject(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -321,7 +321,7 @@ public abstract class AbstractPropertyModel<T>
 	 * @deprecated use {@link #setObject(Object)} instead
 	 */
 	@Deprecated
-	protected final void onSetObject(Component<?> component, Object object)
+	protected final void onSetObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}

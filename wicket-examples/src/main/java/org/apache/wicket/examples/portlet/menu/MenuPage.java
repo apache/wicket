@@ -28,7 +28,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author ate
  */
-public class MenuPage extends WebPage<Void>
+public class MenuPage extends WebPage
 {
 	/**
 	 * Construct.
@@ -43,7 +43,7 @@ public class MenuPage extends WebPage<Void>
 			{
 				final int index = item.getIteration();
 				ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(index + 1);
-				Link<?> link = new Link<Void>("example")
+				Link link = new Link("example")
 				{
 					@Override
 					public void onClick()
@@ -56,9 +56,9 @@ public class MenuPage extends WebPage<Void>
 						session.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, ea);
 					}
 				};
-				link.add(new Label<String>("name", ea.getDisplayName()));
+				link.add(new Label("name", ea.getDisplayName()));
 				item.add(link);
-				item.add(new Label<String>("description", ea.getDescription()));
+				item.add(new Label("description", ea.getDescription()));
 			}
 		});
 	}

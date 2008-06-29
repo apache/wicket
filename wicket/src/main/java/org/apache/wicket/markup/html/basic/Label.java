@@ -63,10 +63,8 @@ import org.apache.wicket.model.Model;
  * </pre>
  * 
  * @author Jonathan Locke
- * @param <T>
- *            The model object type
  */
-public class Label<T> extends WebComponent<T>
+public class Label extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -98,9 +96,11 @@ public class Label<T> extends WebComponent<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Label(final String id, IModel<T> model)
+	public Label(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -112,7 +112,7 @@ public class Label<T> extends WebComponent<T>
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
 
 	/**

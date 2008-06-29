@@ -58,7 +58,7 @@ public class BorderBodyResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer< ? > container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// Must be wicket:body
@@ -69,7 +69,7 @@ public class BorderBodyResolver implements IComponentResolver
 			{
 				// Find the border parent. There must not be a body container in
 				// between
-				MarkupContainer< ? > parent = container.getParent();
+				MarkupContainer parent = container.getParent();
 				while (parent != null)
 				{
 					if (parent instanceof Border.BorderBodyContainer)
@@ -78,7 +78,7 @@ public class BorderBodyResolver implements IComponentResolver
 					}
 					else if (parent instanceof Border)
 					{
-						Component< ? > component = parent.get(tag.getId());
+						Component component = parent.get(tag.getId());
 						if (component != null)
 						{
 							component.render(markupStream);

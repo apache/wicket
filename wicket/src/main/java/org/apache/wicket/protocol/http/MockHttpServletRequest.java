@@ -1156,7 +1156,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param params
 	 *            Additional parameters
 	 */
-	public void setRequestToBookmarkablePage(final Page<?> page, final Map<String, Object> params)
+	public void setRequestToBookmarkablePage(final Page page, final Map<String, Object> params)
 	{
 		parameters.putAll(params);
 		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
@@ -1169,13 +1169,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param component
 	 *            The component
 	 */
-	public void setRequestToComponent(final Component<?> component)
+	public void setRequestToComponent(final Component component)
 	{
 		final IPageMap pageMap = component.getPage().getPageMap();
 		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{
-			final Class<? extends Page<?>> clazz = ((BookmarkablePageLink)component).getPageClass();
+			final Class<? extends Page> clazz = ((BookmarkablePageLink)component).getPageClass();
 			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
 				':' + clazz.getName());
 		}

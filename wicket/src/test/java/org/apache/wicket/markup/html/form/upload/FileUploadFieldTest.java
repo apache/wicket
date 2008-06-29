@@ -62,7 +62,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -157,7 +157,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}

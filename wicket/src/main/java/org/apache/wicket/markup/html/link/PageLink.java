@@ -27,10 +27,8 @@ import org.apache.wicket.Page;
  * 
  * @see IPageLink
  * @author Jonathan Locke
- * @param <T>
- *            type of model object
  */
-public class PageLink<T> extends Link<T>
+public class PageLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +46,7 @@ public class PageLink<T> extends Link<T>
 	 * @param c
 	 *            Page class
 	 */
-	public <C extends Page<?>> PageLink(final String id, final Class<C> c)
+	public <C extends Page> PageLink(final String id, final Class<C> c)
 	{
 		super(id);
 
@@ -58,17 +56,17 @@ public class PageLink<T> extends Link<T>
 			throw new IllegalArgumentException("Class " + c + " is not a subclass of Page");
 		}
 
-		this.pageLink = new IPageLink()
+		pageLink = new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				// Create page using page factory
 				return PageLink.this.getPage().getPageFactory().newPage(c);
 			}
 
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
 				return c;
 			}
@@ -108,24 +106,24 @@ public class PageLink<T> extends Link<T>
 	 *             setResponsePage in their {@link Link#onClick() onClick} methods.
 	 */
 	@Deprecated
-	public PageLink(final String id, final Page<?> page)
+	public PageLink(final String id, final Page page)
 	{
 		super(id);
 
-		this.pageLink = new IPageLink()
+		pageLink = new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				// Create page using page factory
 				return page;
 			}
 
 			@SuppressWarnings("unchecked")
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
-				return (Class<? extends Page<?>>)page.getClass();
+				return page.getClass();
 			}
 		};
 	}
@@ -137,7 +135,7 @@ public class PageLink<T> extends Link<T>
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
-	public boolean linksTo(final Page<?> page)
+	public boolean linksTo(final Page page)
 	{
 		return page.getClass() == pageLink.getPageIdentity();
 	}

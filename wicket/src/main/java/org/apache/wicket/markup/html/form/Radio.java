@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            The model object type
  */
-public class Radio<T> extends LabeledWebMarkupContainer<T>
+public class Radio<T> extends LabeledWebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 	private static final String ATTR_DISABLED = "disabled";
@@ -123,7 +123,7 @@ public class Radio<T> extends LabeledWebMarkupContainer<T>
 				tag.put("checked", "checked");
 			}
 		}
-		else if (Objects.equal(group.getModelObject(), getModelObject()))
+		else if (Objects.equal(group.getDefaultModelObject(), getDefaultModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
@@ -177,4 +177,49 @@ public class Radio<T> extends LabeledWebMarkupContainer<T>
 		setLabelInternal(labelModel);
 		return this;
 	}
+
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
+
 }

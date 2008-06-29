@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public class ListItem<T> extends WebMarkupContainer<T>
+public class ListItem<T> extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,5 +57,47 @@ public class ListItem<T> extends WebMarkupContainer<T>
 	public final int getIndex()
 	{
 		return index;
+	}
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
 	}
 }

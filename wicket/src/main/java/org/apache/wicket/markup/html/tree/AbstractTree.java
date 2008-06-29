@@ -81,7 +81,7 @@ public abstract class AbstractTree extends Panel
 	 * This class represents one row in rendered tree (TreeNode). Only TreeNodes that are visible
 	 * (all their parent are expanded) have TreeItem created for them.
 	 */
-	private final class TreeItem extends WebMarkupContainer<Object>
+	private final class TreeItem extends WebMarkupContainer
 	{
 		/**
 		 * whether this tree item should also render it's children to response. this is set if we
@@ -276,7 +276,7 @@ public abstract class AbstractTree extends Panel
 		protected void onDetach()
 		{
 			super.onDetach();
-			Object object = getModelObject();
+			Object object = getDefaultModelObject();
 			if (object instanceof IDetachable)
 			{
 				((IDetachable)object).detach();
@@ -339,7 +339,7 @@ public abstract class AbstractTree extends Panel
 	 * Components that holds tree items. This is similar to ListView, but it renders tree items in
 	 * the right order.
 	 */
-	private class TreeItemContainer extends WebMarkupContainer<Void>
+	private class TreeItemContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -358,13 +358,13 @@ public abstract class AbstractTree extends Panel
 		 * @see org.apache.wicket.MarkupContainer#remove(org.apache.wicket.Component)
 		 */
 		@Override
-		public void remove(Component<?> component)
+		public void remove(Component component)
 		{
 			// when a treeItem is removed, remove reference to it from
 			// nodeToItemMAp
 			if (component instanceof TreeItem)
 			{
-				nodeToItemMap.remove(((TreeItem)component).getModelObject());
+				nodeToItemMap.remove(((TreeItem)component).getDefaultModelObject());
 			}
 			super.remove(component);
 		}
@@ -555,7 +555,7 @@ public abstract class AbstractTree extends Panel
 			// has been called
 			if (rootItem == null)
 			{
-				Object rootNode = ((TreeModel)getModelObject()).getRoot();
+				Object rootNode = ((TreeModel)getDefaultModelObject()).getRoot();
 				if (rootNode != null)
 				{
 					if (isRootLess())
@@ -631,7 +631,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode
+	 *      )
 	 */
 	public final void nodeExpanded(Object node)
 	{
@@ -642,7 +643,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode
+	 *      )
 	 */
 	public final void nodeSelected(Object node)
 	{
@@ -689,9 +691,9 @@ public abstract class AbstractTree extends Panel
 
 			// if the tree is in rootless mode, make sure the root node is
 			// expanded
-			if (rootLess == true && getModelObject() != null)
+			if (rootLess == true && getDefaultModelObject() != null)
 			{
-				getTreeState().expandNode(((TreeModel)getModelObject()).getRoot());
+				getTreeState().expandNode(((TreeModel)getDefaultModelObject()).getRoot());
 			}
 		}
 	}
@@ -706,7 +708,7 @@ public abstract class AbstractTree extends Panel
 		{
 			if (rootItem != null)
 			{
-				invalidateNode(rootItem.getModelObject(), true);
+				invalidateNode(rootItem.getDefaultModelObject(), true);
 			}
 		}
 		else
@@ -750,7 +752,7 @@ public abstract class AbstractTree extends Panel
 
 				// invalidate the node and it's children, so that they are
 				// redrawn
-				invalidateNodeWithChildren(item.getModelObject());
+				invalidateNodeWithChildren(item.getDefaultModelObject());
 
 			}
 		}
@@ -823,7 +825,7 @@ public abstract class AbstractTree extends Panel
 							removeItem(item);
 
 							// deselect the node
-							getTreeState().selectNode(item.getModelObject(), false);
+							getTreeState().selectNode(item.getDefaultModelObject(), false);
 						}
 					});
 
@@ -1012,7 +1014,7 @@ public abstract class AbstractTree extends Panel
 	protected final boolean isNodeExpanded(Object node)
 	{
 		// In root less mode the root node is always expanded
-		if (isRootLess() && rootItem != null && rootItem.getModelObject().equals(node))
+		if (isRootLess() && rootItem != null && rootItem.getDefaultModelObject().equals(node))
 		{
 			return true;
 		}
@@ -1066,10 +1068,11 @@ public abstract class AbstractTree extends Panel
 		List<TreeItem> items;
 
 		// if the node is expanded
-		if (isNodeExpanded(item.getModelObject()))
+		if (isNodeExpanded(item.getDefaultModelObject()))
 		{
 			// build the items for children of the items' treenode.
-			items = buildTreeItems(item, nodeChildren(item.getModelObject()), item.getLevel() + 1);
+			items = buildTreeItems(item, nodeChildren(item.getDefaultModelObject()),
+				item.getLevel() + 1);
 		}
 		else
 		{
@@ -1118,7 +1121,7 @@ public abstract class AbstractTree extends Panel
 	private final void checkModel()
 	{
 		// find out whether the model object (the TreeModel) has been changed
-		TreeModel model = (TreeModel)getModelObject();
+		TreeModel model = (TreeModel)getDefaultModelObject();
 		if (model != previousModel)
 		{
 			if (previousModel != null)
@@ -1249,7 +1252,7 @@ public abstract class AbstractTree extends Panel
 			{
 				public void visitItem(TreeItem item)
 				{
-					invalidateNode(item.getModelObject(), false);
+					invalidateNode(item.getDefaultModelObject(), false);
 				}
 			});
 		}
@@ -1396,7 +1399,7 @@ public abstract class AbstractTree extends Panel
 		else
 		{
 			TreeItem parent = item.getParentItem();
-			return parent == null ? null : parent.getModelObject();
+			return parent == null ? null : parent.getDefaultModelObject();
 		}
 	}
 
@@ -1468,7 +1471,7 @@ public abstract class AbstractTree extends Panel
 
 	private TreeModel getTreeModel()
 	{
-		return (TreeModel)getModelObject();
+		return (TreeModel)getDefaultModelObject();
 	}
 
 	/**

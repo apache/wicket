@@ -33,7 +33,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class DropDownChoicePage extends WicketExamplePage<DropDownChoicePage.Input>
+public class DropDownChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
@@ -48,14 +48,14 @@ public class DropDownChoicePage extends WicketExamplePage<DropDownChoicePage.Inp
 	public DropDownChoicePage()
 	{
 		final Input input = new Input();
-		setModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -136,7 +136,7 @@ public class DropDownChoicePage extends WicketExamplePage<DropDownChoicePage.Inp
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	public static class Input implements IClusterable
+	private static class Input implements IClusterable
 	{
 		/** the selected site. */
 		public String site;

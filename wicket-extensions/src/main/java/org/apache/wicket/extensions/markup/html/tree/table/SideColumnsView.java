@@ -39,13 +39,13 @@ final class SideColumnsView extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private final List columns = new ArrayList();
+	private final List<IColumn> columns = new ArrayList<IColumn>();
 
-	private final List components = new ArrayList();
+	private final List<Component> components = new ArrayList<Component>();
 
 	private final TreeNode node;
 
-	private final List renderables = new ArrayList();
+	private final List<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	/**
 	 * Constructor.
@@ -102,6 +102,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 * @param markupStream
 	 *            The markup stream of this component
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		final int markupStart = markupStream.getCurrentIndex();
@@ -113,9 +114,9 @@ final class SideColumnsView extends WebMarkupContainer
 
 		for (int i = 0; i < columns.size(); ++i)
 		{
-			IColumn column = (IColumn)columns.get(i);
-			Component component = (Component)components.get(i);
-			IRenderable renderable = (IRenderable)renderables.get(i);
+			IColumn column = columns.get(i);
+			Component component = components.get(i);
+			IRenderable renderable = renderables.get(i);
 
 			// write wrapping markup
 			response.write("<span class=\"b_\" style=\"" + renderColumnStyle(column) + "\">");
@@ -144,7 +145,7 @@ final class SideColumnsView extends WebMarkupContainer
 			else
 			{
 				throw new IllegalStateException(
-						"Either renderable or cell component must be created for this node");
+					"Either renderable or cell component must be created for this node");
 			}
 
 			response.write("</span></span>\n");

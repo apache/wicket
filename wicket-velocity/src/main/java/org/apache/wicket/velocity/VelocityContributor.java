@@ -67,7 +67,7 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
 	@Override
-	public void detach(Component< ? > c)
+	public void detach(Component c)
 	{
 		if (model instanceof IDetachable)
 		{

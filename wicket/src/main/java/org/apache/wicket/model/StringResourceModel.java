@@ -197,7 +197,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	private final Object[] parameters;
 
 	/** The relative component used for lookups. */
-	private Component<?> component;
+	private Component component;
 
 	/** The key of message to get. */
 	private final String resourceKey;
@@ -205,7 +205,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	/** The default value of the message. */
 	private final String defaultValue;
 
-	public IWrapModel<String> wrapOnAssignment(Component<String> component)
+	public IWrapModel<String> wrapOnAssignment(Component component)
 	{
 		return new AssignmentWrapper(component);
 	}
@@ -214,9 +214,14 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component<?> component;
+		private final Component component;
 
-		public AssignmentWrapper(Component<?> component)
+		/**
+		 * Construct.
+		 * 
+		 * @param component
+		 */
+		public AssignmentWrapper(Component component)
 		{
 			this.component = component;
 		}
@@ -264,7 +269,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The model to use for property substitutions
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
-	public StringResourceModel(final String resourceKey, final Component<?> component,
+	public StringResourceModel(final String resourceKey, final Component component,
 		final IModel<?> model)
 	{
 		this(resourceKey, component, model, null, null);
@@ -284,7 +289,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * 
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
-	public StringResourceModel(final String resourceKey, final Component<?> component,
+	public StringResourceModel(final String resourceKey, final Component component,
 		final IModel<?> model, final String defaultValue)
 	{
 		this(resourceKey, component, model, null, defaultValue);
@@ -312,7 +317,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * @param parameters
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
-	public StringResourceModel(final String resourceKey, final Component<?> component,
+	public StringResourceModel(final String resourceKey, final Component component,
 		final IModel<?> model, final Object[] parameters)
 	{
 		this(resourceKey, component, model, parameters, null);
@@ -342,7 +347,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * @param defaultValue
 	 *            The default value if the resource key is not found.
 	 */
-	public StringResourceModel(final String resourceKey, final Component<?> component,
+	public StringResourceModel(final String resourceKey, final Component component,
 		final IModel<?> model, final Object[] parameters, final String defaultValue)
 	{
 		if (resourceKey == null)

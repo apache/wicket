@@ -35,7 +35,7 @@ import org.apache.wicket.version.undo.Change;
  * @param <T>
  *            Model object type
  */
-public class Item<T> extends WebMarkupContainer<T>
+public class Item<T> extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -113,14 +113,14 @@ public class Item<T> extends WebMarkupContainer<T>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class IndexComparator implements Comparator<Item< ? >>
+	public static class IndexComparator implements Comparator<Item<?>>
 	{
-		private static final Comparator<Item< ? >> instance = new IndexComparator();
+		private static final Comparator<Item<?>> instance = new IndexComparator();
 
 		/**
 		 * @return static instance of the comparator
 		 */
-		public static final Comparator<Item< ? >> getInstance()
+		public static final Comparator<Item<?>> getInstance()
 		{
 			return instance;
 		}
@@ -128,11 +128,54 @@ public class Item<T> extends WebMarkupContainer<T>
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
-		public int compare(Item< ? > lhs, Item< ? > rhs)
+		public int compare(Item<?> lhs, Item<?> rhs)
 		{
 			return lhs.getIndex() - rhs.getIndex();
 		}
 
 	};
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
 
 }

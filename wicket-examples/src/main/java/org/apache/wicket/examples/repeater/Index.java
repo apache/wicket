@@ -23,7 +23,7 @@ package org.apache.wicket.examples.repeater;
  * @author igor
  * 
  */
-public class Index extends ExamplePage<Void>
+public class Index extends ExamplePage
 {
 	/**
 	 * constructor

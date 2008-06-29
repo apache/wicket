@@ -41,12 +41,12 @@ public interface ITab extends IClusterable
 	 *            returned panel MUST have this id
 	 * @return a Panel object that will be placed as the content panel
 	 */
-	Panel<?> getPanel(final String panelId);
-	
+	Panel getPanel(final String panelId);
+
 	/**
 	 * Returns whether this tab should be visible
 	 * 
-	 * @return 
+	 * @return whether this tab should be visible
 	 */
 	boolean isVisible();
 }

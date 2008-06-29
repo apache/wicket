@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class MockPageParameterPage extends WebPage<Void>
+public class MockPageParameterPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ public class MockPageParameterPage extends WebPage<Void>
 	/**
 	 * Mock Page for testing WebPages implements as inner pages.
 	 */
-	public static final class MockInnerClassPage extends WebPage<Void>
+	public static final class MockInnerClassPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 

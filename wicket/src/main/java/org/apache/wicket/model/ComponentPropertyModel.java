@@ -60,7 +60,7 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel<T> wrapOnAssignment(final Component<T> component)
+	public IWrapModel<T> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper<T>(component, propertyName);
 	}
@@ -68,19 +68,18 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 	/**
 	 * Wrapper used when assigning a ComponentPropertyModel to a component.
 	 * 
-	 * @param
-	 * <P>
-	 * The Model Object
+	 * @param <P>
+	 *            The Model Object
 	 */
 	private class AssignmentWrapper<P> extends AbstractReadOnlyModel<P> implements IWrapModel<P>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component<P> component;
+		private final Component component;
 
 		private final String propertyName;
 
-		AssignmentWrapper(final Component<P> component, final String propertyName)
+		AssignmentWrapper(final Component component, final String propertyName)
 		{
 			this.component = component;
 			this.propertyName = propertyName;

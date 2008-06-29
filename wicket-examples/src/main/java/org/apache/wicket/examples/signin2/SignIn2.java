@@ -27,7 +27,7 @@ import org.apache.wicket.examples.panels.signin.SignInPanel;
  * 
  * @author Jonathan Locke
  */
-public final class SignIn2 extends WicketExamplePage<Void>
+public final class SignIn2 extends WicketExamplePage
 {
 	/**
 	 * Construct

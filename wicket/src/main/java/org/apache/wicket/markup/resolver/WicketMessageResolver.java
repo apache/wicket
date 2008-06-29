@@ -124,7 +124,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @return true, if componentId was handle by the resolver. False, otherwise
 	 */
-	public boolean resolve(final MarkupContainer<?> container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
@@ -173,7 +173,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 * tags.
 	 * 
 	 */
-	private static class MessageContainer extends MarkupContainer<String>
+	private static class MessageContainer extends MarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -201,7 +201,7 @@ public class WicketMessageResolver implements IComponentResolver
 			final ComponentTag openTag)
 		{
 			// Get the value from the properties file
-			final String key = getModelObjectAsString();
+			final String key = getDefaultModelObjectAsString();
 			final String value = getLocalizer().getString(key, getParent(), DEFAULT_VALUE);
 
 			// if found, than render it after replacing the variables
@@ -262,7 +262,7 @@ public class WicketMessageResolver implements IComponentResolver
 					if (value == null)
 					{
 						value = Strings.toString(PropertyResolver.getValue(variableName,
-							getParent().getModelObject()));
+							getParent().getDefaultModelObject()));
 					}
 
 					// If still not found, try the component itself
@@ -359,7 +359,7 @@ public class WicketMessageResolver implements IComponentResolver
 							final StringResponse response = new StringResponse();
 							getRequestCycle().setResponse(response);
 
-							Component<?> component = getParent().get(id);
+							Component component = getParent().get(id);
 							if (component != null)
 							{
 								component.render(markupStream);

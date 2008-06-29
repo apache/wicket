@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.form.TextField;
 /**
  * @author jcompagner
  */
-public class InputTagNotVisibleWebPage extends WebPage<Void>
+public class InputTagNotVisibleWebPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -223,13 +223,13 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * @return Any page having the given id
 	 */
 	@Override
-	public final Page<?> get(final int id, int versionNumber)
+	public final Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 		if (entry != null)
 		{
 			// Get page as dirty
-			Page<?> page = entry.getPage();
+			Page page = entry.getPage();
 
 			// TODO Performance: Is this really the case is a page always dirty
 			// even if we just render it again? POSSIBLE ANSWER: The page could
@@ -245,7 +245,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 			access(entry, versionNumber);
 
 			// Get the version of the page requested from the page
-			final Page<?> version = page.getVersion(versionNumber);
+			final Page version = page.getVersion(versionNumber);
 
 
 			// Is the requested version available?
@@ -279,7 +279,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 *            The page to put into this map
 	 */
 	@Override
-	public final void put(final Page<?> page)
+	public final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isPageStateless())
@@ -346,7 +346,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 					if (top instanceof Page)
 					{
 						// If there's more than one version
-						Page<?> topPage = (Page<?>)top;
+						Page topPage = (Page)top;
 						if (topPage.getVersions() > 1)
 						{
 							// Remove version the top access version (-1)
@@ -442,7 +442,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	{
 		if (entry instanceof Page)
 		{
-			return ((Page<?>)entry).getCurrentVersionNumber();
+			return ((Page)entry).getCurrentVersionNumber();
 		}
 
 		// If entry is not a page, it cannot have versions because the Page

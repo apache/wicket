@@ -24,16 +24,12 @@ import org.apache.wicket.model.IModel;
 /**
  * Default implementation of a {@link IDynamicWizardStep dynamic wizard step}.
  * 
- * @param <T>
- * 
  * @author eelcohillenius
  */
-public abstract class DynamicWizardStep<T> extends WizardStep<T> implements IDynamicWizardStep
+public abstract class DynamicWizardStep extends WizardStep implements IDynamicWizardStep
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private final IDynamicWizardStep previousStep;
 
 	/**
@@ -81,7 +77,7 @@ public abstract class DynamicWizardStep<T> extends WizardStep<T> implements IDyn
 	 *            Any model which is to be used for this step
 	 */
 	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel<String> title,
-		IModel<String> summary, IModel<T> model)
+		IModel<String> summary, IModel<?> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;
@@ -118,7 +114,7 @@ public abstract class DynamicWizardStep<T> extends WizardStep<T> implements IDyn
 	 *            Any model which is to be used for this step
 	 */
 	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary,
-		IModel<T> model)
+		IModel<?> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;

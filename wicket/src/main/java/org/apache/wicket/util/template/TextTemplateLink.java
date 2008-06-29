@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.link.ResourceLink;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public class TextTemplateLink extends ResourceLink<Void>
+public class TextTemplateLink extends ResourceLink
 {
 	private static final long serialVersionUID = 1L;
 

@@ -79,7 +79,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
 	 */
-	public final void onUnauthorizedInstantiation(final Component<?> component)
+	public final void onUnauthorizedInstantiation(final Component component)
 	{
 		// If there is a sign in page class declared, and the unauthorized
 		// component is a page, but it's not the sign in page
@@ -92,7 +92,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			}
 			else
 			{
-				onUnauthorizedPage((Page<?>)component);
+				onUnauthorizedPage((Page)component);
 			}
 		}
 		else
@@ -129,7 +129,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class<? extends WebPage<?>> getSignInPageClass();
+	protected abstract Class<? extends WebPage> getSignInPageClass();
 
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they are not authorized to
@@ -139,7 +139,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * @param page
 	 *            The page
 	 */
-	protected void onUnauthorizedPage(final Page<?> page)
+	protected void onUnauthorizedPage(final Page page)
 	{
 		// The component was not a page, so throw an exception
 		throw new UnauthorizedInstantiationException(page.getClass());

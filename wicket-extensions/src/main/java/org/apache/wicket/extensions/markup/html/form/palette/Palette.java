@@ -73,7 +73,7 @@ import org.apache.wicket.model.ResourceModel;
  *            Type of model object
  * 
  */
-public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
+public class Palette<T> extends Panel implements IHeaderContributor
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -98,7 +98,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	/**
 	 * recorder component used to track user's selection. it is updated by javascript on changes.
 	 */
-	private Recorder recorderComponent;
+	private Recorder<T> recorderComponent;
 
 	/**
 	 * component used to represent all available choices. by default this is a select box with
@@ -251,7 +251,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	/**
 	 * @return iterator over selected choices
 	 */
-	public Iterator getSelectedChoices()
+	public Iterator<T> getSelectedChoices()
 	{
 		return getRecorderComponent().getSelectedChoices();
 	}
@@ -259,7 +259,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	/**
 	 * @return iterator over unselected choices
 	 */
-	public Iterator getUnselectedChoices()
+	public Iterator<T> getUnselectedChoices()
 	{
 		return getRecorderComponent().getUnselectedChoices();
 	}
@@ -270,10 +270,10 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	 * 
 	 * @return tracker component
 	 */
-	protected Recorder newRecorderComponent()
+	protected Recorder<T> newRecorderComponent()
 	{
 		// create component that will keep track of selections
-		return new Recorder("recorder", this)
+		return new Recorder<T>("recorder", this)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -464,7 +464,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	 * 
 	 * @return recorder component
 	 */
-	public final Recorder getRecorderComponent()
+	public final Recorder<T> getRecorderComponent()
 	{
 		return recorderComponent;
 	}
@@ -472,7 +472,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	/**
 	 * @return collection representing all available items
 	 */
-	public Collection getChoices()
+	public Collection<T> getChoices()
 	{
 		return choicesModel.getObject();
 	}
@@ -480,15 +480,16 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	/**
 	 * @return collection representing selected items
 	 */
-	public Collection getModelCollection()
+	@SuppressWarnings("unchecked")
+	public Collection<T> getModelCollection()
 	{
-		return getModelObject();
+		return (Collection<T>)getDefaultModelObject();
 	}
 
 	/**
 	 * @return choice renderer
 	 */
-	public IChoiceRenderer getChoiceRenderer()
+	public IChoiceRenderer<T> getChoiceRenderer()
 	{
 		return choiceRenderer;
 	}
@@ -513,7 +514,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 	protected final void updateModel()
 	{
 		// prepare model
-		List<T> model = getModelObject();
+		Collection<T> model = getModelCollection();
 		model.clear();
 
 		// update model
@@ -525,7 +526,7 @@ public class Palette<T> extends Panel<List<T>> implements IHeaderContributor
 			model.add(selectedChoice);
 		}
 
-		getModel().setObject(model);
+		setDefaultModelObject(model);
 	}
 
 	/**

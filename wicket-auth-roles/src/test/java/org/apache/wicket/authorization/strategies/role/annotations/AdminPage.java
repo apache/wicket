@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Eelco Hillenius
  */
 @AuthorizeInstantiation("ADMIN")
-public class AdminPage extends WebPage<Void>
+public class AdminPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

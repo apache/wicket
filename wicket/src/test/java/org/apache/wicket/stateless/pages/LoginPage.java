@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author marrink
  */
-public class LoginPage extends WebPage<Void>
+public class LoginPage extends WebPage
 {
 
 	private static final long serialVersionUID = 1L;

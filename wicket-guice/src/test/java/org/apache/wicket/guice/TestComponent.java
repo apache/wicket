@@ -24,7 +24,7 @@ import org.apache.wicket.markup.MarkupStream;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class TestComponent extends Component<Void>
+public class TestComponent extends Component
 {
 	private static final long serialVersionUID = 1L;
 

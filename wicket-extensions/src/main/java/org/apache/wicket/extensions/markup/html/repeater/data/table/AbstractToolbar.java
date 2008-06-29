@@ -25,11 +25,9 @@ import org.apache.wicket.model.IModel;
  * @see DefaultDataTable
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            The toolbar's model object type
  * 
  */
-public abstract class AbstractToolbar<T> extends Panel<T>
+public abstract class AbstractToolbar extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +41,7 @@ public abstract class AbstractToolbar<T> extends Panel<T>
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(IModel<T> model, DataTable<?> table)
+	public AbstractToolbar(IModel<?> model, DataTable<?> table)
 	{
 		super(DataTable.TOOLBAR_COMPONENT_ID, model);
 		this.table = table;

@@ -94,13 +94,13 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public FileUploadField setModel(IModel<FileUpload> model)
+	public FileUploadField setDefaultModel(IModel<?> model)
 	{
 		hasExplicitModel = true;
-		return (FileUploadField)super.setModel(model);
+		return (FileUploadField)super.setDefaultModel(model);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 		// Only update the model if one was passed in
 		if (hasExplicitModel)
 		{
-			setModelObject(getConvertedInput());
+			setDefaultModelObject(getConvertedInput());
 		}
 	}
 

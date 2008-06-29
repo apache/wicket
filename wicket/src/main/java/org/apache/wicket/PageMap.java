@@ -148,7 +148,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @see org.apache.wicket.IPageMap#get(int, int)
 	 */
-	public abstract Page<?> get(final int id, int versionNumber);
+	public abstract Page get(final int id, int versionNumber);
 
 	/**
 	 * @see org.apache.wicket.IPageMap#getEntry(int)
@@ -186,7 +186,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 			IPageMapEntry entry = it.next();
 			if (entry instanceof Page)
 			{
-				size += ((Page<?>)entry).getSizeInBytes();
+				size += ((Page)entry).getSizeInBytes();
 			}
 			else
 			{
@@ -216,7 +216,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @see org.apache.wicket.IPageMap#put(org.apache.wicket.Page)
 	 */
-	public abstract void put(final Page<?> page);
+	public abstract void put(final Page page);
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's URL
@@ -227,7 +227,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	public final <T extends Page<?>> void redirectToInterceptPage(final Class<T> pageClazz)
+	public final <T extends Page> void redirectToInterceptPage(final Class<T> pageClazz)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);
@@ -243,7 +243,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param page
 	 *            The page to temporarily redirect to
 	 */
-	public final void redirectToInterceptPage(final Page<?> page)
+	public final void redirectToInterceptPage(final Page page)
 	{
 		final RequestCycle cycle = RequestCycle.get();
 		setUpRedirect(cycle);
@@ -292,7 +292,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @see org.apache.wicket.IPageMap#remove(org.apache.wicket.Page)
 	 */
-	public final void remove(final Page<?> page)
+	public final void remove(final Page page)
 	{
 		// Remove the pagemap entry from session
 		removeEntry(page.getPageMapEntry());

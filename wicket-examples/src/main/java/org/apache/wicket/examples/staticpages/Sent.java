@@ -21,6 +21,6 @@ import org.apache.wicket.examples.WicketExamplePage;
 /**
  * @author jbq
  */
-public class Sent extends WicketExamplePage<Void>
+public class Sent extends WicketExamplePage
 {
 }

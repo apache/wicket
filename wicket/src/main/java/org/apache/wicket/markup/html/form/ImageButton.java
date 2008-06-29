@@ -37,7 +37,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @param <T>
  *            The model object type, can be only of type Resource, ResouceReference or a String
  */
-public class ImageButton<T> extends Button<T> implements IResourceListener
+public class ImageButton extends Button implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,10 +45,10 @@ public class ImageButton<T> extends Button<T> implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * This constructor can be used if you have an <code>img</code> tag that has a
-	 * <code>src</code> that points to a <code>PackageResource</code> (which will be created and
-	 * bind to the shared resources) or if you have a <code>value</code> attribute in your tag for
-	 * which the image factory can make an image.
+	 * This constructor can be used if you have an <code>img</code> tag that has a <code>src</code>
+	 * that points to a <code>PackageResource</code> (which will be created and bind to the shared
+	 * resources) or if you have a <code>value</code> attribute in your tag for which the image
+	 * factory can make an image.
 	 * 
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -63,9 +63,9 @@ public class ImageButton<T> extends Button<T> implements IResourceListener
 	 * 
 	 * If you are using non sticky session clustering and the resource reference is pointing to a
 	 * <code>Resource</code> that isn't guaranteed to be on every server, for example a dynamic
-	 * image or resources that aren't added with a <code>IInitializer</code> at application
-	 * startup. Then if only that resource is requested from another server, without the rendering
-	 * of the page, the image won't be there and will result in a broken link.
+	 * image or resources that aren't added with a <code>IInitializer</code> at application startup.
+	 * Then if only that resource is requested from another server, without the rendering of the
+	 * page, the image won't be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -83,9 +83,9 @@ public class ImageButton<T> extends Button<T> implements IResourceListener
 	 * 
 	 * If you are using non sticky session clustering and the resource reference is pointing to a
 	 * <code>Resource</code> that isn't guaranteed to be on every server, for example a dynamic
-	 * image or resources that aren't added with a <code>IInitializer</code> at application
-	 * startup. Then if only that resource is requested from another server, without the rendering
-	 * of the page, the image won't be there and will result in a broken link.
+	 * image or resources that aren't added with a <code>IInitializer</code> at application startup.
+	 * Then if only that resource is requested from another server, without the rendering of the
+	 * page, the image won't be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -123,7 +123,7 @@ public class ImageButton<T> extends Button<T> implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ImageButton(final String id, final IModel<T> model)
+	public ImageButton(final String id, final IModel<String> model)
 	{
 		super(id, model);
 	}
@@ -181,17 +181,17 @@ public class ImageButton<T> extends Button<T> implements IResourceListener
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ImageButton<T> setModel(IModel<T> model)
+	public ImageButton setDefaultModel(IModel<?> model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
 		localizedImageResource.setResourceReference(null);
 		localizedImageResource.setResource(null);
-		return (ImageButton)super.setModel(model);
+		return (ImageButton)super.setDefaultModel(model);
 	}
 
 	/**

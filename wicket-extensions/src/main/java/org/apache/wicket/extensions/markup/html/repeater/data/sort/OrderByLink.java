@@ -31,7 +31,7 @@ import org.apache.wicket.version.undo.Change;
  * @author Phil Kulak
  * @author Igor Vaynberg (ivaynberg)
  */
-public class OrderByLink extends Link<Void>
+public class OrderByLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 
@@ -215,7 +215,7 @@ public class OrderByLink extends Link<Void>
 		 * @see org.apache.wicket.AttributeModifier#isEnabled(Component)
 		 */
 		@Override
-		public boolean isEnabled(Component<?> component)
+		public boolean isEnabled(Component component)
 		{
 			return getReplaceModel().getObject() != null;
 		}

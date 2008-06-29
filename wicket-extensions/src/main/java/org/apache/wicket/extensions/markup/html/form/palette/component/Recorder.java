@@ -33,9 +33,12 @@ import org.apache.wicket.util.string.Strings;
  * Component to keep track of selections on the html side. Also used for encoding and decoding those
  * selections between html and java.
  * 
+ * @param <T>
+ *            Type of the palette
+ * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public class Recorder extends HiddenField
+public class Recorder<T> extends HiddenField<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,14 +48,14 @@ public class Recorder extends HiddenField
 	private String[] ids;
 
 	/** parent palette object */
-	private Palette palette;
+	private final Palette<T> palette;
 
 	private boolean attached = false;
 
 	/**
 	 * @return parent Palette object
 	 */
-	public Palette getPalette()
+	public Palette<T> getPalette()
 	{
 		return palette;
 	}
@@ -63,14 +66,16 @@ public class Recorder extends HiddenField
 	 * @param palette
 	 *            parent palette object
 	 */
-	public Recorder(String id, Palette palette)
+	@SuppressWarnings("unchecked")
+	public Recorder(String id, Palette<T> palette)
 	{
 		super(id);
 		this.palette = palette;
-		setModel(new Model());
+		setDefaultModel(new Model());
 		setOutputMarkupId(true);
 	}
 
+	@Override
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
@@ -88,9 +93,9 @@ public class Recorder extends HiddenField
 	private void initIds()
 	{
 		// construct the model string based on selection collection
-		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		StringBuffer modelStringBuffer = new StringBuffer();
-		Iterator selection = getPalette().getModelCollection().iterator();
+		Iterator<T> selection = getPalette().getModelCollection().iterator();
 
 		int i = 0;
 		while (selection.hasNext())
@@ -104,11 +109,12 @@ public class Recorder extends HiddenField
 
 		// set model and update ids array
 		String modelString = modelStringBuffer.toString();
-		setModel(new Model(modelString));
+		setDefaultModel(new Model<String>(modelString));
 		updateIds(modelString);
 	}
 
 
+	@Override
 	protected void onValid()
 	{
 		super.onValid();
@@ -119,22 +125,22 @@ public class Recorder extends HiddenField
 	/**
 	 * @return iterator over selected choices
 	 */
-	public Iterator getSelectedChoices()
+	@SuppressWarnings("unchecked")
+	public Iterator<T> getSelectedChoices()
 	{
-		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
-
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		if (ids.length == 0)
 		{
 			return Collections.EMPTY_LIST.iterator();
 		}
 
-		List selected = new ArrayList(ids.length);
+		List<T> selected = new ArrayList<T>(ids.length);
 		for (int i = 0; i < ids.length; i++)
 		{
-			Iterator it = getPalette().getChoices().iterator();
+			Iterator<T> it = getPalette().getChoices().iterator();
 			while (it.hasNext())
 			{
-				final Object choice = it.next();
+				final T choice = it.next();
 				if (renderer.getIdValue(choice, 0).equals(ids[i]))
 				{
 					selected.add(choice);
@@ -148,21 +154,22 @@ public class Recorder extends HiddenField
 	/**
 	 * @return iterator over unselected choices
 	 */
-	public Iterator getUnselectedChoices()
+	@SuppressWarnings("unchecked")
+	public Iterator<T> getUnselectedChoices()
 	{
-		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
-		Collection choices = getPalette().getChoices();
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		Collection<T> choices = getPalette().getChoices();
 
 		if (choices.size() - ids.length == 0)
 		{
 			return Collections.EMPTY_LIST.iterator();
 		}
 
-		List unselected = new ArrayList(Math.max(1, choices.size() - ids.length));
-		Iterator it = choices.iterator();
+		List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - ids.length));
+		Iterator<T> it = choices.iterator();
 		while (it.hasNext())
 		{
-			final Object choice = it.next();
+			final T choice = it.next();
 			final String choiceId = renderer.getIdValue(choice, 0);
 			boolean selected = false;
 			for (int i = 0; i < ids.length; i++)
@@ -182,6 +189,7 @@ public class Recorder extends HiddenField
 	}
 
 
+	@Override
 	protected void onInvalid()
 	{
 		super.onInvalid();

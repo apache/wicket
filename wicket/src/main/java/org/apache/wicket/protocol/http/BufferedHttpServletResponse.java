@@ -349,6 +349,9 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		contentType = type;
 	}
 
+	/**
+	 * @return The content type
+	 */
 	public String getContentType()
 	{
 		return contentType;

@@ -27,7 +27,7 @@ import org.apache.wicket.model.Model;
  * @see AttributeModifierComponentTest
  * @author Chris Turner
  */
-public class AttributeModifierComponentPage extends WebPage<Void>
+public class AttributeModifierComponentPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

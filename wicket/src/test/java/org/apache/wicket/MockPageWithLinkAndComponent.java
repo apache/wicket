@@ -38,7 +38,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Frank Bille
  */
-public class MockPageWithLinkAndComponent extends WebPage<Void>
+public class MockPageWithLinkAndComponent extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

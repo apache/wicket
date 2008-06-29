@@ -139,7 +139,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	@SuppressWarnings("unchecked")
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices)
 	{
-		this(id, model, Model.valueOf(choices));
+		this(id, model, Model.of(choices));
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices,
 		IChoiceRenderer<T> renderer)
 	{
-		this(id, model, Model.valueOf(choices), renderer);
+		this(id, model, Model.of(choices), renderer);
 	}
 
 
@@ -167,8 +167,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer<?> parent, String componentId,
-		IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
 		IModel<List<? extends T>> choiceModel = new AbstractReadOnlyModel<List<? extends T>>()
 		{
@@ -222,10 +221,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	@Override
-	protected WebComponent<T> newLabel(MarkupContainer<?> parent, String componentId,
-		IModel<T> model)
+	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		Label<T> label = new Label<T>(componentId, model)
+		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -236,13 +234,14 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				return c != null ? c : super.getConverter(type);
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				String displayValue = getModelObjectAsString();
+				String displayValue = getDefaultModelObjectAsString();
 				if (renderer != null)
 				{
-					Object displayObject = renderer.getDisplayValue(getModelObject());
+					Object displayObject = renderer.getDisplayValue((T)getDefaultModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
 

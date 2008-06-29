@@ -29,13 +29,13 @@ import org.apache.wicket.version.undo.Change;
  * contains a {@link Label} with the page number of that link (1..n).
  * 
  * <pre>
- *  
+ * 
  * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
  * 		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
  * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
  * 		&lt;/a&gt;
  * 	&lt;/td&gt;
- * 	
+ * 
  * </pre>
  * 
  * thus renders like:
@@ -275,7 +275,7 @@ public class PagingNavigation extends Loop
 	@Override
 	protected void onBeforeRender()
 	{
-		setModel(new Model<Integer>(new Integer(pageable.getPageCount())));
+		setDefaultModel(new Model<Integer>(new Integer(pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -309,7 +309,7 @@ public class PagingNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final Link<?> link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		final Link link = newPagingNavigationLink("pageLink", pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -322,7 +322,7 @@ public class PagingNavigation extends Loop
 		{
 			label = String.valueOf(pageIndex + 1);
 		}
-		link.add(new Label<String>("pageNumber", label));
+		link.add(new Label("pageNumber", label));
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new PagingNavigationLink(id, pageable, pageIndex);
 	}
@@ -424,6 +424,6 @@ public class PagingNavigation extends Loop
 	 */
 	private void setIterations(int i)
 	{
-		setModelObject(new Integer(i));
+		setDefaultModelObject(new Integer(i));
 	}
 }

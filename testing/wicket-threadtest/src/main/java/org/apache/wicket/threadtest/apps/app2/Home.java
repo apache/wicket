@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  */
-public class Home extends WebPage<Void>
+public class Home extends WebPage
 {
 
 	/**
@@ -42,6 +42,6 @@ public class Home extends WebPage<Void>
 				return Pool.getConnection().getData();
 			}
 		};
-		add(new Label<String>("label", model));
+		add(new Label("label", model));
 	}
 }

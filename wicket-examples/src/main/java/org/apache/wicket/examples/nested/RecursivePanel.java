@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public final class RecursivePanel extends Panel<Object>
+public final class RecursivePanel extends Panel
 {
 	/**
 	 * Constructor.
@@ -73,7 +73,7 @@ public final class RecursivePanel extends Panel<Object>
 		@Override
 		protected void populateItem(ListItem<Object> listItem)
 		{
-			Object modelObject = listItem.getModelObject();
+			Object modelObject = listItem.getDefaultModelObject();
 
 			if (modelObject instanceof List)
 			{
@@ -85,9 +85,9 @@ public final class RecursivePanel extends Panel<Object>
 				// as we have to confirm to our HTML definition, and set it's
 				// visibility
 				// property to false as we do not want LI tags to be rendered.
-				WebMarkupContainer<?> row = new WebMarkupContainer<Void>("row");
+				WebMarkupContainer row = new WebMarkupContainer("row");
 				row.setVisible(false);
-				row.add(new WebMarkupContainer<Void>("label"));
+				row.add(new WebMarkupContainer("label"));
 				listItem.add(row);
 			}
 			else
@@ -103,8 +103,8 @@ public final class RecursivePanel extends Panel<Object>
 				// add the row (with the LI element attached, and the label with
 				// the
 				// row's actual value to display
-				WebMarkupContainer<?> row = new WebMarkupContainer<Void>("row");
-				row.add(new Label<String>("label", modelObject.toString()));
+				WebMarkupContainer row = new WebMarkupContainer("row");
+				row.add(new Label("label", modelObject.toString()));
 				listItem.add(row);
 			}
 		}

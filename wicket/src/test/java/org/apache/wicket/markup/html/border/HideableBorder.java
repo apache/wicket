@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 /**
  * 
  */
-public class HideableBorder extends Border<Void>
+public class HideableBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,10 +37,10 @@ public class HideableBorder extends Border<Void>
 	public HideableBorder(String name)
 	{
 		super(name);
-		final WebMarkupContainer<?> containerWrapper = new WebMarkupContainer<Void>("wrapper");
+		final WebMarkupContainer containerWrapper = new WebMarkupContainer("wrapper");
 		add(containerWrapper);
 		containerWrapper.add(getBodyContainer());
-		add(new AjaxLink<Void>("hideLink")
+		add(new AjaxLink("hideLink")
 		{
 			private static final long serialVersionUID = 1L;
 

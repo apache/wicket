@@ -25,7 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * 
  */
-public class AjaxLinkWithBorderPage extends WebPage<Void>
+public class AjaxLinkWithBorderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,11 +38,11 @@ public class AjaxLinkWithBorderPage extends WebPage<Void>
 	{
 		add(new AjaxTestBorder("border").setTransparentResolver(true));
 
-		final Label<String> label = new Label<String>("ajaxLabel", new PropertyModel<String>(this,
+		final Label label = new Label("ajaxLabel", new PropertyModel<String>(this,
 			"labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
-		add(new AjaxLink<Void>("ajaxLink")
+		add(new AjaxLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

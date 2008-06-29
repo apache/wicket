@@ -30,7 +30,7 @@ public class ComponentBorderTest extends WicketTestCase
 	 * Create the test.
 	 * 
 	 * @param name
-	 * 		The test name
+	 *            The test name
 	 */
 	public ComponentBorderTest(String name)
 	{
@@ -54,11 +54,11 @@ public class ComponentBorderTest extends WicketTestCase
 	{
 		executeTest(HideableBorderPage.class, "HideableBorderPage_ExpectedResult.html");
 
-		Page<?> page = tester.getLastRenderedPage();
-		Border<?> border = (Border<?>)page.get("hideable");
+		Page page = tester.getLastRenderedPage();
+		Border border = (Border)page.get("hideable");
 		assertNotNull(border);
-		AjaxLink<?> link = (AjaxLink<?>)border.get("hideLink");
-		WebMarkupContainer<?> wrapper = (WebMarkupContainer<?>)border.get("wrapper");
+		AjaxLink link = (AjaxLink)border.get("hideLink");
+		WebMarkupContainer wrapper = (WebMarkupContainer)border.get("wrapper");
 		assertNotNull(link);
 		tester.clickLink("hideable:hideLink");
 		tester.assertComponentOnAjaxResponse(wrapper);

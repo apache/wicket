@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePage extends WebPage<Void>
+public class BookmarkablePage extends WebPage
 {
 	/**
 	 * Constructor.
@@ -71,7 +71,7 @@ public class BookmarkablePage extends WebPage<Void>
 		}
 
 		// Add a label to display the message
-		add(new Label<String>("messageLabel", message));
+		add(new Label("messageLabel", message));
 
 		// Add a link back. We did not hold any important instance data in
 		// BookMarkabelPageLinkPage,

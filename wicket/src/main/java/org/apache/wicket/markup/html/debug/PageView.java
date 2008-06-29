@@ -50,7 +50,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class PageView extends Panel<Object>
+public final class PageView extends Panel
 {
 	/**
 	 * El cheapo data holder.
@@ -92,7 +92,7 @@ public final class PageView extends Panel<Object>
 	 *            The page to be analyzed
 	 * @see Component#Component(String)
 	 */
-	public PageView(final String id, final Page< ? > page)
+	public PageView(final String id, final Page page)
 	{
 		super(id);
 
@@ -100,7 +100,7 @@ public final class PageView extends Panel<Object>
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
-		add(new Label<String>("info", page == null ? "[Stateless Page]" : page.toString()));
+		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -129,11 +129,11 @@ public final class PageView extends Panel<Object>
 			{
 				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label<String>("row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label<String>("path", componentData.path));
-				listItem.add(new Label<String>("size", Bytes.bytes(componentData.size).toString()));
-				listItem.add(new Label<String>("type", componentData.type));
-				listItem.add(new Label<String>("model", componentData.value));
+				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
+				listItem.add(new Label("path", componentData.path));
+				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
+				listItem.add(new Label("type", componentData.type));
+				listItem.add(new Label("model", componentData.value));
 			}
 		});
 	}
@@ -145,13 +145,13 @@ public final class PageView extends Panel<Object>
 	 * @param page
 	 * @return List of component data objects
 	 */
-	private List<ComponentData> getComponentData(final Page< ? > page)
+	private List<ComponentData> getComponentData(final Page page)
 	{
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
-		page.visitChildren(new IVisitor<Component< ? >>()
+		page.visitChildren(new IVisitor<Component>()
 		{
-			public Object component(final Component< ? > component)
+			public Object component(final Component component)
 			{
 				if (!component.getPath().startsWith(PageView.this.getPath()))
 				{
@@ -172,7 +172,7 @@ public final class PageView extends Panel<Object>
 
 					try
 					{
-						componentData.value = component.getModelObjectAsString();
+						componentData.value = component.getDefaultModelObjectAsString();
 					}
 					catch (Exception e)
 					{

@@ -48,7 +48,7 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component that has this behavior coupled
 	 */
-	void beforeRender(Component< ? > component);
+	void beforeRender(Component component);
 
 	/**
 	 * Called when a component that has this behavior coupled was rendered.
@@ -56,7 +56,7 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component that has this behavior coupled
 	 */
-	void afterRender(Component< ? > component);
+	void afterRender(Component component);
 
 	/**
 	 * Bind this handler to the given component. This method is called by the host component
@@ -69,7 +69,7 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component to bind to
 	 */
-	void bind(Component< ? > component);
+	void bind(Component component);
 
 	/**
 	 * Allows the behavior to detach any state it has attached during request processing.
@@ -77,7 +77,7 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component that initiates the detachment of this behavior
 	 */
-	void detach(Component< ? > component);
+	void detach(Component component);
 
 	/**
 	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
@@ -91,7 +91,7 @@ public interface IBehavior extends IClusterable
 	 * @param exception
 	 *            the unexpected exception
 	 */
-	void exception(Component< ? > component, RuntimeException exception);
+	void exception(Component component, RuntimeException exception);
 
 	/**
 	 * This method returns false if the behavior generates a callback url (for example ajax
@@ -102,7 +102,7 @@ public interface IBehavior extends IClusterable
 	 * 
 	 * @return boolean true or false.
 	 */
-	boolean getStatelessHint(Component< ? > component);
+	boolean getStatelessHint(Component component);
 
 	/**
 	 * Called when a components is rendering and wants to render this behavior. If false is returned
@@ -113,7 +113,7 @@ public interface IBehavior extends IClusterable
 	 * 
 	 * @return true if this behavior must be executed/rendered
 	 */
-	boolean isEnabled(Component< ? > component);
+	boolean isEnabled(Component component);
 
 	/**
 	 * Called any time a component that has this behavior registered is rendering the component tag.
@@ -123,7 +123,7 @@ public interface IBehavior extends IClusterable
 	 * @param tag
 	 *            the tag that is rendered
 	 */
-	void onComponentTag(Component< ? > component, ComponentTag tag);
+	void onComponentTag(Component component, ComponentTag tag);
 
 	/**
 	 * Specifies whether or not this behavior is temporary. Temporary behaviors are removed at the

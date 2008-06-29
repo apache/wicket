@@ -100,7 +100,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected T getObject(Component<T> component)
+	protected T getObject(Component component)
 	{
 		return null;
 	}
@@ -114,14 +114,14 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	 * @param object
 	 *            The new model object
 	 */
-	protected void setObject(Component<T> component, T object)
+	protected void setObject(Component component, T object)
 	{
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel<T> wrapOnAssignment(Component<T> comp)
+	public IWrapModel<T> wrapOnAssignment(Component comp)
 	{
 		return new WrapModel<T>(comp);
 	}
@@ -130,12 +130,12 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Component<T> component;
+		private final Component component;
 
 		/**
 		 * @param comp
 		 */
-		public WrapModel(Component<T> comp)
+		public WrapModel(Component comp)
 		{
 			component = comp;
 		}

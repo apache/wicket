@@ -29,7 +29,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Igor Vaynberg
  */
-public class Page2 extends WicketExamplePage<Void>
+public class Page2 extends WicketExamplePage
 {
 	private final Random random = new Random();
 
@@ -51,8 +51,8 @@ public class Page2 extends WicketExamplePage<Void>
 			p2 = parameters.getString("param2");
 		}
 
-		add(new Label<String>("p1", p1));
-		add(new Label<String>("p2", p2));
+		add(new Label("p1", p1));
+		add(new Label("p2", p2));
 
 		String newP1 = String.valueOf(random.nextInt());
 		String newP2 = String.valueOf(random.nextInt());

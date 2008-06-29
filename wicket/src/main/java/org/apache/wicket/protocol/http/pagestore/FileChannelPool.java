@@ -50,12 +50,11 @@ import org.slf4j.LoggerFactory;
  */
 public class FileChannelPool
 {
-
-	private final Map /* <String, FileChannel> */nameToChannel = new HashMap();
-	private final Map /* <FileChannel, String> */channelToName = new HashMap();
-	private final Map /* <FileChannel, Integer> */channelToUseCount = new HashMap();
-	private final LinkedList /* <FileChannel> */idleChannels = new LinkedList();
-	private final Set /* <FileChannel> */channelsToDeleteOnReturn = new HashSet();
+	private final Map<String, FileChannel> nameToChannel = new HashMap<String, FileChannel>();
+	private final Map<FileChannel, String> channelToName = new HashMap<FileChannel, String>();
+	private final Map<FileChannel, Integer> channelToUseCount = new HashMap<FileChannel, Integer>();
+	private final LinkedList<FileChannel> idleChannels = new LinkedList<FileChannel>();
+	private final Set<FileChannel> channelsToDeleteOnReturn = new HashSet<FileChannel>();
 
 	private final int capacity;
 
@@ -119,8 +118,8 @@ public class FileChannelPool
 		// channels left
 		while (channelsToReduce > 0 && idleChannels.isEmpty() == false)
 		{
-			FileChannel channel = (FileChannel)idleChannels.getFirst();
-			String channelName = (String)channelToName.get(channel);
+			FileChannel channel = idleChannels.getFirst();
+			String channelName = channelToName.get(channel);
 
 			// remove oldest idle channel
 			idleChannels.removeFirst();
@@ -164,7 +163,7 @@ public class FileChannelPool
 	 */
 	public synchronized FileChannel getFileChannel(String fileName, boolean createIfDoesNotExist)
 	{
-		FileChannel channel = (FileChannel)nameToChannel.get(fileName);
+		FileChannel channel = nameToChannel.get(fileName);
 
 		if (channel == null)
 		{
@@ -188,7 +187,7 @@ public class FileChannelPool
 		{
 			// increase the usage count for this channel
 
-			Integer count = (Integer)channelToUseCount.get(channel);
+			Integer count = channelToUseCount.get(channel);
 			if (count == null || count.intValue() == 0)
 			{
 				channelToUseCount.put(channel, new Integer(1));
@@ -212,7 +211,7 @@ public class FileChannelPool
 	 */
 	public synchronized void returnFileChannel(FileChannel channel)
 	{
-		Integer count = (Integer)channelToUseCount.get(channel);
+		Integer count = channelToUseCount.get(channel);
 
 		if (count == null || count.intValue() == 0)
 		{
@@ -244,7 +243,7 @@ public class FileChannelPool
 	private void closeAndDelete(FileChannel channel)
 	{
 		channelsToDeleteOnReturn.remove(channel);
-		String name = (String)channelToName.get(channel);
+		String name = channelToName.get(channel);
 		channelToName.remove(channel);
 
 		channelToUseCount.remove(channel);
@@ -272,12 +271,12 @@ public class FileChannelPool
 	 */
 	public synchronized void closeAndDeleteFileChannel(String name)
 	{
-		FileChannel channel = (FileChannel)nameToChannel.get(name);
+		FileChannel channel = nameToChannel.get(name);
 		if (channel != null)
 		{
 			nameToChannel.remove(name);
 
-			Integer count = (Integer)channelToUseCount.get(channel);
+			Integer count = channelToUseCount.get(channel);
 			if (count != null && count.intValue() > 0)
 			{
 				channelsToDeleteOnReturn.add(channel);
@@ -300,9 +299,9 @@ public class FileChannelPool
 	public synchronized void destroy()
 	{
 		log.debug("Destroying FileChannel pool");
-		for (Iterator i = channelToName.keySet().iterator(); i.hasNext();)
+		for (Iterator<FileChannel> i = channelToName.keySet().iterator(); i.hasNext();)
 		{
-			FileChannel channel = (FileChannel)i.next();
+			FileChannel channel = i.next();
 			try
 			{
 				channel.close();

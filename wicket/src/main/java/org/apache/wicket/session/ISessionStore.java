@@ -155,13 +155,11 @@ public interface ISessionStore
 	IPageMap createPageMap(String name);
 
 	/**
-	 * @param <T>
-	 *            the page's model object type
 	 * @param page
 	 *            The page for which this version manager must be created
 	 * @return A instance of a IPageVersionManager that the page will use.
 	 */
-	<T> IPageVersionManager<T> newVersionManager(Page<T> page);
+	IPageVersionManager newVersionManager(Page page);
 
 	/**
 	 * Called when the WebApplication is destroyed.

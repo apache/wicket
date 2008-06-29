@@ -33,7 +33,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author ivaynberg
  */
-public class PalettePage extends WicketExamplePage<Void>
+public class PalettePage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -47,12 +47,12 @@ public class PalettePage extends WicketExamplePage<Void>
 			Model.valueOf(new ArrayList<Person>()), Model.valueOf(persons), renderer, 10, true);
 
 
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person(s): " + palette.getModelObjectAsString());
+				info("selected person(s): " + palette.getDefaultModelObjectAsString());
 			}
 		};
 

@@ -85,7 +85,7 @@ public class XsltTransformer implements ITransformer
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component< ? > component, final CharSequence output)
+	public CharSequence transform(final Component component, final CharSequence output)
 		throws Exception
 	{
 		IResourceStream resourceStream = getResourceStream(component);
@@ -128,7 +128,7 @@ public class XsltTransformer implements ITransformer
 	 * 
 	 * @return The XSLT file resource stream
 	 */
-	private IResourceStream getResourceStream(final Component< ? > component)
+	private IResourceStream getResourceStream(final Component component)
 	{
 		final IResourceStream resourceStream;
 

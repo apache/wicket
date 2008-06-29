@@ -43,15 +43,14 @@ import org.apache.wicket.version.undo.Change;
  *  &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
  *  &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre>
+ * 
  * <pre>
  *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;, myPage);
  * </pre>
  * 
  * @author Juergen Donnerstag
- * @param <T>
- *            model object type
  */
-public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
+public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +58,7 @@ public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	private String markupId;
 
 	/** The container providing the inline markup */
-	private final MarkupContainer< ? > markupProvider;
+	private final MarkupContainer markupProvider;
 
 	/**
 	 * Constructor.
@@ -94,7 +93,7 @@ public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * @deprecated use {@link #Fragment(String, String, MarkupContainer, IModel)}
 	 */
 	@Deprecated
-	public Fragment(final String id, final String markupId, final IModel<T> model)
+	public Fragment(final String id, final String markupId, final IModel<?> model)
 	{
 		this(id, markupId, null, model);
 	}
@@ -111,8 +110,7 @@ public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */
-	public Fragment(final String id, final String markupId,
-		final MarkupContainer< ? > markupProvider)
+	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
 	{
 		this(id, markupId, markupProvider, null);
 	}
@@ -131,8 +129,8 @@ public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId,
-		final MarkupContainer< ? > markupProvider, final IModel<T> model)
+	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
+		final IModel<?> model)
 	{
 		super(id, model);
 
@@ -372,7 +370,7 @@ public class Fragment<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * 
 	 * @return markup provider
 	 */
-	public final MarkupContainer< ? > getMarkupProvider()
+	public final MarkupContainer getMarkupProvider()
 	{
 		return markupProvider;
 	}

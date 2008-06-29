@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.list.ListView;
  * 
  * @author Eelco Hillenius
  */
-public class XmlPage extends WebPage<Void>
+public class XmlPage extends WebPage
 {
 	/**
 	 * Constructor
@@ -69,8 +69,8 @@ public class XmlPage extends WebPage<Void>
 		protected void populateItem(ListItem<Person> item)
 		{
 			Person person = item.getModelObject();
-			item.add(new Label<String>("firstName", person.getName()));
-			item.add(new Label<String>("lastName", person.getLastName()));
+			item.add(new Label("firstName", person.getName()));
+			item.add(new Label("lastName", person.getLastName()));
 		}
 	}
 }

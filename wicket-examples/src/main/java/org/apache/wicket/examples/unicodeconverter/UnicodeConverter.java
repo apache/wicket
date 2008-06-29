@@ -35,7 +35,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class UnicodeConverter extends WicketExamplePage<Void>
+public class UnicodeConverter extends WicketExamplePage
 {
 	private static final String FROM_ESCAPED_UNICODE = "from escaped unicode";
 
@@ -55,7 +55,7 @@ public class UnicodeConverter extends WicketExamplePage<Void>
 	 * source, which should be updated on every form post (e.g. by overriding {@link Form#onSubmit}
 	 * and in that method explicitly setting the new value). But as you can see, this method is
 	 * slighly easier, and if we wanted to use the translated value in e.g. a database, we could
-	 * just query this model directly or indirectly by calling {@link Component#getModelObject()} on
+	 * just query this model directly or indirectly by calling {@link Component#getDefaultModelObject()} on
 	 * the component that holds it, and we would have a recent value.
 	 */
 	private final class ConverterModel extends Model<String>

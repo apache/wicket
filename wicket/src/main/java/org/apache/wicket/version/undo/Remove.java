@@ -37,10 +37,10 @@ class Remove extends Change
 	private static final Logger log = LoggerFactory.getLogger(Remove.class);
 
 	/** the subject <code>Component</code> */
-	private final Component<?> component;
+	private final Component component;
 
 	/** the parent <code>MarkupContainer</code> */
-	private final MarkupContainer<?> container;
+	private final MarkupContainer container;
 
 	/**
 	 * Constructor.
@@ -48,7 +48,7 @@ class Remove extends Change
 	 * @param component
 	 *            the subject <code>Component</code>
 	 */
-	Remove(final Component<?> component)
+	Remove(final Component component)
 	{
 		if (component == null)
 		{

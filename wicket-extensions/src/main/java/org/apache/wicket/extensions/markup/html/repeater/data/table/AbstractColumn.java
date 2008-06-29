@@ -28,9 +28,6 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AbstractColumn<T> implements IStyledColumn<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private IModel<String> displayModel;
 	private String sortProperty;
@@ -83,9 +80,9 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
 	 */
-	public Component<?> getHeader(String componentId)
+	public Component getHeader(String componentId)
 	{
-		return new Label<String>(componentId, getDisplayModel());
+		return new Label(componentId, getDisplayModel());
 	}
 
 	/**

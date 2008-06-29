@@ -53,7 +53,7 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  */
 @SuppressWarnings("unchecked")
-public abstract class VelocityPanel extends Panel<Map>
+public abstract class VelocityPanel extends Panel
 		implements
 			IMarkupResourceStreamProvider,
 			IMarkupCacheKeyProvider
@@ -107,7 +107,7 @@ public abstract class VelocityPanel extends Panel<Map>
 	 */
 	public VelocityPanel(final String id, final IModel< ? extends Map> model)
 	{
-		super(id, (IModel<Map>)model);
+		super(id, model);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public abstract class VelocityPanel extends Panel<Map>
 		if (evaluatedTemplate == null)
 		{
 			// Get model as a map
-			final Map map = getModelObject();
+			final Map map = (Map)getDefaultModelObject();
 
 			// create a Velocity context object using the model if set
 			final VelocityContext ctx = new VelocityContext(map);
@@ -304,7 +304,7 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache
 	 *      .wicket.MarkupContainer, java.lang.Class)
 	 */
-	public final IResourceStream getMarkupResourceStream(MarkupContainer< ? > container,
+	public final IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class< ? > containerClass)
 	{
 		Reader reader = getTemplateReader();
@@ -325,7 +325,7 @@ public abstract class VelocityPanel extends Panel<Map>
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.
 	 *      MarkupContainer, java.lang.Class)
 	 */
-	public final String getCacheKey(MarkupContainer< ? > container, Class< ? > containerClass)
+	public final String getCacheKey(MarkupContainer container, Class< ? > containerClass)
 	{
 		// don't cache the evaluated template
 		return null;

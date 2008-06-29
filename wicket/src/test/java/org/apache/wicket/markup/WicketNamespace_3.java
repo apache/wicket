@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Chris Turner
  */
-public class WicketNamespace_3 extends WebPage<Void>
+public class WicketNamespace_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

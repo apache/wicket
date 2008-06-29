@@ -50,12 +50,12 @@ public class InterceptTest extends WicketTestCase
 
 					private boolean block = true;
 
-					public boolean isActionAuthorized(Component<?> component, Action action)
+					public boolean isActionAuthorized(Component component, Action action)
 					{
 						return true;
 					}
 
-					public <T extends Component<?>> boolean isInstantiationAuthorized(
+					public <T extends Component> boolean isInstantiationAuthorized(
 						Class<T> componentClass)
 					{
 						if (block &&
@@ -71,7 +71,7 @@ public class InterceptTest extends WicketTestCase
 			}
 
 			@Override
-			public Class<? extends Page<?>> getHomePage()
+			public Class<? extends Page> getHomePage()
 			{
 				return HomePage.class;
 			}

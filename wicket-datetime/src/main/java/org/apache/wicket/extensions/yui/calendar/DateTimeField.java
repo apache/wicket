@@ -52,7 +52,7 @@ import org.joda.time.format.DateTimeFormat;
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
  */
-public class DateTimeField extends FormComponentPanel
+public class DateTimeField extends FormComponentPanel<Date>
 {
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
@@ -77,13 +77,13 @@ public class DateTimeField extends FormComponentPanel
 		}
 	}
 
-	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
 
 	private static final long serialVersionUID = 1L;
 
 	private AM_PM amOrPm = AM_PM.AM;
 
-	private DropDownChoice amOrPmChoice;
+	private DropDownChoice<AM_PM> amOrPmChoice;
 
 	private MutableDateTime date;
 
@@ -91,11 +91,11 @@ public class DateTimeField extends FormComponentPanel
 
 	private Integer hours;
 
-	private TextField hoursField;
+	private TextField<Integer> hoursField;
 
 	private Integer minutes;
 
-	private TextField minutesField;
+	private TextField<Integer> minutesField;
 
 	/**
 	 * Construct.
@@ -113,39 +113,43 @@ public class DateTimeField extends FormComponentPanel
 	 * @param id
 	 * @param model
 	 */
-	public DateTimeField(String id, IModel model)
+	public DateTimeField(String id, IModel<Date> model)
 	{
 		super(id, model);
 		setType(Date.class);
-		PropertyModel dateFieldModel = new PropertyModel(this, "date");
+		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
 		dateField.add(new DatePicker()
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void configure(Map widgetProperties)
+			@Override
+			protected void configure(Map<String, Object> widgetProperties)
 			{
 				super.configure(widgetProperties);
 				DateTimeField.this.configure(widgetProperties);
 			}
 		});
-		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
+		add(hoursField = new TextField<Integer>("hours", new PropertyModel<Integer>(this, "hours"),
+				Integer.class));
 		hoursField.add(new HoursValidator());
-		hoursField.setLabel(new Model("hours"));
-		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
-				Integer.class)
+		hoursField.setLabel(new Model<String>("hours"));
+		add(minutesField = new TextField<Integer>("minutes", new PropertyModel<Integer>(this,
+				"minutes"), Integer.class)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
+			@Override
 			public IConverter getConverter(Class type)
 			{
 				return MINUTES_CONVERTER;
 			}
 		});
 		minutesField.add(NumberValidator.range(0, 59));
-		minutesField.setLabel(new Model("minutes"));
-		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
-				Arrays.asList(AM_PM.values())));
+		minutesField.setLabel(new Model<String>("minutes"));
+		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new PropertyModel<AM_PM>(this,
+				"amOrPm"), Arrays.asList(AM_PM.values())));
 	}
 
 	/**
@@ -186,6 +190,7 @@ public class DateTimeField extends FormComponentPanel
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getInput()
 	 */
+	@Override
 	public String getInput()
 	{
 		// since we override convertInput, we can let this method return a value
@@ -223,7 +228,7 @@ public class DateTimeField extends FormComponentPanel
 	public void setDate(Date date)
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
-		setModelObject(date);
+		setDefaultModelObject(date);
 	}
 
 	/**
@@ -276,6 +281,7 @@ public class DateTimeField extends FormComponentPanel
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
+	@Override
 	protected void convertInput()
 	{
 		Object dateFieldInput = dateField.getConvertedInput();
@@ -284,7 +290,7 @@ public class DateTimeField extends FormComponentPanel
 			MutableDateTime date = new MutableDateTime(dateFieldInput);
 			Integer hours = (Integer)hoursField.getConvertedInput();
 			Integer minutes = (Integer)minutesField.getConvertedInput();
-			AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
+			AM_PM amOrPm = amOrPmChoice.getConvertedInput();
 
 			try
 			{
@@ -326,6 +332,7 @@ public class DateTimeField extends FormComponentPanel
 	 * @deprecated replaced by {@link #newDateTextField(String, PropertyModel)}
 	 */
 	// TODO remove after deprecation release
+	@Deprecated
 	protected final DateTextField newDateTextField(PropertyModel dateFieldModel)
 	{
 		throw new UnsupportedOperationException();
@@ -346,6 +353,7 @@ public class DateTimeField extends FormComponentPanel
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected void onBeforeRender()
 	{
 		dateField.setRequired(isRequired());
@@ -360,7 +368,7 @@ public class DateTimeField extends FormComponentPanel
 		boolean use12HourFormat = use12HourFormat();
 		amOrPmChoice.setVisible(use12HourFormat);
 
-		Date d = (Date)getModelObject();
+		Date d = (Date)getDefaultModelObject();
 		if (d != null)
 		{
 			date = new MutableDateTime(d);
@@ -449,6 +457,7 @@ public class DateTimeField extends FormComponentPanel
 		/**
 		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable validatable)
 		{
 			Number value = (Number)validatable.getValue();
@@ -461,6 +470,7 @@ public class DateTimeField extends FormComponentPanel
 		/**
 		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
 		 */
+		@Override
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -472,6 +482,7 @@ public class DateTimeField extends FormComponentPanel
 		/**
 		 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey()
 		 */
+		@Override
 		protected String resourceKey()
 		{
 			return "NumberValidator.range";

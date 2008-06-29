@@ -341,7 +341,7 @@ public class PopupSettings implements IClusterable
 	 * 		Calling component
 	 * @return The pagemap where the popup page must be created in
 	 */
-	public IPageMap getPageMap(Component<?> callee)
+	public IPageMap getPageMap(Component callee)
 	{
 		if (pageMapName != null)
 		{
@@ -354,7 +354,7 @@ public class PopupSettings implements IClusterable
 				throw new IllegalArgumentException(
 					"when the page map is not set, argument callee may not be null");
 			}
-			Page<?> page = callee.getPage();
+			Page page = callee.getPage();
 			if (page == null)
 			{
 				throw new IllegalStateException(callee +

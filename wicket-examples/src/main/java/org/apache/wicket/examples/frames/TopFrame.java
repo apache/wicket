@@ -23,7 +23,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * 
  * @author Eelco Hillenius
  */
-public class TopFrame extends WicketExamplePage<Void>
+public class TopFrame extends WicketExamplePage
 {
 	/**
 	 * Constructor

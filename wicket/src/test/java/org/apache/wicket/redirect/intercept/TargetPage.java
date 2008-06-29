@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author marrink
  */
-public class TargetPage extends WebPage<Void>
+public class TargetPage extends WebPage
 {
 
 	private static final long serialVersionUID = 1L;
@@ -35,7 +35,7 @@ public class TargetPage extends WebPage<Void>
 	 */
 	public TargetPage()
 	{
-		add(new Label<String>("label", "Target"));
+		add(new Label("label", "Target"));
 	}
 
 }

@@ -90,7 +90,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	}
 
 	/** simple test page */
-	public static class Page1 extends WebPage<Void>	{
+	public static class Page1 extends WebPage	{
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
@@ -100,7 +100,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	}
 
 	/** simple test page */
-	public static class Page2 extends WebPage<Void>	{
+	public static class Page2 extends WebPage	{
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */

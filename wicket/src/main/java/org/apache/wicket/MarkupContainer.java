@@ -84,7 +84,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public abstract class MarkupContainer<T> extends Component<T>
+public abstract class MarkupContainer extends Component
 {
 	private static final long serialVersionUID = 1L;
 
@@ -111,7 +111,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(final String id, IModel<T> model)
+	public MarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -125,9 +125,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public final MarkupContainer<T> add(final Component<?>... childs)
+	public final MarkupContainer add(final Component... childs)
 	{
-		for (Component<?> child : childs)
+		for (Component child : childs)
 		{
 
 			checkHierarchyChange(child);
@@ -162,9 +162,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The child(s) to be added or replaced
 	 * @return This
 	 */
-	public final MarkupContainer<T> addOrReplace(final Component<?>... childs)
+	public final MarkupContainer addOrReplace(final Component... childs)
 	{
-		for (Component<?> child : childs)
+		for (Component child : childs)
 		{
 
 			checkHierarchyChange(child);
@@ -206,7 +206,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            stream to be used to render the component.
 	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component<?> component, final MarkupStream markupStream)
+	public final boolean autoAdd(final Component component, final MarkupStream markupStream)
 	{
 		if (component == null)
 		{
@@ -250,7 +250,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
 	 */
 	@Deprecated
-	public final boolean autoAdd(final Component<?> component)
+	public final boolean autoAdd(final Component component)
 	{
 		return autoAdd(component, null);
 	}
@@ -262,7 +262,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
-	public final boolean contains(final Component<?> component, final boolean recurse)
+	public final boolean contains(final Component component, final boolean recurse)
 	{
 		if (component == null)
 		{
@@ -272,10 +272,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 		if (recurse)
 		{
 			// Start at component and continue while we're not out of parents
-			for (Component<?> current = component; current != null;)
+			for (Component current = component; current != null;)
 			{
 				// Get parent
-				final MarkupContainer<?> parent = current.getParent();
+				final MarkupContainer parent = current.getParent();
 
 				// If this container is the parent, then the component is
 				// recursively contained by this container
@@ -307,7 +307,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The component at the path
 	 */
 	@Override
-	public final Component<?> get(final String path)
+	public final Component get(final String path)
 	{
 		// Reference to this container
 		if (path == null || path.trim().equals(""))
@@ -319,7 +319,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		// Get child by id
-		Component<?> child = children_get(id);
+		Component child = children_get(id);
 
 		// If the container is transparent, than ask its parent.
 		// ParentResolver does something quite similar, but because of <head>,
@@ -409,7 +409,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @throws IllegalArgumentException
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 */
-	public void internalAdd(final Component<?> child)
+	public void internalAdd(final Component child)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -438,9 +438,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * @return Iterator that iterates through children in the order they were added
 	 */
-	public final Iterator<Component<?>> iterator()
+	public Iterator<? extends Component> iterator()
 	{
-		return new Iterator<Component<?>>()
+		return new Iterator<Component>()
 		{
 			int index = 0;
 
@@ -449,14 +449,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 				return index < children_size();
 			}
 
-			public Component<?> next()
+			public Component next()
 			{
 				return children_get(index++);
 			}
 
 			public void remove()
 			{
-				final Component<?> removed = children_remove(--index);
+				final Component removed = children_remove(--index);
 				checkHierarchyChange(removed);
 				removedComponent(removed);
 			}
@@ -469,9 +469,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
 	@SuppressWarnings("unchecked")
-	public final Iterator<Component<?>> iterator(Comparator<Component<?>> comparator)
+	public final Iterator<Component> iterator(Comparator<Component> comparator)
 	{
-		final List<Component<?>> sorted;
+		final List<Component> sorted;
 		if (children == null)
 		{
 			sorted = Collections.emptyList();
@@ -480,8 +480,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 		{
 			if (children instanceof Component)
 			{
-				sorted = new ArrayList<Component<?>>(1);
-				sorted.add((Component<?>)children);
+				sorted = new ArrayList<Component>(1);
+				sorted.add((Component)children);
 			}
 			else if (children instanceof ChildList)
 			{
@@ -489,7 +489,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			}
 			else
 			{
-				sorted = Arrays.asList((Component<?>[])children);
+				sorted = Arrays.asList((Component[])children);
 			}
 		}
 		Collections.sort(sorted, comparator);
@@ -507,7 +507,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             throws an {@link IllegalStateException}
 	 */
 	// TODO remove after release 1.3.0
-	public final <C extends Component<?>> IResourceStream newMarkupResourceStream(
+	public final <C extends Component> IResourceStream newMarkupResourceStream(
 		Class<C> containerClass)
 	{
 		throw new IllegalStateException(
@@ -518,7 +518,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 *            Component to remove from this container
 	 */
-	public void remove(final Component<?> component)
+	public void remove(final Component component)
 	{
 		checkHierarchyChange(component);
 
@@ -544,7 +544,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			throw new IllegalArgumentException("argument id may not be null");
 		}
 
-		final Component<?> component = get(id);
+		final Component component = get(id);
 		if (component != null)
 		{
 			remove(component);
@@ -587,7 +587,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 					for (int i = 0; i < size; i++)
 					{
 						// Get next child
-						final Component<?> child = children_get(i);
+						final Component child = children_get(i);
 						child.setParent(MarkupContainer.this);
 					}
 				}
@@ -601,7 +601,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 				if (childObject instanceof Component)
 				{
 					// Get next child
-					final Component<?> child = (Component<?>)childObject;
+					final Component child = (Component)childObject;
 
 					// Do not call remove() because the state change would than be
 					// recorded twice.
@@ -682,7 +682,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public final MarkupContainer<T> replace(final Component<?> child)
+	public final MarkupContainer replace(final Component child)
 	{
 		checkHierarchyChange(child);
 
@@ -699,7 +699,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		if (child.getParent() != this)
 		{
 			// Add to map
-			final Component<?> replaced = put(child);
+			final Component replaced = put(child);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
@@ -726,27 +726,27 @@ public abstract class MarkupContainer<T> extends Component<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public MarkupContainer<T> setModel(final IModel<T> model)
+	public MarkupContainer setDefaultModel(final IModel<?> model)
 	{
 		final IModel<?> previous = getModelImpl();
-		super.setModel(model);
+		super.setDefaultModel(model);
 		if (previous instanceof IComponentInheritedModel)
 		{
-			visitChildren(new IVisitor<Component<?>>()
+			visitChildren(new IVisitor<Component>()
 			{
-				public Object component(Component<?> component)
+				public Object component(Component component)
 				{
-					IModel<?> compModel = component.getModel();
+					IModel<?> compModel = component.getDefaultModel();
 					if (compModel instanceof IWrapModel)
 					{
 						compModel = ((IWrapModel<?>)compModel).getWrappedModel();
 					}
 					if (compModel == previous)
 					{
-						component.setModel(null);
+						component.setDefaultModel(null);
 					}
 					else if (compModel == model)
 					{
@@ -806,7 +806,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 				for (int i = 0; i < size; i++)
 				{
 					// Get next child
-					final Component<?> child = children_get(i);
+					final Component child = children_get(i);
 					if (i != 0)
 					{
 						buffer.append(' ');
@@ -836,7 +836,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final <S extends Component<?>> Object visitChildren(final Class<?> clazz,
+	public final <S extends Component> Object visitChildren(final Class<?> clazz,
 		final IVisitor<S> visitor)
 
 	{
@@ -849,7 +849,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
-			final Component<?> child = children_get(i);
+			final Component child = children_get(i);
 			Object value = null;
 
 			// Is the child of the correct class (or was no class specified)?
@@ -873,7 +873,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 				(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
-				value = ((MarkupContainer<?>)child).visitChildren(clazz, visitor);
+				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
@@ -896,7 +896,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor<Component<?>> visitor)
+	public final Object visitChildren(final IVisitor<Component> visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -905,7 +905,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 *            Component being added
 	 */
-	private final void addedComponent(final Component<?> component)
+	private final void addedComponent(final Component component)
 	{
 		// Check for degenerate case
 		if (component == this)
@@ -913,7 +913,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
 
-		MarkupContainer<?> parent = component.getParent();
+		MarkupContainer parent = component.getParent();
 		if (parent != null)
 		{
 			parent.remove(component);
@@ -922,7 +922,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// Set child's parent
 		component.setParent(this);
 
-		final Page<?> page = findPage();
+		final Page page = findPage();
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
@@ -949,7 +949,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param child
 	 *            Child to add
 	 */
-	private final void children_add(final Component<?> child)
+	private final void children_add(final Component child)
 	{
 		if (children == null)
 		{
@@ -971,9 +971,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param index
 	 * @return The child component
 	 */
-	private final Component<?> children_get(int index)
+	private final Component children_get(int index)
 	{
-		return (Component<?>)children_get(index, true);
+		return (Component)children_get(index, true);
 	}
 
 	/**
@@ -987,7 +987,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param index
 	 * @return The object directly or the reconstructed component
 	 */
-	private final Object postprocess(Object object, boolean reconstruct, MarkupContainer<?> parent,
+	private final Object postprocess(Object object, boolean reconstruct, MarkupContainer parent,
 		int index)
 	{
 		if (reconstruct && object instanceof ComponentSourceEntry)
@@ -1053,7 +1053,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		if (object instanceof Component)
 		{
-			return ((Component<?>)object).getId();
+			return ((Component)object).getId();
 		}
 		else if (object instanceof ComponentSourceEntry)
 		{
@@ -1070,18 +1070,18 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param id
 	 * @return The child component
 	 */
-	private final Component<?> children_get(final String id)
+	private final Component children_get(final String id)
 	{
 		if (children == null)
 		{
 			return null;
 		}
-		Component<?> component = null;
+		Component component = null;
 		if ((children instanceof Object[] == false) && (children instanceof List == false))
 		{
 			if (getId(children).equals(id))
 			{
-				component = (Component<?>)postprocess(children, true, this, 0);
+				component = (Component)postprocess(children, true, this, 0);
 				if (children != component)
 				{
 					children = component;
@@ -1106,7 +1106,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			{
 				if (getId(children[i]).equals(id))
 				{
-					component = (Component<?>)postprocess(children[i], true, this, i);
+					component = (Component)postprocess(children[i], true, this, i);
 					if (children[i] != component)
 					{
 						children[i] = component;
@@ -1123,7 +1123,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param child
 	 * @return The index of the given child component
 	 */
-	private final int children_indexOf(Component<?> child)
+	private final int children_indexOf(Component child)
 	{
 		if (children == null)
 		{
@@ -1167,7 +1167,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 * @return The component that is removed.
 	 */
-	private final Component<?> children_remove(Component<?> component)
+	private final Component children_remove(Component component)
 	{
 		int index = children_indexOf(component);
 		if (index != -1)
@@ -1182,7 +1182,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param index
 	 * @return The component that is removed
 	 */
-	private final Component<?> children_remove(int index)
+	private final Component children_remove(int index)
 	{
 		if (children == null)
 			return null;
@@ -1191,7 +1191,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		{
 			if (index == 0)
 			{
-				final Component<?> removed = (Component<?>)postprocess(children, true, null, -1);
+				final Component removed = (Component)postprocess(children, true, null, -1);
 				children = null;
 				return removed;
 			}
@@ -1220,7 +1220,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 					{
 						throw new IndexOutOfBoundsException();
 					}
-					return (Component<?>)postprocess(removed, true, null, -1);
+					return (Component)postprocess(removed, true, null, -1);
 				}
 				children = new ChildList(children);
 			}
@@ -1231,7 +1231,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			{
 				children = lst.get(0);
 			}
-			return (Component<?>)postprocess(removed, true, null, -1);
+			return (Component)postprocess(removed, true, null, -1);
 		}
 	}
 
@@ -1279,9 +1279,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param child
 	 * @return The component that is replaced
 	 */
-	private final Component<?> children_set(int index, Component<?> child)
+	private final Component children_set(int index, Component child)
 	{
-		return (Component<?>)children_set(index, child, true);
+		return (Component)children_set(index, child, true);
 	}
 
 	/**
@@ -1315,7 +1315,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The child to put into the map
 	 * @return Any component that was replaced
 	 */
-	private final Component<?> put(final Component<?> child)
+	private final Component put(final Component child)
 	{
 		int index = children_indexOf(child);
 		if (index == -1)
@@ -1333,10 +1333,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 *            Component being removed
 	 */
-	private final void removedComponent(final Component<?> component)
+	private final void removedComponent(final Component component)
 	{
 		// Notify Page that component is being removed
-		final Page<?> page = component.findPage();
+		final Page page = component.findPage();
 		if (page != null)
 		{
 			page.componentRemoved(component);
@@ -1369,7 +1369,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
-			final Component<?> component = get(id);
+			final Component component = get(id);
 
 			// Failed to find it?
 			if (component != null)
@@ -1380,7 +1380,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			{
 				// 2rd try: Components like Border and Panel might implement
 				// the ComponentResolver interface as well.
-				MarkupContainer<?> container = this;
+				MarkupContainer container = this;
 				while (container != null)
 				{
 					if (container instanceof IComponentResolver)
@@ -1449,7 +1449,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	protected final MarkupStream findMarkupStream()
 	{
 		// Start here
-		MarkupContainer<?> c = this;
+		MarkupContainer c = this;
 
 		// Walk up hierarchy until markup found
 		while (c.getMarkupStream() == null)
@@ -1583,7 +1583,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	private static class ComponentSourceEntry extends org.apache.wicket.ComponentSourceEntry
 	{
-		private ComponentSourceEntry(MarkupContainer<?> container, Component<?> component,
+		private ComponentSourceEntry(MarkupContainer container, Component component,
 			IComponentSource componentSource)
 		{
 			super(container, component, componentSource);
@@ -1592,7 +1592,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		protected void setChild(MarkupContainer<?> parent, int index, Component<?> child)
+		protected void setChild(MarkupContainer parent, int index, Component child)
 		{
 			parent.children_set(index, child, false);
 		}
@@ -1612,7 +1612,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			Object child = children_get(i, false);
 			if (child instanceof Component)
 			{
-				Component<?> component = (Component<?>)child;
+				Component component = (Component)child;
 				component.detach();
 
 				if (child instanceof IComponentSourceProvider)
@@ -1647,7 +1647,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final int size = children_size();
 		for (int i = 0; i < size; i++)
 		{
-			final Component<?> child = children_get(i);
+			final Component child = children_get(i);
 			child.internalMarkRendering();
 		}
 	}
@@ -1655,10 +1655,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * @return a copy of the children array.
 	 */
-	private Component<?>[] copyChildren()
+	private Component[] copyChildren()
 	{
 		int size = children_size();
-		Component<?> result[] = new Component[size];
+		Component result[] = new Component[size];
 		for (int i = 0; i < size; ++i)
 		{
 			result[i] = children_get(i);
@@ -1677,14 +1677,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 		// We need to copy the children list because the children components can
 		// modify the hierarchy in their onBeforeRender.
-		Component<?>[] children = copyChildren();
+		Component[] children = copyChildren();
 		try
 		{
 			// Loop through child components
 			for (int i = 0; i < children.length; i++)
 			{
 				// Get next child
-				final Component<?> child = children[i];
+				final Component child = children[i];
 
 				// Call begin request on the child
 				// We need to check whether the child's wasn't removed from the
@@ -1718,11 +1718,11 @@ public abstract class MarkupContainer<T> extends Component<T>
 	void onAfterRenderChildren()
 	{
 		// Loop through child components
-		final Iterator<Component<?>> iter = iterator();
+		final Iterator<? extends Component> iter = iterator();
 		while (iter.hasNext())
 		{
 			// Get next child
-			final Component<?> child = iter.next();
+			final Component child = iter.next();
 
 			// Call end request on the child
 			child.afterRender();
@@ -1746,9 +1746,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		super.setRenderAllowed();
 
-		visitChildren(new IVisitor<Component<?>>()
+		visitChildren(new IVisitor<Component>()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);

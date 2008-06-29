@@ -63,7 +63,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @param <T>
  *            The model object type
  */
-public abstract class AjaxSubmitLink<T> extends AbstractSubmitLink<T>
+public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -182,7 +182,7 @@ public abstract class AjaxSubmitLink<T> extends AbstractSubmitLink<T>
 	 * @param target
 	 * @param form
 	 * 
-	 * TODO 1.3: Make abstract to be consistent with onsubmit()
+	 *            TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form<?> form)
 	{

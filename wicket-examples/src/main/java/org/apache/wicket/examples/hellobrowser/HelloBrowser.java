@@ -35,7 +35,7 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
  * 
  * @author Eelco Hillenius
  */
-public class HelloBrowser extends WicketExamplePage<Void>
+public class HelloBrowser extends WicketExamplePage
 {
 	/**
 	 * Construct.
@@ -55,7 +55,7 @@ public class HelloBrowser extends WicketExamplePage<Void>
 		// is not allowed.
 		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo()).getProperties();
 
-		add(new MultiLineLabel<String>("clientinfo", properties.toString()));
+		add(new MultiLineLabel("clientinfo", properties.toString()));
 
 		IModel<String> clientTimeModel = new AbstractReadOnlyModel<String>()
 		{
@@ -83,6 +83,6 @@ public class HelloBrowser extends WicketExamplePage<Void>
 					+ "no idea what your time is";
 			}
 		};
-		add(new Label<String>("clienttime", clientTimeModel));
+		add(new Label("clienttime", clientTimeModel));
 	}
 }
