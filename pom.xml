@@ -29,14 +29,6 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<distributionManagement>
-	  <snapshotRepository>
-	    <id>repo</id>
-	    <name>Local Bamboo/Tomcat repository</name>
-	    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
-	    <uniqueVersion>false</uniqueVersion>
-	  </snapshotRepository>
-	</distributionManagement>			
 	<profiles>
 		<profile>
 			<id>bamboo</id>
@@ -90,6 +82,14 @@
 					</plugin>
 				</plugins>
 			</build>
+			<distributionManagement>
+			  <snapshotRepository>
+			    <id>repo</id>
+			    <name>Local Bamboo/Tomcat repository</name>
+			    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+			    <uniqueVersion>false</uniqueVersion>
+			  </snapshotRepository>
+			</distributionManagement>			
 		</profile>
 		<profile>
 			<id>release</id>
