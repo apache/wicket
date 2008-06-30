@@ -392,7 +392,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			String id = tag.getId();
 			if (!id.equals(BODY_ID))
 			{
-				Component component = get(id);
+				Component component = Border.this.get(id);
 				if (component != null)
 				{
 					component.render(markupStream);
