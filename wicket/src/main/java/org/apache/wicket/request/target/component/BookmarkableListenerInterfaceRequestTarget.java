@@ -23,6 +23,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -125,6 +126,12 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			{
 				page = getPage(requestCycle);
 			}
+		}
+
+		if (page == null)
+		{
+			throw new PageExpiredException(
+				"Request cannot be processed. The target page does not exist anymore.");
 		}
 
 		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
