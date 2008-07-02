@@ -51,7 +51,7 @@ Wicket.Tree.createElement = function(elementId, afterId) {
 	}
 
 	var after = document.getElementById(afterId);
-	var newNode = document.createElement("div");
+	var newNode = document.createElement(after.tagName);
 	newNode.setAttribute("id", elementId);
 
 	var p = after.parentNode;

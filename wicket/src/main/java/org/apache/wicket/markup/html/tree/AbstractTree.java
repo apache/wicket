@@ -33,6 +33,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -196,8 +197,10 @@ public abstract class AbstractTree extends Panel
 			{
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
+				String tagName = ((ComponentTag)markupStream.get()).getName();
 				getResponse().write(
-					"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+					"<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() + "\"></" +
+						tagName + ">");
 				markupStream.skipComponent();
 			}
 			else
@@ -631,8 +634,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode
-	 *      )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode )
 	 */
 	public final void nodeExpanded(Object node)
 	{
@@ -643,8 +645,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode
-	 *      )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode )
 	 */
 	public final void nodeSelected(Object node)
 	{
