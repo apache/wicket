@@ -21,7 +21,6 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.AbstractRepeater;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at the component
@@ -83,8 +82,7 @@ final class MarkupFragmentFinder
 						{
 							// WICKET-1560
 							Component parent = component.getParent();
-							if (parent instanceof AbstractRepeater && id != null &&
-								id.equals(parent.getId()))
+							if (id != null && id.equals(parent.getId()))
 							{
 								return markupStream;
 							}
