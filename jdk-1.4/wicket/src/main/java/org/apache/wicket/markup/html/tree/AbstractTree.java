@@ -35,6 +35,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -190,8 +191,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
+				String tagName = ((ComponentTag)markupStream.get()).getName();
 				getResponse().write(
-					"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+					"<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() + "\"></" +
+						tagName + ">");
 				markupStream.skipComponent();
 			}
 			else
@@ -1228,6 +1231,26 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	public final void markNodeDirty(TreeNode node)
 	{
 		invalidateNode(node, false);
+	}
+	
+	/**
+	 * INTERNAL
+	 * 
+	 * @param node
+	 */
+	public final void markNodeChildrenDirty(TreeNode node)
+	{
+		TreeItem item = (TreeItem)nodeToItemMap.get(node);
+		if (item != null)
+		{
+			visitItemChildren(item, new IItemCallback()
+			{
+				public void visitItem(TreeItem item)
+				{
+					invalidateNode((TreeNode)item.getModelObject(), false);
+				}
+			});
+		}
 	}
 
 	/**
