@@ -76,8 +76,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		PageParameters pageParameters, Component component,
 		RequestListenerInterface listenerInterface)
 	{
-		this(pageMapName, pageClass, pageParameters, component.getPath(), listenerInterface
-			.getName(), component.getPage().getCurrentVersionNumber());
+		this(pageMapName, pageClass, pageParameters, component.getPath(),
+			listenerInterface.getName(), component.getPage().getCurrentVersionNumber());
 
 		int version = component.getPage().getCurrentVersionNumber();
 		setPage(component.getPage());
@@ -110,6 +110,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, param.toString());
 	}
 
+	@Override
 	public void processEvents(RequestCycle requestCycle)
 	{
 		Page page = getPage();
@@ -134,7 +135,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			// this is quite a hack to get components in repeater work.
 			// But it still can fail if the repeater is a paging one or on every render
 			// it will generate new index for the items...
-			page.beforeRender();
+			page.prepareForRender(false);
 			component = page.get(pageRelativeComponentPath);
 			if (component == null)
 			{
@@ -146,8 +147,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 						" it could be that the component is inside a repeater make your component return false in getStatelessHint()");
 			}
 		}
-		RequestListenerInterface listenerInterface = RequestListenerInterface
-			.forName(interfaceName);
+		RequestListenerInterface listenerInterface = RequestListenerInterface.forName(interfaceName);
 		if (listenerInterface == null)
 		{
 			throw new WicketRuntimeException("unable to find listener interface " + interfaceName);
@@ -155,6 +155,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		listenerInterface.invoke(page, component);
 	}
 
+	@Override
 	public void respond(RequestCycle requestCycle)
 	{
 		Page page = getPage(requestCycle);

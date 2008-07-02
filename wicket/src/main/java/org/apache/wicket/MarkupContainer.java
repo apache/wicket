@@ -1641,14 +1641,14 @@ public abstract class MarkupContainer extends Component
 	 * @see org.apache.wicket.Component#internalMarkRendering()
 	 */
 	@Override
-	void internalMarkRendering()
+	void internalMarkRendering(boolean setRenderingFlag)
 	{
-		super.internalMarkRendering();
+		super.internalMarkRendering(setRenderingFlag);
 		final int size = children_size();
 		for (int i = 0; i < size; i++)
 		{
 			final Component child = children_get(i);
-			child.internalMarkRendering();
+			child.internalMarkRendering(setRenderingFlag);
 		}
 	}
 

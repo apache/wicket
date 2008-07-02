@@ -1647,7 +1647,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Get converter
 			final Class<?> objectClass = modelObject.getClass();
 
-			final IConverter<Object> converter = (IConverter<Object>) getConverter(objectClass);
+			final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
 
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());
@@ -2139,11 +2139,20 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Sets the RENDERING flag on component and it's children.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Sets the RENDERING flag and removes the PREPARED_FOR_RENDER flag on component and it's
+	 * children.
+	 * 
+	 * @param setRenderingFlag
+	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
+	 *            RENDERING flag is not set.
+	 * 
+	 * @see #prepareForRender(boolean)
 	 */
-	public final void markRendering()
+	public final void markRendering(boolean setRenderingFlag)
 	{
-		internalMarkRendering();
+		internalMarkRendering(setRenderingFlag);
 	}
 
 	/**
@@ -2209,8 +2218,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
+	 * 
+	 * @param setRenderingFlag
+	 *            Whether to set the rendering flag. This must be true if the page is about to be
+	 *            rendered. However, there are usecases to call this method without an immediate
+	 *            render (e.g. on stateless listner request target to build the component
+	 *            hierarchy), in that case setRenderingFlag should be false
 	 */
-	public final void prepareForRender()
+	public final void prepareForRender(boolean setRenderingFlag)
 	{
 		beforeRender();
 		List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
@@ -2223,12 +2238,23 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 		}
 		getRequestCycle().setMetaData(FEEDBACK_LIST, null);
-		markRendering();
+		markRendering(setRenderingFlag);
 
 		// check authorization
 		// first the component itself
 		// (after attach as otherwise list views etc wont work)
 		setRenderAllowed();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Prepares the component and it's children for rendering. On whole page render this method must
+	 * be called on the page. On AJAX request, this method must be called on updated component.
+	 */
+	public final void prepareForRender()
+	{
+		prepareForRender(true);
 	}
 
 	/**
@@ -2344,7 +2370,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			markupIndex = markupStream.getCurrentIndex();
 		}
 
-		markRendering();
+		markRendering(true);
 
 		setMarkupStream(markupStream);
 
@@ -2935,7 +2961,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
 	{
-		final IModel<Object> model = (IModel<Object>) getDefaultModel();
+		final IModel<Object> model = (IModel<Object>)getDefaultModel();
 
 		// Check whether anything can be set at all
 		if (model == null)
@@ -4103,10 +4129,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * 
 	 */
-	void internalMarkRendering()
+	void internalMarkRendering(boolean setRenderingFlag)
 	{
 		setFlag(FLAG_PREPARED_FOR_RENDER, false);
-		setFlag(FLAG_RENDERING, true);
+
+		if (setRenderingFlag)
+		{
+			setFlag(FLAG_RENDERING, true);
+		}
 	}
 
 	/**
