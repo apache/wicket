@@ -830,6 +830,8 @@ public abstract class AbstractTree extends Panel
 						}
 					});
 
+					getTreeState().selectNode(item.getDefaultModelObject(), false);
+
 					removeItem(item);
 				}
 			}
