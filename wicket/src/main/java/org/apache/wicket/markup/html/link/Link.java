@@ -448,8 +448,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 						"onclick",
 						"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " +
 							"if (win == window) { window.location.href='" +
-							url +
-							"'; } ;return false");
+							Strings.replaceAll(url, "&", "&amp;") + "'; } ;return false");
 				}
 			}
 
