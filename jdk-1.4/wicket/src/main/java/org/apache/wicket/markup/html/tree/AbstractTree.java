@@ -831,6 +831,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 						}
 					});
+					
+					getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 
 					removeItem(item);
 				}
