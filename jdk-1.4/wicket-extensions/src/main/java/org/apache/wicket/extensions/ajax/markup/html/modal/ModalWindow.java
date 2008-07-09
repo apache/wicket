@@ -241,6 +241,7 @@ public class ModalWindow extends Panel
 	public void setPageCreator(PageCreator creator)
 	{
 		pageCreator = creator;
+		setContent(empty);
 	}
 
 	/**
@@ -795,6 +796,7 @@ public class ModalWindow extends Panel
 		component.setVisible(false);
 		replace(component);
 		shown = false;
+		pageCreator = null;
 	}
 
 	/**
