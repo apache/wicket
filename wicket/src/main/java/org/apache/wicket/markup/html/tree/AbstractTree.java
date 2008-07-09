@@ -1374,6 +1374,10 @@ public abstract class AbstractTree extends Panel
 	 */
 	private final boolean isNodeVisible(Object node)
 	{
+		if (node == null)
+		{
+			return false;
+		}
 		Object parent = getParentNode(node);
 		while (parent != null)
 		{
