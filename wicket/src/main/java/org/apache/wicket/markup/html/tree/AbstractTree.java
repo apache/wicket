@@ -771,26 +771,30 @@ public abstract class AbstractTree extends Panel
 		{
 			TreeItem parentItem = nodeToItemMap.get(parent);
 
-			if (parentItem.getChildren().isEmpty())
+			if (parentItem != null)
 			{
-				invalidateNode(parent, true);
-			}
-
-			for (int i = 0; i < e.getChildren().length; ++i)
-			{
-				Object node = e.getChildren()[i];
-				int index = e.getChildIndices()[i];
-				TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
-				itemContainer.add(item);
-				parentItem.getChildren().add(index, item);
-
-				markTheLastButOneChildDirty(parentItem, item);
-
-				if (!dirtyItems.contains(item))
-					dirtyItems.add(item);
-
-				if (!dirtyItemsCreateDOM.contains(item))
-					dirtyItemsCreateDOM.add(item);
+			
+				if (parentItem.getChildren().isEmpty())
+				{
+					invalidateNode(parent, true);
+				}
+	
+				for (int i = 0; i < e.getChildren().length; ++i)
+				{
+					Object node = e.getChildren()[i];
+					int index = e.getChildIndices()[i];
+					TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
+					itemContainer.add(item);
+					parentItem.getChildren().add(index, item);
+	
+					markTheLastButOneChildDirty(parentItem, item);
+	
+					if (!dirtyItems.contains(item))
+						dirtyItems.add(item);
+	
+					if (!dirtyItemsCreateDOM.contains(item))
+						dirtyItemsCreateDOM.add(item);
+				}
 			}
 		}
 	}
