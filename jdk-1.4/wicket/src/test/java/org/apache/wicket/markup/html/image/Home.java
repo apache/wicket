@@ -41,6 +41,7 @@ public final class Home extends WebPage
 	 */
 	public Home(final PageParameters parameters)
 	{
+		add(new Image("logo"));
 		add(new Image("beer"));
 
 		// Add a couple of links to be able to play around with the session

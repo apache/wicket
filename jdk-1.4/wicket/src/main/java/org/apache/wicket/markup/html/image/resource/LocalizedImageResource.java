@@ -370,13 +370,6 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 */
 	private void loadStaticImage(final String path)
 	{
-		if ((path.indexOf("..") != -1) || (path.indexOf("./") != -1) || (path.indexOf("/.") != -1))
-		{
-			throw new WicketRuntimeException(
-				"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path=" +
-					path);
-		}
-
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();
 		if (parent instanceof Border)
 		{
