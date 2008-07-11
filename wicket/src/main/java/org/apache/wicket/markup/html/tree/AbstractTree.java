@@ -810,7 +810,7 @@ public abstract class AbstractTree extends Panel
 
 		if (parentItem != null && isNodeVisible(parent) && isNodeExpanded(parent))
 		{
-			boolean nonEmpty = !parentItem.getChildren().isEmpty();
+			boolean nonEmpty = parentItem.getChildren() != null && !parentItem.getChildren().isEmpty();
 			for (int i = 0; i < e.getChildren().length; ++i)
 			{
 				Object node = e.getChildren()[i];
@@ -831,12 +831,13 @@ public abstract class AbstractTree extends Panel
 							getTreeState().selectNode(item.getDefaultModelObject(), false);
 						}
 					});
-
-					getTreeState().selectNode(item.getDefaultModelObject(), false);
-
+					
 					parentItem.getChildren().remove(item);
 					
 					removeItem(item);
+
+					getTreeState().selectNode(item.getDefaultModelObject(), false);					
+					
 				}
 			}
 			if (nonEmpty && parentItem.getChildren().isEmpty())
