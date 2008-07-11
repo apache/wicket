@@ -1530,9 +1530,12 @@ public abstract class AbstractTree extends Panel
 			deleteIds.append(",");
 		}
 
-		// remove the id
-		// note that this doesn't update item's parent's children list
-		item.remove();
+		if (item.getParent() != null) 
+		{
+			// remove the id
+			// note that this doesn't update item's parent's children list
+			item.remove();
+		}
 	}
 
 	/**
