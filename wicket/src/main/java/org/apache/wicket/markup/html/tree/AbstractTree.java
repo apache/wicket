@@ -820,8 +820,6 @@ public abstract class AbstractTree extends Panel
 				{
 					markTheLastButOneChildDirty(parentItem, item);
 
-					parentItem.getChildren().remove(item);
-
 					// go though item children and remove every one of them
 					visitItemChildren(item, new IItemCallback()
 					{
@@ -836,6 +834,8 @@ public abstract class AbstractTree extends Panel
 
 					getTreeState().selectNode(item.getDefaultModelObject(), false);
 
+					parentItem.getChildren().remove(item);
+					
 					removeItem(item);
 				}
 			}
