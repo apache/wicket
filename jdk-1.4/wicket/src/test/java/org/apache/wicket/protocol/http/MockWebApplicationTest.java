@@ -56,17 +56,6 @@ public class MockWebApplicationTest extends TestCase
 		}
 	};
 
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public MockWebApplicationTest(String name)
-	{
-		super(name);
-	}
-
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -79,9 +68,6 @@ public class MockWebApplicationTest extends TestCase
 		application.destroy();
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public void testRenderHomePage() throws Exception
 	{
 		// Validate the document
@@ -113,9 +99,6 @@ public class MockWebApplicationTest extends TestCase
 		assertEquals(0, feedbackMessages.size());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public void testClickLink() throws Exception
 	{
 		// Need to call the home page first
