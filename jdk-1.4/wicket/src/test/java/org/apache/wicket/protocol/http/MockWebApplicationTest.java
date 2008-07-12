@@ -20,14 +20,18 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is
@@ -140,5 +144,36 @@ public class MockWebApplicationTest extends TestCase
 		// Inspect the page & model
 		p = (MockPage)application.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
+	}
+
+	public void testProvidesDefaultResourceFinderIfNotSetByApplication()
+	{
+		 Assert.assertNotNull(Application.get().getResourceSettings().getResourceFinder());
+	}
+
+	public void testHonorsResourceFinderSettingsSetByApplication()
+	{
+		final IResourceFinder customResourceFinder = new IResourceFinder()
+		{
+			public IResourceStream find(Class clazz, String pathname)
+			{
+				throw new UnsupportedOperationException("Not implemented");
+			}
+
+			public String toString()
+			{
+				return "customResourceFinder";
+			}
+		};
+		WebApplication wicketApplication = new DummyWebApplication() {
+			protected void init()
+			{
+				IResourceSettings resourceSettings = getResourceSettings();
+				resourceSettings.setResourceFinder(customResourceFinder);
+			}
+		};
+		new MockWebApplication(wicketApplication, "foo");
+		IResourceFinder resourceFinderInApplication = Application.get().getResourceSettings().getResourceFinder();
+		Assert.assertSame(customResourceFinder, resourceFinderInApplication);
 	}
 }
