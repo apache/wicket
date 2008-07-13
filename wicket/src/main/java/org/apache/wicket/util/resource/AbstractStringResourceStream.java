@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
 
@@ -71,6 +72,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		return contentType;
@@ -103,6 +105,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/**
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		return lastModified;
@@ -121,4 +124,10 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 * @return The string resource
 	 */
 	protected abstract String getString();
+
+	@Override
+	public final long length()
+	{
+		return Strings.lengthInBytes(getString(), getCharset());
+	}
 }

@@ -246,12 +246,5 @@ public class PackagedTextTemplate extends TextTemplate
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
-	@Override
-	public final long length()
-	{
-		return buffer.length();
-	}
+
 }

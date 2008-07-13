@@ -91,24 +91,9 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	protected String getString()
 	{
 		return buffer.toString();
-	}
-
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
-	 */
-	public String asString()
-	{
-		return getString();
-	}
-
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
-	public long length()
-	{
-		return buffer.length();
 	}
 }

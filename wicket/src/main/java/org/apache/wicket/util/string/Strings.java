@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -1341,6 +1343,39 @@ public final class Strings
 	private static char toHex(int nibble)
 	{
 		return hexDigit[(nibble & 0xF)];
+	}
+
+	/**
+	 * Calculates the length of string in bytes, uses specified <code>charset</code> if provided.
+	 * 
+	 * @param string
+	 * @param charset
+	 *            (optional) character set to use when converting string to bytes
+	 * @return length of string in bytes
+	 */
+	public static int lengthInBytes(String string, Charset charset)
+	{
+		if (string == null)
+		{
+			throw new NullPointerException("Argument `string` cannot be null");
+		}
+		if (charset != null)
+		{
+			try
+			{
+				return string.getBytes(charset.name()).length;
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new WicketRuntimeException(
+					"StringResourceStream created with unsupported charset: " + charset.name());
+			}
+		}
+		else
+		{
+			return string.getBytes().length;
+		}
+
 	}
 
 
