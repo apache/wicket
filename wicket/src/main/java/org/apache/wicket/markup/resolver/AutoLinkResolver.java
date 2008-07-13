@@ -443,6 +443,11 @@ public final class AutoLinkResolver implements IComponentResolver
 						// Href is relative. Resolve the url given relative to
 						// the current page
 						className = Packages.absolutePath(clazz, pathInfo.path);
+						className = Strings.replaceAll(className, "/", ".").toString();
+						if (className.startsWith("."))
+						{
+							className = className.substring(1);
+						}
 
 						try
 						{
