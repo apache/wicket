@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -281,7 +283,7 @@ public final class Strings
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
-			final boolean convertToHtmlUnicodeEscapes)
+		final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
 		{
@@ -592,13 +594,13 @@ public final class Strings
 			}
 
 			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y") ||
-					s.equalsIgnoreCase("1"))
+				s.equalsIgnoreCase("1"))
 			{
 				return true;
 			}
 
 			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n") ||
-					s.equalsIgnoreCase("0"))
+				s.equalsIgnoreCase("0"))
 			{
 				return false;
 			}
@@ -707,7 +709,7 @@ public final class Strings
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
 	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
-			CharSequence replaceWith)
+		CharSequence replaceWith)
 	{
 		if (s == null)
 		{
@@ -942,7 +944,7 @@ public final class Strings
 			else
 			{
 				throw new StringValueConversionException("Expected single character, not \"" + s +
-						"\"");
+					"\"");
 			}
 		}
 
@@ -1093,9 +1095,9 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string. Does special conversion for
-	 * {@link Throwable throwables} and String arrays of length 1 (in which case it just returns to
-	 * string in that array, as this is a common thing to have in the Servlet API).
+	 * Converts the given object to a string. Does special conversion for {@link Throwable
+	 * throwables} and String arrays of length 1 (in which case it just returns to string in that
+	 * array, as this is a common thing to have in the Servlet API).
 	 * 
 	 * @param object
 	 *            The object
@@ -1156,8 +1158,8 @@ public final class Strings
 		// differentiator for the message (e.g. "component foo was ***added***"
 		// or "component foo was ***created***")
 		AppendingStringBuffer sb = new AppendingStringBuffer("The " + componentType.toLowerCase() +
-				" with id '" + component.getId() + "' that failed to render was " +
-				location.getMessage() + "\n");
+			" with id '" + component.getId() + "' that failed to render was " +
+			location.getMessage() + "\n");
 
 		// a list of stacktrace elements that need to be skipped in the location
 		// stack trace
@@ -1287,7 +1289,7 @@ public final class Strings
 	 * @param stopAtWicketServlet
 	 */
 	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
-			boolean stopAtWicketServlet)
+		boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
@@ -1301,8 +1303,7 @@ public final class Strings
 				sb.append(traceString);
 				sb.append("\n");
 				if (stopAtWicketServlet &&
-						(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString
-								.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
+					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
 				{
 					return;
 				}
@@ -1344,6 +1345,38 @@ public final class Strings
 		return hexDigit[(nibble & 0xF)];
 	}
 
+	/**
+	 * Calculates the length of string in bytes, uses specified <code>charset</code> if provided.
+	 * 
+	 * @param string
+	 * @param charset
+	 *            (optional) character set to use when converting string to bytes
+	 * @return length of string in bytes
+	 */
+	public static int lengthInBytes(String string, Charset charset)
+	{
+		if (string == null)
+		{
+			throw new NullPointerException("Argument `string` cannot be null");
+		}
+		if (charset != null)
+		{
+			try
+			{
+				return string.getBytes(charset.name()).length;
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new WicketRuntimeException(
+					"StringResourceStream created with unsupported charset: " + charset.name());
+			}
+		}
+		else
+		{
+			return string.getBytes().length;
+		}
+
+	}
 
 	/**
 	 * Private constructor prevents construction.

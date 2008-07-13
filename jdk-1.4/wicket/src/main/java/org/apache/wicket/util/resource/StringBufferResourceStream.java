@@ -17,6 +17,7 @@
 package org.apache.wicket.util.resource;
 
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -109,6 +110,6 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 */
 	public long length()
 	{
-		return buffer.length();
+		return Strings.lengthInBytes(getString(), getCharset());
 	}
 }

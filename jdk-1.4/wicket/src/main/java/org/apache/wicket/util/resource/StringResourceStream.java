@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.util.resource;
 
-import java.io.UnsupportedEncodingException;
-
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -89,24 +87,8 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	 */
 	public long length()
 	{
-		// WICKET-1705: we cannot use string.length() because we need number of bytes rather then
-		// number of characters
-		if (getCharset() != null)
-		{
-			try
-			{
-				return getString().getBytes(getCharset().name()).length;
-			}
-			catch (UnsupportedEncodingException e)
-			{
-				throw new WicketRuntimeException(
-					"StringResourceStream created with unsupported charset: " + getCharset().name());
-			}
-		}
-		else
-		{
-			return getString().getBytes().length;
-		}
+		return Strings.lengthInBytes(getString(), getCharset());
+
 	}
 
 }

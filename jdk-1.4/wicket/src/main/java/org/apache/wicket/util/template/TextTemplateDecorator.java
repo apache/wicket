@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
 
@@ -173,7 +174,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 */
 	public long length()
 	{
-		return decorated.length();
+		return Strings.lengthInBytes(getString(), getCharset());
 	}
 
 	/**
