@@ -240,8 +240,8 @@ public class ModalWindow extends Panel
 	 */
 	public void setPageCreator(PageCreator creator)
 	{
-		pageCreator = creator;
 		setContent(empty);
+		pageCreator = creator;		
 	}
 
 	/**
