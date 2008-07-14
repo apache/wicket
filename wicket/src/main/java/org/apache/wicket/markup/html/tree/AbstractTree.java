@@ -141,7 +141,7 @@ public abstract class AbstractTree extends Panel
 		 * @return The children
 		 */
 		public List<TreeItem> getChildren()
-		{
+		{			
 			return children;
 		}
 
@@ -704,6 +704,10 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void treeNodesChanged(TreeModelEvent e)
 	{
+		if (dirtyAll)
+		{
+			return;
+		}
 		// has root node changed?
 		if (e.getChildren() == null)
 		{
@@ -764,6 +768,11 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void treeNodesInserted(TreeModelEvent e)
 	{
+		if (dirtyAll)
+		{
+			return;
+		}
+		
 		// get the parent node of inserted nodes
 		Object parent = e.getTreePath().getLastPathComponent();
 
@@ -774,7 +783,7 @@ public abstract class AbstractTree extends Panel
 			if (parentItem != null)
 			{
 			
-				if (parentItem.getChildren().isEmpty())
+				if (parentItem.getChildren() == null || parentItem.getChildren().isEmpty())
 				{
 					invalidateNode(parent, true);
 				}
@@ -804,6 +813,11 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void treeNodesRemoved(TreeModelEvent e)
 	{
+		if (dirtyAll)
+		{
+			return;
+		}
+		
 		// get the parent node of inserted nodes
 		Object parent = e.getTreePath().getLastPathComponent();
 		TreeItem parentItem = nodeToItemMap.get(parent);
@@ -852,6 +866,11 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void treeStructureChanged(TreeModelEvent e)
 	{
+		if (dirtyAll)
+		{
+			return;
+		}
+		
 		// get the parent node of changed nodes
 		Object node = e.getTreePath().getLastPathComponent();
 
