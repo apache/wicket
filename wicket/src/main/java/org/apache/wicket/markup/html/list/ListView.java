@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ListModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
@@ -78,7 +79,7 @@ import org.apache.wicket.version.undo.Change;
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior)} should be invoked on the {@link ListItem} that
+ * {@link #add(org.apache.wicket.behavior.IBehavior...)} should be invoked on the {@link ListItem} that
  * is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 
@@ -160,7 +161,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	public ListView(final String id, final List<T> list)
 	{
-		this(id, Model.of(list));
+		this(id, new ListModel<T>(list));
 	}
 
 	/**
@@ -253,9 +254,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String id, final ListItem<T> item)
+	public final Link<Void> moveDownLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -265,7 +266,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getDefaultModelObject());
+				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
 					addStateChange(new Change()
@@ -296,7 +297,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			{
 				super.onBeforeRender();
 				setAutoEnable(false);
-				if (getList().indexOf(item.getDefaultModelObject()) == (getList().size() - 1))
+				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
 				{
 					setEnabled(false);
 				}
@@ -312,9 +313,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String id, final ListItem<T> item)
+	public final Link<Void> moveUpLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -324,7 +325,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getDefaultModelObject());
+				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
 
@@ -356,7 +357,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			{
 				super.onBeforeRender();
 				setAutoEnable(false);
-				if (getList().indexOf(item.getDefaultModelObject()) == 0)
+				if (getList().indexOf(item.getModelObject()) == 0)
 				{
 					setEnabled(false);
 				}
@@ -372,9 +373,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String id, final ListItem<T> item)
+	public final Link<Void> removeLink(final String id, final ListItem<T> item)
 	{
-		return new Link(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -388,7 +389,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				{
 					private static final long serialVersionUID = 1L;
 
-					final int oldIndex = getList().indexOf(item.getDefaultModelObject());
+					final int oldIndex = getList().indexOf(item.getModelObject());
 					final T removedObject = item.getModelObject();
 
 					@Override
@@ -402,7 +403,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				item.modelChanging();
 
 				// Remove item and invalidate listView
-				getList().remove(item.getDefaultModelObject());
+				getList().remove(item.getModelObject());
 
 				ListView.this.modelChanged();
 				ListView.this.removeAll();
