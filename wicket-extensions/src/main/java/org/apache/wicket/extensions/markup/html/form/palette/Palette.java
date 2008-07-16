@@ -400,12 +400,12 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	 */
 	protected Component newSelectionComponent()
 	{
-		return new Selection("selection", this)
+		return new Selection<T>("selection", this)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Map getAdditionalAttributes(Object choice)
+			protected Map<String,String> getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForSelection(choice);
 			}
@@ -413,9 +413,9 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
-	protected Map getAdditionalAttributesForSelection(Object choice)
+	protected Map<String,String> getAdditionalAttributesForSelection(Object choice)
 	{
 		return null;
 	}
@@ -427,12 +427,12 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	 */
 	protected Component newChoicesComponent()
 	{
-		return new Choices("choices", this)
+		return new Choices<T>("choices", this)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Map getAdditionalAttributes(Object choice)
+			protected Map<String,String> getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForChoices(choice);
 			}
@@ -440,9 +440,9 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
-	protected Map getAdditionalAttributesForChoices(Object choice)
+	protected Map<String,String> getAdditionalAttributesForChoices(Object choice)
 	{
 		return null;
 	}

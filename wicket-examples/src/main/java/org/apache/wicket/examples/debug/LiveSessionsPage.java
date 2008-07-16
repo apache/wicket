@@ -34,8 +34,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.RequestLogger.SessionData;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Bytes;
 
 
@@ -55,7 +55,7 @@ public class LiveSessionsPage extends WebPage
 
 		add(new ApplicationView("application", Application.get()));
 
-		Link link = new Link("togglelink")
+		Link<Void> link = new Link<Void>("togglelink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -142,7 +142,7 @@ public class LiveSessionsPage extends WebPage
 			protected void populateItem(ListItem<SessionData> item)
 			{
 				final SessionData sd = item.getModelObject();
-				Link link = new Link("id")
+				Link<Void> link = new Link<Void>("id")
 				{
 					private static final long serialVersionUID = 1L;
 

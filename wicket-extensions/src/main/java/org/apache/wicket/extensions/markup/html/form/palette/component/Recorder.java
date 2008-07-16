@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.palette.component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		super(id);
 		this.palette = palette;
-		setDefaultModel(new Model());
+		setDefaultModel(new Model<Serializable>());
 		setOutputMarkupId(true);
 	}
 
@@ -137,7 +138,7 @@ public class Recorder<T> extends HiddenField<Object>
 		List<T> selected = new ArrayList<T>(ids.length);
 		for (int i = 0; i < ids.length; i++)
 		{
-			Iterator<T> it = getPalette().getChoices().iterator();
+			Iterator<? extends T> it = getPalette().getChoices().iterator();
 			while (it.hasNext())
 			{
 				final T choice = it.next();
@@ -154,7 +155,6 @@ public class Recorder<T> extends HiddenField<Object>
 	/**
 	 * @return iterator over unselected choices
 	 */
-	@SuppressWarnings("unchecked")
 	public Iterator<T> getUnselectedChoices()
 	{
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
@@ -162,7 +162,7 @@ public class Recorder<T> extends HiddenField<Object>
 
 		if (choices.size() - ids.length == 0)
 		{
-			return Collections.EMPTY_LIST.iterator();
+			return Collections.<T>emptyList().iterator();
 		}
 
 		List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - ids.length));

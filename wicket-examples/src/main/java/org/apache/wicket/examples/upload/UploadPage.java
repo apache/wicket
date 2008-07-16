@@ -89,7 +89,7 @@ public class UploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends Form
+	private class FileUploadForm extends Form<Void>
 	{
 		private FileUploadField fileUploadField;
 

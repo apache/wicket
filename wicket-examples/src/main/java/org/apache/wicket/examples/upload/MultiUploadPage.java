@@ -92,7 +92,7 @@ public class MultiUploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends Form
+	private class FileUploadForm extends Form<Void>
 	{
 		// collection that will hold uploaded FileUpload objects
 		private final Collection<FileUpload> uploads = new ArrayList<FileUpload>();

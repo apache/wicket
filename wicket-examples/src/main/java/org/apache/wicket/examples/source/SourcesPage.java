@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
@@ -52,9 +54,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 
 /**
@@ -376,7 +375,7 @@ public class SourcesPage extends WebPage
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					AjaxFallbackLink link = new AjaxFallbackLink("link", item.getModel())
+					AjaxFallbackLink<String> link = new AjaxFallbackLink<String>("link", item.getModel())
 					{
 						@Override
 						public void onClick(AjaxRequestTarget target)
