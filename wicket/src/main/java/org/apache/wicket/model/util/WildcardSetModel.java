@@ -14,32 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.model.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
- * Based on <code>Model</code> but for lists of serializable objects.
- *
+ * Based on <code>Model</code> but for sets of serializable objects.
+ * 
  * @author Timo Rantalaiho
+ * @param <T>
+ *            type of object inside set
  */
-public class WildcardListModel<T> extends CollectionModelBase<List<? extends T>>
+public class WildcardSetModel<T> extends AbstractCollectionModel<Set<? extends T>>
 {
-    public WildcardListModel()
-    {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public WildcardListModel(List<? extends T> object)
-    {
-        setObject(object);
-    }
+	/**
+	 * Creates empty model
+	 */
+	public WildcardSetModel()
+	{
+	}
 
+	/**
+	 * Creates model that will contain <code>set</code>
+	 * 
+	 * @param set
+	 */
+	public WildcardSetModel(Set<? extends T> set)
+	{
+		setObject(set);
+	}
 
-    @Override
-    protected List<? extends T> createSerializableVersionOf(List<? extends T> object)
-    {
-        return new ArrayList<T>(object);
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected Set<? extends T> createSerializableVersionOf(Set<? extends T> object)
+	{
+		return new HashSet<T>(object);
+	}
 }

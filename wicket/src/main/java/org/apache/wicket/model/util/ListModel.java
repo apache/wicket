@@ -14,32 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.model.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 
 /**
- * Based on <code>Model</code> but for any collections of serializable objects.
- *
+ * Based on <code>Model</code> but for lists of serializable objects.
+ * 
  * @author Timo Rantalaiho
+ * @param <T>
+ *            type of object inside list
  */
-public class CollectionModel<T> extends CollectionModelBase<Collection<T>>
+public class ListModel<T> extends AbstractCollectionModel<List<T>>
 {
-    public CollectionModel()
-    {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public CollectionModel(Collection<T> object)
-    {
-        setObject(object);
-    }
+	/**
+	 * Creates empty model
+	 */
+	public ListModel()
+	{
+	}
+
+	/**
+	 * Creates model that will contain <code>list</code>
+	 * 
+	 * @param list
+	 */
+	public ListModel(List<T> list)
+	{
+		setObject(list);
+	}
 
 
-    @Override
-    protected Collection<T> createSerializableVersionOf(Collection<T> object)
-    {
-        return new ArrayList<T>(object);
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected List<T> createSerializableVersionOf(List<T> object)
+	{
+		return new ArrayList<T>(object);
+	}
 }

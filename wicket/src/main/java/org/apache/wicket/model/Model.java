@@ -25,14 +25,18 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.WildcardListModel;
+import org.apache.wicket.model.util.WildcardSetModel;
 import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * <code>Model</code> is the basic implementation of an <code>IModel</code>. It just wraps a
- * simple model object. The model object must be serializable, as it is stored in the session. If
- * you have large objects to store, consider using
- * {@link org.apache.wicket.model.LoadableDetachableModel} instead of this class.
+ * <code>Model</code> is the basic implementation of an <code>IModel</code>. It just wraps a simple
+ * model object. The model object must be serializable, as it is stored in the session. If you have
+ * large objects to store, consider using {@link org.apache.wicket.model.LoadableDetachableModel}
+ * instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -66,25 +70,29 @@ public class Model<T extends Serializable> implements IModel<T>
 	}
 
 	/**
+	 * @param <K>
+	 *            type of key inside map
+	 * @param <V>
+	 *            type of value inside map
 	 * @param map
 	 *            The Map, which may or may not be Serializable
 	 * @deprecated see {@link Model#of(Map)}
 	 * @return A Model object wrapping the Map
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
-    public static <K, V> IModel<Map<K, V>> valueOf(final Map<K, V> map)
+	public static <K, V> IModel<Map<K, V>> valueOf(final Map<K, V> map)
 	{
-        return of(map);
+		return of(map);
 	}
 
 	/**
+	 * @param <C>
+	 *            type of object inside list
 	 * @param list
 	 *            The List, which may or may not be Serializable
 	 * @deprecated see {@link Model#of(List)}
 	 * @return A Model object wrapping the List
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static <C> IModel<List<? extends C>> valueOf(final List<? extends C> list)
 	{
@@ -101,10 +109,9 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	@SuppressWarnings("unchecked")
 	public static <C> IModel<List<? extends C>> of(final List<? extends C> list)
 	{
-        return new WildcardListModel<C>(list);
+		return new WildcardListModel<C>(list);
 	}
 
 	/**
@@ -119,41 +126,40 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> IModel<Map<K, V>> of(final Map<K, V> map)
 	{
-        return new MapModel<K,V>(map);
+		return new MapModel<K, V>(map);
 	}
 
 
 	/**
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
 	 * nonserializable <code>set</code> into a serializable one.
+	 * 
 	 * @param <C>
 	 *            model type
 	 * @param set
 	 *            The Set, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	@SuppressWarnings("unchecked")
 	public static <C> IModel<Set<? extends C>> of(final Set<? extends C> set)
 	{
-        return new WildcardSetModel<C>(set);
+		return new WildcardSetModel<C>(set);
 	}
 
 	/**
 	 * Factory method for models that contain collections. This factory method will automatically
 	 * rebuild a nonserializable <code>collection</code> into a serializable {@link ArrayList}.
+	 * 
 	 * @param <C>
 	 *            model type
 	 * @param set
 	 *            The Collection, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	@SuppressWarnings("unchecked")
 	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> set)
 	{
-        return new WildcardCollectionModel<C>(set);
+		return new WildcardCollectionModel<C>(set);
 	}
 
 

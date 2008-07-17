@@ -14,32 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.model.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
- * Based on <code>Model</code> but for sets of serializable objects.
- *
+ * Based on <code>Model</code> but for mapss of serializable objects.
+ * 
  * @author Timo Rantalaiho
+ * @param <K>
+ *            map's key type
+ * @param <V>
+ *            map's value type
  */
-public class WildcardSetModel<T> extends CollectionModelBase<Set<? extends T>>
+public class MapModel<K, V> extends AbstractCollectionModel<Map<K, V>>
 {
-    public WildcardSetModel()
-    {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public WildcardSetModel(Set<? extends T> object)
-    {
-        setObject(object);
-    }
+	/**
+	 * Creates empty model
+	 */
+	public MapModel()
+	{
+	}
 
+	/**
+	 * Creates model that will contain <code>map</code>
+	 * 
+	 * @param map
+	 */
+	public MapModel(Map<K, V> map)
+	{
+		setObject(map);
+	}
 
-    @Override
-    protected Set<? extends T> createSerializableVersionOf(Set<? extends T> object)
-    {
-        return new HashSet<T>(object);
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected Map<K, V> createSerializableVersionOf(Map<K, V> object)
+	{
+		return new HashMap<K, V>(object);
+	}
 }
