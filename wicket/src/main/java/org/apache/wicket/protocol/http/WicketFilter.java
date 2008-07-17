@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -57,6 +59,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Filter for initiating handling of Wicket requests.
  * 
+ * @see WicketServlet for documentation
+ * 
+ * @author Jonathan Locke
+ * @author Timur Mehrvarz
+ * @author Juergen Donnerstag
+ * @author Igor Vaynberg (ivaynberg)
+ * @author Al Maw
  * @author jcompagner
  */
 public class WicketFilter implements Filter
@@ -73,6 +82,13 @@ public class WicketFilter implements Filter
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
+
+
+	/**
+	 * Name of parameter used to express a comma separated list of paths that should be ignored
+	 */
+	public static final String IGNORE_PATHS_PARAM = "ignorePaths";
+
 
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the filter path will be
@@ -133,6 +149,9 @@ public class WicketFilter implements Filter
 	 */
 	private boolean portletOnlyFilter;
 
+	/** set of paths that should be ignored by the wicket filter */
+	private final Set<String> ignorePaths = new HashSet<String>();
+
 	/**
 	 * Servlet cleanup.
 	 */
@@ -177,7 +196,21 @@ public class WicketFilter implements Filter
 			return;
 		}
 
-		String relativePath = getRelativePath(httpServletRequest);
+		final String relativePath = getRelativePath(httpServletRequest);
+
+		if (ignorePaths.size() > 0 && relativePath.length() > 0)
+		{
+			for (String path : ignorePaths)
+			{
+				if (relativePath.startsWith(path))
+				{
+					log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
+					chain.doFilter(request, response);
+					return;
+				}
+			}
+		}
+
 
 		if (isWicketRequest(relativePath))
 		{
@@ -489,6 +522,8 @@ public class WicketFilter implements Filter
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
+		initIgnorePaths(filterConfig);
+
 		this.filterConfig = filterConfig;
 		String filterMapping = filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
 
@@ -587,6 +622,28 @@ public class WicketFilter implements Filter
 			if (newClassLoader != previousClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
+			}
+		}
+	}
+
+	/**
+	 * initializes the ignore paths parameter
+	 * 
+	 * @param filterConfig
+	 */
+	private void initIgnorePaths(FilterConfig filterConfig)
+	{
+		String paths = filterConfig.getInitParameter(IGNORE_PATHS_PARAM);
+		if (!Strings.isEmpty(paths))
+		{
+			String[] parts = paths.split(",");
+			for (String path : parts)
+			{
+				if (path.startsWith("/"))
+				{
+					path = path.substring(1);
+				}
+				ignorePaths.add(path);
 			}
 		}
 	}

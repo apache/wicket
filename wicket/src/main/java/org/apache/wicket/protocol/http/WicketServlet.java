@@ -56,8 +56,7 @@ import org.slf4j.LoggerFactory;
  * Note that the applicationClassName parameter you specify must be the fully qualified name of a
  * class that extends WebApplication. If your class cannot be found, does not extend WebApplication
  * or cannot be instantiated, a runtime exception of type WicketRuntimeException will be thrown.
- * </p>
- * As an alternative, you can configure an application factory instead. This looks like:
+ * </p> As an alternative, you can configure an application factory instead. This looks like:
  * 
  * <pre>
  * &lt;init-param&gt;
@@ -67,6 +66,17 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * and it has to satisfy interface {@link org.apache.wicket.protocol.http.IWebApplicationFactory}.
+ * 
+ * <p>
+ * The servlet can also be configured to skip certain paths, this is especially useful when the
+ * servlet is mapped to <code>/*</code> mapping:
+ * 
+ * <pre>
+ * &lt;init-param&gt;
+ *   &lt;param-name&gt;ignorePaths&lt;/param-name&gt;
+ *   &lt;param-value&gt;/images/products/,/documents/pdf/&lt;/param-value&gt;
+ * &lt;/init-param&gt;
+ * </pre>
  * 
  * <p>
  * When GET/POST requests are made via HTTP, a WebRequestCycle object is created from the request,
