@@ -46,6 +46,7 @@ public class OddEvenListItem<T> extends ListItem<T>
 		super(index, model);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
