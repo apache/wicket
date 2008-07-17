@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.WildcardListModel;
+import org.apache.wicket.model.util.WildcardListModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;

@@ -25,8 +25,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ListModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
 
