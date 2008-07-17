@@ -79,8 +79,8 @@ import org.apache.wicket.version.undo.Change;
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior...)} should be invoked on the {@link ListItem} that
- * is given in {@link #populateItem(ListItem)} method.
+ * {@link #add(org.apache.wicket.behavior.IBehavior...)} should be invoked on the {@link ListItem}
+ * that is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 
  * <p>
@@ -89,12 +89,11 @@ import org.apache.wicket.version.undo.Change;
  * setReuseItems is false, which has the effect that ListView replaces all child components by new
  * instances. The idea behind this is that you always render the fresh data, and as people usually
  * use ListViews for displaying read-only lists (at least, that's what we think), this is good
- * default behavior. <br />
- * However, as the components are replaced before the rendering starts, the search for specific
- * messages for these components fails as they are replaced with other instances. Another problem is
- * that 'wrong' user input is kept as (temporary) instance data of the components. As these
- * components are replaced by new ones, your user will never see the wrong data when setReuseItems
- * is false.
+ * default behavior. <br /> However, as the components are replaced before the rendering starts, the
+ * search for specific messages for these components fails as they are replaced with other
+ * instances. Another problem is that 'wrong' user input is kept as (temporary) instance data of the
+ * components. As these components are replaced by new ones, your user will never see the wrong data
+ * when setReuseItems is false.
  * </p>
  * 
  * @author Jonathan Locke
@@ -510,6 +509,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	protected ListItem<T> newItem(final int index)
 	{
+		// FIXME 1.5: this method should already include item's model in its definition
 		return new ListItem<T>(index, getListItemModel(getModel(), index));
 	}
 
@@ -662,13 +662,14 @@ public abstract class ListView<T> extends AbstractRepeater
 		};
 	}
 
-    @SuppressWarnings({"unchecked"})
-    @Override
-    public Iterator<? extends ListItem<T>> iterator() {
-        return (Iterator<? extends ListItem<T>>) super.iterator();
-    }
+	@SuppressWarnings( { "unchecked" })
+	@Override
+	public Iterator<? extends ListItem<T>> iterator()
+	{
+		return (Iterator<? extends ListItem<T>>)super.iterator();
+	}
 
-    /**
+	/**
 	 * Gets model
 	 * 
 	 * @return model
