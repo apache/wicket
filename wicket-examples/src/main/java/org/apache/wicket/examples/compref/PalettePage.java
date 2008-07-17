@@ -25,8 +25,8 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.CollectionModel;
-import org.apache.wicket.model.ListModel;
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.model.util.ListModel;
 
 
 /**
@@ -44,8 +44,8 @@ public class PalettePage extends WicketExamplePage
 		List<Person> persons = ComponentReferenceApplication.getPersons();
 		IChoiceRenderer<Person> renderer = new ChoiceRenderer<Person>("fullName", "fullName");
 
-		final Palette<Person> palette = new Palette<Person>("palette",
-			new ListModel<Person>(new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
+		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<Person>(
+			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
 
 
 		Form<?> form = new Form("form")
