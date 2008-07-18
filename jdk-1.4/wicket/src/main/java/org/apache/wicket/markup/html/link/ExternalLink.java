@@ -161,12 +161,12 @@ public class ExternalLink extends AbstractLink
 						url = url.substring(1);
 					}
 					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() +
-							url;
+						url;
 				}
 
 				// if the tag is an anchor proper
 				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-						tag.getName().equalsIgnoreCase("area"))
+					tag.getName().equalsIgnoreCase("area"))
 				{
 					// generate the href attribute
 					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
@@ -191,7 +191,7 @@ public class ExternalLink extends AbstractLink
 					else
 					{
 						// or generate an onclick JS handler directly
-						tag.put("onclick", "window.location.href='" + url + "';");
+						tag.put("onclick", "window.location.href='" + url + "';return false;");
 					}
 				}
 			}
@@ -229,7 +229,7 @@ public class ExternalLink extends AbstractLink
 		if ((label != null) && (label.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
-					getModelObjectAsString(label.getObject()));
+				getModelObjectAsString(label.getObject()));
 		}
 		else
 		{
