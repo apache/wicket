@@ -128,7 +128,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                         var value = getSelectedValue();
                         if(handleSelection(value)) {
                           obj.value = value;
-                          if(typeof objonchange=="function") objonchange();
+                          if(typeof objonchange=="function") objonchange(event);
                         }
                         hideAutoComplete();
                         hidingAutocomplete = 1;
@@ -137,7 +137,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                         hidingAutocomplete = 1;
                     }
                     mouseactive = 0;
-                    if(typeof objonkeydown=="function") objonkeydown();
+                    if(typeof objonkeydown=="function") objonkeydown(event);
                     return true;
                 break;
                 default:
@@ -161,7 +161,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 default:
     	            updateChoices();
             }
-			if(typeof objonkeyup=="function")objonkeyup();
+			if(typeof objonkeyup=="function")objonkeyup(event);
             return null;
         }
 
@@ -172,7 +172,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 			        return killEvent(event);
                 }
             }
-			if(typeof objonkeypress=="function")objonkeypress();
+			if(typeof objonkeypress=="function")objonkeypress(event);
         }
     }
 
