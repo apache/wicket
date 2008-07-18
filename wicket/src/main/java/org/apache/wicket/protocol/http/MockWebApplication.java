@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -209,7 +208,9 @@ public class MockWebApplication
 			IRequestCycleSettings.ONE_PASS_RENDER);
 		// Don't buffer the response, as this can break ajax tests: see WICKET-1264
 		this.application.getRequestCycleSettings().setBufferResponse(false);
-		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+		if (this.application.getResourceFinder() == null) {
+			this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+		}
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 
 		// Since the purpose of MockWebApplication is singlethreaded
