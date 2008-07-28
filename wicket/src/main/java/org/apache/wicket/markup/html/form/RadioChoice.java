@@ -159,7 +159,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param id
 	 *            See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
@@ -176,7 +176,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param renderer
 	 *            The rendering engine
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
@@ -194,7 +194,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
@@ -211,7 +211,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
@@ -230,7 +230,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param id
 	 *            See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
@@ -247,7 +247,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param model
 	 *            The model that is updated with changes in this component. See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
@@ -262,7 +262,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param id
 	 *            See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
@@ -283,7 +283,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param model
 	 *            The model that is updated with changes in this component. See Component
 	 * @param choices
-	 *            The collection of choices in the radio choice
+	 *            The list of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
