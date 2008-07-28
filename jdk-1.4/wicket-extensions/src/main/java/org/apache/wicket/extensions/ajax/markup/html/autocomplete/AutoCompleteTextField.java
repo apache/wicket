@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
@@ -40,6 +40,15 @@ public abstract class AutoCompleteTextField extends TextField
 {
 
 	private static final long serialVersionUID = 1L;
+
+	/** auto complete behavior attached to this textfield */
+	private AutoCompleteBehavior behavior;
+
+	/** renderer */
+	private final IAutoCompleteRenderer renderer;
+
+	/** settings */
+	private final AutoCompleteSettings settings;
 
 	/**
 	 * @param id
@@ -180,7 +189,7 @@ public abstract class AutoCompleteTextField extends TextField
 	}
 
 	/**
-	 * Construct.
+	 * Constructor
 	 * 
 	 * @param id
 	 * @param model
@@ -192,10 +201,23 @@ public abstract class AutoCompleteTextField extends TextField
 		IAutoCompleteRenderer renderer, AutoCompleteSettings settings)
 	{
 		super(id, model, type);
-		// this disables Firefox autocomplete
-		add(new SimpleAttributeModifier("autocomplete", "off"));
+		this.renderer = renderer;
+		this.settings = settings;
+	}
 
-		add(new AutoCompleteBehavior(renderer, settings)
+	/**
+	 * Factory method for autocomplete behavior that will be added to this textfield
+	 * 
+	 * @param renderer
+	 *            auto complete renderer
+	 * @param settings
+	 *            auto complete settings
+	 * @return auto complete behavior
+	 */
+	protected AutoCompleteBehavior newAutoCompleteBehavior(IAutoCompleteRenderer renderer,
+		AutoCompleteSettings settings)
+	{
+		return new AutoCompleteBehavior(renderer, settings)
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -205,7 +227,34 @@ public abstract class AutoCompleteTextField extends TextField
 				return AutoCompleteTextField.this.getChoices(input);
 			}
 
-		});
+		};
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent#onBeforeRender()
+	 */
+	protected void onBeforeRender()
+	{
+		// add auto complete behavior to this component if its not already there
+		if (behavior == null)
+		{
+			// we do this here instad of constructor so we can have an overridable factory method
+			behavior = newAutoCompleteBehavior(renderer, settings);
+			add(behavior);
+		}
+		super.onBeforeRender();
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.TextField#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// disable browser autocomplete
+		tag.put("autocomplete", "false");
 	}
 
 	/**
