@@ -174,30 +174,37 @@ public class Include extends WebComponent
 	 */
 	protected final boolean isAbsolute(String url)
 	{
-		if (url == null)
-		{
-			return false;
-		}
+		boolean absolute = false;
 
-		// do a fast, simple check first
-		int colonPos;
-		if ((colonPos = url.indexOf(":")) == -1)
+		if (url != null && url.length() > 0)
 		{
-			return false;
-		}
 
-		// if we DO have a colon, make sure that every character
-		// leading up to it is a valid scheme character
-		for (int i = 0; i < colonPos; i++)
-		{
-			if (VALID_SCHEME_CHARS.indexOf(url.charAt(i)) == -1)
+			// do a fast, simple check first
+			int colonPos = url.indexOf(":");
+
+			if (colonPos > 0)
 			{
-				return false;
+				// if we DO have a colon, make sure that every character
+				// leading up to it is a valid scheme character
+
+				absolute = true;
+				for (int i = 0; i < colonPos; i++)
+				{
+					if (VALID_SCHEME_CHARS.indexOf(url.charAt(i)) == -1)
+					{
+						absolute = false;
+						break;
+					}
+				}
+			}
+			else if (url.charAt(0) == '/')
+			{
+				// this is a url without a scheme, but starts with a /
+				absolute = true;
 			}
 		}
 
-		// if so, we've got an absolute url
-		return true;
+		return absolute;
 	}
 
 	/**
