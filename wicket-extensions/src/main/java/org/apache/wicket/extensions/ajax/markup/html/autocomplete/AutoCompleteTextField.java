@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
@@ -41,6 +41,16 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 
 	private static final long serialVersionUID = 1L;
 
+	/** auto complete behavior attached to this textfield */
+	private AutoCompleteBehavior<T> behavior;
+
+	/** renderer */
+	private final IAutoCompleteRenderer<T> renderer;
+
+	/** settings */
+	private final AutoCompleteSettings settings;
+
+
 	/**
 	 * @param id
 	 * @param type
@@ -56,7 +66,8 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param type
 	 * @param preselect
 	 *            the first item
-	 * @deprecated use the constructor {@link AutoCompleteTextField}{@link #AutoCompleteTextField(String, IModel, Class, AutoCompleteSettings)}
+	 * @deprecated use the constructor {@link AutoCompleteTextField}
+	 *             {@link #AutoCompleteTextField(String, IModel, Class, AutoCompleteSettings)}
 	 */
 	@Deprecated
 	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type, boolean preselect)
@@ -83,7 +94,8 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param id
 	 * @param object
 	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}{@link #AutoCompleteTextField(String, IModel, AutoCompleteSettings)}
+	 * @deprecated use the constructor {@link AutoCompleteTextField}
+	 *             {@link #AutoCompleteTextField(String, IModel, AutoCompleteSettings)}
 	 */
 	@Deprecated
 	public AutoCompleteTextField(String id, IModel<T> object, boolean preselect)
@@ -116,7 +128,8 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	/**
 	 * @param id
 	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}{@link #AutoCompleteTextField(String, AutoCompleteSettings)}
+	 * @deprecated use the constructor {@link AutoCompleteTextField}
+	 *             {@link #AutoCompleteTextField(String, AutoCompleteSettings)}
 	 */
 	@Deprecated
 	public AutoCompleteTextField(String id, boolean preselect)
@@ -180,7 +193,8 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param type
 	 * @param renderer
 	 * @param preselect
-	 * @deprecated use the constructor {@link AutoCompleteTextField}{@link #AutoCompleteTextField(String, IModel, Class, IAutoCompleteRenderer, AutoCompleteSettings)}
+	 * @deprecated use the constructor {@link AutoCompleteTextField}
+	 *             {@link #AutoCompleteTextField(String, IModel, Class, IAutoCompleteRenderer, AutoCompleteSettings)}
 	 */
 	@Deprecated
 	public AutoCompleteTextField(String id, IModel<T> model, Class<T> type,
@@ -202,12 +216,25 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
 	{
 		super(id, model, type);
-		// this disables Firefox autocomplete
-		add(new SimpleAttributeModifier("autocomplete", "off"));
+		this.renderer = renderer;
+		this.settings = settings;
+	}
 
-		add(new AutoCompleteBehavior<T>(renderer, settings)
+
+	/**
+	 * Factory method for autocomplete behavior that will be added to this textfield
+	 * 
+	 * @param renderer
+	 *            auto complete renderer
+	 * @param settings
+	 *            auto complete settings
+	 * @return auto complete behavior
+	 */
+	protected AutoCompleteBehavior<T> newAutoCompleteBehavior(IAutoCompleteRenderer<T> renderer,
+		AutoCompleteSettings settings)
+	{
+		return new AutoCompleteBehavior<T>(renderer, settings)
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -215,8 +242,30 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 			{
 				return AutoCompleteTextField.this.getChoices(input);
 			}
+		};
+	}
 
-		});
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeRender()
+	{
+		// add auto complete behavior to this component if its not already there
+		if (behavior == null)
+		{
+			// we do this here instad of constructor so we can have an overridable factory method
+			add(behavior = newAutoCompleteBehavior(renderer, settings));
+		}
+		super.onBeforeRender();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// disable browser's autocomplete
+		tag.put("autocomplete", "off");
 	}
 
 	/**
