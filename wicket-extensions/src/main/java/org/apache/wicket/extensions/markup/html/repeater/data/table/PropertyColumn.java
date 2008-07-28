@@ -25,8 +25,8 @@ import org.apache.wicket.model.PropertyModel;
 
 /**
  * A convenience implementation of column that adds a label to the cell whose model is determined by
- * the provided wicket property expression (same as used by {@link PropertyModel}) that is
- * evaluated against the current row's model object
+ * the provided wicket property expression (same as used by {@link PropertyModel}) that is evaluated
+ * against the current row's model object
  * <p>
  * Example
  * 
@@ -88,15 +88,22 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */
-	public void populateItem(Item item, String componentId, IModel model)
+	public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel)
 	{
-		item.add(new Label(componentId, createLabelModel(model)));
+		item.add(new Label(componentId, createLabelModel(rowModel)));
 	}
 
-	// TODO Post 1.3: rename embeddedModel to itemModel
-	protected IModel createLabelModel(IModel embeddedModel)
+	/**
+	 * Factory method for generating a model that will generated the displayed value. Typically the
+	 * model is a property model using the {@link #propertyExpression} specified in the constructor.
+	 * 
+	 * @param rowModel
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	protected IModel<?> createLabelModel(IModel<T> rowModel)
 	{
-		return new PropertyModel(embeddedModel, propertyExpression);
+		return new PropertyModel(rowModel, propertyExpression);
 	}
 
 	/**
