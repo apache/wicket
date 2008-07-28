@@ -379,7 +379,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param create
 	 * @return folder used to store session data
 	 */
-	private File getSessionFolder(String sessionId, boolean create)
+	protected File getSessionFolder(String sessionId, boolean create)
 	{
 		File storeFolder = getStoreFolder();
 
@@ -1120,7 +1120,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Loads the data stripped by
-	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}.
+	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}
+	 * .
 	 * 
 	 * @param page
 	 * @return SerializedPageWithSession isntance
