@@ -99,7 +99,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-			final IModel replaceModel)
+		final IModel replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
 	}
@@ -135,7 +135,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-			final boolean addAttributeIfNotPresent, final IModel replaceModel)
+		final boolean addAttributeIfNotPresent, final IModel replaceModel)
 	{
 		if (attribute == null)
 		{
@@ -248,8 +248,26 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The component
 	 * @param tag
 	 *            The tag to replace the attribute value for
+	 * 
+	 * @deprecated see {@link #replaceAttributeValue(Component, ComponentTag)}
 	 */
-	public final void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	public void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	{
+		replaceAttributeValue(component, tag);
+	}
+
+
+	/**
+	 * Checks the given component tag for an instance of the attribute to modify and if all criteria
+	 * are met then replace the value of this attribute with the value of the contained model
+	 * object.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param tag
+	 *            The tag to replace the attribute value for
+	 */
+	public final void replaceAttributeValue(final Component component, final ComponentTag tag)
 	{
 		if (isEnabled(component))
 		{
@@ -296,7 +314,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 		{
 			RequestContext rc = RequestContext.get();
 			if (rc.isPortletRequest() &&
-					!(value.startsWith("http://") || value.startsWith("https://")))
+				!(value.startsWith("http://") || value.startsWith("https://")))
 			{
 				if ("href".equals(attribute))
 				{
@@ -328,7 +346,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	public String toString()
 	{
 		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled + ", pattern=" +
-				pattern + ", replacementModel=" + replaceModel + "]";
+			pattern + ", replacementModel=" + replaceModel + "]";
 	}
 
 	/* gets replacement with null check. */
