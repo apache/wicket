@@ -334,17 +334,7 @@ public final class Strings
 
 					case '&' :
 
-						// if this is an entity (&#), then do not convert
-						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
-						{
-							buffer.append(c);
-
-						}
-						else
-						{
-							// it is not an entity, so convert it to &amp;
-							buffer.append("&amp;");
-						}
+						buffer.append("&amp;");
 						break;
 
 					case '"' :
