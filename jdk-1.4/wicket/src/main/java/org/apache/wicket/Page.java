@@ -79,13 +79,13 @@ import org.slf4j.LoggerFactory;
  * contain any arbitrary tree of Components. For more details on MarkupContainers, see
  * {@link org.apache.wicket.MarkupContainer}.
  * 
- * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any constructor when they are
- * being used in a Wicket session, but if you wish to link to a Page using a URL that is
- * "bookmarkable" (which implies that the URL will not have any session information encoded in it,
- * and that you can call this page directly without having a session first directly from your
- * browser), you need to implement your Page with a no-arg constructor or with a constructor that
- * accepts a PageParameters argument (which wraps any query string parameters for a request). In
- * case the page has both constructors, the constructor with PageParameters will be used.
+ * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any constructor when they are being
+ * used in a Wicket session, but if you wish to link to a Page using a URL that is "bookmarkable"
+ * (which implies that the URL will not have any session information encoded in it, and that you can
+ * call this page directly without having a session first directly from your browser), you need to
+ * implement your Page with a no-arg constructor or with a constructor that accepts a PageParameters
+ * argument (which wraps any query string parameters for a request). In case the page has both
+ * constructors, the constructor with PageParameters will be used.
  * 
  * <li><b>Models </b>- Pages, like other Components, can have models (see {@link IModel}). A Page
  * can be assigned a model by passing one to the Page's constructor, by overriding initModel() or
@@ -104,8 +104,7 @@ import org.slf4j.LoggerFactory;
  * version manager will be installed using the {@link ISessionStore}'s factory method
  * newVersionManager().
  * 
- * <li><b>Security </b>- See {@link IAuthorizationStrategy},
- * {@link SimplePageAuthorizationStrategy}
+ * <li><b>Security </b>- See {@link IAuthorizationStrategy}, {@link SimplePageAuthorizationStrategy}
  * 
  * @see org.apache.wicket.markup.html.WebPage
  * @see org.apache.wicket.MarkupContainer
@@ -433,8 +432,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * This method is called when a component was rendered standalone. If it is a
-	 * <code>MarkupContainer</code> then the rendering for that container is checked.
+	 * This method is called when a component was rendered standalone. If it is a <code>
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -1355,9 +1354,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
 			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='");
+			// Gwyn - Wed, 21 May 2008 12:23:41
+			// If the xml declaration in the markup used double-quotes, use them in the output too
+			// Whether it should be or not, sometimes it's significant...
+			final String quoteChar = (markupStream.getXmlDeclaration().indexOf('\"') == -1) ? "'"
+				: "\"";
+
+			response.write("<?xml version=");
+			response.write(quoteChar);
+			response.write("1.0");
+			response.write(quoteChar);
+			response.write(" encoding=");
+			response.write(quoteChar);
 			response.write(encoding);
-			response.write("'?>");
+			response.write(quoteChar);
+			response.write("?>");
 		}
 
 		// Set response locale from session locale
