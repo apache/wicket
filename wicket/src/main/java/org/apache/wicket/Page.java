@@ -1368,9 +1368,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
 			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='");
+			// Gwyn - Wed, 21 May 2008 12:23:41
+			// If the xml declaration in the markup used double-quotes, use them in the output too
+			// Whether it should be or not, sometimes it's significant...
+			final String quoteChar = (markupStream.getXmlDeclaration().indexOf('\"') == -1) ? "'"
+				: "\"";
+
+			response.write("<?xml version=");
+			response.write(quoteChar);
+			response.write("1.0");
+			response.write(quoteChar);
+			response.write(" encoding=");
+			response.write(quoteChar);
 			response.write(encoding);
-			response.write("'?>");
+			response.write(quoteChar + "?>");
 		}
 
 		// Set response locale from session locale
