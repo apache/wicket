@@ -1381,7 +1381,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			response.write(" encoding=");
 			response.write(quoteChar);
 			response.write(encoding);
-			response.write(quoteChar + "?>");
+			response.write(quoteChar);
+			response.write("?>");
 		}
 
 		// Set response locale from session locale
