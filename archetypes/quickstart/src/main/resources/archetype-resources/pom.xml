@@ -1,24 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>${groupId}</groupId>
 	<artifactId>${artifactId}</artifactId>
 	<packaging>war</packaging>
 	<version>${version}</version>
-#literal()
-	<!-- TODO project name  -->
+	#literal()<!-- TODO project name  -->
 	<name>quickstart</name>
 	<description></description>
-
-	<!-- TODO
-		<organization>
-		<name>company name</name>
-		<url>company url</url>
+	<!--
+		TODO <organization> <name>company name</name> <url>company url</url>
 		</organization>
 	-->
-
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -26,25 +19,20 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
-
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
-		<!-- OPTIONAL 
-			<dependency>
-			<groupId>org.apache.wicket</groupId>
+		<!--
+			OPTIONAL <dependency> <groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>${wicket.version}</version>
-			</dependency>
+			<version>${wicket.version}</version> </dependency>
 		-->
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -57,15 +45,14 @@
 		</dependency>
 
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
-		 <dependency>
-				 <groupId>junit</groupId>
-				 <artifactId>junit</artifactId>
-				 <version>3.8.2</version>
-				 <scope>test</scope>
-		 </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
-
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
@@ -85,7 +72,6 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<resources>
 			<resource>
@@ -117,6 +103,17 @@
 		</testResources>
 		<plugins>
 			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<optimise>true</optimise>
+					<debug>true</debug>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
 			</plugin>
@@ -126,14 +123,12 @@
 				<configuration>
 					<downloadSources>true</downloadSources>
 				</configuration>
-			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
-
 	<properties>
 		<wicket.version>1.4-SNAPSHOT</wicket.version>
 		<jetty.version>6.1.4</jetty.version>
 	</properties>
-
-#end
+	#end
 </project>
