@@ -110,7 +110,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public String loadStringResource(Class< ? > clazz, final String key, final Locale locale,
+	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
 		if (clazz == null)
@@ -132,7 +132,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
 			while (iter.hasNext())
 			{
-				String newPath = (String)iter.next();
+				String newPath = iter.next();
 
 				final Properties props = propertiesFactory.load(clazz, newPath);
 				if (props != null)
@@ -159,6 +159,12 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 			// Move to the next superclass
 			clazz = clazz.getSuperclass();
+
+			if (clazz == null)
+			{
+				// nothing more to search, done
+				break;
+			}
 		}
 
 		// not found
@@ -188,12 +194,12 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
-		List<Class< ? >> searchStack = getComponentStack(component);
+		List<Class<?>> searchStack = getComponentStack(component);
 
 		// Walk the component hierarchy down from page to the component
 		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 		{
-			Class< ? > clazz = searchStack.get(i);
+			Class<?> clazz = searchStack.get(i);
 
 			// First, try the fully qualified resource name relative to the
 			// component on the path from page down.
@@ -226,10 +232,10 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 *            The component to evaluate
 	 * @return The stack of classes
 	 */
-	private List<Class< ? >> getComponentStack(final Component component)
+	private List<Class<?>> getComponentStack(final Component component)
 	{
 		// Build the search stack
-		final List<Class< ? >> searchStack = new ArrayList<Class< ? >>();
+		final List<Class<?>> searchStack = new ArrayList<Class<?>>();
 		searchStack.add(component.getClass());
 
 		if (!(component instanceof Page))
@@ -258,7 +264,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 *            The class to check
 	 * @return Whether to stop the search
 	 */
-	protected boolean isStopResourceSearch(final Class< ? > clazz)
+	protected boolean isStopResourceSearch(final Class<?> clazz)
 	{
 		if ((clazz == null) || clazz.equals(Object.class) || clazz.equals(Application.class))
 		{
