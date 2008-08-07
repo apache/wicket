@@ -122,7 +122,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @return The string resource value or null if resource not found
 	 */
 	public String loadStringResource(Class clazz, final String key, final Locale locale,
-			final String style)
+		final String style)
 	{
 		if (clazz == null)
 		{
@@ -130,8 +130,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		}
 
 		// Load the properties associated with the path
-		IPropertiesFactory propertiesFactory = Application.get().getResourceSettings()
-				.getPropertiesFactory();
+		IPropertiesFactory propertiesFactory = Application.get()
+			.getResourceSettings()
+			.getPropertiesFactory();
 
 		while (true)
 		{
@@ -140,7 +141,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 			// Iterator over all the combinations
 			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale,
-					"properties,xml");
+				"properties,xml");
 			while (iter.hasNext())
 			{
 				String newPath = (String)iter.next();
@@ -170,6 +171,12 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 			// Move to the next superclass
 			clazz = clazz.getSuperclass();
+
+			if (clazz == null)
+			{
+				// nothing more to search, done
+				break;
+			}
 		}
 
 		// not found
@@ -278,13 +285,13 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// Stop at all html markup base classes
 		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class) ||
-				clazz.equals(WebComponent.class))
+			clazz.equals(WebComponent.class))
 		{
 			return true;
 		}
 
 		// Stop at all wicket base classes
 		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class) ||
-				clazz.equals(Component.class);
+			clazz.equals(Component.class);
 	}
 }
