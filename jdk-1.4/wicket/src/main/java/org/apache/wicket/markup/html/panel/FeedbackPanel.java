@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -321,7 +322,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
-		Label label = new Label(id, message.getMessage().toString());
+		Serializable serializable = message.getMessage();
+		Label label = new Label(id, (serializable == null) ? "" : serializable.toString());
 		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}
