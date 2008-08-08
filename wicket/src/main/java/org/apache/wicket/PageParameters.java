@@ -63,7 +63,7 @@ public final class PageParameters extends ValueMap
 	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
-	public PageParameters(final Map<String, Object> parameterMap)
+	public PageParameters(final Map<String, ?> parameterMap)
 	{
 		super(parameterMap);
 
@@ -146,8 +146,8 @@ public final class PageParameters extends ValueMap
  * BRING BACK IN 1.4
  * 
  * if (!(key instanceof String)) { throw new IllegalArgumentException( "PageParameter keys must be
- * of type String, but you supplied a " + key.getClass().getName()); } if (value instanceof String ||
- * value instanceof String[]) { return super.put(key, value); } else { throw new
+ * of type String, but you supplied a " + key.getClass().getName()); } if (value instanceof String
+ * || value instanceof String[]) { return super.put(key, value); } else { throw new
  * IllegalArgumentException("You tried to add an object of type " + value.getClass().getName() + "
  * to your PageParameters for key " + key + ", but you are only allowed to use String or
  * String[]."); }
