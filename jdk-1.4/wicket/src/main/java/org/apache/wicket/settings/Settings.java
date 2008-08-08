@@ -52,8 +52,8 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
@@ -310,12 +310,12 @@ public final class Settings
 
 	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
 
-  /**
-   * escape string for '..' within resource keys
-   */
-  private CharSequence parentFolderPlaceholder = "$up$";
+	/**
+	 * escape string for '..' within resource keys
+	 */
+	private CharSequence parentFolderPlaceholder = "$up$";
 
-  /**
+	/**
 	 * Create the application settings, carrying out any necessary initializations.
 	 * 
 	 * @param application
@@ -480,7 +480,7 @@ public final class Settings
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
+			cryptFactory = new KeyInSessionSunJceCryptFactory();
 		}
 		return cryptFactory;
 	}
@@ -1360,20 +1360,20 @@ public final class Settings
 		throwExceptionOnMissingXmlDeclaration = throwException;
 	}
 
-  /**
-   * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
-   */
-  public CharSequence getParentFolderPlaceholder()
-  {
-    return parentFolderPlaceholder;
-  }
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
+	 */
+	public CharSequence getParentFolderPlaceholder()
+	{
+		return parentFolderPlaceholder;
+	}
 
-  /**
-   * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
-   */
-  public void setParentFolderPlaceholder(final CharSequence sequence)
-  {
-    parentFolderPlaceholder = sequence;
-  }
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
+	 */
+	public void setParentFolderPlaceholder(final CharSequence sequence)
+	{
+		parentFolderPlaceholder = sequence;
+	}
 
 }
