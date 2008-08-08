@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
