@@ -53,8 +53,8 @@ import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
@@ -486,7 +486,7 @@ public final class Settings
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY);
+			cryptFactory = new KeyInSessionSunJceCryptFactory();
 		}
 		return cryptFactory;
 	}
@@ -1028,8 +1028,7 @@ public final class Settings
 		}
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(
-			pageExpiredErrorPage);
+		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
 	}
 
 	/**
