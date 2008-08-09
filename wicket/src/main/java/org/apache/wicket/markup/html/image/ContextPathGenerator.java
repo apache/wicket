@@ -69,7 +69,7 @@ public class ContextPathGenerator extends AbstractBehavior
 		final String prefix = component.getRequest().getRelativePathPrefixToContextRoot();
 
 		// join the two path pieces
-		final String contextRelativePath = Strings.join("/", path, prefix);
+		final String contextRelativePath = Strings.join("/", prefix, path);
 
 		tag.put("src", contextRelativePath);
 	}
