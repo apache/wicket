@@ -620,6 +620,7 @@
 		execute: function(next)
 		{
 			console.info("Hello!");
+			next();
 		}
 	};
 	
@@ -633,6 +634,8 @@
 	{
 		addInternal: function(item) 
 		{			
+			var execute = this.queue.length == 0;
+		
 			var a = item.attributes;
 			if (a.removePrevious) 
 			{
@@ -647,7 +650,7 @@
 			}
 			this.queue.push(item);
 			
-			if (this.currentItem == null) 
+			if (execute) 
 			{
 				this.next();
 			}
@@ -778,7 +781,7 @@
 	
 	var i = 0;
 	
-	var pre = function(item) { console.info("X", item); if (i++ % 2 == 0) return false; else return true;};
+	var pre = function(item) { console.info("X", item); return true; };
 	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre});
 	var y = new RequestQueue();
 	y.add(x);
