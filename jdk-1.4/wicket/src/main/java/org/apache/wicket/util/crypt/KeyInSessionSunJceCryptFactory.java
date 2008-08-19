@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.crypt;
 
-import java.util.UUID;
+import java.security.SecureRandom;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,6 +34,8 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
  */
 public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 {
+	private static SecureRandom numberGenerator;
+
 	public ICrypt newCrypt()
 	{
 		WebRequestCycle rc = (WebRequestCycle)RequestCycle.get();
@@ -47,7 +49,7 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		if (key == null)
 		{
 			// generate new key
-			key = session.getId() + "." + UUID.randomUUID().toString();
+			key = session.getId() + "." + randomUUIDString();
 			session.setAttribute(keyAttr, key);
 		}
 
@@ -55,5 +57,39 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		ICrypt crypt = new SunJceCrypt();
 		crypt.setKey(key);
 		return crypt;
+	}
+
+	private static String randomUUIDString()
+	{
+		SecureRandom ng = numberGenerator;
+		if (ng == null)
+		{
+			numberGenerator = ng = new SecureRandom();
+		}
+
+		byte[] randomBytes = new byte[16];
+		ng.nextBytes(randomBytes);
+		randomBytes[6] &= 0x0f; /* clear version */
+		randomBytes[6] |= 0x40; /* set to version 4 */
+		randomBytes[8] &= 0x3f; /* clear variant */
+		randomBytes[8] |= 0x80; /* set to IETF variant */
+
+		long mostSigBits = 0;
+		long leastSigBits = 0;
+		for (int i = 0; i < 8; i++)
+			mostSigBits = (mostSigBits << 8) | (randomBytes[i] & 0xff);
+		for (int i = 8; i < 16; i++)
+			leastSigBits = (leastSigBits << 8) | (randomBytes[i] & 0xff);
+
+
+		return (digits(mostSigBits >> 32, 8) + "-" + digits(mostSigBits >> 16, 4) + "-" +
+			digits(mostSigBits, 4) + "-" + digits(leastSigBits >> 48, 4) + "-" + digits(
+			leastSigBits, 12));
+	}
+
+	private static String digits(long val, int digits)
+	{
+		long hi = 1L << (digits * 4);
+		return Long.toHexString(hi | (val & (hi - 1))).substring(1);
 	}
 }
