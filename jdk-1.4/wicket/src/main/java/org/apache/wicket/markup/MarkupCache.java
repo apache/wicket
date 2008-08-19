@@ -346,7 +346,7 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// flag markup as non-existent
-		return putIntoCache(cacheKey, Markup.NO_MARKUP);
+		return putIntoCache(cacheKey, container, Markup.NO_MARKUP);
 	}
 
 	/**
@@ -358,6 +358,8 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
 	 *         the markup from the cache is provided.
+	 * 
+	 * @deprecated see
 	 */
 	protected Markup putIntoCache(final String locationString, Markup markup)
 	{
@@ -380,6 +382,27 @@ public class MarkupCache implements IMarkupCache
 			}
 		}
 		return markup;
+	}
+
+	/**
+	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
+	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
+	 * 
+	 * More sophisticated implementations may call a container method to e.g. cache it per container
+	 * instance.
+	 * 
+	 * @param locationString
+	 *            If null, than ignore the cache
+	 * @param container
+	 *            The container this markup is for.
+	 * @param markup
+	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
+	 *         the markup from the cache is provided.
+	 */
+	protected Markup putIntoCache(final String locationString, MarkupContainer container,
+		Markup markup)
+	{
+		return putIntoCache(locationString, markup);
 	}
 
 	/**
@@ -435,12 +458,13 @@ public class MarkupCache implements IMarkupCache
 
 			if (cacheKey != null)
 			{
-				if (markup.locationAsString() != null) {
+				if (markup.locationAsString() != null)
+				{
 					locationString = markup.locationAsString();
 				}
 				// add the markup to the cache.
 				markupKeyCache.put(cacheKey, locationString);
-				return putIntoCache(locationString, markup);
+				return putIntoCache(locationString, container, markup);
 			}
 			return markup;
 		}
