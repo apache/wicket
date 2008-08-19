@@ -2388,20 +2388,21 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			try
 			{
-				// Call implementation to render component
-				notifyBehaviorsComponentBeforeRender();
+				// Call implementation to render component				
 				final IComponentBorder border = getComponentBorder();
 				if (border != null)
 				{
 					border.renderBefore(this);
 				}
+				notifyBehaviorsComponentBeforeRender();
 				onRender(markupStream);
+				notifyBehaviorsComponentRendered();
 				if (border != null)
 				{
 					border.renderAfter(this);
 				}
 				// Component has been rendered
-				rendered();
+				rendered();				
 			}
 			catch (RuntimeException ex)
 			{
@@ -2609,8 +2610,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * rendered, and in development mode this would result in a runtime exception.
 	 */
 	public final void rendered()
-	{
-		notifyBehaviorsComponentRendered();
+	{		
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 	}
