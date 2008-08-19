@@ -1,22 +1,25 @@
 (function() {
+
+YUI().use('*', function(Y) {
 	
 	/*
 	 * YUI Shortcuts 
 	 */
-	var D = YAHOO.util.Dom;
-	var E = YAHOO.util.Event;
-	var L = YAHOO.lang;
+	var E = Y.Event;
+	var L = Y.Lang;
 	var UA = YAHOO.env.ua;
 	
-	var oldWicket = window.Wicket;	
-	
-	Wicket = { };
+	var W = { };
 
+	// Publish the current YUI instance.
+	// Creating new YUI instance every time is needed can be quite expensive
+	W.Y = Y;
+	
 	/*
-	 * Wicket.$, Wicket.$$
+	 * W.$, W.$$
 	 */
 	
-	Wicket.$ = function(arg) 
+	W.$ = function(arg) 
 	{
 		if (arg == null || typeof(arg) == "undefined") 
 		{
@@ -27,7 +30,7 @@
 			var e=[];
 			for (var i=0; i<arguments.length; i++) 
 			{
-				e.push(Wicket.$(arguments[i]));
+				e.push(W.$(arguments[i]));
 			}
 			return e;
 		} 
@@ -54,15 +57,15 @@
 	 * If the argument is a string, returns whether the document contains element with given id.
 	 * If the argument is neither element nor a string function returns true.
 	 */
-	Wicket.$$ = function(element) 
-	{	
+	W.$$ = function(element) 
+	{				
 		if (L.isString(element)) 
-		{
-			return Wicket.$(element) != null;
+		{			
+			return W.$(element) != null;
 		}
 		else 
 		{	
-			return D.inDocument(element);
+			return Y.get(element).inDoc();
 		}
 	}
 	
@@ -152,7 +155,7 @@
 	
 	var logConfig = { trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false };
 	
-	Wicket.Log  = 
+	W.Log  = 
 	{
 		trace: function()
 		{
@@ -193,7 +196,7 @@
 	};
 		
 	// convenience shortcut
-	var log = Wicket.Log;
+	var log = W.Log;
 	
 	/*
 	 * Garbage Collection (for removing event listeners from elements removed from DOM)
@@ -260,7 +263,7 @@
 					if (e != null)
 					{
 						++done;
-						if (!Wicket.$$(e)) {
+						if (!W.$$(e)) {
 							E.purgeElement(e);
 							++this.purgedCount;
 						} else {
@@ -288,25 +291,48 @@
 	}
 	
 	var garbageCollector = new GarbageCollector(5000);
+
+	// We need to intercept addListener for current YUI instance as well as for all subsequent instances
 	
-	var oldAddListener = E.addListener;
-	
+	var oldAddListener = Y.Event.addListener;	
 	/**
 	 * Intercept the YAHOO.util.Event.addListener method and append the element
 	 * to elementsWithListeners array so that we can purge it once it get removed from DOM;
 	 */
-	E.addListener = function(el)
+	Y.Event.addListener = function(el)
 	{		
 		log.trace("Events", "Adding event listeners", arguments);
 		oldAddListener.apply(this, arguments);
 		if (el !== window && el !== document)
 		{
 			var a = garbageCollector.elementsWithListeners;
-			a.push(Wicket.$(el));			
+			a.push(W.$(el));			
 		}
 	};
+
+	// This intercepts addListener in other YUI instances
+	YUI.add("event-dom-fix", function(YY) 
+	{	
+		var oldAddListener = YY.Event.addListener;	
+		/**
+		 * Intercept the YAHOO.util.Event.addListener method and append the element
+		 * to elementsWithListeners array so that we can purge it once it get removed from DOM;
+		 */
+		YY.Event.addListener = function(el)
+		{		
+			log.trace("Events", "Adding event listeners", arguments);
+			oldAddListener.apply(this, arguments);
+			if (el !== window && el !== document)
+			{
+				var a = garbageCollector.elementsWithListeners;
+				a.push(W.$(el));			
+			}
+		};
+	}, "1.0.0", { use: [ "event-dom" ] }
+	);			
 	
-	E.addListener(window, "unload", function() { garbageCollector = null; } );
+	
+	Y.on("unload", function() { garbageCollector = null; }, window );
 	
 	/*
 	 * Throttler
@@ -418,7 +444,7 @@
 		return L.isString(string) && string.length > 0;
 	}
 	
-	Wicket.Throttler = Throttler;	
+	W.Throttler = Throttler;	
 	
 	/*
 	 * AJAX
@@ -518,7 +544,8 @@
 	 *                                        an error happens during the AJAX request or the processing 
 	 *                                        afterwards, or when some of the timeouts is exceeded. The 
 	 *                                        method(s) will get this RequestQueueItem passed as fist 
-	 *                                        argument. 
+	 *                                        argument. If possible error message will be second argument 
+	 *                                        passed to the handlers. 
 	 *                                        
 	 *   u, urlPostProcessors    - Method(s)  Optional. Method or array of methods that can postprocess 
 	 *                                        the URL before it hits the server. Each of the methods 
@@ -560,28 +587,28 @@
 			m2 = createMethodArray(m2);
 			return m1.concat(m2);
 		}
-		var gs = Wicket.ajax.globalSettings;
+		var gs = W.ajax.globalSettings;
 		
 		this.attributes  = 
 		{
-			component:            a.component          || a.c || null,
-			formId:               a.formId             || a.f || null,
+			component:            a.component          || a.c    || null,
+			formId:               a.formId             || a.f    || null,
 			multipart:          b(a.multipart          || a.m),
 			requestTimeout:       a.requestTimeout     || a.t    || gs.defaultRequestTimeout,
 			processingTimeout:    a.processingTimeout  || a.pt   || gs.defaultProcessingTimeout,
 			pageId:               a.pageId             || a.p    || gs.defaultPageId,
-			listenerInterface:    a.listenerInterface  || a.l || null,
+			listenerInterface:    a.listenerInterface  || a.l    || null,
 			behaviorIndex:        a.behaviorIndex      || a.b,
 			token:                a.token              || a.t    || gs.defaultToken,			
 			removePrevious:     b(a.removePrevious     || a.r    || gs.defaultRemovePrevious),
-			throttle:             a.throttle           || a.th || null,
+			throttle:             a.throttle           || a.th   || null,
 			throttlePostpone:   b(a.throttlePostpone   || a.thp),
 			preconditions:      m(a.preconditions      || a.pr,  gs.preconditions),
 			beforeHandlers:     m(a.beforeHandlers     || a.be,  gs.beforeHandlers),
 			successHandlers:    m(a.successHandlers    || a.s,   gs.successHandlers),
 			errorHandlers:      m(a.errorHandlers      || a.e,   gs.errorHandlers),
 			urlPostProcessors:  m(a.urlPostProcessors  || a.u,   gs.urlPostProcessors),
-			urlArguments:         a.urlArguments       || a.ua || null,
+			urlArguments:         a.urlArguments       || a.ua   || null,
 			urlArgumentMethods: m(a.urlArgumentMethods || a.uam, gs.urlArgumentMethods)
 		}
 		
@@ -617,9 +644,54 @@
 			}
 		},
 		
+		invokeBeforeHandlers: function()
+		{
+			iterateArray(this.attributes.beforeHandlers, bind(function(handler) 
+			{
+				try
+				{
+					handler(this);
+				}
+				catch (exception)
+				{
+					log.error("RequestQueue", "Error invoking before handler ", handler, "Exception: ", exception);
+				}
+			}, this));
+		},
+		
+		invokeSuccessHandlers: function()
+		{
+			iterateArray(this.attributes.successHandlers, bind(function(handler) 
+			{
+				try
+				{
+					handler(this);
+				}
+				catch (exception)
+				{
+					log.error("RequestQueue", "Error invoking success handler ", handler, "Exception: ", exception);
+				}
+			}, this));
+		},
+		
+		invokeErrorHandlers: function(error)
+		{
+			iterateArray(this.attributes.errorHandlers, bind(function(handler) 
+			{
+				try
+				{
+					handler(this, error);
+				}
+				catch (exception)
+				{
+					log.error("RequestQueue", "Error invoking error handler ", handler, "Exception: ", exception);
+				}
+			}, this));
+		},
+		
 		execute: function(next)
 		{
-			console.info("Hello!");
+			this.invokeBeforeHandlers();
 			next();
 		}
 	};
@@ -755,6 +827,28 @@
 		
 	};
 	
+	var defaultPrecondition = function(item)
+	{
+		var a = item.attributes;		
+		if (a.component != null)
+		{			
+			if (!W.$$(a.component))
+			{				
+				log.debug("RequestQueue", "Component ", a.component, " no longer in document, skipping item.");
+				return false;
+			}			
+		}
+		if (a.formId != null)
+		{
+			if (!W.$$(a.formId))
+			{
+				log.debug("RequestQueue", "Form ", a.formId, " no longer in document, skipping item.");
+				return false;
+			}
+		}
+		return true;
+	};
+	
 	var globalSettings = 
 	{
 		defaultRequestTimeout: 60000,
@@ -763,7 +857,7 @@
 		defaultToken: null,
 		defaultRemovePrevious: false,
 		beforeHandlers: [],
-		preconditions: [],
+		preconditions: [defaultPrecondition],
 		successHandlers: [],
 		errorHandlers: [],
 		urlPostProcessors: [],
@@ -775,13 +869,13 @@
 		this.globalSettings = globalSettings;
 	};
 	
-	Wicket.ajax = new Ajax();
+	W.ajax = new Ajax();
 
 	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
 	
 	var i = 0;
 	
-	var pre = function(item) { console.info("X", item); return true; };
+	var pre = function(item) { /*console.info("X", item); */ return true; };
 	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre});
 	var y = new RequestQueue();
 	y.add(x);
@@ -791,7 +885,8 @@
 	y.add(x);
 	y.add(x);
 	
-	WicketNG = Wicket;	
-	Wicket = oldWicket;
+	WicketNG = W;		
+	
+});
 	
 })();
