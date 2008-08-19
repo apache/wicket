@@ -106,7 +106,7 @@
 	{
 		trace: function() { },
 		debug: function() { },
-		info: function() { 	},
+		info: function() { },
 		error: function() { }
 	}		
 	
@@ -226,7 +226,8 @@
 		purgeInactiveListeners : function() 
 		{		
 			// if purge is in progress don't do anything
-			if (this.beingPurged != null) {
+			if (this.beingPurged != null) 
+			{
 				return;
 			}
 			
@@ -234,7 +235,7 @@
 			this.beingPurged = this.elementsWithListeners;
 			this.elementsWithListeners = new Array();
 			
-			log.trace("GarbageCollector", "Purge begin");
+			log.trace("GarbageCollector", "Purge Begin");
 			
 			this.purgedCount = 0;
 			
@@ -563,24 +564,24 @@
 		
 		this.attributes  = 
 		{
-			component:            a.component          || a.c,
-			formId:               a.formId             || a.f,
+			component:            a.component          || a.c || null,
+			formId:               a.formId             || a.f || null,
 			multipart:          b(a.multipart          || a.m),
 			requestTimeout:       a.requestTimeout     || a.t    || gs.defaultRequestTimeout,
 			processingTimeout:    a.processingTimeout  || a.pt   || gs.defaultProcessingTimeout,
 			pageId:               a.pageId             || a.p    || gs.defaultPageId,
-			listenerInterface:    a.listenerInterface  || a.l    || gs.defaultToken,
+			listenerInterface:    a.listenerInterface  || a.l || null,
 			behaviorIndex:        a.behaviorIndex      || a.b,
-			token:                a.token              || a.t,			
+			token:                a.token              || a.t    || gs.defaultToken,			
 			removePrevious:     b(a.removePrevious     || a.r    || gs.defaultRemovePrevious),
-			throttle:             a.throttle           || a.th,
+			throttle:             a.throttle           || a.th || null,
 			throttlePostpone:   b(a.throttlePostpone   || a.thp),
 			preconditions:      m(a.preconditions      || a.pr,  gs.preconditions),
 			beforeHandlers:     m(a.beforeHandlers     || a.be,  gs.beforeHandlers),
 			successHandlers:    m(a.successHandlers    || a.s,   gs.successHandlers),
 			errorHandlers:      m(a.errorHandlers      || a.e,   gs.errorHandlers),
 			urlPostProcessors:  m(a.urlPostProcessors  || a.u,   gs.urlPostProcessors),
-			urlArguments:         a.urlArguments       || a.ua,
+			urlArguments:         a.urlArguments       || a.ua || null,
 			urlArgumentMethods: m(a.urlArgumentMethods || a.uam, gs.urlArgumentMethods)
 		}
 		
@@ -590,11 +591,11 @@
 	RequestQueueItem.prototype = 
 	{
 		checkPreconditions: function() 
-		{
-			var res = iterateArray(this.preconditions, function(precondition) 
+		{			
+			var res = iterateArray(this.attributes.preconditions, bind(function(precondition) 
 			{
 				try 
-				{
+				{					
 					if (precondition(this) == false)
 					{
 						return false;
@@ -605,7 +606,7 @@
 					log.error("RequestQueue", "Error evaluating precondition ", precondition, "Exception: ", exception);
 					return false;
 				}
-			});
+			}, this));
 			if (res == null)
 			{
 				return true;
@@ -618,6 +619,7 @@
 		
 		execute: function(next)
 		{
+			console.info("Hello!");
 		}
 	};
 	
@@ -702,7 +704,7 @@
 				this.throttler.throttle(a.token, a.throttle, f, a.throttlePostpone);
 				return;
 			}
-			addInternal(item);				
+			this.addInternal(item);				
 		},
 		
 		nextInternal: function() 
@@ -712,6 +714,7 @@
 			if (this.queue.length > 0)
 			{
 				var i = this.queue.shift();
+				
 				if (i.checkPreconditions())
 				{
 					this.currentItem = i;
@@ -772,6 +775,18 @@
 	Wicket.ajax = new Ajax();
 
 	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
+	
+	var i = 0;
+	
+	var pre = function(item) { console.info("X", item); if (i++ % 2 == 0) return false; else return true;};
+	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre});
+	var y = new RequestQueue();
+	y.add(x);
+	y.add(x);
+	y.add(x);
+	y.add(x);
+	y.add(x);
+	y.add(x);
 	
 	WicketNG = Wicket;	
 	Wicket = oldWicket;
