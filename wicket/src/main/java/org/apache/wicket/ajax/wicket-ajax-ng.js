@@ -447,6 +447,95 @@ YUI().use('*', function(Y) {
 	W.Throttler = Throttler;	
 	
 	/*
+	 * Convenience URL methods
+	 */
+	var escapeParameter = function(text) 
+	{
+	    if (encodeURIComponent) 
+	    {
+	        return encodeURIComponent(text);
+	    } else 
+	    {
+	        return escape(text);
+	    }
+	}	
+	
+	var mapToUrlParameters = function(map)
+	{
+		var res = "";
+		for (key in map)
+		{
+			var value = map[key];
+			if (L.isString(value) || L.isNumber(value))
+			{
+				if (res.length > 0)
+				{
+					res += "&";
+				}
+				res += escapeParameter(key);
+				res += "=";
+				res += escapeParameter(value);
+			}
+			else if (L.isArray(value))
+			{
+				for (var i = 0; i < value.length; ++i)
+				{
+					var v = value[i];
+					if (L.isString(v) || L.isNumber(v))
+					{
+						if (res.length > 0)
+						{
+							res += "&";
+						}
+						res += escapeParameter(key);
+						res += "=";
+						res += escapeParameter(v);
+					}
+				}
+			}
+		}
+		return res;
+	}
+		
+	var appendMap = function(target, map)
+	{
+		var append = function(key, value)
+		{
+			var oldValue = target[key];
+			if (oldValue == null)
+			{
+				target[key] = value;
+			}
+			else if (L.isArray(oldValue))
+			{
+				oldValue.push(value);
+			}
+			else
+			{
+				target[key] = [ oldValue, value];
+			}				
+		}
+		
+		for (key in map)
+		{
+			var value = map[key];
+			
+			if (L.isArray(value))
+			{
+				for (var i = 0; i < value.length; ++i)
+				{
+					var v = value[i];
+					append(key, v);
+				}
+			}
+			else
+			{
+				append(key, value);
+			}			
+		}
+	}
+	
+	/*
 	 * AJAX
 	 */
 	
@@ -474,6 +563,7 @@ YUI().use('*', function(Y) {
 	 *                                        be multipart, false otherwise. Note that for multipart AJAX 
 	 *                                        requests a hidden IFRAME will be used and that can have 
 	 *                                        negative impact on error detection.
+	 *                                        (doesn't work with current YUI 3 PR1 release)
 	 *                                         
 	 *   t, requestTimeout       - Integer    Timeout in milliseconds for the AJAX request. This only 
 	 *                                        involves the actual communication and not the processing 
@@ -689,10 +779,83 @@ YUI().use('*', function(Y) {
 			}, this));
 		},
 		
+		success: function()
+		{
+			if (this.next != null)
+			{
+				this.invokeSuccessHandlers();				
+				this.next();
+				this.next = null;
+			}
+		},
+		
+		failure: function()
+		{
+			if (this.next != null)
+			{
+				this.invokeFailureHandlers();				
+				this.next();
+				this.next = null;
+			}
+		},
+		
+		defaultUrlParameters: function()
+		{
+			var a = this.attributes;
+			var componentId = (a.component == null) ? null : (Wicket.$(a.component).getAttribute("id"));
+			var res =
+			{
+				"wicket:componentId" : componentId,
+				"wicket:pageId" : a.pageId,
+				"wicket:formId" : a.formId,
+				"wicket:listenerInterface" : a.listenerInterface,
+				"wicket:behaviorIndex" : a.behaviorIndex				
+			};
+			return res;
+		},
+		
+		buildUrl: function() 
+		{
+			var url = W.ajax.getUrlPrefix();
+			var a = this.attributes;
+			
+			var params = new Object();
+			
+			if (a.urlArguments != null)
+			{				
+				appendMap(params, a.urlArguments);
+			}
+			for (var i = 0; i < a.urlArgumentMethods.length; ++i)
+			{
+				var m = a.urlArgumentMethods[i](this);
+				if (L.isObject(m))
+				{
+					appendMap(params, m);
+				}
+			}
+			
+			appendMap(params, this.defaultUrlParameters());
+			
+			var paramsString = mapToUrlParameters(params); 
+			
+			if (paramsString.length > 0)
+			{
+				url += "?";
+				url += paramsString;
+			}
+			
+			return url;
+		},
+		
 		execute: function(next)
 		{
-			this.invokeBeforeHandlers();
-			next();
+			this.invokeBeforeHandlers();			
+			this.next = next;
+
+			var url = this.buildUrl();
+			console.info(url);
+			
+			this.success();
 		}
 	};
 	
@@ -849,6 +1012,14 @@ YUI().use('*', function(Y) {
 		return true;
 	};
 	
+	var reqCount = 0;
+	
+	var timestampArgumentMethod = function(item)
+	{
+		var stamp = "" + (reqCount ++) + (Math.ceil(Math.random() * 10000));
+		return { "wicket:timestamp": stamp }; 
+	}
+	
 	var globalSettings = 
 	{
 		defaultRequestTimeout: 60000,
@@ -861,7 +1032,7 @@ YUI().use('*', function(Y) {
 		successHandlers: [],
 		errorHandlers: [],
 		urlPostProcessors: [],
-		urlArgumentMethods: []
+		urlArgumentMethods: [ timestampArgumentMethod ]		                     
 	};
 	
 	var Ajax = function() 
@@ -869,23 +1040,39 @@ YUI().use('*', function(Y) {
 		this.globalSettings = globalSettings;
 	};
 	
+	Ajax.prototype = 
+	{
+		getUrlPrefix: function()
+		{
+			return globalSettings.urlPrefix;
+		}
+	};
+	
 	W.ajax = new Ajax();
 
+	W.ajax.globalSettings.urlPrefix = "wicketfilter/ajax";
+	
 	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
 	
+	Y.on("event:ready", function() {
+	
+	
+		
 	var i = 0;
 	
 	var pre = function(item) { /*console.info("X", item); */ return true; };
-	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre});
+	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre, ua:{a:5} });
 	var y = new RequestQueue();
 	y.add(x);
 	y.add(x);
 	y.add(x);
 	y.add(x);
 	y.add(x);
-	y.add(x);
+	y.add(x);		
 	
-	WicketNG = W;		
+	}, window);
+	
+	WicketNG = W;
 	
 });
 	
