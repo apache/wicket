@@ -14,38 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.ajaxng;
 
-import org.apache.wicket.ajaxng.AjaxNGEventBehavior;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * @author matej
+ * @author Matej Knopp
  */
-public class TestPage1 extends WebPage
+public class AjaxNGEventBehavior extends AjaxNGBehavior
 {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct.
-	 */
-	public TestPage1()
+	private final String event;
+	
+	public AjaxNGEventBehavior(String event)
 	{
-		WebMarkupContainer c1 = new WebMarkupContainer("c1");
-		c1.add(new AjaxNGEventBehavior("click") {
-			
-		});
-		c1.add(new AjaxEventBehavior("click") {
-			/**
-			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
-			@Override
-			protected void onEvent(AjaxRequestTarget target)
-			{
-			}
-		});
+		this.event = event;
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
 		
-		add(c1);
+		StringBuilder js = new StringBuilder();
+		js.append(AjaxNGBehavior.JS_PREFIX + ".e('");
+		js.append(event);
+		js.append("',");
+		js.append(getAttributes());
+		js.append(")");
+		
+		response.renderOnDomReadyJavascript(js.toString());
 	}
 
 }

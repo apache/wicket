@@ -1085,6 +1085,7 @@ YUI().use('*', function(Y) {
 	var Ajax = function() 
 	{
 		this.globalSettings = globalSettings;
+		this.requestQueue = new RequestQueue();
 	};
 	
 	Ajax.prototype = 
@@ -1094,7 +1095,24 @@ YUI().use('*', function(Y) {
 	
 	W.ajax = new Ajax();
 
-	
+	W.e = function(event, attributes)
+	{
+		var element;
+		if (attributes.c == null)
+		{
+			element = window;
+		}
+		else
+		{
+			element = W.$(attributes.c);
+		}		
+		Y.on(event, function(event) {			
+			var item = new RequestQueueItem(attributes);
+			item.event = event;
+			W.ajax.requestQueue.add(item);
+		}, element);
+		element = null;
+	}
 	
 	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
 	
@@ -1102,10 +1120,10 @@ YUI().use('*', function(Y) {
 		
 	var i = 0;
 	
-	var pre = function(item) { /*console.info("X", item); */ return true; };
-	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre, ua:{a:5} });
-	var y = new RequestQueue();
-	y.add(x);
+//	var pre = function(item) { /*console.info("X", item); */ return true; };
+//	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre, ua:{a:5} });
+//	var y = new RequestQueue();
+//	y.add(x);
 //	y.add(x);
 //	y.add(x);
 //	y.add(x);

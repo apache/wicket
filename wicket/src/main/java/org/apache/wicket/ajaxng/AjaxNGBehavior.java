@@ -17,6 +17,7 @@
 package org.apache.wicket.ajaxng;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajaxng.request.AjaxNGRequestTarget;
@@ -26,8 +27,10 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
-import com.sun.jmx.remote.internal.ArrayNotificationBuffer;
 
+/**
+ * @author Matej Knopp
+ */
 public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 {
 
@@ -35,10 +38,12 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 
 	private Component component;
 	
+	/**
+	 * Construct.
+	 */
 	public AjaxNGBehavior()
 	{
 	}
-
 
 		
 	private final static ResourceReference YUI_BASE = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/yui-base/yui-base.js");
@@ -49,7 +54,7 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 	private final static ResourceReference YUI_IO = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/io/io.js");	
 	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(AjaxNGBehavior.class, "js/wicket-ajax-ng.js");
 
-	private final static String JS_PREFIX = "WicketNG";
+	public final static String JS_PREFIX = "WicketNG";
 	
 	public void renderHead(IHeaderResponse response)
 	{
@@ -110,8 +115,43 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 			throw new IllegalStateException("The behavior can be only bound to one component.");			
 		}
 		this.component = component;
+		component.setOutputMarkupId(true);
 	}
 
+	protected String getAttributes()
+	{
+		StringBuilder res = new StringBuilder();
+		
+		res.append("{");
+		
+		res.append("p:'");
+		Page page = component.getPage();
+		res.append(page.getNumericId());
+		if (page.getCurrentVersionNumber() != 0)
+		{
+			res.append(":");
+			res.append(page.getCurrentVersionNumber());
+		}
+		res.append("'");
+		
+		
+		if (component instanceof Page == false)
+		{
+			res.append(",c:'");
+			res.append(component.getMarkupId());
+			res.append("'");
+		}
+		
+		int behaviorIndex = component.getBehaviors().indexOf(this);
+		
+		res.append(",b:");
+		res.append(behaviorIndex);
+				
+		res.append("}");
+		
+		return res.toString();
+	}
+	
 	public void detach(Component component)
 	{
 	}

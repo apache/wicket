@@ -2,7 +2,7 @@
 	<head>
 	
 	</head>
-	<body onload="init();">
+	<body>
 		<div wicket:id="c1">
 			C1 DIV
 		</div>
@@ -16,40 +16,4 @@
 		
 	</body>	
 	
-	<script type="text/javascript">
-
-	for (var i = 0; i < 1000; ++i) {
-		var Y = WicketNG.Y;
-//		YUI().use('*', function(Y) {
-	//	});
-	}
-	
-	//YUI().use('*', function(Y) {
-	
-	var Y = WicketNG.Y;
-	
-		window.init = function()
-		{
-			var d = WicketNG.$("div1");
-			var E = Y.Event;
-
-			var f = function()
-			{
-				console.info("Clicked");
-			};
-
-			var t = new WicketNG.Throttler();
-			
-			//E.addListener(d, "click", function() { t.throttle("t1", 5000, f ); });
-			//WicketNG.Log.debug("D", d);		
-
-
-			E.addListener(d, "click", function() { window.setTimeout(function() { WicketNG.Log.debug("X"); }, 0) });
-			E.addListener(d, "click", function() { WicketNG.Log.debug("y"); });
-			E.addListener(d, "click", function() { WicketNG.Log.debug("z"); });
-			E.addListener(d, "click", function() { WicketNG.Log.debug("ww"); });
-		}
-		
-	//});
-	</script>
 </html>

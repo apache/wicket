@@ -35,6 +35,7 @@ public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 	
 	private Component getComponent(RequestParameters parameters)
 	{
+		return null;
 		//String page = parameters.getParameters().get(PARAM_PAGE_ID);
 	}
 
