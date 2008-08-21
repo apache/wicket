@@ -31,7 +31,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author frankbille
  */
-public class MockFormPage extends WebPage<Void>
+public class MockFormPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

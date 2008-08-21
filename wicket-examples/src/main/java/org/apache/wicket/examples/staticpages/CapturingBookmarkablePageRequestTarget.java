@@ -28,7 +28,7 @@ import org.apache.wicket.response.StringResponse;
  */
 public abstract class CapturingBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
 {
-	Class<? extends Page<?>> displayedPageClass;
+	Class<? extends Page> displayedPageClass;
 
 	/**
 	 * @see org.apache.wicket.request.target.component.BookmarkablePageRequestTarget#respond(org.apache.wicket.RequestCycle)
@@ -60,7 +60,7 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 * @param pageParameters
 	 *            the page parameters
 	 */
-	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTarget(
+	public <C extends Page, D extends Page> CapturingBookmarkablePageRequestTarget(
 		Class<C> capturedPageClass, Class<D> displayedPageClass, PageParameters pageParameters)
 	{
 		super(capturedPageClass, pageParameters);
@@ -78,7 +78,7 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 * @param displayedPageClass
 	 *            the bookmarkable page to display in the browser
 	 */
-	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTarget(
+	public <C extends Page, D extends Page> CapturingBookmarkablePageRequestTarget(
 		Class<C> capturedPageClass, Class<D> displayedPageClass)
 	{
 		super(capturedPageClass);

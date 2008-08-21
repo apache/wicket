@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class StatefulPage extends WebPage<Void>
+public class StatefulPage extends WebPage
 {
 	/** click count for Link. */
 	private int linkClickCount = 0;
@@ -41,11 +41,11 @@ public class StatefulPage extends WebPage<Void>
 	 */
 	public StatefulPage()
 	{
-		add(new Label<String>("message", new SessionModel()));
+		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
 
 		// Action link counts link clicks
-		final Link<?> actionLink = new Link<Void>("actionLink")
+		final Link actionLink = new Link("actionLink")
 		{
 			@Override
 			public void onClick()
@@ -54,12 +54,12 @@ public class StatefulPage extends WebPage<Void>
 			}
 		};
 		add(actionLink);
-		actionLink.add(new Label<Integer>("linkClickCount", new PropertyModel<Integer>(this,
+		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
 			"linkClickCount")));
 
 		final TextField<String> field = new TextField<String>("textfield", new Model<String>());
 
-		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
@@ -67,7 +67,7 @@ public class StatefulPage extends WebPage<Void>
 			@Override
 			protected void onSubmit()
 			{
-				info("Submitted text: " + field.getModelObject() + ", link click count: " +
+				info("Submitted text: " + field.getDefaultModelObject() + ", link click count: " +
 					linkClickCount);
 			}
 		};

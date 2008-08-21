@@ -32,13 +32,13 @@ import org.apache.wicket.extensions.wizard.WizardStep;
  * 
  * @author Eelco Hillenius
  */
-public class StaticWizardWithPanels extends Wizard<Void>
+public class StaticWizardWithPanels extends Wizard
 {
 
 	/**
 	 * The first step of this wizard.
 	 */
-	private static final class Step1 extends WizardStep<Void>
+	private static final class Step1 extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -52,7 +52,7 @@ public class StaticWizardWithPanels extends Wizard<Void>
 	/**
 	 * The second step of this wizard.
 	 */
-	private static final class Step2 extends WizardStep<Void>
+	private static final class Step2 extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -66,7 +66,7 @@ public class StaticWizardWithPanels extends Wizard<Void>
 	/**
 	 * The third step of this wizard.
 	 */
-	private static final class Step3 extends WizardStep<Void>
+	private static final class Step3 extends WizardStep
 	{
 		/**
 		 * Construct.

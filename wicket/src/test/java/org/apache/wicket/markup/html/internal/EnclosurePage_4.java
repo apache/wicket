@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * Mock page for testing.
  * 
  */
-public class EnclosurePage_4 extends WebPage<Void>
+public class EnclosurePage_4 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

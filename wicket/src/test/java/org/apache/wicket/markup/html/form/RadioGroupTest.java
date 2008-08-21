@@ -162,15 +162,15 @@ public class RadioGroupTest extends WicketTestCase
 		tester.getServletRequest().setParameter(group2.getInputName(), choice3.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
-				modelObject.getProp1(), choice1.getModelObject());
+				modelObject.getProp1(), choice1.getDefaultModelObject());
 		assertEquals(
 				"group2: running with choice3 selected - model must be set to value of radio1",
-				model.getObject(), choice3.getModelObject());
+				model.getObject(), choice3.getDefaultModelObject());
 
 		tester.getServletRequest().setParameter(group.getInputName(), choice2.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
-				modelObject.getProp1(), choice2.getModelObject());
+				modelObject.getProp1(), choice2.getDefaultModelObject());
 
 		tester.getServletRequest().setParameter(group2.getInputName(), choice1.getValue());
 		try

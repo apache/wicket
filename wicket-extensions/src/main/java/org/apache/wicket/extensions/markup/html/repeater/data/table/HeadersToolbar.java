@@ -31,7 +31,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class HeadersToolbar extends AbstractToolbar<Void>
+public class HeadersToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,24 +47,23 @@ public class HeadersToolbar extends AbstractToolbar<Void>
 	{
 		super(table);
 
-
-		RepeatingView<?> headers = new RepeatingView<Void>("headers");
+		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
 
 		final IColumn<?>[] columns = table.getColumns();
 		for (final IColumn<?> column : columns)
 		{
-			WebMarkupContainer<?> item = new WebMarkupContainer<Void>(headers.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
 			headers.add(item);
 
-			WebMarkupContainer<?> header = null;
+			WebMarkupContainer header = null;
 			if (column.isSortable())
 			{
 				header = newSortableHeader("header", column.getSortProperty(), stateLocator);
 			}
 			else
 			{
-				header = new WebMarkupContainer<Void>("header");
+				header = new WebMarkupContainer("header");
 			}
 
 			if (column instanceof IStyledColumn)
@@ -100,12 +99,11 @@ public class HeadersToolbar extends AbstractToolbar<Void>
 	 *            sort state locator
 	 * @return created header component
 	 */
-	protected WebMarkupContainer<?> newSortableHeader(String headerId, String property,
+	protected WebMarkupContainer newSortableHeader(String headerId, String property,
 		ISortStateLocator locator)
 	{
 		return new OrderByBorder(headerId, property, locator)
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -114,7 +112,6 @@ public class HeadersToolbar extends AbstractToolbar<Void>
 				getTable().setCurrentPage(0);
 			}
 		};
-
 	}
 
 }

@@ -33,7 +33,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Joshua Perlow
  */
-public class Captcha extends WicketExamplePage<Void>
+public class Captcha extends WicketExamplePage
 {
 	private final class CaptchaForm extends Form
 	{

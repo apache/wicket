@@ -24,7 +24,7 @@ import org.apache.wicket.examples.WicketExamplePage;
  * 
  * @param <T>
  */
-public abstract class ExamplePage<T> extends WicketExamplePage<T>
+public abstract class ExamplePage extends WicketExamplePage
 {
 	/**
 	 * Get downcast session object for easy access by subclasses

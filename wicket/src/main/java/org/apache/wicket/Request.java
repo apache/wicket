@@ -36,7 +36,7 @@ import org.apache.wicket.request.RequestParameters;
 public abstract class Request
 {
 	/** Any Page decoded for this request */
-	private Page<?> page;
+	private Page page;
 
 	/** the type safe request parameters object for this request. */
 	private RequestParameters requestParameters;
@@ -69,7 +69,7 @@ public abstract class Request
 	/**
 	 * @return Any Page for this request
 	 */
-	public Page<?> getPage()
+	public Page getPage()
 	{
 		return page;
 	}
@@ -201,7 +201,7 @@ public abstract class Request
 	 * @param page
 	 *            The Page for this request
 	 */
-	public void setPage(final Page<?> page)
+	public void setPage(final Page page)
 	{
 		this.page = page;
 	}

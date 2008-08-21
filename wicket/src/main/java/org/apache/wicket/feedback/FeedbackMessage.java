@@ -79,7 +79,7 @@ public class FeedbackMessage implements IClusterable
 	private final Serializable message;
 
 	/** The reporting component. */
-	private final Component< ? > reporter;
+	private final Component reporter;
 
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
@@ -90,13 +90,15 @@ public class FeedbackMessage implements IClusterable
 	 * @param reporter
 	 *            The message reporter
 	 * @param message
-	 *            The actual message
+	 *            The actual message. Must not be <code>null</code>.
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component< ? > reporter, final Serializable message,
+	public FeedbackMessage(final Component reporter, final Serializable message,
 		final int level)
 	{
+		if(message == null)
+			throw new IllegalArgumentException("Parameter message can't be null");
 		this.reporter = reporter;
 		this.message = message;
 		this.level = level;
@@ -158,7 +160,7 @@ public class FeedbackMessage implements IClusterable
 	 * 
 	 * @return the reporting component.
 	 */
-	public final Component< ? > getReporter()
+	public final Component getReporter()
 	{
 		return reporter;
 	}

@@ -56,7 +56,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator)
 	 */
 	@Override
-	protected WebMarkupContainer<?> newSortableHeader(String borderId, String property,
+	protected WebMarkupContainer newSortableHeader(String borderId, String property,
 		ISortStateLocator locator)
 	{
 		return new AjaxFallbackOrderByBorder(borderId, property, locator, getAjaxCallDecorator())

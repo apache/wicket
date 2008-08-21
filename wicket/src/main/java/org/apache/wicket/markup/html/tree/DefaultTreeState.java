@@ -160,6 +160,11 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		return Collections.unmodifiableList(new ArrayList<Object>(selectedNodes));
 	}
 
+	protected void removeSelectedNodeSilent(Object node)
+	{
+		selectedNodes.remove(node);
+	}
+
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#isAllowSelectMultiple()
 	 */

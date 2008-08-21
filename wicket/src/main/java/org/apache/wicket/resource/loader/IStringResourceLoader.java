@@ -77,5 +77,5 @@ public interface IStringResourceLoader
 	 *            The key should be a String containing a lookup key into a resource bundle
 	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
-	String loadStringResource(Component< ? > component, String key);
+	String loadStringResource(Component component, String key);
 }

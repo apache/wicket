@@ -36,7 +36,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class SmartLinkLabel<T> extends Label<T>
+public class SmartLinkLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class SmartLinkLabel<T> extends Label<T>
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, IModel<T> model)
+	public SmartLinkLabel(String name, IModel<?> model)
 	{
 		super(name, model);
 	}
@@ -67,12 +67,13 @@ public class SmartLinkLabel<T> extends Label<T>
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 * 	org.apache.wicket.markup.ComponentTag)
+	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, getSmartLink(getModelObjectAsString()));
+		replaceComponentTagBody(markupStream, openTag,
+			getSmartLink(getDefaultModelObjectAsString()));
 	}
 
 	protected ILinkParser getLinkParser()
@@ -84,7 +85,7 @@ public class SmartLinkLabel<T> extends Label<T>
 	 * Replace all email and URL addresses
 	 * 
 	 * @param text
-	 * 		Text to be modified
+	 *            Text to be modified
 	 * @return Modified Text
 	 */
 	protected final CharSequence getSmartLink(final CharSequence text)

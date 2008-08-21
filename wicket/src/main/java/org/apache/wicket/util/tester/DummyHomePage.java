@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Ingram Chen
  * @since 1.2.6
  */
-public class DummyHomePage extends WebPage<Object>
+public class DummyHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

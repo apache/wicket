@@ -38,7 +38,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class ChoicePage extends BasePage<Void>
+public class ChoicePage extends BasePage
 {
 	private String selectedMake;
 
@@ -99,7 +99,7 @@ public class ChoicePage extends BasePage<Void>
 
 		};
 
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form("form");
 		add(form);
 
 		final DropDownChoice<String> makes = new DropDownChoice<String>("makes",

@@ -84,7 +84,7 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  * 
  */
-public class TabbedPanel extends Panel<Integer>
+public class TabbedPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -95,6 +95,8 @@ public class TabbedPanel extends Panel<Integer>
 
 
 	private final List<ITab> tabs;
+
+	private transient Boolean[] tabsVisibilityCache;
 
 	/**
 	 * Constructor
@@ -126,7 +128,7 @@ public class TabbedPanel extends Panel<Integer>
 			}
 		};
 
-		WebMarkupContainer<?> tabsContainer = new WebMarkupContainer<Void>("tabs-container")
+		WebMarkupContainer tabsContainer = new WebMarkupContainer("tabs-container")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -150,7 +152,7 @@ public class TabbedPanel extends Panel<Integer>
 				final int index = item.getIteration();
 				final ITab tab = (TabbedPanel.this.tabs.get(index));
 
-				final WebMarkupContainer<?> titleLink = newLink("link", index);
+				final WebMarkupContainer titleLink = newLink("link", index);
 
 				titleLink.add(newTitle("title", tab.getTitle(), index));
 				item.add(titleLink);
@@ -199,7 +201,7 @@ public class TabbedPanel extends Panel<Integer>
 				}
 				tag.put("class", cssClass.trim());
 			}
-			
+
 			@Override
 			public boolean isVisible()
 			{
@@ -214,25 +216,34 @@ public class TabbedPanel extends Panel<Integer>
 	@Override
 	protected void onBeforeRender()
 	{
-		if (!hasBeenRendered() && getSelectedTab() == -1)
-        {
-            List<ITab> tabs = getTabs();
-            for (int i = 0; i < tabs.size(); ++i)
-            {
-                ITab tab = tabs.get(i);
-                if (tab.isVisible())
-                {
-                    setSelectedTab(i);
-                    break;
-                }
-            }
-            
-            if (tabs.size() == 0)
-            {
-            	add(new WebMarkupContainer<Void>(TAB_PANEL_ID)).setVisible(false);
-            }
-        }
-        super.onBeforeRender();
+		if (getSelectedTab() == -1 || isTabVisible(getSelectedTab()) == false)
+		{
+			// find first visible selected tab
+			int selected = 0;
+			for (int i = 0; i < tabs.size(); i++)
+			{
+				if (isTabVisible(i))
+				{
+					selected = i;
+					break;
+				}
+			}
+
+			if (selected == tabs.size())
+			{
+				/*
+				 * none of the tabs are selected...
+				 * 
+				 * we do not need to do anything special because the check in setSelectedTab() will
+				 * replace the current tab panel with an empty one
+				 */
+				selected = 0;
+			}
+
+			setSelectedTab(selected);
+		}
+
+		super.onBeforeRender();
 	}
 
 	/**
@@ -262,13 +273,11 @@ public class TabbedPanel extends Panel<Integer>
 	 *            model containing tab title
 	 * @param index
 	 *            index of tab
-	 * @param <S>
-	 *            the returned component's model object type
 	 * @return title component
 	 */
-	protected <S> Component<S> newTitle(String titleId, IModel<S> titleModel, int index)
+	protected Component newTitle(String titleId, IModel<?> titleModel, int index)
 	{
-		return new Label<S>(titleId, titleModel);
+		return new Label(titleId, titleModel);
 	}
 
 
@@ -302,14 +311,13 @@ public class TabbedPanel extends Panel<Integer>
 	 * @param linkId
 	 *            component id with which the link should be created
 	 * @param index
-	 *            index of the tab that should be activated when this link is clicked. See {@link
-	 *            #setSelectedTab(int)}.
-	 * @param <S>
+	 *            index of the tab that should be activated when this link is clicked. See
+	 *            {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(String linkId, final int index)
 	{
-		return new Link<S>(linkId)
+		return new Link(linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -330,28 +338,34 @@ public class TabbedPanel extends Panel<Integer>
 	 */
 	public void setSelectedTab(int index)
 	{
-		if (index < 0 || index >= tabs.size())
+		if (index < 0 || (index >= tabs.size() && index > 0))
 		{
 			throw new IndexOutOfBoundsException();
 		}
 
-		setModelObject(new Integer(index));
+		setDefaultModelObject(new Integer(index));
 
-		ITab tab = tabs.get(index);
+		final Component component;
 
-		final Component<?> component;
-		
-		if (tab.isVisible())		
-			component = tab.getPanel(TAB_PANEL_ID);
-		else
-			component = new WebMarkupContainer<Void>(TAB_PANEL_ID);
 
-		if (component == null)
+		if (tabs.size() == 0 || !isTabVisible(index))
 		{
-			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
-				getPath() + "] ITab index [" + index + "]");
-
+			// no tabs or the currently selected tab is not visible
+			component = new WebMarkupContainer(TAB_PANEL_ID);
 		}
+		else
+		{
+			// show panel from selected tab
+			ITab tab = tabs.get(index);
+			component = tab.getPanel(TAB_PANEL_ID);
+			if (component == null)
+			{
+				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
+					getPath() + "] ITab index [" + index + "]");
+
+			}
+		}
+
 
 		if (!component.getId().equals(TAB_PANEL_ID))
 		{
@@ -362,15 +376,7 @@ public class TabbedPanel extends Panel<Integer>
 					getPath() + "] ITab index [" + index + "]");
 		}
 
-
-		if (get(TAB_PANEL_ID) == null)
-		{
-			add(component);
-		}
-		else
-		{
-			replace(component);
-		}
+		addOrReplace(component);
 	}
 
 	/**
@@ -378,7 +384,30 @@ public class TabbedPanel extends Panel<Integer>
 	 */
 	public final int getSelectedTab()
 	{
-		return (getModelObject()).intValue();
+		return (Integer)getDefaultModelObject();
+	}
+
+	private boolean isTabVisible(int tabIndex)
+	{
+		if (tabsVisibilityCache == null)
+		{
+			tabsVisibilityCache = new Boolean[tabs.size()];
+		}
+
+		Boolean visible = tabsVisibilityCache[tabIndex];
+		if (visible == null)
+		{
+			visible = tabs.get(tabIndex).isVisible();
+			tabsVisibilityCache[tabIndex] = visible;
+		}
+		return visible;
+	}
+
+	@Override
+	protected void onDetach()
+	{
+		tabsVisibilityCache = null;
+		super.onDetach();
 	}
 
 }

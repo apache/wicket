@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePageLinkPage extends WicketExamplePage<Void>
+public class BookmarkablePageLinkPage extends WicketExamplePage
 {
 	/**
 	 * Constructor

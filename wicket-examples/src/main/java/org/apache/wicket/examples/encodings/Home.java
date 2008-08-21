@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public class Home extends WicketExamplePage<Void>
+public class Home extends WicketExamplePage
 {
 	private static final Log log = LogFactory.getLog(Home.class);
 
@@ -42,7 +42,7 @@ public class Home extends WicketExamplePage<Void>
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Label<String>("message", "Hello world! Test: ���"));
+		add(new Label("message", "Hello world! Test: ���"));
 	}
 
 	/**

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
  * 
  * @author Eelco Hillenius
  */
-public class MultiLineLabelPage extends WicketExamplePage<Void>
+public class MultiLineLabelPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -34,7 +34,7 @@ public class MultiLineLabelPage extends WicketExamplePage<Void>
 	{
 		String text = "\nThis is a line.\n" + "And this is another line.\n" + "End of lines.\n";
 
-		add(new MultiLineLabel<String>("multiLineLabel", text));
+		add(new MultiLineLabel("multiLineLabel", text));
 	}
 
 	/**

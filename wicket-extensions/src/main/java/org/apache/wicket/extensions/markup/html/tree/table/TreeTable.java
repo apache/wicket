@@ -81,7 +81,7 @@ public class TreeTable extends DefaultAbstractTree
 		public TreeFragment(String id, final TreeNode node, int level,
 			final IRenderNodeCallback renderNodeCallback)
 		{
-			super(id, "fragment");
+			super(id, "fragment", TreeTable.this);
 
 			add(newIndentation(this, "indent", node, level));
 
@@ -92,7 +92,7 @@ public class TreeTable extends DefaultAbstractTree
 
 			nodeLink.add(newNodeIcon(nodeLink, "icon", node));
 
-			nodeLink.add(new Label("label", new AbstractReadOnlyModel()
+			nodeLink.add(new Label("label", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -100,7 +100,7 @@ public class TreeTable extends DefaultAbstractTree
 				 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
 				 */
 				@Override
-				public Object getObject()
+				public String getObject()
 				{
 					return renderNodeCallback.renderNode(node);
 				}
@@ -303,7 +303,7 @@ public class TreeTable extends DefaultAbstractTree
 	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
-		final TreeNode node = (TreeNode)item.getModelObject();
+		final TreeNode node = (TreeNode)item.getDefaultModelObject();
 
 		// add side columns
 		SideColumnsView sideColumns = new SideColumnsView("sideColumns", node);

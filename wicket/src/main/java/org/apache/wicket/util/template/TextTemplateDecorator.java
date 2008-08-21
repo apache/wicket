@@ -178,15 +178,6 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
-	@Override
-	public long length()
-	{
-		return decorated.length();
-	}
-
-	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#setCharset(java.nio.charset.Charset)
 	 */
 	@Override

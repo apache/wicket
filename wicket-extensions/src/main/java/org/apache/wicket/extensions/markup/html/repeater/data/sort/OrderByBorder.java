@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class OrderByBorder extends Border<Void>
+public class OrderByBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 

@@ -28,8 +28,8 @@ import org.apache.wicket.response.StringResponse;
 public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy extends
 	BookmarkablePageRequestTargetUrlCodingStrategy
 {
-	Class<? extends Page<?>> capturedPageClass;
-	Class<? extends Page<?>> displayedPageClass;
+	Class<? extends Page> capturedPageClass;
+	Class<? extends Page> displayedPageClass;
 
 	/**
 	 * Construct.
@@ -41,7 +41,7 @@ public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy extends
 	 * @param capturedPageClass
 	 * @param displayedPageClass
 	 */
-	public <C extends Page<?>, D extends Page<?>> CapturingBookmarkablePageRequestTargetUrlCodingStrategy(
+	public <C extends Page, D extends Page> CapturingBookmarkablePageRequestTargetUrlCodingStrategy(
 		String mountPath, Class<C> capturedPageClass, Class<D> displayedPageClass)
 	{
 		super(mountPath, capturedPageClass, null);

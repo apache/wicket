@@ -29,7 +29,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class Home extends WebPage<Void>
+public final class Home extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +41,7 @@ public final class Home extends WebPage<Void>
 	 */
 	public Home(final PageParameters parameters)
 	{
+		add(new Image("logo"));
 		add(new Image("beer"));
 
 		// Add a couple of links to be able to play around with the session

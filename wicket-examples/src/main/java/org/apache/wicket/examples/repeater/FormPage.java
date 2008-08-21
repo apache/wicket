@@ -46,7 +46,7 @@ public class FormPage extends BasePage
 	 */
 	public FormPage()
 	{
-		form = new Form<Void>("form");
+		form = new Form("form");
 		add(form);
 
 		// create a repeater that will display the list of contacts.
@@ -111,7 +111,7 @@ public class FormPage extends BasePage
 	/**
 	 * Panel that houses row-actions
 	 */
-	private class ActionPanel extends Panel<Contact>
+	private class ActionPanel extends Panel
 	{
 		/**
 		 * @param id
@@ -122,21 +122,21 @@ public class FormPage extends BasePage
 		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link<Void>("select")
+			add(new Link("select")
 			{
 				@Override
 				public void onClick()
 				{
-					setSelected(ActionPanel.this.getModelObject());
+					setSelected((Contact)ActionPanel.this.getDefaultModelObject());
 				}
 			});
 
-			SubmitLink<?> removeLink = new SubmitLink<Void>("remove", form)
+			SubmitLink removeLink = new SubmitLink("remove", form)
 			{
 				@Override
 				public void onSubmit()
 				{
-					Contact contact = ActionPanel.this.getModelObject();
+					Contact contact = (Contact)ActionPanel.this.getDefaultModelObject();
 					info("Removed contact " + contact);
 					DatabaseLocator.getDatabase().delete(contact);
 				}

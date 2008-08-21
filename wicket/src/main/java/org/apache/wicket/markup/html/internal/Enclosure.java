@@ -75,19 +75,19 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @since 1.3
  */
-public class Enclosure extends WebMarkupContainer<Object>
+public class Enclosure extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(Enclosure.class);
 
 	/** The child component to delegate the isVisible() call to */
-	private Component< ? > childComponent;
+	private Component childComponent;
 
 	/** Id of the child component that will control visibility of the enclosure */
 	private final CharSequence childId;
 
-	private transient Map<Component< ? >, Boolean> originalVisibilityStatus;
+	private transient Map<Component, Boolean> originalVisibilityStatus;
 
 	/**
 	 * Construct.
@@ -116,11 +116,11 @@ public class Enclosure extends WebMarkupContainer<Object>
 	 * @param childId
 	 * @return Child Component
 	 */
-	public Component< ? > getChildComponent()
+	public Component getChildComponent()
 	{
 		if (childComponent == null)
 		{
-			MarkupContainer< ? > parent = getEnclosureParent();
+			MarkupContainer parent = getEnclosureParent();
 
 			if (childId == null)
 			{
@@ -128,7 +128,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
 			}
 
-			final Component< ? > child = parent.get(childId.toString());
+			final Component child = parent.get(childId.toString());
 			if (child == null)
 			{
 				throw new MarkupException(
@@ -145,9 +145,9 @@ public class Enclosure extends WebMarkupContainer<Object>
 	 * 
 	 * @return enclosure's parent markup container
 	 */
-	private MarkupContainer< ? > getEnclosureParent()
+	private MarkupContainer getEnclosureParent()
 	{
-		MarkupContainer< ? > parent = getParent();
+		MarkupContainer parent = getParent();
 		while (parent != null)
 		{
 			if (parent.isTransparentResolver())
@@ -180,7 +180,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		final Component< ? > controller = getChildComponent();
+		final Component controller = getChildComponent();
 		if (controller == this)
 		{
 			throw new WicketRuntimeException(
@@ -190,13 +190,13 @@ public class Enclosure extends WebMarkupContainer<Object>
 		setVisible(controller.determineVisibility());
 
 		// transfer visibility to direct children
-		originalVisibilityStatus = new HashMap<Component< ? >, Boolean>();
+		originalVisibilityStatus = new HashMap<Component, Boolean>();
 		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
-		MarkupContainer< ? > controllerParent = getEnclosureParent();
+		MarkupContainer controllerParent = getEnclosureParent();
 		while (it.hasNext())
 		{
 			ComponentTag t = it.next();
-			Component< ? > child = controllerParent.get(t.getId());
+			Component child = controllerParent.get(t.getId());
 			if (child != null)
 			{
 				// record original visiblity allowed value, will restore later
@@ -223,7 +223,7 @@ public class Enclosure extends WebMarkupContainer<Object>
 		if (originalVisibilityStatus != null)
 		{
 			// restore original visibility statuses
-			for (Map.Entry<Component< ? >, Boolean> entry : originalVisibilityStatus.entrySet())
+			for (Map.Entry<Component, Boolean> entry : originalVisibilityStatus.entrySet())
 			{
 				entry.getKey().setVisibilityAllowed(entry.getValue());
 			}

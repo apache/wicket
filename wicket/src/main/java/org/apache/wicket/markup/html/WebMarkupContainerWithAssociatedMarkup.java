@@ -25,10 +25,8 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  * 
- * @param <T>
- *            The model object type
  */
-public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T>
+public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	implements
 		IHeaderPartContainerProvider
 {
@@ -48,7 +46,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<T> model)
+	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}

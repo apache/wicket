@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.extensions.validation.validator;
 
-import java.util.regex.Matcher;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.Validatable;
 
 /**
  * Test that it really validates RFC valid email addresses.
@@ -32,8 +33,7 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	 */
 	public void testValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressValidator validator = RfcCompliantEmailAddressValidator
-				.getInstance();
+		IValidator validator = RfcCompliantEmailAddressValidator.getInstance();
 
 		String[] validEmails = new String[] { "bill.gates@gmail.com",
 				"firstname.middlename@lastname.dk", "buy@something.nu", "user@post.inet.tele.dk",
@@ -42,10 +42,9 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 		for (int i = 0; i < validEmails.length; i++)
 		{
 			String emailAddress = validEmails[i];
-
-			Matcher matcher = validator.getPattern().matcher(emailAddress);
-
-			assertTrue(emailAddress + " wasn't valid but should be", matcher.matches());
+			Validatable validatable = new Validatable(emailAddress);
+			validator.validate(validatable);
+			assertTrue(emailAddress + " wasn't valid but should be", validatable.isValid());
 		}
 	}
 
@@ -55,19 +54,18 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	 */
 	public void testInValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressValidator validator = RfcCompliantEmailAddressValidator
-				.getInstance();
+		IValidator validator = RfcCompliantEmailAddressValidator.getInstance();
 
 		String[] inValidEmails = new String[] { "whatever", "dont.end.in.a.dot.@gmail.com",
-				".dot.in.the.beginning.is.not.good@wicketframework.org" };
+				".dot.in.the.beginning.is.not.good@wicketframework.org", " space@front.com",
+				"space@back.com ", "\ttab@front.com", "tab@back.com\t" };
 
 		for (int i = 0; i < inValidEmails.length; i++)
 		{
 			String emailAddress = inValidEmails[i];
-
-			Matcher matcher = validator.getPattern().matcher(emailAddress);
-
-			assertFalse(emailAddress + " was valid but shouldn't be", matcher.matches());
+			Validatable validatable = new Validatable(emailAddress);
+			validator.validate(validatable);
+			assertFalse(emailAddress + " was valid but shouldn't be", validatable.isValid());
 		}
 	}
 }

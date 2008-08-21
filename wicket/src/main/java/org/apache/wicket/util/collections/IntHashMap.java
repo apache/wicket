@@ -215,7 +215,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         contains no mapping for this key.
 	 * @see #put(int, Object)
 	 */
-	public Object get(int key)
+	public V get(int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry<V> e = table[i];
@@ -223,7 +223,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		{
 			if (e == null)
 			{
-				return e;
+				return null;
 			}
 			if (key == e.key)
 			{
@@ -285,7 +285,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         mapping for key. A <tt>null</tt> return can also indicate that the HashMap
 	 *         previously associated <tt>null</tt> with the specified key.
 	 */
-	public Object put(int key, V value)
+	public V put(int key, V value)
 	{
 		int i = indexFor(key, table.length);
 
@@ -456,10 +456,10 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         mapping for key. A <tt>null</tt> return can also indicate that the map previously
 	 *         associated <tt>null</tt> with the specified key.
 	 */
-	public Object remove(int key)
+	public V remove(int key)
 	{
 		Entry<V> e = removeEntryForKey(key);
-		return (e == null ? e : e.value);
+		return (e == null ? null : e.value);
 	}
 
 	/**

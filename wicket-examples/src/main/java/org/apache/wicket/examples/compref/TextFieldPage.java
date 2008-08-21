@@ -29,7 +29,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextFieldPage extends WicketExamplePage<TextFieldPage.Input>
+public class TextFieldPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -50,14 +50,14 @@ public class TextFieldPage extends WicketExamplePage<TextFieldPage.Input>
 		// property model's actual object is an instance of 'Input', it will map
 		// to
 		// Input's 'text' property.
-		setModel(new CompoundPropertyModel<Input>(input));
+		setDefaultModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -100,7 +100,7 @@ public class TextFieldPage extends WicketExamplePage<TextFieldPage.Input>
 	/**
 	 * Simple data class that acts as a holder for the data for the input fields.
 	 */
-	public static class Input implements IClusterable
+	private static class Input implements IClusterable
 	{
 		// Normally we would have played nice and made it a proper JavaBean with
 		// getters and

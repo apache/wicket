@@ -26,7 +26,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
  * 
  * @author Eelco Hillenius
  */
-public class AlternativePageFromWebContext extends WicketExamplePage<Void>
+public class AlternativePageFromWebContext extends WicketExamplePage
 {
 	/**
 	 * Constructor

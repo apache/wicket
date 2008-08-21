@@ -74,11 +74,9 @@ import org.apache.wicket.model.Model;
  * 
  * </p>
  * 
- * @param <T>
- * 
  * @author Eelco Hillenius
  */
-public class WizardStep<T> extends Panel<T> implements IWizardStep
+public class WizardStep extends Panel implements IWizardStep
 {
 	/**
 	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know at construction time
@@ -93,7 +91,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 
 		void execute()
 		{
-			Form< ? > form = findParent(Form.class);
+			Form<?> form = findParent(Form.class);
 			form.add(formValidatorWrapper);
 		}
 	}
@@ -123,14 +121,14 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 		/**
 		 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
 		 */
-		public FormComponent< ? >[] getDependentFormComponents()
+		public FormComponent<?>[] getDependentFormComponents()
 		{
 			if (isActiveStep())
 			{
-				Set<Component< ? >> components = new HashSet<Component< ? >>();
+				Set<Component> components = new HashSet<Component>();
 				for (IFormValidator v : validators)
 				{
-					FormComponent< ? >[] dependentComponents = v.getDependentFormComponents();
+					FormComponent<?>[] dependentComponents = v.getDependentFormComponents();
 					if (dependentComponents != null)
 					{
 						int len = dependentComponents.length;
@@ -148,7 +146,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 		/**
 		 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#validate(org.apache.wicket.markup.html.form.Form)
 		 */
-		public void validate(Form< ? > form)
+		public void validate(Form<?> form)
 		{
 			if (isActiveStep())
 			{
@@ -171,7 +169,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 	/**
 	 * Default header for wizards.
 	 */
-	private final class Header extends Panel<IWizard>
+	private final class Header extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -186,8 +184,8 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 		public Header(final String id, final IWizard wizard)
 		{
 			super(id);
-			setModel(new CompoundPropertyModel<IWizard>(wizard));
-			add(new Label<String>("title", new AbstractReadOnlyModel<String>()
+			setDefaultModel(new CompoundPropertyModel<IWizard>(wizard));
+			add(new Label("title", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -197,7 +195,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 					return getTitle();
 				}
 			}).setEscapeModelStrings(false));
-			add(new Label<String>("summary", new AbstractReadOnlyModel<String>()
+			add(new Label("summary", new AbstractReadOnlyModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -271,7 +269,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(IModel<String> title, IModel<String> summary, IModel<T> model)
+	public WizardStep(IModel<String> title, IModel<String> summary, IModel<?> model)
 	{
 		super(Wizard.VIEW_ID, model);
 
@@ -304,7 +302,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(String title, String summary, IModel<T> model)
+	public WizardStep(String title, String summary, IModel<?> model)
 	{
 		this(new Model<String>(title), new Model<String>(summary), model);
 	}
@@ -334,7 +332,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component< ? > getHeader(String id, Component< ? > parent, IWizard wizard)
+	public Component getHeader(String id, Component parent, IWizard wizard)
 	{
 		return new Header(id, wizard);
 	}
@@ -365,7 +363,7 @@ public class WizardStep<T> extends Panel<T> implements IWizardStep
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component< ? > getView(String id, Component< ? > parent, IWizard wizard)
+	public Component getView(String id, Component parent, IWizard wizard)
 	{
 		return this;
 	}

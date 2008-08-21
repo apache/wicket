@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Just a totally do nothing page; has to be here to have any page at all for the CookieTest.
  */
-public class MockPage extends WebPage<Void>
+public class MockPage extends WebPage
 {
 
 	/**

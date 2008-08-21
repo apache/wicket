@@ -31,11 +31,8 @@ import org.apache.wicket.util.string.Strings;
  * for sequences of more than one newline.
  * 
  * @author Jonathan Locke
- * 
- * @param <T>
- *            Model object type
  */
-public class MultiLineLabel<T> extends WebComponent<T>
+public class MultiLineLabel extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -70,7 +67,7 @@ public class MultiLineLabel<T> extends WebComponent<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(final String id, IModel<T> model)
+	public MultiLineLabel(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -81,7 +78,7 @@ public class MultiLineLabel<T> extends WebComponent<T>
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
+		final CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);
 	}
 }

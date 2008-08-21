@@ -38,7 +38,7 @@ public class SetResponsePageTest extends WicketTestCase
 	}
 
 	/** first page, redirects to page 2. */
-	public static class Page1 extends WebPage<Void>
+	public static class Page1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class SetResponsePageTest extends WicketTestCase
 	}
 
 	/** second page, redirects to page 3. */
-	public static class Page2 extends WebPage<Void>
+	public static class Page2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -62,7 +62,7 @@ public class SetResponsePageTest extends WicketTestCase
 	}
 
 	/** final target page. */
-	public static class Page3 extends WebPage<Void>
+	public static class Page3 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 

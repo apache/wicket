@@ -106,15 +106,13 @@ public abstract class AbstractCalendar extends WebComponent
 			contributeDependencies();
 		}
 
-		add(new StringHeaderContributor(new LoadableDetachableModel()
+		add(new StringHeaderContributor(new LoadableDetachableModel<CharSequence>()
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Object load()
+			protected CharSequence load()
 			{
-
 				// not pretty to look at, but cheaper than using a template
 				String markupId = AbstractCalendar.this.getMarkupId();
 				String javascriptId = getJavascriptId();
@@ -138,9 +136,9 @@ public abstract class AbstractCalendar extends WebComponent
 				Properties p = new Properties();
 				configureWidgetProperties(p);
 				b.append("\", { ");
-				for (Iterator i = p.entrySet().iterator(); i.hasNext();)
+				for (Iterator<Entry<Object, Object>> i = p.entrySet().iterator(); i.hasNext();)
 				{
-					Entry entry = (Entry)i.next();
+					Entry<Object, Object> entry = i.next();
 					b.append(entry.getKey());
 					Object value = entry.getValue();
 					if (value instanceof CharSequence)
@@ -264,7 +262,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void configureWidgetProperties(Map widgetProperties)
+	protected void configureWidgetProperties(Map<Object, Object> widgetProperties)
 	{
 	}
 }

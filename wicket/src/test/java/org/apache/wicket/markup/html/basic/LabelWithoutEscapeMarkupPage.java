@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-public class LabelWithoutEscapeMarkupPage extends WebPage<Void>
+public class LabelWithoutEscapeMarkupPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

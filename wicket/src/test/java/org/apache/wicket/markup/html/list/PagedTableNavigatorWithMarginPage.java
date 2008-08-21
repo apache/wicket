@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTableNavigatorWithMarginPage extends WebPage<Void>
+public class PagedTableNavigatorWithMarginPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +62,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage<Void>
 
 			protected void populateItem(ListItem listItem)
 			{
-				String txt = (String)listItem.getModelObject();
+				String txt = (String)listItem.getDefaultModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		};

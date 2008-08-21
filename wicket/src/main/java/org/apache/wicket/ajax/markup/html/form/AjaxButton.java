@@ -31,11 +31,8 @@ import org.apache.wicket.util.string.Strings;
  * @since 1.3
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
- * @param <T>
- *            The model object type
  */
-public abstract class AjaxButton<T> extends Button<T>
+public abstract class AjaxButton extends Button
 {
 	private static final long serialVersionUID = 1L;
 

@@ -22,22 +22,21 @@ import org.apache.wicket.Page;
 import org.apache.wicket.version.undo.Change;
 
 /**
- * An interface that manages versions of a <code>Page</code>. Initially a page has a version
- * number of 0, indicating that it is in its original state. When one or more changes are made to
- * the page, we arrive at version 1.
+ * An interface that manages versions of a <code>Page</code>. Initially a page has a version number
+ * of 0, indicating that it is in its original state. When one or more changes are made to the page,
+ * we arrive at version 1.
  * <p>
  * During a <code>RequestCycle</code>, just before a change is about to occur, the
  * <code>beginVersion</code> method is called, followed by one or more calls to
- * <code>componentAdded</code>, <code>componentRemoved</code> or
- * <code>componentModelChanging</code>. If <code>beginVersion</code> is called by the framework
- * during a given request cycle, a balancing call to <code>endVersion</code> will occur at the end
- * of the request cycle. However, if no changes occur to a page during a request cycle, none of
- * these methods will be called.
+ * <code>componentAdded</code>, <code>componentRemoved</code> or <code>componentModelChanging</code>
+ * . If <code>beginVersion</code> is called by the framework during a given request cycle, a
+ * balancing call to <code>endVersion</code> will occur at the end of the request cycle. However, if
+ * no changes occur to a page during a request cycle, none of these methods will be called.
  * <p>
- * Once version information has been added to a page version manager (<code>IPageVersionManager</code>),
- * versions can be retrieved by number using the <code>getVersion(int)</code> method. Since
- * version 0 is the first version of a page, calling <code>getVersion(0)</code> will retrieve that
- * version.
+ * Once version information has been added to a page version manager (
+ * <code>IPageVersionManager</code>), versions can be retrieved by number using the
+ * <code>getVersion(int)</code> method. Since version 0 is the first version of a page, calling
+ * <code>getVersion(0)</code> will retrieve that version.
  * <p>
  * The current version number of a page (that is, the number of the newest available version) can be
  * retrieved by calling <code>getCurrentVersionNumber</code>.
@@ -47,7 +46,7 @@ import org.apache.wicket.version.undo.Change;
  *            type of page
  * @since 1.2.6
  */
-public interface IPageVersionManager<T> extends IClusterable
+public interface IPageVersionManager extends IClusterable
 {
 	/**
 	 * Called when changes are immediately impending to the <code>Page</code> being managed. The
@@ -68,7 +67,7 @@ public interface IPageVersionManager<T> extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was added
 	 */
-	void componentAdded(Component<?> component);
+	void componentAdded(Component component);
 
 	/**
 	 * Indicates that the model for the given <code>Component</code> is about to change.
@@ -76,7 +75,7 @@ public interface IPageVersionManager<T> extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> whose model is about to change
 	 */
-	void componentModelChanging(Component<?> component);
+	void componentModelChanging(Component component);
 
 	/**
 	 * Indicates an internal state for the given <code>Component</code> is about to change.
@@ -92,7 +91,7 @@ public interface IPageVersionManager<T> extends IClusterable
 	 * @param component
 	 *            the <code>Component</code> that was removed
 	 */
-	void componentRemoved(Component<?> component);
+	void componentRemoved(Component component);
 
 	/**
 	 * Called when changes to the <code>Page</code> have ended.
@@ -109,16 +108,14 @@ public interface IPageVersionManager<T> extends IClusterable
 	void expireOldestVersion();
 
 	/**
-	 * Retrieves a given <code>Page</code> version. This method does not include the Ajax
-	 * versions.
+	 * Retrieves a given <code>Page</code> version. This method does not include the Ajax versions.
 	 * 
 	 * 
 	 * @param versionNumber
 	 *            the version of the page to get
-	 * @return the <code>Page</code>, or <code>null</code> if the version requested is not
-	 *         available
+	 * @return the <code>Page</code>, or <code>null</code> if the version requested is not available
 	 */
-	Page<T> getVersion(int versionNumber);
+	Page getVersion(int versionNumber);
 
 
 	/**
@@ -130,7 +127,7 @@ public interface IPageVersionManager<T> extends IClusterable
 	 *            the number of versions to roll back
 	 * @return the rolled-back <code>Page</code>
 	 */
-	Page<T> rollbackPage(int numberOfVersions);
+	Page rollbackPage(int numberOfVersions);
 
 	/**
 	 * Retrieves the number of versions stored in this page version manager.

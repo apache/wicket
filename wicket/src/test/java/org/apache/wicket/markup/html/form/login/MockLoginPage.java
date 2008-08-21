@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author marrink
  */
-public class MockLoginPage extends WebPage<Void>
+public class MockLoginPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class MockLoginPage extends WebPage<Void>
 			@Override
 			protected void onSubmit()
 			{
-				login(get("username").getModelObjectAsString().toString());
+				login(get("username").getDefaultModelObjectAsString().toString());
 			}
 		});
 		form.add(textField = new TextField("username", new Model()));

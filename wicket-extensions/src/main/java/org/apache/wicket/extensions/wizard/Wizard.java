@@ -44,12 +44,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  * components you want yourself using methods like {@link #newButtonBar(String)} et-cetera.
  * </p>
  * 
- * @param <T>
- *            The model object type
- * 
  * @author Eelco Hillenius
  */
-public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
+public class Wizard extends Panel implements IWizardModelListener, IWizard
 {
 	/** Component id of the buttons panel as used by the default wizard panel. */
 	public static final String BUTTONS_ID = "buttons";
@@ -77,7 +74,7 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	/**
 	 * The form in which the view is nested, and on which the wizard buttons work.
 	 */
-	private Form< ? > form;
+	private Form<?> form;
 
 	/** The wizard model. */
 	private IWizardModel wizardModel;
@@ -192,7 +189,7 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	 * 
 	 * @return The wizard form
 	 */
-	public Form< ? > getForm()
+	public Form<?> getForm()
 	{
 		return form;
 	}
@@ -262,10 +259,10 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 		form = newForm(FORM_ID);
 		addOrReplace(form);
 		// dummy view to be replaced
-		form.addOrReplace(new WebMarkupContainer<Void>(HEADER_ID));
+		form.addOrReplace(new WebMarkupContainer(HEADER_ID));
 		form.addOrReplace(newFeedbackPanel(FEEDBACK_ID));
 		// add dummy view; will be replaced on initialization
-		form.addOrReplace(new WebMarkupContainer<Void>(VIEW_ID));
+		form.addOrReplace(new WebMarkupContainer(VIEW_ID));
 		form.addOrReplace(newButtonBar(BUTTONS_ID));
 		form.addOrReplace(newOverviewBar(OVERVIEW_ID));
 
@@ -292,7 +289,7 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new button bar
 	 */
-	protected Component< ? > newButtonBar(String id)
+	protected Component newButtonBar(String id)
 	{
 		return new WizardButtonBar(id, this);
 	}
@@ -330,7 +327,7 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		Component< ? > buttonBar = form.get(BUTTONS_ID);
+		Component buttonBar = form.get(BUTTONS_ID);
 		if (buttonBar instanceof IDefaultButtonProvider)
 		{
 			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar).getDefaultButton(wizardModel);
@@ -341,18 +338,15 @@ public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 	/**
 	 * Create a new overview bar. Clients can override this method to provide a custom bar.
 	 * 
-	 * @param <E>
-	 *            The overview bar's model object type
-	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * 
 	 * @return A new overview bar
 	 */
-	protected <E> Component<E> newOverviewBar(String id)
+	protected Component newOverviewBar(String id)
 	{
 		// return a dummy component by default as we don't have an overview
 		// component
-		return new WebMarkupContainer<E>(id).setVisible(false);
+		return new WebMarkupContainer(id).setVisible(false);
 	}
 }

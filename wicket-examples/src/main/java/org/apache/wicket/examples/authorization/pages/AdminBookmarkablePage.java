@@ -23,7 +23,7 @@ import org.apache.wicket.examples.authorization.BasePage;
  * 
  * @author Eelco Hillenius
  */
-public class AdminBookmarkablePage extends BasePage<Void>
+public class AdminBookmarkablePage extends BasePage
 {
 	/*
 	 * See for configuration of this class the {@link RolesApplication#init)

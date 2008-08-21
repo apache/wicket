@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.form.select;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -40,10 +41,10 @@ import org.apache.wicket.model.Model;
  * &lt;/code&gt;
  * </pre>
  * 
+ * @param <T>
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
-public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
+public class SelectOptions<T> extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 	private boolean recreateChoices = false;
@@ -71,9 +72,11 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 	 * @param elements
 	 * @param renderer
 	 */
+	@SuppressWarnings("unchecked")
 	public SelectOptions(String id, Collection<? extends T> elements, IOptionRenderer<T> renderer)
 	{
-		this(id, new Model((Serializable)elements), renderer);
+		this(id, new Model((elements instanceof Serializable) ? (Serializable)elements
+			: new ArrayList<T>(elements)), renderer);
 	}
 
 	/**
@@ -91,6 +94,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected final void onPopulate()
 	{
@@ -99,7 +103,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 			// populate this repeating view with SelectOption components
 			removeAll();
 
-			Collection<? extends T> modelObject = getModelObject();
+			Collection<? extends T> modelObject = (Collection<? extends T>)getDefaultModelObject();
 
 			if (modelObject != null)
 			{
@@ -115,7 +119,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 				while (it.hasNext())
 				{
 					// we need a container to represent a row in repeater
-					WebMarkupContainer<?> row = new WebMarkupContainer<Void>(newChildId());
+					WebMarkupContainer row = new WebMarkupContainer(newChildId());
 					row.setRenderBodyOnly(true);
 					add(row);
 
@@ -142,7 +146,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 		return new SimpleSelectOption<T>("option", model, text);
 	}
 
-	private static class SimpleSelectOption<S> extends SelectOption<S>
+	private static class SimpleSelectOption<V> extends SelectOption<V>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -153,7 +157,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<? extends T>>
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(String id, IModel<S> model, String text)
+		public SimpleSelectOption(String id, IModel<V> model, String text)
 		{
 			super(id, model);
 			this.text = text;

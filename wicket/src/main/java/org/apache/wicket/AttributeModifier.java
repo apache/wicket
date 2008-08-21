@@ -85,7 +85,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	private final String pattern;
 
 	/** The model that is to be used for the replacement. */
-	private final IModel< ? > replaceModel;
+	private final IModel<?> replaceModel;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model to replace with. The
@@ -99,7 +99,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-		final IModel< ? > replaceModel)
+		final IModel<?> replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
 	}
@@ -113,7 +113,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final IModel< ? > replaceModel)
+	public AttributeModifier(final String attribute, final IModel<?> replaceModel)
 	{
 		this(attribute, null, false, replaceModel);
 	}
@@ -135,7 +135,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-		final boolean addAttributeIfNotPresent, final IModel< ? > replaceModel)
+		final boolean addAttributeIfNotPresent, final IModel<?> replaceModel)
 	{
 		if (attribute == null)
 		{
@@ -162,7 +162,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-		final IModel< ? > replaceModel)
+		final IModel<?> replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
 	}
@@ -176,7 +176,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            the model that initiates the detachment
 	 */
 	@Override
-	public final void detach(Component< ? > component)
+	public final void detach(Component component)
 	{
 		if (replaceModel != null)
 		{
@@ -226,7 +226,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
 	 */
 	@Override
-	public boolean isEnabled(Component< ? > component)
+	public boolean isEnabled(Component component)
 	{
 		return enabled;
 	}
@@ -236,11 +236,11 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public final void onComponentTag(Component< ? > component, ComponentTag tag)
+	public final void onComponentTag(Component component, ComponentTag tag)
 	{
 		if (tag.getType() != XmlTag.CLOSE)
 		{
-			replaceAttibuteValue(component, tag);
+			replaceAttributeValue(component, tag);
 		}
 	}
 
@@ -253,8 +253,26 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 *            The component
 	 * @param tag
 	 *            The tag to replace the attribute value for
+	 * 
+	 * @deprecated see {@link #replaceAttributeValue(Component, ComponentTag)}
 	 */
-	public final void replaceAttibuteValue(final Component< ? > component, final ComponentTag tag)
+	@Deprecated
+	public void replaceAttibuteValue(final Component component, final ComponentTag tag)
+	{
+		replaceAttributeValue(component, tag);
+	}
+
+	/**
+	 * Checks the given component tag for an instance of the attribute to modify and if all criteria
+	 * are met then replace the value of this attribute with the value of the contained model
+	 * object.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param tag
+	 *            The tag to replace the attribute value for
+	 */
+	public final void replaceAttributeValue(final Component component, final ComponentTag tag)
 	{
 		if (isEnabled(component))
 		{
@@ -350,9 +368,9 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @param component
 	 * @return
 	 */
-	private Object getReplacementOrNull(final Component< ? > component)
+	private Object getReplacementOrNull(final Component component)
 	{
-		IModel< ? > model = replaceModel;
+		IModel<?> model = replaceModel;
 		if (model instanceof IComponentAssignedModel)
 		{
 			model = ((IComponentAssignedModel)model).wrapOnAssignment(component);
@@ -376,7 +394,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * 
 	 * @return the replace model of this attribute modifier
 	 */
-	protected final IModel< ? > getReplaceModel()
+	protected final IModel<?> getReplaceModel()
 	{
 		return replaceModel;
 	}

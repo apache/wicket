@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 /**
  * @author jcompagner
  */
-public class FeedbackIndicatorFormPage extends WebPage<Void>
+public class FeedbackIndicatorFormPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

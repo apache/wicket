@@ -44,7 +44,7 @@ public interface IApplicationSettings
 	 * @return Returns the accessDeniedPage.
 	 * @see IApplicationSettings#setAccessDeniedPage(Class)
 	 */
-	Class<? extends Page<?>> getAccessDeniedPage();
+	Class<? extends Page> getAccessDeniedPage();
 
 	/**
 	 * Gets the default resolver to use when finding classes and resources
@@ -67,7 +67,7 @@ public interface IApplicationSettings
 	 * @return Returns the internalErrorPage.
 	 * @see IApplicationSettings#setInternalErrorPage(Class)
 	 */
-	Class<? extends Page<?>> getInternalErrorPage();
+	Class<? extends Page> getInternalErrorPage();
 
 	/**
 	 * Gets the page expired page class.
@@ -75,7 +75,7 @@ public interface IApplicationSettings
 	 * @return Returns the pageExpiredErrorPage.
 	 * @see IApplicationSettings#setPageExpiredErrorPage(Class)
 	 */
-	Class<? extends Page<?>> getPageExpiredErrorPage();
+	Class<? extends Page> getPageExpiredErrorPage();
 
 	/**
 	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
@@ -85,7 +85,7 @@ public interface IApplicationSettings
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
 	 */
-	<C extends Page<?>> void setAccessDeniedPage(final Class<C> accessDeniedPage);
+	<C extends Page> void setAccessDeniedPage(final Class<C> accessDeniedPage);
 
 	/**
 	 * Sets the default class resolver to use when finding classes and resources
@@ -112,7 +112,7 @@ public interface IApplicationSettings
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
 	 */
-	<C extends Page<?>> void setInternalErrorPage(final Class<C> internalErrorPage);
+	<C extends Page> void setInternalErrorPage(final Class<C> internalErrorPage);
 
 	/**
 	 * Sets the page expired page class. The class must be bookmarkable and must extend Page.
@@ -122,5 +122,5 @@ public interface IApplicationSettings
 	 * @param pageExpiredErrorPage
 	 *            The pageExpiredErrorPage to set.
 	 */
-	<C extends Page<?>> void setPageExpiredErrorPage(final Class<C> pageExpiredErrorPage);
+	<C extends Page> void setPageExpiredErrorPage(final Class<C> pageExpiredErrorPage);
 }

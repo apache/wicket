@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -104,7 +105,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			Field[] currentFields = current.getDeclaredFields();
 			for (final Field field : currentFields)
 			{
-				if (field.getAnnotation(Inject.class) != null)
+				if (!Modifier.isStatic(field.getModifiers()) &&
+						field.getAnnotation(Inject.class) != null)
 				{
 					try
 					{
@@ -136,7 +138,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			Method[] currentMethods = current.getDeclaredMethods();
 			for (final Method method : currentMethods)
 			{
-				if (method.getAnnotation(Inject.class) != null)
+				if (!Modifier.isStatic(method.getModifiers()) &&
+						method.getAnnotation(Inject.class) != null)
 				{
 					Annotation[][] paramAnnotations = method.getParameterAnnotations();
 					Class< ? >[] paramTypes = method.getParameterTypes();
@@ -188,7 +191,7 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		while (current != null && current != Object.class);
 	}
 
-	public void onInstantiation(Component< ? > component)
+	public void onInstantiation(Component component)
 	{
 		inject(component);
 	}

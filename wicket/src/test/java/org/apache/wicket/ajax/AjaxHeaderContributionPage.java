@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class AjaxHeaderContributionPage extends WebPage<Void>
+public class AjaxHeaderContributionPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,13 +32,13 @@ public class AjaxHeaderContributionPage extends WebPage<Void>
 	 */
 	public AjaxHeaderContributionPage()
 	{
-		final Component<?> test1 = new AjaxHeaderContribution("test1").setOutputMarkupId(true);
+		final Component test1 = new AjaxHeaderContribution("test1").setOutputMarkupId(true);
 		add(test1);
-		final Component<?> test2 = new AjaxHeaderContribution("test2").setOutputMarkupId(true);
+		final Component test2 = new AjaxHeaderContribution("test2").setOutputMarkupId(true);
 		add(test2);
-		final Component<?> test3 = new AjaxHeaderContribution("test3").setOutputMarkupId(true);
+		final Component test3 = new AjaxHeaderContribution("test3").setOutputMarkupId(true);
 		add(test3);
-		add(new AjaxFallbackLink<Void>("link")
+		add(new AjaxFallbackLink("link")
 		{
 			private static final long serialVersionUID = 1L;
 

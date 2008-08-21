@@ -27,7 +27,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Juergen Donnerstag
  */
-public class CreateBook extends WebPage<Void>
+public class CreateBook extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

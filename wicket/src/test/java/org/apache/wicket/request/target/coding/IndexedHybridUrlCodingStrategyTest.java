@@ -36,7 +36,7 @@ public class IndexedHybridUrlCodingStrategyTest extends TestCase
 	/**
 	 * 
 	 */
-	public static class TestPage extends WebPage<Void>
+	public static class TestPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class IndexedHybridUrlCodingStrategyTest extends TestCase
 		 */
 		public TestPage(PageParameters pars)
 		{
-			add(new AjaxLink<Void>("ajax")
+			add(new AjaxLink("ajax")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class IndexedHybridUrlCodingStrategyTest extends TestCase
 					target.addComponent(this);
 				}
 			}.setOutputMarkupId(true));
-			add(new Link<Void>("link")
+			add(new Link("link")
 			{
 				private static final long serialVersionUID = 1L;
 

@@ -43,13 +43,13 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 
 /**
  * This wizard shows some basic form use. It uses custom panels for the form elements, and a single
- * domain object ({@link User}) as it's subject. Also, the user roles step}is an optional step,
- * that will only be executed when assignRoles is true (and that value is edited in the user details
+ * domain object ({@link User}) as it's subject. Also, the user roles step}is an optional step, that
+ * will only be executed when assignRoles is true (and that value is edited in the user details
  * step).
  * 
  * @author Eelco Hillenius
  */
-public class NewUserWizard extends Wizard<NewUserWizard>
+public class NewUserWizard extends Wizard
 {
 	/**
 	 * The confirmation step.
@@ -72,7 +72,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	/**
 	 * The user details step.
 	 */
-	private final class UserDetailsStep extends WizardStep<Void>
+	private final class UserDetailsStep extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -92,7 +92,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	/**
 	 * The user name step.
 	 */
-	private final class UserNameStep extends WizardStep<Void>
+	private final class UserNameStep extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -108,7 +108,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	/**
 	 * The user details step.
 	 */
-	private final class UserRolesStep extends WizardStep<Void> implements ICondition
+	private final class UserRolesStep extends WizardStep implements ICondition
 	{
 		/**
 		 * Construct.
@@ -125,7 +125,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			add(rolesSetNameField);
 			add(new AbstractFormValidator()
 			{
-				public FormComponent<?>[] getDependentFormComponents()
+				public FormComponent[] getDependentFormComponents()
 				{
 					// name and roles don't have anything to validate,
 					// so might as well just skip them here
@@ -178,7 +178,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		// create a blank user
 		user = new User();
 
-		setModel(new CompoundPropertyModel<NewUserWizard>(this));
+		setDefaultModel(new CompoundPropertyModel<NewUserWizard>(this));
 		WizardModel model = new WizardModel();
 		model.add(new UserNameStep());
 		model.add(new UserDetailsStep());

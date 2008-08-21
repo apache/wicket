@@ -56,7 +56,7 @@ public class PageablesPage extends BasePage
 		{
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Label("name", item.getModelObjectAsString()));
+				item.add(new Label("name", item.getDefaultModelObjectAsString()));
 			}
 		};
 

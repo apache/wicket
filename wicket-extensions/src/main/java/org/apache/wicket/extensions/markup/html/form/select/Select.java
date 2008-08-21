@@ -89,9 +89,10 @@ public class Select extends FormComponent
 		super(id, model);
 	}
 
+	@Override
 	protected void convertInput()
 	{
-		boolean supportsMultiple = getModelObject() instanceof Collection;
+		boolean supportsMultiple = getDefaultModelObject() instanceof Collection;
 
 		/*
 		 * the input contains an array of full path of the selected option components unless nothing
@@ -108,9 +109,9 @@ public class Select extends FormComponent
 		if (!supportsMultiple && paths.length > 1)
 		{
 			throw new WicketRuntimeException(
-					"The model of Select component [" +
-							getPath() +
-							"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
+				"The model of Select component [" +
+					getPath() +
+					"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
 		List converted = new ArrayList(paths.length);
@@ -136,15 +137,15 @@ public class Select extends FormComponent
 				if (option == null)
 				{
 					throw new WicketRuntimeException(
-							"submitted http post value [" +
-									paths.toString() +
-									"] for SelectOption component [" +
-									getPath() +
-									"] contains an illegal relative path element [" +
-									path +
-									"] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
+						"submitted http post value [" +
+							paths.toString() +
+							"] for SelectOption component [" +
+							getPath() +
+							"] contains an illegal relative path element [" +
+							path +
+							"] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 				}
-				converted.add(option.getModelObject());
+				converted.add(option.getDefaultModelObject());
 			}
 
 		}
@@ -167,9 +168,10 @@ public class Select extends FormComponent
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
-		Object object = getModelObject();
+		Object object = getDefaultModelObject();
 		boolean supportsMultiple = object instanceof Collection;
 
 		Object converted = getConvertedInput();
@@ -187,11 +189,11 @@ public class Select extends FormComponent
 			}
 			modelChanged();
 			// force notify of model update via setObject()
-			getModel().setObject(modelCollection);
+			setDefaultModelObject(modelCollection);
 		}
 		else
 		{
-			setModelObject(converted);
+			setDefaultModelObject(converted);
 		}
 	}
 
@@ -221,8 +223,8 @@ public class Select extends FormComponent
 		}
 		else
 		{
-			Object selected = getModelObject();
-			Object value = option.getModelObject();
+			Object selected = getDefaultModelObject();
+			Object value = option.getDefaultModelObject();
 
 			if (selected != null && selected instanceof Collection)
 			{

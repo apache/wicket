@@ -89,7 +89,7 @@ public class ComponentTag extends MarkupElement
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
 	 * information however is required.
 	 */
-	private WeakReference<Class<? extends Component<?>>> markupClassRef = null;
+	private WeakReference<Class<? extends Component>> markupClassRef = null;
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with some HTML tags like
@@ -759,7 +759,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return wicketHeaderClass
 	 */
-	public Class<? extends Component<?>> getMarkupClass()
+	public Class<? extends Component> getMarkupClass()
 	{
 		return (markupClassRef == null ? null : markupClassRef.get());
 	}
@@ -772,7 +772,7 @@ public class ComponentTag extends MarkupElement
 	 * @param wicketHeaderClass
 	 *            wicketHeaderClass
 	 */
-	public <C extends Component<?>> void setMarkupClass(Class<C> wicketHeaderClass)
+	public <C extends Component> void setMarkupClass(Class<C> wicketHeaderClass)
 	{
 		if (wicketHeaderClass == null)
 		{
@@ -780,7 +780,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			markupClassRef = new WeakReference<Class<? extends Component<?>>>(wicketHeaderClass);
+			markupClassRef = new WeakReference<Class<? extends Component>>(wicketHeaderClass);
 		}
 	}
 

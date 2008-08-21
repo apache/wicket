@@ -66,7 +66,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 * @param level
 	 */
-	public final void add(Component< ? > reporter, String message, int level)
+	public final void add(Component reporter, String message, int level)
 	{
 		add(new FeedbackMessage(reporter, message, level));
 	}
@@ -111,7 +111,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void debug(Component< ? > reporter, String message)
+	public final void debug(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
@@ -124,7 +124,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void error(Component< ? > reporter, Serializable message)
+	public final void error(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
@@ -137,7 +137,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void fatal(Component< ? > reporter, String message)
+	public final void fatal(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
@@ -150,7 +150,7 @@ public final class FeedbackMessages implements IClusterable
 	 *            the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list with level ERROR
 	 */
-	public final boolean hasErrorMessageFor(Component< ? > component)
+	public final boolean hasErrorMessageFor(Component component)
 	{
 		return hasMessageFor(component, FeedbackMessage.ERROR);
 	}
@@ -172,7 +172,7 @@ public final class FeedbackMessages implements IClusterable
 	 *            the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
 	 */
-	public final boolean hasMessageFor(Component< ? > component)
+	public final boolean hasMessageFor(Component component)
 	{
 		return messageForComponent(component) != null;
 	}
@@ -187,7 +187,7 @@ public final class FeedbackMessages implements IClusterable
 	 *            The level of the message
 	 * @return Whether the given component registered a message with this list with the given level
 	 */
-	public final boolean hasMessageFor(Component< ? > component, int level)
+	public final boolean hasMessageFor(Component component, int level)
 	{
 		final FeedbackMessage message = messageForComponent(component);
 		return message != null && message.isLevel(level);
@@ -201,7 +201,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            The actual message
 	 */
-	public final void info(Component< ? > reporter, String message)
+	public final void info(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
@@ -234,7 +234,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @return the message that is found for the given component (first match) or null if none was
 	 *         found
 	 */
-	public final FeedbackMessage messageForComponent(final Component< ? > component)
+	public final FeedbackMessage messageForComponent(final Component component)
 	{
 		for (Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 		{
@@ -333,7 +333,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void warn(Component< ? > reporter, String message)
+	public final void warn(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}

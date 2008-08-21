@@ -58,7 +58,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testExpirePage()
 	{
 		tester.startPage(TestExpirePage.class);
-		AjaxLink<?> link = (AjaxLink<?>)tester.getComponentFromLastRenderedPage("link");
+		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
 		// Cannot use executeAjaxEvent or onClick because WicketTester creates
 		// an AjaxRequestTarget from scratch
@@ -97,7 +97,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testInternalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
-		AjaxLink<?> link = (AjaxLink<?>)tester.getComponentFromLastRenderedPage("link");
+		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
 		// Cannot use executeAjaxEvent or onClick because WicketTester creates
 		// an AjaxRequestTarget from scratch

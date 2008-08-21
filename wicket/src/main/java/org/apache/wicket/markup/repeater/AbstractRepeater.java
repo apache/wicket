@@ -39,11 +39,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @param <T>
- *            The model object type
  * 
  */
-public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
+public abstract class AbstractRepeater extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -67,7 +65,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * @param id
 	 * @param model
 	 */
-	public AbstractRepeater(String id, IModel<T> model)
+	public AbstractRepeater(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -78,7 +76,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * 
 	 * @return iterator over child components to be rendered
 	 */
-	protected abstract Iterator<Component< ? >> renderIterator();
+	protected abstract Iterator<? extends Component> renderIterator();
 
 	/**
 	 * Renders all child items in no specified order
@@ -91,12 +89,12 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	{
 		final int markupStart = markupStream.getCurrentIndex();
 
-		Iterator<Component< ? >> it = renderIterator();
+		Iterator<? extends Component> it = renderIterator();
 		if (it.hasNext())
 		{
 			do
 			{
-				Component< ? > child = it.next();
+				Component child = it.next();
 				if (child == null)
 				{
 					throw new IllegalStateException("the render iterator returned null for a child");
@@ -119,7 +117,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * @param child
 	 *            Child component to be rendered
 	 */
-	protected void renderChild(final Component< ? > child)
+	protected void renderChild(final Component child)
 	{
 		child.render(getMarkupStream());
 	}
@@ -134,10 +132,10 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 
 		if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT))
 		{
-			Iterator<Component< ? >> i = iterator();
+			Iterator<? extends Component> i = iterator();
 			while (i.hasNext())
 			{
-				Component< ? > c = i.next();
+				Component c = i.next();
 				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
 				if (!matcher.matches())
 				{

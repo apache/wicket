@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.form.Form;
  * @author evan
  * 
  */
-public abstract class IndicatingAjaxButton<T> extends AjaxButton<T> implements IAjaxIndicatorAware
+public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIndicatorAware
 {
 
 	/**

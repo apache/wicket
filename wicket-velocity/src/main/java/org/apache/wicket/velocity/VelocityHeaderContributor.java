@@ -50,7 +50,7 @@ public class VelocityHeaderContributor extends AbstractHeaderContributor
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
 	@Override
-	public void detach(Component< ? > component)
+	public void detach(Component component)
 	{
 		for (Iterator<VelocityContributor> i = contributors.iterator(); i.hasNext();)
 		{

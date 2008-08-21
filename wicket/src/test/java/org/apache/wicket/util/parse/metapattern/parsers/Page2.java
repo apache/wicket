@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  */
-public class Page2 extends WebPage<Void>
+public class Page2 extends WebPage
 {
 	private static final Logger log = LoggerFactory.getLogger(Page2.class);
 

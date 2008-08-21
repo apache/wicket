@@ -33,7 +33,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Jonathan Locke
  */
-public final class Home extends AuthenticatedWebPage<Void>
+public final class Home extends AuthenticatedWebPage
 {
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public final class Home extends AuthenticatedWebPage<Void>
 				final Book book = listItem.getModelObject();
 				listItem.add(BookDetails.link("details", book, getLocalizer().getString(
 					"noBookTitle", this)));
-				listItem.add(new Label<Book>("author", new Model<Book>(book)));
+				listItem.add(new Label("author", new Model<Book>(book)));
 				listItem.add(moveUpLink("moveUp", listItem));
 				listItem.add(moveDownLink("moveDown", listItem));
 				listItem.add(removeLink("remove", listItem));

@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * 
  */
-public class InlinePanelPage_7 extends WebPage<Void>
+public class InlinePanelPage_7 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

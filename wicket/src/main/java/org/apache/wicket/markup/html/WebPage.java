@@ -61,34 +61,28 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Gwyn Evans
- * 
- * @param <T>
- *            The model object type
  */
-public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
+public class WebPage extends Page implements INewBrowserWindowListener
 {
 	/**
 	 * Tries to determine whether this page was opened in a new window or tab. If it is (and this
 	 * checker were able to recognize that), a new page map is created for this page instance, so
 	 * that it will start using it's own history in sync with the browser window or tab.
-	 * 
-	 * @param <T>
-	 *            The model object type
 	 */
-	private static final class PageMapChecker<T> extends AbstractBehavior
+	private static final class PageMapChecker extends AbstractBehavior
 		implements
 			IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WebPage<T> webPage;
+		private final WebPage webPage;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param webPage
 		 */
-		PageMapChecker(WebPage<T> webPage)
+		PageMapChecker(WebPage webPage)
 		{
 			this.webPage = webPage;
 		}
@@ -195,7 +189,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(IModel)
 	 */
-	protected WebPage(final IModel<T> model)
+	protected WebPage(final IModel<?> model)
 	{
 		super(model);
 		commonInit();
@@ -213,7 +207,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(org.apache.wicket.IPageMap, org.apache.wicket.model.IModel)
 	 */
-	protected WebPage(final IPageMap pageMap, final IModel<T> model)
+	protected WebPage(final IPageMap pageMap, final IModel<?> model)
 	{
 		super(pageMap, model);
 		commonInit();
@@ -310,10 +304,10 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	public void onNewBrowserWindow()
 	{
 		// if the browser reports a history of 0 then make a new webpage
-		WebPage<?> clonedPage = this;
+		WebPage clonedPage = this;
 		try
 		{
-			clonedPage = (WebPage<?>)Objects.cloneObject(this);
+			clonedPage = (WebPage)Objects.cloneObject(this);
 		}
 		catch (Exception e)
 		{
@@ -332,7 +326,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
-			add(new PageMapChecker<T>(this));
+			add(new PageMapChecker(this));
 		}
 	}
 
@@ -399,15 +393,15 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		super.onAfterRender();
 		if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
 		{
-			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component<?>>()
+			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component>()
 			{
-				public Object component(Component<?> component)
+				public Object component(Component component)
 				{
 					if (component instanceof HtmlHeaderContainer)
 					{
 						return component;
 					}
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
 			if (header == null)
@@ -431,12 +425,12 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 					// Make sure all Components interested in contributing to the header
 					// and there attached behaviors are asked.
 					final HtmlHeaderContainer finalHeader = header;
-					visitChildren(new IVisitor<Component<?>>()
+					visitChildren(new IVisitor<Component>()
 					{
 						/**
 						 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 						 */
-						public Object component(Component<?> component)
+						public Object component(Component component)
 						{
 							component.renderHead(finalHeader);
 							return CONTINUE_TRAVERSAL;

@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class ExceptionErrorPage extends WebPage<Object>
+public class ExceptionErrorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,12 +51,12 @@ public class ExceptionErrorPage extends WebPage<Object>
 	 * @param page
 	 *            The page being rendered when the exception was thrown
 	 */
-	public ExceptionErrorPage(final Throwable throwable, final Page< ? > page)
+	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
 		this.throwable = throwable;
 
 		// Add exception label
-		add(new MultiLineLabel<String>("exception", Strings.toString(throwable)));
+		add(new MultiLineLabel("exception", Strings.toString(throwable)));
 
 		// Get values
 		String resource = "";
@@ -75,22 +75,21 @@ public class ExceptionErrorPage extends WebPage<Object>
 		}
 
 		// Create markup label
-		final MultiLineLabel<String> markupLabel = new MultiLineLabel<String>("markup", markup);
+		final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
 
 		markupLabel.setEscapeModelStrings(false);
 
 		// Add container with markup highlighted
-		final WebMarkupContainer<String> markupHighlight = new WebMarkupContainer<String>(
-			"markupHighlight");
+		final WebMarkupContainer markupHighlight = new WebMarkupContainer("markupHighlight");
 
 		markupHighlight.add(markupLabel);
-		markupHighlight.add(new Label<String>("resource", resource));
+		markupHighlight.add(new Label("resource", resource));
 		add(markupHighlight);
 
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
 
-		add(new Link<Object>("displayPageViewLink")
+		add(new Link("displayPageViewLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -102,7 +101,7 @@ public class ExceptionErrorPage extends WebPage<Object>
 			}
 		});
 
-		add(new Label<String>("componentTree", ""));
+		add(new Label("componentTree", ""));
 	}
 
 	/**

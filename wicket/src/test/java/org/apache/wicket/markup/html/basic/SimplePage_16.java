@@ -26,7 +26,7 @@ import org.apache.wicket.markup.parser.XmlTag;
  * Mock page for testing.
  * 
  */
-public class SimplePage_16 extends WebPage<Void>
+public class SimplePage_16 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

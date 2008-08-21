@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author dashorst
  */
-public class TestDetachPage extends WebPage<Void>
+public class TestDetachPage extends WebPage
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;

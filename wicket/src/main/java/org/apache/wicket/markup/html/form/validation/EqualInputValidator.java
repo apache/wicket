@@ -40,7 +40,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	private static final long serialVersionUID = 1L;
 
 	/** form components to be checked. */
-	private final FormComponent< ? >[] components;
+	private final FormComponent[] components;
 
 	/**
 	 * Construct.
@@ -50,7 +50,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	 * @param formComponent2
 	 *            a form component
 	 */
-	public EqualInputValidator(FormComponent< ? > formComponent1, FormComponent< ? > formComponent2)
+	public EqualInputValidator(FormComponent formComponent1, FormComponent formComponent2)
 	{
 		if (formComponent1 == null)
 		{
@@ -66,7 +66,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	/**
 	 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
 	 */
-	public FormComponent< ? >[] getDependentFormComponents()
+	public FormComponent[] getDependentFormComponents()
 	{
 		return components;
 	}
@@ -78,8 +78,8 @@ public class EqualInputValidator extends AbstractFormValidator
 	{
 		// we have a choice to validate the type converted values or the raw
 		// input values, we validate the raw input
-		final FormComponent< ? > formComponent1 = components[0];
-		final FormComponent< ? > formComponent2 = components[1];
+		final FormComponent formComponent1 = components[0];
+		final FormComponent formComponent2 = components[1];
 
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{

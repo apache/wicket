@@ -76,7 +76,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		owner.onClick(target);
 
 		// find the PagingNavigator parent of this link
-		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component< ? >)owner).findParent(AjaxPagingNavigator.class);
+		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component)owner).findParent(AjaxPagingNavigator.class);
 		if (navigator == null)
 		{
 			throw new WicketRuntimeException(

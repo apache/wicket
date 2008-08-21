@@ -44,8 +44,8 @@ public class EqualPasswordInputValidator extends EqualInputValidator
 	 * @param formComponent1
 	 * @param formComponent2
 	 */
-	public EqualPasswordInputValidator(FormComponent< ? > formComponent1,
-		FormComponent< ? > formComponent2)
+	public EqualPasswordInputValidator(FormComponent formComponent1,
+		FormComponent formComponent2)
 	{
 		super(formComponent1, formComponent2);
 	}

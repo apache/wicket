@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class RedirectPage extends WebPage<Void>
+public class RedirectPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

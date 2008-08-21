@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * 
  */
-public class SimpleTestPage extends WebPage<Void>
+public class SimpleTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -34,15 +34,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.RequestLogger.SessionData;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Bytes;
 
 
 /**
  * @author jcompagner
  */
-public class LiveSessionsPage extends WebPage<Void>
+public class LiveSessionsPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,11 +51,11 @@ public class LiveSessionsPage extends WebPage<Void>
 	 */
 	public LiveSessionsPage()
 	{
-		add(new Image<Void>("bug"));
+		add(new Image("bug"));
 
 		add(new ApplicationView("application", Application.get()));
 
-		Link<?> link = new Link<Void>("togglelink")
+		Link<Void> link = new Link<Void>("togglelink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -69,7 +69,7 @@ public class LiveSessionsPage extends WebPage<Void>
 				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}
 		};
-		link.add(new Label<String>("toggletext", new Model<String>()
+		link.add(new Label("toggletext", new Model<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,7 @@ public class LiveSessionsPage extends WebPage<Void>
 			}
 		}));
 		add(link);
-		add(new Label<Integer>("totalSessions", new Model<Integer>()
+		add(new Label("totalSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -99,7 +99,7 @@ public class LiveSessionsPage extends WebPage<Void>
 				return getRequestLogger().getTotalCreatedSessions();
 			}
 		}));
-		add(new Label<Integer>("peakSessions", new Model<Integer>()
+		add(new Label("peakSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -109,7 +109,7 @@ public class LiveSessionsPage extends WebPage<Void>
 				return getRequestLogger().getPeakSessions();
 			}
 		}));
-		add(new Label<Integer>("liveSessions", new Model<Integer>()
+		add(new Label("liveSessions", new Model<Integer>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -142,7 +142,7 @@ public class LiveSessionsPage extends WebPage<Void>
 			protected void populateItem(ListItem<SessionData> item)
 			{
 				final SessionData sd = item.getModelObject();
-				Link<?> link = new Link<Void>("id")
+				Link<Void> link = new Link<Void>("id")
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -155,14 +155,14 @@ public class LiveSessionsPage extends WebPage<Void>
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add(new Label<String>("id", new Model<String>(sd.getSessionId())));
+				link.add(new Label("id", new Model<String>(sd.getSessionId())));
 				item.add(link);
-				item.add(new Label<String>("lastRequestTime", new Model<String>(
+				item.add(new Label("lastRequestTime", new Model<String>(
 					sdf.format(sd.getLastActive()))));
-				item.add(new Label<Long>("requestCount", new Model<Long>(sd.getNumberOfRequests())));
-				item.add(new Label<Long>("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
-				item.add(new Label<Bytes>("sessionSize",
-					new Model<Bytes>(Bytes.bytes(sd.getSessionSize()))));
+				item.add(new Label("requestCount", new Model<Long>(sd.getNumberOfRequests())));
+				item.add(new Label("requestsTime", new Model<Long>(sd.getTotalTimeTaken())));
+				item.add(new Label("sessionSize", new Model<Bytes>(
+					Bytes.bytes(sd.getSessionSize()))));
 			}
 		};
 		add(listView);

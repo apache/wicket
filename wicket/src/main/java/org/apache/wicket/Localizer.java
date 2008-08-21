@@ -21,7 +21,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -57,6 +60,8 @@ public class Localizer
 	/** Cache properties */
 	private Map<String, String> cache = newCache();
 
+	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
+
 	/**
 	 * Create the utils instance class backed by the configuration information contained within the
 	 * supplied application object.
@@ -87,7 +92,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component)
+	public String getString(final String key, final Component component)
 		throws MissingResourceException
 	{
 		return getString(key, component, null, null);
@@ -106,7 +111,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model)
+	public String getString(final String key, final Component component, final IModel<?> model)
 		throws MissingResourceException
 	{
 		return getString(key, component, model, null);
@@ -125,7 +130,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component,
+	public String getString(final String key, final Component component,
 		final String defaultValue) throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
@@ -145,7 +150,7 @@ public class Localizer
 	 * 
 	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model,
+	public String getString(final String key, final Component component, final IModel<?> model,
 		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException
 	{
@@ -170,7 +175,7 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component<?> component, final IModel<?> model,
+	public String getString(final String key, final Component component, final IModel<?> model,
 		final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
@@ -320,7 +325,7 @@ public class Localizer
 	 * @param component
 	 * @return The value of the key
 	 */
-	protected String getCacheKey(final String key, final Component<?> component)
+	protected String getCacheKey(final String key, final Component component)
 	{
 		String cacheKey = key;
 		if (component != null)
@@ -328,14 +333,29 @@ public class Localizer
 			AppendingStringBuffer buffer = new AppendingStringBuffer(200);
 			buffer.append(key);
 
-			Component<?> cursor = component;
+			Component cursor = component;
 			while (cursor != null)
 			{
-				buffer.append("-").append(cursor.getClass().getName());
-				buffer.append(":").append(cursor.getId());
-				cursor = cursor.getParent();
+				buffer.append("-").append(metaDatabase.id(cursor.getClass()));
+
 				if (cursor instanceof Page)
+				{
 					break;
+				}
+
+				if (cursor.getParent() != null && !(cursor.getParent() instanceof AbstractRepeater))
+				{
+					/*
+					 * only append component id if parent is not a repeater because
+					 * 
+					 * (a) these ids are irrelevant when generating resource cache keys
+					 * 
+					 * (b) they cause a lot of redundant keys to be generated
+					 */
+					buffer.append(":").append(cursor.getId());
+				}
+				cursor = cursor.getParent();
+
 			}
 
 			buffer.append("-").append(component.getLocale());
@@ -359,7 +379,7 @@ public class Localizer
 	 *            The model
 	 * @return The resulting string
 	 */
-	public String substitutePropertyExpressions(final Component<?> component, final String string,
+	public String substitutePropertyExpressions(final Component component, final String string,
 		final IModel<?> model)
 	{
 		if ((string != null) && (model != null))
@@ -399,4 +419,41 @@ public class Localizer
 	{
 		return new ConcurrentHashMap<String, String>();
 	}
+
+	/**
+	 * Database that maps class names to an integer id. This is used to make localizer keys shorter
+	 * because sometimes they can contain a large number of class names.
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private static class ClassMetaDatabase
+	{
+		private final ConcurrentMap<String, Long> nameToId = new ConcurrentHashMap<String, Long>();
+		private final AtomicLong nameCounter = new AtomicLong();
+
+		/**
+		 * Returns a unique id that represents this class' name. This can be used for compressing
+		 * class names. Notice this id should not be used across cluster nodes.
+		 * 
+		 * @param clazz
+		 * @return long id of class name
+		 */
+		public long id(Class<?> clazz)
+		{
+			final String name = clazz.getName();
+			Long id = nameToId.get(name);
+			if (id == null)
+			{
+				id = nameCounter.incrementAndGet();
+				Long previousId = nameToId.putIfAbsent(name, id);
+				if (previousId != null)
+				{
+					id = previousId;
+				}
+			}
+			return id;
+		}
+	}
+
+
 }

@@ -33,7 +33,7 @@ import org.apache.wicket.model.StringResourceModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NavigatorLabel extends Label<String>
+public class NavigatorLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
@@ -129,8 +129,9 @@ public class NavigatorLabel extends Label<String>
 	private NavigatorLabel(final String id, final PageableComponent table)
 	{
 		super(id);
-		setModel(new StringResourceModel("NavigatorLabel", this, new Model<LabelModelObject>(
-			new LabelModelObject(table)), "Showing ${from} to ${to} of ${of}"));
+		setDefaultModel(new StringResourceModel("NavigatorLabel", this,
+			new Model<LabelModelObject>(new LabelModelObject(table)),
+			"Showing ${from} to ${to} of ${of}"));
 	}
 
 	private class LabelModelObject implements IClusterable

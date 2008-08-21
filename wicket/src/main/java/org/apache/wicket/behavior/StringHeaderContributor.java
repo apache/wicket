@@ -161,7 +161,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
 	@Override
-	public void detach(Component< ? > component)
+	public void detach(Component component)
 	{
 		contributor.contribution.detach();
 	}

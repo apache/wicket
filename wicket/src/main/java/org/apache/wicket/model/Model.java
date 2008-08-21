@@ -19,27 +19,30 @@ package org.apache.wicket.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.WildcardListModel;
+import org.apache.wicket.model.util.WildcardSetModel;
+import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * <code>Model</code> is the basic implementation of an <code>IModel</code>. It just wraps a
- * simple model object. The model object must be serializable, as it is stored in the session. If
- * you have large objects to store, consider using
- * {@link org.apache.wicket.model.LoadableDetachableModel} instead of this class.
+ * <code>Model</code> is the basic implementation of an <code>IModel</code>. It just wraps a simple
+ * model object. The model object must be serializable, as it is stored in the session. If you have
+ * large objects to store, consider using {@link org.apache.wicket.model.LoadableDetachableModel}
+ * instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * 
  * @param <T>
- *            The Model Object
+ *            The type of the Model Object
  */
 public class Model<T extends Serializable> implements IModel<T>
 {
@@ -67,47 +70,48 @@ public class Model<T extends Serializable> implements IModel<T>
 	}
 
 	/**
+	 * @param <K>
+	 *            type of key inside map
+	 * @param <V>
+	 *            type of value inside map
 	 * @param map
 	 *            The Map, which may or may not be Serializable
-	 * @deprecated see {@link Model#ofMap(Map)}
+	 * @deprecated see {@link Model#of(Map)}
 	 * @return A Model object wrapping the Map
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
-	public static Model valueOf(final Map map)
+	public static <K, V> IModel<Map<K, V>> valueOf(final Map<K, V> map)
 	{
-		return new Model(map instanceof Serializable ? (Serializable)map : new HashMap(map));
+		return of(map);
 	}
 
 	/**
+	 * @param <C>
+	 *            type of object inside list
 	 * @param list
 	 *            The List, which may or may not be Serializable
 	 * @deprecated see {@link Model#of(List)}
 	 * @return A Model object wrapping the List
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
-	public static Model valueOf(final List list)
+	public static <C> IModel<List<? extends C>> valueOf(final List<? extends C> list)
 	{
-		return new Model(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
+		return of(list);
 	}
 
 	/**
 	 * Factory method for models that contain lists. This factory method will automatically rebuild
 	 * a nonserializable <code>list</code> into a serializable one.
 	 * 
-	 * @param <V>
-	 *            value type in list
-	 * @param <T>
+	 * @param <C>
 	 *            model type
 	 * @param list
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<List<T>> of(final List<T> list)
+	public static <C> IModel<List<? extends C>> of(final List<? extends C> list)
 	{
-		return new Model((Serializable)(list instanceof Serializable ? list : new ArrayList(list)));
+		return new WildcardListModel<C>(list);
 	}
 
 	/**
@@ -118,16 +122,13 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            key type in map
 	 * @param <V>
 	 *            value type in map
-	 * @param <T>
-	 *            model type
 	 * @param map
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> IModel<Map<K, V>> of(final Map<K, V> map)
 	{
-		return new Model((Serializable)(map instanceof Serializable ? map : new HashMap<K, V>(map)));
+		return new MapModel<K, V>(map);
 	}
 
 
@@ -135,36 +136,30 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
 	 * nonserializable <code>set</code> into a serializable one.
 	 * 
-	 * @param <V>
-	 *            value type in set
-	 * @param <T>
+	 * @param <C>
 	 *            model type
 	 * @param set
 	 *            The Set, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<Set<T>> of(final Set<T> set)
+	public static <C> IModel<Set<? extends C>> of(final Set<? extends C> set)
 	{
-		return new Model((Serializable)(set instanceof Serializable ? set : new HashSet<T>(set)));
+		return new WildcardSetModel<C>(set);
 	}
 
 	/**
 	 * Factory method for models that contain collections. This factory method will automatically
 	 * rebuild a nonserializable <code>collection</code> into a serializable {@link ArrayList}.
 	 * 
-	 * @param <V>
-	 *            value type in set
-	 * @param <T>
+	 * @param <C>
 	 *            model type
 	 * @param set
-	 *            The Set, which may or may not be Serializable
+	 *            The Collection, which may or may not be Serializable
 	 * @return A Model object wrapping the Set
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<Collection<T>> of(final Collection<T> set)
+	public static <C> IModel<Collection<? extends C>> of(final Collection<? extends C> set)
 	{
-		return new Model((Serializable)(set instanceof Serializable ? set : new ArrayList<T>(set)));
+		return new WildcardCollectionModel<C>(set);
 	}
 
 
@@ -240,7 +235,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @deprecated replace by {@link IModel#getObject()}.
 	 */
 	@Deprecated
-	public final Object getObject(Component<?> component)
+	public final Object getObject(Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -251,8 +246,27 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * @deprecated replace by {@link IModel#setObject(Object)}.
 	 */
 	@Deprecated
-	public final void setObject(Component<?> component, Object object)
+	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(object);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Model<?>))
+		{
+			return false;
+		}
+		Model<?> that = (Model<?>)obj;
+		return Objects.equal(object, that.object);
 	}
 }

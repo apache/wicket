@@ -28,7 +28,7 @@ import org.apache.wicket.model.Model;
 /**
  * Tests drop down choice.
  */
-public class MockPageWithForm extends WebPage<Void>
+public class MockPageWithForm extends WebPage
 {
 	private final class MyForm extends Form
 	{

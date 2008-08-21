@@ -59,7 +59,7 @@ public class RepeaterApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

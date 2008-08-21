@@ -55,7 +55,7 @@ public class TestApp1 extends WebApplication
 	}
 
 	@Override
-	public Class<? extends Page<?>> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Chris Turner
  */
-public class AutolinkPage_4 extends WebPage<Void>
+public class AutolinkPage_4 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

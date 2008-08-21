@@ -30,7 +30,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class StockQuotePage extends WicketExamplePage<Void>
+public class StockQuotePage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -52,12 +52,12 @@ public class StockQuotePage extends WicketExamplePage<Void>
 		final IModel<String> model = new PropertyModel<String>(quote, "symbol");
 
 		// form holding the input field.
-		final Form<?> form = new Form<Void>("form");
+		final Form<?> form = new Form("form");
 		add(form);
 		form.add(new TextField<String>("symbol", model));
 
 		// labels for displaying the chosen symbol
-		add(new Label<String>("symbol", model));
+		add(new Label("symbol", model));
 
 		// and its quote
 		add(new StockQuoteLabel("quote", model));

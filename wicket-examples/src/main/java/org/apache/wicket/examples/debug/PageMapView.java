@@ -42,7 +42,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Jonathan Locke
  */
-public final class PageMapView extends Panel<Void>
+public final class PageMapView extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,8 +59,8 @@ public final class PageMapView extends Panel<Void>
 		super(id);
 
 		// Basic attributes
-		add(new Label<String>("name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label<String>("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
+		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
+		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
 		// Get entry accesses
 		// Get entry accesses
@@ -92,15 +92,15 @@ public final class PageMapView extends Panel<Void>
 				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
-				Link<?> link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
-				link.add(new Label<String>("id", "" + entry.getNumericId()));
+				Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
+				link.add(new Label("id", "" + entry.getNumericId()));
 				listItem.add(link);
-				listItem.add(new Label<String>("class", "" + entry.getClass().getName()));
+				listItem.add(new Label("class", "" + entry.getClass().getName()));
 				long size;
 				int versions;
 				if (entry instanceof Page)
 				{
-					Page<?> page = (Page<?>)entry;
+					Page page = (Page)entry;
 					page.detachModels();
 					size = page.getSizeInBytes();
 					versions = page.getVersions();
@@ -110,12 +110,10 @@ public final class PageMapView extends Panel<Void>
 					size = Objects.sizeof(entry);
 					versions = 0;
 				}
-				listItem.add(new Label<String>("access", "" +
-					(accessStack.size() - listItem.getIndex())));
-				listItem.add(new Label<String>("version", "" + access.getVersion()));
-				listItem.add(new Label<String>("versions", "" + versions));
-				listItem.add(new Label<String>("size", size == -1 ? "[Unknown]" : "" +
-					Bytes.bytes(size)));
+				listItem.add(new Label("access", "" + (accessStack.size() - listItem.getIndex())));
+				listItem.add(new Label("version", "" + access.getVersion()));
+				listItem.add(new Label("versions", "" + versions));
+				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
 			}
 		});
 	}

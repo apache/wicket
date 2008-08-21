@@ -51,7 +51,9 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	String getContentType();
 
 	/**
-	 * Gets the size of this resource
+	 * Gets the size of this resource in bytes
+	 * 
+	 * TODO 1.5: rename to lengthInBytes() or let it return some sort of size object
 	 * 
 	 * @return The size of this resource in the number of bytes, or -1 if unknown
 	 */

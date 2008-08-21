@@ -214,8 +214,8 @@ public abstract class GridView<T> extends DataViewBase<T>
 			do
 			{
 				// Build a row
-				Item< ? > rowItem = newRowItem(newChildId(), row);
-				RepeatingView< ? > rowView = new RepeatingView<Void>("cols");
+				Item<?> rowItem = newRowItem(newChildId(), row);
+				RepeatingView rowView = new RepeatingView("cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
@@ -258,7 +258,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 	@Override
 	public Iterator<Item<T>> getItems()
 	{
-		Iterator<MarkupContainer< ? >> rows = Generics.iterator(iterator());
+		Iterator<MarkupContainer> rows = Generics.iterator(iterator());
 		return new ItemsIterator<T>(rows);
 	}
 
@@ -289,9 +289,9 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 * @param index
 	 * @return created Item
 	 */
-	protected Item< ? > newRowItem(String id, int index)
+	protected Item<?> newRowItem(String id, int index)
 	{
-		return new Item<Void>(id, index, null);
+		return new Item<Object>(id, index, null);
 	}
 
 	/**
@@ -303,7 +303,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 */
 	private static class ItemsIterator<T> implements Iterator<Item<T>>
 	{
-		private final Iterator<MarkupContainer< ? >> rows;
+		private final Iterator<MarkupContainer> rows;
 		private Iterator<Item<T>> cells;
 
 		private Item<T> next;
@@ -312,7 +312,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		 * @param rows
 		 *            iterator over child row views
 		 */
-		public ItemsIterator(Iterator<MarkupContainer< ? >> rows)
+		public ItemsIterator(Iterator<MarkupContainer> rows)
 		{
 			this.rows = rows;
 			findNext();
@@ -356,10 +356,10 @@ public abstract class GridView<T> extends DataViewBase<T>
 			{
 				while (rows.hasNext())
 				{
-					MarkupContainer< ? > row = rows.next();
+					MarkupContainer row = rows.next();
 
-					final Iterator<Component< ? >> rawCells;
-					rawCells = ((MarkupContainer< ? >)row.iterator().next()).iterator();
+					final Iterator<? extends Component> rawCells;
+					rawCells = ((MarkupContainer)row.iterator().next()).iterator();
 					cells = Generics.iterator(rawCells);
 					if (cells.hasNext())
 					{

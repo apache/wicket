@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 /**
  * Base page for ajax example
  */
-public class BasePage<T> extends WicketExamplePage<T>
+public class BasePage extends WicketExamplePage
 {
 	/**
 	 * Constructor

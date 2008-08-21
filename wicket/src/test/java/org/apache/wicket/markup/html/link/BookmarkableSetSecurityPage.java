@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author jcompagner
  */
-public class BookmarkableSetSecurityPage extends WebPage<Void>
+public class BookmarkableSetSecurityPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

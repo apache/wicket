@@ -27,9 +27,6 @@ import org.apache.wicket.model.Model;
  */
 public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -44,9 +41,9 @@ public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn#getHeader(java.lang.String)
 	 */
 	@Override
-	public Component< ? > getHeader(String componentId)
+	public Component getHeader(String componentId)
 	{
-		Component< ? > header = super.getHeader(componentId);
+		Component header = super.getHeader(componentId);
 		return header.setEscapeModelStrings(false);
 	}
 }

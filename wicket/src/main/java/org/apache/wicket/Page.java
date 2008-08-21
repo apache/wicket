@@ -79,13 +79,13 @@ import org.slf4j.LoggerFactory;
  * contain any arbitrary tree of Components. For more details on MarkupContainers, see
  * {@link org.apache.wicket.MarkupContainer}.
  * 
- * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any constructor when they are
- * being used in a Wicket session, but if you wish to link to a Page using a URL that is
- * "bookmarkable" (which implies that the URL will not have any session information encoded in it,
- * and that you can call this page directly without having a session first directly from your
- * browser), you need to implement your Page with a no-arg constructor or with a constructor that
- * accepts a PageParameters argument (which wraps any query string parameters for a request). In
- * case the page has both constructors, the constructor with PageParameters will be used.
+ * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any constructor when they are being
+ * used in a Wicket session, but if you wish to link to a Page using a URL that is "bookmarkable"
+ * (which implies that the URL will not have any session information encoded in it, and that you can
+ * call this page directly without having a session first directly from your browser), you need to
+ * implement your Page with a no-arg constructor or with a constructor that accepts a PageParameters
+ * argument (which wraps any query string parameters for a request). In case the page has both
+ * constructors, the constructor with PageParameters will be used.
  * 
  * <li><b>Models </b>- Pages, like other Components, can have models (see {@link IModel}). A Page
  * can be assigned a model by passing one to the Page's constructor, by overriding initModel() or
@@ -104,8 +104,7 @@ import org.slf4j.LoggerFactory;
  * version manager will be installed using the {@link ISessionStore}'s factory method
  * newVersionManager().
  * 
- * <li><b>Security </b>- See {@link IAuthorizationStrategy},
- * {@link SimplePageAuthorizationStrategy}
+ * <li><b>Security </b>- See {@link IAuthorizationStrategy}, {@link SimplePageAuthorizationStrategy}
  * 
  * @see org.apache.wicket.markup.html.WebPage
  * @see org.apache.wicket.MarkupContainer
@@ -123,10 +122,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public abstract class Page<T> extends MarkupContainer<T>
-	implements
-		IRedirectListener,
-		IPageMapEntry
+public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -150,7 +146,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @throws ClassNotFoundException
 		 * 
 		 */
-		public void deserializePage(int id, String name, Page<?> page, ObjectInputStream stream)
+		public void deserializePage(int id, String name, Page page, ObjectInputStream stream)
 			throws IOException, ClassNotFoundException;
 
 		/**
@@ -163,7 +159,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @throws IOException
 		 */
 
-		public void serializePage(Page<?> page, ObjectOutputStream stream) throws IOException;
+		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
 
 		/**
 		 * Returns object to be serialized instead of given page (called from writeReplace).
@@ -171,7 +167,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		 * @param serializedPage
 		 * @return object to be serialized instead of page (or the page instance itself)
 		 */
-		public Object getPageReplacementObject(Page<?> serializedPage);
+		public Object getPageReplacementObject(Page serializedPage);
 	}
 
 	/**
@@ -218,7 +214,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private String pageMapName;
 
 	/** Set of components that rendered if component use checking is enabled */
-	private transient Set<Component<?>> renderedComponents;
+	private transient Set<Component> renderedComponents;
 
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page map, will be set in
@@ -227,7 +223,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private transient Boolean stateless = null;
 
 	/** Version manager for this page */
-	private IPageVersionManager<T> versionManager;
+	private IPageVersionManager versionManager;
 
 	/** The page parameters object hat constructed this page */
 	private PageParameters parameters;
@@ -250,7 +246,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IModel<T> model)
+	protected Page(final IModel<?> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -281,7 +277,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IPageMap pageMap, final IModel<T> model)
+	protected Page(final IPageMap pageMap, final IModel<?> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -347,7 +343,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	// IComponentInstantiationListener
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
-	public void afterCallComponent(final Component<?> component,
+	public void afterCallComponent(final Component component,
 		final RequestListenerInterface listener)
 	{
 	}
@@ -368,7 +364,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	// IComponentInstantiationListener
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
-	public void beforeCallComponent(final Component<?> component,
+	public void beforeCallComponent(final Component component,
 		final RequestListenerInterface listener)
 	{
 	}
@@ -379,14 +375,14 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 *            The component that was rendered
 	 */
-	public final void componentRendered(final Component<?> component)
+	public final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
-				renderedComponents = new HashSet<Component<?>>();
+				renderedComponents = new HashSet<Component>();
 			}
 			if (renderedComponents.add(component) == false)
 			{
@@ -421,17 +417,17 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * This method is called when a component was rendered standalone. If it is a
-	 * <code>MarkupContainer</code> then the rendering for that container is checked.
+	 * This method is called when a component was rendered standalone. If it is a <code>
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
 	 */
-	public final void endComponentRender(Component<?> component)
+	public final void endComponentRender(Component component)
 	{
 		if (component instanceof MarkupContainer)
 		{
-			checkRendering((MarkupContainer<?>)component);
+			checkRendering((MarkupContainer)component);
 		}
 		else
 		{
@@ -501,9 +497,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
 	@SuppressWarnings("unchecked")
-	public final Class<? extends Page<?>> getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
-		return (Class<? extends Page<?>>)getClass();
+		return getClass();
 	}
 
 	/**
@@ -570,7 +566,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @return A Page object with the component/model hierarchy that was attached to this page at
 	 *         the time represented by the requested version.
 	 */
-	public Page<T> getVersion(final int versionNumber)
+	public Page getVersion(final int versionNumber)
 	{
 		// If we're still the original Page and that's what's desired
 		if (versionManager == null)
@@ -599,7 +595,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page<T> page;
+				final Page page;
 				if (versionNumber != LATEST_VERSION)
 				{
 					page = versionManager.getVersion(versionNumber);
@@ -642,12 +638,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
-		visitChildren(new IVisitor<Component<?>>()
+		visitChildren(new IVisitor<Component>()
 		{
-			public Object component(Component<?> component)
+			public Object component(Component component)
 			{
 				int levels = 0;
-				for (Component<?> current = component; current != null; current = current.getParent())
+				for (Component current = component; current != null; current = current.getParent())
 				{
 					levels++;
 				}
@@ -761,9 +757,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 		if (stateless == null)
 		{
 			final Object[] returnArray = new Object[1];
-			Object returnValue = visitChildren(Component.class, new IVisitor<Component<?>>()
+			Object returnValue = visitChildren(Component.class, new IVisitor<Component>()
 			{
-				public Object component(Component<?> component)
+				public Object component(Component component)
 				{
 					if (!component.isStateless())
 					{
@@ -830,9 +826,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 		}
 
 		// Visit all children which are an instance of formClass
-		visitChildren(formClass, new IVisitor<Component<?>>()
+		visitChildren(formClass, new IVisitor<Component>()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				// They must be of type Form as well
 				if (component instanceof Form)
@@ -909,9 +905,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// clean up debug meta data if component check is on
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
-			visitChildren(new IVisitor<Component<?>>()
+			visitChildren(new IVisitor<Component>()
 			{
-				public Object component(Component<?> component)
+				public Object component(Component component)
 				{
 					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
 					component.setMetaData(Component.ADDED_AT_KEY, null);
@@ -939,9 +935,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            to rollback
 	 * @return rollbacked page instance
 	 */
-	public final Page<T> rollbackPage(int numberOfVersions)
+	public final Page rollbackPage(int numberOfVersions)
 	{
-		Page<T> page = this;
+		Page page = this;
 		if (versionManager != null)
 		{
 			page = versionManager.rollbackPage(numberOfVersions);
@@ -991,7 +987,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 * 
 	 */
-	public final void startComponentRender(Component<?> component)
+	public final void startComponentRender(Component component)
 	{
 		renderedComponents = null;
 	}
@@ -1024,18 +1020,18 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            The page itself if it was a full page render or the container that was rendered
 	 *            standalone
 	 */
-	private final void checkRendering(final MarkupContainer<?> renderedContainer)
+	private final void checkRendering(final MarkupContainer renderedContainer)
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
-			final List<Component<?>> unrenderedComponents = new ArrayList<Component<?>>();
+			final List<Component> unrenderedComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor<Component<?>>()
+			renderedContainer.visitChildren(new IVisitor<Component>()
 			{
-				public Object component(final Component<?> component)
+				public Object component(final Component component)
 				{
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
@@ -1078,21 +1074,21 @@ public abstract class Page<T> extends MarkupContainer<T>
 				// Get rid of set
 				renderedComponents = null;
 
-				Iterator<Component<?>> iterator = unrenderedComponents.iterator();
+				Iterator<Component> iterator = unrenderedComponents.iterator();
 
 				while (iterator.hasNext())
 				{
-					Component<?> component = iterator.next();
+					Component component = iterator.next();
 					// Now first test if the component has a sibling that is a transparent resolver.
 
-					Iterator<Component<?>> iterator2 = component.getParent().iterator();
+					Iterator<? extends Component> iterator2 = component.getParent().iterator();
 					while (iterator2.hasNext())
 					{
-						Component<?> sibling = iterator2.next();
+						Component sibling = iterator2.next();
 						if (!sibling.isVisible())
 						{
 							boolean isTransparentMarkupContainer = sibling instanceof MarkupContainer &&
-								((MarkupContainer<?>)sibling).isTransparentResolver();
+								((MarkupContainer)sibling).isTransparentResolver();
 							boolean isComponentResolver = sibling instanceof IComponentResolver;
 							if (isTransparentMarkupContainer || isComponentResolver)
 							{
@@ -1222,7 +1218,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param parent
 	 * @return True if the change is okay to report
 	 */
-	private final boolean mayTrackChangesFor(final Component<?> component, MarkupContainer<?> parent)
+	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
 	{
 		// first call the method so that people can track dirty components
 		componentChanged(component, parent);
@@ -1272,7 +1268,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 * @param parent
 	 */
-	protected void componentChanged(Component<?> component, MarkupContainer<?> parent)
+	protected void componentChanged(Component component, MarkupContainer parent)
 	{
 	}
 
@@ -1372,9 +1368,21 @@ public abstract class Page<T> extends MarkupContainer<T>
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
 			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			response.write("<?xml version='1.0' encoding='");
+			// Gwyn - Wed, 21 May 2008 12:23:41
+			// If the xml declaration in the markup used double-quotes, use them in the output too
+			// Whether it should be or not, sometimes it's significant...
+			final String quoteChar = (markupStream.getXmlDeclaration().indexOf('\"') == -1) ? "'"
+				: "\"";
+
+			response.write("<?xml version=");
+			response.write(quoteChar);
+			response.write("1.0");
+			response.write(quoteChar);
+			response.write(" encoding=");
+			response.write(quoteChar);
 			response.write(encoding);
-			response.write("'?>");
+			response.write(quoteChar);
+			response.write("?>");
 		}
 
 		// Set response locale from session locale
@@ -1389,9 +1397,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor<Component<?>>()
+		visitChildren(new Component.IVisitor<Component>()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				// If form component is using form model
 				if (component.sameInnermostModel(Page.this))
@@ -1424,7 +1432,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @deprecated TODO Remove in 1.4
 	 */
 	@Deprecated
-	protected final IPageVersionManager<T> newVersionManager()
+	protected final IPageVersionManager newVersionManager()
 	{
 		return null;
 	}
@@ -1489,7 +1497,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 *            The component that was added
 	 */
-	final void componentAdded(final Component<?> component)
+	final void componentAdded(final Component component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
@@ -1504,7 +1512,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	final void componentModelChanging(final Component<?> component)
+	final void componentModelChanging(final Component component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, null))
@@ -1524,7 +1532,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 *            The component that was removed
 	 */
-	final void componentRemoved(final Component<?> component)
+	final void componentRemoved(final Component component)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
@@ -1538,7 +1546,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 * @param change
 	 */
-	final void componentStateChanging(final Component<?> component, Change change)
+	final void componentStateChanging(final Component component, Change change)
 	{
 		dirty();
 		if (mayTrackChangesFor(component, null))
@@ -1554,10 +1562,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 	final void setFormComponentValuesFromCookies()
 	{
 		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor<Component<?>>()
+		visitChildren(Form.class, new Component.IVisitor<Component>()
 		{
 			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				((Form<?>)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;

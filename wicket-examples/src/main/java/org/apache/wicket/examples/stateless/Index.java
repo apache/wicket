@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.link.StatelessLink;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WebPage<Void>
+public class Index extends WebPage
 {
 	/**
 	 * Constructor
@@ -35,7 +35,7 @@ public class Index extends WebPage<Void>
 	public Index()
 	{
 		setStatelessHint(true);
-		add(new Label<String>("message", new SessionModel()));
+		add(new Label("message", new SessionModel()));
 		// First a normal bookmarkable link (which is stateless by default)
 		add(new BookmarkablePageLink("linkToStatelessPage", StatelessPage.class));
 		add(new BookmarkablePageLink("linkToStatelessPage1", StatelessPage1.class));
@@ -43,7 +43,7 @@ public class Index extends WebPage<Void>
 		add(new BookmarkablePageLink("linkToStatelessPage3", StatelessPage3.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
-		add(new StatelessLink<Void>("linkToStatefulPage")
+		add(new StatelessLink("linkToStatefulPage")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -54,7 +54,7 @@ public class Index extends WebPage<Void>
 				setResponsePage(StatefulPage.class);
 			}
 		});
-		add(new StatelessLink<Void>("invalidatesession")
+		add(new StatelessLink("invalidatesession")
 		{
 
 			@Override

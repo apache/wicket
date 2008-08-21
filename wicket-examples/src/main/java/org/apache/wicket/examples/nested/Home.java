@@ -40,7 +40,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class Home extends WicketExamplePage<Void>
+public class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor.
@@ -85,7 +85,7 @@ public class Home extends WicketExamplePage<Void>
 		tree.setLinkType(LinkType.REGULAR);
 
 		add(tree);
-		add(new Link<Void>("expandAll")
+		add(new Link("expandAll")
 		{
 			@Override
 			public void onClick()
@@ -94,7 +94,7 @@ public class Home extends WicketExamplePage<Void>
 			}
 		});
 
-		add(new Link<Void>("collapseAll")
+		add(new Link("collapseAll")
 		{
 			@Override
 			public void onClick()

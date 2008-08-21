@@ -46,7 +46,7 @@ public class MyTable extends ListView
 
 	protected void populateItem(ListItem listItem)
 	{
-		String txt = (String)listItem.getModelObject();
+		String txt = (String)listItem.getDefaultModelObject();
 		listItem.add(new Label("txt", txt));
 	}
 
@@ -64,6 +64,6 @@ public class MyTable extends ListView
 			list.add("row: " + String.valueOf(i));
 		}
 
-		setModelObject(list);
+		setDefaultModelObject(list);
 	}
 }

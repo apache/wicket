@@ -77,9 +77,9 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 */
 	private void addFeedbackPanels(final AjaxRequestTarget target)
 	{
-		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component< ? >>()
+		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component>()
 		{
-			public Object component(Component< ? > component)
+			public Object component(Component component)
 			{
 				target.addComponent(component);
 				return IVisitor.CONTINUE_TRAVERSAL;
@@ -108,9 +108,9 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	public static void addToAllFormComponents(final Form< ? > form, final String event,
 		final Duration throttleDelay)
 	{
-		form.visitChildren(FormComponent.class, new IVisitor<Component< ? >>()
+		form.visitChildren(FormComponent.class, new IVisitor<Component>()
 		{
-			public Object component(Component< ? > component)
+			public Object component(Component component)
 			{
 				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);
 				if (throttleDelay != null)

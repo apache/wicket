@@ -25,7 +25,8 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.model.util.ListModel;
 
 
 /**
@@ -33,7 +34,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author ivaynberg
  */
-public class PalettePage extends WicketExamplePage<Void>
+public class PalettePage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -43,16 +44,16 @@ public class PalettePage extends WicketExamplePage<Void>
 		List<Person> persons = ComponentReferenceApplication.getPersons();
 		IChoiceRenderer<Person> renderer = new ChoiceRenderer<Person>("fullName", "fullName");
 
-		final Palette<Person> palette = new Palette<Person>("palette",
-			Model.valueOf(new ArrayList<Person>()), Model.valueOf(persons), renderer, 10, true);
+		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<Person>(
+			new ArrayList<Person>()), new CollectionModel<Person>(persons), renderer, 10, true);
 
 
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person(s): " + palette.getModelObjectAsString());
+				info("selected person(s): " + palette.getDefaultModelObjectAsString());
 			}
 		};
 

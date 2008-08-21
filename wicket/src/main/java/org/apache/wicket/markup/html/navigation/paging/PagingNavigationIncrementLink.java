@@ -24,9 +24,9 @@ import org.apache.wicket.markup.html.link.Link;
  * like
  * 
  * <pre>
- *    
+ * 
  *   	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *   	
+ * 
  * </pre>
  * 
  * <p>
@@ -36,7 +36,7 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Juergen Donnerstag
  * @author Martijn Dashorst
  */
-public class PagingNavigationIncrementLink extends Link<Object>
+public class PagingNavigationIncrementLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 
@@ -121,7 +121,7 @@ public class PagingNavigationIncrementLink extends Link<Object>
 	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
-	public boolean linksTo(final Page<?> page)
+	public boolean linksTo(final Page page)
 	{
 		pageable.getCurrentPage();
 		return ((increment < 0) && isFirst()) || ((increment > 0) && isLast());

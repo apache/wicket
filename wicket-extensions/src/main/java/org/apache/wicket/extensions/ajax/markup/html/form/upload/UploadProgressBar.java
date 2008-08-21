@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Andrew Lombardi
  */
-public class UploadProgressBar extends Panel<Void>
+public class UploadProgressBar extends Panel
 {
 	private static final Logger log = LoggerFactory.getLogger(UploadProgressBar.class);
 
@@ -93,11 +93,11 @@ public class UploadProgressBar extends Panel<Void>
 			add(HeaderContributor.forCss(css));
 		}
 
-		final WebMarkupContainer<Void> barDiv = new WebMarkupContainer<Void>("bar");
+		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
 		add(barDiv);
 
-		final WebMarkupContainer<Void> statusDiv = new WebMarkupContainer<Void>("status");
+		final WebMarkupContainer statusDiv = new WebMarkupContainer("status");
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 

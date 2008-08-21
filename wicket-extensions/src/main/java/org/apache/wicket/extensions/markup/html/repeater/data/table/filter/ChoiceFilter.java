@@ -36,7 +36,7 @@ import org.apache.wicket.model.Model;
  *            The model object type
  * 
  */
-public class ChoiceFilter<T> extends AbstractFilter<T>
+public class ChoiceFilter<T> extends AbstractFilter
 {
 	private static final long serialVersionUID = 1L;
 	private static final IChoiceRenderer defaultRenderer = new ChoiceRenderer();

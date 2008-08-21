@@ -36,7 +36,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	}
 
 	@Override
-	protected Class< ? extends WebPage< ? >> getSignInPageClass()
+	protected Class< ? extends WebPage> getSignInPageClass()
 	{
 		return MySignInPage.class;
 	}
@@ -45,7 +45,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return HomePage.class;
 	}

@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  * Generics related utilities
@@ -57,7 +56,7 @@ public class Generics
 	 * @return <code>model</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> model(Model<?> model)
+	public static <T> IModel<T> model(IModel<?> model)
 	{
 		return (IModel<T>)model;
 	}

@@ -77,7 +77,7 @@ public class BoxBorderTest extends WicketTestCase
 		Form form = (Form)tester.getLastRenderedPage().get("border:myForm");
 
 		TextField input = (TextField)tester.getLastRenderedPage().get("border:name");
-		assertEquals("", input.getModelObjectAsString());
+		assertEquals("", input.getDefaultModelObjectAsString());
 
 		tester.setupRequestAndResponse();
 
@@ -88,7 +88,7 @@ public class BoxBorderTest extends WicketTestCase
 		tester.processRequestCycle();
 
 		input = (TextField)tester.getLastRenderedPage().get("border:name");
-		assertEquals("jdo", input.getModelObjectAsString());
+		assertEquals("jdo", input.getDefaultModelObjectAsString());
 	}
 
 	/**

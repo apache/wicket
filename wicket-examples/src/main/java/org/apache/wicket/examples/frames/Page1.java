@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-public class Page1 extends WebPage<Void>
+public class Page1 extends WebPage
 {
 	/**
 	 * Constructor

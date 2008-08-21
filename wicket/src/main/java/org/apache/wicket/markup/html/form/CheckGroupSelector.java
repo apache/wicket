@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * @author Igor Vaynberg
  * 
  */
-public class CheckGroupSelector extends LabeledWebMarkupContainer<Void>
+public class CheckGroupSelector extends LabeledWebMarkupContainer
 {
 	/** */
 	private static final long serialVersionUID = 1L;

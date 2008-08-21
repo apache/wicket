@@ -96,7 +96,16 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				return Objects.convertValue(value, theType);
+				Object converted = Objects.convertValue(value, theType);
+				if (theType.isAssignableFrom(converted.getClass()))
+				{
+					return theType.cast(converted);
+				}
+				else
+				{
+					throw new ConversionException("Could not convert value: " + value +
+						" to type: " + theType.getName() + "(Could not find compatible converter).").setSourceValue(value);
+				}
 			}
 			catch (Exception e)
 			{
@@ -115,7 +124,7 @@ public class ConverterLocator implements IConverterLocator
 				return "";
 			}
 
-			return Objects.convertValue(value, String.class);
+			return (String)Objects.convertValue(value, String.class);
 		}
 	}
 

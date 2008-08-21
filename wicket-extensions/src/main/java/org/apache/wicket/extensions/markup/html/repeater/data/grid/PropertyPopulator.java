@@ -32,13 +32,13 @@ import org.apache.wicket.model.PropertyModel;
  * ICellPopulator cityPopulator = new PropertyPopulator(&quot;address.city&quot;);
  * </pre>
  * 
+ * @param <T>
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
-public class PropertyPopulator implements ICellPopulator
+public class PropertyPopulator<T> implements ICellPopulator<T>
 {
 	private static final long serialVersionUID = 1L;
-	private String property;
+	private final String property;
 
 	/**
 	 * Constructor
@@ -67,8 +67,9 @@ public class PropertyPopulator implements ICellPopulator
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(org.apache.wicket.markup.repeater.Item,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
-	public void populateItem(Item cellItem, String componentId, IModel rowModel)
+	public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId,
+		IModel<T> rowModel)
 	{
-		cellItem.add(new Label(componentId, new PropertyModel(rowModel, property)));
+		cellItem.add(new Label(componentId, new PropertyModel<T>(rowModel, property)));
 	}
 }

@@ -35,7 +35,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Frank Bille (billen)
  */
-public class MockPageWithFormAndCheckGroup extends WebPage<Void>
+public class MockPageWithFormAndCheckGroup extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 	 */
 	public MockPageWithFormAndCheckGroup()
 	{
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form("form");
 		add(form);
 
 
@@ -57,7 +57,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage<Void>
 		checkGroup.add(new Check<Integer>("check1", new Model<Integer>(1)));
 		checkGroup.add(new Check<Integer>("check2", new Model<Integer>(2)));
 
-		add(new AjaxSubmitLink<Void>("submitLink", form)
+		add(new AjaxSubmitLink("submitLink", form)
 		{
 			private static final long serialVersionUID = 1L;
 

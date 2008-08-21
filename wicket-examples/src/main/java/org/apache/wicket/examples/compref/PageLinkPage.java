@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.link.PageLink;
  * 
  * @author Eelco Hillenius
  */
-public class PageLinkPage extends WicketExamplePage<Void>
+public class PageLinkPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -47,14 +47,14 @@ public class PageLinkPage extends WicketExamplePage<Void>
 		// anonymous class, which will create the page instance only when
 		// needed.
 
-		add(new PageLink<Void>("pageLink", new IPageLink()
+		add(new PageLink("pageLink", new IPageLink()
 		{
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				return new NonBookmarkablePage(PageLinkPage.this);
 			}
 
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
 				return NonBookmarkablePage.class;
 			}

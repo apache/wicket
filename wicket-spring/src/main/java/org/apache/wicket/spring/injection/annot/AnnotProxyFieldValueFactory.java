@@ -58,14 +58,13 @@ import org.apache.wicket.spring.SpringBeanLocator;
  */
 public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 {
-	private ISpringContextLocator contextLocator;
-	private boolean failFast = true;
+	private final ISpringContextLocator contextLocator;
 
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
 	/**
 	 * @param contextLocator
-	 * 		spring context locator
+	 *            spring context locator
 	 */
 	public AnnotProxyFieldValueFactory(ISpringContextLocator contextLocator)
 	{
@@ -78,7 +77,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
-	 * 	java.lang.Object)
+	 *      java.lang.Object)
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
@@ -95,11 +94,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				return cache.get(locator);
 			}
 
-			if (failFast)
-			{
-				testLocator(locator, fieldOwner, field);
-			}
-
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
 			// only put the proxy into the cache if the bean is a singleton
 			if (locator.isSingletonBean())
@@ -112,42 +106,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		{
 			return null;
 		}
-	}
-
-	/**
-	 * Tests if the locator can retrieve the bean it is responsible for.
-	 * 
-	 * @param locator
-	 * @param fieldOwner
-	 * @param field
-	 */
-	private void testLocator(SpringBeanLocator locator, Object fieldOwner, Field field)
-	{
-		try
-		{
-			locator.locateProxyTarget();
-		}
-		catch (Throwable e)
-		{
-			String errorMessage = "Could not locate spring bean of class [[" +
-					locator.getBeanType().getName() + "]] ";
-			if (locator.getBeanName() != null && locator.getBeanName().length() > 0)
-			{
-				errorMessage += "and id [[" + locator.getBeanName() + "]] ";
-			}
-			errorMessage += "needed in class [[" + fieldOwner.getClass().getName() + "]] field [[" +
-					field.getName() + "]]";
-			throw new RuntimeException(errorMessage, e);
-		}
-	}
-
-	/**
-	 * @param failFast
-	 * 		true if the locator fails if a bean can't be located
-	 */
-	public void setFailFast(boolean failFast)
-	{
-		this.failFast = failFast;
 	}
 
 	/**

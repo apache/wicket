@@ -26,10 +26,10 @@ import org.apache.wicket.util.value.IValueMap;
 /**
  * select box containing all available choices of the palette
  * 
+ * @param <T>
  * @author Igor Vaynberg ( ivaynberg )
- * 
  */
-public class Choices extends AbstractOptions
+public class Choices<T> extends AbstractOptions<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,12 +39,13 @@ public class Choices extends AbstractOptions
 	 * @param palette
 	 *            parent palette
 	 */
-	public Choices(String id, Palette palette)
+	public Choices(String id, Palette<T> palette)
 	{
 		super(id, palette);
 	}
 
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -58,7 +59,8 @@ public class Choices extends AbstractOptions
 		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS());
 	}
 
-	protected Iterator getOptionsIterator()
+	@Override
+	protected Iterator<T> getOptionsIterator()
 	{
 		return getPalette().getUnselectedChoices();
 	}

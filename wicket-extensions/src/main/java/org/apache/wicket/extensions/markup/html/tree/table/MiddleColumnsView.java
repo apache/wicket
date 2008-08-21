@@ -44,13 +44,13 @@ final class MiddleColumnsView extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private final List columns = new ArrayList();
+	private final List<IColumn> columns = new ArrayList<IColumn>();
 
-	private final List components = new ArrayList();
+	private final List<Component> components = new ArrayList<Component>();
 
-	private TreeNode node;
+	private final TreeNode node;
 
-	private final List renderables = new ArrayList();
+	private final List<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private boolean treeHasLeftColumn;
 
@@ -109,9 +109,9 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		// go over all columns, check their alignment and count sum of their
 		// weights
-		for (Iterator i = columns.iterator(); i.hasNext();)
+		for (Iterator<IColumn> i = columns.iterator(); i.hasNext();)
 		{
-			IColumn column = (IColumn)i.next();
+			IColumn column = i.next();
 			// check if the unit is right
 			if (column.getLocation().getUnit() != Unit.PROPORTIONAL)
 			{
@@ -128,9 +128,9 @@ final class MiddleColumnsView extends WebMarkupContainer
 		int spanLeft = 0; // over how many columns does the spanning column
 		// span
 
-		for (Iterator i = columns.iterator(); i.hasNext();)
+		for (Iterator<IColumn> i = columns.iterator(); i.hasNext();)
 		{
-			IColumn column = (IColumn)i.next();
+			IColumn column = i.next();
 			int ix = index; // to which column should we append the size
 			if (spanLeft > 0) // is there a column spanning over current
 			// column?
@@ -194,6 +194,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 * @param markupStream
 	 *            The markup stream of this component
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		final int markupStart = markupStream.getCurrentIndex();
@@ -209,9 +210,9 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		for (int i = 0; i < columns.size(); ++i)
 		{
-			Component component = (Component)components.get(i);
-			IRenderable renderable = (IRenderable)renderables.get(i);
-			IColumn column = (IColumn)columns.get(i);
+			Component component = components.get(i);
+			IRenderable renderable = renderables.get(i);
+			IColumn column = columns.get(i);
 
 			// write the wrapping column markup
 			response.write("<span class=\"b_\" style=\"width:" + nf.format(widths[i]) + "%\">");
@@ -238,7 +239,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 			{
 				// no renderable or component. fail
 				throw new IllegalStateException(
-						"Either renderable or cell component must be created for this noode");
+					"Either renderable or cell component must be created for this noode");
 			}
 
 			// end of wrapping markup
@@ -260,7 +261,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 					{
 						Response old = RequestCycle.get().setResponse(NullResponse.getInstance());
 						markupStream.setCurrentIndex(markupStart);
-						((Component)components.get(i)).render(markupStream);
+						(components.get(i)).render(markupStream);
 						RequestCycle.get().setResponse(old);
 						rendered = true;
 					}

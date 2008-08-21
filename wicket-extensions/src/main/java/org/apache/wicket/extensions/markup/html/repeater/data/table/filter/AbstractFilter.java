@@ -24,11 +24,8 @@ import org.apache.wicket.model.IModel;
  * Base class for filters that provides some useful functionality
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            The model object type
- * 
  */
-public class AbstractFilter<T> extends Panel<T>
+public class AbstractFilter extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,14 +61,14 @@ public class AbstractFilter<T> extends Panel<T>
 		return form.getStateLocator();
 	}
 
-	protected IModel<Object> getStateModel()
+	protected IModel<?> getStateModel()
 	{
-		return form.getModel();
+		return form.getDefaultModel();
 	}
 
 	protected Object getState()
 	{
-		return form.getModelObject();
+		return form.getDefaultModelObject();
 	}
 
 }

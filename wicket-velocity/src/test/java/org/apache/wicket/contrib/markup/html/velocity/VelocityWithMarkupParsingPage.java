@@ -31,7 +31,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityWithMarkupParsingPage extends WebPage<Void>
+public class VelocityWithMarkupParsingPage extends WebPage
 {
 	/**
 	 * Adds a VelocityPanel to the page with markup parsing
@@ -57,7 +57,7 @@ public class VelocityWithMarkupParsingPage extends WebPage<Void>
 				return true;
 			}
 		};
-		velocityPanel.add(new Label<String>("message", VelocityPage.TEST_STRING)
+		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING)
 		{
 			private static final long serialVersionUID = 1L;
 

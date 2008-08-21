@@ -32,7 +32,7 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
  * 
  * @author Peter Ertl
  */
-public class AbortExceptionPage extends WebPage<Object>
+public class AbortExceptionPage extends WebPage
 {
 	private static final long serialVersionUID = -5906071716129043859L;
 

@@ -31,7 +31,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Eelco Hillenius
  */
-public class LinkPage extends WicketExamplePage<Void>
+public class LinkPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -45,7 +45,7 @@ public class LinkPage extends WicketExamplePage<Void>
 
 		// add a link which, when clicked, increases our counter
 		// when a link is clicked, its onClick method is called
-		Link<?> link1 = new Link<Void>("link1")
+		Link link1 = new Link("link1")
 		{
 			@Override
 			public void onClick()
@@ -56,7 +56,7 @@ public class LinkPage extends WicketExamplePage<Void>
 		add(link1);
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		link1.add(new Label<String>("label1", new Model<String>()
+		link1.add(new Label("label1", new Model<String>()
 		{
 			@Override
 			public String getObject()
@@ -72,7 +72,7 @@ public class LinkPage extends WicketExamplePage<Void>
 		// The same thing could have been achieved by using setModelObject,
 		// which implicitly registers a state change (of type
 		// ComponentModelChange).
-		Link<?> linkWithStateChange = new Link<Void>("linkWithStateChange")
+		Link linkWithStateChange = new Link("linkWithStateChange")
 		{
 			@Override
 			public void onClick()
@@ -91,8 +91,7 @@ public class LinkPage extends WicketExamplePage<Void>
 			}
 		};
 		add(linkWithStateChange);
-		linkWithStateChange.add(new Label<Integer>("label", new PropertyModel<Integer>(count2,
-			"clicks")));
+		linkWithStateChange.add(new Label("label", new PropertyModel<Integer>(count2, "clicks")));
 
 		// we can attach Link components to any HTML tag we want. If it is an
 		// anchor (<a href...),
@@ -103,7 +102,7 @@ public class LinkPage extends WicketExamplePage<Void>
 
 		// it is of course possible to - instead of the above approach - hide as
 		// much of the component as possible within a class.
-		class CustomLink extends Link<Void>
+		class CustomLink extends Link
 		{
 			final ClickCount count2;
 
@@ -130,7 +129,7 @@ public class LinkPage extends WicketExamplePage<Void>
 		// and if we know we are going to attach it to a <input type="button>
 		// tag, we shouldn't
 		// use a label, but an AttributeModifier instead.
-		class ButtonLink extends Link<Void>
+		class ButtonLink extends Link
 		{
 			final ClickCount count3;
 
@@ -179,7 +178,7 @@ public class LinkPage extends WicketExamplePage<Void>
 	/**
 	 * Simple custom label that displays the link click count.
 	 */
-	private static class ClickCountLabel extends Label<String>
+	private static class ClickCountLabel extends Label
 	{
 		/**
 		 * Construct.
@@ -207,7 +206,7 @@ public class LinkPage extends WicketExamplePage<Void>
 	// ----------
 
 	final ClickCount count1 = new ClickCount(); // simple counter object
-	Link<?> link1 = new Link<Void>("link1")
+	Link link1 = new Link("link1")
 	{
 		@Override
 		public void onClick()

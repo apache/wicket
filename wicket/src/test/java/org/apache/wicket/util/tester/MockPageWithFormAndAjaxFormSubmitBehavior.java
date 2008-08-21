@@ -32,7 +32,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Frank Bille (billen)
  */
-public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage<Void>
+public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 {
 	static final String EVENT_COMPONENT = "eventComponent";
 

@@ -90,7 +90,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	public void onComponentTag(final Component< ? > component, final ComponentTag tag)
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		if (isEnabled(component))
 		{

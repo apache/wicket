@@ -40,7 +40,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * Demonstrates components from the wicket-date project and a bunch of locale fiddling.
  */
-public class DatesPage extends WicketExamplePage<Void>
+public class DatesPage extends WicketExamplePage
 {
 	/**
 	 * Choice for a locale.
@@ -100,7 +100,7 @@ public class DatesPage extends WicketExamplePage<Void>
 				}
 			});
 			setChoiceRenderer(new LocaleChoiceRenderer());
-			setModel(new PropertyModel<Locale>(DatesPage.this, "selectedLocale"));
+			setDefaultModel(new PropertyModel<Locale>(DatesPage.this, "selectedLocale"));
 		}
 
 		/**
@@ -139,9 +139,9 @@ public class DatesPage extends WicketExamplePage<Void>
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form<?> localeForm = new Form<Void>("localeForm");
+		Form<?> localeForm = new Form("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
-		localeForm.add(new Link<Void>("localeUSLink")
+		localeForm.add(new Link("localeUSLink")
 		{
 			@Override
 			public void onClick()
@@ -159,7 +159,7 @@ public class DatesPage extends WicketExamplePage<Void>
 				return selectedLocale;
 			}
 		};
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()

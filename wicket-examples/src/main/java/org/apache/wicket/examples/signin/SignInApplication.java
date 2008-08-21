@@ -45,7 +45,7 @@ public final class SignInApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<? extends Page<?>> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
@@ -67,12 +67,12 @@ public final class SignInApplication extends WicketExampleApplication
 	{
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
-			public boolean isActionAuthorized(Component<?> component, Action action)
+			public boolean isActionAuthorized(Component component, Action action)
 			{
 				return true;
 			}
 
-			public <T extends Component<?>> boolean isInstantiationAuthorized(
+			public <T extends Component> boolean isInstantiationAuthorized(
 				Class<T> componentClass)
 			{
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))

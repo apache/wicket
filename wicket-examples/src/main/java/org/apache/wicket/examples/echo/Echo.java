@@ -28,7 +28,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class Echo extends WicketExamplePage<Void>
+public class Echo extends WicketExamplePage
 {
 	private String message = "[type your message to the world here]";
 
@@ -42,12 +42,12 @@ public class Echo extends WicketExamplePage<Void>
 		PropertyModel<String> messageModel = new PropertyModel<String>(this, "message");
 
 		// The label displays the currently set message
-		add(new Label<String>("msg", messageModel));
+		add(new Label("msg", messageModel));
 
 		// Add a form to change the message. We don't need to do anything
 		// else with this form as the shared model is automatically updated
 		// on form submits
-		Form<?> form = new Form<Void>("form");
+		Form<?> form = new Form("form");
 		form.add(new TextField<String>("msgInput", messageModel));
 		add(form);
 	}

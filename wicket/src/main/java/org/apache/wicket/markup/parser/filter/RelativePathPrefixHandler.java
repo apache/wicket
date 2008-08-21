@@ -78,7 +78,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public void onComponentTag(Component< ? > component, ComponentTag tag)
+		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			String prefix = null;
 
@@ -156,24 +156,23 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(MarkupContainer< ? > container, MarkupStream markupStream,
-		ComponentTag tag)
+	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		if (WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID.equals(tag.getId()))
 		{
-			final Component< ? > wc;
+			final Component wc;
 			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
 				container.getPage().getAutoIndex();
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent<Object>(id);
+				wc = new WebComponent(id);
 			}
 			else
 			{
 				// we do not want to mess with the hierarchy, so the container has to be
 				// transparent as it may have wicket components inside. for example a raw anchor tag
 				// that contains a label.
-				wc = new WebMarkupContainer<Object>(id)
+				wc = new WebMarkupContainer(id)
 				{
 					private static final long serialVersionUID = 1L;
 

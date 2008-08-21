@@ -124,15 +124,18 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 	return killEvent(event);
                		break;
                 case KEY_ENTER:
-	                if(selected>-1){
-    	                obj.value=getSelectedValue();
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-          		        if(typeof objonchange=="function")objonchange();
-					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection==true) {
- 			            hideAutoComplete();
-          		        hidingAutocomplete=1;
-					}
+                    if(selected > -1) {
+                        var value = getSelectedValue();
+                        if(value = handleSelection(value)) {
+                          obj.value = value;
+                          if(typeof objonchange=="function") objonchange();
+                        }
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    } else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
+                        hideAutoComplete();
+                        hidingAutocomplete = 1;
+                    }
 	                mouseactive=0;
 	                if(typeof objonkeydown=="function")objonkeydown();
 
@@ -177,6 +180,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         }
     }
 
+    function handleSelection(input) {
+    	var menu = getAutocompleteMenu();
+    	var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
+    	return attr ? eval(attr.value) : input;
+    }
+    
     function getMenuId() {
         return elementId+"-autocomplete";
     }
@@ -185,8 +194,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         var choiceDiv=document.getElementById(getMenuId());
         if (choiceDiv==null) {
         	var container = document.createElement("div");
-        	container.className="wicket-aa-container";
-        	document.body.appendChild(container);
+            container.className ="wicket-aa-container";
+            if(cfg.className)
+              container.className += ' ' + cfg.className;
+            document.body.appendChild(container);
         	container.style.display="none";
         	container.style.overflow="auto";
             container.style.position="absolute";            
@@ -264,7 +275,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
         container.style.left=position[0]+'px'
         container.style.top=(input.offsetHeight+position[1])+'px';
-        container.style.width=input.offsetWidth+'px';
+        if(cfg.adjustInputWidth)
+          container.style.width=input.offsetWidth+'px';
         visible=1;
         hideShowCovered();
     }
@@ -306,9 +318,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 
 		var clickFunc = function(event){
 			mouseactive=0;
-			wicketGet(elementId).value=getSelectedValue();
-			if(typeof objonchange=="function")objonchange();
+			var value = getSelectedValue();
+			if(value = handleSelection(value)) {
+				wicketGet(elementId).value=value;
+				if (typeof objonchange=="function") {objonchange();}
 				hideAutoComplete();
+			}
 		};
 			
 		var mouseOverFunc = function(event){

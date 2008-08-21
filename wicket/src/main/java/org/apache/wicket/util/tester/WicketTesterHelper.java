@@ -91,7 +91,7 @@ public class WicketTesterHelper
 					object.type = name;
 					try
 					{
-						object.value = component.getModelObjectAsString();
+						object.value = component.getDefaultModelObjectAsString();
 					}
 					catch (Exception e)
 					{

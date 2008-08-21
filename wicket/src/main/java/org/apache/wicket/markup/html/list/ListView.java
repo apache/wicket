@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
 
@@ -78,8 +79,8 @@ import org.apache.wicket.version.undo.Change;
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior)} should be invoked on the {@link ListItem} that
- * is given in {@link #populateItem(ListItem)} method.
+ * {@link #add(org.apache.wicket.behavior.IBehavior...)} should be invoked on the {@link ListItem}
+ * that is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 
  * <p>
@@ -88,12 +89,11 @@ import org.apache.wicket.version.undo.Change;
  * setReuseItems is false, which has the effect that ListView replaces all child components by new
  * instances. The idea behind this is that you always render the fresh data, and as people usually
  * use ListViews for displaying read-only lists (at least, that's what we think), this is good
- * default behavior. <br />
- * However, as the components are replaced before the rendering starts, the search for specific
- * messages for these components fails as they are replaced with other instances. Another problem is
- * that 'wrong' user input is kept as (temporary) instance data of the components. As these
- * components are replaced by new ones, your user will never see the wrong data when setReuseItems
- * is false.
+ * default behavior. <br /> However, as the components are replaced before the rendering starts, the
+ * search for specific messages for these components fails as they are replaced with other
+ * instances. Another problem is that 'wrong' user input is kept as (temporary) instance data of the
+ * components. As these components are replaced by new ones, your user will never see the wrong data
+ * when setReuseItems is false.
  * </p>
  * 
  * @author Jonathan Locke
@@ -104,11 +104,8 @@ import org.apache.wicket.version.undo.Change;
  * @param <T>
  *            Model object type
  */
-public abstract class ListView<T> extends AbstractRepeater<List<T>>
+public abstract class ListView<T> extends AbstractRepeater
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** Index of the first item to show */
@@ -135,6 +132,8 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public ListView(final String id, final IModel<List<T>> model)
@@ -161,7 +160,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	public ListView(final String id, final List<T> list)
 	{
-		this(id, Model.of(list));
+		this(id, new ListModel<T>(list));
 	}
 
 	/**
@@ -171,9 +170,10 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * 
 	 * @return The list of items in this list view.
 	 */
+	@SuppressWarnings("unchecked")
 	public final List<T> getList()
 	{
-		final List<T> list = getModelObject();
+		final List<T> list = (List<T>)getDefaultModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -217,7 +217,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	{
 		int size = viewSize;
 
-		final Object modelObject = getModelObject();
+		final Object modelObject = getDefaultModelObject();
 		if (modelObject == null)
 		{
 			return size == Integer.MAX_VALUE ? 0 : size;
@@ -248,17 +248,14 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will move the given item "down" (towards the end) in the listView.
 	 * 
-	 * @param <S>
-	 *            The returned {@link Link}'s model object type
-	 * 
 	 * @param id
 	 *            Name of move-down link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final <S> Link<S> moveDownLink(final String id, final ListItem<T> item)
+	public final Link<Void> moveDownLink(final String id, final ListItem<T> item)
 	{
-		return new Link<S>(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -310,17 +307,14 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will move the given item "up" (towards the beginning) in the listView.
 	 * 
-	 * @param <S>
-	 *            The returned {@link Link}'s model object type
-	 * 
 	 * @param id
 	 *            Name of move-up link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final <S> Link<S> moveUpLink(final String id, final ListItem<T> item)
+	public final Link<Void> moveUpLink(final String id, final ListItem<T> item)
 	{
-		return new Link<S>(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -373,17 +367,14 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * Returns a link that will remove this ListItem from the ListView that holds it.
 	 * 
-	 * @param <S>
-	 *            The returned {@link Link}'s model object type
-	 * 
 	 * @param id
 	 *            Name of remove link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final <S> Link<S> removeLink(final String id, final ListItem<T> item)
+	public final Link<Void> removeLink(final String id, final ListItem<T> item)
 	{
-		return new Link<S>(id)
+		return new Link<Void>(id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -429,7 +420,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	public ListView<T> setList(List<T> list)
 	{
-		setModel(Model.of(list));
+		setDefaultModel(Model.of(list));
 		return this;
 	}
 
@@ -518,6 +509,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	protected ListItem<T> newItem(final int index)
 	{
+		// FIXME 1.5: this method should already include item's model in its definition
 		return new ListItem<T>(index, getListItemModel(getModel(), index));
 	}
 
@@ -536,10 +528,10 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
-				for (final Iterator<Component<?>> iterator = iterator(); iterator.hasNext();)
+				for (final Iterator<? extends ListItem<T>> iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
-					final ListItem<?> child = (ListItem<?>)iterator.next();
+					final ListItem<?> child = iterator.next();
 					if (child != null)
 					{
 						final int index = child.getIndex();
@@ -626,7 +618,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
 	 */
 	@Override
-	protected final void renderChild(Component<?> child)
+	protected final void renderChild(Component child)
 	{
 		renderItem((ListItem<?>)child);
 	}
@@ -647,11 +639,11 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	@Override
-	protected Iterator<Component<?>> renderIterator()
+	protected Iterator<Component> renderIterator()
 	{
 
 		final int size = size();
-		return new ReadOnlyIterator<Component<?>>()
+		return new ReadOnlyIterator<Component>()
 		{
 			private int index = 0;
 
@@ -660,13 +652,63 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				return index < size;
 			}
 
-			public Component<?> next()
+			public Component next()
 			{
 				final String id = Integer.toString(firstIndex + index);
 				index++;
-				Component<?> c = get(id);
+				Component c = get(id);
 				return c;
 			}
 		};
 	}
+
+	@SuppressWarnings( { "unchecked" })
+	@Override
+	public Iterator<? extends ListItem<T>> iterator()
+	{
+		return (Iterator<? extends ListItem<T>>)super.iterator();
+	}
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<List<T>> getModel()
+	{
+		return (IModel<List<T>>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<List<T>> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final List<T> getModelObject()
+	{
+		return (List<T>)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(List<T> object)
+	{
+		setDefaultModelObject(object);
+	}
+
 }

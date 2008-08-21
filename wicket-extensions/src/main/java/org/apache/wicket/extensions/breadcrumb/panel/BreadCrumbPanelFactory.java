@@ -32,7 +32,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	private static final long serialVersionUID = 1L;
 
 	/** Class to construct. */
-	private Class panelClass;
+	private final Class<? extends BreadCrumbPanel> panelClass;
 
 	/**
 	 * Construct.
@@ -42,7 +42,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 *            and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelFactory(final Class panelClass)
+	public BreadCrumbPanelFactory(final Class<? extends BreadCrumbPanel> panelClass)
 	{
 		if (panelClass == null)
 		{
@@ -52,7 +52,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 		if (!BreadCrumbPanel.class.isAssignableFrom(panelClass))
 		{
 			throw new IllegalArgumentException("argument panelClass (" + panelClass +
-					") must extend class " + BreadCrumbPanel.class.getName());
+				") must extend class " + BreadCrumbPanel.class.getName());
 		}
 
 
@@ -68,10 +68,10 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 */
 	public final BreadCrumbPanel create(String componentId, IBreadCrumbModel breadCrumbModel)
 	{
-		Constructor ctor = getConstructor();
+		Constructor<? extends BreadCrumbPanel> ctor = getConstructor();
 		try
 		{
-			return (BreadCrumbPanel)ctor.newInstance(new Object[] { componentId, breadCrumbModel });
+			return ctor.newInstance(new Object[] { componentId, breadCrumbModel });
 		}
 		catch (Exception e)
 		{
@@ -84,12 +84,12 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * 
 	 * @return The constructor.
 	 */
-	private final Constructor getConstructor()
+	private final Constructor<? extends BreadCrumbPanel> getConstructor()
 	{
 		try
 		{
-			Constructor ctor = panelClass.getConstructor(new Class[] { String.class,
-					IBreadCrumbModel.class });
+			Constructor<? extends BreadCrumbPanel> ctor = panelClass.getConstructor(new Class[] {
+					String.class, IBreadCrumbModel.class });
 			return ctor;
 		}
 		catch (SecurityException e)

@@ -56,7 +56,7 @@ public interface IMarkupLoader
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	Markup loadMarkup(final MarkupContainer< ? > container,
+	Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException;
 }

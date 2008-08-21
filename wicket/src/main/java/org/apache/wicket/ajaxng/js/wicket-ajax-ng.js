@@ -7,16 +7,16 @@ YUI().use('*', function(Y) {
 	 */
 	var E = Y.Event;
 	var L = Y.Lang;
-	var UA = YAHOO.env.ua;
+	var UA = Y.UA;
 	
 	var W = { };
 
 	// Publish the current YUI instance.
 	// Creating new YUI instance every time is needed can be quite expensive
-	W.Y = Y;
+	W.Y = Y;		
 	
 	/*
-	 * W.$, W.$$
+	 * $, $$
 	 */
 	
 	W.$ = function(arg) 
@@ -43,14 +43,6 @@ YUI().use('*', function(Y) {
 			return arg;
 		}
 	}
-
-	var bind = function(method, object) 
-	{		
-		return function() 
-		{
-			return method.apply(object, arguments);
-		}
-	}
 	
 	/**
 	 * Returns true if the argument element belongs to the current document.
@@ -67,11 +59,20 @@ YUI().use('*', function(Y) {
 		{	
 			return Y.get(element).inDoc();
 		}
-	}
+	}	
 	
 	/*
 	 * Utility
 	 */
+	
+	var bind = function(method, object) 
+	{		
+		return function() 
+		{
+			return method.apply(object, arguments);
+		}
+	}
+	
 	var copyArray = function(array)
 	{
 		var res = new Array();
@@ -257,7 +258,8 @@ YUI().use('*', function(Y) {
 				var max = 50;
 				
 				var a = this.beingPurged;
-				for (var i = 0; i < a.length && done < 50; ++i)
+				var i;
+				for (i = 0; i < a.length && done < 50; ++i)
 				{
 					var e = a[i];
 					if (e != null)
@@ -802,21 +804,20 @@ YUI().use('*', function(Y) {
 		defaultUrlParameters: function()
 		{
 			var a = this.attributes;
-			var componentId = (a.component == null) ? null : (Wicket.$(a.component).getAttribute("id"));
-			var res =
-			{
-				"wicket:componentId" : componentId,
-				"wicket:pageId" : a.pageId,
-				"wicket:formId" : a.formId,
-				"wicket:listenerInterface" : a.listenerInterface,
-				"wicket:behaviorIndex" : a.behaviorIndex				
-			};
+			var componentId = (a.component == null) ? null : (W.$(a.component).getAttribute("id"));
+			var res = {};
+			var gs = W.ajax.globalSettings;
+			res[gs.urlParamComponentId] = componentId;
+			res[gs.urlParamPageId] = a.pageId;
+			res[gs.urlParamFormId] = a.formId;
+			res[gs.urlParamListenerInterface] = a.listenerInterface;
+			res[gs.urlParamBehaviorIndex] = a.behaviorIndex;
 			return res;
 		},
 		
 		buildUrl: function() 
 		{
-			var url = W.ajax.getUrlPrefix();
+			var url = W.ajax.globalSettings.urlPrefix;
 			var a = this.attributes;
 			
 			var params = new Object();
@@ -847,13 +848,50 @@ YUI().use('*', function(Y) {
 			return url;
 		},
 		
+		onSuccess: function(transactionId, responseObject)
+		{
+			log.debug("RequestQueue", "Request successful - TransactionId: ", transactionId, " Response: ", responseObject);
+			
+		},
+		
+		onFailure: function(transactionId, responseObject)
+		{
+			log.debug("RequestQueue", "Request failed - TransactionId: ", transactionId, " Response: ", responseObject);
+			this.failure();
+		},
+		
+		getRequestCfg: function(url) {
+			var a = this.attributes;
+			var m = a.formId != null ? "POST" : "GET";
+			var f = a.formId != null ? { id:a.formId } : null;
+			var res = 
+			{
+				method: m,
+				on: 
+				{
+					success: bind(this.onSuccess, this),
+					failure: bind(this.onFailure, this),
+					abort: bind(this.onFailure, this)
+				},
+				form: f,
+				timeout: a.requestTimeout				
+			};
+			return res;
+		},
+		
 		execute: function(next)
 		{
 			this.invokeBeforeHandlers();			
 			this.next = next;
 
 			var url = this.buildUrl();
-			console.info(url);
+			var cfg = this.getRequestCfg(url);
+			
+			log.debug("RequestQueue", "Initiating AJAX Request on url ", url + " with configuration ", cfg);
+			
+			var request = Y.io(url, cfg);
+			
+			log.trace("RequestQueue", "Obtained request object ", request);
 			
 			this.success();
 		}
@@ -958,7 +996,7 @@ YUI().use('*', function(Y) {
 					this.currentItem = i;
 					var s = bind(function() { this.skip(i); }, this);
 					var a = i.attributes;
-					var t = a.requestTimeout + a.processingTimeout;
+					var t = a.requestTimeout + a.processingTimeout + 1000;
 					
 					// failsafe timeout, in case the request queue item fails to call next() 
 					window.setTimeout(s, t);
@@ -1017,7 +1055,9 @@ YUI().use('*', function(Y) {
 	var timestampArgumentMethod = function(item)
 	{
 		var stamp = "" + (reqCount ++) + (Math.ceil(Math.random() * 10000));
-		return { "wicket:timestamp": stamp }; 
+		var res = {};
+		res[W.ajax.globalSettings.urlParamTimestamp] = stamp;
+		return res; 
 	}
 	
 	var globalSettings = 
@@ -1032,7 +1072,14 @@ YUI().use('*', function(Y) {
 		successHandlers: [],
 		errorHandlers: [],
 		urlPostProcessors: [],
-		urlArgumentMethods: [ timestampArgumentMethod ]		                     
+		urlArgumentMethods: [ timestampArgumentMethod ],
+		urlPrefix: "INVALID_URL_PREFIX",
+		urlParamComponentId: "INVALID_COMPONENT_ID_PARAM",
+		urlParamTimestamp: "INVALID_TIMESTAMP_PARAM",
+		urlParamPageId: "INVALID_PAGE_ID_PARAM",
+		urlParamFormId: "INVALID_FORM_ID_PARAM",
+		urlParamListenerInterface: "INVALID_LISTENER_INTERFACE_PARAM",
+		urlParamBehaviorIndex: "INVALID_BEHAVIOR_INDEX_PARAM"
 	};
 	
 	var Ajax = function() 
@@ -1042,21 +1089,16 @@ YUI().use('*', function(Y) {
 	
 	Ajax.prototype = 
 	{
-		getUrlPrefix: function()
-		{
-			return globalSettings.urlPrefix;
-		}
+		
 	};
 	
 	W.ajax = new Ajax();
 
-	W.ajax.globalSettings.urlPrefix = "wicketfilter/ajax";
+	
 	
 	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
 	
 	Y.on("event:ready", function() {
-	
-	
 		
 	var i = 0;
 	
@@ -1064,12 +1106,12 @@ YUI().use('*', function(Y) {
 	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre, ua:{a:5} });
 	var y = new RequestQueue();
 	y.add(x);
-	y.add(x);
-	y.add(x);
-	y.add(x);
-	y.add(x);
-	y.add(x);		
-	
+//	y.add(x);
+//	y.add(x);
+//	y.add(x);
+//	y.add(x);
+//	y.add(x);		
+//	
 	}, window);
 	
 	WicketNG = W;

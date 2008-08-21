@@ -25,7 +25,7 @@ import org.apache.wicket.examples.authorization.BasePage;
  * @author Eelco Hillenius
  */
 @AuthorizeInstantiation("ADMIN")
-public class AdminAnnotationsBookmarkablePage extends BasePage<Void>
+public class AdminAnnotationsBookmarkablePage extends BasePage
 {
 	/**
 	 * Construct.

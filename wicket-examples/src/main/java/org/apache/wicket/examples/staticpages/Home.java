@@ -35,7 +35,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class Home extends WicketExamplePage<Void>
+public class Home extends WicketExamplePage
 {
 	/**
 	 * Construct.
@@ -43,9 +43,9 @@ public class Home extends WicketExamplePage<Void>
 	public Home()
 	{
 		// Hello World as a Static Page
-		add(new StaticLink<String>("hellostream", new Model<String>("docs/hello.html")));
+		add(new StaticLink("hellostream", new Model<String>("docs/hello.html")));
 		// Hello World as a Static Page with XSLT layout
-		add(new StaticLink<String>("helloxslt", new Model<String>("xsldocs/hello.html")));
+		add(new StaticLink("helloxslt", new Model<String>("xsldocs/hello.html")));
 
 		/*
 		 * Sending a Wicket page by email: all requests to bookmarkable page "Page" will be
@@ -58,9 +58,9 @@ public class Home extends WicketExamplePage<Void>
 		add(new BookmarkablePageLink("emailwicketpage", EmailPage.class));
 	}
 
-	private class StaticLink<T> extends WebMarkupContainer<T>
+	private class StaticLink extends WebMarkupContainer
 	{
-		public StaticLink(String id, IModel<T> model)
+		public StaticLink(String id, IModel<?> model)
 		{
 			super(id, model);
 			add(new AttributeModifier("href", true, model));

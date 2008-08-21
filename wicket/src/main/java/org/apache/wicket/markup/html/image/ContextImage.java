@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.image;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
@@ -28,26 +27,38 @@ import org.apache.wicket.model.IModel;
  * to the context root, no matter what URL the page the ContextImage is on is rendered at.
  * 
  * @author Alastair Maw
+ * @author Igor Vaynberg (ivaynberg)
  */
-public class ContextImage extends WebComponent<String>
+public class ContextImage extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see Component#Component(String)
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param contextRelativePath
+	 *            context-relative path eg <code>images/border.jpg</code>
 	 */
-	public ContextImage(String id)
+	public ContextImage(String id, IModel<String> contextRelativePath)
 	{
 		super(id);
+		add(new ContextPathGenerator(contextRelativePath));
 	}
 
 	/**
-	 * @see Component#Component(String, IModel)
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param contextRelativePath
+	 *            context-relative path eg <code>images/border.jpg</code>
 	 */
-	public ContextImage(String id, IModel<String> model)
+	public ContextImage(String id, String contextRelativePath)
 	{
-		super(id, model);
+		super(id);
+		add(new ContextPathGenerator(contextRelativePath));
 	}
+
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
@@ -57,6 +68,5 @@ public class ContextImage extends WebComponent<String>
 	{
 		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
-		tag.put("src", getRequest().getRelativePathPrefixToContextRoot() + getModelObjectAsString());
 	}
 }

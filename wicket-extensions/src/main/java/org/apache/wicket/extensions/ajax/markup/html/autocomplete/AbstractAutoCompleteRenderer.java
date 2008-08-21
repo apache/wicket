@@ -53,7 +53,11 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		}
 		textValue = textValue.replaceAll("\\\"", "&quot;");
 
-		response.write("<li textvalue=\"" + textValue + "\">");
+        response.write("<li textvalue=\"" + textValue + "\"");
+        final CharSequence handler = getOnSelectJavascriptExpression(object);
+        if(handler != null)
+            response.write(" onselect=\"" + handler + '"');
+        response.write(">");
 		renderChoice(object, response, criteria);
 		response.write("</li>");
 	}
@@ -94,4 +98,48 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @return the text value that will be set on the textbox if this assist is selected
 	 */
 	protected abstract String getTextValue(T object);
+
+    /**
+     * Allows the execution of a custom javascript expression when an item is selected in the autocompleter popup (either by
+     * clicking on it or hitting enter on the current selection).
+     * <p/>
+     * The javascript to execute must be a javascript expression that will be processed using javascript's eval().
+     * The function should return the textvalue to copy it into the corresponding form input field (the default behavior).
+     *
+     * the current text value will be in variable 'input'.
+     *
+     * If the function returns <code>null</code> the chosen text value will be ignored.
+     * <p/>
+     * example 1:
+     * <pre>
+     * protected CharSequence getOnSelectJavascript(Address address)
+     * {
+     *    final StringBuilder js = new StringBuilder();
+     *    js.append("wicketGet('street').value ='" + address.getStreet() + "';");
+     *    js.append("wicketGet('zipcode').value ='" + address.getZipCode() + "';");
+     *    js.append("wicketGet('city').value ='" + address.getCity() + "';");
+     *    js.append("input"); // <-- do not use return statement here!
+     *    return js.toString();
+     * }
+     * </pre>
+     * example 2:
+     * <pre>
+     * protected CharSequence getOnSelectJavascript(Currency currency)
+     * {
+     *    final StringBuilder js = new StringBuilder();
+     *    js.append("val rate = ajaxGetExchangeRateForCurrency(currencySymbol);");
+     *    js.append("if(rate == null) alert('exchange rate service currently not available');");
+     *    js.append("rate");
+     *    return js.toString();
+     * }
+     * </pre>
+     * Then the autocompleter popup will be closed.
+     *
+     * @param item the autocomplete item to get a custom javascript expression for
+     * @return javascript to execute on selection or <code>null</code> if default behavior is intented
+     */
+    protected CharSequence getOnSelectJavascriptExpression(T item)
+    {
+      return null;
+    }
 }

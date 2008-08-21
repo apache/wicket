@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  */
-public class MarkupInheritanceBase_8 extends WebPage<Void>
+public class MarkupInheritanceBase_8 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

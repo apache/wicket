@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_8 extends WebPage<Void>
+public class HeaderSectionPage_8 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

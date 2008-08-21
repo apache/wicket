@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.WildcardListModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -63,7 +62,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new Model(new ArrayList<E>()), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<E>(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -77,7 +76,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices)
 	{
-		this(id, new Model((Serializable)choices), new ChoiceRenderer<E>());
+		this(id, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -94,7 +93,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, final List<? extends E> choices,
 		final IChoiceRenderer<E> renderer)
 	{
-		this(id, new Model((Serializable)choices), renderer);
+		this(id, new WildcardListModel<E>(choices), renderer);
 	}
 
 	/**
@@ -110,7 +109,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices)
 	{
-		this(id, model, new Model((Serializable)choices), new ChoiceRenderer<E>());
+		this(id, model, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -129,7 +128,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices,
 		final IChoiceRenderer<E> renderer)
 	{
-		this(id, model, new Model((Serializable)choices), renderer);
+		this(id, model, new WildcardListModel<E>(choices), renderer);
 	}
 
 	/**
@@ -208,7 +207,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public List<? extends E> getChoices()
 	{
-		List<E> choices = (this.choices != null) ? (List<E>)this.choices.getObject() : null;
+		List<? extends E> choices = (this.choices != null) ? this.choices.getObject() : null;
 		if (choices == null)
 		{
 			throw new NullPointerException(
@@ -245,7 +244,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            the list of choices
 	 * @return this for chaining
 	 */
-	public final AbstractChoice<T, E> setChoices(List<T> choices)
+	public final AbstractChoice<T, E> setChoices(List<E> choices)
 	{
 		if ((this.choices != null))
 		{
@@ -254,7 +253,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				addStateChange(new ChoicesListChange());
 			}
 		}
-		this.choices = new Model((Serializable)choices);
+        this.choices = new WildcardListModel<E>(choices);
 		return this;
 	}
 
@@ -386,7 +385,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
-			final IConverter<T> converter = this.getConverter(objectClass);
+			final IConverter<T> converter = getConverter(objectClass);
 
 			displayValue = converter.convertToString(objectValue, getLocale());
 		}
@@ -492,8 +491,5 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices +
 				"]";
 		}
-
-
 	}
-
 }

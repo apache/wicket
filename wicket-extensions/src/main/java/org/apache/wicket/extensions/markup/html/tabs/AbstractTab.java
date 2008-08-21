@@ -54,13 +54,16 @@ public abstract class AbstractTab implements ITab
 		return title;
 	}
 
+	/**
+	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#isVisible()
+	 */
 	public boolean isVisible()
 	{
 		return true;
 	}
-	
+
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
+	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(String)
 	 */
-	public abstract Panel<?> getPanel(final String panelId);
+	public abstract Panel getPanel(final String panelId);
 }

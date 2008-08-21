@@ -25,10 +25,8 @@ package org.apache.wicket.markup.html.link;
  * 
  * @author jcompagner
  * 
- * @param <T>
- *            The model object type
  */
-public abstract class StatelessLink<T> extends Link<T>
+public abstract class StatelessLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 

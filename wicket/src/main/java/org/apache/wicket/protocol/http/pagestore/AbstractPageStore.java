@@ -80,7 +80,7 @@ public abstract class AbstractPageStore implements IPageStore
 		 * 
 		 * @param page
 		 */
-		public SerializedPage(Page<?> page)
+		public SerializedPage(Page page)
 		{
 			pageId = page.getNumericId();
 			pageMapName = page.getPageMapName();
@@ -261,7 +261,7 @@ public abstract class AbstractPageStore implements IPageStore
 
 		private final List<SerializedPage> completed = new ArrayList<SerializedPage>();
 
-		public Object getPageReplacementObject(Page<?> callingPage)
+		public Object getPageReplacementObject(Page callingPage)
 		{
 			SerializedPage calling = new SerializedPage(callingPage);
 
@@ -314,16 +314,16 @@ public abstract class AbstractPageStore implements IPageStore
 		 *      java.io.ObjectOutputStream)
 		 */
 
-		public void serializePage(Page<?> page, ObjectOutputStream stream) throws IOException
+		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{
 			stream.defaultWriteObject();
 		}
 
-		public void deserializePage(int id, String pageMapName, Page<?> page,
+		public void deserializePage(int id, String pageMapName, Page page,
 			ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{
 			// get the page instance registry
-			IntHashMap<Page<?>> pages = SecondLevelCacheSessionStore.getUsedPages(pageMapName);
+			IntHashMap<Page> pages = SecondLevelCacheSessionStore.getUsedPages(pageMapName);
 			// register the new page instance so that when the same page is being deserialized
 			// (curricular page references) we can use existing page instance (otherwise deadlock
 			// would happen)
@@ -345,7 +345,7 @@ public abstract class AbstractPageStore implements IPageStore
 		private final int pageid;
 		private final String pagemap;
 
-		PageHolder(Page<?> page)
+		PageHolder(Page page)
 		{
 			pageid = page.getNumericId();
 			pagemap = page.getPageMapName();

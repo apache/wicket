@@ -45,7 +45,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	/**
 	 * Component instance this behavior is bound to
 	 */
-	private Component< ? > component;
+	private Component component;
 
 	/**
 	 * 
@@ -81,7 +81,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(Component< ? > component)
+	public void onRendered(Component component)
 	{
 		final Response r = component.getResponse();
 
@@ -127,7 +127,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
-	public final void bind(Component< ? > component)
+	public final void bind(Component component)
 	{
 		this.component = component;
 	}

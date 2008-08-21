@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Form for posting JavaScript properties.
  */
-public class BrowserInfoForm extends Panel<Object>
+public class BrowserInfoForm extends Panel
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BrowserInfoForm.class);

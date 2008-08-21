@@ -48,8 +48,7 @@ import org.apache.wicket.util.string.Strings;
  * </code>
  * 
  * @see org.apache.wicket.markup.html.form.Check
- * @see org.apache.wicket.markup.html.form.CheckGroupSelector
- *      <p>
+ * @see org.apache.wicket.markup.html.form.CheckGroupSelector <p>
  *      Note: This component does not support cookie persistence
  * 
  * @author Igor Vaynberg
@@ -161,7 +160,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		if (collection == null)
 		{
 			collection = getConvertedInput();
-			setModelObject(collection);
+			setDefaultModelObject(collection);
 		}
 		else
 		{

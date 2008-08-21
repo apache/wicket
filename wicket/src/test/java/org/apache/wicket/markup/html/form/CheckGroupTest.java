@@ -120,10 +120,10 @@ public class CheckGroupTest extends WicketTestCase
 		Model model = new Model((Serializable)list);
 
 		final CheckGroup group2 = new CheckGroup("group2", model);
-		assertTrue(group2.getModelObject() == list);
+		assertTrue(group2.getDefaultModelObject() == list);
 
 		final CheckGroup group3 = new CheckGroup("group3", list);
-		assertTrue(group3.getModelObject() == list);
+		assertTrue(group3.getDefaultModelObject() == list);
 
 
 		// set up necessary objects to emulate a form submission

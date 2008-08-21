@@ -140,7 +140,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public ListMultipleChoice(String id, IModel<List< ? extends T>> choices)
+	public ListMultipleChoice(String id, IModel<List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -149,7 +149,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
 	public ListMultipleChoice(String id, IModel<Collection<T>> model,
-		IModel<List< ? extends T>> choices)
+		IModel<List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -158,7 +158,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(String id, IModel<List< ? extends T>> choices,
+	public ListMultipleChoice(String id, IModel<List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
@@ -170,7 +170,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(String id, IModel<Collection<T>> model,
-		IModel<List< ? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -199,7 +199,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
-			final List< ? extends T> choices = getChoices();
+			final List<? extends T> choices = getChoices();
 			for (T object : selectedValues)
 			{
 				int index = choices.indexOf(object);
@@ -279,7 +279,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final List< ? extends T> choices = getChoices();
+			final List<? extends T> choices = getChoices();
 
 			// Loop through selected indices
 			for (int i = 0; i < ids.length; i++)
@@ -316,7 +316,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		Collection<T> selectedValues = getModelObject();
 		if (selectedValues != null)
 		{
-			if (getModelObject() != selectedValues)
+			if (getDefaultModelObject() != selectedValues)
 			{
 				throw new WicketRuntimeException(
 					"Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
@@ -341,7 +341,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		else
 		{
 			selectedValues = getConvertedInput();
-			setModelObject(selectedValues);
+			setDefaultModelObject(selectedValues);
 		}
 	}
 }

@@ -30,7 +30,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * Add more links when needed.
  */
-public class LinkPage extends WebPage<Void>
+public class LinkPage extends WebPage
 {
 	/**
 	 * Construct.
@@ -38,7 +38,7 @@ public class LinkPage extends WebPage<Void>
 	public LinkPage()
 	{
 		// Link
-		add(new Link<Void>("linkWithSetResponsePageClass")
+		add(new Link("linkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class LinkPage extends WebPage<Void>
 			}
 		});
 
-		add(new Link<Void>("linkWithSetResponsePage")
+		add(new Link("linkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -61,7 +61,7 @@ public class LinkPage extends WebPage<Void>
 		});
 
 		// AjaxLink
-		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePageClass")
+		add(new AjaxLink("ajaxLinkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -72,7 +72,7 @@ public class LinkPage extends WebPage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePage")
+		add(new AjaxLink("ajaxLinkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -84,7 +84,7 @@ public class LinkPage extends WebPage<Void>
 		});
 
 		// AjaxFallbackLink
-		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePageClass")
+		add(new AjaxFallbackLink("ajaxFallbackLinkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class LinkPage extends WebPage<Void>
 			}
 		});
 
-		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePage")
+		add(new AjaxFallbackLink("ajaxFallbackLinkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -107,9 +107,9 @@ public class LinkPage extends WebPage<Void>
 		});
 
 		// AjaxSubmitLink
-		final Form<Void> form = new Form<Void>("form");
+		final Form form = new Form("form");
 		add(form);
-		final AjaxSubmitLink<Void> submit = new AjaxSubmitLink<Void>("submit")
+		final AjaxSubmitLink submit = new AjaxSubmitLink("submit")
 		{
 			private static final long serialVersionUID = 1L;
 

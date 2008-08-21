@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ImageButton;
 import org.apache.wicket.model.Model;
 
-public class InvalidImageButtonPage extends WebPage<Void>
+public class InvalidImageButtonPage extends WebPage
 {
 	/**
 	 * 

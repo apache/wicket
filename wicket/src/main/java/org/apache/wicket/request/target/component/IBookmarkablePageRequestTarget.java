@@ -34,7 +34,7 @@ public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventPr
 	 * 
 	 * @return the page class
 	 */
-	Class<? extends Page<?>> getPageClass();
+	Class<? extends Page> getPageClass();
 
 	/**
 	 * Gets the optional page parameters.

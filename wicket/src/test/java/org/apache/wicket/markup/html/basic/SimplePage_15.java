@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Juergen Donnerstag
  */
-public class SimplePage_15 extends WebPage<Void>
+public class SimplePage_15 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -119,7 +119,7 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
-	public String loadStringResource(final Component<?> component, final String key)
+	public String loadStringResource(final Component component, final String key)
 	{
 		if (component == null)
 		{

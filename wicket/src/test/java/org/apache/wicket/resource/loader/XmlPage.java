@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
  * Mock page for testing.
  * 
  */
-public class XmlPage extends WebPage<Void>
+public class XmlPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

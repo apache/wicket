@@ -659,7 +659,7 @@ public final class SerializableChecker extends ObjectOutputStream
 			result.append(" [class=").append(slot.object.getClass().getName());
 			if (slot.object instanceof Component)
 			{
-				Component<?> component = (Component<?>)slot.object;
+				Component component = (Component)slot.object;
 				result.append(", path=").append(component.getPath());
 			}
 			result.append("]");
@@ -681,7 +681,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		root = obj;
 		if (fieldDescription == null)
 		{
-			fieldDescription = (root instanceof Component) ? ((Component<?>)root).getPath() : "";
+			fieldDescription = (root instanceof Component) ? ((Component)root).getPath() : "";
 		}
 
 		check(root);

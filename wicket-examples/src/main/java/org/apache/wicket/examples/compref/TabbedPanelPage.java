@@ -37,14 +37,14 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class TabbedPanelPage extends WicketExamplePage<String>
+public class TabbedPanelPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
 	 */
 	public TabbedPanelPage()
 	{
-		setModel(new Model<String>("tabpanel"));
+		setDefaultModel(new Model<String>("tabpanel"));
 
 		// create links used to switch between css variations
 		addCssSwitchingLinks();
@@ -55,7 +55,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		{
 
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel1(panelId);
 			}
@@ -66,7 +66,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		{
 
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel2(panelId);
 			}
@@ -77,7 +77,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		{
 
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel3(panelId);
 			}
@@ -87,7 +87,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
 		add(new TabbedPanel("tabs", tabs).add(new AttributeModifier("class", true,
-			TabbedPanelPage.this.getModel())));
+			TabbedPanelPage.this.getDefaultModel())));
 
 	}
 
@@ -100,7 +100,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		add(new CssSwitchingLink("var4", "tabpanel4"));
 	}
 
-	protected class CssSwitchingLink extends Link<Void>
+	protected class CssSwitchingLink extends Link
 	{
 		private final String clazz;
 
@@ -120,7 +120,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		@Override
 		public void onClick()
 		{
-			TabbedPanelPage.this.setModelObject(clazz);
+			TabbedPanelPage.this.setDefaultModelObject(clazz);
 		}
 
 		/**
@@ -129,7 +129,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		@Override
 		public boolean isEnabled()
 		{
-			return !TabbedPanelPage.this.getModelObjectAsString().equals(clazz);
+			return !TabbedPanelPage.this.getDefaultModelObjectAsString().equals(clazz);
 		}
 
 	};
@@ -140,7 +140,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel1 extends Panel<Void>
+	private static class TabPanel1 extends Panel
 	{
 
 		/**
@@ -162,7 +162,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel2 extends Panel<Void>
+	private static class TabPanel2 extends Panel
 	{
 
 		/**
@@ -184,7 +184,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class TabPanel3 extends Panel<Void>
+	private static class TabPanel3 extends Panel
 	{
 
 		/**

@@ -28,7 +28,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	private final MarkupContainer< ? > container;
+	private final MarkupContainer container;
 
 	/**
 	 * Constructor
@@ -36,7 +36,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 * @param container
 	 *            The container that message reporters must be a child of
 	 */
-	public ContainerFeedbackMessageFilter(MarkupContainer< ? > container)
+	public ContainerFeedbackMessageFilter(MarkupContainer container)
 	{
 		if (container == null)
 		{

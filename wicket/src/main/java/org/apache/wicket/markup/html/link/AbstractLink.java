@@ -26,18 +26,10 @@ import org.apache.wicket.model.IModel;
  * Base class that that contains functionality for rendering disabled links.
  * 
  * @author Matej Knopp
- * 
- * @param <T>
- *            The model object type
  */
-public abstract class AbstractLink<T> extends WebMarkupContainer<T>
+public abstract class AbstractLink extends WebMarkupContainer
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * Construct.
@@ -45,7 +37,7 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 	 * @param id
 	 * @param model
 	 */
-	public AbstractLink(String id, IModel<T> model)
+	public AbstractLink(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -78,7 +70,7 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 	 *            The insertion string
 	 * @return this
 	 */
-	public AbstractLink<T> setAfterDisabledLink(final String afterDisabledLink)
+	public AbstractLink setAfterDisabledLink(final String afterDisabledLink)
 	{
 		if (afterDisabledLink == null)
 		{
@@ -106,7 +98,7 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 	 *            The insertion string
 	 * @return this
 	 */
-	public AbstractLink<T> setBeforeDisabledLink(final String beforeDisabledLink)
+	public AbstractLink setBeforeDisabledLink(final String beforeDisabledLink)
 	{
 		if (beforeDisabledLink == null)
 		{

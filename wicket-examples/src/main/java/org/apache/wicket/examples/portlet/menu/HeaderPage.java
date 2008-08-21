@@ -26,14 +26,14 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author Ate Douma
  */
-public class HeaderPage extends WebPage<Void>
+public class HeaderPage extends WebPage
 {
 	/**
 	 * Construct.
 	 */
 	public HeaderPage()
 	{
-		add(new Link<Void>("menu")
+		add(new Link("menu")
 		{
 			@Override
 			public void onClick()

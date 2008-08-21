@@ -46,7 +46,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public <T extends Component<?>> boolean isInstantiationAuthorized(final Class<T> componentClass)
+	public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClass)
 	{
 		// We are authorized unless we are found not to be
 		boolean authorized = true;
@@ -77,7 +77,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final Component<?> component, final Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		// Get component's class
 		final Class<?> componentClass = component.getClass();

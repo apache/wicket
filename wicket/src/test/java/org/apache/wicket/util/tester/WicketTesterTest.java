@@ -79,7 +79,7 @@ public class WicketTesterTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				Book mockBook = new Book("xxId", "xxName");
 				return new ViewBook(mockBook);
@@ -148,7 +148,7 @@ public class WicketTesterTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				Book mockBook = new Book("xxId", "xxName");
 				return new ViewBook(mockBook);
@@ -265,7 +265,7 @@ public class WicketTesterTest extends TestCase
 	public void testPageConstructor() throws Exception
 	{
 		Book mockBook = new Book("xxId", "xxName");
-		Page<?> page = new ViewBook(mockBook);
+		Page page = new ViewBook(mockBook);
 		tester.startPage(page);
 
 		// assertion
@@ -294,8 +294,8 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testAssertComponentOnAjaxResponse()
 	{
-		final Page<?> page = new MockPageWithLink();
-		AjaxLink<?> ajaxLink = new AjaxLink<Void>(MockPageWithLink.LINK_ID)
+		final Page page = new MockPageWithLink();
+		AjaxLink ajaxLink = new AjaxLink(MockPageWithLink.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -303,7 +303,7 @@ public class WicketTesterTest extends TestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				// Replace the link with a normal Link
-				Link<?> link = new Link<Void>(MockPageWithLink.LINK_ID)
+				Link link = new Link(MockPageWithLink.LINK_ID)
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -328,7 +328,7 @@ public class WicketTesterTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -375,11 +375,11 @@ public class WicketTesterTest extends TestCase
 		};
 
 		labelModel.setObject("Label 1");
-		final Label<String> label = new Label<String>(MockPageWithLinkAndLabel.LABEL_ID, labelModel);
+		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, labelModel);
 		label.setOutputMarkupId(true);
 
-		final Page<?> page = new MockPageWithLinkAndLabel();
-		AjaxLink<?> ajaxLink = new AjaxLink<Void>(MockPageWithLinkAndLabel.LINK_ID)
+		final Page page = new MockPageWithLinkAndLabel();
+		AjaxLink ajaxLink = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -399,7 +399,7 @@ public class WicketTesterTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -426,7 +426,7 @@ public class WicketTesterTest extends TestCase
 		// Setup mocks
 		final MockPageWithOneComponent page = new MockPageWithOneComponent();
 
-		Label<String> label = new Label<String>("component", "Dblclick This To See Magick");
+		Label label = new Label("component", "Dblclick This To See Magick");
 		label.add(new AjaxEventBehavior("ondblclick")
 		{
 			private static final long serialVersionUID = 1L;
@@ -444,7 +444,7 @@ public class WicketTesterTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return page;
 			}
@@ -562,7 +562,7 @@ public class WicketTesterTest extends TestCase
 	public void testToggleButtonEnabledState()
 	{
 		tester.startPage(MockFormPage.class);
-		Component<?> submit = tester.getComponentFromLastRenderedPage("form:submit");
+		Component submit = tester.getComponentFromLastRenderedPage("form:submit");
 		assertTrue(submit.isEnabled());
 		tester.createRequestCycle();
 		submit.setEnabled(false);
@@ -575,7 +575,7 @@ public class WicketTesterTest extends TestCase
 	public void testToggleAjaxFormButton()
 	{
 		tester.startPage(new MockAjaxFormPage());
-		Button<?> submit = getSubmitButton();
+		Button submit = getSubmitButton();
 		assertFalse(submit.isEnabled());
 		FormTester form = tester.newFormTester("form");
 
@@ -596,13 +596,13 @@ public class WicketTesterTest extends TestCase
 	private void setTextFieldAndAssertSubmit(boolean expected)
 	{
 		tester.executeAjaxEvent("form:text", "onkeyup");
-		Button<?> submit = getSubmitButton();
+		Button submit = getSubmitButton();
 // System.out.println(Session.get().getFeedbackMessages());
 		assertEquals(expected, submit.isEnabled());
 	}
 
-	private Button<?> getSubmitButton()
+	private Button getSubmitButton()
 	{
-		return (Button<?>)tester.getComponentFromLastRenderedPage("form:submit");
+		return (Button)tester.getComponentFromLastRenderedPage("form:submit");
 	}
 }

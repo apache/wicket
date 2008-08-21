@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * Dummy page used for resource testing.
  */
-public class SimpleTablePage_2 extends WebPage<Void>
+public class SimpleTablePage_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class SimpleTablePage_2 extends WebPage<Void>
 
 			protected void populateItem(ListItem listItem)
 			{
-				String txt = (String)listItem.getModelObject();
+				String txt = (String)listItem.getDefaultModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		});

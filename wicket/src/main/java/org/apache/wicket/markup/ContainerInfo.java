@@ -43,7 +43,7 @@ public class ContainerInfo
 	 * @param container
 	 *            The container to create the information from
 	 */
-	public ContainerInfo(final MarkupContainer< ? > container)
+	public ContainerInfo(final MarkupContainer container)
 	{
 		this(container.getClass(), container.getLocale(), container.getStyle(), null,
 			container.getMarkupType());

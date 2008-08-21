@@ -25,10 +25,8 @@ import org.apache.wicket.model.IWrapModel;
  * 
  * @author almaw
  * 
- * @param <T>
- *            The model object type
  */
-public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
+public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	implements
 		ILabelProvider<String>
 {
@@ -67,7 +65,7 @@ public abstract class LabeledWebMarkupContainer<T> extends WebMarkupContainer<T>
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public LabeledWebMarkupContainer(final String id, final IModel<T> model)
+	public LabeledWebMarkupContainer(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}

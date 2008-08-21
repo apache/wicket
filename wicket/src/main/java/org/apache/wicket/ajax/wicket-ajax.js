@@ -327,7 +327,10 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 	// go through newly added elements and try to find javascripts that 
 	// need to be executed	
 	while (element != next) {
-	//	Wicket.Head.addJavascripts(element);
+		try {
+			Wicket.Head.addJavascripts(element);
+		} catch (ignore) {
+		}
 		element = element.nextSibling;
 	}	
 }
@@ -659,10 +662,12 @@ Wicket.channelManager = new Wicket.ChannelManager();
  	// Creates a new instance of a XmlHttpRequest
 	createTransport: function() {
 	    var transport = null;
-	    if (Wicket.Browser.isIELessThan7() && window.ActiveXObject) {
+	    if (window.ActiveXObject) {
 	        transport = new ActiveXObject("Microsoft.XMLHTTP");
+	        Wicket.Log.info("Using ActiveX transport");
 	    } else if (window.XMLHttpRequest) {
 	        transport = new XMLHttpRequest();
+	        Wicket.Log.info("Using XMLHttpRequest transport");
 	    } 
 	    
 	    if (transport == null) {
@@ -839,8 +844,9 @@ Wicket.Ajax.Request.prototype = {
 				t.open("GET", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
-				t.setRequestHeader("Wicket-Ajax", "true");				
-				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
+				t.setRequestHeader("Wicket-Ajax", "true");
+				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
+				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(null);
 				return true;
@@ -888,7 +894,8 @@ Wicket.Ajax.Request.prototype = {
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
-				t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId || "");
+				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
+				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");
 				t.send(body);
 				return true;
@@ -1409,11 +1416,12 @@ Wicket.Head.Contributor.prototype = {
 			
 			// determine whether it is external javascript (has src attribute set)
 			var src = node.getAttribute("src");
+			
 			if (src != null && src != "") {
 				// load the external javascript using Wicket.Ajax.Request
 				
 				// callback when script is loaded
-				var onLoad = function(content) {
+				var onLoad = function(content) {					
 					Wicket.Head.addJavascript(content, null, src);
 					Wicket.Ajax.invokePostCallHandlers();
 
@@ -1476,9 +1484,15 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 		return false;
 
 	var head = document.getElementsByTagName("head")[0];
+	
+	if (element.tagName == "script")
+		head = document;
+	
 	var nodes = head.getElementsByTagName(element.tagName);
+	
 	for (var i = 0; i < nodes.length; ++i) {
-		var node = nodes[i];		
+		var node = nodes[i];				
+		
 		// check node names and mandatory attribute values
 		// we also have to check for attribute name that is suffixed by "_".
 		// this is necessary for filtering script references

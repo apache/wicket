@@ -33,7 +33,7 @@ import org.apache.wicket.session.ISessionStore;
 public class DummyApplication extends WebApplication
 {
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return null;
 	}

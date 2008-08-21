@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 /**
  * Mock page for testing.
  */
-public class BoxBorderTestPage_8 extends WebPage<Void>
+public class BoxBorderTestPage_8 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public class ExternalLink extends AbstractLink<String>
+public class ExternalLink extends AbstractLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class ExternalLink extends AbstractLink<String>
 	{
 		super(id);
 
-		setModel(href != null ? new Model<String>(href) : null);
+		setDefaultModel(href != null ? new Model<String>(href) : null);
 		this.label = (label != null ? new Model<String>(label) : null);
 	}
 
@@ -90,7 +90,7 @@ public class ExternalLink extends AbstractLink<String>
 	{
 		super(id);
 
-		setModel(wrap(href));
+		setDefaultModel(wrap(href));
 		this.label = wrap(label);
 	}
 
@@ -148,9 +148,9 @@ public class ExternalLink extends AbstractLink<String>
 		{
 			disableLink(tag);
 		}
-		else if (getModel() != null)
+		else if (getDefaultModel() != null)
 		{
-			Object hrefValue = getModelObject();
+			Object hrefValue = getDefaultModelObject();
 			if (hrefValue != null)
 			{
 				String url = hrefValue.toString();
@@ -192,7 +192,7 @@ public class ExternalLink extends AbstractLink<String>
 					else
 					{
 						// or generate an onclick JS handler directly
-						tag.put("onclick", "window.location.href='" + url + "';");
+						tag.put("onclick", "window.location.href='" + url + "';return false;");
 					}
 				}
 			}
@@ -231,7 +231,7 @@ public class ExternalLink extends AbstractLink<String>
 		if ((label != null) && (label.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
-				getModelObjectAsString(label.getObject()));
+				getDefaultModelObjectAsString(label.getObject()));
 		}
 		else
 		{

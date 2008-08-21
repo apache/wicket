@@ -44,10 +44,10 @@ import org.apache.wicket.validation.IValidator;
  * <ul>
  * <li>{@link #onEdit(AjaxRequestTarget)} is called when the label is clicked and the editor is to
  * be displayed. The default implementation switches the label for the editor and places the caret
- * at the end of the text. </li>
+ * at the end of the text.</li>
  * <li>{@link #onSubmit(AjaxRequestTarget)} is called when in edit mode, the user submitted new
  * content, that content validated well, and the model value successfully updated. This
- * implementation also clears any <code>window.status</code> set. </li>
+ * implementation also clears any <code>window.status</code> set.</li>
  * <li>{@link #onError(AjaxRequestTarget)} is called when in edit mode, the user submitted new
  * content, but that content did not validate. Get the current input by calling
  * {@link FormComponent#getInput()} on {@link #getEditor()}, and the error message by calling:
@@ -67,12 +67,10 @@ import org.apache.wicket.validation.IValidator;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
- * 
  * @param <T>
- *            The model object type
  */
 // TODO wonder if it makes sense to refactor this into a formcomponentpanel
-public class AjaxEditableLabel<T> extends Panel<T>
+public class AjaxEditableLabel<T> extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -80,7 +78,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	private FormComponent<T> editor;
 
 	/** label component. */
-	private WebComponent<T> label;
+	private WebComponent label;
 
 	protected class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
@@ -192,13 +190,13 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * Adds a validator to this form component. A model must be available for this component before
 	 * Validators can be added. Either add this Component to its parent (already having a Model), or
 	 * provide one before this call via constructor {@link #AjaxEditableLabel(String,IModel)} or
-	 * {@link #setModel(IModel)}.
+	 * {@link #setDefaultModel(IModel)}.
 	 * 
 	 * @param validator
 	 *            The validator
 	 * @return This
 	 */
-	public final AjaxEditableLabel<T> add(IValidator validator)
+	public final AjaxEditableLabel add(IValidator validator)
 	{
 		getEditor().add(validator);
 		return this;
@@ -226,21 +224,21 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setLabel(final IModel<String> labelModel)
+	public final AjaxEditableLabel setLabel(final IModel<String> labelModel)
 	{
 		getEditor().setLabel(labelModel);
 		return this;
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.MarkupContainer#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public final AjaxEditableLabel<T> setModel(IModel<T> model)
+	public final AjaxEditableLabel setDefaultModel(IModel<?> model)
 	{
-		super.setModel(model);
-		getLabel().setModel(model);
-		getEditor().setModel(model);
+		super.setDefaultModel(model);
+		getLabel().setDefaultModel(model);
+		getEditor().setDefaultModel(model);
 		return this;
 	}
 
@@ -250,7 +248,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param required
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setRequired(final boolean required)
+	public final AjaxEditableLabel setRequired(final boolean required)
 	{
 		getEditor().setRequired(required);
 		return this;
@@ -263,7 +261,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setType(Class<T> type)
+	public final AjaxEditableLabel setType(Class<?> type)
 	{
 		getEditor().setType(type);
 		return this;
@@ -280,8 +278,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The model
 	 * @return The editor
 	 */
-	protected FormComponent<T> newEditor(MarkupContainer<?> parent, String componentId,
-		IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
 		TextField<T> editor = new TextField<T>(componentId, model)
 		{
@@ -325,10 +322,10 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The model
 	 * @return The editor
 	 */
-	protected WebComponent<T> newLabel(MarkupContainer<?> parent, String componentId,
-		IModel<T> model)
+	@SuppressWarnings("unchecked")
+	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		Label<T> label = new Label<T>(componentId, model)
+		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -342,7 +339,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				Object modelObject = getModelObject();
+				Object modelObject = getDefaultModelObject();
 				if (modelObject == null || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
@@ -389,7 +386,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * 
 	 * @return The label component
 	 */
-	protected final WebComponent<T> getLabel()
+	protected final WebComponent getLabel()
 	{
 		if (label == null)
 		{
@@ -501,18 +498,19 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
+	@SuppressWarnings("unchecked")
 	private IModel<T> getParentModel()
 	{
 		// the #getModel() call below will resolve and assign any inheritable
 		// model this component can use. Set that directly to the label and
 		// editor so that those components work like this enclosing panel
 		// does not exist (must have that e.g. with CompoundPropertyModels)
-		IModel<T> m = getModel();
+		IModel<T> m = (IModel<T>)getDefaultModel();
 
 		// check that a model was found
 		if (m == null)
 		{
-			Component<?> parent = getParent();
+			Component parent = getParent();
 			String msg = "No model found for this component, either pass one explicitly or "
 				+ "make sure an inheritable model is available.";
 			if (parent == null)

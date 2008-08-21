@@ -23,7 +23,7 @@ import org.apache.wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public class SignOut extends AuthenticatedWebPage<Void>
+public class SignOut extends AuthenticatedWebPage
 {
 	/**
 	 * Constructor

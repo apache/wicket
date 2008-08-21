@@ -59,7 +59,7 @@ public class PropertyResolverTest extends TestCase
 		{
 
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class< ? extends Page> getHomePage()
 			{
 				return null;
 			}

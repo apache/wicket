@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * @author jbq
  */
-public class Page extends WicketExamplePage<Void>
+public class Page extends WicketExamplePage
 {
 	/**
 	 * Construct.
@@ -32,6 +32,6 @@ public class Page extends WicketExamplePage<Void>
 	 */
 	public Page(PageParameters parameters)
 	{
-		add(new Label<String>("uri", parameters.getString("uri")));
+		add(new Label("uri", parameters.getString("uri")));
 	}
 }

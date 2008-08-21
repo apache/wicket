@@ -138,7 +138,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	@Override
 	public int getViewSize()
 	{
-		if (getModelObject() != null)
+		if (getDefaultModelObject() != null)
 		{
 			super.setStartIndex(getCurrentPage() * getRowsPerPage());
 			super.setViewSize(getRowsPerPage());

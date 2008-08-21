@@ -246,9 +246,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#newVersionManager(Page)
 	 */
-	public <T> IPageVersionManager<T> newVersionManager(Page<T> page)
+	public IPageVersionManager newVersionManager(Page page)
 	{
-		return new UndoPageVersionManager<T>(page, 20);
+		return new UndoPageVersionManager(page, 20);
 	}
 
 	/**

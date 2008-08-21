@@ -81,7 +81,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 		WebApplication app = new WebApplication()
 		{
 			@Override
-			public Class< ? extends Page< ? >> getHomePage()
+			public Class< ? extends Page> getHomePage()
 			{
 				return null;
 			}

@@ -34,11 +34,10 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Sven Meier
  * @author Ralf Ebert
- * @param <T>
- *            type of model object
+ * 
  */
 
-public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListener
+public class InlineFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +62,7 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * @param c
 	 *            Page class
 	 */
-	public <C extends Page<?>> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c)
+	public <C extends Page> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c)
 	{
 		this(id, pageMap, c, null);
 	}
@@ -83,14 +82,14 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * @param params
 	 *            Page parameters
 	 */
-	public <C extends Page<?>> InlineFrame(final String id, final IPageMap pageMap,
-		final Class<C> c, final PageParameters params)
+	public <C extends Page> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c,
+		final PageParameters params)
 	{
 		this(id, pageMap, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				if (params == null)
 				{
@@ -103,7 +102,7 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 				}
 			}
 
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
 				return c;
 			}
@@ -125,22 +124,22 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 	 * @param page
 	 *            The page
 	 */
-	public InlineFrame(final String id, final Page<?> page)
+	public InlineFrame(final String id, final Page page)
 	{
 		this(id, page.getPageMap(), new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getPage()
+			public Page getPage()
 			{
 				// use given page
 				return page;
 			}
 
 			@SuppressWarnings("unchecked")
-			public Class<? extends Page<?>> getPageIdentity()
+			public Class<? extends Page> getPageIdentity()
 			{
-				return (Class<? extends Page<?>>)page.getClass();
+				return page.getClass();
 			}
 
 		});
@@ -239,8 +238,8 @@ public class InlineFrame<T> extends WebMarkupContainer<T> implements ILinkListen
 		 * TODO optimization: the inlineframe component does not always have to be stateless.
 		 * 
 		 * unfortunately due to current implementation always using ipagelink and a ilinklistener
-		 * callback it has to always be *stateful* because it can be put inside a listview item
-		 * which will not be built upon a stateless callback causing a "component at path
+		 * callback it has to always bestateful because it can be put inside a listview item which
+		 * will not be built upon a stateless callback causing a "component at path
 		 * listview:0:iframe not found" error.
 		 * 
 		 * eventually variant such as (string, ipagemap, class<? extends Page>) can be made

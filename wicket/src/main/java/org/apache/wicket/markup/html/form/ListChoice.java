@@ -84,7 +84,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @param id
 	 *            See Component
 	 * @param choices
-	 *            The collection of values in the list
+	 *            The list of values in the list
 	 * @param renderer
 	 *            See AbstractChoice
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
@@ -102,7 +102,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of values in the list
+	 *            The list of values in the list
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
 	public ListChoice(final String id, final IModel<T> model, final List<T> choices)
@@ -116,7 +116,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of values in the list
+	 *            The list of values in the list
 	 * @param maxRows
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
@@ -133,7 +133,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of values in the list
+	 *            The list of values in the list
 	 * @param renderer
 	 *            See AbstractChoice
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
@@ -150,7 +150,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @param model
 	 *            See Component
 	 * @param choices
-	 *            The collection of values in the list
+	 *            The list of values in the list
 	 * @param renderer
 	 *            See AbstractChoice
 	 * @param maxRows

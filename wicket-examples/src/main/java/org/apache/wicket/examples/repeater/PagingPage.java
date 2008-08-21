@@ -45,11 +45,11 @@ public class PagingPage extends BasePage
 			{
 				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label<String>("contactid", String.valueOf(contact.getId())));
-				item.add(new Label<String>("firstname", contact.getFirstName()));
-				item.add(new Label<String>("lastname", contact.getLastName()));
-				item.add(new Label<String>("homephone", contact.getHomePhone()));
-				item.add(new Label<String>("cellphone", contact.getCellPhone()));
+				item.add(new Label("contactid", String.valueOf(contact.getId())));
+				item.add(new Label("firstname", contact.getFirstName()));
+				item.add(new Label("lastname", contact.getLastName()));
+				item.add(new Label("homephone", contact.getHomePhone()));
+				item.add(new Label("cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{

@@ -18,17 +18,18 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
@@ -77,8 +78,7 @@ import org.slf4j.LoggerFactory;
  * argument will be used. Links to bookmarkable pages are created by calling the urlFor(Class,
  * PageParameters) method, where Class is the page class and PageParameters are the parameters to
  * encode into the URL.
- * <p>
- * </td>
+ * <p></td>
  * </tr>
  * <tr>
  * <td valign = "top"><b>2. </b></td>
@@ -118,9 +118,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th>
- * <th align = "left">Interface</th>
- * <th align="left">Purpose</th>
+ * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -394,7 +392,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page or null
 	 */
-	public final Page<?> getResponsePage()
+	public final Page getResponsePage()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target instanceof IPageRequestTarget)
@@ -414,7 +412,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the page class or null
 	 */
-	public final Class<? extends Page<?>> getResponsePageClass()
+	public final Class<? extends Page> getResponsePageClass()
 	{
 		IRequestTarget target = getRequestTarget();
 		if (target != null && (target instanceof IBookmarkablePageRequestTarget))
@@ -467,7 +465,7 @@ public abstract class RequestCycle
 	 *            The exception
 	 * @return Any error page to redirect to
 	 */
-	public Page<?> onRuntimeException(Page<?> page, RuntimeException e)
+	public Page onRuntimeException(Page page, RuntimeException e)
 	{
 		return null;
 	}
@@ -481,7 +479,7 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
-	public abstract void redirectTo(final Page<?> page);
+	public abstract void redirectTo(final Page page);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -511,7 +509,7 @@ public abstract class RequestCycle
 	 * @param component
 	 *            to be re-rendered
 	 */
-	public final void request(final Component<?> component)
+	public final void request(final Component component)
 	{
 		checkReuse();
 
@@ -644,7 +642,7 @@ public abstract class RequestCycle
 		IRequestTarget target = RequestCycle.get().getRequestTarget();
 		if (target instanceof IPageRequestTarget)
 		{
-			Page<?> page = ((IPageRequestTarget)target).getPage();
+			Page page = ((IPageRequestTarget)target).getPage();
 			return page != null ? page.getPageMapName() : null;
 		}
 		else if (target instanceof IBookmarkablePageRequestTarget)
@@ -666,7 +664,7 @@ public abstract class RequestCycle
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
-	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass)
+	public final <C extends Page> void setResponsePage(final Class<C> pageClass)
 	{
 		setResponsePage(pageClass, null);
 	}
@@ -681,7 +679,7 @@ public abstract class RequestCycle
 	 * @param pageParameters
 	 *            The page parameters that gets appended to the bookmarkable url,
 	 */
-	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass,
+	public final <C extends Page> void setResponsePage(final Class<C> pageClass,
 		final PageParameters pageParameters)
 	{
 		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
@@ -700,7 +698,7 @@ public abstract class RequestCycle
 	 * @param pageMapName
 	 *            The pagemap in which the response page should be created
 	 */
-	public final <C extends Page<?>> void setResponsePage(final Class<C> pageClass,
+	public final <C extends Page> void setResponsePage(final Class<C> pageClass,
 		final PageParameters pageParameters, final String pageMapName)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
@@ -714,7 +712,7 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to render as a response
 	 */
-	public final void setResponsePage(final Page<?> page)
+	public final void setResponsePage(final Page page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		setRequestTarget(target);
@@ -777,7 +775,7 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final <C extends Page<?>> CharSequence urlFor(final Class<C> pageClass,
+	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		return urlFor(null, pageClass, parameters);
@@ -797,7 +795,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component, behavior and interface to call
 	 */
-	public final CharSequence urlFor(final Component<?> component, final IBehavior behaviour,
+	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
 		int index = component.getBehaviors().indexOf(behaviour);
@@ -838,11 +836,11 @@ public abstract class RequestCycle
 	 *            Additional parameters to pass to the page
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component<?> component,
+	public final CharSequence urlFor(final Component component,
 		final RequestListenerInterface listener, ValueMap params)
 	{
 		// Get Page holding component and mark it as stateful.
-		final Page<?> page = component.getPage();
+		final Page page = component.getPage();
 		final IRequestTarget target;
 		if (listener != IRedirectListener.INTERFACE && component.isStateless() &&
 			page.isBookmarkable() && page.getStatelessHint())
@@ -865,7 +863,6 @@ public abstract class RequestCycle
 					// to do the endoding. This leads to double encoding
 					// - Doug Donohoe
 					// @see https://issues.apache.org/jira/browse/WICKET-1627
-					// pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
 					pageParameters.add(key, value);
 				}
 			}
@@ -893,34 +890,18 @@ public abstract class RequestCycle
 			if (params != null)
 			{
 				AppendingStringBuffer buff = new AppendingStringBuffer(url);
-				Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
-				while (it.hasNext())
+				WebRequestEncoder encoder = new WebRequestEncoder(buff);
+				for (Entry<String, Object> stringObjectEntry : params.entrySet())
 				{
-					final Map.Entry<String, Object> entry = it.next();
-					final String key = entry.getKey();
-					final String value = entry.getValue().toString();
-					buff.append("&");
-					buff.append(encodeQueryStringItem(key));
-					buff.append("=");
-					buff.append(encodeQueryStringItem(value));
+					final String key = stringObjectEntry.getKey();
+					final String value = stringObjectEntry.getValue().toString();
+					encoder.addValue(key, value);
 				}
 
 				url = buff;
 			}
 			return url;
 		}
-	}
-
-	/**
-	 * Url encodes value using UTF-8
-	 * 
-	 * @param value
-	 *            value to encode
-	 * @return encoded value
-	 */
-	private static String encodeQueryStringItem(String value)
-	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**
@@ -934,7 +915,7 @@ public abstract class RequestCycle
 	 *            The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
-	public final CharSequence urlFor(final Component<?> component,
+	public final CharSequence urlFor(final Component component,
 		final RequestListenerInterface listener)
 	{
 		return urlFor(component, listener, null);
@@ -955,7 +936,7 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final <C extends Page<?>> CharSequence urlFor(final IPageMap pageMap,
+	public final <C extends Page> CharSequence urlFor(final IPageMap pageMap,
 		final Class<C> pageClass, final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
@@ -984,7 +965,7 @@ public abstract class RequestCycle
 	 *            The page
 	 * @return The url pointing to the provided page
 	 */
-	public final CharSequence urlFor(final Page<?> page)
+	public final CharSequence urlFor(final Page page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		getSession().touch(((IPageRequestTarget)target).getPage());
@@ -1438,8 +1419,8 @@ public abstract class RequestCycle
 	/**
 	 * Called when an unrecoverable runtime exception during request cycle handling occurred, which
 	 * will result in displaying a user facing error page. Clients can override this method in case
-	 * they want to customize logging. NOT called for
-	 * {@link PageExpiredException page expired exceptions}.
+	 * they want to customize logging. NOT called for {@link PageExpiredException page expired
+	 * exceptions}.
 	 * 
 	 * @param e
 	 *            the runtime exception

@@ -38,5 +38,5 @@ public interface IComponentSource extends IClusterable
 	 * @param id
 	 * @return reconstructed component
 	 */
-	public Component< ? > restoreComponent(String id);
+	public Component restoreComponent(String id);
 }

@@ -28,7 +28,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class PackagedResourceReference extends WebMarkupContainer<String>
+public class PackagedResourceReference extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,13 +36,13 @@ public class PackagedResourceReference extends WebMarkupContainer<String>
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param referer
-	 * 		the class that is referring; is used as the relative root for getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 * 		relative location of the packaged file
+	 *            relative location of the packaged file
 	 * @param attributeToReplace
-	 * 		the attribute to replace of the target tag
+	 *            the attribute to replace of the target tag
 	 */
 	public PackagedResourceReference(final String id, final Class<?> referer, final String file,
 		final String attributeToReplace)
@@ -54,14 +54,14 @@ public class PackagedResourceReference extends WebMarkupContainer<String>
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param referer
-	 * 		the class that is referring; is used as the relative root for getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 * 		model that supplies the relative location of the packaged file. Must return an instance
-	 * 		of {@link String}
+	 *            model that supplies the relative location of the packaged file. Must return an
+	 *            instance of {@link String}
 	 * @param attributeToReplace
-	 * 		the attribute to replace of the target tag
+	 *            the attribute to replace of the target tag
 	 */
 	public PackagedResourceReference(final String id, final Class<?> referer,
 		final IModel<String> file, final String attributeToReplace)
@@ -127,11 +127,11 @@ public class PackagedResourceReference extends WebMarkupContainer<String>
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param resourceReference
-	 * 		the reference to the resource
+	 *            the reference to the resource
 	 * @param attributeToReplace
-	 * 		the attribute to replace of the target tag
+	 *            the attribute to replace of the target tag
 	 */
 	public PackagedResourceReference(final String id, final ResourceReference resourceReference,
 		final String attributeToReplace)
@@ -143,11 +143,12 @@ public class PackagedResourceReference extends WebMarkupContainer<String>
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param resourceReference
-	 * 		the reference to the resource. Must return an instance of {@link ResourceReference}
+	 *            the reference to the resource. Must return an instance of
+	 *            {@link ResourceReference}
 	 * @param attributeToReplace
-	 * 		the attribute to replace of the target tag
+	 *            the attribute to replace of the target tag
 	 */
 	public PackagedResourceReference(final String id,
 		final IModel<ResourceReference> resourceReference, final String attributeToReplace)

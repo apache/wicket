@@ -82,7 +82,7 @@ public class AutoCompletePage extends BasePage
 		};
 		form.add(field);
 
-		final Label label = new Label("selectedValue", field.getModel());
+		final Label label = new Label("selectedValue", field.getDefaultModel());
 		label.setOutputMarkupId(true);
 		form.add(label);
 

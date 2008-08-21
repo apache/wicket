@@ -32,7 +32,7 @@ import org.apache.wicket.validation.validator.StringValidator;
  * 
  * @author Kare Nuorteva
  */
-public class MockAjaxFormPage extends WebPage<Void>
+public class MockAjaxFormPage extends WebPage
 {
 	private static final class MockDomainObject implements Serializable
 	{

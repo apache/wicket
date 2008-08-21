@@ -21,7 +21,7 @@ import org.apache.wicket.Component;
 /**
  * Models that wish to substitute themselves with a wrapper when they are bound to a component
  * (either through IModel parameter in a constructor or via a call to
- * {@link Component#setModel(IModel)}) should implement this interface. One reason for a model to
+ * {@link Component#setDefaultModel(IModel)}) should implement this interface. One reason for a model to
  * want to do this is if it needs to be aware of the component it is bound to.
  * 
  * The algorithm wicket employs is similar to this:
@@ -58,5 +58,5 @@ public interface IComponentAssignedModel<T> extends IModel<T>
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	IWrapModel<T> wrapOnAssignment(Component<T> component);
+	IWrapModel<T> wrapOnAssignment(Component component);
 }

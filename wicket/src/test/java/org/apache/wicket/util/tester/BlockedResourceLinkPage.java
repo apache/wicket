@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.ResourceLink;
  * 
  * @author frankbille
  */
-public class BlockedResourceLinkPage extends WebPage<Void>
+public class BlockedResourceLinkPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

@@ -31,10 +31,8 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @param <T>
- *            The model object type
  */
-public abstract class AjaxLink<T> extends AbstractLink<T> implements IAjaxLink
+public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -123,4 +121,47 @@ public abstract class AjaxLink<T> extends AbstractLink<T> implements IAjaxLink
 	 * @param target
 	 */
 	public abstract void onClick(final AjaxRequestTarget target);
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
 }

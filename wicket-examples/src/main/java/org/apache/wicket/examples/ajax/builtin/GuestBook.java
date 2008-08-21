@@ -43,7 +43,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class GuestBook extends BasePage<Void>
+public class GuestBook extends BasePage
 {
 	/** A global list of all comments from all users across all sessions */
 	public static final List<Comment> commentList = new ArrayList<Comment>();
@@ -51,10 +51,10 @@ public class GuestBook extends BasePage<Void>
 	/** The list view that shows comments */
 	private final ListView<Comment> commentListView;
 	/** Container for the comments, used to update the listview. */
-	private final WebMarkupContainer<?> comments;
+	private final WebMarkupContainer comments;
 
 	/** The textarea for entering the comments, is updated in the ajax call. */
-	private Component<String> text;
+	private Component text;
 
 	/**
 	 * Constructor.
@@ -66,7 +66,7 @@ public class GuestBook extends BasePage<Void>
 		add(commentForm);
 
 		// the WebMarkupContainer is used to update the listview in an ajax call
-		comments = new WebMarkupContainer<Void>("comments");
+		comments = new WebMarkupContainer("comments");
 		add(comments.setOutputMarkupId(true));
 
 		// Add commentListView of existing comments
@@ -77,8 +77,8 @@ public class GuestBook extends BasePage<Void>
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
-				listItem.add(new Label<Date>("date", new Model<Date>(comment.getDate())));
-				listItem.add(new MultiLineLabel<String>("text", comment.getText()));
+				listItem.add(new Label("date", new Model<Date>(comment.getDate())));
+				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
 

@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
  * 
  * @author Eelco Hillenius
  */
-public class ExternalLinkPage extends WicketExamplePage<Void>
+public class ExternalLinkPage extends WicketExamplePage
 {
 	/**
 	 * Constructor

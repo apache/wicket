@@ -51,9 +51,9 @@ public class AjaxTabbedPanel extends TabbedPanel
 	}
 
 	@Override
-	protected <S> WebMarkupContainer<S> newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(String linkId, final int index)
 	{
-		return new AjaxFallbackLink<S>(linkId)
+		return new AjaxFallbackLink(linkId)
 		{
 
 			private static final long serialVersionUID = 1L;

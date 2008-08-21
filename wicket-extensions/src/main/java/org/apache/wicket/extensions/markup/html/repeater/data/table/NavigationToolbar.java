@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NavigationToolbar extends AbstractToolbar<Void>
+public class NavigationToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class NavigationToolbar extends AbstractToolbar<Void>
 		super(table);
 		this.table = table;
 
-		WebMarkupContainer<?> span = new WebMarkupContainer<Void>("span");
+		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
 		span.add(new AttributeModifier("colspan", true, new Model<String>(
 			String.valueOf(table.getColumns().length))));
@@ -80,7 +80,7 @@ public class NavigationToolbar extends AbstractToolbar<Void>
 	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent<?> newNavigatorLabel(String navigatorId, final DataTable<?> table)
+	protected WebComponent newNavigatorLabel(String navigatorId, final DataTable<?> table)
 	{
 		return new NavigatorLabel(navigatorId, table);
 	}

@@ -68,7 +68,7 @@ public class DownloadLink extends Link<File>
 		{
 			throw new IllegalArgumentException("file cannot be null");
 		}
-		setModel(new Model<File>(file));
+		setDefaultModel(new Model<File>(file));
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class DownloadLink extends Link<File>
 		{
 			throw new IllegalArgumentException("fileName cannot be an empty string");
 		}
-		setModel(new Model<File>(file));
+		setDefaultModel(new Model<File>(file));
 		this.fileName = fileName;
 	}
 

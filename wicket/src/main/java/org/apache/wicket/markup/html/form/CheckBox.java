@@ -77,7 +77,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getModelObject());
+		onSelectionChanged(getDefaultModelObject());
 	}
 
 	/**

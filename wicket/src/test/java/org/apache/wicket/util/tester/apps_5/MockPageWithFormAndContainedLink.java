@@ -19,8 +19,8 @@ package org.apache.wicket.util.tester.apps_5;
 import org.apache.wicket.markup.html.link.AbstractLink;
 
 /**
- * Contains a form with a textfield on it and a link inside the form. Use the {@link
- * #addLink(AbstractLink)} method to add a link to the form.
+ * Contains a form with a textfield on it and a link inside the form. Use the
+ * {@link #addLink(AbstractLink)} method to add a link to the form.
  * 
  * @author Gerolf Seitz
  */
@@ -42,7 +42,7 @@ public class MockPageWithFormAndContainedLink extends MockPageWithFormAndLink
 	/**
 	 * @param link
 	 */
-	public void addLink(AbstractLink<?> link)
+	public void addLink(AbstractLink link)
 	{
 		getForm().add(link);
 	}

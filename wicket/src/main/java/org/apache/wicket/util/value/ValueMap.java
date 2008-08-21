@@ -16,13 +16,16 @@
  */
 package org.apache.wicket.util.value;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
@@ -51,17 +54,52 @@ import org.apache.wicket.util.time.Time;
  * The <code>makeImmutable</code> method will make the underlying <code>Map</code> immutable.
  * Further attempts to change the <code>Map</code> will result in a <code>RuntimeException</code>.
  * <p>
- * The <code>toString</code> method converts a <code>ValueMap</code> object to a readable
- * key/value string for diagnostics.
+ * The <code>toString</code> method converts a <code>ValueMap</code> object to a readable key/value
+ * string for diagnostics.
  * 
  * @author Jonathan Locke
  * @author Doug Donohoe
  * @since 1.2.6
  */
-public class ValueMap extends HashMap<String, Object> implements IValueMap
+public class ValueMap extends TreeMap<String, Object> implements IValueMap
 {
 	/** an empty <code>ValueMap</code>. */
 	public static final ValueMap EMPTY_MAP;
+
+	/**
+	 * Comparator to allow null keys. This is because we use a {@link TreeMap} instead of a
+	 * {@link HashMap}, so we must provide a null safe comparator to avoid null pointer exceptions
+	 * with null keys.
+	 */
+	private static class NullSafeKeyComparator implements Comparator<String>, Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		public int compare(String o1, String o2)
+		{
+			int compare = 0;
+
+			if (o1 != null && o2 != null)
+			{
+				compare = o1.compareTo(o2);
+			}
+			else if (o1 != null)
+			{
+				compare = -1;
+			}
+			else if (o2 != null)
+			{
+				compare = 1;
+			}
+
+			return compare;
+		}
+	}
+
+	/**
+	 * We only need one comparator.
+	 */
+	private static final NullSafeKeyComparator COMPARATOR = new NullSafeKeyComparator();
 
 	/** create EMPTY_MAP, make immutable * */
 	static
@@ -82,6 +120,7 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	 */
 	public ValueMap()
 	{
+		super(COMPARATOR);
 	}
 
 	/**
@@ -92,6 +131,8 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	 */
 	public ValueMap(final Map map)
 	{
+		super(COMPARATOR);
+
 		super.putAll(map);
 	}
 
@@ -123,6 +164,8 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
+		super(COMPARATOR);
+
 		int start = 0;
 		int equalsIndex = keyValuePairs.indexOf('=');
 		int delimiterIndex = keyValuePairs.indexOf(delimiter, equalsIndex);
@@ -181,6 +224,8 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	public ValueMap(final String keyValuePairs, final String delimiter,
 		final MetaPattern valuePattern)
 	{
+		super(COMPARATOR);
+
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 

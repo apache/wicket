@@ -17,6 +17,7 @@
 package org.apache.wicket.datetime.markup.html.basic;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.wicket.datetime.DateConverter;
 import org.apache.wicket.datetime.PatternDateConverter;
@@ -66,7 +67,7 @@ public class DateLabel extends Label
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDatePattern(String id, IModel model, String datePattern)
+	public static DateLabel forDatePattern(String id, IModel<Date> model, String datePattern)
 	{
 		return new DateLabel(id, model, new PatternDateConverter(datePattern, true));
 	}
@@ -101,7 +102,7 @@ public class DateLabel extends Label
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDateStyle(String id, IModel model, String dateStyle)
+	public static DateLabel forDateStyle(String id, IModel<Date> model, String dateStyle)
 	{
 		return new DateLabel(id, model, new StyleDateConverter(dateStyle, true));
 	}
@@ -146,7 +147,7 @@ public class DateLabel extends Label
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forShortStyle(String id, IModel model)
+	public static DateLabel forShortStyle(String id, IModel<Date> model)
 	{
 		return new DateLabel(id, model, new StyleDateConverter(true));
 	}
@@ -178,7 +179,7 @@ public class DateLabel extends Label
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel withConverter(String id, IModel model, DateConverter converter)
+	public static DateLabel withConverter(String id, IModel<Date> model, DateConverter converter)
 	{
 		return new DateLabel(id, model, converter);
 	}
@@ -217,7 +218,7 @@ public class DateLabel extends Label
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateLabel(String id, IModel model, DateConverter converter)
+	public DateLabel(String id, IModel<Date> model, DateConverter converter)
 	{
 		super(id, model);
 		if (converter == null)
@@ -247,6 +248,7 @@ public class DateLabel extends Label
 	/**
 	 * Returns the specialized converter.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public IConverter getConverter(Class clazz)
 	{
@@ -274,7 +276,7 @@ public class DateLabel extends Label
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		String s = getModelObjectAsString();
+		String s = getDefaultModelObjectAsString();
 		if (before != null)
 		{
 			s = before + s;

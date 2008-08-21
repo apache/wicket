@@ -78,7 +78,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				label.setModelObject(getValue(field.getModelObjectAsString()));
+				label.setDefaultModelObject(getValue(field.getDefaultModelObjectAsString()));
 				target.addComponent(label);
 			}
 		};

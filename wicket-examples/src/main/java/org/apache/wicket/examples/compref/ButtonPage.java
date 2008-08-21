@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class ButtonPage extends WicketExamplePage<Void>
+public class ButtonPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class ButtonPage extends WicketExamplePage<Void>
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -48,7 +48,7 @@ public class ButtonPage extends WicketExamplePage<Void>
 			}
 		};
 
-		Button<?> button1 = new Button<Void>("button1")
+		Button button1 = new Button("button1")
 		{
 			@Override
 			public void onSubmit()
@@ -58,7 +58,7 @@ public class ButtonPage extends WicketExamplePage<Void>
 		};
 		form.add(button1);
 
-		Button<?> button2 = new Button<Void>("button2")
+		Button button2 = new Button("button2")
 		{
 			@Override
 			public void onSubmit()

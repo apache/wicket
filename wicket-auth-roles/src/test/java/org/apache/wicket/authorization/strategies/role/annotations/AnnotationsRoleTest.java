@@ -81,7 +81,7 @@ public class AnnotationsRoleTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return new NormalPage();
 			}
@@ -101,7 +101,7 @@ public class AnnotationsRoleTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page<?> getTestPage()
+			public Page getTestPage()
 			{
 				return new AdminPage();
 			}
@@ -121,7 +121,7 @@ public class AnnotationsRoleTest extends TestCase
 		{
 			private boolean eventReceived = false;
 
-			public void onUnauthorizedInstantiation(Component<?> component)
+			public void onUnauthorizedInstantiation(Component component)
 			{
 				eventReceived = true;
 			}
@@ -137,7 +137,7 @@ public class AnnotationsRoleTest extends TestCase
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Page<?> getTestPage()
+				public Page getTestPage()
 				{
 					return new AdminPage();
 				}

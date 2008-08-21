@@ -30,7 +30,7 @@ import org.apache.wicket.validation.validator.NumberValidator;
  * 
  * @author Eelco Hillenius
  */
-public class StatelessPage3 extends WebPage<Void>
+public class StatelessPage3 extends WebPage
 {
 	private final Integer number = new Integer(10);
 
@@ -40,14 +40,14 @@ public class StatelessPage3 extends WebPage<Void>
 	public StatelessPage3()
 	{
 		setStatelessHint(true);
-		add(new Label<String>("message", new SessionModel()));
+		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
 		final TextField<Integer> field = new TextField<Integer>("textfield",
 			new PropertyModel<Integer>(this, "number"));
 		field.add(NumberValidator.maximum(20));
 		field.setRequired(true);
 
-		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
@@ -55,7 +55,7 @@ public class StatelessPage3 extends WebPage<Void>
 			@Override
 			protected void onSubmit()
 			{
-				info("Submitted text: " + field.getModelObject());
+				info("Submitted text: " + field.getDefaultModelObject());
 			}
 		};
 		statelessForm.add(field);

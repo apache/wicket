@@ -68,7 +68,7 @@ public class FormTester
 		/**
 		 * TODO need Javadoc from author.
 		 */
-		private final class SearchOptionByIndexVisitor implements IVisitor<Component<?>>
+		private final class SearchOptionByIndexVisitor implements IVisitor<Component>
 		{
 			int count = 0;
 
@@ -83,7 +83,7 @@ public class FormTester
 			/**
 			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 			 */
-			public Object component(Component<?> component)
+			public Object component(Component component)
 			{
 				if (count == index)
 				{
@@ -173,7 +173,7 @@ public class FormTester
 		 * @return the id value at the selected index
 		 */
 		@SuppressWarnings("unchecked")
-		private String selectAbstractChoice(FormComponent<?> formComponent, final int index)
+		private String selectAbstractChoice(FormComponent formComponent, final int index)
 		{
 			try
 			{
@@ -380,7 +380,7 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent<?> formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -420,12 +420,12 @@ public class FormTester
 				}
 				else if (formComponent instanceof CheckGroup)
 				{
-					final Collection<?> checkGroupValues = (Collection<?>)formComponent.getModelObject();
-					formComponent.visitChildren(Check.class, new IVisitor<Component<?>>()
+					final Collection<?> checkGroupValues = (Collection<?>)formComponent.getDefaultModelObject();
+					formComponent.visitChildren(Check.class, new IVisitor<Component>()
 					{
-						public Object component(Component<?> component)
+						public Object component(Component component)
 						{
-							if (checkGroupValues.contains(component.getModelObject()))
+							if (checkGroupValues.contains(component.getDefaultModelObject()))
 							{
 								addFormComponentValue(formComponent,
 									((Check<?>)component).getValue());
@@ -439,14 +439,14 @@ public class FormTester
 					// TODO 1.5: see if all these transformations can be factored out into
 					// checkgroup/radiogroup by them implementing some sort of interface {
 					// getValue(); } otherwise all these implementation details leak into the tester
-					final Object value = formComponent.getModelObject();
+					final Object value = formComponent.getDefaultModelObject();
 					if (value != null)
 					{
-						formComponent.visitChildren(Radio.class, new IVisitor<Component<?>>()
+						formComponent.visitChildren(Radio.class, new IVisitor<Component>()
 						{
-							public Object component(Component<?> component)
+							public Object component(Component component)
 							{
-								if (value.equals(component.getModelObject()))
+								if (value.equals(component.getDefaultModelObject()))
 								{
 									addFormComponentValue(formComponent,
 										((Radio<?>)component).getValue());
@@ -481,7 +481,7 @@ public class FormTester
 	 */
 	public String getTextComponentValue(String id)
 	{
-		Component<?> c = getForm().get(id);
+		Component c = getForm().get(id);
 		if (c instanceof AbstractTextComponent)
 		{
 			return ((AbstractTextComponent<?>)c).getValue();
@@ -568,7 +568,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		Component<?> component = workingForm.get(formComponentId);
+		Component component = workingForm.get(formComponentId);
 		if (component instanceof IFormSubmittingComponent)
 		{
 			setFormSubmittingComponentValue((IFormSubmittingComponent)component, value);

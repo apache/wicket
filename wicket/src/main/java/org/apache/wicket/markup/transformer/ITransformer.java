@@ -37,6 +37,6 @@ public interface ITransformer
 	 * @return The output which will be appended to the original response
 	 * @throws Exception
 	 */
-	CharSequence transform(final Component< ? > component, final CharSequence output)
+	CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 }

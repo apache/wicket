@@ -34,11 +34,12 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	private IConverter converter;
 
 	private Locale locale;
 
-	private String propertyExpression;
+	private final String propertyExpression;
 
 	/**
 	 * Creates the columns.
@@ -63,6 +64,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * 
 	 * @return Any converter
 	 */
+	@SuppressWarnings("unchecked")
 	public IConverter getConverter()
 	{
 		return converter;
@@ -81,6 +83,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	/**
 	 * @see AbstractTreeColumn#renderNode(TreeNode)
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public String renderNode(TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
@@ -106,6 +110,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param converter
 	 *            Any converter
 	 */
+	@SuppressWarnings("unchecked")
 	public void setConverter(IConverter converter)
 	{
 		this.converter = converter;

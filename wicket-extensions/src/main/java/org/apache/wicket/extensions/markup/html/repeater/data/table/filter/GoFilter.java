@@ -27,13 +27,13 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class GoFilter extends Panel<Void>
+public class GoFilter extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	protected static final IModel<String> defaultGoModel = new Model<String>("filter");
 
-	private final Button<String> go;
+	private final Button go;
 
 	/**
 	 * Constructor
@@ -60,7 +60,7 @@ public class GoFilter extends Panel<Void>
 	{
 		super(id);
 
-		go = new Button<String>("go", goModel)
+		go = new Button("go", goModel)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -74,7 +74,7 @@ public class GoFilter extends Panel<Void>
 		add(go);
 	}
 
-	protected Button<String> getGoButton()
+	protected Button getGoButton()
 	{
 		return go;
 	}
@@ -88,7 +88,7 @@ public class GoFilter extends Panel<Void>
 	 *            filter state object by retrieving the form's model object
 	 * 
 	 */
-	protected void onGoSubmit(Button<String> button)
+	protected void onGoSubmit(Button button)
 	{
 	}
 

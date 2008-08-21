@@ -125,7 +125,7 @@ public class CookieTest extends TestCase
 
 		Assert.assertNotNull(cookieUsername);
 
-		Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
+		Assert.assertEquals(cookieUsername.getValue(), username.getDefaultModelObjectAsString());
 	}
 
 	/**
@@ -169,10 +169,10 @@ public class CookieTest extends TestCase
 			Cookie cookie = (Cookie)iter.next();
 			Assert.assertNotNull(page.get(cookie.getName()));
 			// Skip "deleted" cookies
-			if (page.get(cookie.getName()).getModelObjectAsString() != "")
+			if (page.get(cookie.getName()).getDefaultModelObjectAsString() != "")
 			{
 				Assert.assertEquals(cookie.getValue(), page.get(cookie.getName())
-						.getModelObjectAsString());
+						.getDefaultModelObjectAsString());
 			}
 		}
 	}

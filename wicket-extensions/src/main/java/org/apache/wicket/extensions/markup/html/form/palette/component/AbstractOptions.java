@@ -33,18 +33,16 @@ import org.apache.wicket.util.value.IValueMap;
  * Generates html option elements based on iterator specified by getOptionsIterator() and
  * IChoiceRender specified by the palette
  * 
+ * @param <T>
  * @author Igor Vaynberg ( ivaynberg )
- * 
  */
-public abstract class AbstractOptions extends FormComponent
+public abstract class AbstractOptions<T> extends FormComponent<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private Palette palette;
 
-	protected Palette getPalette()
+	private final Palette<T> palette;
+
+	protected Palette<T> getPalette()
 	{
 		return palette;
 	}
@@ -55,25 +53,27 @@ public abstract class AbstractOptions extends FormComponent
 	 * @param palette
 	 *            parent palette
 	 */
-	public AbstractOptions(String id, Palette palette)
+	public AbstractOptions(String id, Palette<T> palette)
 	{
 		super(id);
 		this.palette = palette;
 		setOutputMarkupId(true);
 	}
 
-	protected abstract Iterator getOptionsIterator();
+	protected abstract Iterator<T> getOptionsIterator();
 
 
+	@SuppressWarnings("unchecked")
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
-		Iterator options = getOptionsIterator();
-		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
+		Iterator<T> options = getOptionsIterator();
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 
 		while (options.hasNext())
 		{
-			final Object choice = options.next();
+			final T choice = options.next();
 			String id = renderer.getIdValue(choice, 0);
 			Object displayValue = renderer.getDisplayValue(choice);
 			Class displayClass = displayValue == null ? null : displayValue.getClass();
@@ -82,13 +82,13 @@ public abstract class AbstractOptions extends FormComponent
 
 			buffer.append("\n<option value=\"").append(id).append("\"");
 
-			Map additionalAttributesMap = getAdditionalAttributes(choice);
+			Map<String, String> additionalAttributesMap = getAdditionalAttributes(choice);
 			if (additionalAttributesMap != null)
 			{
-				Iterator iter = additionalAttributesMap.keySet().iterator();
+				Iterator<String> iter = additionalAttributesMap.keySet().iterator();
 				while (iter.hasNext())
 				{
-					String next = (String)iter.next();
+					String next = iter.next();
 					buffer.append(" " + next + "=\"" +
 						additionalAttributesMap.get(next).toString() + "\"");
 				}
@@ -104,17 +104,18 @@ public abstract class AbstractOptions extends FormComponent
 	}
 
 	/**
+	 * @param choice
 	 * @return map of attribute/value pairs (String/String)
 	 */
-	protected Map getAdditionalAttributes(Object choice)
+	protected Map<String, String> getAdditionalAttributes(T choice)
 	{
 		return null;
 	}
 
 	/**
-	 * 
-	 * @param tag
+	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
@@ -143,6 +144,7 @@ public abstract class AbstractOptions extends FormComponent
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 	}

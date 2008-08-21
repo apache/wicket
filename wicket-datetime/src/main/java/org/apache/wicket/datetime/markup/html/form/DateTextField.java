@@ -50,7 +50,7 @@ import org.joda.time.format.DateTimeFormat;
  * 
  * @author eelcohillenius
  */
-public class DateTextField extends TextField implements ITextFormatProvider
+public class DateTextField extends TextField<Date> implements ITextFormatProvider
 {
 
 	private static final long serialVersionUID = 1L;
@@ -68,7 +68,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDatePattern(String id, IModel model, String datePattern)
+	public static DateTextField forDatePattern(String id, IModel<Date> model, String datePattern)
 	{
 		return new DateTextField(id, model, new PatternDateConverter(datePattern, true));
 	}
@@ -104,7 +104,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDateStyle(String id, IModel model, String dateStyle)
+	public static DateTextField forDateStyle(String id, IModel<Date> model, String dateStyle)
 	{
 		return new DateTextField(id, model, new StyleDateConverter(dateStyle, true));
 	}
@@ -150,7 +150,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forShortStyle(String id, IModel model)
+	public static DateTextField forShortStyle(String id, IModel<Date> model)
 	{
 		return new DateTextField(id, model, new StyleDateConverter(true));
 	}
@@ -182,7 +182,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateTextField withConverter(String id, IModel model, DateConverter converter)
+	public static DateTextField withConverter(String id, IModel<Date> model, DateConverter converter)
 	{
 		return new DateTextField(id, model, converter);
 	}
@@ -202,7 +202,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateTextField(String id, IModel model, DateConverter converter)
+	public DateTextField(String id, IModel<Date> model, DateConverter converter)
 	{
 		super(id, model, Date.class);
 		if (converter == null)
@@ -217,6 +217,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @return The specialized converter.
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public final IConverter getConverter(Class clazz)
 	{

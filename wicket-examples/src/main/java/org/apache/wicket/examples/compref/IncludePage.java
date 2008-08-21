@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.include.Include;
  * 
  * @author Eelco Hillenius
  */
-public class IncludePage extends WicketExamplePage<Void>
+public class IncludePage extends WicketExamplePage
 {
 	/**
 	 * Constructor

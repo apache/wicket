@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
  * 
  * @author Eelco Hillenius
  */
-public class NonBookmarkablePage extends WebPage<Void>
+public class NonBookmarkablePage extends WebPage
 {
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ public class NonBookmarkablePage extends WebPage<Void>
 	 * @param referer
 	 *            the refering page
 	 */
-	public NonBookmarkablePage(final WebPage<?> referer)
+	public NonBookmarkablePage(final WebPage referer)
 	{
 		if (referer == null)
 		{
@@ -45,7 +45,7 @@ public class NonBookmarkablePage extends WebPage<Void>
 		// constructor with the Page instance argument, because we allready have
 		// a page instance
 		// at our disposal
-		add(new Link<Void>("navigateBackLink")
+		add(new Link("navigateBackLink")
 		{
 			@Override
 			public void onClick()

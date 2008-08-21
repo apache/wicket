@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
  * type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
+ * <li>The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
  * button) is nested in this form (is a child component) and was clicked by the user. If an
  * IFormSubmittingComponent was found, and it has the defaultFormProcessing field set to false
  * (default is true), it's onSubmit method will be called right away, thus no validition is done,
@@ -78,17 +78,17 @@ import org.slf4j.LoggerFactory;
  * respect, nesting an IFormSubmittingComponent with the defaultFormProcessing field set to false
  * has the same effect as nesting a normal link. If you want you can call validate() to execute form
  * validation, hasError() to find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components. </li>
- * <li> When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
+ * updateFormComponentModels() to update the models of nested form components.</li>
+ * <li>When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
  * found, this form is processed (method process()). Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked invalid, and onError() is
- * called to allow clients to provide custom error handling code. </li>
- * <li> Form validation succeeded. The nested components will be asked to update their models and
+ * <li>Form validation failed. All nested form components will be marked invalid, and onError() is
+ * called to allow clients to provide custom error handling code.</li>
+ * <li>Form validation succeeded. The nested components will be asked to update their models and
  * persist their data is applicable. After that, method delegateSubmit with optionally the
  * submitting IFormSubmittingComponent is called. The default when there is a submitting
  * IFormSubmittingComponent is to first call onSubmit on that Component, and after that call
- * onSubmit on this form. Clients may override delegateSubmit if they want different behavior. </li>
+ * onSubmit on this form. Clients may override delegateSubmit if they want different behavior.</li>
  * </ul>
  * </li>
  * </li>
@@ -136,7 +136,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 {
 	/**
 	 * Visitor used for validation
@@ -540,9 +540,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
 		IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)getPage().visitChildren(
-			IFormSubmittingComponent.class, new IVisitor<Component<?>>()
+			IFormSubmittingComponent.class, new IVisitor<Component>()
 			{
-				public Object component(final Component<?> component)
+				public Object component(final Component component)
 				{
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
@@ -899,9 +899,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		onError();
 		// call onError on nested forms
-		visitChildren(Form.class, new IVisitor<Component<?>>()
+		visitChildren(Form.class, new IVisitor<Component>()
 		{
-			public Object component(Component<?> component)
+			public Object component(Component component)
 			{
 				final Form<?> form = (Form<?>)component;
 				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
@@ -925,9 +925,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		setFlag(FLAG_SUBMITTED, true);
 
-		visitChildren(Form.class, new IVisitor<Component<?>>()
+		visitChildren(Form.class, new IVisitor<Component>()
 		{
-			public Object component(Component<?> component)
+			public Object component(Component component)
 			{
 				Form<?> form = (Form<?>)component;
 				if (form.isEnabled() && form.isEnableAllowed() && isVisibleInHierarchy())
@@ -1034,7 +1034,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @see org.apache.wicket.Component#setVersioned(boolean)
 	 */
 	@Override
-	public final Component<T> setVersioned(final boolean isVersioned)
+	public final Component setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
 
@@ -1058,9 +1058,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	public final void visitFormComponents(final FormComponent.IVisitor visitor)
 	{
-		visitChildren(FormComponent.class, new IVisitor<Component<?>>()
+		visitChildren(FormComponent.class, new IVisitor<Component>()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				visitor.formComponent((FormComponent<?>)component);
 				return CONTINUE_TRAVERSAL;
@@ -1098,11 +1098,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		if (getParent() instanceof Border)
 		{
-			MarkupContainer<?> border = getParent();
-			Iterator<Component<?>> iter = border.iterator();
+			MarkupContainer border = getParent();
+			Iterator<? extends Component> iter = border.iterator();
 			while (iter.hasNext())
 			{
-				Component<?> child = iter.next();
+				Component child = iter.next();
 				if (child instanceof FormComponent)
 				{
 					visitor.formComponent((FormComponent<?>)child);
@@ -1118,9 +1118,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private boolean anyFormComponentError()
 	{
-		final Object value = visitChildren(new IVisitor<Component<?>>()
+		final Object value = visitChildren(new IVisitor<Component>()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				if (component.hasErrorMessage())
 				{
@@ -1144,7 +1144,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @param url
 	 *            The url which describes the component path and the interface to be called.
 	 */
-	private void dispatchEvent(final Page<?> page, final String url)
+	private void dispatchEvent(final Page page, final String url)
 	{
 		RequestCycle rc = RequestCycle.get();
 		IRequestCycleProcessor processor = rc.getProcessor();
@@ -1278,7 +1278,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				{
 					if (formComponent.isVisibleInHierarchy())
 					{
-						// If peristence is switched on for that FormComponent
+						// If persistence is switched on for that FormComponent
 						// ...
 						if (formComponent.isPersistent())
 						{
@@ -1321,7 +1321,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
 
 		// add the submitting component
-		final Component<?> submittingComponent = (Component<?>)defaultSubmittingComponent;
+		final Component submittingComponent = (Component)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" name=\"");
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=Wicket.$('");
@@ -1493,7 +1493,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 					// override default message
 					final String defaultValue = "Upload must be less than " + getMaxSize();
 					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-						Model.valueOf(model), defaultValue);
+						Model.of(model), defaultValue);
 					error(msg);
 				}
 				else
@@ -1502,7 +1502,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 					// default message
 					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
 					String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY,
-						Model.valueOf(model), defaultValue);
+						Model.of(model), defaultValue);
 					error(msg);
 
 					log.warn(msg, e);
@@ -1707,7 +1707,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			// if a default submitting component was set, handle the rendering of that
 			if (defaultSubmittingComponent instanceof Component)
 			{
-				final Component<?> submittingComponent = (Component<?>)defaultSubmittingComponent;
+				final Component submittingComponent = (Component)defaultSubmittingComponent;
 				if (submittingComponent.isVisibleInHierarchy() && submittingComponent.isEnabled())
 				{
 					appendDefaultButtonField(markupStream, openTag);
@@ -2037,4 +2037,48 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		return "";
 	}
+
+	/**
+	 * Gets model
+	 * 
+	 * @return model
+	 */
+	@SuppressWarnings("unchecked")
+	public final IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public final void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	/**
+	 * Gets model object
+	 * 
+	 * @return model object
+	 */
+	@SuppressWarnings("unchecked")
+	public final T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	/**
+	 * Sets model object
+	 * 
+	 * @param object
+	 */
+	public final void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+	}
+
+
 }

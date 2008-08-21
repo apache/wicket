@@ -23,7 +23,7 @@ import org.apache.wicket.model.Model;
 /**
  * Result page
  */
-public class ResultPage extends WebPage<String>
+public class ResultPage extends WebPage
 {
 	/**
 	 * Construct.
@@ -42,6 +42,6 @@ public class ResultPage extends WebPage<String>
 	{
 		super(new Model<String>(label));
 
-		add(new Label<String>("label", getModel()));
+		add(new Label("label", getDefaultModel()));
 	}
 }

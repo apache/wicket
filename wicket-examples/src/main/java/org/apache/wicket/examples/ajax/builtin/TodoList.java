@@ -38,7 +38,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Martijn Dashorst
  */
-public class TodoList extends BasePage<Void>
+public class TodoList extends BasePage
 {
 	/**
 	 * The todo object.
@@ -113,7 +113,7 @@ public class TodoList extends BasePage<Void>
 	/**
 	 * Container for displaying the todo items in a list.
 	 */
-	public class TodoItemsContainer extends WebMarkupContainer<Void>
+	public class TodoItemsContainer extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
@@ -136,8 +136,8 @@ public class TodoList extends BasePage<Void>
 				protected void populateItem(ListItem<TodoItem> item)
 				{
 					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox("check", new PropertyModel<Boolean>(item.getModel(),
-						"checked"))
+					item.add(new AjaxCheckBox("check", new PropertyModel<Boolean>(
+						item.getDefaultModel(), "checked"))
 					{
 						@Override
 						protected void onUpdate(AjaxRequestTarget target)
@@ -149,7 +149,7 @@ public class TodoList extends BasePage<Void>
 						}
 					});
 					// display the text of the todo item
-					item.add(new Label<String>("text", new PropertyModel<String>(item.getModel(),
+					item.add(new Label("text", new PropertyModel<String>(item.getDefaultModel(),
 						"text")));
 				}
 			});
@@ -159,13 +159,13 @@ public class TodoList extends BasePage<Void>
 	/**
 	 * Container for showing either the add link, or the addition form.
 	 */
-	public class AddItemsContainer extends WebMarkupContainer<Void>
+	public class AddItemsContainer extends WebMarkupContainer
 	{
 		/** Visibility toggle so that either the link or the form is visible. */
 		private boolean linkVisible = true;
 
 		/** Link for displaying the AddTodo form. */
-		private final class AddTodoLink extends AjaxFallbackLink<Void>
+		private final class AddTodoLink extends AjaxFallbackLink
 		{
 			/** Constructor. */
 			private AddTodoLink(String id)
@@ -201,7 +201,7 @@ public class TodoList extends BasePage<Void>
 		 * Link for removing all completed todos from the list, this link follows the same
 		 * visibility rules as the add link.
 		 */
-		private final class RemoveCompletedTodosLink extends AjaxFallbackLink<Void>
+		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
 		{
 			/**
 			 * Constructor.
@@ -253,20 +253,20 @@ public class TodoList extends BasePage<Void>
 				super(id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
 				setOutputMarkupId(true);
 				add(new TextField<String>("text"));
-				add(new AjaxButton<Void>("add", this)
+				add(new AjaxButton("add", this)
 				{
 					@Override
 					protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						// retrieve the todo item
-						TodoItem item = (TodoItem)getParent().getModelObject();
+						TodoItem item = (TodoItem)getParent().getDefaultModelObject();
 
 						// add the item
 						onAdd(item, target);
 					}
 				});
 
-				add(new AjaxButton<Void>("cancel", this)
+				add(new AjaxButton("cancel", this)
 				{
 					@Override
 					public void onSubmit(AjaxRequestTarget target, Form<?> form)
@@ -386,7 +386,7 @@ public class TodoList extends BasePage<Void>
 	/**
 	 * Container for redrawing the todo items list with an AJAX call.
 	 */
-	private final WebMarkupContainer<?> showItems;
+	private final WebMarkupContainer showItems;
 
 	/**
 	 * The list of todo items.
@@ -402,7 +402,7 @@ public class TodoList extends BasePage<Void>
 		showItems = new TodoItemsContainer("showItems");
 		add(showItems);
 
-		add(new AjaxFallbackLink<Void>("ajaxback")
+		add(new AjaxFallbackLink("ajaxback")
 		{
 			/**
 			 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)

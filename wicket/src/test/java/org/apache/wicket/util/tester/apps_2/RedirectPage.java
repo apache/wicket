@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Juergen Donnerstag
  */
-public class RedirectPage extends WebPage<Void>
+public class RedirectPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 }

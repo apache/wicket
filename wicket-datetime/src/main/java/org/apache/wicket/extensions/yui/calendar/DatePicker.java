@@ -128,7 +128,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
-	public void bind(Component<?> component) {
+	public void bind(Component component) {
 		this.component = component;
 		checkComponentProvidesDateFormat(component);
 		component.setOutputMarkupId(true);
@@ -138,7 +138,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(Component<?> component) {
+	public void onRendered(Component component) {
 		super.onRendered(component);
 		// Append the span and img icon right after the rendering of the
 		// component. Not as pretty as working with a panel etc, but works
@@ -283,7 +283,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @throws UnableToDetermineFormatException
 	 *             if this date picker is unable to determine a format.
 	 */
-	private final void checkComponentProvidesDateFormat(Component<?> component) {
+	private final void checkComponentProvidesDateFormat(Component component) {
 		if (getDatePattern() == null) {
 			throw new UnableToDetermineFormatException();
 		}
@@ -352,7 +352,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		// localize date fields
 		localize(widgetProperties);
 
-		Object modelObject = component.getModelObject();
+		Object modelObject = component.getDefaultModelObject();
 		// null and cast check
 		if (modelObject instanceof Date) {
 			Date date = (Date) modelObject;
@@ -629,7 +629,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
 	 */
 	@Override
-	public boolean isEnabled(Component<?> component) {
+	public boolean isEnabled(Component component) {
 		return component.isEnabled() && component.isEnableAllowed();
 	}
 }

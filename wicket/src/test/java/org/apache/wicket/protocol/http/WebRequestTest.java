@@ -130,7 +130,7 @@ public class WebRequestTest extends WicketTestCase
 		mockRequest.setRequestToRedirectString("?=m"); // key is encoded as empty string
 		assertEquals("=m", mockRequest.getQueryString());
 		mockRequest.setParameter(null, "m2"); // force null string
-		assertEquals("=m2&=m", mockRequest.getQueryString());
+		assertEquals("=m&=m2", mockRequest.getQueryString());
 
 	}
 }

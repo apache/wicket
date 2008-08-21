@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * 
  */
-public class InlinePanelPage_8 extends WebPage<Void>
+public class InlinePanelPage_8 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 	private int number = 0;
@@ -42,7 +42,7 @@ public class InlinePanelPage_8 extends WebPage<Void>
 		ListNode first = new ListNode("first", number++);
 		nodes.add(first);
 		add(first);
-		add(new AjaxLink<Void>("add")
+		add(new AjaxLink("add")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -59,11 +59,11 @@ public class InlinePanelPage_8 extends WebPage<Void>
 	/**
 	 * 
 	 */
-	public class ListNode extends Fragment<Void>
+	public class ListNode extends Fragment
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WebMarkupContainer<?> nextContainer;
+		private final WebMarkupContainer nextContainer;
 
 		/**
 		 * Construct.
@@ -74,8 +74,8 @@ public class InlinePanelPage_8 extends WebPage<Void>
 		public ListNode(String id, int number)
 		{
 			super(id, "node", InlinePanelPage_8.this);
-			add(new Label<String>("number", Integer.toString(number)));
-			nextContainer = new WebMarkupContainer<Void>("nextContainer");
+			add(new Label("number", Integer.toString(number)));
+			nextContainer = new WebMarkupContainer("nextContainer");
 			nextContainer.setOutputMarkupPlaceholderTag(true);
 			nextContainer.setVisible(false);
 			add(nextContainer);

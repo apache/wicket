@@ -119,9 +119,9 @@ public class TagTester
 
 		if (attributeMap != null)
 		{
-			for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();)
+			for (Iterator<String> iter = attributeMap.keySet().iterator(); iter.hasNext();)
 			{
-				String attr = (String)iter.next();
+				String attr = iter.next();
 
 				if (attr.equalsIgnoreCase(attribute))
 				{
@@ -362,7 +362,7 @@ public class TagTester
 		TagTester tester = null;
 
 		if (Strings.isEmpty(markup) == false && Strings.isEmpty(attribute) == false &&
-				Strings.isEmpty(value) == false)
+			Strings.isEmpty(value) == false)
 		{
 			try
 			{
@@ -383,12 +383,11 @@ public class TagTester
 						{
 							IValueMap attributeMap = xmlTag.getAttributes();
 
-							for (Iterator iter = attributeMap.entrySet().iterator(); iter.hasNext();)
+							for (Iterator<Map.Entry<String, Object>> iter = attributeMap.entrySet()
+								.iterator(); iter.hasNext();)
 							{
-								Map.Entry entry = (Map.Entry) iter.next();
-
-								String attr = (String) entry.getKey();
-
+								Map.Entry<String, Object> entry = iter.next();
+								String attr = entry.getKey();
 								if (attr.equals(attribute) && value.equals(entry.getValue()))
 								{
 									if (xmlTag.isOpen())

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public class Page3 extends WicketExamplePage<Void>
+public class Page3 extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -35,6 +35,6 @@ public class Page3 extends WicketExamplePage<Void>
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new Label<String>("bookmarkparameter", parameters.getString("bookmarkparameter")));
+		add(new Label("bookmarkparameter", parameters.getString("bookmarkparameter")));
 	}
 }

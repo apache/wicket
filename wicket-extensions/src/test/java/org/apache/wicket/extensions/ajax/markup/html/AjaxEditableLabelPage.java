@@ -24,7 +24,7 @@ import org.apache.wicket.model.Model;
 /**
  * @author Gerolf Seitz
  */
-public class AjaxEditableLabelPage extends WebPage<Void>
+public class AjaxEditableLabelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,10 +33,10 @@ public class AjaxEditableLabelPage extends WebPage<Void>
 	 */
 	public AjaxEditableLabelPage()
 	{
-		final AjaxEditableLabel<String> ajaxLabel = new AjaxEditableLabel<String>("ajaxLabel",
+		final AjaxEditableLabel ajaxLabel = new AjaxEditableLabel("ajaxLabel",
 			new Model<String>("ajaxTest"));
 		add(ajaxLabel);
-		add(new AjaxLink<Void>("toggle")
+		add(new AjaxLink("toggle")
 		{
 			private static final long serialVersionUID = 1L;
 

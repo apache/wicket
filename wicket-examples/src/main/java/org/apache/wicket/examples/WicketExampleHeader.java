@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public final class WicketExampleHeader extends Panel<Void>
+public final class WicketExampleHeader extends Panel
 {
 	/**
 	 * Construct.
@@ -45,10 +45,10 @@ public final class WicketExampleHeader extends Panel<Void>
 	 * @param page
 	 *            The example page
 	 */
-	public WicketExampleHeader(String id, String exampleTitle, WebPage<?> page)
+	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
 	{
 		super(id);
-		WebMarkupContainer<?> hideInPortlet = new WebMarkupContainer<Void>("hideInPortlet")
+		WebMarkupContainer hideInPortlet = new WebMarkupContainer("hideInPortlet")
 		{
 			/**
 			 * @see org.apache.wicket.Component#isVisible()
@@ -61,14 +61,14 @@ public final class WicketExampleHeader extends Panel<Void>
 		};
 		add(hideInPortlet);
 		hideInPortlet.add(new InspectorBug("inspector", page));
-		add(new Label<String>("exampleTitle", exampleTitle));
-		Link<?> link = new Link<Void>("sources")
+		add(new Label("exampleTitle", exampleTitle));
+		Link link = new Link("sources")
 		{
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick()
 			{
-				setResponsePage(new SourcesPage((Class<? extends Page<?>>)getPage().getClass()));
+				setResponsePage(new SourcesPage((Class<? extends Page>)getPage().getClass()));
 			}
 		};
 		add(link);

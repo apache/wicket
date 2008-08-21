@@ -32,8 +32,8 @@ public class PanelCachingTab implements ITab
 {
 	private static final long serialVersionUID = 1L;
 
-	private Panel<?> panel;
-	private ITab delegate;
+	private Panel panel;
+	private final ITab delegate;
 
 	/**
 	 * Constructor
@@ -57,7 +57,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public Panel<?> getPanel(final String panelId)
+	public Panel getPanel(final String panelId)
 	{
 		if (panel == null)
 		{
@@ -65,7 +65,7 @@ public class PanelCachingTab implements ITab
 		}
 		return panel;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#isVisible()
 	 */

@@ -46,7 +46,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  * @author almaw
  */
-public class ResourceTestPage extends WebPage<Void>
+public class ResourceTestPage extends WebPage
 {
 	/**
 	 * Defines the number of images per page
@@ -87,7 +87,7 @@ public class ResourceTestPage extends WebPage<Void>
 				}
 				final byte[] imageData = baos.toByteArray();
 
-				item.add(new Image<Void>("image", new WebResource()
+				item.add(new Image("image", new WebResource()
 				{
 					private static final long serialVersionUID = 1L;
 

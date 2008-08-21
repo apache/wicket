@@ -721,7 +721,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
 
 		// Get page Class
-		final Class<? extends Page<?>> pageClass = requestTarget.getPageClass();
+		final Class<? extends Page> pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
 		// Find pagemap name
@@ -731,7 +731,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			IRequestTarget currentTarget = requestCycle.getRequestTarget();
 			if (currentTarget instanceof IPageRequestTarget)
 			{
-				Page<?> currentPage = ((IPageRequestTarget)currentTarget).getPage();
+				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
 				final IPageMap pageMap = currentPage.getPageMap();
 				if (pageMap.isDefault())
 				{
@@ -869,8 +869,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		url.append('=');
 
 		// Get component and page for request target
-		final Component<?> component = requestTarget.getTarget();
-		final Page<?> page = component.getPage();
+		final Component component = requestTarget.getTarget();
+		final Page page = component.getPage();
 
 		// Add pagemap
 		final IPageMap pageMap = page.getPageMap();
@@ -938,7 +938,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	protected CharSequence encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
 		// Get the page we want a url from:
-		Page<?> page = requestTarget.getPage();
+		Page page = requestTarget.getPage();
 
 		// A url to a page is the IRedirectListener interface:
 		CharSequence urlRedirect = page.urlFor(IRedirectListener.INTERFACE);

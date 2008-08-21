@@ -31,7 +31,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author ivaynberg
  */
-public class TabbedPanelPage extends BasePage<Void>
+public class TabbedPanelPage extends BasePage
 {
 	/**
 	 * Constructor
@@ -43,7 +43,7 @@ public class TabbedPanelPage extends BasePage<Void>
 		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel1(panelId);
 			}
@@ -52,7 +52,7 @@ public class TabbedPanelPage extends BasePage<Void>
 		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel2(panelId);
 			}
@@ -61,7 +61,7 @@ public class TabbedPanelPage extends BasePage<Void>
 		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
 			@Override
-			public Panel<Void> getPanel(String panelId)
+			public Panel getPanel(String panelId)
 			{
 				return new TabPanel3(panelId);
 			}
@@ -73,7 +73,7 @@ public class TabbedPanelPage extends BasePage<Void>
 	/**
 	 * Panel representing the content panel for the first tab.
 	 */
-	private static class TabPanel1 extends Panel<Void>
+	private static class TabPanel1 extends Panel
 	{
 		/**
 		 * Constructor
@@ -90,7 +90,7 @@ public class TabbedPanelPage extends BasePage<Void>
 	/**
 	 * Panel representing the content panel for the second tab.
 	 */
-	private static class TabPanel2 extends Panel<Void>
+	private static class TabPanel2 extends Panel
 	{
 		/**
 		 * Constructor
@@ -107,7 +107,7 @@ public class TabbedPanelPage extends BasePage<Void>
 	/**
 	 * Panel representing the content panel for the third tab.
 	 */
-	private static class TabPanel3 extends Panel<Void>
+	private static class TabPanel3 extends Panel
 	{
 		/**
 		 * Constructor

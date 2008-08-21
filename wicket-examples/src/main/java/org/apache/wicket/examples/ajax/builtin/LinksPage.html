@@ -10,6 +10,25 @@
 
 <wicket:extend>
 
+<script type="text/javascript">
+  Wicket.Ajax.Request.prototype._doGet  = Wicket.Ajax.Request.prototype.doGet;
+  Wicket.Ajax.Request.prototype.doGet = function() {
+     var res = this._doGet()
+     if (res == true) {
+         this.failure();
+     }
+     return;
+  }
+
+  Wicket.Ajax.Request.prototype._doPost = Wicket.Ajax.Request.prototype.doPost;
+  Wicket.Ajax.Request.prototype.doPost = function(body) {
+     var res = this._doPost(body)
+     if (res == true) {
+         this.failure();
+     }
+     return;
+  }
+</script> 
 
 counter 1: <span wicket:id="c1"></span> <a href="#" wicket:id="c1-link">increment</a> ( ajax-only link )
 <br/>

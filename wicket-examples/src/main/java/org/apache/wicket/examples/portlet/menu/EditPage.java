@@ -34,7 +34,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 /**
  * @author Ate Douma
  */
-public class EditPage extends WebPage<Void>
+public class EditPage extends WebPage
 {
 	private static final IChoiceRenderer<ExampleApplication> exampleChoiceRenderer = new IChoiceRenderer<ExampleApplication>()
 	{
@@ -62,7 +62,7 @@ public class EditPage extends WebPage<Void>
 	 */
 	public EditPage()
 	{
-		Form<?> form = new Form<Void>("form")
+		Form<?> form = new Form("form")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
@@ -106,9 +106,9 @@ public class EditPage extends WebPage<Void>
 				}
 			}
 		}
-		ddc.setModel(selected);
+		ddc.setDefaultModel(selected);
 		form.add(ddc);
-		form.add(new Button<Void>("setButton"));
+		form.add(new Button("setButton"));
 		add(form);
 	}
 

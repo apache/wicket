@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.upload.FileItem;
 
 /**
@@ -93,13 +94,13 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public FileUploadField setModel(IModel<FileUpload> model)
+	public FileUploadField setDefaultModel(IModel<?> model)
 	{
 		hasExplicitModel = true;
-		return (FileUploadField)super.setModel(model);
+		return (FileUploadField)super.setDefaultModel(model);
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 		// Only update the model if one was passed in
 		if (hasExplicitModel)
 		{
-			setModelObject(getFileUpload());
+			setDefaultModelObject(getConvertedInput());
 		}
 	}
 
@@ -128,6 +129,17 @@ public class FileUploadField extends FormComponent<FileUpload>
 			return new String[] { fu.getClientFileName() };
 		}
 		return null;
+	}
+
+	@Override
+	protected FileUpload convertValue(String[] value) throws ConversionException
+	{
+		final String[] filenames = getInputAsArray();
+		if (filenames == null)
+		{
+			return null;
+		}
+		return getFileUpload();
 	}
 
 	/**

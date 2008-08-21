@@ -27,7 +27,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Frank Bille
  */
-public class MockPageWithFormAndLink extends WebPage<Void>
+public class MockPageWithFormAndLink extends WebPage
 {
 	/**
 	 * @author Frank Bille

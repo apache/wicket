@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.repeater;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
@@ -49,7 +48,7 @@ import org.apache.wicket.version.undo.Change;
  * @param <T>
  *            Model object type
  */
-public abstract class RefreshingView<T> extends RepeatingView<Collection<T>>
+public abstract class RefreshingView<T> extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
 
@@ -80,7 +79,7 @@ public abstract class RefreshingView<T> extends RepeatingView<Collection<T>>
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(String id, IModel<Collection<T>> model)
+	public RefreshingView(String id, IModel<?> model)
 	{
 		super(id, model);
 	}

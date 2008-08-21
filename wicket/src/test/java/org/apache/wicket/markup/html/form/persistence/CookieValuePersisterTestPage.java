@@ -28,7 +28,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class CookieValuePersisterTestPage extends WebPage<Void>
+public class CookieValuePersisterTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

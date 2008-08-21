@@ -31,7 +31,7 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class CheckGroupTestPage5 extends WebPage<Void>
+public class CheckGroupTestPage5 extends WebPage
 {
 	/**
 	 * Constructor

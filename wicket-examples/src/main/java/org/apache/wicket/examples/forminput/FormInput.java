@@ -57,7 +57,7 @@ import org.apache.wicket.validation.validator.NumberValidator;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FormInput extends WicketExamplePage<Void>
+public class FormInput extends WicketExamplePage
 {
 	/**
 	 * Form for collecting input.
@@ -78,7 +78,7 @@ public class FormInput extends WicketExamplePage<Void>
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link<Void>("defaultLocaleLink")
+			add(new Link("defaultLocaleLink")
 			{
 				@Override
 				public void onClick()
@@ -102,8 +102,8 @@ public class FormInput extends WicketExamplePage<Void>
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
 			// display the multiply result
-			Label<Integer> multiplyLabel = new Label<Integer>("multiplyLabel",
-				new PropertyModel<Integer>(getModel(), "multiply"));
+			Label multiplyLabel = new Label("multiplyLabel", new PropertyModel<Integer>(
+				getDefaultModel(), "multiply"));
 			// just for fun, add a border so that our result will be displayed
 			// as '[ x ]'
 			multiplyLabel.setComponentBorder(new BeforeAndAfterBorder());
@@ -121,7 +121,7 @@ public class FormInput extends WicketExamplePage<Void>
 				protected void populateItem(ListItem<String> item)
 				{
 					item.add(new Radio<String>("radio", item.getModel()));
-					item.add(new Label<String>("number", item.getModelObjectAsString()));
+					item.add(new Label("number", item.getDefaultModelObjectAsString()));
 				};
 			}.setReuseItems(true);
 			group.add(persons);
@@ -134,7 +134,7 @@ public class FormInput extends WicketExamplePage<Void>
 				protected void populateItem(ListItem<String> item)
 				{
 					item.add(new Check<String>("check", item.getModel()));
-					item.add(new Label<String>("number", item.getModelObjectAsString()));
+					item.add(new Label("number", item.getDefaultModelObjectAsString()));
 				};
 			}.setReuseItems(true);
 			checks.add(checksList);
@@ -201,9 +201,9 @@ public class FormInput extends WicketExamplePage<Void>
 			// and this is to show we can nest ListViews in Forms too
 			add(new LinesListView("lines"));
 
-			add(new Button<Void>("saveButton"));
+			add(new Button("saveButton"));
 
-			add(new Button<Void>("resetButton")
+			add(new Button("resetButton")
 			{
 				@Override
 				public void onSubmit()
@@ -221,7 +221,7 @@ public class FormInput extends WicketExamplePage<Void>
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
-			info("Saved model " + getModelObject());
+			info("Saved model " + getDefaultModelObject());
 		}
 	}
 
@@ -247,8 +247,8 @@ public class FormInput extends WicketExamplePage<Void>
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(item.getModel(),
-				"text")));
+			item.add(new TextField<String>("lineEdit", new PropertyModel<String>(
+				item.getDefaultModel(), "text")));
 		}
 	}
 
@@ -292,7 +292,7 @@ public class FormInput extends WicketExamplePage<Void>
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel<Locale>(FormInput.this, "locale"));
+			setDefaultModel(new PropertyModel<Locale>(FormInput.this, "locale"));
 		}
 
 		/**

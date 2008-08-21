@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * @author Martijn Dashorst
  */
-public abstract class AbstractBasePage extends WebPage<Void>
+public abstract class AbstractBasePage extends WebPage
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;

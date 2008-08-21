@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class SimplePage extends WebPage<Void>
+public class SimplePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

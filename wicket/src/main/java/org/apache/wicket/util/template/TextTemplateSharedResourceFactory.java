@@ -38,8 +38,8 @@ import org.apache.wicket.util.resource.IResourceStream;
  * <p>
  * You may use resources created by this factory directly by calling
  * <code>resourceReference(Map)</code> to get a resource reference to the given shared resource
- * interpolation represented by the variables in the <code>Map</code>. Or, for convenience, you
- * can use <code>TextTemplateLink</code> to link to resources created by this factory.
+ * interpolation represented by the variables in the <code>Map</code>. Or, for convenience, you can
+ * use <code>TextTemplateLink</code> to link to resources created by this factory.
  * <p>
  * In many cases, it will be useful to extend this class and override
  * <code>sharedResourceName(Map)</code> in order to provide a unique name for resources created by
@@ -96,8 +96,8 @@ public class TextTemplateSharedResourceFactory
 	 * 
 	 * @param variables
 	 *            the variables to interpolate into the template
-	 * @return a <code>ResourceReference</code> to the template encoded as a resource with the
-	 *         given variables interpolated
+	 * @return a <code>ResourceReference</code> to the template encoded as a resource with the given
+	 *         variables interpolated
 	 */
 	public ResourceReference resourceReference(final Map<String, Object> variables)
 	{
@@ -127,11 +127,6 @@ public class TextTemplateSharedResourceFactory
 							return templateValue;
 						}
 
-						@Override
-						public long length()
-						{
-							return templateValue.length();
-						}
 					};
 				}
 			};
@@ -163,7 +158,8 @@ public class TextTemplateSharedResourceFactory
 	}
 
 	/**
-	 * Simple encoder for key values. Letters and digits are unchanged. All others are encoded as %<hexcode>.
+	 * Simple encoder for key values. Letters and digits are unchanged. All others are encoded as
+	 * %<hexcode>.
 	 * 
 	 * @param value
 	 *            a value

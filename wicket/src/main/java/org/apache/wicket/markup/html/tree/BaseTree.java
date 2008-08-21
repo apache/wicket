@@ -100,13 +100,13 @@ public abstract class BaseTree extends AbstractTree
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
 		// add junction link
-		Object node = item.getModelObject();
+		Object node = item.getDefaultModelObject();
 		Component junctionLink = newJunctionLink(item, JUNCTION_LINK_ID, node);
 		junctionLink.setComponentBorder(new JunctionBorder(node, level));
 		item.add(junctionLink);
 
 		// add node component
-		Component nodeComponent = newNodeComponent(NODE_COMPONENT_ID, item.getModel());
+		Component nodeComponent = newNodeComponent(NODE_COMPONENT_ID, item.getDefaultModel());
 		item.add(nodeComponent);
 
 		// add behavior that conditionally adds the "selected" CSS class name
@@ -117,7 +117,7 @@ public abstract class BaseTree extends AbstractTree
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
-				Object node = component.getModelObject();
+				Object node = component.getDefaultModelObject();
 				String klass = getItemClass(node);
 				if (!Strings.isEmpty(klass))
 				{
@@ -413,11 +413,11 @@ public abstract class BaseTree extends AbstractTree
 	 *            The link call back
 	 * @return The link component
 	 */
-	public MarkupContainer<? extends Object> newLink(String id, final ILinkCallback callback)
+	public MarkupContainer newLink(String id, final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link<Object>(id)
+			return new Link(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -433,7 +433,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink<Object>(id)
+			return new AjaxLink(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -449,7 +449,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink<Object>(id)
+			return new AjaxFallbackLink(id)
 			{
 				private static final long serialVersionUID = 1L;
 

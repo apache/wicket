@@ -25,7 +25,7 @@ import org.apache.wicket.markup.parser.filter.sub.HeaderSectionBorder;
  * 
  * @author Jonathan Locke
  */
-public class HeaderSectionBasePage_12 extends WebPage<Void>
+public class HeaderSectionBasePage_12 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

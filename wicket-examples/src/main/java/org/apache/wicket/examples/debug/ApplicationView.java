@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Jonathan Locke
  */
-public final class ApplicationView extends Panel<Void>
+public final class ApplicationView extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,22 +42,22 @@ public final class ApplicationView extends Panel<Void>
 		super(id);
 
 		// Basic attributes
-		add(new Label<String>("name", application.getName()));
-		add(new Label<String>("componentUseCheck", "" +
+		add(new Label("name", application.getName()));
+		add(new Label("componentUseCheck", "" +
 			application.getDebugSettings().getComponentUseCheck()));
-		add(new Label<String>("compressWhitespace", "" +
+		add(new Label("compressWhitespace", "" +
 			application.getMarkupSettings().getCompressWhitespace()));
-		add(new Label<String>("stripComments", "" +
+		add(new Label("stripComments", "" +
 			application.getMarkupSettings().getStripComments()));
-		add(new Label<String>("stripWicketTags", "" +
+		add(new Label("stripWicketTags", "" +
 			application.getMarkupSettings().getStripWicketTags()));
-		add(new Label<String>("bufferResponse", "" +
+		add(new Label("bufferResponse", "" +
 			application.getRequestCycleSettings().getBufferResponse()));
-		add(new Label<String>("resourcePollFrequency", "" +
+		add(new Label("resourcePollFrequency", "" +
 			application.getResourceSettings().getResourcePollFrequency()));
-		add(new Label<String>("versionPages", "" +
+		add(new Label("versionPages", "" +
 			application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label<String>("pageMapEvictionStrategy", "" +
+		add(new Label("pageMapEvictionStrategy", "" +
 			application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

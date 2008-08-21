@@ -379,7 +379,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param create
 	 * @return folder used to store session data
 	 */
-	private File getSessionFolder(String sessionId, boolean create)
+	protected File getSessionFolder(String sessionId, boolean create)
 	{
 		File storeFolder = getStoreFolder();
 
@@ -679,7 +679,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 *      java.lang.String, int, int, int)
 	 */
 
-	public <T> Page<T> getPage(String sessionId, String pagemap, int id, int versionNumber,
+	public <T> Page getPage(String sessionId, String pagemap, int id, int versionNumber,
 		int ajaxVersionNumber)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, false);
@@ -706,7 +706,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			if (data != null)
 			{
 				@SuppressWarnings("unchecked")
-				final Page<T> ret = deserializePage(data, versionNumber);
+				final Page ret = deserializePage(data, versionNumber);
 				return ret;
 			}
 		}
@@ -718,7 +718,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#pageAccessed(java.lang.String,
 	 *      org.apache.wicket.Page)
 	 */
-	public void pageAccessed(String sessionId, Page<?> page)
+	public void pageAccessed(String sessionId, Page page)
 	{
 	}
 
@@ -809,7 +809,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#storePage(java.lang.String,
 	 *      org.apache.wicket.Page)
 	 */
-	public void storePage(String sessionId, Page<?> page)
+	public void storePage(String sessionId, Page page)
 	{
 		List<SerializedPage> pages = serializePage(page);
 
@@ -1120,7 +1120,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Loads the data stripped by
-	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}.
+	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}
+	 * .
 	 * 
 	 * @param page
 	 * @return SerializedPageWithSession isntance
@@ -1151,11 +1152,11 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		SerializedPageWithSession result = null;
 		if (page instanceof Page)
 		{
-			result = serializedPagesCache.getPage((Page<?>)page);
+			result = serializedPagesCache.getPage((Page)page);
 			if (result == null)
 			{
-				List<SerializedPage> serialized = serializePage((Page<?>)page);
-				result = serializedPagesCache.storePage(sessionId, (Page<?>)page, serialized);
+				List<SerializedPage> serialized = serializePage((Page)page);
+				result = serializedPagesCache.storePage(sessionId, (Page)page, serialized);
 			}
 		}
 		else if (page instanceof SerializedPageWithSession)
@@ -1216,11 +1217,11 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 	}
 
-	public Page<?> convertToPage(Object page)
+	public Page convertToPage(Object page)
 	{
 		if (page instanceof Page)
 		{
-			return (Page<?>)page;
+			return (Page)page;
 		}
 		else if (page instanceof SerializedPageWithSession)
 		{

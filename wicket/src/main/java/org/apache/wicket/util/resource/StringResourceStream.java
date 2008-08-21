@@ -17,6 +17,7 @@
 package org.apache.wicket.util.resource;
 
 
+
 /**
  * A StringResourceStream is an IResource implementation for strings.
  * 
@@ -59,6 +60,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return string.toString();
@@ -67,6 +69,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	protected String getString()
 	{
 		return toString();
@@ -75,17 +78,9 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();
 	}
-
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
-	public long length()
-	{
-		return string.length();
-	}
-
 }

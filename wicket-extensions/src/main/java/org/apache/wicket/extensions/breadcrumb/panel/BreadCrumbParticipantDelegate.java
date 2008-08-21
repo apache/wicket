@@ -81,7 +81,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 				{
 					// try to search downwards to match the id
 					// NOTE unfortunately, we can't rely on the path pre 2.0
-					Component c = (Component)parent.visitChildren(new IVisitor()
+					Component c = (Component)parent.visitChildren(new IVisitor<Component>()
 					{
 						public Object component(Component component)
 						{
@@ -95,17 +95,18 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 					if (c == null)
 					{
 						// not found... do a reverse search (upwards)
-						c = (Component)parent.visitParents(Component.class, new IVisitor()
-						{
-							public Object component(Component component)
+						c = (Component)parent.visitParents(Component.class,
+							new IVisitor<Component>()
 							{
-								if (component.getId().equals(thisId))
+								public Object component(Component component)
 								{
-									return component;
+									if (component.getId().equals(thisId))
+									{
+										return component;
+									}
+									return IVisitor.CONTINUE_TRAVERSAL;
 								}
-								return IVisitor.CONTINUE_TRAVERSAL;
-							}
-						});
+							});
 					}
 
 					// replace if found

@@ -57,7 +57,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public Tree(String id, IModel model)
+	public Tree(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -84,9 +84,9 @@ public class Tree extends DefaultAbstractTree
 	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
-		final TreeNode node = (TreeNode)item.getModelObject();
+		final TreeNode node = (TreeNode)item.getDefaultModelObject();
 
-		item.add(newIndentation(item, "indent", (TreeNode)item.getModelObject(), level));
+		item.add(newIndentation(item, "indent", (TreeNode)item.getDefaultModelObject(), level));
 
 		item.add(newJunctionLink(item, "link", "image", node));
 
@@ -95,12 +95,12 @@ public class Tree extends DefaultAbstractTree
 
 		nodeLink.add(newNodeIcon(nodeLink, "icon", node));
 
-		nodeLink.add(new Label("label", new AbstractReadOnlyModel()
+		nodeLink.add(new Label("label", new AbstractReadOnlyModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject()
+			public String getObject()
 			{
 				return renderNode(node);
 			}

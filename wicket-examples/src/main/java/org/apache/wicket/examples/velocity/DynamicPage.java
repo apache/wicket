@@ -33,7 +33,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class DynamicPage extends WicketExamplePage<Void>
+public class DynamicPage extends WicketExamplePage
 {
 	/**
 	 * Constructor

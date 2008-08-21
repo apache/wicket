@@ -46,7 +46,7 @@ import org.apache.wicket.util.convert.ConversionException;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -150,7 +150,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getModelObject());
+		onSelectionChanged(getDefaultModelObject());
 	}
 
 	/**

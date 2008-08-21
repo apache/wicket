@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * @author jcompagner
  * 
  */
-public class DoubleHeaderPartPage extends WebPage<Void>
+public class DoubleHeaderPartPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

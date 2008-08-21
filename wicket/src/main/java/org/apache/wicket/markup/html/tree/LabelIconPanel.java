@@ -110,7 +110,7 @@ public class LabelIconPanel extends Panel
 	 */
 	protected ResourceReference getImageResourceReference(BaseTree tree, Object node)
 	{
-		TreeModel model = (TreeModel)tree.getModelObject();
+		TreeModel model = (TreeModel)tree.getDefaultModelObject();
 		if (model.isLeaf(node))
 		{
 			return getResourceItemLeaf(node);

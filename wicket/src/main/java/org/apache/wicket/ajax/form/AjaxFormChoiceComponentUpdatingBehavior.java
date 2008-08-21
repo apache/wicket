@@ -134,9 +134,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * 
 	 * @return FormComponent
 	 */
-	protected final FormComponent< ? > getFormComponent()
+	protected final FormComponent getFormComponent()
 	{
-		return (FormComponent< ? >)getComponent();
+		return (FormComponent)getComponent();
 	}
 
 	/**
@@ -157,7 +157,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		final FormComponent< ? > formComponent = getFormComponent();
+		final FormComponent formComponent = getFormComponent();
 
 		try
 		{

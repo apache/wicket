@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Matej Knopp
  * 
  */
-public class ModalContent1Page extends WebPage<Void>
+public class ModalContent1Page extends WebPage
 {
 
 	/**
@@ -38,7 +38,7 @@ public class ModalContent1Page extends WebPage<Void>
 	 */
 	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window)
 	{
-		add(new AjaxLink<Void>("closeOK")
+		add(new AjaxLink("closeOK")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -49,7 +49,7 @@ public class ModalContent1Page extends WebPage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("closeCancel")
+		add(new AjaxLink("closeCancel")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -78,7 +78,7 @@ public class ModalContent1Page extends WebPage<Void>
 
 		modal.setPageCreator(new ModalWindow.PageCreator()
 		{
-			public Page<?> createPage()
+			public Page createPage()
 			{
 				return new ModalContent2Page(modal);
 			}
@@ -94,7 +94,7 @@ public class ModalContent1Page extends WebPage<Void>
 			}
 		});
 
-		add(new AjaxLink<Void>("open")
+		add(new AjaxLink("open")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

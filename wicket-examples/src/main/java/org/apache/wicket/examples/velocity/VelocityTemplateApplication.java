@@ -80,7 +80,7 @@ public class VelocityTemplateApplication extends WebApplication
 	 * @return class
 	 */
 	@Override
-	public Class< ? extends Page< ? >> getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

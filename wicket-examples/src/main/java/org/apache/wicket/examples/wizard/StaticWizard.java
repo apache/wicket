@@ -31,7 +31,7 @@ import org.apache.wicket.extensions.wizard.WizardModel;
  * 
  * @author Eelco Hillenius
  */
-public class StaticWizard extends Wizard<Void>
+public class StaticWizard extends Wizard
 {
 
 	/**

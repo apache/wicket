@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public class FormComponentFeedbackIndicator extends Panel<Void> implements IFeedback
+public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class FormComponentFeedbackIndicator extends Panel<Void> implements IFeed
 	 * @deprecated no need for a model in this component
 	 */
 	@Deprecated
-	public FormComponentFeedbackIndicator(final String id, IModel<Void> model)
+	public FormComponentFeedbackIndicator(final String id, IModel model)
 	{
 		super(id, model);
 	}
@@ -66,7 +66,7 @@ public class FormComponentFeedbackIndicator extends Panel<Void> implements IFeed
 	 * @param component
 	 *            The component to watch for messages
 	 */
-	public void setIndicatorFor(final Component< ? > component)
+	public void setIndicatorFor(final Component component)
 	{
 		filter = new ComponentFeedbackMessageFilter(component);
 	}

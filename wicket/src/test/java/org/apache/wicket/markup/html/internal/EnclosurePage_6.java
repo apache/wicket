@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.link.Link;
 /**
  * @author ivaynberg
  */
-public class EnclosurePage_6 extends WebPage<Void>
+public class EnclosurePage_6 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class EnclosurePage_6 extends WebPage<Void>
 	 */
 	public EnclosurePage_6()
 	{
-		add(new Link<Object>("link")
+		add(new Link("link")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class EnclosurePage_6 extends WebPage<Void>
 
 		});
 
-		add(new Label<String>("label1", "content1")
+		add(new Label("label1", "content1")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -57,6 +57,6 @@ public class EnclosurePage_6 extends WebPage<Void>
 			}
 		});
 
-		add(new Label<String>("label2", "content2"));
+		add(new Label("label2", "content2"));
 	}
 }

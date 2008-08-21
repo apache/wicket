@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Juergen Donnerstag
  */
-public class InlinePanelPage_5 extends WebPage<Void>
+public class InlinePanelPage_5 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 

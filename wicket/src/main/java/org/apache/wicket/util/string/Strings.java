@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.string;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -332,17 +334,7 @@ public final class Strings
 
 					case '&' :
 
-						// if this is an entity (&#), then do not convert
-						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
-						{
-							buffer.append(c);
-
-						}
-						else
-						{
-							// it is not an entity, so convert it to &amp;
-							buffer.append("&amp;");
-						}
+						buffer.append("&amp;");
 						break;
 
 					case '"' :
@@ -621,7 +613,7 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
-	public static String join(String separator, String[] fragments)
+	public static String join(String separator, String... fragments)
 	{
 		if (fragments.length < 1)
 		{
@@ -1093,9 +1085,9 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string. Does special conversion for
-	 * {@link Throwable throwables} and String arrays of length 1 (in which case it just returns to
-	 * string in that array, as this is a common thing to have in the Servlet API).
+	 * Converts the given object to a string. Does special conversion for {@link Throwable
+	 * throwables} and String arrays of length 1 (in which case it just returns to string in that
+	 * array, as this is a common thing to have in the Servlet API).
 	 * 
 	 * @param object
 	 *            The object
@@ -1138,7 +1130,7 @@ public final class Strings
 	 *            the location where the component was created or added in the java code.
 	 * @return a string giving the line precise location where the component was added or created.
 	 */
-	public static String toString(final Component<?> component, final Throwable location)
+	public static String toString(final Component component, final Throwable location)
 	{
 		Class<?> componentClass = component.getClass();
 
@@ -1341,6 +1333,39 @@ public final class Strings
 	private static char toHex(int nibble)
 	{
 		return hexDigit[(nibble & 0xF)];
+	}
+
+	/**
+	 * Calculates the length of string in bytes, uses specified <code>charset</code> if provided.
+	 * 
+	 * @param string
+	 * @param charset
+	 *            (optional) character set to use when converting string to bytes
+	 * @return length of string in bytes
+	 */
+	public static int lengthInBytes(String string, Charset charset)
+	{
+		if (string == null)
+		{
+			throw new NullPointerException("Argument `string` cannot be null");
+		}
+		if (charset != null)
+		{
+			try
+			{
+				return string.getBytes(charset.name()).length;
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new WicketRuntimeException(
+					"StringResourceStream created with unsupported charset: " + charset.name());
+			}
+		}
+		else
+		{
+			return string.getBytes().length;
+		}
+
 	}
 
 

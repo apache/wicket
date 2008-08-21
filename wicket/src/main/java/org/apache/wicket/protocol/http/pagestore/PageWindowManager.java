@@ -59,23 +59,23 @@ public class PageWindowManager implements Serializable
 	}
 
 	// list of PageWindowInternal objects
-	private final List /* <PageWindowInternal> */windows = new ArrayList();
+	private final List<PageWindowInternal> windows = new ArrayList<PageWindowInternal>();
 
 	// map from page id to list of pagewindow indices (referring to the windows
 	// list) - to improve searching speed
 	// the index must be cleaned when the instances in the windows list
 	// change their indexes (e.g. items are shifted on page window removal)
-	private IntHashMap /* <int, List<Integer> */idToWindowIndices = null;
+	private IntHashMap<List<Integer>> idToWindowIndices = null;
 
 	private void putWindowIndex(int pageId, int windowIndex)
 	{
 		if (pageId != -1 && idToWindowIndices != null)
 		{
-			List indices = (List)idToWindowIndices.get(pageId);
+			List<Integer> indices = idToWindowIndices.get(pageId);
 			Integer index = new Integer(windowIndex);
 			if (indices == null)
 			{
-				indices = new ArrayList();
+				indices = new ArrayList<Integer>();
 				indices.add(index);
 				idToWindowIndices.put(pageId, indices);
 			}
@@ -90,7 +90,7 @@ public class PageWindowManager implements Serializable
 	{
 		if (pageId != -1 && idToWindowIndices != null)
 		{
-			List indices = (List)idToWindowIndices.get(pageId);
+			List<Integer> indices = idToWindowIndices.get(pageId);
 			if (indices != null)
 			{
 				indices.remove(new Integer(windowIndex));
@@ -100,15 +100,15 @@ public class PageWindowManager implements Serializable
 
 	private void rebuildIndices()
 	{
-		idToWindowIndices = new IntHashMap();
+		idToWindowIndices = new IntHashMap<List<Integer>>();
 		for (int i = 0; i < windows.size(); ++i)
 		{
-			PageWindowInternal window = (PageWindowInternal)windows.get(i);
+			PageWindowInternal window = windows.get(i);
 			putWindowIndex(window.pageId, i);
 		}
 	}
 
-	private int getWindowIndex(List /* Integer */indices, int pageId, int versionNumber,
+	private int getWindowIndex(List<Integer> indices, int pageId, int versionNumber,
 		int ajaxVersionNumber)
 	{
 		int result = -1;
@@ -116,10 +116,10 @@ public class PageWindowManager implements Serializable
 		if (versionNumber != -1 && ajaxVersionNumber != -1)
 		{
 			// just find the exact page version
-			for (Iterator i = indices.iterator(); i.hasNext();)
+			for (Iterator<Integer> i = indices.iterator(); i.hasNext();)
 			{
-				int currentIndex = ((Integer)i.next()).intValue();
-				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+				int currentIndex = (i.next()).intValue();
+				PageWindowInternal window = windows.get(currentIndex);
 
 				if (window.pageId == pageId && window.versionNumber == versionNumber &&
 					window.ajaxVersionNumber == ajaxVersionNumber)
@@ -135,10 +135,10 @@ public class PageWindowManager implements Serializable
 			// window with index closest to the left of the indexPointer or
 			// farthest
 			// to the right.
-			for (Iterator i = indices.iterator(); i.hasNext();)
+			for (Iterator<Integer> i = indices.iterator(); i.hasNext();)
 			{
-				int currentIndex = ((Integer)i.next()).intValue();
-				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+				int currentIndex = (i.next()).intValue();
+				PageWindowInternal window = windows.get(currentIndex);
 
 				if (window.pageId == pageId)
 				{
@@ -156,10 +156,10 @@ public class PageWindowManager implements Serializable
 		{
 			int lastAjaxVersion = -1;
 			// we need to find index with highest ajax version
-			for (Iterator i = indices.iterator(); i.hasNext();)
+			for (Iterator<Integer> i = indices.iterator(); i.hasNext();)
 			{
-				int currentIndex = ((Integer)i.next()).intValue();
-				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+				int currentIndex = (i.next()).intValue();
+				PageWindowInternal window = windows.get(currentIndex);
 
 				if (window.pageId == pageId && window.versionNumber == versionNumber &&
 					window.ajaxVersionNumber > lastAjaxVersion)
@@ -190,7 +190,7 @@ public class PageWindowManager implements Serializable
 			rebuildIndices();
 		}
 
-		List indices = (List)idToWindowIndices.get(pageId);
+		List<Integer> indices = idToWindowIndices.get(pageId);
 		if (indices != null)
 		{
 			index = getWindowIndex(indices, pageId, versionNumber, ajaxVersionNumber);
@@ -231,7 +231,7 @@ public class PageWindowManager implements Serializable
 	{
 		if (index > 0)
 		{
-			PageWindowInternal window = (PageWindowInternal)windows.get(index - 1);
+			PageWindowInternal window = windows.get(index - 1);
 			return window.filePartOffset + window.filePartSize;
 		}
 		else
@@ -249,7 +249,7 @@ public class PageWindowManager implements Serializable
 	 */
 	private void splitWindow(int index, int size)
 	{
-		PageWindowInternal window = (PageWindowInternal)windows.get(index);
+		PageWindowInternal window = windows.get(index);
 		int delta = window.filePartSize - size;
 
 		if (index == windows.size() - 1)
@@ -283,8 +283,8 @@ public class PageWindowManager implements Serializable
 	{
 		if (index < windows.size() - 1)
 		{
-			PageWindowInternal window = (PageWindowInternal)windows.get(index);
-			PageWindowInternal next = (PageWindowInternal)windows.get(index + 1);
+			PageWindowInternal window = windows.get(index);
+			PageWindowInternal next = windows.get(index + 1);
 			window.filePartSize += next.filePartSize;
 
 			windows.remove(index + 1);
@@ -303,7 +303,7 @@ public class PageWindowManager implements Serializable
 	 */
 	private void adjustWindowSize(int index, int size)
 	{
-		PageWindowInternal window = (PageWindowInternal)windows.get(index);
+		PageWindowInternal window = windows.get(index);
 
 		// last window, just adjust size
 		if (index == windows.size() - 1)
@@ -365,7 +365,7 @@ public class PageWindowManager implements Serializable
 		else
 		{
 			// get the window
-			window = (PageWindowInternal)windows.get(index);
+			window = windows.get(index);
 
 			// adjust if necessary
 			if (window.filePartSize != size)
@@ -456,7 +456,7 @@ public class PageWindowManager implements Serializable
 		if (index != -1)
 		{
 			removeWindowIndex(pageId, index);
-			((PageWindowInternal)windows.get(index)).pageId = -1;
+			(windows.get(index)).pageId = -1;
 		}
 
 		// if we are not going to reuse a page window (because it's not on
@@ -489,7 +489,7 @@ public class PageWindowManager implements Serializable
 		int index = getWindowIndex(pageId, versionNumber, ajaxVersionNumber);
 		if (index != -1)
 		{
-			return new PageWindow((PageWindowInternal)windows.get(index));
+			return new PageWindow(windows.get(index));
 		}
 		else
 		{
@@ -509,7 +509,7 @@ public class PageWindowManager implements Serializable
 		int index = getWindowIndex(pageId, versionNumber, ajaxVersionNumber);
 		if (index != -1)
 		{
-			PageWindowInternal window = (PageWindowInternal)windows.get(index);
+			PageWindowInternal window = windows.get(index);
 			removeWindowIndex(pageId, index);
 			if (index == windows.size() - 1)
 			{
@@ -538,7 +538,7 @@ public class PageWindowManager implements Serializable
 		{
 			rebuildIndices();
 		}
-		List indicesList = (List)idToWindowIndices.get(pageId);
+		List<Integer> indicesList = idToWindowIndices.get(pageId);
 
 		if (indicesList != null)
 		{
@@ -547,7 +547,7 @@ public class PageWindowManager implements Serializable
 			for (int i = 0; i < indices.length; i++)
 			{
 				int index = ((Integer)indices[i]).intValue();
-				PageWindowInternal window = (PageWindowInternal)windows.get(index);
+				PageWindowInternal window = windows.get(index);
 				if (window.pageId == pageId)
 				{
 					removePage(window.pageId, window.versionNumber, window.ajaxVersionNumber);
@@ -562,10 +562,9 @@ public class PageWindowManager implements Serializable
 	 * @param count
 	 * @return
 	 */
-	public synchronized List /* <PageWindow> */getLastPageWindows(int count)
+	public synchronized List<PageWindow> getLastPageWindows(int count)
 	{
-		List /* <PageWindow */result = new ArrayList();
-
+		List<PageWindow> result = new ArrayList<PageWindow>();
 		int currentIndex = indexPointer;
 
 		do
@@ -575,7 +574,7 @@ public class PageWindowManager implements Serializable
 				break;
 			}
 
-			PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+			PageWindowInternal window = windows.get(currentIndex);
 			if (window.pageId != -1)
 			{
 				result.add(new PageWindow(window));

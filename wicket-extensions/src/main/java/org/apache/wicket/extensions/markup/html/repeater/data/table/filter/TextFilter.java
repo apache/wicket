@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  *            The {@link TextField}'s model object
  * 
  */
-public class TextFilter<T> extends AbstractFilter<T>
+public class TextFilter<T> extends AbstractFilter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,6 +58,4 @@ public class TextFilter<T> extends AbstractFilter<T>
 	{
 		return filter;
 	}
-
-
 }

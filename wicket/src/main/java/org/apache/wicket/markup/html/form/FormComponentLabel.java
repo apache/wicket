@@ -24,14 +24,12 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * form component output an id attribute and link its for attribute with that value.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            The model object type
  */
-public class FormComponentLabel<T> extends WebMarkupContainer<T>
+public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private final LabeledWebMarkupContainer<?> component;
+	private final LabeledWebMarkupContainer component;
 
 	/**
 	 * Constructor
@@ -41,7 +39,7 @@ public class FormComponentLabel<T> extends WebMarkupContainer<T>
 	 * @param component
 	 *            component that this label is linked to
 	 */
-	public FormComponentLabel(String id, LabeledWebMarkupContainer<?> component)
+	public FormComponentLabel(String id, LabeledWebMarkupContainer component)
 	{
 		super(id);
 		if (component == null)
@@ -70,7 +68,7 @@ public class FormComponentLabel<T> extends WebMarkupContainer<T>
 	 * 
 	 * @return form component
 	 */
-	public LabeledWebMarkupContainer<?> getFormComponent()
+	public LabeledWebMarkupContainer getFormComponent()
 	{
 		return component;
 	}

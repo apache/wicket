@@ -37,10 +37,8 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The model object type
  */
-public class Image<T> extends WebComponent<T> implements IResourceListener
+public class Image extends WebComponent implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -125,7 +123,7 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String id, final IModel<T> model)
+	public Image(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}
@@ -182,16 +180,16 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public Component<T> setModel(IModel<T> model)
+	public Component setDefaultModel(IModel<?> model)
 	{
 		// Null out the image resource, so we reload it (otherwise we'll be
 		// stuck with the old model.
 		localizedImageResource.setResourceReference(null);
 		localizedImageResource.setResource(null);
-		return super.setModel(model);
+		return super.setDefaultModel(model);
 	}
 
 	/**
@@ -214,7 +212,7 @@ public class Image<T> extends WebComponent<T> implements IResourceListener
 	 * @see org.apache.wicket.Component#initModel()
 	 */
 	@Override
-	protected IModel<T> initModel()
+	protected IModel<?> initModel()
 	{
 		// Images don't support Compound models. They either have a simple
 		// model, explicitly set, or they use their tag's src or value

@@ -25,7 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * Demonstrates ajax effects
  */
-public class EffectsPage extends BasePage<Void>
+public class EffectsPage extends BasePage
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
@@ -69,17 +69,15 @@ public class EffectsPage extends BasePage<Void>
 	 */
 	public EffectsPage()
 	{
-		final Label<Integer> c1 = new Label<Integer>("c1", new PropertyModel<Integer>(this,
-			"counter1"));
+		final Label c1 = new Label("c1", new PropertyModel<Integer>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label<Integer> c2 = new Label<Integer>("c2", new PropertyModel<Integer>(this,
-			"counter2"));
+		final Label c2 = new Label("c2", new PropertyModel<Integer>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		add(new AjaxLink<Void>("c1-link")
+		add(new AjaxLink("c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -90,7 +88,7 @@ public class EffectsPage extends BasePage<Void>
 			}
 		});
 
-		add(new AjaxFallbackLink<Void>("c2-link")
+		add(new AjaxFallbackLink("c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

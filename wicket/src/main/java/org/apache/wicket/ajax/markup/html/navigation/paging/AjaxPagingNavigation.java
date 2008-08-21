@@ -78,7 +78,7 @@ public class AjaxPagingNavigation extends PagingNavigation
 	 * @return the ajaxified page number link.
 	 */
 	@Override
-	protected Link<Object> newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
 	}
