@@ -124,14 +124,17 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 		
 		res.append("{");
 		
-		res.append("p:'");
+		res.append("p:'");		
 		Page page = component.getPage();
-		res.append(page.getNumericId());
-		if (page.getCurrentVersionNumber() != 0)
+		if (page.getPageMapName() != null)
 		{
+			res.append(page.getPageMapName());
 			res.append(":");
-			res.append(page.getCurrentVersionNumber());
 		}
+		res.append(page.getNumericId());
+		res.append(":");
+		res.append(page.getCurrentVersionNumber());
+		
 		res.append("'");
 		
 		

@@ -18,6 +18,9 @@ package org.apache.wicket.ajaxng.request;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Page;
+import org.apache.wicket.Session;
+import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
@@ -27,26 +30,97 @@ import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 {
 	private final String mountPath;
-	
+
 	public AjaxNGUrlCodingStrategy(String mountPath)
 	{
 		this.mountPath = mountPath;
 	}
+
+	private String getParameter(RequestParameters parameters, String key)
+	{
+		Object o = parameters.getParameters().get(key);
+		if (o instanceof String[])
+		{
+			return ((String[])o)[0];
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
+	private Page getPage(RequestParameters parameters)
+	{
+		String page = getParameter(parameters, PARAM_PAGE_ID);
+		String elements[] = page.split(":");
+		int pageId;
+		String pageMapName = null; 
+		int version = 0;
+		if (elements.length == 2)
+		{
+			pageId = Integer.valueOf(elements[0]);	
+			version = Integer.valueOf(elements[1]);
+		}
+		else if (elements.length == 3)
+		{
+			pageMapName = elements[0];
+			pageId = Integer.valueOf(elements[1]);	
+			version = Integer.valueOf(elements[2]);
+		}
+		else
+		{
+			throw new IllegalStateException("Couldn't parse pageID '" + page + "'");
+		}
+		return Session.get().getPage(pageMapName, "" + pageId, version);
+	}
+
 	private Component getComponent(RequestParameters parameters)
 	{
+		Page page = getPage(parameters);
+
+		if (page != null)
+		{
+			final String componentId = getParameter(parameters, PARAM_COMPONENT_ID);
+			if (componentId == null)
+			{
+				return page;
+			}
+			else
+			{
+				return (Component)page.visitChildren(new IVisitor<Component>()
+				{
+					public Object component(Component component)
+					{
+						if (componentId.equals(component.getMarkupId(false)))
+						{
+							return component;
+						}
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+		}
+
 		return null;
-		//String page = parameters.getParameters().get(PARAM_PAGE_ID);
 	}
 
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		return AjaxNGRequestTarget.DUMMY; 		
-	}		
+		Component component = getComponent(requestParameters);
+		if (component == null)
+		{
+			throw new IllegalStateException("Couldn't find component with id '" +
+				getParameter(requestParameters, PARAM_COMPONENT_ID) + "'.");
+		}
+		
+		int behaviorIndex = Integer.valueOf(getParameter(requestParameters, PARAM_BEHAVIOR_INDEX));
+		
+		return new AjaxNGRequestTarget(component, behaviorIndex);
+	}
 
 	public CharSequence encode(IRequestTarget requestTarget)
 	{
-		// we need this as the prefix for the ajax configuration 
+		// we need this as the prefix for the ajax configuration
 		return getMountPath();
 	}
 
@@ -54,8 +128,8 @@ public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 	{
 		return mountPath;
 	}
-	
-	private static final String PARAM_PREFIX = "wicket:";
+
+	private static final String PARAM_PREFIX = "wicketNG:";
 	public static final String PARAM_TIMESTAMP = PARAM_PREFIX + "timestamp";
 	public static final String PARAM_COMPONENT_ID = PARAM_PREFIX + "componentId";
 	public static final String PARAM_PAGE_ID = PARAM_PREFIX + "pageId";
