@@ -574,7 +574,8 @@ YUI().use('*', function(Y) {
 	 *                                        
 	 *   pt, processingTimeout   - Integer    Timeout for the response processing. In case the response
 	 *                                        processing takes more than the timeout it won't block the
-	 *                                        request queue.
+	 *                                        request queue. Can be null in which case the default processing
+	 *                                        timeout will be used.
 	 *          
 	 *   p, pageId               - String     Used to identify the originating page. String in form of
 	 *                                        <pageId>:<pageVersion>
@@ -620,7 +621,7 @@ YUI().use('*', function(Y) {
 	 *   
 	 *   pr, preconditions       - Method(s)  Optional. Method or array of methods that is/are invoked 
 	 *                                        before the request executes. The method(s) will get this 
-	 *                                        RequestItem passed as fist argument and have to return 
+	 *                                        RequestQueueItem passed as fist argument and have to return 
 	 *                                        a boolean value. If any of these methods returns false the 
 	 *                                        request is canceled.
 	 *                                        
@@ -638,20 +639,15 @@ YUI().use('*', function(Y) {
 	 *                                        method(s) will get this RequestQueueItem passed as fist 
 	 *                                        argument. If possible error message will be second argument 
 	 *                                        passed to the handlers. 
-	 *                                        
-	 *   u, urlPostProcessors    - Method(s)  Optional. Method or array of methods that can postprocess 
-	 *                                        the URL before it hits the server. Each of the methods 
-	 *                                        will get the URL as first argument and this RequestQueueItem 
-	 *                                        as second argument and must return postprocessed URL.
-	 *                                        
-     *   ua, urlArguments        - Object     Optional. Map that contains additional URL arguments. These 
-     *                                        will be appended to the URL before postprocessing it. This is 
-     *                                        simpler alternative to urlPostProcessor or urlArgumentMethods.
+	 *                                        	                                         
+     *   u, urlArguments        - Object      Optional. Map that contains additional URL arguments. These 
+     *                                        will be appended to the URL. This is simpler alternative to 
+     *                                        urlArgumentMethods.
      *                                        
-     *   uam, urlArgumentMethods - Method(s)  Optional. Method or array of methods that produce additional 
-     *                                        URL arguments. Each of the methods will get this 
-     *                                        RequestQueueItem passed and must return a 
-     *                                        Map<String, String> (Object).
+     *   ua, urlArgumentMethods - Method(s)  Optional. Method or array of methods that produce additional 
+     *                                       URL arguments. Each of the methods will get this 
+     *                                       RequestQueueItem passed and must return a 
+     *                                       Map<String, String> (Object).
 	 */
 	var RequestQueueItem = function(attributes)
 	{
@@ -699,9 +695,8 @@ YUI().use('*', function(Y) {
 			beforeHandlers:     m(a.beforeHandlers     || a.be,  gs.beforeHandlers),
 			successHandlers:    m(a.successHandlers    || a.s,   gs.successHandlers),
 			errorHandlers:      m(a.errorHandlers      || a.e,   gs.errorHandlers),
-			urlPostProcessors:  m(a.urlPostProcessors  || a.u,   gs.urlPostProcessors),
-			urlArguments:         a.urlArguments       || a.ua   || null,
-			urlArgumentMethods: m(a.urlArgumentMethods || a.uam, gs.urlArgumentMethods)
+			urlArguments:         a.urlArguments       || a.u    || null,
+			urlArgumentMethods: m(a.urlArgumentMethods || a.ua,  gs.urlArgumentMethods)
 		}
 		
 		log.trace("RequestQueue", "Creating New Item", this.attributes);
@@ -1106,7 +1101,8 @@ YUI().use('*', function(Y) {
 		{
 			element = W.$(attributes.c);
 		}		
-		Y.on(event, function(event) {			
+		Y.on(event, function(event) 
+		{			
 			var item = new RequestQueueItem(attributes);
 			item.event = event;
 			W.ajax.requestQueue.add(item);

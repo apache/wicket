@@ -16,47 +16,52 @@
  */
 package org.apache.wicket.ajaxng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.ajaxng.request.AjaxNGRequestTarget;
-import org.apache.wicket.ajaxng.request.AjaxNGUrlCodingStrategy;
+import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
+import org.apache.wicket.ajaxng.request.AjaxUrlCodingStrategy;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
 /**
  * @author Matej Knopp
  */
-public class AjaxNGBehavior implements IBehavior, IHeaderContributor
+public class AjaxBehavior implements IBehavior
 {
 
 	private static final long serialVersionUID = 1L;
 
-	private Component component;
+	private final List<Component> boundComponents = new ArrayList<Component>();
 	
 	/**
 	 * Construct.
 	 */
-	public AjaxNGBehavior()
+	public AjaxBehavior()
 	{
 	}
 
 		
-	private final static ResourceReference YUI_BASE = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/yui-base/yui-base.js");
-	private final static ResourceReference YUI_OOP = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/oop/oop.js");
-	private final static ResourceReference YUI_EVENT = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/event/event.js");
-	private final static ResourceReference YUI_DOM = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/dom/dom.js");
-	private final static ResourceReference YUI_NODE = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/node/node.js");
-	private final static ResourceReference YUI_IO = new JavascriptResourceReference(AjaxNGBehavior.class, "js/yui3/io/io.js");	
-	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(AjaxNGBehavior.class, "js/wicket-ajax-ng.js");
+	private final static ResourceReference YUI_BASE = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/yui-base/yui-base.js");
+	private final static ResourceReference YUI_OOP = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/oop/oop.js");
+	private final static ResourceReference YUI_EVENT = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/event/event.js");
+	private final static ResourceReference YUI_DOM = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/dom/dom.js");
+	private final static ResourceReference YUI_NODE = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/node/node.js");
+	private final static ResourceReference YUI_IO = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/io/io.js");	
+	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(AjaxBehavior.class, "js/wicket-ajax-ng.js");
 
-	public final static String JS_PREFIX = "WicketNG";
+	/**
+	 * Wicket javascript namespace.
+	 */
+	public final static String WICKET_NS = "WicketNG";		
 	
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		response.renderJavascriptReference(YUI_BASE);
 		response.renderJavascriptReference(YUI_OOP);
@@ -66,38 +71,38 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 		response.renderJavascriptReference(YUI_IO);
 		response.renderJavascriptReference(AJAX_NG);
 		
-		CharSequence prefix = RequestCycle.get().urlFor(AjaxNGRequestTarget.DUMMY);
+		CharSequence prefix = RequestCycle.get().urlFor(AjaxRequestTarget.DUMMY);
 		
 		StringBuilder config = new StringBuilder();
-		config.append(JS_PREFIX +".ajax.globalSettings.urlPrefix='");
+		config.append(WICKET_NS +".ajax.globalSettings.urlPrefix='");
 		config.append(prefix);
 		config.append("'\n");
 		
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamComponentId='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_COMPONENT_ID);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamComponentId='");
+		config.append(AjaxUrlCodingStrategy.PARAM_COMPONENT_ID);
 		config.append("'\n");
 		
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamTimestamp='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_TIMESTAMP);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamTimestamp='");
+		config.append(AjaxUrlCodingStrategy.PARAM_TIMESTAMP);
 		config.append("'\n");
 		
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamPageId='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_PAGE_ID);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamPageId='");
+		config.append(AjaxUrlCodingStrategy.PARAM_PAGE_ID);
 		config.append("'\n");
 				
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamFormId='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_FORM_ID);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamFormId='");
+		config.append(AjaxUrlCodingStrategy.PARAM_FORM_ID);
 		config.append("'\n");
 		
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamListenerInterface='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_LISTENER_INTEFACE);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamListenerInterface='");
+		config.append(AjaxUrlCodingStrategy.PARAM_LISTENER_INTEFACE);
 		config.append("'\n");
 		
-		config.append(JS_PREFIX +".ajax.globalSettings.urlParamBehaviorIndex='");
-		config.append(AjaxNGUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
+		config.append(WICKET_NS +".ajax.globalSettings.urlParamBehaviorIndex='");
+		config.append(AjaxUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
 		config.append("'\n");
 		
-		response.renderJavascript(config, JS_PREFIX + "-Config");
+		response.renderJavascript(config, WICKET_NS + "-Config");
 	}
 
 	public void afterRender(Component component)
@@ -110,15 +115,14 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 
 	public void bind(Component component)
 	{
-		if (this.component != null && this.component != component)
+		if (boundComponents.contains(component) == false)
 		{
-			throw new IllegalStateException("The behavior can be only bound to one component.");			
-		}
-		this.component = component;
-		component.setOutputMarkupId(true);
+			boundComponents.add(component);
+			component.setOutputMarkupId(true);
+		}					
 	}
 
-	protected String getAttributes()
+	protected String getAttributes(Component component)
 	{
 		StringBuilder res = new StringBuilder();
 		
@@ -182,4 +186,13 @@ public class AjaxNGBehavior implements IBehavior, IHeaderContributor
 	{
 	}
 
+	/**
+	 * Returns attributes for Ajax Request.
+	 * 
+	 * @return {@link AjaxRequestAttributes} instance
+	 */
+	public AjaxRequestAttributes getAttributes()
+	{
+		return new AjaxRequestAttributesImpl();
+	}
 }

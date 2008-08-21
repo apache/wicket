@@ -2644,10 +2644,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 				while (iter.hasNext())
 				{
 					IBehavior behavior = iter.next();
+					behavior.renderHead(this, container.getHeaderResponse());
 					if (behavior instanceof IHeaderContributor && isBehaviorAccepted(behavior))
 					{
 						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
-					}
+					}					
 				}
 			}
 		}

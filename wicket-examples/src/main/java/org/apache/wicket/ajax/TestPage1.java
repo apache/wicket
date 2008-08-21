@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.ajaxng.AjaxNGEventBehavior;
+import org.apache.wicket.ajaxng.AjaxEventBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -32,10 +32,10 @@ public class TestPage1 extends WebPage
 	public TestPage1()
 	{
 		WebMarkupContainer c1 = new WebMarkupContainer("c1");
-		c1.add(new AjaxNGEventBehavior("click") {
+		c1.add(new AjaxEventBehavior("click") {
 			
 		});
-		c1.add(new AjaxEventBehavior("click") {
+		c1.add(new org.apache.wicket.ajax.AjaxEventBehavior("onclick") {
 			/**
 			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 			 */

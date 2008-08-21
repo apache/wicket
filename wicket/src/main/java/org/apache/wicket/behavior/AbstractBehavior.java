@@ -186,4 +186,8 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	{
 		throw new UnsupportedOperationException();
 	}
+	
+	public void renderHead(Component component, IHeaderResponse headerResponse)
+	{
+	}
 }

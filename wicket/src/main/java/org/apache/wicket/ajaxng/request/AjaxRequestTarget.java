@@ -14,37 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajaxng;
+package org.apache.wicket.ajaxng.request;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.Component;
+import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.RequestCycle;
 
-/**
- * @author Matej Knopp
- */
-public class AjaxNGEventBehavior extends AjaxNGBehavior
+public class AjaxRequestTarget implements IRequestTarget
 {
-	private static final long serialVersionUID = 1L;
 
-	private final String event;
-	
-	public AjaxNGEventBehavior(String event)
+	private AjaxRequestTarget()
 	{
-		this.event = event;
 	}
 	
-	@Override
-	public void renderHead(IHeaderResponse response)
+	private Component component;
+	private int behaviorIndex;
+	
+	public AjaxRequestTarget(Component component, int behaviorIndex)
 	{
-		super.renderHead(response);
-		
-		StringBuilder js = new StringBuilder();
-		js.append(AjaxNGBehavior.JS_PREFIX + ".e('");
-		js.append(event);
-		js.append("',");
-		js.append(getAttributes());
-		js.append(")");
-		
-		response.renderOnDomReadyJavascript(js.toString());
+		this.component = component;
+		this.behaviorIndex = behaviorIndex;
 	}
 
+	public void detach(RequestCycle requestCycle)
+	{
+	}
+
+	public void respond(RequestCycle requestCycle)
+	{
+	}
+
+	public static final AjaxRequestTarget DUMMY = new AjaxRequestTarget();
 }

@@ -19,6 +19,7 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow to be added to a component and get
@@ -133,4 +134,6 @@ public interface IBehavior extends IClusterable
 	 * @return true if this behavior is temporary
 	 */
 	boolean isTemporary();
+	
+	void renderHead(Component component, IHeaderResponse headerResponse);
 }

@@ -21,17 +21,18 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
 /**
  * @author Matej Knopp
  */
-public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
+public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 {
 	private final String mountPath;
 
-	public AjaxNGUrlCodingStrategy(String mountPath)
+	public AjaxUrlCodingStrategy(String mountPath)
 	{
 		this.mountPath = mountPath;
 	}
@@ -100,8 +101,10 @@ public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 				});
 			}
 		}
-
-		return null;
+		else
+		{
+			throw new PageExpiredException("Page Expired");
+		}
 	}
 
 	public IRequestTarget decode(RequestParameters requestParameters)
@@ -115,7 +118,7 @@ public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 		
 		int behaviorIndex = Integer.valueOf(getParameter(requestParameters, PARAM_BEHAVIOR_INDEX));
 		
-		return new AjaxNGRequestTarget(component, behaviorIndex);
+		return new AjaxRequestTarget(component, behaviorIndex);
 	}
 
 	public CharSequence encode(IRequestTarget requestTarget)
@@ -139,7 +142,7 @@ public class AjaxNGUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 
 	public boolean matches(IRequestTarget requestTarget)
 	{
-		return requestTarget instanceof AjaxNGRequestTarget;
+		return requestTarget instanceof AjaxRequestTarget;
 	}
 
 	public boolean matches(String path)
