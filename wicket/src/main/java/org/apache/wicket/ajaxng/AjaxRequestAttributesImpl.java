@@ -47,14 +47,14 @@ import org.apache.wicket.markup.html.form.Form;
  */
 public class AjaxRequestAttributesImpl implements AjaxRequestAttributes
 {
-	private final AjaxRequestAttributesImpl delegate;
+	private final AjaxRequestAttributes delegate;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param delegate
 	 */
-	public AjaxRequestAttributesImpl(AjaxRequestAttributesImpl delegate)
+	public AjaxRequestAttributesImpl(AjaxRequestAttributes delegate)
 	{
 		this.delegate = delegate;
 	}

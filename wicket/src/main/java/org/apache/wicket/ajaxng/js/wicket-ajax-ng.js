@@ -154,28 +154,28 @@ YUI().use('*', function(Y) {
 		logger = FirebugLogger;
 	}	
 	
-	var logConfig = { trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false };
+	var logConfig = { disableAll: false, trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false };
 	
 	W.Log  = 
 	{
 		trace: function()
 		{
-			if (logConfig.trace && logConfig[arguments[0]] != false && logConfig["trace:" + arguments[0]] != false)
+			if (!logConfig.disableAll && logConfig.trace && logConfig[arguments[0]] != false && logConfig["trace:" + arguments[0]] != false)
 				logger.trace.apply(this, arguments);
 		},
 		debug: function()
 		{
-			if (logConfig.debug && logConfig[arguments[0]] != false && logConfig["debug:" + arguments[0]] != false)
+			if (!logConfig.disableAll && logConfig.debug && logConfig[arguments[0]] != false && logConfig["debug:" + arguments[0]] != false)
 				logger.debug.apply(this, arguments);
 		},
 		info: function()
 		{
-			if (logConfig.info && logConfig[arguments[0]] != false && logConfig["info:" + arguments[0]] != false)
+			if (!logConfig.disableAll && logConfig.info && logConfig[arguments[0]] != false && logConfig["info:" + arguments[0]] != false)
 				logger.info.apply(this, arguments);
 		},
 		error: function()
 		{
-			if (logConfig.error && logConfig[arguments[0]] != false && logConfig["error:" + arguments[0]] != false)
+			if (!logConfig.disableAll && logConfig.error && logConfig[arguments[0]] != false && logConfig["error:" + arguments[0]] != false)
 				logger.error.apply(this, arguments);
 		},
 		setLogger: function(newLogger)
@@ -190,7 +190,7 @@ YUI().use('*', function(Y) {
 		{
 			return logger == DummyLogger;
 		},
-		getLogConfig: function() 
+		getConfig: function() 
 		{
 			return logConfig;
 		}
@@ -465,6 +465,7 @@ YUI().use('*', function(Y) {
 	var mapToUrlParameters = function(map)
 	{
 		var res = "";
+		var key;
 		for (key in map)
 		{
 			var value = map[key];
@@ -518,6 +519,7 @@ YUI().use('*', function(Y) {
 			}				
 		}
 		
+		var key;
 		for (key in map)
 		{
 			var value = map[key];
@@ -712,6 +714,7 @@ YUI().use('*', function(Y) {
 				{					
 					if (precondition(this) == false)
 					{
+						log.debug("RequestQueue", "Precondition failed - skiping item; Item: ", this, " Precondition: ", precondition);
 						return false;
 					}
 				} 
@@ -845,13 +848,13 @@ YUI().use('*', function(Y) {
 		
 		onSuccess: function(transactionId, responseObject)
 		{
-			log.debug("RequestQueue", "Request successful - TransactionId: ", transactionId, " Response: ", responseObject);
+			log.debug("RequestQueue", "Request successful - TransactionId: ", transactionId, " Response: ", responseObject, "Item: ", this);
 			
 		},
 		
 		onFailure: function(transactionId, responseObject)
 		{
-			log.debug("RequestQueue", "Request failed - TransactionId: ", transactionId, " Response: ", responseObject);
+			log.debug("RequestQueue", "Request failed - TransactionId: ", transactionId, " Response: ", responseObject, "Item: ", this);
 			this.failure();
 		},
 		
@@ -882,7 +885,7 @@ YUI().use('*', function(Y) {
 			var url = this.buildUrl();
 			var cfg = this.getRequestCfg(url);
 			
-			log.debug("RequestQueue", "Initiating AJAX Request on url ", url + " with configuration ", cfg);
+			log.debug("RequestQueue", "Initiating AJAX Request on url ", { url: url }, " with configuration ", cfg);
 			
 			var request = Y.io(url, cfg);
 			

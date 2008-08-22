@@ -17,7 +17,10 @@
 package org.apache.wicket.ajaxng;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -39,7 +42,7 @@ public class AjaxBehavior implements IBehavior
 	private static final long serialVersionUID = 1L;
 
 	private final List<Component> boundComponents = new ArrayList<Component>();
-	
+
 	/**
 	 * Construct.
 	 */
@@ -47,20 +50,26 @@ public class AjaxBehavior implements IBehavior
 	{
 	}
 
-		
-	private final static ResourceReference YUI_BASE = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/yui-base/yui-base.js");
-	private final static ResourceReference YUI_OOP = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/oop/oop.js");
-	private final static ResourceReference YUI_EVENT = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/event/event.js");
-	private final static ResourceReference YUI_DOM = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/dom/dom.js");
-	private final static ResourceReference YUI_NODE = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/node/node.js");
-	private final static ResourceReference YUI_IO = new JavascriptResourceReference(AjaxBehavior.class, "js/yui3/io/io.js");	
-	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(AjaxBehavior.class, "js/wicket-ajax-ng.js");
+	private final static ResourceReference YUI_BASE = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/yui-base/yui-base.js");
+	private final static ResourceReference YUI_OOP = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/oop/oop.js");
+	private final static ResourceReference YUI_EVENT = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/event/event.js");
+	private final static ResourceReference YUI_DOM = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/dom/dom.js");
+	private final static ResourceReference YUI_NODE = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/node/node.js");
+	private final static ResourceReference YUI_IO = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/io/io.js");
+	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/wicket-ajax-ng.js");
 
 	/**
 	 * Wicket javascript namespace.
 	 */
-	public final static String WICKET_NS = "WicketNG";		
-	
+	public final static String WICKET_NS = "WicketNG";
+
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		response.renderJavascriptReference(YUI_BASE);
@@ -70,38 +79,38 @@ public class AjaxBehavior implements IBehavior
 		response.renderJavascriptReference(YUI_NODE);
 		response.renderJavascriptReference(YUI_IO);
 		response.renderJavascriptReference(AJAX_NG);
-		
+
 		CharSequence prefix = RequestCycle.get().urlFor(AjaxRequestTarget.DUMMY);
-		
+
 		StringBuilder config = new StringBuilder();
-		config.append(WICKET_NS +".ajax.globalSettings.urlPrefix='");
+		config.append(WICKET_NS + ".ajax.globalSettings.urlPrefix='");
 		config.append(prefix);
 		config.append("'\n");
-		
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamComponentId='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamComponentId='");
 		config.append(AjaxUrlCodingStrategy.PARAM_COMPONENT_ID);
 		config.append("'\n");
-		
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamTimestamp='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamTimestamp='");
 		config.append(AjaxUrlCodingStrategy.PARAM_TIMESTAMP);
 		config.append("'\n");
-		
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamPageId='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamPageId='");
 		config.append(AjaxUrlCodingStrategy.PARAM_PAGE_ID);
 		config.append("'\n");
-				
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamFormId='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamFormId='");
 		config.append(AjaxUrlCodingStrategy.PARAM_FORM_ID);
 		config.append("'\n");
-		
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamListenerInterface='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamListenerInterface='");
 		config.append(AjaxUrlCodingStrategy.PARAM_LISTENER_INTEFACE);
 		config.append("'\n");
-		
-		config.append(WICKET_NS +".ajax.globalSettings.urlParamBehaviorIndex='");
+
+		config.append(WICKET_NS + ".ajax.globalSettings.urlParamBehaviorIndex='");
 		config.append(AjaxUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
 		config.append("'\n");
-		
+
 		response.renderJavascript(config, WICKET_NS + "-Config");
 	}
 
@@ -119,17 +128,44 @@ public class AjaxBehavior implements IBehavior
 		{
 			boundComponents.add(component);
 			component.setOutputMarkupId(true);
-		}					
+		}
+	}
+	
+	public List<Component> getBoundComponents()
+	{
+		return Collections.unmodifiableList(boundComponents);
 	}
 
-	protected String getAttributes(Component component)
+	/**
+	 * Renders the javascript object with Ajax request attributes. The object can be used
+	 * as argument for <code>RequestQueueItem</code> constructor.
+	 * 
+	 * @param component
+	 * @return attributes javascript object rendered as string.
+	 */
+	public String renderAttributes(Component component)
 	{
-		StringBuilder res = new StringBuilder();
-		
-		res.append("{");
-		
-		res.append("p:'");		
-		Page page = component.getPage();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("p", escapeJavascriptString(getPageId(component.getPage())));
+
+		if (component instanceof Page == false)
+		{
+			map.put("c", escapeJavascriptString(component.getMarkupId()));
+		}
+
+		int behaviorIndex = component.getBehaviors().indexOf(this);
+
+		map.put("b", behaviorIndex);
+
+		renderAttributes(component, getAttributes(), map);
+
+		return renderMap(map);
+	}
+	
+	private CharSequence getPageId(Page page)
+	{
+		StringBuilder res = new StringBuilder(5);
+
 		if (page.getPageMapName() != null)
 		{
 			res.append(page.getPageMapName());
@@ -138,27 +174,180 @@ public class AjaxBehavior implements IBehavior
 		res.append(page.getNumericId());
 		res.append(":");
 		res.append(page.getCurrentVersionNumber());
-		
-		res.append("'");
-		
-		
-		if (component instanceof Page == false)
+
+		return res;
+	}
+
+	private String renderMap(Map<String, Object> map)
+	{
+		StringBuilder res = new StringBuilder();
+
+		if (map == null)
 		{
-			res.append(",c:'");
-			res.append(component.getMarkupId());
-			res.append("'");
+			return "{}";
 		}
 		
-		int behaviorIndex = component.getBehaviors().indexOf(this);
+		res.append("{");
+		boolean first = true;
+		for (String s : map.keySet())
+		{
+			Object value = map.get(s);
+			
+			if (value == null)
+			{
+				continue;
+			}
+			
+			if (!first)
+			{
+				res.append(",");
+			}
+			else
+			{
+				first = false;
+			}
+			
+			res.append(s);
 		
-		res.append(",b:");
-		res.append(behaviorIndex);
-				
+			res.append(":");
+		
+			res.append(value);
+
+		}
 		res.append("}");
-		
+
 		return res.toString();
 	}
+
+	private CharSequence escapeJavascriptString(CharSequence s)
+	{		
+		if (s == null)
+		{
+			return null;
+		}
+		StringBuilder res = new StringBuilder(s.length() + 2);
+
+		res.append("'");
+		
+		for (int i = 0; i < s.length(); ++i)
+		{
+			char c = s.charAt(i);
+			switch (c)
+			{
+				case '\'' :
+					res.append("\\'");
+					break;
+				case '\"' :
+					res.append("\\\"");
+					break;
+				case '\\':
+					res.append("\\\\");
+					break;
+				case '\n' :
+					res.append("\\n");					
+					break;
+				case '\r' :
+					res.append("\\r");
+					break;
+				case '\t' :
+					res.append("\\t");
+					break;
+				default:
+					res.append(c);
+			}
+		}
+		
+		res.append("'");
+
+		return res;
+	}
+
+	private CharSequence renderFunctionList(FunctionList list)
+	{
+		if (list == null || list.isEmpty())
+		{
+			return null;
+		}
+		else if (list.size() == 1)
+		{
+			return list.get(0);
+		}
+		else
+		{
+			StringBuilder res = new StringBuilder();
+			boolean first = true;
+			res.append("[");
+			
+			for (int i = 0; i < list.size(); ++i)				
+			{
+				String s = list.get(i);
+				
+				if (!first)
+				{
+					res.append(",");
+				}
+				else
+				{
+					first = false;
+				}
+				
+				res.append(s);
+			}
+			
+			res.append("]");
+			return res;
+		}		
+	}
 	
+	private Map<String, Object> escapeMap(Map<String, Object> map)
+	{
+		if (map == null)
+		{
+			return null;
+		}
+		Map<String, Object> res = new HashMap<String, Object>();
+		
+		for (String s : map.keySet())
+		{
+			Object value = map.get(s);
+			if (value instanceof Number == false)
+			{
+				value = escapeJavascriptString((value).toString());
+			}
+			res.put(escapeJavascriptString(s).toString(), value);
+		}
+		
+		return res;
+	}
+	
+	private void renderAttributes(Component component, AjaxRequestAttributes attributes,
+		Map<String, Object> map)
+	{
+		if (attributes.getForm() != null)
+		{
+			map.put("f", escapeJavascriptString(attributes.getForm().getMarkupId()));
+		}
+		map.put("m", attributes.isMultipart());
+		map.put("t", attributes.getRequesTimeout());
+		map.put("pt", attributes.getProcessingTimeout());
+		map.put("t", escapeJavascriptString(attributes.getToken()));
+		map.put("r", attributes.isRemovePrevious());
+		map.put("th", attributes.getThrottle());
+		map.put("thp", attributes.isThrottlePostpone());
+		map.put("pr", renderFunctionList(attributes.getPreconditions()));
+		map.put("be", renderFunctionList(attributes.getBeforeHandlers()));
+		map.put("s", renderFunctionList(attributes.getSuccessHandlers()));
+		map.put("e", renderFunctionList(attributes.getErrorHandlers()));
+
+		Map<String, Object> urlArguments = attributes.getUrlArguments();
+		if (urlArguments != null && !urlArguments.isEmpty())
+		{
+			map.put("u", renderMap(escapeMap(urlArguments)));
+		}
+		
+		map.put("ua", renderFunctionList(attributes.getUrlArgumentMethods()));
+	}
+
 	public void detach(Component component)
 	{
 	}

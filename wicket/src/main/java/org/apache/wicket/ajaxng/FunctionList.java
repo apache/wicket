@@ -34,7 +34,7 @@ public class FunctionList
 
 	public FunctionList add(int index, String element)
 	{
-		add(index, element);
+		list.add(index, element);
 		return this;
 	}
 

@@ -42,7 +42,7 @@ public class AjaxEventBehavior extends AjaxBehavior
 		js.append(AjaxBehavior.WICKET_NS + ".e('");
 		js.append(event);
 		js.append("',");
-		js.append(getAttributes(component));
+		js.append(renderAttributes(component));
 		js.append(")");
 		
 		response.renderOnDomReadyJavascript(js.toString());
