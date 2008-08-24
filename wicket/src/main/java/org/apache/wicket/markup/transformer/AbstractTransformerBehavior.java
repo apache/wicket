@@ -64,6 +64,15 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.AbstractBehavior#beforeRender(org.apache.wicket.Component)
+	 */
+	@Override
+	public void beforeRender(Component component)
+	{
+		super.beforeRender(component);
 
 		final RequestCycle requestCycle = RequestCycle.get();
 
