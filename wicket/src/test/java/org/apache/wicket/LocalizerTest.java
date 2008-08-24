@@ -86,6 +86,7 @@ public class LocalizerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
@@ -121,7 +122,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(false);
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
-			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
 				"unknown.string", null, null, null));
 	}
 
@@ -133,7 +134,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
 				"unknown.string", null, null, "DEFAULT"));
 	}
 
