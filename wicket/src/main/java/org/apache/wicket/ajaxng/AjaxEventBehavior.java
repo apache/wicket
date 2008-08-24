@@ -22,30 +22,36 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 /**
  * @author Matej Knopp
  */
-public class AjaxEventBehavior extends AjaxBehavior
+public abstract class AjaxEventBehavior extends AjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
-	
+
+	/**
+	 * Construct.
+	 * 
+	 * @param event
+	 *            Event on which the behavior should be executed. The event needs to be specified
+	 *            without the "on" prefix (e.g. <code>click</code>, <code>change</code>)
+	 */
 	public AjaxEventBehavior(String event)
 	{
 		this.event = event;
 	}
-	
+
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		super.renderHead(component, response);
-		
+
 		StringBuilder js = new StringBuilder();
 		js.append(AjaxBehavior.WICKET_NS + ".e('");
 		js.append(event);
 		js.append("',");
 		js.append(renderAttributes(component));
 		js.append(")");
-		
+
 		response.renderOnDomReadyJavascript(js.toString());
 	}
-
 }

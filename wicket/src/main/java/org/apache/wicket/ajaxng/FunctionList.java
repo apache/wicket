@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class FunctionList 
+public class FunctionList implements Iterable<String> 
 {
 	private final List<String> list = new ArrayList<String>();
 	
@@ -144,4 +144,6 @@ public class FunctionList
 	{
 		return list.toArray(a);
 	}
+	
+	
 }

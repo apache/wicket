@@ -1131,7 +1131,7 @@ YUI().use('*', function(Y) {
 //	
 	}, window);
 	
-	WicketNG = W;
+	window.W = W;
 	
 });
 	
