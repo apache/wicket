@@ -23,6 +23,7 @@ import org.apache.wicket.ajaxng.AjaxEventBehavior;
 import org.apache.wicket.ajaxng.AjaxRequestAttributes;
 import org.apache.wicket.ajaxng.AjaxRequestAttributesImpl;
 import org.apache.wicket.ajaxng.FunctionList;
+import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -37,7 +38,7 @@ public class TestPage1 extends WebPage
 	 */
 	public TestPage1()
 	{
-		WebMarkupContainer c1 = new WebMarkupContainer("c1");
+		final WebMarkupContainer c1 = new WebMarkupContainer("c1");
 		c1.add(new AjaxEventBehavior("click")
 		{
 			/**
@@ -46,6 +47,9 @@ public class TestPage1 extends WebPage
 			@Override
 			public AjaxRequestAttributes getAttributes()
 			{
+				if (true) {
+					return super.getAttributes();					
+				}
 				return new AjaxRequestAttributesImpl(super.getAttributes())
 				{
 					/**
@@ -66,7 +70,7 @@ public class TestPage1 extends WebPage
 					@Override
 					public FunctionList getBeforeHandlers()
 					{
-						return super.getBeforeHandlers().add("function(i) { WicketNG.Log.debug('before!'); }").add(0, "function(i) { WicketNG.Log.debug('b!'); }");
+						return super.getBeforeHandlers().add("function(i) { W.Log.debug('before!'); }").add(0, "function(i) { W.Log.debug('b!'); }");
 					}
 					/**
 					 * @see org.apache.wicket.ajaxng.AjaxRequestAttributesImpl#getSuccessHandlers()
@@ -74,7 +78,7 @@ public class TestPage1 extends WebPage
 					@Override
 					public FunctionList getSuccessHandlers()
 					{
-						return super.getSuccessHandlers().add("function(i) { WicketNG.Log.debug('after!'); }");
+						return super.getSuccessHandlers().add("function(i) { W.Log.debug('after!'); }");
 					}
 					/**
 					 * @see org.apache.wicket.ajaxng.AjaxRequestAttributesImpl#getPreconditions()
@@ -94,19 +98,31 @@ public class TestPage1 extends WebPage
 					}
 				};
 			}
-		});
-		c1.add(new org.apache.wicket.ajax.AjaxEventBehavior("onclick")
-		{
+			
 			/**
-			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
+			 * @see org.apache.wicket.ajaxng.AjaxBehavior#respond(org.apache.wicket.ajaxng.request.AjaxRequestTarget)
 			 */
 			@Override
-			protected void onEvent(AjaxRequestTarget target)
+			public void respond(AjaxRequestTarget target)
 			{
+				target.addComponent(c1);
 			}
+		
 		});
-
+		
 		add(c1);
-	}
+		
+//		c1.add(new org.apache.wicket.ajax.AjaxEventBehavior("onclick")
+//		{
+//			/**
+//			 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
+//			 */
+//			@Override
+//			protected void onEvent(AjaxRequestTarget target)
+//			{
+//			}
+//		});
+//		
+	}		
 
 }

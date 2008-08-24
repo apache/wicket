@@ -12,7 +12,7 @@ YUI().use('*', function(Y) {
 	var W = { };
 
 	// Publish the current YUI instance.
-	// Creating new YUI instance every time is needed can be quite expensive
+	// Creating new YUI instance every time it is needed can be quite expensive
 	W.Y = Y;		
 	
 	/*
@@ -103,6 +103,17 @@ YUI().use('*', function(Y) {
 		return null;
 	}
 	
+	var replaceAll = function(str, from, to) 
+	{
+	    var idx = str.indexOf(from);
+	    while (idx > -1) 
+	    {
+	        str = str.replace(from, to);
+	        idx = str.indexOf(from);
+	    }
+	    return str;
+	}
+	
 	/*
 	 * Logging
 	 */
@@ -127,6 +138,23 @@ YUI().use('*', function(Y) {
 			a.unshift(first);
 			a.unshift("|");			
 			a.unshift(type);
+			
+			for (var i = 0; i < a.length; ++i)
+			{
+				if (L.isString(a[i]) && a[i].length > 100) 
+				{
+					var s = a[i];
+					a[i] = 
+					{
+						value: s,
+						toString: function() 
+						{
+							return s.substring(0, 30) + "...";
+						}
+					};
+				}
+			}
+			
 			return a;
 		},
 		trace: function()
@@ -336,6 +364,288 @@ YUI().use('*', function(Y) {
 	
 	Y.on("unload", function() { garbageCollector = null; }, window );
 	
+	/**
+	 * Functions executor takes array of functions and executes them. Each function gets
+	 * the notify object, which needs to be called for the next function to be executed.
+	 * This way the functions can be executed synchronously. Each function has to call
+	 * the notify object at some point, otherwise the functions after it wont be executed.
+	 * After the FunctionExecutor is initialize, the start methods triggers the
+	 * first function.
+	 */
+	var FunctionsExecutor = function(functions) 
+	{
+		this.functions = functions;
+		this.current = 0;
+		this.depth = 0; // we need to limit call stack depth
+	}
+
+	FunctionsExecutor.prototype = 
+	{
+		processNext: function() 
+		{
+			if (this.current < this.functions.length) 
+			{
+				var f = this.functions[this.current];
+				var run = bind(function() 
+				{
+					var notify = bind(this.notify, this);
+					try
+					{
+						f(notify);
+					} 
+					catch (ex)
+					{
+						log.error("FunctionExecutor", "Error execution function: ", f);
+						notify();
+					}
+				}, this);
+				this.current++;
+							
+				if (this.depth > 50 || UA.webkit) 
+				{
+					// to prevent khtml bug that crashes entire browser
+					// or to prevent stack overflow (safari has small call stack)
+					this.depth = 0;
+					window.setTimeout(run, 1);
+				}
+				else 
+				{
+					this.depth ++;
+					run();
+				}				
+			}
+		},	
+		
+		start: function() 
+		{
+			this.processNext();
+		},
+		
+		notify: function() 
+		{
+			this.processNext();
+		}
+	}
+
+	var replaceOuterHtmlIE = function(element, text) 
+	{						
+
+		// replaces all <iframe references with <__WICKET_JS_REMOVE_X9F4A__iframe text
+		var marker = "__WICKET_JS_REMOVE_X9F4A__"; 					
+		function markIframe(text) {
+			var t = text;
+			var r = /<\s*iframe/i;
+			while ((m = t.match(r)) != null) 
+			{			
+				t = replaceAll(t, m[0], "<" + marker + m[0].substring(1));            
+			}
+	        return t;
+		}
+		
+		function removeIframeMark(text) 
+		{
+			return replaceAll(text, marker, "");
+		}
+								
+		if (element.tagName == "SCRIPT") 
+		{
+			// we need to get the javascript content, so we create an invalid DOM structure,
+			// (that is necessary for IE to let us see the innerHTML of the script tag	
+			var tempDiv = document.createElement("div");
+			tempDiv.innerHTML = "<table>" + text + "</table>";		
+			var script = tempDiv.childNodes[0].childNodes[0].innerHTML;
+			
+			element.outerHtml = text;
+			try 
+			{
+				eval(script);
+			} 
+			catch (e) 
+			{
+				log.error("ReplaceOuterHtml", "Error evaluation javascript: ", script, e);
+			}
+			return;
+		}  
+		
+		var parent = element.parentNode;
+		var tn = element.tagName;
+					
+						
+		var tempDiv = document.createElement("div");
+		var tempParent;
+		
+		// array for javascripts that were in the text
+		var scripts = new Array();				
+		
+		if (window.parent == window || window.parent == null) 
+		{
+			document.body.appendChild(tempDiv);
+		}
+			
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TFOOT" && tn != "TH") 
+		{		
+			// in case the element is not any of these																									
+							
+			// this is not exactly nice, but we need to get invalid markup inside innerHTML,
+			// because otherwise IE just swallows the <script> tags (sometimes)		
+			tempDiv.innerHTML = '<table style="display:none">' + markIframe(text) + '</table>';
+							
+			// now copy the script tags to array (needed later for script execution)
+			var s = tempDiv.getElementsByTagName("script");				
+							
+			for (var i = 0; i < s.length; ++i) 
+			{			
+				scripts.push(s[i]);
+			}						
+							
+			// now use regular div so that we won't mess the DOM
+			tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
+
+			// set the outer <div> as parent
+			tempParent = tempDiv.childNodes[0];
+			
+			tempParent.parentNode.removeChild(tempParent);								
+							
+		} 
+		else 
+		{		
+			// same trick as with before, this time we need a div to to create invalid markup
+			// (otherwise we wouldn't be able to get the script tags)
+			tempDiv.innerHTML = '<div style="display:none">' + markIframe(text) + '</div>';
+		
+			// now copy the script tags to array (needed later for script execution)
+			var s = tempDiv.getElementsByTagName("script");
+							
+			for (var i = 0; i < s.length; ++i) 
+			{
+				scripts.push(s[i]);
+			}		
+			
+			// hack to get around the fact that IE doesn't allow to replace table elements
+			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
+			
+			// get the parent element of new elements
+			tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;					
+		}	
+
+		// place all newly created elements before the old element	
+		while(tempParent.childNodes.length > 0) 
+		{
+			var tempElement = tempParent.childNodes[0];
+			tempParent.removeChild(tempElement);
+			parent.insertBefore(tempElement, element);
+			tempElement = null;
+		}
+
+	    // remove the original element
+		parent.removeChild(element);
+
+		element.outerHTML = "";	
+		element = "";
+		
+		if (window.parent == window || window.parent == null) 
+		{
+			document.body.removeChild(tempDiv);
+		}	
+		
+		tempDiv.outerHTML = "";
+
+		parent = null;
+		tempDiv = null;
+		tempParent = null;
+	      		
+		for (i = 0; i < scripts.length; ++i) 
+		{
+			Wicket.Head.addJavascripts(scripts[i], removeIframeMark); 
+		}									
+	}
+
+	var replaceOuterHtmlSafari = function(element, text) 
+	{
+		// if we are replacing a single <script> element
+		if (element.tagName == "SCRIPT") 
+		{
+			// create temporal div and add script as inner HTML		
+			var tempDiv = document.createElement("div");
+			tempDiv.innerHTML = text;
+
+			// try to get script content
+			var script = tempDiv.childNodes[0].innerHTML;
+			if (typeof(script) != "string") 
+			{
+				script = tempDiv.childNodes[0].text;
+			}
+			
+			element.outerHTML = text;
+			try 
+			{
+				eval(script);
+			} 
+			catch (e) 
+			{
+				log.error("ReplaceOuterHtml", "Error evaluation javascript: ", script, e);
+			}
+			return;
+		}
+		var parent = element.parentNode;
+		var next = element.nextSibling;
+		
+		var index = 0;
+		while (parent.childNodes[index] != element) 
+		{
+			++index;
+		}
+		
+		element.outerHTML = text;	
+			
+		element = parent.childNodes[index];	
+		
+		// go through newly added elements and try to find javascripts that 
+		// need to be executed	
+		while (element != next) 
+		{
+			try 			
+			{
+				Wicket.Head.addJavascripts(element);
+			} 
+			catch (ignore) 
+			{
+			}
+			element = element.nextSibling;
+		}	
+	}
+
+	/**
+	 * A cross-browser method that replaces the markup of an element. The behavior
+	 * is similar to calling element.outerHtml=text in internet explorer. However
+	 * this method also takes care of executing javascripts within the markup on
+	 * browsers that don't do that automatically.
+	 * Also this method takes care of replacing table elements (tbody, tr, td, thead)
+	 * on browser where it's not supported when using outerHTML (IE).
+	 */
+	var replaceOuterHtml = function(element, text) 
+	{	
+		if (UA.ie) 
+		{		
+			replaceOuterHtmlIE(element, text);				
+	    } 
+		else if (UA.safari || UA.opera) 
+		{
+	    	replaceOuterHtmlSafari(element, text);    	
+	    } 
+		else /* GECKO */ 
+		{
+	    	// create range and fragment
+	        var range = element.ownerDocument.createRange();
+	        range.selectNode(element);
+			var fragment = range.createContextualFragment(text);
+			
+	        element.parentNode.replaceChild(fragment, element);        
+	    }		
+	}	
+
+	W.replaceOuterHtml = replaceOuterHtml;
+	
 	/*
 	 * Throttler
 	 */
@@ -538,6 +848,200 @@ YUI().use('*', function(Y) {
 			}			
 		}
 	}
+	
+	/**
+	 * Adds a stylesheet definition to document.
+	 */
+	var addStyle = function(style) 
+	{
+		if (W.Y.UA.ie)
+		{
+			try 
+			{
+				// workaround to get over the limit of 31 definitions in IE				
+				var last = document.styleSheets.length - 1;
+				if (last > 0 && document.styleSheets[last].cssText.length < 30000)
+				{
+					document.styleSheets[last].cssText = document.styleSheets[last].cssText + style;
+				}
+				else
+				{
+					document.createStyleSheet().cssText = style;
+				}
+			} 
+			catch(e) 
+			{
+				try 
+				{
+					document.createStyleSheet().cssText = style;
+				} 
+				catch (e) 
+				{
+					try 
+					{
+						var last = document.styleSheets.length - 1;
+						document.styleSheets[last].cssText = document.styleSheets[last].cssText + style;
+					} 
+					catch (error) 
+					{
+						log.error("General", "Error adding stylesheet definiton.");
+					}
+				}				
+			}			
+		}
+		else
+		{			
+			var head = document.getElementsByTagName("head")[0];
+
+			var node = document.createElement("style");
+			node.setAttribute("type", "text/css");
+
+			var content = document.createTextNode(style);
+			node.appendChild(content);
+			head.appendChild(node);
+		}
+	}
+	
+	/**
+	 * Loads remote stylesheet file. 
+	 * Note that the CSS file must come from same origin as the page, unlike
+	 * loadJavascript.
+	 */
+	var loadStylesheet = function(url, notify)
+	{
+		var failureHandler = function() 
+		{
+			log.error("General", "Error loading stylesheet from ", url);
+			notify();
+		};
+		
+		var successHandler = function(response)
+		{
+			try 
+			{				
+				addStyle(response.responseText);
+			} 
+			catch (exception)
+			{
+				log.error("General", "Error adding stylesheet from ", url);
+			}
+			notify();
+		};
+		
+		// load the file using Ajax
+		// there are two reasons why yui-get can't be used to load stylesheets
+		//  1. lack of proper onload notification in FF
+		//  2. bug in IE that limits maximal number of CSS definitons to 31
+		
+		var cfg = 
+		{
+			method: "get",
+			on: 
+			{
+				success: successHandler,
+				failure: failureHandler,
+				abourt: abortHandler
+			}			
+		}
+		
+		log.debug("General", "Loading stylesheet resource ", url);
+		
+		Y.io(url, cfg);
+	}
+	
+	/**
+	 * Loads and executes remote javascript file. The file may come from
+	 * different origin than the page.
+	 */
+	var loadJavascript = function(url, notify)
+	{
+		var failureHandler = function() 
+		{
+			log.error("General", "Error loading javascript from ", url);
+			notify();
+		};
+		
+		var successHandler = function()
+		{
+			notify();
+		};
+		
+		var cfg =
+		{
+			onSuccess: successHandler,
+			onFailure: failureHandler,
+			onTimeout: failureHandler
+		};
+		
+		Y.Get.script(url, cfg);
+	}
+	
+	var contributed = null;
+	
+	var getContributed = function() 
+	{
+		if (contributed == null)
+		{
+			contributed = {
+				urls: {},
+				ids: {}
+			};
+			
+			Y.all("script").each(function(node)
+			{
+				var src = node.getAttribute("src");
+				if (L.isString(src))
+				{
+					contributed.urls[src] = true;
+				}
+			});
+			
+			Y.all("link").each(function(node)
+			{
+				var href = node.getAttribute("href");
+				if (L.isString(href))
+				{
+					contributed.urls[href] = true;
+				}
+			});
+		}
+		return contributed;
+	}
+	
+	W.getContributed = function() 
+	{
+		return getContributed();		
+	}
+	
+	var isContributed = function(id, url)
+	{
+		if (L.isString(id) && (Wicket.$(id) != null || getContributed().ids[id] == true))
+		{
+			return true;
+		}
+		else if (L.isString(url) && getContributed().urls[url] == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	var markContributed = function(id, url)
+	{
+		if (L.isString(id))
+		{
+			getContributed().ids[id] = true;
+		}
+		if (L.isString(url))
+		{
+			getContributed().urls[url] = true;
+		}
+	}
+	
+	
 	
 	/*
 	 * AJAX
@@ -789,11 +1293,11 @@ YUI().use('*', function(Y) {
 			}
 		},
 		
-		failure: function()
+		failure: function(msg)
 		{
 			if (this.next != null)
 			{
-				this.invokeFailureHandlers();				
+				this.invokeErrorHandlers(msg);				
 				this.next();
 				this.next = null;
 			}
@@ -846,9 +1350,25 @@ YUI().use('*', function(Y) {
 			return url;
 		},
 		
+		processResponse: function(response)
+		{
+		},
+		
 		onSuccess: function(transactionId, responseObject)
 		{
 			log.debug("RequestQueue", "Request successful - TransactionId: ", transactionId, " Response: ", responseObject, "Item: ", this);
+			try {
+				// skip the if (false) prefix
+				var responseText = responseObject.responseText.substring(10);
+				var response = eval(responseText);
+				log.debug("RequestQueue", "Response parsed: ", response);
+				
+				alert(response.header);
+				
+			} catch (exception) {
+				log.error("RequestQueue","Error parsing or processing response.");
+				this.failure(exception);
+			}
 			
 		},
 		
@@ -885,7 +1405,7 @@ YUI().use('*', function(Y) {
 			var url = this.buildUrl();
 			var cfg = this.getRequestCfg(url);
 			
-			log.debug("RequestQueue", "Initiating AJAX Request on url ", { url: url }, " with configuration ", cfg);
+			log.debug("RequestQueue", "Initiating AJAX Request on ", url, " with configuration ", cfg);
 			
 			var request = Y.io(url, cfg);
 			
@@ -1112,27 +1632,9 @@ YUI().use('*', function(Y) {
 		}, element);
 		element = null;
 	}
-	
-	// ===================== REVERT THE OLD WICKET OBJECT ===================== 		
-	
-	Y.on("event:ready", function() {
 		
-	var i = 0;
-	
-//	var pre = function(item) { /*console.info("X", item); */ return true; };
-//	var x = new RequestQueueItem({b:4,c:"cpn1234", pr:pre, ua:{a:5} });
-//	var y = new RequestQueue();
-//	y.add(x);
-//	y.add(x);
-//	y.add(x);
-//	y.add(x);
-//	y.add(x);
-//	y.add(x);		
-//	
-	}, window);
-	
 	window.W = W;
 	
 });
-	
+
 })();

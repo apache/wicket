@@ -153,6 +153,10 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	public void detach(RequestCycle requestCycle)
 	{
+		if (!entries.isEmpty())
+		{
+			entries.iterator().next().getComponent().getPage().detach();
+		}
 	}
 
 	/**
@@ -1003,7 +1007,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 		response.setHeader("Cache-Control", "no-cache, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
-	}
+	}	
 
 	public static final AjaxRequestTarget DUMMY = new AjaxRequestTarget();
 }

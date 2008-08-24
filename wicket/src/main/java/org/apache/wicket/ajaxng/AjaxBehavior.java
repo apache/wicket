@@ -71,6 +71,8 @@ public abstract class AjaxBehavior implements IBehavior
 		AjaxBehavior.class, "js/yui3/node/node.js");
 	private final static ResourceReference YUI_IO = new JavascriptResourceReference(
 		AjaxBehavior.class, "js/yui3/io/io.js");
+	private final static ResourceReference YUI_GET = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui3/get/get.js");
 	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(
 		AjaxBehavior.class, "js/wicket-ajax-ng.js");
 
@@ -87,11 +89,14 @@ public abstract class AjaxBehavior implements IBehavior
 		response.renderJavascriptReference(YUI_DOM);
 		response.renderJavascriptReference(YUI_NODE);
 		response.renderJavascriptReference(YUI_IO);
+		response.renderJavascriptReference(YUI_GET);
 		response.renderJavascriptReference(AJAX_NG);
 
 		CharSequence prefix = RequestCycle.get().urlFor(AjaxRequestTarget.DUMMY);
 
 		StringBuilder config = new StringBuilder();
+		
+		config.append("(function() {\n");
 		
 		config.append("var gs = " + WICKET_NS + ".ajax.globalSettings;\n");
 		
@@ -122,6 +127,8 @@ public abstract class AjaxBehavior implements IBehavior
 		config.append("gs.urlParamBehaviorIndex='");
 		config.append(AjaxUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
 		config.append("';\n");
+		
+		config.append("})();");
 
 		response.renderJavascript(config, WICKET_NS + "-Config");
 	}
