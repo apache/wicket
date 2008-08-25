@@ -556,7 +556,7 @@ YUI().use('*', function(Y) {
 	      		
 		for (i = 0; i < scripts.length; ++i) 
 		{
-			Wicket.Head.addJavascripts(scripts[i], removeIframeMark); 
+			addJavascripts(scripts[i], removeIframeMark); 
 		}									
 	}
 
@@ -606,7 +606,7 @@ YUI().use('*', function(Y) {
 		{
 			try 			
 			{
-				Wicket.Head.addJavascripts(element);
+				addJavascripts(element);
 			} 
 			catch (ignore) 
 			{
@@ -621,7 +621,7 @@ YUI().use('*', function(Y) {
 	 * this method also takes care of executing javascripts within the markup on
 	 * browsers that don't do that automatically.
 	 * Also this method takes care of replacing table elements (tbody, tr, td, thead)
-	 * on browser where it's not supported when using outerHTML (IE).
+	 * on browsers where it's not supported when using outerHTML (IE).
 	 */
 	var replaceOuterHtml = function(element, text) 
 	{	
@@ -849,6 +849,68 @@ YUI().use('*', function(Y) {
 		}
 	}
 	
+	// Method for serializing DOM nodes to string
+	// original taken from Tacos (http://tacoscomponents.jot.com)
+	var serializeNodeChildren = function(node) 
+	{
+		if (node == null) 
+		{ 
+			return "" 
+		}
+		var result = "";
+		
+		for (var i = 0; i < node.childNodes.length; i++) 
+		{
+			var thisNode = node.childNodes[i];
+			switch (thisNode.nodeType) 
+			{
+				case 1: // ELEMENT_NODE
+				case 5: // ENTITY_REFERENCE_NODE
+					result += serializeNode(thisNode);
+					break;
+				case 8: // COMMENT
+					result += "<!--" + thisNode.nodeValue + "-->";
+					break;
+				case 4: // CDATA_SECTION_NODE
+					result += "<![CDATA[" + thisNode.nodeValue + "]]>";
+					break;				
+				case 3: // TEXT_NODE
+				case 2: // ATTRIBUTE_NODE
+					result += thisNode.nodeValue;
+					break;
+				default:
+					break;
+			}
+		}
+		return result;	
+	}
+
+
+	var serializeNode = function(node)
+	{
+		if (node == null) 
+		{ 
+			return "" 
+		}
+		var result = "";
+		result += '<' + node.nodeName;
+		
+		if (node.attributes && node.attributes.length > 0) 
+		{				
+			for (var i = 0; i < node.attributes.length; i++) 
+			{
+				result += " " + node.attributes[i].name 
+					+ "=\"" + node.attributes[i].value + "\"";	
+			}
+		}
+		
+		result += '>';
+		result += serializeNodeChildren(node);
+		result += '</' + node.nodeName + '>';
+		return result;
+	}
+
+	
 	/**
 	 * Adds a stylesheet definition to document.
 	 */
@@ -884,7 +946,7 @@ YUI().use('*', function(Y) {
 					} 
 					catch (error) 
 					{
-						log.error("General", "Error adding stylesheet definiton.");
+						log.error("Contribution", "Error adding stylesheet definiton.");
 					}
 				}				
 			}			
@@ -911,7 +973,7 @@ YUI().use('*', function(Y) {
 	{
 		var failureHandler = function() 
 		{
-			log.error("General", "Error loading stylesheet from ", url);
+			log.error("Contribution", "Error loading stylesheet from ", url);
 			notify();
 		};
 		
@@ -923,7 +985,7 @@ YUI().use('*', function(Y) {
 			} 
 			catch (exception)
 			{
-				log.error("General", "Error adding stylesheet from ", url);
+				log.error("Contribution", "Error adding stylesheet from ", url);
 			}
 			notify();
 		};
@@ -944,7 +1006,7 @@ YUI().use('*', function(Y) {
 			}			
 		}
 		
-		log.debug("General", "Loading stylesheet resource ", url);
+		log.debug("Contribution", "Loading stylesheet resource ", url);
 		
 		Y.io(url, cfg);
 	}
@@ -957,7 +1019,7 @@ YUI().use('*', function(Y) {
 	{
 		var failureHandler = function() 
 		{
-			log.error("General", "Error loading javascript from ", url);
+			log.error("Contribution", "Error loading javascript from ", url);
 			notify();
 		};
 		
@@ -1041,7 +1103,144 @@ YUI().use('*', function(Y) {
 		}
 	}
 	
+	var contributeElement = function(element, notify)
+	{		
+		try 
+		{
+			log.trace("Contribution", "Begin element contribution:", element);
+			var tagName = element.tagName.toLowerCase();
+			if (tagName != "script" && tagName != "link" && tagName != "style")
+			{
+				log.error("Contribution", "Unknown element to contribute:", element);
+				notify();
+				return;
+			}
+			var id = element.getAttribute("id");
+			var url = null;
+			if (tagName == "script")
+			{
+				url = element.getAttribute("src");
+			}
+			else if (tagName == "link")
+			{
+				url = element.getAttribute("href");
+			}
+			
+			log.trace("Contribution", "TagName:", tagName, "url:", url, "id:", id);
+			
+			if (!isContribute(id, url))
+			{
+				markContributed(id, url);
+				if (tagName == "script")
+				{
+					if (url != null)
+					{
+						log.trace("Contribution", "Loading javascript:", url);
+						loadJavascipt(url, notify);
+					}
+					else
+					{
+						var body = serializeNodeChildren(element);
+						if (body == null || body == "")
+							body = element.text;
+						
+						log.trace("Contribution", "Evaluating javascript:", body);
+						
+						eval(body);
+					}
+				}
+				else if (tagName == "link")
+				{
+					log.trace("Contribution", "Loading stylesheet:", url);
+					loadStylesheet(url, notify);
+				}
+				else 
+				{
+					var body = serializeNodeChidren(element);
+					if (body == null || body == "")
+						body = element.text;
+					
+					log.trace("Contribution", "Adding stylesheet: ", body);
+					
+					addStyle(body);
+				}
+			}
+			else
+			{
+				log.trace("Contribution", "Skipped - element already contributed.");
+			}
+		} 
+		catch (e) 
+		{
+			log.error("Contribution", "Error contributing element:", element);
+			notify();
+		}
+	}
 	
+	// Goes through all script elements contained by the element and add them to head
+	var addJavascripts = function(element, contentFilter) 
+	{	
+		var notify = function() 
+		{
+		}
+		
+		var add = function(element) 
+		{
+			var src = element.getAttribute("src");
+			
+			// if it is a reference, just add it to head				
+			if (L.isString(src)) 
+			{
+				contributeElement(element, nofiy);
+			} 
+			else 
+			{	
+				var content = Wicket.DOM.serializeNodeChildren(element);		
+				if (content == null || content == "")
+					content = element.text;
+				
+				if (L.isFunction(contentFilter)) 
+				{
+					content = contentFilter(content);
+				}
+				
+				var id = element.getAttribute(id);
+				if (L.isString(id))
+				{
+					markContributed(id, null);
+				}
+					
+				try 
+				{
+					eval(content);
+				}
+				catch (exception)
+				{
+					log.error("Contribution", "Error evaluating javascript ", content);
+				}
+			}		
+		}
+		
+		if (typeof(element) != "undefined" &&
+		    typeof(element.tagName) != "undefined" &&
+		    element.tagName.toLowerCase() == "script") 
+		{
+			add(element);
+		} 
+		else 
+		{
+			// we need to check if there are any children, because Safari
+			// aborts when the element is a text node			
+			if (element.childNodes.length > 0) 
+			{				
+				var scripts = element.getElementsByTagName("script");
+				for (var i = 0; i < scripts.length; ++i) 
+				{
+					add(scripts[i]);
+				}
+			}
+		}
+	}
 	
 	/*
 	 * AJAX
