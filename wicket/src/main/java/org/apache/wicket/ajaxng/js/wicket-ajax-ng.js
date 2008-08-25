@@ -1745,6 +1745,8 @@ YUI().use('*', function(Y) {
 				}
 			}			
 			
+			var insertedElements = null;
+			
 			// bind it with special notify function that invokes nodesAddedListeners
 			var replaceFunction2 = bind(function(notify)
 			{
@@ -1752,6 +1754,7 @@ YUI().use('*', function(Y) {
 				{
 					if (L.isArray(elements))
 					{
+						insertedElements = elements;
 						W.ajax.invokeNodesAddedListeners(elements, this);
 					}
 					notify();
@@ -1764,11 +1767,11 @@ YUI().use('*', function(Y) {
 			// 3 - After replacement javascript
 			if (after != null)
 			{
-				var f = eval("(function(requestQueueItem, componentId, notify) {" + after + "})");
+				var f = eval("(function(requestQueueItem, componentId, notify, insertedElements) {" + after + "})");
 				var f2 = bind(function(notify)
 				{
 					log.trace("RequestQueue", "Invoking after replacement javascript", f);
-					f(this, id, notify);
+					f(this, id, notify, insertedElements);
 				}, this);
 				steps.push(f2);
 			}
