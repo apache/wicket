@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajaxng.json.JSONArray;
@@ -34,6 +35,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * @author Matej Knopp
@@ -128,11 +130,39 @@ public abstract class AjaxBehavior implements IBehavior
 		config.append(AjaxUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
 		config.append("';\n");
 		
+		config.append("gs.urlParamUrlDepth='");
+		config.append(AjaxUrlCodingStrategy.PARAM_URL_DEPTH);
+		config.append("';\n");
+		
+		config.append("gs.urlDepthValue=");
+		config.append(getUrlDepth());
+		config.append(";\n");
+		
 		config.append("})();");
 
 		response.renderJavascript(config, WICKET_NS + "-Config");
 	}
 
+	private int getUrlDepth()
+	{
+		Request request = RequestCycle.get().getRequest();
+		if (request instanceof ServletWebRequest)
+		{
+			ServletWebRequest swr = (ServletWebRequest)request;
+			// If we're coming in with an existing depth, use it. Otherwise,
+			// compute from the URL. This provides correct behavior for repeated
+			// AJAX requests: If we need to generate a URL within an AJAX
+			// request for another one, it needs to be at the same depth as the
+			// original AJAX request.
+			int urlDepth = swr.getRequestParameters().getUrlDepth();
+			return urlDepth > -1 ? urlDepth : swr.getDepthRelativeToWicketHandler();
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
 	public void afterRender(Component component)
 	{
 	}

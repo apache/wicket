@@ -415,6 +415,11 @@ public class ServletWebRequest extends WebRequest
 	{
 		boolean ajax = false;
 
+		if (Strings.isTrue(httpServletRequest.getParameter("wicket:ajax")))
+		{
+			return true;
+		}
+		
 		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
 		if (Strings.isEmpty(ajaxHeader) == false)
 		{

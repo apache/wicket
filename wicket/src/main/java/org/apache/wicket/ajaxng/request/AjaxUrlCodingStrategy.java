@@ -19,6 +19,7 @@ package org.apache.wicket.ajaxng.request;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -118,6 +119,10 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 		
 		int behaviorIndex = Integer.valueOf(getParameter(requestParameters, PARAM_BEHAVIOR_INDEX));
 		
+		int urlDepth = Integer.valueOf(getParameter(requestParameters, PARAM_URL_DEPTH));
+		
+		RequestCycle.get().getRequest().getRequestParameters().setUrlDepth(urlDepth);
+		
 		return new AjaxRequestTarget(component, behaviorIndex);
 	}
 
@@ -139,6 +144,7 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 	public static final String PARAM_FORM_ID = PARAM_PREFIX + "formId";
 	public static final String PARAM_LISTENER_INTEFACE = PARAM_PREFIX + "listenerInterface";
 	public static final String PARAM_BEHAVIOR_INDEX = PARAM_PREFIX + "behaviorIndex";
+	public static final String PARAM_URL_DEPTH = PARAM_PREFIX + "urlDepth";
 
 	public boolean matches(IRequestTarget requestTarget)
 	{

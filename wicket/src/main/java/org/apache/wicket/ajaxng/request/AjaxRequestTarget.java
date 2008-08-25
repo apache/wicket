@@ -75,7 +75,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		public void onBeforeRespond(List<ComponentEntry> components, AjaxRequestTarget target);
 
 		/**
-		 * Triggered after ajax request target is done with its response cycle. At this point only
+		 * Triggered after ajax request target is notify with its response cycle. At this point only
 		 * additional javascript can be output to the response using the provided
 		 * {@link IJavascriptResponse} object
 		 * 
@@ -228,7 +228,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dt>sourceComponentId</dt>
 		 * <dd>MarkupId of component that has initiated current ajax request or <code>null</code>
 		 * if the component is not available.
-		 * <dt>done</dt>
+		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after it has finished. Note that it is
 		 * mandatory to call this method otherwise the processing pipeline will stop</dd>
 		 * </dl>
@@ -261,7 +261,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dd>RequestQueueItem instance for current request</dd>
 		 * <dt>componentId</dt>
 		 * <dd>MarkupId of component that has been replaced
-		 * <dt>done</dt>
+		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after it has finished. Note that it is
 		 * mandatory to call this method otherwise the processing pipeline will stop</dd>
 		 * </dl>
@@ -296,7 +296,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dd>MarkupId of component that has been replaced
 		 * <dt>markup</dt>
 		 * <dd>The new markup that should replace current markup</dd>
-		 * <dt>done</dt>
+		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after the component has been replaced. Note
 		 * that it is mandatory to call this method otherwise the processing pipeline will stop</dd>
 		 * </dl>
@@ -306,7 +306,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <pre>
 		 * var element = W.$(componentId);
 		 * W.replaceOuterHtml(element, markup);
-		 * done();
+		 * notify();
 		 * </pre>
 		 * 
 		 * @param replaceJavascript
@@ -465,7 +465,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * <dl>
 	 * <dt>requestQueueItem</dt>
 	 * <dd>RequestQueueItem instance for current request</dd>
-	 * <dt>done</dt>
+	 * <dt>notify</dt>
 	 * <dd>Must be called for asynchronous javascript
 	 * </dl>
 	 * 
@@ -474,7 +474,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param async
 	 *            indicates if the javascript should be evaluated asynchrously. If
 	 *            <code>async</code> is <code>true</code>, the javascript must invoke the
-	 *            <code>done</code> function that it gets passed for the processing queue to
+	 *            <code>notify</code> function that it gets passed for the processing queue to
 	 *            continue.
 	 */
 	public void prependJavascript(String javascript, boolean async)
@@ -512,7 +512,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * <dl>
 	 * <dt>requestQueueItem</dt>
 	 * <dd>RequestQueueItem instance for current request</dd>
-	 * <dt>done</dt>
+	 * <dt>notify</dt>
 	 * <dd>Must be called for asynchronous javascript
 	 * </dl>
 	 * 
@@ -521,7 +521,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param async
 	 *            indicates if the javascript should be evaluated asynchrously. If
 	 *            <code>async</code> is <code>true</code>, the javascript must invoke the
-	 *            <code>done</code> function that it gets passed for the processing queue to
+	 *            <code>notify</code> function that it gets passed for the processing queue to
 	 *            continue.
 	 */
 	public void appendJavascript(String javascript, boolean async)

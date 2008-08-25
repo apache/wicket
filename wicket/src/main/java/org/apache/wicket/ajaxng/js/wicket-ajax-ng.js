@@ -182,7 +182,7 @@ YUI().use('*', function(Y) {
 		logger = FirebugLogger;
 	}	
 	
-	var logConfig = { disableAll: false, trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false };
+	var logConfig = { disableAll: false, trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false, "trace:Contribution":false };
 	
 	W.Log  = 
 	{
@@ -395,7 +395,7 @@ YUI().use('*', function(Y) {
 					} 
 					catch (ex)
 					{
-						log.error("FunctionExecutor", "Error execution function: ", f);
+						log.error("FunctionsExecutor", "Error execution function: ", f);
 						notify();
 					}
 				}, this);
@@ -779,7 +779,7 @@ YUI().use('*', function(Y) {
 		for (key in map)
 		{
 			var value = map[key];
-			if (L.isString(value) || L.isNumber(value))
+			if (L.isString(value) || L.isNumber(value) || L.isBoolean(value))
 			{
 				if (res.length > 0)
 				{
@@ -794,7 +794,7 @@ YUI().use('*', function(Y) {
 				for (var i = 0; i < value.length; ++i)
 				{
 					var v = value[i];
-					if (L.isString(v) || L.isNumber(v))
+					if (L.isString(v) || L.isNumber(v) || L.isBoolean(v))
 					{
 						if (res.length > 0)
 						{
@@ -971,9 +971,9 @@ YUI().use('*', function(Y) {
 	 */
 	var loadStylesheet = function(url, notify)
 	{
-		var failureHandler = function() 
+		var failureHandler = function(req, failure) 
 		{
-			log.error("Contribution", "Error loading stylesheet from ", url);
+			log.error("Contribution", "Error loading stylesheet from ", url, req, failure);
 			notify();
 		};
 		
@@ -985,7 +985,7 @@ YUI().use('*', function(Y) {
 			} 
 			catch (exception)
 			{
-				log.error("Contribution", "Error adding stylesheet from ", url);
+				log.error("Contribution", "Error adding stylesheet from ", url, exception);
 			}
 			notify();
 		};
@@ -1017,9 +1017,9 @@ YUI().use('*', function(Y) {
 	 */
 	var loadJavascript = function(url, notify)
 	{
-		var failureHandler = function() 
+		var failureHandler = function(req) 
 		{
-			log.error("Contribution", "Error loading javascript from ", url);
+			log.error("Contribution", "Error loading javascript from ", url, req);
 			notify();
 		};
 		
@@ -1077,7 +1077,7 @@ YUI().use('*', function(Y) {
 	
 	var isContributed = function(id, url)
 	{
-		if (L.isString(id) && (Wicket.$(id) != null || getContributed().ids[id] == true))
+		if (L.isString(id) && (W.$(id) != null || getContributed().ids[id] == true))
 		{
 			return true;
 		}
@@ -1126,9 +1126,9 @@ YUI().use('*', function(Y) {
 				url = element.getAttribute("href");
 			}
 			
-			log.trace("Contribution", "TagName:", tagName, "url:", url, "id:", id);
+			log.trace("Contribution", "TagName:", tagName, ", URL:", url, ", ID:", id);
 			
-			if (!isContribute(id, url))
+			if (!isContributed(id, url))
 			{
 				markContributed(id, url);
 				if (tagName == "script")
@@ -1136,7 +1136,7 @@ YUI().use('*', function(Y) {
 					if (url != null)
 					{
 						log.trace("Contribution", "Loading javascript:", url);
-						loadJavascipt(url, notify);
+						loadJavascript(url, notify);
 					}
 					else
 					{
@@ -1147,6 +1147,7 @@ YUI().use('*', function(Y) {
 						log.trace("Contribution", "Evaluating javascript:", body);
 						
 						eval(body);
+						notify();
 					}
 				}
 				else if (tagName == "link")
@@ -1162,17 +1163,19 @@ YUI().use('*', function(Y) {
 					
 					log.trace("Contribution", "Adding stylesheet: ", body);
 					
-					addStyle(body);
+					addStyle(body);				
+					notify();
 				}
 			}
 			else
 			{
 				log.trace("Contribution", "Skipped - element already contributed.");
+				notify();
 			}
 		} 
 		catch (e) 
 		{
-			log.error("Contribution", "Error contributing element:", element);
+			log.error("Contribution", "Error contributing element:", element, e);
 			notify();
 		}
 	}
@@ -1486,6 +1489,7 @@ YUI().use('*', function(Y) {
 		{
 			if (this.next != null)
 			{
+				log.info("RequestQueue", "Item processed successfully", this);
 				this.invokeSuccessHandlers();				
 				this.next();
 				this.next = null;
@@ -1549,8 +1553,81 @@ YUI().use('*', function(Y) {
 			return url;
 		},
 		
+		parseHeaderContribution: function(header)
+		{
+			var s = "<head>" + header + "</head>";
+			// build a DOM tree of the contribution
+			var xmldoc;
+			if (window.ActiveXObject) {
+		        xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+				xmldoc.loadXML(s);
+			} else {
+			    var parser = new DOMParser();    
+			    xmldoc = parser.parseFromString(s, "text/xml");	
+			}	
+			
+			return xmldoc.documentElement;;	
+		},
+		
+		processHeaderContribution: function(header, steps)
+		{
+			var rootNode = this.parseHeaderContribution(header);
+			
+			var processNode = function(node)
+			{
+				var tagName = node.tagName.toLowerCase();
+				if (tagName == "script" || tagName == "link" || tagName == "style")
+				{
+					steps.push(function(notify) 
+					{
+						contributeElement(node, notify);
+					});
+				}				
+			};
+			
+			// go through the individual elements and process them according to their type
+			for (var i = 0; i < rootNode.childNodes.length; i++) 
+			{
+				var node = rootNode.childNodes[i];			
+				if (node.tagName != null) 
+				{
+					var name = node.tagName.toLowerCase();
+					
+					// it is possible that a reference is surrounded by a <wicket:link
+					// in that case, we need to find the inner element
+					if (name == "wicket:link") {					
+						for (var j = 0; j < node.childNodes.length; ++j) 
+						{
+							var childNode = node.childNodes[j];
+							// try to find a regular node inside wicket:link
+							if (childNode.nodeType == 1) 
+							{
+								processNode(childNode);
+							}					
+						}					
+					}
+							
+					// process the element
+					processNode(node);
+				}
+			}
+			
+		},
+		
 		processResponse: function(response)
 		{
+			var steps = new Array();
+			
+			this.processHeaderContribution(response.header, steps);
+			
+			steps.push(bind(function(notify)
+			{
+				this.success();
+			}, this));
+			
+			log.debug("RequestQueue", "Response processed: ", {toString: function() { return "Steps..."; }, steps:steps}, ". Executing.");			
+			
+			new FunctionsExecutor(steps).start();
 		},
 		
 		onSuccess: function(transactionId, responseObject)
@@ -1561,11 +1638,12 @@ YUI().use('*', function(Y) {
 				var responseText = responseObject.responseText.substring(10);
 				var response = eval(responseText);
 				log.debug("RequestQueue", "Response parsed: ", response);
-				
-				alert(response.header);
-				
-			} catch (exception) {
-				log.error("RequestQueue","Error parsing or processing response.");
+								
+				this.processResponse(response);
+			} 
+			catch (exception) 
+			{
+				log.error("RequestQueue","Error parsing or processing response.", exception);
 				this.failure(exception);
 			}
 			
@@ -1577,7 +1655,8 @@ YUI().use('*', function(Y) {
 			this.failure();
 		},
 		
-		getRequestCfg: function(url) {
+		getRequestCfg: function(url) 
+		{
 			var a = this.attributes;
 			var m = a.formId != null ? "POST" : "GET";
 			var f = a.formId != null ? { id:a.formId } : null;
@@ -1604,13 +1683,11 @@ YUI().use('*', function(Y) {
 			var url = this.buildUrl();
 			var cfg = this.getRequestCfg(url);
 			
-			log.debug("RequestQueue", "Initiating AJAX Request on ", url, " with configuration ", cfg);
+			log.info("RequestQueue", "Initiating AJAX Request on ", url, " with configuration ", cfg);
 			
 			var request = Y.io(url, cfg);
 			
 			log.trace("RequestQueue", "Obtained request object ", request);
-			
-			this.success();
 		}
 	};
 	
@@ -1769,11 +1846,13 @@ YUI().use('*', function(Y) {
 	
 	var reqCount = 0;
 	
-	var timestampArgumentMethod = function(item)
+	var defaultArgumentMethod = function(item)
 	{
 		var stamp = "" + (reqCount ++) + (Math.ceil(Math.random() * 10000));
 		var res = {};
-		res[W.ajax.globalSettings.urlParamTimestamp] = stamp;
+		res[W.ajax.globalSettings.urlParamTimestamp] = stamp;			
+		res[W.ajax.globalSettings.urlParamUrlDepth] = W.ajax.globalSettings.urlDepthValue;
+		res["wicket:ajax"] = true;
 		return res; 
 	}
 	
@@ -1789,14 +1868,16 @@ YUI().use('*', function(Y) {
 		successHandlers: [],
 		errorHandlers: [],
 		urlPostProcessors: [],
-		urlArgumentMethods: [ timestampArgumentMethod ],
+		urlArgumentMethods: [ defaultArgumentMethod ],
 		urlPrefix: "INVALID_URL_PREFIX",
 		urlParamComponentId: "INVALID_COMPONENT_ID_PARAM",
 		urlParamTimestamp: "INVALID_TIMESTAMP_PARAM",
 		urlParamPageId: "INVALID_PAGE_ID_PARAM",
 		urlParamFormId: "INVALID_FORM_ID_PARAM",
 		urlParamListenerInterface: "INVALID_LISTENER_INTERFACE_PARAM",
-		urlParamBehaviorIndex: "INVALID_BEHAVIOR_INDEX_PARAM"
+		urlParamBehaviorIndex: "INVALID_BEHAVIOR_INDEX_PARAM",
+		urlParamUrlDepth: "INVALID_URL_DEPTH_PARAM",
+		urlDepthValue: 0
 	};
 	
 	var Ajax = function() 
