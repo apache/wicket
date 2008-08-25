@@ -1,3 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Wicket Ajax Support
+ * 
+ * @author Matej Knopp
+ */
+
 (function() {
 
 YUI().use('*', function(Y) {
@@ -395,7 +418,7 @@ YUI().use('*', function(Y) {
 					} 
 					catch (ex)
 					{
-						log.error("FunctionsExecutor", "Error execution function: ", f);
+						log.error("FunctionsExecutor", "Error execution function: ", f, ex);
 						notify();
 					}
 				}, this);
@@ -623,7 +646,7 @@ YUI().use('*', function(Y) {
 	 * Also this method takes care of replacing table elements (tbody, tr, td, thead)
 	 * on browsers where it's not supported when using outerHTML (IE).
 	 */
-	var replaceOuterHtml = function(element, text) 
+	var _replaceOuterHtml = function(element, text) 
 	{	
 		if (UA.ie) 
 		{		
@@ -643,6 +666,31 @@ YUI().use('*', function(Y) {
 	        element.parentNode.replaceChild(fragment, element);        
 	    }		
 	}	
+	
+	var replaceOuterHtml = function(element, text)
+	{		
+		if (element == null)
+		{
+			log.error("ReplaceOuterHtml", "Element can not be null. Markup: ", text);
+			return;
+		}
+		// remember next sibling (if any)
+		var nextSibling = element.nextSibling;
+		var id = element.id;				
+		
+		// replace
+		_replaceOuterHtml(element, text);
+		
+		// get the list of inserted nodes		
+		var res = new Array();
+		var e = W.$(id);
+		while (e != nextSibling && e != null)
+		{
+			res.push(e);
+			e = e.nextSibling;
+		}
+		return res;
+	}
 
 	W.replaceOuterHtml = replaceOuterHtml;
 	
@@ -1614,11 +1662,147 @@ YUI().use('*', function(Y) {
 			
 		},
 		
+		processJavascripts: function(javascripts, steps)
+		{
+			var process = bind(function(script)
+			{
+				if (script.async == true)
+				{
+					var f = eval("(function(requestQueueItem, notify) {" + script.javascript + "})");					
+					var f2 = bind(function(notify)
+					{
+						f(this, notify);
+					}, this);
+					steps.push(f2);
+				}
+				else
+				{
+					var f = eval("(function(requestQueueItem) {" + script.javascript + "})");
+					var f2 = bind(function(notify)
+					{
+						f(this);
+						notify();
+					}, this);
+					steps.push(f2);
+				}
+			}, this);
+			
+			if (L.isArray(javascripts))
+			{
+				for (var i = 0; i < javascripts.length; ++i)
+				{
+					var j = javascripts[i];
+					process(j);
+				}
+			}
+		},
+		
+		processComponent: function(component, steps)
+		{
+			var markup = component.markup;
+			var id = component.componentId;
+			var before = component.beforeReplaceJavascript;
+			var after = component.afterReplaceJavascript;
+			var replace = component.replaceJavascript;
+			
+			// 1 - Before replacement javascript
+			if (before != null)
+			{
+				var f = eval("(function(requestQueueItem, componentId, notify) {" + before + "})");
+				var f2 = bind(function(notify)
+				{
+					log.trace("RequestQueue", "Invoking before replacement javascript", f);
+					f(this, id, notify);
+				}, this);
+				steps.push(f2);
+			}
+			
+			// 2 - replacement
+			var replaceFunction;
+			if (replace != null)
+			{
+				// user specified replacement function
+				replaceFunction = eval("(function(requestQueueItem, componentId, markup, notify) {" + before + "})");				
+			}
+			else
+			{
+				// default replacement function
+				replaceFunction = function(requestQueueItem, componentId, markup, notify)
+				{
+					log.trace("RequestQueue", "Replacing component", requestQueueItem, componentId, markup);
+					var e = W.$(componentId);
+					var res;
+					if (e == null)
+					{
+						log.error("RequestQueue", "Couldn't find element to be replaced ", componentId);					
+					}
+					else
+					{
+						res = W.replaceOuterHtml(e, markup);
+						log.trace("RequestQueue", "Replacement done:", res);
+					}
+					notify(res);
+				}
+			}			
+			
+			// bind it with special notify function that invokes nodesAddedListeners
+			var replaceFunction2 = bind(function(notify)
+			{
+				var replaceNotify = bind(function(elements)
+				{
+					if (L.isArray(elements))
+					{
+						W.ajax.invokeNodesAddedListeners(elements, this);
+					}
+					notify();
+				}, this);
+				
+				replaceFunction(this, id, markup, replaceNotify);
+			}, this);
+			steps.push(replaceFunction2);			
+			
+			// 3 - After replacement javascript
+			if (after != null)
+			{
+				var f = eval("(function(requestQueueItem, componentId, notify) {" + after + "})");
+				var f2 = bind(function(notify)
+				{
+					log.trace("RequestQueue", "Invoking after replacement javascript", f);
+					f(this, id, notify);
+				}, this);
+				steps.push(f2);
+			}
+		},
+		
+		processComponents: function(components, steps)
+		{
+			if (L.isArray(components))
+			{
+				for (var i = 0; i < components.length; ++i)
+				{
+					var c = components[i];
+					if (L.isObject(c))
+					{
+						this.processComponent(c, steps);
+					}
+				}
+			}
+		},
+		
 		processResponse: function(response)
 		{
 			var steps = new Array();
+		
+			this.processJavascripts(response.prependJavascript, steps);
 			
-			this.processHeaderContribution(response.header, steps);
+			if (response.header != null)
+			{
+				this.processHeaderContribution(response.header, steps);
+			}			
+			
+			this.processComponents(response.components, steps);
+			
+			this.processJavascripts(response.appendJavascript, steps);
 			
 			steps.push(bind(function(notify)
 			{
@@ -1856,6 +2040,11 @@ YUI().use('*', function(Y) {
 		return res; 
 	}
 	
+	var defaultNodesAddedListener = function(nodes, requestQueueItem)
+	{
+		log.trace("General", "New nodes added to document:", nodes, ", from RequestQueueItem (optional):", requestQueueItem);
+	}
+	
 	var globalSettings = 
 	{
 		defaultRequestTimeout: 60000,
@@ -1877,7 +2066,8 @@ YUI().use('*', function(Y) {
 		urlParamListenerInterface: "INVALID_LISTENER_INTERFACE_PARAM",
 		urlParamBehaviorIndex: "INVALID_BEHAVIOR_INDEX_PARAM",
 		urlParamUrlDepth: "INVALID_URL_DEPTH_PARAM",
-		urlDepthValue: 0
+		urlDepthValue: 0,
+		nodesAddedListeners: [defaultNodesAddedListener]
 	};
 	
 	var Ajax = function() 
@@ -1888,7 +2078,21 @@ YUI().use('*', function(Y) {
 	
 	Ajax.prototype = 
 	{
-		
+		invokeNodesAddedListeners: function(elements, requestQueueItem)
+		{
+			try 
+			{
+				var l = this.globalSettings.nodesAddedListeners;
+				for (var i = 0; i < l.length; ++i)
+				{
+					l[i](elements, requestQueueItem);
+				}
+			} 
+			catch (e)
+			{
+				log.error("Ajax", "Error invoking nodes added listeners", e);
+			}
+		}
 	};
 	
 	W.ajax = new Ajax();

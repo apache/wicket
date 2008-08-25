@@ -1307,7 +1307,7 @@ Wicket.Head.Contributor.prototype = {
 			var node = rootNode.childNodes[i];			
 			if (node.tagName != null) {
 				var name = node.tagName.toLowerCase();
-				
+
 				// it is possible that a reference is surrounded by a <wicket:link
 				// in that case, we need to find the inner element
 				if (name == "wicket:link") {					
@@ -1321,9 +1321,9 @@ Wicket.Head.Contributor.prototype = {
 						}					
 					}					
 				}
-						
+
 				// process the element
-			    if (name == "link") {
+				if (name == "link") {
 					this.processLink(steps, node);
 				} else if (name == "script") {
 					this.processScript(steps, node);

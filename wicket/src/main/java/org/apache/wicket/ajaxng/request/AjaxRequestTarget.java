@@ -225,9 +225,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dd>RequestQueueItem instance for current request</dd>
 		 * <dt>componentId</dt>
 		 * <dd>MarkupId of component that is about to be replaced
-		 * <dt>sourceComponentId</dt>
-		 * <dd>MarkupId of component that has initiated current ajax request or <code>null</code>
-		 * if the component is not available.
 		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after it has finished. Note that it is
 		 * mandatory to call this method otherwise the processing pipeline will stop</dd>
@@ -298,15 +295,17 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dd>The new markup that should replace current markup</dd>
 		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after the component has been replaced. Note
-		 * that it is mandatory to call this method otherwise the processing pipeline will stop</dd>
+		 * that it is mandatory to call this method otherwise the processing pipeline will stop.
+		 * Array of newly inserted elements should be passed as argument to the notify method.</dd>
 		 * </dl>
 		 * 
 		 * An example javascript:
 		 * 
 		 * <pre>
 		 * var element = W.$(componentId);
-		 * W.replaceOuterHtml(element, markup);
-		 * notify();
+		 * var insertedElements = W.replaceOuterHtml(element, markup);
+		 * notify(insertedElements);
+		 * 
 		 * </pre>
 		 * 
 		 * @param replaceJavascript
@@ -910,7 +909,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		JSONObject object = new JSONObject();
 
 		Component component = componentEntry.getComponent();
-		object.put("componentId", component.getId());
+		object.put("componentId", component.getMarkupId());
 		object.put("beforeReplaceJavascript", componentEntry.getBeforeReplaceJavascript());
 		object.put("afterReplaceJavascript", componentEntry.getAfterReplaceJavascript());
 		object.put("replaceJavascript", componentEntry.getReplaceJavascript());
