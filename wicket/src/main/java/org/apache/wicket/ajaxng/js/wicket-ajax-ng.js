@@ -198,14 +198,25 @@ YUI().use('*', function(Y) {
 		}
 	}
 	
-	var logger = DummyLogger;
+	var logger = DummyLogger;		
 	
-	if (UA.gecko && typeof(console) !== "undefined" && logger === DummyLogger)
-	{
+	if (typeof(console) !== "undefined" && L.isFunction(console.log) && logger === DummyLogger)
+	{		
 		logger = FirebugLogger;
-	}	
+		
+		if (typeof(console.error) == "undefined")
+			console.error = console.log;
+		if (typeof(console.info) == "undefined")
+			console.info = console.log;
+		if (typeof(console.debug) == "undefined")
+			console.debug = console.log;
+	}				
 	
-	var logConfig = { disableAll: false, trace: true, debug: true, info: true, error: true, "trace:GarbageCollector": false, "trace:Contribution":false };
+	var logConfig = 
+	{ 
+		disableAll: false, trace: true, debug: true, info: true, error: true, 
+		"trace:GarbageCollector": false, "trace:Contribution":false, "trace:Events":true 
+	};
 	
 	W.Log  = 
 	{
@@ -355,12 +366,13 @@ YUI().use('*', function(Y) {
 	Y.Event.addListener = function(el)
 	{		
 		log.trace("Events", "Adding event listeners", arguments);
-		oldAddListener.apply(this, arguments);
+		var res = oldAddListener.apply(this, arguments);
 		if (el !== window && el !== document)
 		{
 			var a = garbageCollector.elementsWithListeners;
 			a.push(W.$(el));			
 		}
+		return res;
 	};
 
 	// This intercepts addListener in other YUI instances
@@ -449,7 +461,17 @@ YUI().use('*', function(Y) {
 			this.processNext();
 		}
 	}
-
+	
+	var getFunction = function(evalstring)
+	{
+		var str = "W.__tmp=" + evalstring;
+		eval(str);
+		var res = W.__tmp;
+		W.__tmp = null;
+		
+		return res;
+	}
+	
 	var replaceOuterHtmlIE = function(element, text) 
 	{						
 
@@ -1457,6 +1479,8 @@ YUI().use('*', function(Y) {
 		
 		log.trace("RequestQueue", "Creating New Item", this.attributes);
 	}
+		
+	W.RequestQueueItem = RequestQueueItem;		
 	
 	RequestQueueItem.prototype = 
 	{
@@ -1665,10 +1689,10 @@ YUI().use('*', function(Y) {
 		processJavascripts: function(javascripts, steps)
 		{
 			var process = bind(function(script)
-			{
+			{											
 				if (script.async == true)
-				{
-					var f = eval("(function(requestQueueItem, notify) {" + script.javascript + "})");					
+				{					
+					var f = getFunction("(function(requestQueueItem, notify) {" + script.javascript + "})");					
 					var f2 = bind(function(notify)
 					{
 						f(this, notify);
@@ -1677,9 +1701,9 @@ YUI().use('*', function(Y) {
 				}
 				else
 				{
-					var f = eval("(function(requestQueueItem) {" + script.javascript + "})");
+					var f = getFunction("(function(requestQueueItem) {" + script.javascript + "})");
 					var f2 = bind(function(notify)
-					{
+					{	
 						f(this);
 						notify();
 					}, this);
@@ -1708,7 +1732,7 @@ YUI().use('*', function(Y) {
 			// 1 - Before replacement javascript
 			if (before != null)
 			{
-				var f = eval("(function(requestQueueItem, componentId, notify) {" + before + "})");
+				var f = getFunction("(function(requestQueueItem, componentId, notify) {" + before + "})");
 				var f2 = bind(function(notify)
 				{
 					log.trace("RequestQueue", "Invoking before replacement javascript", f);
@@ -1722,7 +1746,7 @@ YUI().use('*', function(Y) {
 			if (replace != null)
 			{
 				// user specified replacement function
-				replaceFunction = eval("(function(requestQueueItem, componentId, markup, notify) {" + before + "})");				
+				replaceFunction = getFunction("(function(requestQueueItem, componentId, markup, notify) {" + before + "})");				
 			}
 			else
 			{
@@ -1756,18 +1780,20 @@ YUI().use('*', function(Y) {
 					{
 						insertedElements = elements;
 						W.ajax.invokeNodesAddedListeners(elements, this);
-					}
+						W.ajax.invokeAfterReplacementListeners(id, this);
+					}					
 					notify();
 				}, this);
 				
+				W.ajax.invokeBeforeReplacementListeners(id, this);
 				replaceFunction(this, id, markup, replaceNotify);
 			}, this);
-			steps.push(replaceFunction2);			
+			steps.push(replaceFunction2);									
 			
 			// 3 - After replacement javascript
 			if (after != null)
 			{
-				var f = eval("(function(requestQueueItem, componentId, notify, insertedElements) {" + after + "})");
+				var f = getFunction("(function(requestQueueItem, componentId, notify, insertedElements) {" + after + "})");
 				var f2 = bind(function(notify)
 				{
 					log.trace("RequestQueue", "Invoking after replacement javascript", f);
@@ -1803,9 +1829,9 @@ YUI().use('*', function(Y) {
 				this.processHeaderContribution(response.header, steps);
 			}			
 			
-			this.processComponents(response.components, steps);
+			this.processComponents(response.components, steps);												
 			
-			this.processJavascripts(response.appendJavascript, steps);
+			this.processJavascripts(response.appendJavascript, steps);									
 			
 			steps.push(bind(function(notify)
 			{
@@ -2046,6 +2072,20 @@ YUI().use('*', function(Y) {
 	var defaultNodesAddedListener = function(nodes, requestQueueItem)
 	{
 		log.trace("General", "New nodes added to document:", nodes, ", from RequestQueueItem (optional):", requestQueueItem);
+		if (L.isArray(nodes))
+		{
+			W.focusManager.attachFocusEvent(nodes);
+		}
+	}	
+	
+	var defaultBeforeReplacementListener = function(id, requestQueueItem)
+	{
+		W.focusManager.rememberFocus();
+	}
+	
+	var defaultAfterReplacementListener = function(id, requestQueueItem)
+	{
+		W.focusManager.restoreFocus();
 	}
 	
 	var globalSettings = 
@@ -2070,7 +2110,9 @@ YUI().use('*', function(Y) {
 		urlParamBehaviorIndex: "INVALID_BEHAVIOR_INDEX_PARAM",
 		urlParamUrlDepth: "INVALID_URL_DEPTH_PARAM",
 		urlDepthValue: 0,
-		nodesAddedListeners: [defaultNodesAddedListener]
+		nodesAddedListeners: [defaultNodesAddedListener],
+		beforeReplacementListeners: [defaultBeforeReplacementListener],
+		afterReplacementListeners: [defaultAfterReplacementListener]
 	};
 	
 	var Ajax = function() 
@@ -2095,11 +2137,243 @@ YUI().use('*', function(Y) {
 			{
 				log.error("Ajax", "Error invoking nodes added listeners", e);
 			}
+		},
+	
+		invokeBeforeReplacementListeners: function(id, requestQueueItem)
+		{
+			try 
+			{
+				var l = this.globalSettings.beforeReplacementListeners;
+				for (var i = 0; i < l.length; ++i)
+				{
+					l[i](id, requestQueueItem);
+				}
+			} 
+			catch (e)
+			{
+				log.error("Ajax", "Error invoking before replacement listeners", e);
+			}
+		},
+		
+		invokeAfterReplacementListeners: function(id, requestQueueItem)
+		{
+			try 
+			{
+				var l = this.globalSettings.afterReplacementListeners;
+				for (var i = 0; i < l.length; ++i)
+				{
+					l[i](id, requestQueueItem);
+				}
+			} 
+			catch (e)
+			{
+				log.error("Ajax", "Error invoking after replacement listeners", e);
+			}
 		}
 	};
 	
 	W.ajax = new Ajax();
 
+	var setSelection = function(elm, begin, end) 
+	{
+	    if (typeof elm.selectionStart != "undefined" && typeof elm.selectionEnd != "undefined")  
+	    {
+	        elm.setSelectionRange (begin, end);
+	        elm.focus ();
+	    } 
+	    else if (document.selection && document.selection.createRange) 
+	    {
+	        var range = elm.createTextRange();
+	        range.move ("character", begin);
+	        range.moveEnd ("character", end - begin);
+	        range.select ();
+	    }
+	}
+	
+	// Cross Browser selectionStart/selectionEnd
+	// Version 0.2
+	// Copyright (c) 2005-2007 KOSEKI Kengo
+	// 
+	// This script is distributed under the MIT licence.
+	// http://www.opensource.org/licenses/mit-license.php
+
+	var Selection = function(textareaElement) {
+	    this.element = textareaElement;
+	}
+
+	Selection.prototype.create = function() {
+	    if (document.selection != null && this.element.selectionStart == null) {
+	        return this._ieGetSelection();
+	    } else {
+	        return this._mozillaGetSelection();
+	    }
+	}
+
+	Selection.prototype._mozillaGetSelection = function() {
+	    return { 
+	        start: this.element.selectionStart, 
+	        end: this.element.selectionEnd 
+	    };
+	}
+
+	Selection.prototype._ieGetSelection = function() {
+	    this.element.focus();
+
+	    var range = document.selection.createRange();
+	    var bookmark = range.getBookmark();
+
+	    var contents = this.element.value;
+	    var originalContents = contents;
+	    var marker = this._createSelectionMarker();
+	    while(contents.indexOf(marker) != -1) {
+	        marker = this._createSelectionMarker();
+	    }
+
+	    var parent = range.parentElement();
+	    if (parent == null || (parent.type != "textarea" && parent.type != "text")) {
+	        return { start: 0, end: 0 };
+	    }
+	    range.text = marker + range.text + marker;
+	    contents = this.element.value;
+
+	    var result = {};
+	    result.start = contents.indexOf(marker);
+	    contents = contents.replace(marker, "");
+	    result.end = contents.indexOf(marker);
+
+	    this.element.value = originalContents;
+	    range.moveToBookmark(bookmark);
+	    range.select();
+
+	    return result;
+	}
+
+	Selection.prototype._createSelectionMarker = function() {
+	    return "##SELECTION_MARKER_" + Math.random() + "##";
+	}
+	
+	var getSelection = function(elm)
+	{		
+		var selection = new Selection(elm)
+		var s = selection.create();
+		return [s.start, s.end];
+	}
+	
+	var FocusManager = function()
+	{
+		this.tagNames = [ "input", "select", "textarea", "button", "a" ];
+		
+		var init = bind(function()
+		{
+			this.attachFocusEvent([document]);
+		}, this);
+				
+		Y.on("event:ready", init);
+		this.focusedElement = null;
+	};
+	
+	FocusManager.prototype = 
+	{		
+		attachFocusEvent: function(elements)
+		{
+			log.trace("Focus", "Attach focus events", elements);
+			for (var i = 0; i < elements.length; ++i)
+			{
+				var e = elements[i];
+				for (var j = 0; j < this.tagNames.length; ++j)
+				{					
+					var tn = this.tagNames[j];					
+					var nodes = e.getElementsByTagName(tn);
+					for (var k = 0; k < nodes.length; ++k)
+					{						
+						var n = nodes[k];
+						if (n.wicketFocusAttached != true)
+						{
+							log.trace("Focus", "Attaching focus events on", n);
+							Y.on("focus", this.onFocus, n, this);
+							Y.on("blur", this.onBlur, n, this);
+							n.wicketFocusAttached = true;
+						}		
+					}
+				}
+			}
+		},
+		onFocus: function(event)
+		{
+			this.focusedElement = event.target.getAttribute("id");
+		},
+		onBlur: function(event)
+		{
+			var id = event.target.getAttribute("id");
+			if (this.focusedElement == id)
+			{
+				this.focusedElement = null;
+			}
+		},
+		rememberFocus: function()
+		{
+			log.trace("Focus", "Remembering last focused element id:", this.focusedElement);
+			this.lastFocusedElement = this.focusedElement;
+			var e = W.$(this.focusedElement);
+			this.lastSelection = null;
+			if (e != null)
+			{					
+				if (e.tagName.toLowerCase() == "input" || e.tagName.toLowerCase() == "textarea")
+				{					
+					this.lastSelection = getSelection(e);
+					log.trace("Focus", "Last selection: ", this.lastSelection);
+				}
+			}
+		},
+		restoreFocus: function()
+		{
+			var f = bind(function()
+			{
+				try 
+				{
+					log.trace("Focus", "Restoring last focused element id:", this.focusedElement);
+					if (this.lastFocusedElement != null)
+					{
+						var e = W.$(this.lastFocusedElement);						
+						e.focus();
+						if (this.lastSelection != null)
+						{
+							setSelection(e, this.lastSelection[0], this.lastSelection[1]);
+						}
+						this.lastSelection = null;
+						this.lastFocusedElement = null;
+						return true;
+					}
+				} 
+				catch (e)
+				{
+					log.debug("Focus", "Error restoring focus ", e);
+					return false;
+				}
+			}, this);
+			if (f() == false)
+			{
+				window.setTimeout(f, 0);
+			}			
+		}
+	};
+	
+	W.focusManager = new FocusManager();
+	
+	var getAttributesKey = function(e, a)
+	{
+		return e + "---" + a.c + "---" + a.b;		
+	}
+	
+	var getEventHandlers = function(element)
+	{
+		if (element.wicketEventHandlers == null)
+		{
+			element.wicketEventHandlers = { };
+		}
+		return element.wicketEventHandlers;
+	}
+	
 	W.e = function(event, attributes)
 	{
 		var element;
@@ -2110,17 +2384,37 @@ YUI().use('*', function(Y) {
 		else
 		{
 			element = W.$(attributes.c);
-		}		
-		Y.on(event, function(event) 
+		}
+		
+		var key = getAttributesKey(event, attributes);		
+		
+		var h = getEventHandlers(element);
+		
+		var handle = h[key];
+		
+		if (handle != null)
+		{
+			log.trace("Events", "Detaching handle ", handle);
+			handle.detach();			
+		}
+		
+		var f = function(event) 
 		{			
 			var item = new RequestQueueItem(attributes);
 			item.event = event;
 			W.ajax.requestQueue.add(item);
-		}, element);
-		element = null;
-	}
+		}
 		
-	window.W = W;
+		handle = Y.on(event, f, element);
+		
+		h[key] = handle;
+		
+		element = null;
+		h = null;
+		f = null;
+	}
+	
+	window.W = W;		
 	
 });
 
