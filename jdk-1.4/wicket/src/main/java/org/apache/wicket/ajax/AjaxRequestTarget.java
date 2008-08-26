@@ -744,10 +744,25 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		page.startComponentRender(component);
 
-		component.prepareForRender();
+		try
+		{
+			component.prepareForRender();
 
-		// render any associated headers of the component
-		respondHeaderContribution(response, component);
+			// render any associated headers of the component
+			respondHeaderContribution(response, component);
+		}
+		catch (RuntimeException e)
+		{
+			try
+			{
+				component.afterRender();
+			}
+			catch (RuntimeException e2)
+			{
+				// ignore this one could be a result off.
+			}
+			throw e;
+		}
 
 		component.renderComponent();
 
