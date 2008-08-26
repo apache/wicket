@@ -52,6 +52,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 	var objonkeypress;
 	var objonchange;
 	var objonchangeoriginal;
+	var objonfocus;
 	
 	// holds the eventual margins, padding, etc. of the menu container.
 	// it is computed when the menu is first rendered, and then reused.
@@ -78,6 +79,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         objonblur=obj.onblur;
         objonkeyup=obj.onkeyup;
         objonkeypress=obj.onkeypress;
+        objonfocus = obj.onfocus;
         
         // WICKET-1280
         objonchangeoriginal=obj.onchange; 
@@ -173,6 +175,12 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 }
             }
 			if(typeof objonkeypress=="function")objonkeypress(event);
+        }
+
+        obj.onfocus=function(event){
+            if (cfg.showListOnFocusGain)
+                updateChoices();
+            if(typeof objonfocus=="function")objonfocus();		
         }
     }
 

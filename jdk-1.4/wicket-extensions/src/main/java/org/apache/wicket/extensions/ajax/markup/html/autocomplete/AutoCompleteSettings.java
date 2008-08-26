@@ -57,6 +57,8 @@ public final class AutoCompleteSettings implements IClusterable
     private String cssClassName = null;
 
     private boolean adjustInputWidth = true;
+    
+    private boolean showListOnFocusGain = false;
 
   /**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -187,5 +189,26 @@ public final class AutoCompleteSettings implements IClusterable
     public void setAdjustInputWidth(final boolean adjustInputWidth)
     {
         this.adjustInputWidth = adjustInputWidth;
+    }
+    
+    /**
+	 * Indicates whether the autocomplete list will be shown when the input field receives focus.
+	 * 
+	 * @return true if the autocomplete list will be shown when the input field receives focus, false
+	 *         otherwise
+	 */
+    public boolean getShowListOnFocusGain()
+    {
+        return this.showListOnFocusGain;
+    }
+    
+    /**
+	 * Sets whether the list should be shown when the input field receives focus.
+	 * 
+	 * @param showListOnEmptyInput the flag
+	 */
+    public void setShowListOnFocusGain(final boolean showListOnFocusGain)
+    {
+        this.showListOnFocusGain = showListOnFocusGain;
     }
 }
