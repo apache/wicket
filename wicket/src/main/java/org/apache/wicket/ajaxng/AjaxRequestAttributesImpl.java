@@ -26,21 +26,22 @@ import org.apache.wicket.markup.html.form.Form;
  * delegating the calls to another {@link AjaxRequestAttributes} instance if one is specified.
  * <p>
  * To extend attributes from behavior or component the following pattern can be used:
+ * 
  * <pre>
- *      // add a precondition to super attirbutes
- *      class MyBehavior extends AjaxBehavior
- *      {
- *          public AjaxRequestAttributes getAttributes()
+ * // add a precondition to super attirbutes
+ * class MyBehavior extends AjaxBehavior
+ * {
+ * 	public AjaxRequestAttributes getAttributes()
  *          {
  *              return new AjaxRequestAttributesImpl(super.getAttributes) 
  *              {
  *                  public FunctionList getPreconditions()
  *                  {
- *                      return super.getPreconditions().add("function(requestQueueItem) { return true; }";);
+ *                      return super.getPreconditions().add(&quot;function(requestQueueItem) { return true; }&quot;;);
  *                  }
  *              }
  *          }
- *      }		
+ * }
  * </pre>
  * 
  * @author Matej Knopp
@@ -246,5 +247,24 @@ public class AjaxRequestAttributesImpl implements AjaxRequestAttributes
 		{
 			return null;
 		}
+	}
+
+	public FunctionList getRequestQueueItemCreationListeners()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getRequestQueueItemCreationListeners();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
+
+	public boolean allowDefault()
+	{
+		return false;
 	}
 }

@@ -106,6 +106,10 @@ public abstract class AjaxBehavior implements IBehavior
 		config.append(prefix);
 		config.append("';\n");
 
+		config.append("gs.defaultPageId='");
+		config.append(getPageId(component.getPage()));
+		config.append("';\n");
+		
 		config.append("gs.urlParamComponentId='");
 		config.append(AjaxUrlCodingStrategy.PARAM_COMPONENT_ID);
 		config.append("';\n");
@@ -201,8 +205,6 @@ public abstract class AjaxBehavior implements IBehavior
 	{
 		JSONObject o = new JSONObject();
 
-		o.put("p", getPageId(component.getPage()));
-
 		if (component instanceof Page == false)
 		{
 			o.put("c", component.getMarkupId());
@@ -262,7 +264,7 @@ public abstract class AjaxBehavior implements IBehavior
 			o.put("f", attributes.getForm().getMarkupId());
 		}
 		o.put("m", attributes.isMultipart());
-		o.put("t", attributes.getRequesTimeout());
+		o.put("rt", attributes.getRequesTimeout());
 		o.put("pt", attributes.getProcessingTimeout());
 		o.put("t", attributes.getToken());
 		o.put("r", attributes.isRemovePrevious());
@@ -273,6 +275,7 @@ public abstract class AjaxBehavior implements IBehavior
 		renderFunctionList(o, "be", attributes.getBeforeHandlers());
 		renderFunctionList(o, "s", attributes.getSuccessHandlers());
 		renderFunctionList(o, "e", attributes.getErrorHandlers());
+		renderFunctionList(o, "rqi", attributes.getRequestQueueItemCreationListeners());
 
 		Map<String, Object> urlArguments = attributes.getUrlArguments();
 		if (urlArguments != null && !urlArguments.isEmpty())

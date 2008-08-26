@@ -21,18 +21,18 @@ import java.util.Map;
 import org.apache.wicket.markup.html.form.Form;
 
 /**
- * Attributes for an Ajax Request. 
+ * Attributes for an Ajax Request.
  * 
  * <hr>
- *  
+ * 
  * <p>
  * Note that some of these attributes represent javascript functions. Those functions get a
  * <code>RequestQueueItem</code> instance as first argument. The instance provides access to
  * following properties that the javascript functions can use:
  * <dl>
  * <dt>attributes</dt>
- * <dd> Object with request queue item attributes. The <code>attributes</code> Object contains following
- * properties:
+ * <dd> Object with request queue item attributes. The <code>attributes</code> Object contains
+ * following properties:
  * <dl>
  * 
  * <dt>component</dt>
@@ -262,4 +262,24 @@ public interface AjaxRequestAttributes
 	 * @return FunctionList or <code>null</code>
 	 */
 	FunctionList getUrlArgumentMethods();
+
+	/**
+	 * Array of javascript functions invoked when a <code>RequestQueueItem</code> instance is
+	 * created. The <code>RequestQueueItem</code> instance will be passed as first argument.
+	 * 
+	 * @return FunctionList or <code>null</code>
+	 */
+	FunctionList getRequestQueueItemCreationListeners();
+
+	/**
+	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
+	 * handler to be invoked. For example if the behavior is attached to a link and
+	 * {@link #allowDefault()} returns <code>false</code> (which is default value), the link's URL
+	 * will not be followed. If {@link #allowDefault()} returns <code>true</code>, the link URL
+	 * will be loaded (and the onclick handler fired if there is any).
+	 * 
+	 * @return <code>true</code> if the default event handler should be invoked,
+	 *         <code>false</code> otherwise.
+	 */
+	boolean allowDefault();
 }

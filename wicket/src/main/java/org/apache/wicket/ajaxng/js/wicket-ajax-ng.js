@@ -145,7 +145,8 @@ YUI().use('*', function(Y) {
 		trace: function() { },
 		debug: function() { },
 		info: function() { },
-		error: function() { }
+		error: function() { },
+		warn: function() { }
 	}		
 	
 	var FirebugLogger =
@@ -195,6 +196,10 @@ YUI().use('*', function(Y) {
 		error: function() 
 		{
 			console.error.apply(this, FirebugLogger.arg("ERROR", arguments));
+		},
+		warn: function() 
+		{
+			console.warn.apply(this, FirebugLogger.arg("WARN", arguments));
 		}
 	}
 	
@@ -210,12 +215,15 @@ YUI().use('*', function(Y) {
 			console.info = console.log;
 		if (typeof(console.debug) == "undefined")
 			console.debug = console.log;
+		if (typeof(console.warn) == "undefined")
+			console.warn = console.log;
 	}				
 	
 	var logConfig = 
 	{ 
-		disableAll: false, trace: true, debug: true, info: true, error: true, 
-		"trace:GarbageCollector": false, "trace:Contribution":false, "trace:Events":true 
+		disableAll: false, trace: true, debug: true, info: true, error: true, warn: true, 
+		"trace:GarbageCollector": false, "trace:Contribution":false, "trace:Events":false, "trace:Focus":false,
+		"trace:RequestQueue": false, "trace:General":false, "trace:Throttler": true
 	};
 	
 	W.Log  = 
@@ -239,6 +247,11 @@ YUI().use('*', function(Y) {
 		{
 			if (!logConfig.disableAll && logConfig.error && logConfig[arguments[0]] != false && logConfig["error:" + arguments[0]] != false)
 				logger.error.apply(this, arguments);
+		},
+		warn: function()
+		{
+			if (!logConfig.disableAll && logConfig.warn && logConfig[arguments[0]] != false && logConfig["warn:" + arguments[0]] != false)
+				logger.warn.apply(this, arguments);
 		},
 		setLogger: function(newLogger)
 		{
@@ -764,8 +777,21 @@ YUI().use('*', function(Y) {
 				return;
 			}
 			var entry = this.entries[token];
-			if (entry == null)
+			
+			var e = this.executionTimes[token];					
+			if (!postponeTimerOnUpdate && e != null)
 			{
+				// get millis to reflect the real time after last invocation update
+				var now = new Date().getTime();
+				var d = now - e;
+				if (d < millis)
+				{
+					millis -= d;
+				}
+			}
+			
+			if (entry == null)
+			{	
 				entry = new ThrottlerEntry(func);
 				entry.timeout = window.setTimeout(bind(function() { this.execute(token) }, this), millis);
 				this.entries[token] = entry;
@@ -776,8 +802,8 @@ YUI().use('*', function(Y) {
 				entry.func = func;
 				if (postponeTimerOnUpdate)
 				{
-					window.clearTimeout(entry.timeout);
-					entry.timeout = window.setTimeout(bind(this.execute, this), millis);
+					window.clearTimeout(entry.timeout);				
+					entry.timeout = window.setTimeout(bind(function() { this.execute(token) }, this), millis);
 					log.trace("Throttler", "Postponing throttle, token:", token, ", millis:", millis, ", func:", func);
 				}
 				else
@@ -796,7 +822,12 @@ YUI().use('*', function(Y) {
 			if (e == null || (e + millis) < now)
 			{
 				log.trace("Throttler", "Executing function immediately, token:", token, ", millis:", millis, ", func:", func);
-				this.executionTimes[token] = now;
+				this.executionTimes[token] = now;				
+				var e = this.entries[token];
+				if (e != null)
+				{
+					window.clearTimeout(e.timeout);
+				}
 				this.entries[token] = null;
 				func();
 				return true;
@@ -1345,7 +1376,7 @@ YUI().use('*', function(Y) {
 	 *                                        negative impact on error detection.
 	 *                                        (doesn't work with current YUI 3 PR1 release)
 	 *                                         
-	 *   t, requestTimeout       - Integer    Timeout in milliseconds for the AJAX request. This only 
+	 *   rt, requestTimeout       - Integer   Timeout in milliseconds for the AJAX request. This only 
 	 *                                        involves the actual communication and not the processing 
 	 *                                        afterwards. Can be null in which case the default request
 	 *                                        timeout will be used.
@@ -1426,6 +1457,10 @@ YUI().use('*', function(Y) {
      *                                        URL arguments. Each of the methods will get this 
      *                                        RequestQueueItem passed and must return a 
      *                                        Map<String, String> (Object).
+     *                                        
+     *   rqi, requestQueueItem  - Method(s)   Optional. Method or array of methods that will be invoked
+     *                                        after the RequestQueueItem instance is created. The methods 
+     *                                        will get the request queue instance passed as first argument.
 	 */
 	var RequestQueueItem = function(attributes)
 	{
@@ -1460,7 +1495,7 @@ YUI().use('*', function(Y) {
 			component:            a.component          || a.c    || null,
 			formId:               a.formId             || a.f    || null,
 			multipart:          b(a.multipart          || a.m),
-			requestTimeout:       a.requestTimeout     || a.t    || gs.defaultRequestTimeout,
+			requestTimeout:       a.requestTimeout     || a.rt   || gs.defaultRequestTimeout,
 			processingTimeout:    a.processingTimeout  || a.pt   || gs.defaultProcessingTimeout,
 			pageId:               a.pageId             || a.p    || gs.defaultPageId,
 			listenerInterface:    a.listenerInterface  || a.l    || null,
@@ -1474,16 +1509,37 @@ YUI().use('*', function(Y) {
 			successHandlers:    m(a.successHandlers    || a.s,   gs.successHandlers),
 			errorHandlers:      m(a.errorHandlers      || a.e,   gs.errorHandlers),
 			urlArguments:         a.urlArguments       || a.u    || null,
-			urlArgumentMethods: m(a.urlArgumentMethods || a.ua,  gs.urlArgumentMethods)
+			urlArgumentMethods: m(a.urlArgumentMethods || a.ua,  gs.urlArgumentMethods),
+			requestQueueItem:   m(a.requestQueueItem   || a.rqi, gs.requestQueueItem)
 		}
 		
-		log.trace("RequestQueue", "Creating New Item", this.attributes);
+		log.trace("RequestQueue", "Creating New Item", this.attributes);				
 	}
 		
 	W.RequestQueueItem = RequestQueueItem;		
 	
 	RequestQueueItem.prototype = 
-	{
+	{		
+		init: function()
+		{
+			if (this.initialized != true)
+			{
+				this.initialized = true;			
+				var l = this.attributes.requestQueueItem;
+				for (var i = 0; i < l.length; ++i)
+				{
+					var handler = l[i];
+					try 
+					{
+						handler(this);
+					} 
+					catch (exception)
+					{
+						log.error("RequestQueue", "Error invoking RequestQueueItem creation listener", exception);
+					}
+				}
+			}
+		},
 		checkPreconditions: function() 
 		{			
 			var res = iterateArray(this.attributes.preconditions, bind(function(precondition) 
@@ -1972,6 +2028,9 @@ YUI().use('*', function(Y) {
 				log.error("RequestQueue", "Item ", item, " must contain attributes.");
 				return;
 			}
+			
+			item.init();
+			
 			var a = item.attributes;			
 			if (a.throttlePostpone == true && a.throttle == null) 
 			{
@@ -2101,6 +2160,7 @@ YUI().use('*', function(Y) {
 		errorHandlers: [],
 		urlPostProcessors: [],
 		urlArgumentMethods: [ defaultArgumentMethod ],
+		requestQueueItem: [],
 		urlPrefix: "INVALID_URL_PREFIX",
 		urlParamComponentId: "INVALID_COMPONENT_ID_PARAM",
 		urlParamTimestamp: "INVALID_TIMESTAMP_PARAM",
@@ -2374,7 +2434,7 @@ YUI().use('*', function(Y) {
 		return element.wicketEventHandlers;
 	}
 	
-	W.e = function(event, attributes)
+	W.e = function(event, attributes, allowDefault)
 	{
 		var element;
 		if (attributes.c == null)
@@ -2403,6 +2463,10 @@ YUI().use('*', function(Y) {
 			var item = new RequestQueueItem(attributes);
 			item.event = event;
 			W.ajax.requestQueue.add(item);
+			if (allowDefault != true)
+			{
+				event.preventDefault();
+			}
 		}
 		
 		handle = Y.on(event, f, element);
