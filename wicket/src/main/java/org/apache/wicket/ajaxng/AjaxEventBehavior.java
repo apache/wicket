@@ -17,6 +17,7 @@
 package org.apache.wicket.ajaxng;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
@@ -40,6 +41,14 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 		this.event = event;
 	}
 
+	@Override
+	public final void respond(AjaxRequestTarget target)
+	{
+		onEvent(target);
+	}
+	
+	protected abstract void onEvent(AjaxRequestTarget target);
+	
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{

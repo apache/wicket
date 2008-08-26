@@ -24,6 +24,7 @@ import org.apache.wicket.ajaxng.AjaxRequestAttributes;
 import org.apache.wicket.ajaxng.AjaxRequestAttributesImpl;
 import org.apache.wicket.ajaxng.FunctionList;
 import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
+import org.apache.wicket.ajaxng.request.AjaxRequestTarget.ComponentEntry;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -103,9 +104,12 @@ public class TestPage1 extends WebPage
 			 * @see org.apache.wicket.ajaxng.AjaxBehavior#respond(org.apache.wicket.ajaxng.request.AjaxRequestTarget)
 			 */
 			@Override
-			public void respond(AjaxRequestTarget target)
+			public void onEvent(AjaxRequestTarget target)
 			{
-				target.addComponent(c1);
+				ComponentEntry e = new ComponentEntry(c1);
+				//e.setAfterReplaceJavascript("console.info(insertedElements); notify()");
+				target.addComponent(e);
+				//target.prependJavascript("console.info(requestQueueItem); alert('x');", false);
 			}
 		
 		});

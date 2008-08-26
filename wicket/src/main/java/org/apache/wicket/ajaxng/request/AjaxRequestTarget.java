@@ -258,6 +258,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * <dd>RequestQueueItem instance for current request</dd>
 		 * <dt>componentId</dt>
 		 * <dd>MarkupId of component that has been replaced
+		 * <dt>insertedElements</dt>
+		 * <dd>Array of newly inserted elements</dd>
 		 * <dt>notify</dt>
 		 * <dd>Method that javascript needs to execute after it has finished. Note that it is
 		 * mandatory to call this method otherwise the processing pipeline will stop</dd>
@@ -887,7 +889,22 @@ public class AjaxRequestTarget implements IRequestTarget
 
 			checkComponent(component);
 
-			component.prepareForRender();
+			try
+			{
+				component.prepareForRender();
+			}
+			catch (RuntimeException e)
+	        {
+	            try
+	            {
+	                component.afterRender();
+	            }
+	            catch (RuntimeException e2)
+	            {
+	                // ignore this one could be a result off.
+	            }
+	            throw e;
+	        }
 		}
 	}
 
@@ -948,15 +965,19 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 		else
 		{
-			prepareRender();
-
-			response.put("header", respondHeaderContribution());
-
 			JSONArray components = new JSONArray();
 			response.put("components", components);
-			for (ComponentEntry entry : entries)
+			
+			if (!entries.isEmpty())
 			{
-				components.put(renderComponentEntry(entry));
+				prepareRender();
+
+				response.put("header", respondHeaderContribution());
+				
+				for (ComponentEntry entry : entries)
+				{
+					components.put(renderComponentEntry(entry));
+				}
 			}
 
 			fireOnAfterRespondListeners(entries);

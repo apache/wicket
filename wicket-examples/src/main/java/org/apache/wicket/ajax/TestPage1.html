@@ -1,11 +1,20 @@
 <html>
 	<head>
-	
+<!-- 
+ 	<script type='text/javascript' 
+        src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+        -->	
 	</head>
 	<body>
 		<div wicket:id="c1">
 			C1 DIV
+			<input id="i1" value="somelongtextinherebaby"/>
+			<input id="i2" value="somelongtextinherebaby"/>
+			
 		</div>
+		
+		<input id="i3" value="somelongtextinherebaby"/>
+		<input id="i4" value="somelongtextinherebaby"/>
 		
 		<div id="div1">
 			DIV 1
@@ -20,69 +29,6 @@
 			</div>
 		</div>
 		
-		<a href="javascript:changestyle();">CS</a>
-		
-		<script type="text/javascript">
-
-	var addStyle = function(style) {
-				
-		if (W.Y.UA.ie)
-		{
-			try 
-			{
-				var last = document.styleSheets.length - 1;
-				if (last > 0 && document.styleSheets[last].cssText.length < 30000)
-					document.styleSheets[last].cssText = document.styleSheets[last].cssText + style;
-				else
-					document.createStyleSheet().cssText = style;
-			} 
-			catch(e) 
-			{
-				try {
-					document.createStyleSheet().cssText = style;
-				} catch (e) {
-					try {
-						var last = document.styleSheets.length - 1;
-						document.styleSheets[last].cssText = document.styleSheets[last].cssText + style;
-					} catch (error) {
-						
-					}
-				}				
-			}			
-		}
-		else
-		{			
-			var head = document.getElementsByTagName("head")[0];
-
-			var node = document.createElement("style");
-			node.setAttribute("type", "text/css");
-
-			var content = document.createTextNode(style);
-			node.appendChild(content);
-			head.appendChild(node);
-		}
-	}
-
-	changestyle = function() {
-
-		var s="";
-		
-		for (var i = 0; i < 30; ++i) {
-			s+=(".d1 .d2 { background-color: red; } ");
-		}
-
-		//alert(s.length);
-		
-		for (var i = 0; i < 60; ++i) {
-			addStyle(s);
-		}
-		
-		addStyle(".d1 .d2 { background-color: red; }");
-		addStyle(".d1 .d2 { background-color: blue; }");
-	}
-	
-		
-		</script>
 		
 	</body>	
 	
