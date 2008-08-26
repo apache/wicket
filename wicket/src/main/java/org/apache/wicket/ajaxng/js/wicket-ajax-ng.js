@@ -1422,10 +1422,10 @@ YUI().use('*', function(Y) {
      *                                        will be appended to the URL. This is simpler alternative to 
      *                                        urlArgumentMethods.
      *                                        
-     *   ua, urlArgumentMethods - Method(s)  Optional. Method or array of methods that produce additional 
-     *                                       URL arguments. Each of the methods will get this 
-     *                                       RequestQueueItem passed and must return a 
-     *                                       Map<String, String> (Object).
+     *   ua, urlArgumentMethods - Method(s)   Optional. Method or array of methods that produce additional 
+     *                                        URL arguments. Each of the methods will get this 
+     *                                        RequestQueueItem passed and must return a 
+     *                                        Map<String, String> (Object).
 	 */
 	var RequestQueueItem = function(attributes)
 	{
