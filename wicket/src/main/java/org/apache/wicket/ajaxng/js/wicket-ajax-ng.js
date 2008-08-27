@@ -2489,7 +2489,12 @@ YUI().use('*', function(Y) {
 		return element.wicketEventHandlers;
 	}
 	
-	W.e = function(event, attributes, allowDefault)
+	/**
+	 * Attaches the handler to element specified by attributes to be fired on
+	 * specified event. Makes sure that the previous handler (if any) for given
+	 * component/behavior/event combination is properly detached.
+	 */
+	W.attachEventHandler = function(event, attributes, handler)
 	{
 		var element;
 		if (attributes.c == null)
@@ -2512,7 +2517,14 @@ YUI().use('*', function(Y) {
 			log.trace("Events", "Detaching handle ", handle);
 			handle.detach();			
 		}
+
+		handle = Y.on(event, handler, element);
 		
+		h[key] = handle;
+	}
+	
+	W.e = function(event, attributes, allowDefault)
+	{		
 		var f = function(event) 
 		{			
 			var item = new RequestQueueItem(attributes);
@@ -2523,14 +2535,7 @@ YUI().use('*', function(Y) {
 				event.preventDefault();
 			}
 		}
-		
-		handle = Y.on(event, f, element);
-		
-		h[key] = handle;
-		
-		element = null;
-		h = null;
-		f = null;
+		W.attachEventHandler(event, attributes, f);
 	}
 	
 	window.W = W;			
