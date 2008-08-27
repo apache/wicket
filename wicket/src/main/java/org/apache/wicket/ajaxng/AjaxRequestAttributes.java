@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.wicket.markup.html.form.Form;
 
 /**
- * Attributes for an Ajax Request.
+ * Attributes of an Ajax Request.
  * 
  * This class supports delegating the calls to another {@link AjaxRequestAttributes} instance if one
  * is specified. To extend attributes from behavior or component the following pattern can be used:
@@ -332,7 +332,6 @@ public class AjaxRequestAttributes
 		}
 		return result;
 	}
-
 
 	/**
 	 * Array of javascript functions that are invoked before the actual AJAX request. This

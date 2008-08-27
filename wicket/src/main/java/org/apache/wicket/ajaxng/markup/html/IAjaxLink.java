@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajaxng.markup.html;
 
-import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
+import org.apache.wicket.ajaxng.AjaxRequestTarget;
 
 /**
  * Interface for Ajax callback links.

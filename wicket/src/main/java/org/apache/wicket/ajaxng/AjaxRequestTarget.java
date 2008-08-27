@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajaxng.request;
+package org.apache.wicket.ajaxng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,6 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajaxng.AjaxBehavior;
 import org.apache.wicket.ajaxng.json.JSONArray;
 import org.apache.wicket.ajaxng.json.JSONObject;
 import org.apache.wicket.behavior.IBehavior;

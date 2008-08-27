@@ -22,6 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.ajaxng.AjaxRequestTarget;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;

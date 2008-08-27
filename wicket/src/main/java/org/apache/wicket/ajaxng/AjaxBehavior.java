@@ -29,7 +29,6 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajaxng.json.JSONArray;
 import org.apache.wicket.ajaxng.json.JSONFunction;
 import org.apache.wicket.ajaxng.json.JSONObject;
-import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
 import org.apache.wicket.ajaxng.request.AjaxUrlCodingStrategy;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
