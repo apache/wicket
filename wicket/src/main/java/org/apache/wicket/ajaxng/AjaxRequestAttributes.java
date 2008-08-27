@@ -24,6 +24,26 @@ import org.apache.wicket.markup.html.form.Form;
 /**
  * Attributes for an Ajax Request.
  * 
+ * This class supports delegating the calls to another {@link AjaxRequestAttributes} instance if one
+ * is specified. To extend attributes from behavior or component the following pattern can be used:
+ * 
+ * <pre>
+ * // add a precondition to super attirbutes
+ * class MyBehavior extends AjaxBehavior
+ * {
+ * 	public AjaxRequestAttributes getAttributes()
+ *          {
+ *              return new AjaxRequestAttributesImpl(super.getAttributes) 
+ *              {
+ *                  public FunctionList getPreconditions()
+ *                  {
+ *                      return super.getPreconditions().add(&quot;function(requestQueueItem) { return true; }&quot;;);
+ *                  }
+ *              }
+ *          }
+ * }
+ * </pre>
+ * 
  * <hr>
  * 
  * <p>
@@ -55,27 +75,6 @@ import org.apache.wicket.markup.html.form.Form;
  * property contains the actual event instance.
  * 
  * </dl>
- * 
- * This class supports delegating the calls to another {@link AjaxRequestAttributes} instance if one
- * is specified. To extend attributes from behavior or component the following pattern can be used:
- * 
- * <pre>
- * // add a precondition to super attirbutes
- * class MyBehavior extends AjaxBehavior
- * {
- * 	public AjaxRequestAttributes getAttributes()
- *          {
- *              return new AjaxRequestAttributesImpl(super.getAttributes) 
- *              {
- *                  public FunctionList getPreconditions()
- *                  {
- *                      return super.getPreconditions().add(&quot;function(requestQueueItem) { return true; }&quot;;);
- *                  }
- *              }
- *          }
- * }
- * </pre>
- * 
  * 
  * @author Matej Knopp
  */
@@ -296,6 +295,28 @@ public class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
+	 * Preconditions can also be asynchronous (with the rest of the queue waiting until precondition
+	 * finishes). An example of asynchronous precondition:
+	 * 
+	 * <pre>
+	 *    function(requestQueueItem, makeAsync, asyncReturn) 
+	 *    { 
+	 *      makeAsync(); // let the queue know that this precondition is asynchronous
+	 *      var f = function()
+	 *      {
+	 *        if (someCondition())
+	 *        {
+	 *          asyncReturn(true); // return the precondition value
+	 *        }
+	 *        else
+	 *        {
+	 *          asyncReturn(false); // return the precondition value
+	 *        }
+	 *      };
+	 *      window.setTimeout(f, 1000); // postpone the actual check 1000 millisecond. The queue will wait.
+	 *    }
+	 * </pre>
+	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
 	public FunctionList getPreconditions()
@@ -491,6 +512,13 @@ public class AjaxRequestAttributes
 	 */
 	public boolean allowDefault()
 	{
-		return false;
+		if (delegate != null)
+		{
+			return delegate.allowDefault();			
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
