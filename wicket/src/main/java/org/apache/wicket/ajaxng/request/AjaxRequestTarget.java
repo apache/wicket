@@ -45,6 +45,35 @@ import org.apache.wicket.response.StringResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A request target that produces ajax response envelopes used on the client side to update
+ * component markup as well as evaluate arbitrary javascript.
+ * <p>
+ * A component whose markup needs to be updated should be added to this target via
+ * AjaxRequestTarget#addComponent(Component) method. Its body will be rendered and added to the
+ * envelope when the target is processed, and refreshed on the client side when the ajax response is
+ * received.
+ * <p>
+ * It is important that the component whose markup needs to be updated contains an id attribute in
+ * the generated markup that is equal to the value retrieved from Component#getMarkupId(). This can
+ * be accomplished by either setting the id attribute in the html template, or using an attribute
+ * modifier that will add the attribute with value Component#getMarkupId() to the tag ( such as
+ * MarkupIdSetter )
+ * <p>
+ * Any javascript that needs to be evaluated on the client side can be added using
+ * AjaxRequestTarget#append/prependJavascript(String). For example, this feature can be useful when
+ * it is desirable to link component update with some javascript effects.
+ * <p>
+ * The target provides a listener interface {@link IListener} that can be used to add code that
+ * responds to various target events by adding listeners via
+ * {@link #addListener(IListener)} 
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * @author Eelco Hillenius
+ * @author Matej Knopp
+ */
 public class AjaxRequestTarget implements IRequestTarget
 {
 
@@ -58,7 +87,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	/**
 	 * An {@link AjaxRequestTarget} listener that can be used to respond to various target-related
 	 * events
-	 * 
 	 */
 	public static interface IListener
 	{
@@ -396,6 +424,15 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 	}
 
+	/**
+	 * Adds a component entry to the list of components to be rendered
+	 * 
+	 * @param entry
+	 *            component entry to be rendered
+	 * 
+	 * @return <code>true</code> if the component was added, <code>false</code> if the
+	 *          component or some of it's parents is already in the list
+	 */
 	public boolean addComponent(ComponentEntry entry)
 	{
 		if (entry == null)
@@ -427,6 +464,16 @@ public class AjaxRequestTarget implements IRequestTarget
 		entries.add(entry);
 		return true;
 	}
+
+	/**
+	 * Adds a component to the list of components to be rendered
+	 * 
+	 * @param component
+	 *            component to be rendered
+	 * 
+	 * @return <code>true</code> if the component was added, <code>false</code> if the
+	 *          component or some of it's parents is already in the list
+	 */
 
 	public boolean addComponent(Component component)
 	{
@@ -864,8 +911,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		return stringResponse.toString();
 	}
 
+	/**
+	 * 
+	 * @param redirect
+	 */
 	public void setRedirect(String redirect)
 	{
+		// TODO: Implement redirect
 		this.redirect = redirect;
 	}
 
@@ -894,17 +946,17 @@ public class AjaxRequestTarget implements IRequestTarget
 				component.prepareForRender();
 			}
 			catch (RuntimeException e)
-	        {
-	            try
-	            {
-	                component.afterRender();
-	            }
-	            catch (RuntimeException e2)
-	            {
-	                // ignore this one could be a result off.
-	            }
-	            throw e;
-	        }
+			{
+				try
+				{
+					component.afterRender();
+				}
+				catch (RuntimeException e2)
+				{
+					// ignore this one could be a result off.
+				}
+				throw e;
+			}
 		}
 	}
 
@@ -967,13 +1019,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			JSONArray components = new JSONArray();
 			response.put("components", components);
-			
+
 			if (!entries.isEmpty())
 			{
 				prepareRender();
 
 				response.put("header", respondHeaderContribution());
-				
+
 				for (ComponentEntry entry : entries)
 				{
 					components.put(renderComponentEntry(entry));
@@ -1003,10 +1055,10 @@ public class AjaxRequestTarget implements IRequestTarget
 				appendJavascripts.put(renderJavascriptEntry(e));
 			}
 		}
-		
-		WebResponse webResponse = (WebResponse) requestCycle.getResponse();
+
+		WebResponse webResponse = (WebResponse)requestCycle.getResponse();
 		prepareResponse(webResponse);
-		
+
 		webResponse.write("if (false) (");
 		webResponse.write(response.toString());
 		webResponse.write(")");
@@ -1015,7 +1067,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private void prepareResponse(WebResponse response)
 	{
 		final Application app = Application.get();
-		
+
 		// Determine encoding
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
@@ -1027,7 +1079,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 		response.setHeader("Cache-Control", "no-cache, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
-	}	
+	}
 
+	/**
+	 * Dummy AJAX request target instance used by {@link AjaxBehavior} to generate AJAX URL prefix.
+	 */
 	public static final AjaxRequestTarget DUMMY = new AjaxRequestTarget();
 }

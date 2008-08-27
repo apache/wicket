@@ -33,6 +33,11 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 {
 	private final String mountPath;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 */
 	public AjaxUrlCodingStrategy(String mountPath)
 	{
 		this.mountPath = mountPath;
@@ -50,23 +55,23 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 			return null;
 		}
 	}
-	
+
 	private Page getPage(RequestParameters parameters)
 	{
 		String page = getParameter(parameters, PARAM_PAGE_ID);
 		String elements[] = page.split(":");
 		int pageId;
-		String pageMapName = null; 
+		String pageMapName = null;
 		int version = 0;
 		if (elements.length == 2)
 		{
-			pageId = Integer.valueOf(elements[0]);	
+			pageId = Integer.valueOf(elements[0]);
 			version = Integer.valueOf(elements[1]);
 		}
 		else if (elements.length == 3)
 		{
 			pageMapName = elements[0];
-			pageId = Integer.valueOf(elements[1]);	
+			pageId = Integer.valueOf(elements[1]);
 			version = Integer.valueOf(elements[2]);
 		}
 		else
@@ -116,13 +121,13 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 			throw new IllegalStateException("Couldn't find component with id '" +
 				getParameter(requestParameters, PARAM_COMPONENT_ID) + "'.");
 		}
-		
+
 		int behaviorIndex = Integer.valueOf(getParameter(requestParameters, PARAM_BEHAVIOR_INDEX));
-		
+
 		int urlDepth = Integer.valueOf(getParameter(requestParameters, PARAM_URL_DEPTH));
-		
+
 		RequestCycle.get().getRequest().getRequestParameters().setUrlDepth(urlDepth);
-		
+
 		return new AjaxRequestTarget(component, behaviorIndex);
 	}
 
@@ -138,12 +143,26 @@ public class AjaxUrlCodingStrategy implements IRequestTargetUrlCodingStrategy
 	}
 
 	private static final String PARAM_PREFIX = "wicketNG:";
+	
+	/** Timestamp query parameter */
 	public static final String PARAM_TIMESTAMP = PARAM_PREFIX + "timestamp";
+	
+	/** ComponentId query parameter */
 	public static final String PARAM_COMPONENT_ID = PARAM_PREFIX + "componentId";
+	
+	/** PageId query parameter */
 	public static final String PARAM_PAGE_ID = PARAM_PREFIX + "pageId";
+	
+	/** FormId query parameter */
 	public static final String PARAM_FORM_ID = PARAM_PREFIX + "formId";
+	
+	/** Listener interface query parameter */
 	public static final String PARAM_LISTENER_INTEFACE = PARAM_PREFIX + "listenerInterface";
+	
+	/** Behavior index query parameter */
 	public static final String PARAM_BEHAVIOR_INDEX = PARAM_PREFIX + "behaviorIndex";
+	
+	/** URL Depth query parameter */
 	public static final String PARAM_URL_DEPTH = PARAM_PREFIX + "urlDepth";
 
 	public boolean matches(IRequestTarget requestTarget)
