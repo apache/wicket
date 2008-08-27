@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajaxng;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -55,18 +56,70 @@ import org.apache.wicket.markup.html.form.Form;
  * 
  * </dl>
  * 
+ * This class supports delegating the calls to another {@link AjaxRequestAttributes} instance if one
+ * is specified. To extend attributes from behavior or component the following pattern can be used:
+ * 
+ * <pre>
+ * // add a precondition to super attirbutes
+ * class MyBehavior extends AjaxBehavior
+ * {
+ * 	public AjaxRequestAttributes getAttributes()
+ *          {
+ *              return new AjaxRequestAttributesImpl(super.getAttributes) 
+ *              {
+ *                  public FunctionList getPreconditions()
+ *                  {
+ *                      return super.getPreconditions().add(&quot;function(requestQueueItem) { return true; }&quot;;);
+ *                  }
+ *              }
+ *          }
+ * }
+ * </pre>
+ * 
  * 
  * @author Matej Knopp
  */
-public interface AjaxRequestAttributes
+public class AjaxRequestAttributes
 {
+	private final AjaxRequestAttributes delegate;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param delegate
+	 */
+	public AjaxRequestAttributes(AjaxRequestAttributes delegate)
+	{
+		this.delegate = delegate;
+	}
+
+	/**
+	 * 
+	 * Construct.
+	 */
+	public AjaxRequestAttributes()
+	{
+		this(null);
+	}
+
 	/**
 	 * Form instance if the AJAX request should submit a form or <code>null</code> if the request
 	 * doesn't involve form submission.
 	 * 
 	 * @return form instance or <code>null</code>
 	 */
-	Form<?> getForm();
+	public Form<?> getForm()
+	{
+		if (delegate != null)
+		{
+			return delegate.getForm();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -76,7 +129,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return <code>true</code> if the form submit should be multipart, false otherwise
 	 */
-	Boolean isMultipart();
+	public Boolean isMultipart()
+	{
+		if (delegate != null)
+		{
+			return delegate.isMultipart();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Timeout in milliseconds for the AJAX request. This only involves the actual communication and
@@ -85,7 +148,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return request timeout in milliseconds or <code>null<code> for default timeout
 	 */
-	Integer getRequesTimeout();
+	public Integer getRequesTimeout()
+	{
+		if (delegate != null)
+		{
+			return delegate.getRequesTimeout();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Timeout for the response processing. In case the response processing takes more than the
@@ -94,7 +167,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return processing timeout in milliseconds or <code>null</code> for default timeout
 	 */
-	Integer getProcessingTimeout();
+	public Integer getProcessingTimeout()
+	{
+		if (delegate != null)
+		{
+			return delegate.getProcessingTimeout();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Optional string identifying related items in request queue. Used to identify previous items
@@ -107,7 +190,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return token string or <code>null</code>
 	 */
-	String getToken();
+	public String getToken()
+	{
+		if (delegate != null)
+		{
+			return delegate.getToken();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * If there are previous items with same token in the queue they will be removed if
@@ -123,7 +216,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return boolean value or <code>null</code>
 	 */
-	Boolean isRemovePrevious();
+	public Boolean isRemovePrevious()
+	{
+		if (delegate != null)
+		{
+			return delegate.isRemovePrevious();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Limits adding items with same token to at most one item per n milliseconds where n is the
@@ -136,7 +239,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return throttling timeout in milliseconds or <code>null</code>
 	 */
-	Integer getThrottle();
+	public Integer getThrottle()
+	{
+		if (delegate != null)
+		{
+			return delegate.getThrottle();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Only applicable when throttling is enabled. Defaults to <code>false</code>. Causes the
@@ -149,7 +262,17 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return boolean value or <code>null</code>
 	 */
-	Boolean isThrottlePostpone();
+	public Boolean isThrottlePostpone()
+	{
+		if (delegate != null)
+		{
+			return delegate.isThrottlePostpone();
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Array of javascript functions that are invoked before the request executes. The functions
@@ -175,7 +298,20 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getPreconditions();
+	public FunctionList getPreconditions()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getPreconditions();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
+
 
 	/**
 	 * Array of javascript functions that are invoked before the actual AJAX request. This
@@ -195,7 +331,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getBeforeHandlers();
+	public FunctionList getBeforeHandlers()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getBeforeHandlers();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
 
 	/**
 	 * Array of javascript functions that are invoked after the request is successfully processed.
@@ -212,7 +360,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getSuccessHandlers();
+	public FunctionList getSuccessHandlers()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getSuccessHandlers();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
 
 	/**
 	 * Array of javascript functions that are invoked when an unexpected error happens during the
@@ -234,7 +394,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getErrorHandlers();
+	public FunctionList getErrorHandlers()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getErrorHandlers();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
 
 	/**
 	 * Map that contains additional URL arguments. These will be appended to the request URL. This
@@ -242,7 +414,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return Map with additional URL arguments or <code>null</code>
 	 */
-	Map<String, Object> getUrlArguments();
+	public Map<String, Object> getUrlArguments()
+	{
+		Map<String, Object> result = null;
+		if (delegate != null)
+		{
+			result = delegate.getUrlArguments();
+		}
+		if (result == null)
+		{
+			result = new HashMap<String, Object>();
+		}
+		return result;
+	}
 
 	/**
 	 * Array of javascript functions that produce additional URL arguments. Each of the functions
@@ -261,7 +445,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getUrlArgumentMethods();
+	public FunctionList getUrlArgumentMethods()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getUrlArgumentMethods();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
 
 	/**
 	 * Array of javascript functions invoked when a <code>RequestQueueItem</code> instance is
@@ -269,7 +465,19 @@ public interface AjaxRequestAttributes
 	 * 
 	 * @return FunctionList or <code>null</code>
 	 */
-	FunctionList getRequestQueueItemCreationListeners();
+	public FunctionList getRequestQueueItemCreationListeners()
+	{
+		FunctionList result = null;
+		if (delegate != null)
+		{
+			result = delegate.getRequestQueueItemCreationListeners();
+		}
+		if (result == null)
+		{
+			result = new FunctionList();
+		}
+		return result;
+	}
 
 	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
@@ -281,5 +489,8 @@ public interface AjaxRequestAttributes
 	 * @return <code>true</code> if the default event handler should be invoked,
 	 *         <code>false</code> otherwise.
 	 */
-	boolean allowDefault();
+	public boolean allowDefault()
+	{
+		return false;
+	}
 }

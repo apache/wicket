@@ -324,6 +324,6 @@ public abstract class AjaxBehavior implements IBehavior
 	 */
 	public AjaxRequestAttributes getAttributes()
 	{
-		return new AjaxRequestAttributesImpl();
+		return new AjaxRequestAttributes();
 	}
 }

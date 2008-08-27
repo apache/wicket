@@ -24,7 +24,7 @@
 (function() {
 
 YUI().use('*', function(Y) {
-	
+
 	/*
 	 * YUI Shortcuts 
 	 */
@@ -1540,32 +1540,84 @@ YUI().use('*', function(Y) {
 				}
 			}
 		},
-		checkPreconditions: function() 
-		{			
+		
+		checkPrecondition: function(precondition, continueTrue, continueFalse)
+		{
+			var f = bind(function()
+			{
+				log.debug("RequestQueue", "Precondition failed - skiping item; Item: ", this, " Precondition: ", precondition);
+				continueFalse();
+			}, this);
+			
+			var async = false;
+			var makeAsync = function()
+			{
+				async = true;
+			};
+			var asyncReturn = function(value)
+			{
+				if (value == false)
+				{
+					f();
+				}
+				else
+				{
+					continueTrue();
+				}
+			}
+			
+			var res;
+			try 
+			{					
+				res = precondition(this, makeAsync, asyncReturn)
+			} 
+			catch (exception) 
+			{
+				log.error("RequestQueue", "Error evaluating precondition ", precondition, "Exception: ", exception);
+				async = false;
+				res = false;
+			}
+			
+			if (async == false)
+			{
+				if (res == false)
+				{
+					f();
+				}
+				else
+				{
+					continueTrue();
+				}
+			}
+		},
+		
+		checkPreconditions: function(continueTrue, continueFalse) 
+		{	
+			var steps = new Array();
+			
+			var preconditions = copyArray(this.attributes.preconditions);
+			
+			// make sure that the element check is the last precondition
+			preconditions.push(defaultPrecondition);
+			
 			var res = iterateArray(this.attributes.preconditions, bind(function(precondition) 
 			{
-				try 
-				{					
-					if (precondition(this) == false)
-					{
-						log.debug("RequestQueue", "Precondition failed - skiping item; Item: ", this, " Precondition: ", precondition);
-						return false;
-					}
-				} 
-				catch (exception) 
+				steps.push(bind(function(notify) 
 				{
-					log.error("RequestQueue", "Error evaluating precondition ", precondition, "Exception: ", exception);
-					return false;
-				}
+					var cTrue = notify;
+					var cFalse = continueFalse;
+					
+					this.checkPrecondition(precondition, cTrue, cFalse);
+				}, this));
 			}, this));
-			if (res == null)
+			
+			steps.push(function(notify)
 			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+				notify();
+				continueTrue();
+			});
+			
+			new FunctionsExecutor(steps).start();
 		},
 		
 		invokeBeforeHandlers: function()
@@ -2057,7 +2109,7 @@ YUI().use('*', function(Y) {
 			{
 				var i = this.queue.shift();
 				
-				if (i.checkPreconditions())
+				var continueTrue = bind(function()
 				{
 					this.currentItem = i;
 					var s = bind(function() { this.skip(i); }, this);
@@ -2068,12 +2120,15 @@ YUI().use('*', function(Y) {
 					window.setTimeout(s, t);
 					
 					var next = bind(this.next, this);
-					i.execute(next);
-				}
-				else
+					i.execute(next);	
+				}, this);
+				
+				var continueFalse = bind(function()
 				{
 					this.next();
-				}
+				}, this);	
+				
+				i.checkPreconditions(continueTrue, continueFalse);
 			}
 		},		
 		
@@ -2155,7 +2210,7 @@ YUI().use('*', function(Y) {
 		defaultToken: null,
 		defaultRemovePrevious: false,
 		beforeHandlers: [],
-		preconditions: [defaultPrecondition],
+		preconditions: [],
 		successHandlers: [],
 		errorHandlers: [],
 		urlPostProcessors: [],
@@ -2478,7 +2533,7 @@ YUI().use('*', function(Y) {
 		f = null;
 	}
 	
-	window.W = W;		
+	window.W = W;			
 	
 });
 

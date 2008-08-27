@@ -19,7 +19,6 @@ package org.apache.wicket.ajaxng.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajaxng.AjaxEventBehavior;
 import org.apache.wicket.ajaxng.AjaxRequestAttributes;
-import org.apache.wicket.ajaxng.AjaxRequestAttributesImpl;
 import org.apache.wicket.ajaxng.request.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -84,9 +83,14 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 		});
 	}
 
+	/**
+	 * Returns {@link AjaxRequestAttributes} object for this link.
+	 * 
+	 * @return {@link AjaxRequestAttributes} instance
+	 */
 	public AjaxRequestAttributes getAttributes()
 	{
-		return new AjaxRequestAttributesImpl();
+		return new AjaxRequestAttributes();
 	}
 	
 	@Override
