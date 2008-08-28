@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajaxng.AjaxRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
@@ -223,9 +224,10 @@ public class WebResponse extends Response
 						 */
 						httpServletResponse.addHeader("Ajax-Location", url);
 
+						AjaxRequestTarget.sendRedirect(this, url);
 						// safari chokes on empty response. but perhaps this is
 						// not the best place?
-						httpServletResponse.getWriter().write(" ");
+						//httpServletResponse.getWriter().write(" ");
 					}
 					else
 					{

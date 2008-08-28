@@ -1884,8 +1884,19 @@ YUI().use('*', function(Y) {
 			}
 		},
 		
+		processRedirect: function(url)
+		{
+			window.location = url;
+		},
+		
 		processResponse: function(response)
 		{
+			if (L.isString(response.redirect))
+			{
+				this.processRedirect(response.redirect);
+				this.success();
+			}
+			
 			var steps = new Array();
 		
 			this.processJavascripts(response.prependJavascript, steps);
@@ -1918,7 +1929,10 @@ YUI().use('*', function(Y) {
 				var response = eval(responseText);
 				log.debug("RequestQueue", "Response parsed: ", response);
 								
-				this.processResponse(response);
+				if (L.isObject(response))
+				{
+					this.processResponse(response);
+				}
 			} 
 			catch (exception) 
 			{

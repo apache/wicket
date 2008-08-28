@@ -64,8 +64,7 @@ import org.slf4j.LoggerFactory;
  * it is desirable to link component update with some javascript effects.
  * <p>
  * The target provides a listener interface {@link IListener} that can be used to add code that
- * responds to various target events by adding listeners via
- * {@link #addListener(IListener)} 
+ * responds to various target events by adding listeners via {@link #addListener(IListener)}
  * 
  * @since 1.2
  * 
@@ -148,8 +147,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final List<IListener> listeners = new ArrayList<IListener>();
 
 	private static final Logger log = LoggerFactory.getLogger(AjaxRequestTarget.class);
-
-	private String redirect = null;
 
 	// whether a header contribution is being rendered
 	private boolean headerRendering = false;
@@ -429,8 +426,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param entry
 	 *            component entry to be rendered
 	 * 
-	 * @return <code>true</code> if the component was added, <code>false</code> if the
-	 *          component or some of it's parents is already in the list
+	 * @return <code>true</code> if the component was added, <code>false</code> if the component
+	 *         or some of it's parents is already in the list
 	 */
 	public boolean addComponent(ComponentEntry entry)
 	{
@@ -470,8 +467,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param component
 	 *            component to be rendered
 	 * 
-	 * @return <code>true</code> if the component was added, <code>false</code> if the
-	 *          component or some of it's parents is already in the list
+	 * @return <code>true</code> if the component was added, <code>false</code> if the component
+	 *         or some of it's parents is already in the list
 	 */
 
 	public boolean addComponent(Component component)
@@ -910,16 +907,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		return stringResponse.toString();
 	}
 
-	/**
-	 * 
-	 * @param redirect
-	 */
-	public void setRedirect(String redirect)
-	{
-		// TODO: Implement redirect
-		this.redirect = redirect;
-	}
-
 	private void prepareRender()
 	{
 		for (Iterator<ComponentEntry> i = entries.iterator(); i.hasNext();)
@@ -1010,49 +997,42 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		JSONObject response = new JSONObject();
 
-		if (redirect != null)
+		JSONArray components = new JSONArray();
+		response.put("components", components);
+
+		if (!entries.isEmpty())
 		{
-			response.put("redirect", redirect);
+			prepareRender();
+
+			response.put("header", respondHeaderContribution());
+
+			for (ComponentEntry entry : entries)
+			{
+				components.put(renderComponentEntry(entry));
+			}
 		}
-		else
+
+		fireOnAfterRespondListeners(entries);
+
+		JSONArray prependJavascripts = new JSONArray();
+		response.put("prependJavascript", prependJavascripts);
+
+		for (JavascriptEntry e : this.prependJavascripts)
 		{
-			JSONArray components = new JSONArray();
-			response.put("components", components);
+			prependJavascripts.put(renderJavascriptEntry(e));
+		}
 
-			if (!entries.isEmpty())
-			{
-				prepareRender();
+		JSONArray appendJavascripts = new JSONArray();
+		response.put("appendJavascript", appendJavascripts);
 
-				response.put("header", respondHeaderContribution());
+		for (JavascriptEntry e : this.domReadyJavascripts)
+		{
+			appendJavascripts.put(renderJavascriptEntry(e));
+		}
 
-				for (ComponentEntry entry : entries)
-				{
-					components.put(renderComponentEntry(entry));
-				}
-			}
-
-			fireOnAfterRespondListeners(entries);
-
-			JSONArray prependJavascripts = new JSONArray();
-			response.put("prependJavascript", prependJavascripts);
-
-			for (JavascriptEntry e : this.prependJavascripts)
-			{
-				prependJavascripts.put(renderJavascriptEntry(e));
-			}
-
-			JSONArray appendJavascripts = new JSONArray();
-			response.put("appendJavascript", appendJavascripts);
-
-			for (JavascriptEntry e : this.domReadyJavascripts)
-			{
-				appendJavascripts.put(renderJavascriptEntry(e));
-			}
-
-			for (JavascriptEntry e : this.appendJavascripts)
-			{
-				appendJavascripts.put(renderJavascriptEntry(e));
-			}
+		for (JavascriptEntry e : this.appendJavascripts)
+		{
+			appendJavascripts.put(renderJavascriptEntry(e));
 		}
 
 		WebResponse webResponse = (WebResponse)requestCycle.getResponse();
@@ -1061,6 +1041,29 @@ public class AjaxRequestTarget implements IRequestTarget
 		webResponse.write("if (false) (");
 		webResponse.write(response.toString());
 		webResponse.write(")");
+	}
+
+	/**
+	 * Renders a redirect response to the response object. This is used to send the redirect to
+	 * client outside {@link AjaxRequestTarget#respond(RequestCycle)}.
+	 * 
+	 * @param response
+	 * @param url
+	 */
+	public static void sendRedirect(WebResponse response, String url)
+	{
+		JSONObject object = new JSONObject();
+		object.put("redirect", url);
+		try
+		{
+			response.getHttpServletResponse().getWriter().write("if (false) (");
+			response.getHttpServletResponse().getWriter().write(object.toString());
+			response.getHttpServletResponse().getWriter().write(")");
+		}
+		catch (Exception e)
+		{
+			log.error("Error sending redirect", e);
+		}
 	}
 
 	private void prepareResponse(WebResponse response)
