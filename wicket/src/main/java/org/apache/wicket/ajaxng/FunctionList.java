@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajaxng;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,4 +45,57 @@ public class FunctionList extends ChainingList<Object>
 		super(list);
 	}
 
+	@Override
+	public FunctionList add(int index, Object element)
+	{
+		return (FunctionList)super.add(index, element);
+	}
+
+	@Override
+	public FunctionList add(Object o)
+	{
+		return (FunctionList)super.add(o);
+	}
+
+	@Override
+	public FunctionList addAll(Collection<? extends Object> c)
+	{
+		return (FunctionList)super.addAll(c);
+	}
+
+	@Override
+	public FunctionList addAll(int index, Collection<? extends Object> c)
+	{
+		return (FunctionList)super.addAll(index, c);
+	}
+
+	@Override
+	public FunctionList clear()
+	{
+		return (FunctionList)super.clear();
+	}
+
+	@Override
+	public FunctionList remove(int index)
+	{
+		return (FunctionList)super.remove(index);
+	}
+
+	@Override
+	public FunctionList remove(Object o)
+	{
+		return (FunctionList)super.remove(o);
+	}
+
+	@Override
+	public FunctionList removeAll(Collection<?> c)
+	{
+		return (FunctionList)super.removeAll(c);
+	}
+
+	@Override
+	public FunctionList set(int index, Object element)
+	{
+		return (FunctionList)super.set(index, element);
+	}
 }
