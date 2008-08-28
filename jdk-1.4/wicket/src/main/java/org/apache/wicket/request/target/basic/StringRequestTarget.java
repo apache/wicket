@@ -17,6 +17,7 @@
 package org.apache.wicket.request.target.basic;
 
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
@@ -40,16 +41,22 @@ public class StringRequestTarget implements IRequestTarget
 	/** content type for the string */
 	private final String contentType;
 
+	/** charset of the string */
+	private final Charset charset;
+
+
 	/**
-	 * Constructor
+	 * Creates a string request target with content type <code>text/plain</code> and default charset
+	 * (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response
 	 */
 	public StringRequestTarget(String string)
 	{
-		this("text/plain", string);
+		this("text/plain", Charset.defaultCharset(), string);
 	}
+
 
 	/**
 	 * Constructor
@@ -57,10 +64,12 @@ public class StringRequestTarget implements IRequestTarget
 	 * @param contentType
 	 *            content type of the data the string represents eg
 	 *            <code>text/html; charset=utf-8</code>
+	 * @param charset
+	 *            charset to use
 	 * @param string
 	 *            string for the response
 	 */
-	public StringRequestTarget(String contentType, String string)
+	public StringRequestTarget(String contentType, Charset charset, String string)
 	{
 		if (string == null)
 		{
@@ -70,8 +79,13 @@ public class StringRequestTarget implements IRequestTarget
 		{
 			throw new IllegalArgumentException("Argument contentType must not be null or empty");
 		}
+		if (charset == null)
+		{
+			throw new IllegalArgumentException("Argument charset must not be null");
+		}
 		this.contentType = contentType;
 		this.string = string;
+		this.charset = charset;
 	}
 
 
@@ -86,6 +100,7 @@ public class StringRequestTarget implements IRequestTarget
 		final Response response = requestCycle.getResponse();
 		response.setContentType(contentType);
 		final StringBufferResourceStream stream = new StringBufferResourceStream(contentType);
+		stream.setCharset(charset);
 		stream.append(string);
 
 		// Respond with resource
