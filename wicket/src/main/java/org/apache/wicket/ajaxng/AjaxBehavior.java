@@ -77,6 +77,9 @@ public abstract class AjaxBehavior implements IBehavior
 	private final static ResourceReference AJAX_NG = new JavascriptResourceReference(
 		AjaxBehavior.class, "js/wicket-ajax-ng.js");
 
+	private final static ResourceReference YUI_COMBO = new JavascriptResourceReference(
+		AjaxBehavior.class, "js/yui-combo.js");
+	
 	/**
 	 * Wicket javascript namespace.
 	 */
@@ -84,6 +87,8 @@ public abstract class AjaxBehavior implements IBehavior
 
 	public void renderHead(Component component, IHeaderResponse response)
 	{
+				
+		/*
 		response.renderJavascriptReference(YUI_BASE);
 		response.renderJavascriptReference(YUI_OOP);
 		response.renderJavascriptReference(YUI_EVENT);
@@ -91,7 +96,9 @@ public abstract class AjaxBehavior implements IBehavior
 		response.renderJavascriptReference(YUI_NODE);
 		response.renderJavascriptReference(YUI_IO);
 		response.renderJavascriptReference(YUI_GET);
-		response.renderJavascriptReference(AJAX_NG);
+		*/
+		response.renderJavascriptReference(YUI_COMBO);
+		response.renderJavascriptReference(AJAX_NG);		
 
 		CharSequence prefix = RequestCycle.get().urlFor(AjaxRequestTarget.DUMMY);
 
@@ -241,14 +248,21 @@ public abstract class AjaxBehavior implements IBehavior
 		{
 			if (list.size() == 1)
 			{
-				target.put(attributeName, new JSONFunction(list.get(0)));
+				Object function = list.get(0);
+				if (function != null)
+				{
+					target.put(attributeName, new JSONFunction(function.toString()));
+				}
 			}
 			else
 			{
 				JSONArray a = new JSONArray();
-				for (String s : list)
+				for (Object o : list)
 				{
-					a.put(new JSONFunction(s));
+					if (o != null)
+					{
+						a.put(new JSONFunction(o.toString()));
+					}
 				}
 				target.put(attributeName, a);
 			}
@@ -316,6 +330,25 @@ public abstract class AjaxBehavior implements IBehavior
 	{
 	}
 
+	/**
+	 * Utility function to decorate javascript.
+	 * 
+	 * @param script
+	 * @return decorated javacsript
+	 */
+	public CharSequence decorateScript(CharSequence script)
+	{
+		ChainingList<ExpressionDecorator> decoratorList = getAttributes().getExpressionDecorators();
+		if (decoratorList != null)
+		{
+			for (ExpressionDecorator d : decoratorList)
+			{
+				script = d.decoreateExpression(script);
+			}
+		}
+		return script;
+	}
+	
 	/**
 	 * Returns attributes for Ajax Request.
 	 * 

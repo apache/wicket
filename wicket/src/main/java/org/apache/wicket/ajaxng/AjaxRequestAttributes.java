@@ -500,6 +500,32 @@ public class AjaxRequestAttributes
 	}
 
 	/**
+	 * Certain behaviors support decorating the javascript expression they generate with
+	 * {@link ExpressionDecorator}s.
+	 * <p>
+	 * This usually decorates the javascript expression that is responsible for creating
+	 * <code>RequestQueueItem</code> and adding it to the queue. The decorator may be useful to
+	 * intercept the <code>RequestQueueItem</code> creation on in the earliest possible time.
+	 * <p>
+	 * Note that not all Ajax behaviors are required to support decorating the expression.
+	 * 
+	 * @return list of {@link ExpressionDecorator} .
+	 */
+	public ChainingList<ExpressionDecorator> getExpressionDecorators()
+	{
+		ChainingList<ExpressionDecorator> result = null;
+		if (delegate != null)
+		{
+			result = delegate.getExpressionDecorators();
+		}
+		if (result == null)
+		{
+			result = new ChainingList<ExpressionDecorator>();
+		}
+		return result;
+	}
+
+	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
 	 * {@link #allowDefault()} returns <code>false</code> (which is default value), the link's URL
@@ -513,7 +539,7 @@ public class AjaxRequestAttributes
 	{
 		if (delegate != null)
 		{
-			return delegate.allowDefault();			
+			return delegate.allowDefault();
 		}
 		else
 		{

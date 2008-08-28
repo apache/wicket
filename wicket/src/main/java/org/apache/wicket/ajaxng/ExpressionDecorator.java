@@ -16,32 +16,18 @@
  */
 package org.apache.wicket.ajaxng;
 
-import java.util.List;
-
 /**
- * Chaining list of javascript functions. Function can by any object that renders a javascript
- * function (in the form of "function(arg, ...) { ... }") on {@link #toString()}.
+ * Decorator of an expression.
  * 
  * @author Matej Knopp
  */
-public class FunctionList extends ChainingList<Object>
+public interface ExpressionDecorator
 {
 	/**
-	 * Construct.
+	 * Decorate the given expression (possibly prepending/appending it with another expression).
+	 * 
+	 * @param expression
+	 * @return decorated expression
 	 */
-	public FunctionList()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-
-	 * @param list
-	 */
-	public FunctionList(List<Object> list)
-	{
-		super(list);
-	}
-
+	public CharSequence decoreateExpression(CharSequence expression);
 }
