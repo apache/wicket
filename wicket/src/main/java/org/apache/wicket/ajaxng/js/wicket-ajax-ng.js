@@ -205,7 +205,7 @@ YUI().use('*', function(Y) {
 	
 	var logger = DummyLogger;		
 	
-	if (typeof(console) !== "undefined" && L.isFunction(console.log) && logger === DummyLogger)
+	if (!UA.webkit && typeof(window.console) !== "undefined" && L.isFunction(console.log) && logger === DummyLogger)
 	{		
 		logger = FirebugLogger;
 		
@@ -1376,6 +1376,9 @@ YUI().use('*', function(Y) {
 	 *                                        negative impact on error detection.
 	 *                                        (doesn't work with current YUI 3 PR1 release)
 	 *                                         
+     *   fp, forcePost           - Boolean    Optional. Whether the request should be post even if no form
+     *                                        is specified. Defaults to false.
+     *                                        
 	 *   rt, requestTimeout       - Integer   Timeout in milliseconds for the AJAX request. This only 
 	 *                                        involves the actual communication and not the processing 
 	 *                                        afterwards. Can be null in which case the default request
@@ -1449,18 +1452,19 @@ YUI().use('*', function(Y) {
 	 *                                        argument. If possible error message will be second argument 
 	 *                                        passed to the handlers. 
 	 *                                        	                                         
-     *   u, urlArguments        - Object      Optional. Map that contains additional URL arguments. These 
+     *   u, urlArguments         - Object     Optional. Map that contains additional URL arguments. These 
      *                                        will be appended to the URL. This is simpler alternative to 
      *                                        urlArgumentMethods.
      *                                        
-     *   ua, urlArgumentMethods - Method(s)   Optional. Method or array of methods that produce additional 
+     *   ua, urlArgumentMethods  - Method(s)  Optional. Method or array of methods that produce additional 
      *                                        URL arguments. Each of the methods will get this 
      *                                        RequestQueueItem passed and must return a 
      *                                        Map<String, String> (Object).
      *                                        
-     *   rqi, requestQueueItem  - Method(s)   Optional. Method or array of methods that will be invoked
+     *   rqi, requestQueueItem   - Method(s)  Optional. Method or array of methods that will be invoked
      *                                        after the RequestQueueItem instance is created. The methods 
      *                                        will get the request queue instance passed as first argument.
+     *                                        
 	 */
 	var RequestQueueItem = function(attributes)
 	{
@@ -1495,6 +1499,7 @@ YUI().use('*', function(Y) {
 			component:            a.component          || a.c    || null,
 			formId:               a.formId             || a.f    || null,
 			multipart:          b(a.multipart          || a.m),
+			forcePost:          b(a.forcePost          || a.fp),
 			requestTimeout:       a.requestTimeout     || a.rt   || gs.defaultRequestTimeout,
 			processingTimeout:    a.processingTimeout  || a.pt   || gs.defaultProcessingTimeout,
 			pageId:               a.pageId             || a.p    || gs.defaultPageId,
@@ -1685,54 +1690,7 @@ YUI().use('*', function(Y) {
 				this.next = null;
 			}
 		},
-		
-		defaultUrlParameters: function()
-		{
-			var a = this.attributes;
-			var componentId = (a.component == null) ? null : (W.$(a.component).getAttribute("id"));
-			var res = {};
-			var gs = W.ajax.globalSettings;
-			res[gs.urlParamComponentId] = componentId;
-			res[gs.urlParamPageId] = a.pageId;
-			res[gs.urlParamFormId] = a.formId;
-			res[gs.urlParamListenerInterface] = a.listenerInterface;
-			res[gs.urlParamBehaviorIndex] = a.behaviorIndex;
-			return res;
-		},
-		
-		buildUrl: function() 
-		{
-			var url = W.ajax.globalSettings.urlPrefix;
-			var a = this.attributes;
-			
-			var params = new Object();
-			
-			if (a.urlArguments != null)
-			{				
-				appendMap(params, a.urlArguments);
-			}
-			for (var i = 0; i < a.urlArgumentMethods.length; ++i)
-			{
-				var m = a.urlArgumentMethods[i](this);
-				if (L.isObject(m))
-				{
-					appendMap(params, m);
-				}
-			}
-			
-			appendMap(params, this.defaultUrlParameters());
-			
-			var paramsString = mapToUrlParameters(params); 
-			
-			if (paramsString.length > 0)
-			{
-				url += "?";
-				url += paramsString;
-			}
-			
-			return url;
-		},
-		
+				
 		parseHeaderContribution: function(header)
 		{
 			var s = "<head>" + header + "</head>";
@@ -1976,14 +1934,78 @@ YUI().use('*', function(Y) {
 			this.failure();
 		},
 		
-		getRequestCfg: function(url) 
+		defaultUrlParameters: function()
 		{
 			var a = this.attributes;
+			var componentId = (a.component == null) ? null : (W.$(a.component).getAttribute("id"));
+			var res = {};
+			var gs = W.ajax.globalSettings;
+			res[gs.urlParamComponentId] = componentId;
+			res[gs.urlParamPageId] = a.pageId;
+			res[gs.urlParamFormId] = a.formId;
+			res[gs.urlParamListenerInterface] = a.listenerInterface;
+			res[gs.urlParamBehaviorIndex] = a.behaviorIndex;
+			return res;
+		},
+		
+		buildUrl: function()
+		{
+			var url = W.ajax.globalSettings.urlPrefix;
+			var stamp = "" + (reqCount ++) + (Math.ceil(Math.random() * 10000));
+			if (url.indexOf("?") == -1)
+			{
+				url += "?";
+			}
+			else
+			{
+				url += "&";
+			}
+			url += W.ajax.globalSettings.urlParamTimestamp;
+			url += "=";
+			url += stamp;			
+			return url;
+		},
+		
+		buildUrlParameters: function() 
+		{			
+			var a = this.attributes;
+			
+			var params = new Object();
+			
+			if (a.urlArguments != null)
+			{				
+				appendMap(params, a.urlArguments);
+			}
+			for (var i = 0; i < a.urlArgumentMethods.length; ++i)
+			{
+				var m = a.urlArgumentMethods[i](this);
+				if (L.isObject(m))
+				{
+					appendMap(params, m);
+				}
+			}
+			
+			appendMap(params, this.defaultUrlParameters());
+			
+			return mapToUrlParameters(params); 			
+		},
+		
+		getRequestCfg: function(urlParameters) 
+		{
+			var a = this.attributes;
+			
 			var m = a.formId != null ? "POST" : "GET";
+			
+			if (m == "GET" && a.forcePost == true)
+			{
+				m = "POST";
+			}			
+			
 			var f = a.formId != null ? { id:a.formId } : null;
 			var res = 
 			{
 				method: m,
+				data: urlParameters,
 				on: 
 				{
 					success: bind(this.onSuccess, this),
@@ -2001,8 +2023,9 @@ YUI().use('*', function(Y) {
 			this.invokeBeforeHandlers();			
 			this.next = next;
 
+			var urlParameters = this.buildUrlParameters();
 			var url = this.buildUrl();
-			var cfg = this.getRequestCfg(url);
+			var cfg = this.getRequestCfg(urlParameters);
 			
 			log.info("RequestQueue", "Initiating AJAX Request on ", url, " with configuration ", cfg);
 			
@@ -2175,9 +2198,7 @@ YUI().use('*', function(Y) {
 	
 	var defaultArgumentMethod = function(item)
 	{
-		var stamp = "" + (reqCount ++) + (Math.ceil(Math.random() * 10000));
 		var res = {};
-		res[W.ajax.globalSettings.urlParamTimestamp] = stamp;			
 		res[W.ajax.globalSettings.urlParamUrlDepth] = W.ajax.globalSettings.urlDepthValue;
 		res["wicket:ajax"] = true;
 		return res; 

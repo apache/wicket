@@ -59,14 +59,14 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 		js.append("',");
 		js.append(renderAttributes(component));
 		
-		boolean allowDefault = getAttributes().allowDefault(); 
+		boolean allowDefault = getAttributes().isAllowDefault(); 
 		if (allowDefault)
 		{
 			js.append("," + allowDefault);
 		}
-		js.append(")");
+		js.append(")");				
 
-		response.renderOnDomReadyJavascript(js.toString());
+		response.renderOnDomReadyJavascript(decorateScript(js).toString());
 	}
 	
 }

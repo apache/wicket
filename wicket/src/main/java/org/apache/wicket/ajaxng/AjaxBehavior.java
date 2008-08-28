@@ -269,6 +269,18 @@ public abstract class AjaxBehavior implements IBehavior
 		}
 	}
 
+	private Object renderBoolean(Boolean b)
+	{
+		if (b != null && b == true)
+		{
+			return 1;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	private void renderAttributes(Component component, AjaxRequestAttributes attributes,
 		JSONObject o)
 	{
@@ -276,13 +288,14 @@ public abstract class AjaxBehavior implements IBehavior
 		{
 			o.put("f", attributes.getForm().getMarkupId());
 		}
-		o.put("m", attributes.isMultipart());
+		o.put("m", renderBoolean(attributes.isMultipart()));
+		o.put("fp", renderBoolean(attributes.isForcePost()));
 		o.put("rt", attributes.getRequesTimeout());
 		o.put("pt", attributes.getProcessingTimeout());
 		o.put("t", attributes.getToken());
-		o.put("r", attributes.isRemovePrevious());
+		o.put("r", renderBoolean(attributes.isRemovePrevious()));
 		o.put("th", attributes.getThrottle());
-		o.put("thp", attributes.isThrottlePostpone());
+		o.put("thp", renderBoolean(attributes.isThrottlePostpone()));
 
 		renderFunctionList(o, "pr", attributes.getPreconditions());
 		renderFunctionList(o, "be", attributes.getBeforeHandlers());

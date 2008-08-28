@@ -126,13 +126,35 @@ public class AjaxRequestAttributes
 	 * Note that for multipart AJAX requests a hidden IFRAME will be used and that can have negative
 	 * impact on error detection.
 	 * 
-	 * @return <code>true</code> if the form submit should be multipart, false otherwise
+	 * @return <code>true</code> if the form submit should be multipart, <code>false</code>
+	 *         otherwise
 	 */
 	public Boolean isMultipart()
 	{
 		if (delegate != null)
 		{
 			return delegate.isMultipart();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Returns whether the Ajax request should be a <code>POST</code> regardless of whether a form
+	 * is being submitted.
+	 * <p> 
+	 * For a <code>POST</code>request all URL arguments are submitted as body. This can be useful
+	 * if the URL parameters are longer than maximal URL length.
+	 * 
+	 * @return <code>true</code> if the request should be post, <code>false</code> otherwise.
+	 */
+	public Boolean isForcePost()
+	{
+		if (delegate != null)
+		{
+			return delegate.isForcePost();
 		}
 		else
 		{
@@ -528,18 +550,18 @@ public class AjaxRequestAttributes
 	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #allowDefault()} returns <code>false</code> (which is default value), the link's URL
-	 * will not be followed. If {@link #allowDefault()} returns <code>true</code>, the link URL
-	 * will be loaded (and the onclick handler fired if there is any).
+	 * {@link #isAllowDefault()} returns <code>false</code> (which is default value), the link's
+	 * URL will not be followed. If {@link #isAllowDefault()} returns <code>true</code>, the link
+	 * URL will be loaded (and the onclick handler fired if there is any).
 	 * 
 	 * @return <code>true</code> if the default event handler should be invoked,
 	 *         <code>false</code> otherwise.
 	 */
-	public boolean allowDefault()
+	public boolean isAllowDefault()
 	{
 		if (delegate != null)
 		{
-			return delegate.allowDefault();
+			return delegate.isAllowDefault();
 		}
 		else
 		{
