@@ -19,6 +19,7 @@ package org.apache.wicket.request.target.basic;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -54,9 +55,8 @@ public class StringRequestTarget implements IRequestTarget
 	 */
 	public StringRequestTarget(String string)
 	{
-		this("text/plain", Charset.defaultCharset(), string);
+		this("text/plain", getDefaultCharset(), string);
 	}
-
 
 	/**
 	 * Constructor
@@ -86,6 +86,20 @@ public class StringRequestTarget implements IRequestTarget
 		this.contentType = contentType;
 		this.string = string;
 		this.charset = charset;
+	}
+
+	/**
+	 * Retrieves default charset configured in application
+	 * 
+	 * @return charset
+	 */
+	private static Charset getDefaultCharset()
+	{
+		final String charsetName = Application.get()
+			.getRequestCycleSettings()
+			.getResponseRequestEncoding();
+
+		return Charset.forName(charsetName);
 	}
 
 
