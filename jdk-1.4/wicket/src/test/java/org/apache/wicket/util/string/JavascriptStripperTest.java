@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 /**
  * Tests {@link JavascriptStripper}
- * 
+ *
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class JavascriptStripperTest extends TestCase
@@ -69,5 +69,23 @@ public class JavascriptStripperTest extends TestCase
 		String expected = " attr:   /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/\nafter\nregex";
 		assertEquals(expected, after);
 		System.out.println(after);
+	}
+
+	public void testWICKET1806()
+	{
+		String before = "accepts: {\n" //
+			+ "xml: \"application/xml, text/xml\",\n" //
+			+ "html: \"text/html\",\n" + "script: \"text/javascript, application/javascript\",\n" //
+			+ "json: \"application/json, text/javascript\",\n" + "text: \"text/plain\",\n" //
+			+ "_default: \"*/*\"\n" + "} /* COMMENT THAT SHOULD BE REMOVED! */"; //
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		
+		String expected = "accepts: {\n" //
+			+ "xml: \"application/xml, text/xml\",\n" //
+			+ "html: \"text/html\",\n" + "script: \"text/javascript, application/javascript\",\n" //
+			+ "json: \"application/json, text/javascript\",\n" + "text: \"text/plain\",\n" //
+			+ "_default: \"*/*\"\n" + "} "; //
+		
+		assertEquals(expected, after);
 	}
 }
