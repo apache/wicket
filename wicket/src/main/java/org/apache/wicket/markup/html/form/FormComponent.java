@@ -318,7 +318,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @author ivaynberg
 	 */
-	private class ValidatableAdapter implements IValidatable
+	private class ValidatableAdapter implements IValidatable<T>
 	{
 
 		/**
@@ -332,7 +332,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		/**
 		 * @see org.apache.wicket.validation.IValidatable#getValue()
 		 */
-		public Object getValue()
+		public T getValue()
 		{
 			return getConvertedInput();
 		}
@@ -483,14 +483,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IValidator
 	 * @see IValidatorAddListener
 	 */
-	public final FormComponent<?> add(final IValidator... validators)
+	public final FormComponent<T> add(final IValidator<T>... validators)
 	{
 		if (validators == null)
 		{
 			throw new IllegalArgumentException("validator argument cannot be null");
 		}
 
-		for (IValidator validator : validators)
+		for (IValidator<T> validator : validators)
 		{
 			if (validator == null)
 			{
@@ -782,7 +782,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return List of validators
 	 */
-	public final List<IValidator> getValidators()
+	public final List<IValidator<T>> getValidators()
 	{
 		final int size = validators_size();
 		if (size == 0)
@@ -791,7 +791,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			final List<IValidator> list = new ArrayList<IValidator>(size);
+			final List<IValidator<T>> list = new ArrayList<IValidator<T>>(size);
 			for (int i = 0; i < size; i++)
 			{
 				list.add(validators_get(i));
@@ -1126,7 +1126,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The validator to add to the validators Object (which may be an array of
 	 *            IValidators or a single instance, for efficiency)
 	 */
-	private void validators_add(final IValidator validator)
+	private void validators_add(final IValidator<T> validator)
 	{
 		if (validators == null)
 		{
@@ -1138,7 +1138,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			final int size = validators_size();
 
 			// Create array that holds size + 1 elements
-			final IValidator[] validators = new IValidator[size + 1];
+			final IValidator<T>[] validators = new IValidator[size + 1];
 
 			// Loop through existing validators copying them
 			for (int i = 0; i < size; i++)
@@ -1162,7 +1162,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The index of the validator to get
 	 * @return The validator
 	 */
-	private IValidator validators_get(int index)
+	private IValidator<T> validators_get(int index)
 	{
 		if (validators == null)
 		{
@@ -1172,7 +1172,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			return ((IValidator[])validators)[index];
 		}
-		return (IValidator)validators;
+		return (IValidator<T>)validators;
 	}
 
 	/**
@@ -1495,10 +1495,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		final int size = validators_size();
 
-		final IValidatable validatable = new ValidatableAdapter();
+		final IValidatable<T> validatable = new ValidatableAdapter();
 
 		int i = 0;
-		IValidator validator = null;
+		IValidator<T> validator = null;
 
 		boolean isNull = getConvertedInput() == null;
 

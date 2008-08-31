@@ -23,14 +23,14 @@ package org.apache.wicket.validation;
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public interface IValidatable
+public interface IValidatable<T>
 {
 	/**
 	 * Retrieves the value to be validated.
 	 * 
 	 * @return the value to be validated
 	 */
-	Object getValue();
+	T getValue();
 
 	/**
 	 * Reports an error against this <code>IValidatable</code>'s value. Multiple errors can be
@@ -46,8 +46,7 @@ public interface IValidatable
 	 * <code>IValidatable</code>s should assume they are valid until
 	 * {@link #error(IValidationError)} is called.
 	 * 
-	 * @return <code>true</code> if the object is in a valid state, <code>false</code> if
-	 *         otherwise
+	 * @return <code>true</code> if the object is in a valid state, <code>false</code> if otherwise
 	 */
 	boolean isValid();
 }
