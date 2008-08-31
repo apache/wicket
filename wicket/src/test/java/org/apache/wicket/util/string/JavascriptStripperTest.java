@@ -70,4 +70,13 @@ public class JavascriptStripperTest extends TestCase
 		assertEquals(expected, after);
 		System.out.println(after);
 	}
+	
+	public void testWICKET1806()
+	{
+		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		String expected = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];\nb()";
+		
+		assertEquals(expected, after);
+	}
 }
