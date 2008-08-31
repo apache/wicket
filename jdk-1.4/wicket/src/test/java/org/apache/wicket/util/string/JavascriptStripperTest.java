@@ -73,18 +73,9 @@ public class JavascriptStripperTest extends TestCase
 
 	public void testWICKET1806()
 	{
-		String before = "accepts: {\n" //
-			+ "xml: \"application/xml, text/xml\",\n" //
-			+ "html: \"text/html\",\n" + "script: \"text/javascript, application/javascript\",\n" //
-			+ "json: \"application/json, text/javascript\",\n" + "text: \"text/plain\",\n" //
-			+ "_default: \"*/*\"\n" + "} /* COMMENT THAT SHOULD BE REMOVED! */"; //
+		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
 		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
-		
-		String expected = "accepts: {\n" //
-			+ "xml: \"application/xml, text/xml\",\n" //
-			+ "html: \"text/html\",\n" + "script: \"text/javascript, application/javascript\",\n" //
-			+ "json: \"application/json, text/javascript\",\n" + "text: \"text/plain\",\n" //
-			+ "_default: \"*/*\"\n" + "} "; //
+		String expected = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];\nb()";
 		
 		assertEquals(expected, after);
 	}
