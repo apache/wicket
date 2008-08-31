@@ -435,7 +435,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
-				final String idAttr = getInputName() + "_" + id;
+				final String idAttr = getMarkupId() + "_" + id;
 
 				// Add radio tag
 				buffer.append("<input name=\"")
