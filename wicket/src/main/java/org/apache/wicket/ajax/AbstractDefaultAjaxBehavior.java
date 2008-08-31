@@ -159,8 +159,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param partialCall
 	 *            Javascript of a partial call to the function performing the actual ajax callback.
 	 *            Must be in format <code>function(params,</code> with signature
-	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example:
-	 *            <code>wicketAjaxGet('callbackurl'</code>
+	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example: <code>wicketAjaxGet('callbackurl'</code>
 	 * 
 	 * @return script that performs ajax callback to this behavior
 	 */
@@ -260,10 +259,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
+	 * Finds the markup id of the indicator. The default search order is: component, behavior,
+	 * component's parent hieararchy.
 	 * 
-	 * @return String
+	 * @return markup id or <code>null</code> if no indicator found
 	 */
-	private String findIndicatorId()
+	protected String findIndicatorId()
 	{
 		if (getComponent() instanceof IAjaxIndicatorAware)
 		{
