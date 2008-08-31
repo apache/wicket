@@ -297,7 +297,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 		// body.isVisible(false) needs a little extra work. We must skip the
 		// markup between <span wicket:id="myBorder"> and </span>
-		if (body.isVisible() == false)
+		if (isBodyVisible() == false)
 		{
 			originalMarkupStream.skipToMatchingCloseTag(openTag);
 		}
@@ -402,5 +402,25 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 			return false;
 		}
+	}
+
+	/**
+	 * Determines whether or not the border body is visible.
+	 * 
+	 * @return true if body of the border is visible, false otherwise
+	 */
+	private boolean isBodyVisible()
+	{
+		// in order to determine this we have to visit all components between the border and the
+		// body because border body can be embedded inside other containers.
+
+		boolean bodyVisible = true;
+		Component cursor = body;
+		while (cursor != this && bodyVisible)
+		{
+			bodyVisible = cursor.determineVisibility();
+			cursor = cursor.getParent();
+		}
+		return bodyVisible;
 	}
 }
