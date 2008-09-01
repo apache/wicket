@@ -567,5 +567,5 @@ public class AjaxRequestAttributes
 		{
 			return false;
 		}
-	}
+	}	
 }

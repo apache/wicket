@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 package org.apache.wicket.ajaxng;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -180,6 +179,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (!entries.isEmpty())
 		{
 			entries.iterator().next().getComponent().getPage().detach();
+		}
+		else
+		{
+			page.detach();
 		}
 	}
 
@@ -1081,6 +1084,26 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 		response.setHeader("Cache-Control", "no-cache, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
+	}
+
+	/**
+	 * Static method that returns current {@link AjaxRequestTarget} or <code>null</code> of no
+	 * {@link AjaxRequestTarget} is available.
+	 * 
+	 * @return {@link AjaxRequestTarget} instance if current request is an Ajax request,
+	 *         <code>null</code> otherwise.
+	 */
+	public static AjaxRequestTarget get()
+	{
+		final RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			if (requestCycle.getRequestTarget() instanceof AjaxRequestTarget)
+			{
+				return (AjaxRequestTarget)requestCycle.getRequestTarget();
+			}
+		}
+		return null;
 	}
 
 	/**

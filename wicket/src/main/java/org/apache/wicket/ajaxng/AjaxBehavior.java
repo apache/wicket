@@ -79,7 +79,7 @@ public abstract class AjaxBehavior implements IBehavior
 
 	private final static ResourceReference YUI_COMBO = new JavascriptResourceReference(
 		AjaxBehavior.class, "js/yui-combo.js");
-	
+
 	/**
 	 * Wicket javascript namespace.
 	 */
@@ -87,27 +87,26 @@ public abstract class AjaxBehavior implements IBehavior
 
 	public void renderHead(Component component, IHeaderResponse response)
 	{
-				
+
 		/*
-		response.renderJavascriptReference(YUI_BASE);
-		response.renderJavascriptReference(YUI_OOP);
-		response.renderJavascriptReference(YUI_EVENT);
-		response.renderJavascriptReference(YUI_DOM);
-		response.renderJavascriptReference(YUI_NODE);
-		response.renderJavascriptReference(YUI_IO);
-		response.renderJavascriptReference(YUI_GET);
-		*/
+		 * response.renderJavascriptReference(YUI_BASE);
+		 * response.renderJavascriptReference(YUI_OOP);
+		 * response.renderJavascriptReference(YUI_EVENT);
+		 * response.renderJavascriptReference(YUI_DOM);
+		 * response.renderJavascriptReference(YUI_NODE); response.renderJavascriptReference(YUI_IO);
+		 * response.renderJavascriptReference(YUI_GET);
+		 */
 		response.renderJavascriptReference(YUI_COMBO);
-		response.renderJavascriptReference(AJAX_NG);		
+		response.renderJavascriptReference(AJAX_NG);
 
 		CharSequence prefix = RequestCycle.get().urlFor(AjaxRequestTarget.DUMMY);
 
 		StringBuilder config = new StringBuilder();
-		
+
 		config.append("(function() {\n");
-		
+
 		config.append("var gs = " + WICKET_NS + ".ajax.globalSettings;\n");
-		
+
 		config.append("gs.urlPrefix='");
 		config.append(prefix);
 		config.append("';\n");
@@ -115,7 +114,7 @@ public abstract class AjaxBehavior implements IBehavior
 		config.append("gs.defaultPageId='");
 		config.append(getPageId(component.getPage()));
 		config.append("';\n");
-		
+
 		config.append("gs.urlParamComponentId='");
 		config.append(AjaxUrlCodingStrategy.PARAM_COMPONENT_ID);
 		config.append("';\n");
@@ -139,15 +138,15 @@ public abstract class AjaxBehavior implements IBehavior
 		config.append("gs.urlParamBehaviorIndex='");
 		config.append(AjaxUrlCodingStrategy.PARAM_BEHAVIOR_INDEX);
 		config.append("';\n");
-		
+
 		config.append("gs.urlParamUrlDepth='");
 		config.append(AjaxUrlCodingStrategy.PARAM_URL_DEPTH);
 		config.append("';\n");
-		
+
 		config.append("gs.urlDepthValue=");
 		config.append(getUrlDepth());
 		config.append(";\n");
-		
+
 		config.append("})();");
 
 		response.renderJavascript(config, WICKET_NS + "-Config");
@@ -172,7 +171,7 @@ public abstract class AjaxBehavior implements IBehavior
 			return -1;
 		}
 	}
-	
+
 	public void afterRender(Component component)
 	{
 	}
@@ -181,10 +180,20 @@ public abstract class AjaxBehavior implements IBehavior
 	{
 	}
 
+	protected boolean allowBindToMultipleComponents()
+	{
+		return true;
+	}
+
 	public void bind(Component component)
 	{
 		if (boundComponents.contains(component) == false)
 		{
+			if (!allowBindToMultipleComponents() && !boundComponents.isEmpty())
+			{
+				throw new IllegalStateException("Behavior '" + getClass().getName() +
+					" can only be bound to one component.");
+			}
 			boundComponents.add(component);
 			component.setOutputMarkupId(true);
 		}
@@ -221,6 +230,13 @@ public abstract class AjaxBehavior implements IBehavior
 		o.put("b", behaviorIndex);
 
 		renderAttributes(component, getAttributes(), o);
+
+		if (allowAjaxIndicator())
+		{
+			o.put("i", findIndicatorId(component));	
+		}		
+
+		postprocessConfiguration(o, component);
 
 		return o.toString();
 	}
@@ -280,7 +296,7 @@ public abstract class AjaxBehavior implements IBehavior
 			return null;
 		}
 	}
-	
+
 	private void renderAttributes(Component component, AjaxRequestAttributes attributes,
 		JSONObject o)
 	{
@@ -314,6 +330,11 @@ public abstract class AjaxBehavior implements IBehavior
 		}
 
 		renderFunctionList(o, "ua", attributes.getUrlArgumentMethods());
+	}
+
+	protected void postprocessConfiguration(JSONObject object, Component component)
+	{
+
 	}
 
 	public void detach(Component component)
@@ -361,7 +382,18 @@ public abstract class AjaxBehavior implements IBehavior
 		}
 		return script;
 	}
-	
+
+	/**
+	 * Creates {@link AjaxRequestAttributes} instance. If behavior needs to change the behaviors,
+	 * this is the method to override and wrap the attributes.
+	 * 
+	 * @return {@link AjaxRequestAttributes} instance.
+	 */
+	public AjaxRequestAttributes initAttributes()
+	{
+		return new AjaxRequestAttributes();
+	}
+
 	/**
 	 * Returns attributes for Ajax Request.
 	 * 
@@ -369,6 +401,48 @@ public abstract class AjaxBehavior implements IBehavior
 	 */
 	public AjaxRequestAttributes getAttributes()
 	{
-		return new AjaxRequestAttributes();
+		return initAttributes();
+	}
+
+	protected String getAjaxIndicatorMarkupId()
+	{
+		return null;
+	}
+
+	protected boolean allowAjaxIndicator()
+	{
+		return true;
+	}
+	
+	private String findIndicatorId(Component component)
+	{
+		String id = getAjaxIndicatorMarkupId();
+		if (id != null)
+		{
+			return id;
+		}
+		if (component instanceof IAjaxIndicatorAware)
+		{
+			id = ((IAjaxIndicatorAware)component).getAjaxIndicatorMarkupId();
+			if (id != null)
+			{
+				return id;
+			}
+		}
+
+		Component parent = component.getParent();
+		while (parent != null)
+		{
+			if (parent instanceof IAjaxIndicatorAware)
+			{
+				id = ((IAjaxIndicatorAware)parent).getAjaxIndicatorMarkupId();
+				if (id != null)
+				{
+					return id;
+				}
+			}
+			parent = parent.getParent();
+		}
+		return null;
 	}
 }

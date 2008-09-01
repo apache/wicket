@@ -1465,6 +1465,11 @@ YUI().use('*', function(Y) {
      *                                        after the RequestQueueItem instance is created. The methods 
      *                                        will get the request queue instance passed as first argument.
      *                                        
+     *   i, indicatorId          - String     Optional. Id of the indicator element. The element is assumed 
+     *                                        to have style="display:none" set. The style is removed on 
+     *                                        beginning of Ajax request and restored when request is 
+     *                                        processed.
+     *                                        
 	 */
 	var RequestQueueItem = function(attributes)
 	{
@@ -1515,7 +1520,8 @@ YUI().use('*', function(Y) {
 			errorHandlers:      m(a.errorHandlers      || a.e,   gs.errorHandlers),
 			urlArguments:         a.urlArguments       || a.u    || null,
 			urlArgumentMethods: m(a.urlArgumentMethods || a.ua,  gs.urlArgumentMethods),
-			requestQueueItem:   m(a.requestQueueItem   || a.rqi, gs.requestQueueItem)
+			requestQueueItem:   m(a.requestQueueItem   || a.rqi, gs.requestQueueItem),
+			indicatorId:          a.indicatorId        || a.i    || null
 		}
 		
 		log.trace("RequestQueue", "Creating New Item", this.attributes);				
@@ -2237,6 +2243,32 @@ YUI().use('*', function(Y) {
 		W.focusManager.restoreFocus();
 	}
 	
+	var showIndicator = function(requestQueueItem)
+	{
+		var a = requestQueueItem.attributes;
+		if (a.indicatorId != null)
+		{
+			var e = W.$(a.indicatorId);
+			if (e != null)
+			{
+				e.style.display="";
+			}
+		}
+	}
+	
+	var hideIndicator = function(requestQueueItem)
+	{
+		var a = requestQueueItem.attributes;
+		if (a.indicatorId != null)
+		{
+			var e = W.$(a.indicatorId);
+			if (e != null)
+			{
+				e.style.display="none";
+			}
+		}
+	}
+	
 	var globalSettings = 
 	{
 		defaultRequestTimeout: 60000,
@@ -2244,10 +2276,10 @@ YUI().use('*', function(Y) {
 		defaultPageId: -1,
 		defaultToken: null,
 		defaultRemovePrevious: false,
-		beforeHandlers: [],
+		beforeHandlers: [showIndicator],
 		preconditions: [],
-		successHandlers: [],
-		errorHandlers: [],
+		successHandlers: [hideIndicator],
+		errorHandlers: [hideIndicator],
 		urlPostProcessors: [],
 		urlArgumentMethods: [ defaultArgumentMethod ],
 		requestQueueItem: [],
@@ -2572,6 +2604,44 @@ YUI().use('*', function(Y) {
 		}
 		W.attachEventHandler(event, attributes, f);
 	}
+	
+	var TimerManager = function()
+	{
+		this.timers = {};
+	};
+	
+	TimerManager.prototype = 
+	{
+		setTimeout: function(duration, attributes)
+		{
+			var token = attributes.t;
+			if (token != null)
+			{
+				if (this.timers[token] == null)
+				{
+					var f = bind(function() 
+					{
+						this.timers[token] = null;
+						var item = new RequestQueueItem(attributes);
+						W.ajax.requestQueue.add(item);
+					}, this);
+					this.timers[token] = window.setTimeout(f, duration);
+				}
+			}
+		},
+		removeTimeout: function(attributes)
+		{
+			var token = attributes.t;
+			var t = this.timers[token];
+			if (t != null)
+			{
+				window.clearTimeout(t);
+				this.timers[token] = null;
+			}
+		},
+	}
+	
+	W.timerManager = new TimerManager();
 	
 	window.W = W;			
 	
