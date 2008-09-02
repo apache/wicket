@@ -265,7 +265,7 @@ public abstract class AjaxBehavior implements IBehavior
 	}
 
 
-	private void renderFunctionList(JSONObject target, String attributeName, FunctionList list)
+	private void renderFunctionList(JSONObject target, String attributeName, List<CharSequence> list)
 	{
 		if (list != null && !list.isEmpty())
 		{
@@ -391,7 +391,7 @@ public abstract class AjaxBehavior implements IBehavior
 	 */
 	public CharSequence decorateScript(CharSequence script, Component component)
 	{
-		ChainingList<ExpressionDecorator> decoratorList = getAttributes(component).getExpressionDecorators();
+		List<ExpressionDecorator> decoratorList = getAttributes(component).getExpressionDecorators();
 		if (decoratorList != null)
 		{
 			for (ExpressionDecorator d : decoratorList)

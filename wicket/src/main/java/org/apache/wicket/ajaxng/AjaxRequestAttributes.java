@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.ajaxng;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,14 +79,14 @@ public final class AjaxRequestAttributes
 	private boolean throttlePostpone = false;
 	private boolean allowDefault = false;
 
-	private FunctionList preconditions = null;
-	private FunctionList beforeHandlers = null;
-	private FunctionList successHandlers = null;
-	private FunctionList errorHandlers = null;
+	private List<CharSequence> preconditions = null;
+	private List<CharSequence> beforeHandlers = null;
+	private List<CharSequence> successHandlers = null;
+	private List<CharSequence> errorHandlers = null;
 	private Map<String, Object> urlArguments = null;
-	private FunctionList urlArgumentMethods = null;
-	private FunctionList requestQueueItemCreationListeners = null;
-	private ChainingList<ExpressionDecorator> expressionDecorators = null;
+	private List<CharSequence> urlArgumentMethods = null;
+	private List<CharSequence> requestQueueItemCreationListeners = null;
+	private List<ExpressionDecorator> expressionDecorators = null;
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -363,13 +365,13 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getPreconditions()
+	public List<CharSequence> getPreconditions()
 	{
 		if (preconditions == null)
 		{
-			preconditions = new FunctionList();
+			preconditions = new ArrayList<CharSequence>();
 		}
 		return preconditions;
 	}
@@ -390,13 +392,13 @@ public final class AjaxRequestAttributes
 	 * 
 	 * @see #getPreconditions()
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getBeforeHandlers()
+	public List<CharSequence> getBeforeHandlers()
 	{
 		if (beforeHandlers == null)
 		{
-			beforeHandlers = new FunctionList();
+			beforeHandlers = new ArrayList<CharSequence>();
 		}
 		return beforeHandlers;
 	}
@@ -414,13 +416,13 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getSuccessHandlers()
+	public List<CharSequence> getSuccessHandlers()
 	{
 		if (successHandlers == null)
 		{
-			successHandlers = new FunctionList();
+			successHandlers = new ArrayList<CharSequence>();
 		}
 		return successHandlers;
 	}
@@ -443,13 +445,13 @@ public final class AjaxRequestAttributes
 	 *    }
 	 * </pre>
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getErrorHandlers()
+	public List<CharSequence> getErrorHandlers()
 	{
 		if (errorHandlers == null)
 		{
-			errorHandlers = new FunctionList();
+			errorHandlers = new ArrayList<CharSequence>();
 		}
 		return errorHandlers;
 	}
@@ -484,13 +486,13 @@ public final class AjaxRequestAttributes
 	 *    } 
 	 * </pre>
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getUrlArgumentMethods()
+	public List<CharSequence> getUrlArgumentMethods()
 	{
 		if (urlArgumentMethods == null)
 		{
-			urlArgumentMethods = new FunctionList();
+			urlArgumentMethods = new ArrayList<CharSequence>();
 		}
 		return urlArgumentMethods;
 	}
@@ -499,13 +501,13 @@ public final class AjaxRequestAttributes
 	 * Array of javascript functions invoked when a <code>RequestQueueItem</code> instance is
 	 * created. The <code>RequestQueueItem</code> instance will be passed as first argument.
 	 * 
-	 * @return FunctionList or <code>null</code>
+	 * @return List<CharSequence> or <code>null</code>
 	 */
-	public FunctionList getRequestQueueItemCreationListeners()
+	public List<CharSequence> getRequestQueueItemCreationListeners()
 	{
 		if (requestQueueItemCreationListeners == null)
 		{
-			requestQueueItemCreationListeners = new FunctionList();
+			requestQueueItemCreationListeners = new ArrayList<CharSequence>();
 		}
 		return requestQueueItemCreationListeners;
 	}
@@ -522,11 +524,11 @@ public final class AjaxRequestAttributes
 	 * 
 	 * @return list of {@link ExpressionDecorator} .
 	 */
-	public ChainingList<ExpressionDecorator> getExpressionDecorators()
+	public List<ExpressionDecorator> getExpressionDecorators()
 	{
 		if (expressionDecorators == null)
 		{
-			expressionDecorators = new ChainingList<ExpressionDecorator>();
+			expressionDecorators = new ArrayList<ExpressionDecorator>();
 		}
 		return expressionDecorators;
 	}
