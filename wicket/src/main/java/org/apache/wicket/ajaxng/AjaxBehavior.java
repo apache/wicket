@@ -33,6 +33,7 @@ import org.apache.wicket.ajaxng.request.AjaxUrlCodingStrategy;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
@@ -229,12 +230,18 @@ public abstract class AjaxBehavior implements IBehavior
 
 		o.put("b", behaviorIndex);
 
-		renderAttributes(component, getAttributes(), o);
+		renderAttributes(component, getAttributes(component), o);
 
 		if (allowAjaxIndicator())
 		{
-			o.put("i", findIndicatorId(component));	
-		}		
+			o.put("i", findIndicatorId(component));
+		}
+
+		Form<?> form = getForm(component);
+		if (form != null)
+		{
+			o.put("f", form.getMarkupId());
+		}
 
 		postprocessConfiguration(o, component);
 
@@ -285,9 +292,9 @@ public abstract class AjaxBehavior implements IBehavior
 		}
 	}
 
-	private Object renderBoolean(Boolean b)
+	private Object renderBoolean(boolean b)
 	{
-		if (b != null && b == true)
+		if (b == true)
 		{
 			return 1;
 		}
@@ -300,13 +307,9 @@ public abstract class AjaxBehavior implements IBehavior
 	private void renderAttributes(Component component, AjaxRequestAttributes attributes,
 		JSONObject o)
 	{
-		if (attributes.getForm() != null)
-		{
-			o.put("f", attributes.getForm().getMarkupId());
-		}
 		o.put("m", renderBoolean(attributes.isMultipart()));
 		o.put("fp", renderBoolean(attributes.isForcePost()));
-		o.put("rt", attributes.getRequesTimeout());
+		o.put("rt", attributes.getRequestTimeout());
 		o.put("pt", attributes.getProcessingTimeout());
 		o.put("t", attributes.getToken());
 		o.put("r", renderBoolean(attributes.isRemovePrevious()));
@@ -327,6 +330,7 @@ public abstract class AjaxBehavior implements IBehavior
 			{
 				args.put(s, urlArguments.get(s));
 			}
+			o.put("u", args);
 		}
 
 		renderFunctionList(o, "ua", attributes.getUrlArgumentMethods());
@@ -335,6 +339,18 @@ public abstract class AjaxBehavior implements IBehavior
 	protected void postprocessConfiguration(JSONObject object, Component component)
 	{
 
+	}
+
+	/**
+	 * Form instance if the AJAX request should submit a form or <code>null</code> if the request
+	 * doesn't involve form submission.
+	 * 
+	 * @param component
+	 * @return form instance or <code>null</code>
+	 */
+	protected Form<?> getForm(Component component)
+	{
+		return null;
 	}
 
 	public void detach(Component component)
@@ -368,11 +384,14 @@ public abstract class AjaxBehavior implements IBehavior
 	 * Utility function to decorate javascript.
 	 * 
 	 * @param script
+	 * @param component
+	 *            component for which the script is being rendered
+	 * 
 	 * @return decorated javacsript
 	 */
-	public CharSequence decorateScript(CharSequence script)
+	public CharSequence decorateScript(CharSequence script, Component component)
 	{
-		ChainingList<ExpressionDecorator> decoratorList = getAttributes().getExpressionDecorators();
+		ChainingList<ExpressionDecorator> decoratorList = getAttributes(component).getExpressionDecorators();
 		if (decoratorList != null)
 		{
 			for (ExpressionDecorator d : decoratorList)
@@ -384,24 +403,23 @@ public abstract class AjaxBehavior implements IBehavior
 	}
 
 	/**
-	 * Creates {@link AjaxRequestAttributes} instance. If behavior needs to change the behaviors,
-	 * this is the method to override and wrap the attributes.
-	 * 
-	 * @return {@link AjaxRequestAttributes} instance.
-	 */
-	public AjaxRequestAttributes initAttributes()
-	{
-		return new AjaxRequestAttributes();
-	}
-
-	/**
 	 * Returns attributes for Ajax Request.
+	 * 
+	 * @param component
 	 * 
 	 * @return {@link AjaxRequestAttributes} instance
 	 */
-	public AjaxRequestAttributes getAttributes()
+	public final AjaxRequestAttributes getAttributes(Component component)
 	{
-		return initAttributes();
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		updateAttributes(attributes, component);
+		return attributes;
+		
+	}
+	
+	protected void updateAttributes(AjaxRequestAttributes attributes, Component component)
+	{
+		
 	}
 
 	protected String getAjaxIndicatorMarkupId()
@@ -413,7 +431,7 @@ public abstract class AjaxBehavior implements IBehavior
 	{
 		return true;
 	}
-	
+
 	private String findIndicatorId(Component component)
 	{
 		String id = getAjaxIndicatorMarkupId();

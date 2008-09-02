@@ -48,8 +48,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 		this(id, null);
 	}
 
-	private final AjaxEventBehavior behavior;
-	
 	/**
 	 * Construct.
 	 * 
@@ -60,7 +58,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	{
 		super(id, model);
 
-		add(behavior = new AjaxEventBehavior("click")
+		add(new AjaxEventBehavior("click")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -78,23 +76,19 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 			}
 			
 			@Override
-			public AjaxRequestAttributes getAttributes()
+			protected void updateAttributes(AjaxRequestAttributes attributes, Component component)
 			{
-				return AjaxLink.this.getAttributes();
+				super.updateAttributes(attributes, component);
+				AjaxLink.this.updateAttributes(attributes);
 			}
 		});
 	}
-
-	/**
-	 * Returns {@link AjaxRequestAttributes} object for this link.
-	 * 
-	 * @return {@link AjaxRequestAttributes} instance
-	 */
-	public AjaxRequestAttributes getAttributes()
-	{
-		return behavior.initAttributes();
-	}
 	
+	protected void updateAttributes(AjaxRequestAttributes attributes)
+	{
+		
+	}
+		
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{

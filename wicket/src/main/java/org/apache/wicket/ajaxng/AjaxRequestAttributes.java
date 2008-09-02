@@ -19,30 +19,8 @@ package org.apache.wicket.ajaxng;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.markup.html.form.Form;
-
 /**
  * Attributes of an Ajax Request.
- * 
- * This class supports delegating the calls to another {@link AjaxRequestAttributes} instance if one
- * is specified. To extend attributes from behavior or component the following pattern can be used:
- * 
- * <pre>
- * // add a precondition to super attirbutes
- * class MyBehavior extends AjaxBehavior
- * {
- * 	public AjaxRequestAttributes getAttributes()
- *          {
- *              return new AjaxRequestAttributesImpl(super.getAttributes) 
- *              {
- *                  public FunctionList getPreconditions()
- *                  {
- *                      return super.getPreconditions().add(&quot;function(requestQueueItem) { return true; }&quot;;);
- *                  }
- *              }
- *          }
- * }
- * </pre>
  * 
  * <hr>
  * 
@@ -78,47 +56,35 @@ import org.apache.wicket.markup.html.form.Form;
  * 
  * @author Matej Knopp
  */
-public class AjaxRequestAttributes
+public final class AjaxRequestAttributes
 {
-	private final AjaxRequestAttributes delegate;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param delegate
-	 */
-	public AjaxRequestAttributes(AjaxRequestAttributes delegate)
-	{
-		this.delegate = delegate;
-	}
-
 	/**
 	 * 
 	 * Construct.
 	 */
 	public AjaxRequestAttributes()
 	{
-		this(null);
+
 	}
 
-	/**
-	 * Form instance if the AJAX request should submit a form or <code>null</code> if the request
-	 * doesn't involve form submission.
-	 * 
-	 * @return form instance or <code>null</code>
-	 */
-	public Form<?> getForm()
-	{
-		if (delegate != null)
-		{
-			return delegate.getForm();
-		}
-		else
-		{
-			return null;
-		}
-	}
+	private boolean multipart = false;
+	private boolean forcePost = false;
+	private Integer requestTimeout;
+	private Integer processingTimeout;
+	private String token;
+	private boolean removePrevious = false;
+	private Integer throttle;
+	private boolean throttlePostpone = false;
+	private boolean allowDefault = false;
 
+	private final FunctionList preconditions = new FunctionList();
+	private final FunctionList beforeHandlers = new FunctionList();
+	private final FunctionList successHandlers = new FunctionList();
+	private final FunctionList errorHandlers = new FunctionList();
+	private final Map<String, Object> urlArguments = new HashMap<String, Object>();
+	private final FunctionList urlArgumentMethods = new FunctionList();
+	private final FunctionList requestQueueItemCreationListeners = new FunctionList();
+	private final ChainingList<ExpressionDecorator> expressionDecorators = new ChainingList<ExpressionDecorator>();
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -129,80 +95,104 @@ public class AjaxRequestAttributes
 	 * @return <code>true</code> if the form submit should be multipart, <code>false</code>
 	 *         otherwise
 	 */
-	public Boolean isMultipart()
+	public boolean isMultipart()
 	{
-		if (delegate != null)
-		{
-			return delegate.isMultipart();
-		}
-		else
-		{
-			return null;
-		}
+		return multipart;
+	}
+
+	/**
+	 * Determines whether the form submit is multipart.
+	 * 
+	 * <p>
+	 * Note that for multipart AJAX requests a hidden IFRAME will be used and that can have negative
+	 * impact on error detection.
+	 * 
+	 * @param multipart
+	 */
+	public void setMultipart(boolean multipart)
+	{
+		this.multipart = multipart;
 	}
 
 	/**
 	 * Returns whether the Ajax request should be a <code>POST</code> regardless of whether a form
 	 * is being submitted.
-	 * <p> 
+	 * <p>
 	 * For a <code>POST</code>request all URL arguments are submitted as body. This can be useful
 	 * if the URL parameters are longer than maximal URL length.
 	 * 
 	 * @return <code>true</code> if the request should be post, <code>false</code> otherwise.
 	 */
-	public Boolean isForcePost()
+	public boolean isForcePost()
 	{
-		if (delegate != null)
-		{
-			return delegate.isForcePost();
-		}
-		else
-		{
-			return null;
-		}
+		return forcePost;
 	}
 
 	/**
-	 * Timeout in milliseconds for the AJAX request. This only involves the actual communication and
-	 * not the processing afterwards. Can be <code>null</code> in which case the default request
-	 * timeout will be used.
+	 * Determines whether the Ajax request should be a <code>POST</code> regardless of whether a
+	 * form is being submitted.
+	 * <p>
+	 * For a <code>POST</code>request all URL arguments are submitted as body. This can be useful
+	 * if the URL parameters are longer than maximal URL length.
+	 * 
+	 * @param forcePost
+	 */
+	public void setForcePost(boolean forcePost)
+	{
+		this.forcePost = forcePost;
+	}
+
+	/**
+	 * Returns the timeout in milliseconds for the AJAX request. This only involves the actual
+	 * communication and not the processing afterwards. Can be <code>null</code> in which case the
+	 * default request timeout will be used.
 	 * 
 	 * @return request timeout in milliseconds or <code>null<code> for default timeout
 	 */
-	public Integer getRequesTimeout()
+	public Integer getRequestTimeout()
 	{
-		if (delegate != null)
-		{
-			return delegate.getRequesTimeout();
-		}
-		else
-		{
-			return null;
-		}
+		return requestTimeout;
 	}
 
 	/**
-	 * Timeout for the response processing. In case the response processing takes more than the
-	 * timeout it won't block the request queue. Can be <code>null</code> in which case the
-	 * default processing timeout will be used.
+	 * Sets the timeout in milliseconds for the AJAX request. This only involves the actual
+	 * communication and not the processing afterwards. Can be <code>null</code> in which case the
+	 * default request timeout will be used.
+	 * 
+	 * @param requestTimeout
+	 */
+	public void setRequestTimeout(Integer requestTimeout)
+	{
+		this.requestTimeout = requestTimeout;
+	}
+
+	/**
+	 * Returns the timeout for the response processing. In case the response processing takes more
+	 * than the timeout it won't block the request queue. Can be <code>null</code> in which case
+	 * the default processing timeout will be used.
 	 * 
 	 * @return processing timeout in milliseconds or <code>null</code> for default timeout
 	 */
 	public Integer getProcessingTimeout()
 	{
-		if (delegate != null)
-		{
-			return delegate.getProcessingTimeout();
-		}
-		else
-		{
-			return null;
-		}
+		return processingTimeout;
 	}
 
 	/**
-	 * Optional string identifying related items in request queue. Used to identify previous items
-	 * (items with same token) that will be removed when this item is added and
+	 * Sets the timeout for the response processing. In case the response processing takes more than
+	 * the timeout it won't block the request queue. Can be <code>null</code> in which case the
+	 * default processing timeout will be used.
+	 * 
+	 * @param processingTimeout
+	 */
+	public void setProcessingTimeout(Integer processingTimeout)
+	{
+		this.processingTimeout = processingTimeout;
+	}
+
+	/**
+	 * Returns optional string identifying related items in request queue. Used to identify previous
+	 * items (items with same token) that will be removed when this item is added and
 	 * {@link #isRemovePrevious()} returns <code>true</code>. Also required when throttling is
 	 * enabled.
 	 * 
@@ -213,14 +203,23 @@ public class AjaxRequestAttributes
 	 */
 	public String getToken()
 	{
-		if (delegate != null)
-		{
-			return delegate.getToken();
-		}
-		else
-		{
-			return null;
-		}
+		return token;
+	}
+
+	/**
+	 * Sets optional string identifying related items in request queue. Used to identify previous
+	 * items (items with same token) that will be removed when this item is added and
+	 * {@link #isRemovePrevious()} returns <code>true</code>. Also required when throttling is
+	 * enabled.
+	 * 
+	 * @see #getThrottle()
+	 * @see #isRemovePrevious()
+	 * 
+	 * @param token
+	 */
+	public void setToken(String token)
+	{
+		this.token = token;
 	}
 
 	/**
@@ -239,14 +238,24 @@ public class AjaxRequestAttributes
 	 */
 	public Boolean isRemovePrevious()
 	{
-		if (delegate != null)
-		{
-			return delegate.isRemovePrevious();
-		}
-		else
-		{
-			return null;
-		}
+		return removePrevious;
+	}
+
+	/**
+	 * If there are previous items with same token in the queue they will be removed if
+	 * {@link #setRemovePrevious(boolean)} is set to <code>true</code>. This can be useful when
+	 * the items are added in queue faster than they are processed and only the latest request
+	 * matters.
+	 * <p>
+	 * An example of this could be periodically updated component. There is no point of having
+	 * multiple refreshing requests stored in the queue for such component because only the last
+	 * request is relevant. Alternative to this is throttling.
+	 * 
+	 * @param removePrevious
+	 */
+	public void setRemovePrevious(boolean removePrevious)
+	{
+		this.removePrevious = removePrevious;
 	}
 
 	/**
@@ -262,14 +271,23 @@ public class AjaxRequestAttributes
 	 */
 	public Integer getThrottle()
 	{
-		if (delegate != null)
-		{
-			return delegate.getThrottle();
-		}
-		else
-		{
-			return null;
-		}
+		return throttle;
+	}
+
+	/**
+	 * Limits adding items with same token to at most one item per n milliseconds where n is the
+	 * return value.
+	 * <p>
+	 * Useful to limit the number of AJAX requests that are triggered by a user action such as
+	 * typing into a text field. Throttle attribute only applies when token is specified.
+	 * 
+	 * @see #getToken()
+	 * 
+	 * @param throttle
+	 */
+	public void setThrottle(Integer throttle)
+	{
+		this.throttle = throttle;
 	}
 
 	/**
@@ -283,16 +301,22 @@ public class AjaxRequestAttributes
 	 * 
 	 * @return boolean value or <code>null</code>
 	 */
-	public Boolean isThrottlePostpone()
+	public boolean isThrottlePostpone()
 	{
-		if (delegate != null)
-		{
-			return delegate.isThrottlePostpone();
-		}
-		else
-		{
-			return null;
-		}
+		return throttlePostpone;
+	}
+
+	/**
+	 * When set to true causes the throttle timer reset each time item with same token is being
+	 * added to queue.
+	 * 
+	 * @see #isThrottlePostpone()
+	 * 
+	 * @param throttlePostpone
+	 */
+	public void setThrottlePostpone(boolean throttlePostpone)
+	{
+		this.throttlePostpone = throttlePostpone;
 	}
 
 	/**
@@ -343,16 +367,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getPreconditions()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getPreconditions();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return preconditions;
 	}
 
 	/**
@@ -375,16 +390,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getBeforeHandlers()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getBeforeHandlers();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return beforeHandlers;
 	}
 
 	/**
@@ -404,16 +410,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getSuccessHandlers()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getSuccessHandlers();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return successHandlers;
 	}
 
 	/**
@@ -438,16 +435,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getErrorHandlers()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getErrorHandlers();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return errorHandlers;
 	}
 
 	/**
@@ -458,16 +446,7 @@ public class AjaxRequestAttributes
 	 */
 	public Map<String, Object> getUrlArguments()
 	{
-		Map<String, Object> result = null;
-		if (delegate != null)
-		{
-			result = delegate.getUrlArguments();
-		}
-		if (result == null)
-		{
-			result = new HashMap<String, Object>();
-		}
-		return result;
+		return urlArguments;
 	}
 
 	/**
@@ -489,16 +468,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getUrlArgumentMethods()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getUrlArgumentMethods();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return urlArgumentMethods;
 	}
 
 	/**
@@ -509,16 +479,7 @@ public class AjaxRequestAttributes
 	 */
 	public FunctionList getRequestQueueItemCreationListeners()
 	{
-		FunctionList result = null;
-		if (delegate != null)
-		{
-			result = delegate.getRequestQueueItemCreationListeners();
-		}
-		if (result == null)
-		{
-			result = new FunctionList();
-		}
-		return result;
+		return requestQueueItemCreationListeners;
 	}
 
 	/**
@@ -535,16 +496,7 @@ public class AjaxRequestAttributes
 	 */
 	public ChainingList<ExpressionDecorator> getExpressionDecorators()
 	{
-		ChainingList<ExpressionDecorator> result = null;
-		if (delegate != null)
-		{
-			result = delegate.getExpressionDecorators();
-		}
-		if (result == null)
-		{
-			result = new ChainingList<ExpressionDecorator>();
-		}
-		return result;
+		return expressionDecorators;
 	}
 
 	/**
@@ -559,13 +511,19 @@ public class AjaxRequestAttributes
 	 */
 	public boolean isAllowDefault()
 	{
-		if (delegate != null)
-		{
-			return delegate.isAllowDefault();
-		}
-		else
-		{
-			return false;
-		}
-	}	
+		return allowDefault;
+	}
+
+	/**
+	 * Only applies for event behaviors. Determines whether the behavior should allow the default
+	 * event handler to be invoked.
+	 * 
+	 * @see #isAllowDefault()
+	 * 
+	 * @param allowDefault
+	 */
+	public void setAllowDefault(boolean allowDefault)
+	{
+		this.allowDefault = allowDefault;
+	}
 }

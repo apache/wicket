@@ -240,22 +240,9 @@ public abstract class AjaxTimerBehavior extends AjaxBehavior
 	}
 
 	@Override
-	public AjaxRequestAttributes initAttributes()
+	protected void updateAttributes(AjaxRequestAttributes attributes, Component component)
 	{
-		return new AjaxRequestAttributes(super.initAttributes())
-		{
-			@Override
-			public Boolean isRemovePrevious()
-			{
-				// Do not queue the requests on client
-				return true;
-			}
-
-			@Override
-			public String getToken()
-			{				
-				return getId();
-			}
-		};
-	}
+		attributes.setRemovePrevious(true);
+		attributes.setToken(getId());
+	}	
 }
