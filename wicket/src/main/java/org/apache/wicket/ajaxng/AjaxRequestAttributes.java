@@ -77,14 +77,14 @@ public final class AjaxRequestAttributes
 	private boolean throttlePostpone = false;
 	private boolean allowDefault = false;
 
-	private final FunctionList preconditions = new FunctionList();
-	private final FunctionList beforeHandlers = new FunctionList();
-	private final FunctionList successHandlers = new FunctionList();
-	private final FunctionList errorHandlers = new FunctionList();
-	private final Map<String, Object> urlArguments = new HashMap<String, Object>();
-	private final FunctionList urlArgumentMethods = new FunctionList();
-	private final FunctionList requestQueueItemCreationListeners = new FunctionList();
-	private final ChainingList<ExpressionDecorator> expressionDecorators = new ChainingList<ExpressionDecorator>();
+	private FunctionList preconditions = null;
+	private FunctionList beforeHandlers = null;
+	private FunctionList successHandlers = null;
+	private FunctionList errorHandlers = null;
+	private Map<String, Object> urlArguments = null;
+	private FunctionList urlArgumentMethods = null;
+	private FunctionList requestQueueItemCreationListeners = null;
+	private ChainingList<ExpressionDecorator> expressionDecorators = null;
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -367,6 +367,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getPreconditions()
 	{
+		if (preconditions == null)
+		{
+			preconditions = new FunctionList();
+		}
 		return preconditions;
 	}
 
@@ -390,6 +394,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getBeforeHandlers()
 	{
+		if (beforeHandlers == null)
+		{
+			beforeHandlers = new FunctionList();
+		}
 		return beforeHandlers;
 	}
 
@@ -410,6 +418,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getSuccessHandlers()
 	{
+		if (successHandlers == null)
+		{
+			successHandlers = new FunctionList();
+		}
 		return successHandlers;
 	}
 
@@ -435,6 +447,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getErrorHandlers()
 	{
+		if (errorHandlers == null)
+		{
+			errorHandlers = new FunctionList();
+		}
 		return errorHandlers;
 	}
 
@@ -446,6 +462,10 @@ public final class AjaxRequestAttributes
 	 */
 	public Map<String, Object> getUrlArguments()
 	{
+		if (urlArgumentMethods == null)
+		{
+			urlArguments = new HashMap<String, Object>();
+		}
 		return urlArguments;
 	}
 
@@ -468,6 +488,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getUrlArgumentMethods()
 	{
+		if (urlArgumentMethods == null)
+		{
+			urlArgumentMethods = new FunctionList();
+		}
 		return urlArgumentMethods;
 	}
 
@@ -479,6 +503,10 @@ public final class AjaxRequestAttributes
 	 */
 	public FunctionList getRequestQueueItemCreationListeners()
 	{
+		if (requestQueueItemCreationListeners == null)
+		{
+			requestQueueItemCreationListeners = new FunctionList();
+		}
 		return requestQueueItemCreationListeners;
 	}
 
@@ -496,6 +524,10 @@ public final class AjaxRequestAttributes
 	 */
 	public ChainingList<ExpressionDecorator> getExpressionDecorators()
 	{
+		if (expressionDecorators == null)
+		{
+			expressionDecorators = new ChainingList<ExpressionDecorator>();
+		}
 		return expressionDecorators;
 	}
 
