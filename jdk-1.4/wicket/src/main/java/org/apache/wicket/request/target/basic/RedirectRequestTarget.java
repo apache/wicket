@@ -87,7 +87,7 @@ public class RedirectRequestTarget implements IRequestTarget
 					redirectUrl.substring(1));
 			}
 		}
-		else if (redirectUrl.contains("://"))
+		else if (redirectUrl.indexOf("://") > 0)
 		{
 			// absolute url
 			response.redirect(redirectUrl);
