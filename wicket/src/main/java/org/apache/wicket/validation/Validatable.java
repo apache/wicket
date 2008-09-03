@@ -48,12 +48,14 @@ import java.util.List;
  * </pre></code>
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable
  * @since 1.2.6
  */
-public class Validatable implements IValidatable
+public class Validatable<T> implements IValidatable<T>
 {
 	/** the value object */
-	private Object value;
+	private T value;
 
 	/** the list of errors */
 	private ArrayList<IValidationError> errors;
@@ -71,7 +73,7 @@ public class Validatable implements IValidatable
 	 * @param value
 	 *            The value that will be tested
 	 */
-	public Validatable(Object value)
+	public Validatable(T value)
 	{
 		this.value = value;
 	}
@@ -82,7 +84,7 @@ public class Validatable implements IValidatable
 	 * @param value
 	 *            the value object
 	 */
-	public void setValue(Object value)
+	public void setValue(T value)
 	{
 		this.value = value;
 	}
@@ -90,7 +92,7 @@ public class Validatable implements IValidatable
 	/**
 	 * @see IValidatable#getValue()
 	 */
-	public Object getValue()
+	public T getValue()
 	{
 		return value;
 	}

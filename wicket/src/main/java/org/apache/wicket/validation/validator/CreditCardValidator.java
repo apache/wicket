@@ -29,16 +29,17 @@ import org.apache.wicket.validation.IValidatable;
  * @author Johan Compagner
  * @since 1.2.6
  */
-public class CreditCardValidator extends AbstractValidator
+public class CreditCardValidator extends AbstractValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see AbstractValidator#onValidate(IValidatable)
 	 */
-	protected void onValidate(IValidatable validatable)
+	@Override
+	protected void onValidate(IValidatable<String> validatable)
 	{
-		String input = ((String)validatable.getValue());
+		String input = (validatable.getValue());
 		String numberToCheck = input.replaceAll("[ -]", "");
 		int nulOffset = '0';
 		int sum = 0;

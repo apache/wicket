@@ -29,9 +29,11 @@ import org.apache.wicket.validation.IValidatable;
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable
  * @since 1.2.6
  */
-public abstract class NumberValidator extends AbstractValidator
+public abstract class NumberValidator<T extends Number> extends AbstractValidator<T>
 {
 	/**
 	 * 

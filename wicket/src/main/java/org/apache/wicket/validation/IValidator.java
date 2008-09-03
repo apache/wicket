@@ -26,6 +26,8 @@ import org.apache.wicket.IClusterable;
  * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable value
  * @since 1.2.6
  */
 public interface IValidator<T> extends IClusterable

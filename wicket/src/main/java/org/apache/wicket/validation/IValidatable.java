@@ -21,6 +21,8 @@ package org.apache.wicket.validation;
  * Interface representing any object that can be validated.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of value
  * @since 1.2.6
  */
 public interface IValidatable<T>

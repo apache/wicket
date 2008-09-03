@@ -30,7 +30,7 @@ import org.apache.wicket.validation.IValidatable;
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public abstract class StringValidator extends AbstractValidator
+public abstract class StringValidator extends AbstractValidator<String>
 {
 
 	/**
@@ -72,9 +72,9 @@ public abstract class StringValidator extends AbstractValidator
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<String> validatable)
 		{
-			if (((String)validatable.getValue()).length() != length)
+			if ((validatable.getValue()).length() != length)
 			{
 				error(validatable);
 			}
@@ -93,10 +93,10 @@ public abstract class StringValidator extends AbstractValidator
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("length", new Integer((validatable.getValue()).length()));
 			map.put("exact", new Integer(length));
 			return map;
 		}
@@ -104,8 +104,7 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if the length of a <code>String</code> is within the specified
-	 * range.
+	 * Validator for checking if the length of a <code>String</code> is within the specified range.
 	 */
 	public static class LengthBetweenValidator extends StringValidator
 	{
@@ -152,9 +151,9 @@ public abstract class StringValidator extends AbstractValidator
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<String> validatable)
 		{
-			final String value = (String)validatable.getValue();
+			final String value = validatable.getValue();
 			if (value.length() < minimum || value.length() > maximum)
 			{
 				error(validatable);
@@ -175,12 +174,12 @@ public abstract class StringValidator extends AbstractValidator
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("length", new Integer((validatable.getValue()).length()));
 			return map;
 		}
 
@@ -220,9 +219,9 @@ public abstract class StringValidator extends AbstractValidator
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<String> validatable)
 		{
-			if (((String)validatable.getValue()).length() > maximum)
+			if ((validatable.getValue()).length() > maximum)
 			{
 				error(validatable);
 			}
@@ -241,11 +240,11 @@ public abstract class StringValidator extends AbstractValidator
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("length", new Integer((validatable.getValue()).length()));
 			return map;
 		}
 	}
@@ -284,9 +283,9 @@ public abstract class StringValidator extends AbstractValidator
 		 * see AbstractValidator#onValidate(IValidatable)
 		 */
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<String> validatable)
 		{
-			if (((String)validatable.getValue()).length() < minimum)
+			if ((validatable.getValue()).length() < minimum)
 			{
 				error(validatable);
 			}
@@ -305,21 +304,20 @@ public abstract class StringValidator extends AbstractValidator
 		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("length", new Integer((validatable.getValue()).length()));
 			return map;
 		}
 
 	}
 
 	/**
-	 * Gets a <code>String</code> exact length validator for checking if a string length is
-	 * exactly the same as the given length value. If that is not the case, then an error message
-	 * will be generated with the key "StringValidator.exact". The message keys that can be used
-	 * are:
+	 * Gets a <code>String</code> exact length validator for checking if a string length is exactly
+	 * the same as the given length value. If that is not the case, then an error message will be
+	 * generated with the key "StringValidator.exact". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${exact}: the maximum length</li>
@@ -342,8 +340,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> range validator for checking if a string length falls between
-	 * the minimum and and maximum lengths. If that is not the case, then an error message will be
+	 * Gets a <code>String</code> range validator for checking if a string length falls between the
+	 * minimum and and maximum lengths. If that is not the case, then an error message will be
 	 * generated with the key "StringValidator.range". The message keys that can be used are:
 	 * <p>
 	 * <ul>
@@ -370,9 +368,9 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> maximum validator for checking if a string length is smaller
-	 * than the given maximum value. If that is not the case, then an error message will be
-	 * generated with the key "StringValidator.maximum". The message keys that can be used are:
+	 * Gets a <code>String</code> maximum validator for checking if a string length is smaller than
+	 * the given maximum value. If that is not the case, then an error message will be generated
+	 * with the key "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum length</li>
@@ -395,9 +393,9 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> minimum validator for checking if a string length is greater
-	 * than the given minimum value. If that is not the case, then an error message will be
-	 * generated with the key "StringValidator.minimum". The message keys that can be used are:
+	 * Gets a <code>String</code> minimum validator for checking if a string length is greater than
+	 * the given minimum value. If that is not the case, then an error message will be generated
+	 * with the key "StringValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
