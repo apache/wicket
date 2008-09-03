@@ -71,6 +71,8 @@ public class RedirectRequestTarget implements IRequestTarget
 		response.reset();
 		if (redirectUrl.startsWith("/"))
 		{
+			// context-absolute url
+
 			RequestContext rc = RequestContext.get();
 			String continueTo = null;
 			if (rc.isPortletRequest() && ((PortletRequestContext)rc).isEmbedded())
@@ -85,12 +87,14 @@ public class RedirectRequestTarget implements IRequestTarget
 					redirectUrl.substring(1));
 			}
 		}
-		else if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
+		else if (redirectUrl.contains("://"))
 		{
+			// absolute url
 			response.redirect(redirectUrl);
 		}
 		else
 		{
+			// relative url
 			response.redirect(RequestCycle.get()
 				.getRequest()
 				.getRelativePathPrefixToWicketHandler() +
