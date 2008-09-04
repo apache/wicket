@@ -68,8 +68,16 @@ public class ContextPathGenerator extends AbstractBehavior
 		// generate prefix that will make path context relative
 		final String prefix = component.getRequest().getRelativePathPrefixToContextRoot();
 
-		// join the two path pieces
-		final String contextRelativePath = Strings.join("/", prefix, path);
+		final String contextRelativePath;
+		if (!Strings.isEmpty(prefix))
+		{
+			// join the two path pieces
+			contextRelativePath = Strings.join("/", prefix, path);
+		}
+		else
+		{
+			contextRelativePath = path;
+		}
 
 		tag.put("src", contextRelativePath);
 	}
