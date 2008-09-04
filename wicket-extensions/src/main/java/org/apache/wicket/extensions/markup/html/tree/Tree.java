@@ -57,7 +57,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public Tree(String id, IModel<?> model)
+	public Tree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 	}

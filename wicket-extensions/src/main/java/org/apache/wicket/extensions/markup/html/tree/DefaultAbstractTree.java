@@ -52,7 +52,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * This class allows you to choose between 3 types of links. {@link
  * DefaultAbstractTree#setLinkType(org
  * .apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
- * 
+ *
  * @author Matej Knopp
  */
 public abstract class DefaultAbstractTree extends AbstractTree
@@ -92,7 +92,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
 		 */
 		public LinkType(String name)
@@ -103,14 +103,14 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Helper class for calling an action from a link.
-	 * 
+	 *
 	 * @author Matej Knopp
 	 */
 	protected interface ILinkCallback extends IClusterable
 	{
 		/**
 		 * Called when the click is executed.
-		 * 
+		 *
 		 * @param target
 		 *            The ajax request target
 		 */
@@ -140,7 +140,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Tree constructor.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 */
@@ -152,13 +152,13 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Tree constructor.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
 	 *            The tree model
 	 */
-	public DefaultAbstractTree(String id, IModel<?> model)
+	public DefaultAbstractTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 		init();
@@ -166,21 +166,22 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Tree constructor.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
 	 *            The tree model
 	 */
+	@SuppressWarnings("unchecked")
 	public DefaultAbstractTree(String id, TreeModel model)
 	{
-		super(id, new Model<Serializable>((Serializable)model));
+		super(id, new Model((Serializable)model));
 		init();
 	}
 
 	/**
 	 * Returns the current type of links on tree items.
-	 * 
+	 *
 	 * @return The link type
 	 */
 	public LinkType getLinkType()
@@ -191,7 +192,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Sets the type of links on tree items. After the link type is changed, the whole tree is
 	 * rebuild and re-rendered.
-	 * 
+	 *
 	 * @param linkType
 	 *            type of links
 	 */
@@ -206,7 +207,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default stylesheet.
-	 * 
+	 *
 	 * @return The package resource reference
 	 */
 	protected ResourceReference getCSS()
@@ -216,7 +217,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default closed tree folder.
-	 * 
+	 *
 	 * @return The package resource reference
 	 */
 	protected ResourceReference getFolderClosed()
@@ -226,7 +227,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default open tree folder.
-	 * 
+	 *
 	 * @return The package resource reference
 	 */
 	protected ResourceReference getFolderOpen()
@@ -236,7 +237,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default tree item (not folder).
-	 * 
+	 *
 	 * @return The package resource reference
 	 */
 	protected ResourceReference getItem()
@@ -246,7 +247,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference for icon of specified tree node.
-	 * 
+	 *
 	 * @param node
 	 *            The node
 	 * @return The package resource reference
@@ -274,7 +275,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * Creates the indentation element. This element should be placed as first element in the tree
 	 * item markup to ensure proper indentation of the tree item. This implementation also takes
 	 * care of lines that connect nodes.
-	 * 
+	 *
 	 * @param parent
 	 *            The component parent
 	 * @param id
@@ -331,7 +332,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * Creates an image placed on junction link. This image actually consists of two spans with
 	 * different css classes. These classes are specified according to the stylesheet to make the
 	 * junction image look well together with lines connecting nodes.
-	 * 
+	 *
 	 * @param parent
 	 *            The component parent
 	 * @param id
@@ -377,17 +378,17 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Creates the junction link for given node. Also (optionally) creates the junction image. If
 	 * the node is a leaf (it has no children), the created junction link is non-functional.
-	 * 
+	 *
 	 * @param parent
 	 *            parent component of the link
-	 * 
+	 *
 	 * @param id
 	 *            wicket:id of the component
-	 * 
+	 *
 	 * @param imageId
 	 *            wicket:id of the image. this can be null, in that case image is not created. image
 	 *            is supposed to be placed on the link (link is parent of image)
-	 * 
+	 *
 	 * @param node
 	 *            tree node for which the link should be created.
 	 * @return The link component
@@ -448,7 +449,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Creates a link of type specified by current linkType. When the links is clicked it calls the
 	 * specified callback.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent component
 	 * @param id
@@ -462,7 +463,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link(id)
+			return new Link<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -478,7 +479,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink(id)
+			return new AjaxLink<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -495,7 +496,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink(id)
+			return new AjaxFallbackLink<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -515,7 +516,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Creates the icon for current node. By default uses image reference specified by
 	 * {@link DefaultAbstractTree#getNodeIcon(TreeNode)}.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent component
 	 * @param id
@@ -543,7 +544,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Creates a link that can be used to select / deselect the specified node.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent component
 	 * @param id
@@ -570,10 +571,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Callback function called after user clicked on an junction link. The node has already been
 	 * expanded/collapsed (depending on previous status).
-	 * 
+	 *
 	 * @param target
 	 *            Request target - may be null on non-ajax call
-	 * 
+	 *
 	 * @param node
 	 *            Node for which this callback is relevant
 	 */
@@ -583,10 +584,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * This callback method is called after user has selected / deselected the given node.
-	 * 
+	 *
 	 * @param target
 	 *            Request target - may be null on non-ajax call
-	 * 
+	 *
 	 * @param node
 	 *            Node for which this this callback is fired.
 	 */
@@ -608,7 +609,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns whether the provided node is last child of it's parent.
-	 * 
+	 *
 	 * @param node
 	 *            The node
 	 * @return whether the provided node is the last child

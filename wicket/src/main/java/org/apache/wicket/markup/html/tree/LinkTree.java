@@ -54,7 +54,7 @@ public class LinkTree extends LabelTree
 	 * @param model
 	 *            model that provides the {@link TreeModel}
 	 */
-	public LinkTree(String id, IModel model)
+	public LinkTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 	}
@@ -67,6 +67,7 @@ public class LinkTree extends LabelTree
 	 * @param model
 	 *            Tree model
 	 */
+	@SuppressWarnings("unchecked")
 	public LinkTree(String id, TreeModel model)
 	{
 		super(id, new Model((Serializable)model));
@@ -77,7 +78,7 @@ public class LinkTree extends LabelTree
 	 *      org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected Component newNodeComponent(String id, IModel model)
+	protected Component newNodeComponent(String id, IModel<Object> model)
 	{
 		return new LinkIconPanel(id, model, LinkTree.this)
 		{
@@ -91,7 +92,8 @@ public class LinkTree extends LabelTree
 			}
 
 			@Override
-			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+			protected Component newContentComponent(String componentId, BaseTree tree,
+				IModel<Object> model)
 			{
 				return new Label(componentId, getNodeTextModel(model));
 			}

@@ -43,7 +43,7 @@ public class LabelIconPanel extends Panel
 	 *            model that is used to access the TreeNode
 	 * @param tree
 	 */
-	public LabelIconPanel(String id, IModel model, BaseTree tree)
+	public LabelIconPanel(String id, IModel<Object> model, BaseTree tree)
 	{
 		super(id, model);
 
@@ -59,7 +59,7 @@ public class LabelIconPanel extends Panel
 	 * 
 	 * @param tree
 	 */
-	protected void addComponents(IModel model, BaseTree tree)
+	protected void addComponents(IModel<Object> model, BaseTree tree)
 	{
 		add(newImageComponent("icon", tree, model));
 		add(newContentComponent("content", tree, model));
@@ -74,7 +74,7 @@ public class LabelIconPanel extends Panel
 	 * @return icon image component
 	 */
 	protected Component newImageComponent(String componentId, final BaseTree tree,
-		final IModel model)
+		final IModel<Object> model)
 	{
 		return new Image(componentId)
 		{
@@ -96,7 +96,7 @@ public class LabelIconPanel extends Panel
 	 * @param model
 	 * @return content component
 	 */
-	protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+	protected Component newContentComponent(String componentId, BaseTree tree, IModel<Object> model)
 	{
 		return new Label(componentId, model);
 	}
@@ -134,7 +134,7 @@ public class LabelIconPanel extends Panel
 	 * @param nodeModel
 	 * @return wrapped model
 	 */
-	protected IModel wrapNodeModel(IModel nodeModel)
+	protected IModel<Object> wrapNodeModel(IModel<Object> nodeModel)
 	{
 		return nodeModel;
 	}

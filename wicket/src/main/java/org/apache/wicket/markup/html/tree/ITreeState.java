@@ -66,7 +66,7 @@ public interface ITreeState
 	 * 
 	 * @return The collection of selected nodes
 	 */
-	Collection getSelectedNodes();
+	Collection<Object> getSelectedNodes();
 
 	/**
 	 * Returns whether multiple nodes can be selected.
