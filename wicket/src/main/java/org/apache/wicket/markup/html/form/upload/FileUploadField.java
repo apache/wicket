@@ -39,9 +39,6 @@ public class FileUploadField extends FormComponent<FileUpload>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** True if a model has been set explicitly */
-	private boolean hasExplicitModel;
-
 	private transient FileUpload fileUpload;
 
 	/**
@@ -61,7 +58,6 @@ public class FileUploadField extends FormComponent<FileUpload>
 	public FileUploadField(final String id, IModel<FileUpload> model)
 	{
 		super(id, model);
-		hasExplicitModel = true;
 	}
 
 	/**
@@ -99,23 +95,8 @@ public class FileUploadField extends FormComponent<FileUpload>
 	@Override
 	public FileUploadField setDefaultModel(IModel<?> model)
 	{
-		hasExplicitModel = true;
 		return (FileUploadField)super.setDefaultModel(model);
 	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	@Override
-	public void updateModel()
-	{
-		// Only update the model if one was passed in
-		if (hasExplicitModel)
-		{
-			setDefaultModelObject(getConvertedInput());
-		}
-	}
-
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
