@@ -223,7 +223,7 @@ YUI().use('*', function(Y) {
 	{ 
 		disableAll: false, trace: true, debug: true, info: true, error: true, warn: true, 
 		"trace:GarbageCollector": false, "trace:Contribution":false, "trace:Events":false, "trace:Focus":false,
-		"trace:RequestQueue": false, "trace:General":false, "trace:Throttler": true
+		"trace:RequestQueue": false, "trace:General":false, "trace:Throttler": false
 	};
 	
 	W.Log  = 
@@ -1401,7 +1401,8 @@ YUI().use('*', function(Y) {
 	 *   t, token                - String     Optional string identifying related items in request queue. 
 	 *                                        Used to identify previous items (items with same token) that 
 	 *                                        will be removed when this item is added and removePrevious 
-	 *                                        is true. Also required when throttle attribute is used.
+	 *                                        is true. If token is required and none is specified token
+	 *                                        value is generated from componentId.
 	 *        
 	 *   r, removePrevious       - Boolean    Optional. If there are previous items with same token in the 
 	 *                                        queue they will be removed if removePrevious is true. This 
@@ -1522,6 +1523,22 @@ YUI().use('*', function(Y) {
 			urlArgumentMethods: m(a.urlArgumentMethods || a.ua,  gs.urlArgumentMethods),
 			requestQueueItem:   m(a.requestQueueItem   || a.rqi, gs.requestQueueItem),
 			indicatorId:          a.indicatorId        || a.i    || null
+		}
+		
+		var a = this.attributes;
+		if (a.throttle != null || a.removePrevious != null)
+		{
+			if (a.token == null)
+			{
+				if (a.component != null)
+				{
+					a.token = "GENERATED_TOKEN_" + a.component;
+				}
+				else
+				{
+					a.token = "GENERATED_TOKEN_PAGE";
+				}
+			}
 		}
 		
 		log.trace("RequestQueue", "Creating New Item", this.attributes);				
@@ -2379,26 +2396,48 @@ YUI().use('*', function(Y) {
 	// This script is distributed under the MIT licence.
 	// http://www.opensource.org/licenses/mit-license.php
 
-	var Selection = function(textareaElement) {
+	var Selection = function(textareaElement) 
+	{
 	    this.element = textareaElement;
 	}
 
-	Selection.prototype.create = function() {
-	    if (document.selection != null && this.element.selectionStart == null) {
+	Selection.prototype.create = function() 
+	{
+	    if (document.selection != null && this.element.selectionStart == null) 
+	    {
 	        return this._ieGetSelection();
-	    } else {
+	    } 
+	    else 
+	    {
 	        return this._mozillaGetSelection();
 	    }
 	}
 
-	Selection.prototype._mozillaGetSelection = function() {
-	    return { 
-	        start: this.element.selectionStart, 
-	        end: this.element.selectionEnd 
-	    };
+	Selection.prototype._mozillaGetSelection = function() 
+	{
+		var type = this.element.type;
+		var res;
+		if (type == "textarea" || type == "text")
+		{			
+		    res = 
+		    { 
+		        start: this.element.selectionStart, 
+		        end: this.element.selectionEnd 
+		    };
+		}
+		else
+		{
+			res =  
+			{
+				start: 0,
+				end: 0
+			};
+		}
+		return res;
 	}
 
-	Selection.prototype._ieGetSelection = function() {
+	Selection.prototype._ieGetSelection = function() 
+	{
 	    this.element.focus();
 
 	    var range = document.selection.createRange();
@@ -2407,13 +2446,20 @@ YUI().use('*', function(Y) {
 	    var contents = this.element.value;
 	    var originalContents = contents;
 	    var marker = this._createSelectionMarker();
-	    while(contents.indexOf(marker) != -1) {
+	    while(contents.indexOf(marker) != -1) 
+	    {
 	        marker = this._createSelectionMarker();
 	    }
 
 	    var parent = range.parentElement();
-	    if (parent == null || (parent.type != "textarea" && parent.type != "text")) {
-	        return { start: 0, end: 0 };
+	    if (parent == null || (parent.type != "textarea" && parent.type != "text")) 
+	    {
+	        var res = 
+	        { 
+	        	start: 0, 
+	        	end: 0 
+	        };
+			return res;
 	    }
 	    range.text = marker + range.text + marker;
 	    contents = this.element.value;
@@ -2430,7 +2476,8 @@ YUI().use('*', function(Y) {
 	    return result;
 	}
 
-	Selection.prototype._createSelectionMarker = function() {
+	Selection.prototype._createSelectionMarker = function() 
+	{
 	    return "##SELECTION_MARKER_" + Math.random() + "##";
 	}
 	

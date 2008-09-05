@@ -1920,7 +1920,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @param validator
 	 */
-	protected final void validateFormValidator(final IFormValidator validator)
+	public final void validateFormValidator(final IFormValidator validator)
 	{
 		if (validator == null)
 		{

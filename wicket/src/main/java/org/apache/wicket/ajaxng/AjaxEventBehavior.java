@@ -37,6 +37,16 @@ public abstract class AjaxEventBehavior extends AjaxBehavior
 	 */
 	public AjaxEventBehavior(String event)
 	{
+		if (event == null)
+		{
+			throw new IllegalArgumentException("Argument 'event' may not be null.");
+		}
+		event = event.toLowerCase();
+		if (event.startsWith("on"))
+		{
+			event = event.substring(2);
+		}
+
 		this.event = event;
 	}
 

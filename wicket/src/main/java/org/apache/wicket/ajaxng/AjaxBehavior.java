@@ -368,7 +368,7 @@ public abstract class AjaxBehavior implements IBehavior
 
 	public boolean isEnabled(Component component)
 	{
-		return true;
+		return component.isEnabled();
 	}
 
 	public boolean isTemporary()
