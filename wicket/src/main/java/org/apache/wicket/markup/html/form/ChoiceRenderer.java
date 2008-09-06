@@ -23,7 +23,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <p>
  * 
  * <pre>
- * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers)
+ * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers)
  * </pre>
  * 
  * creates a DropDownChoice of users and the display value will be toString() and the id the index
@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <p>
  * 
  * <pre>
- * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;))
+ * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers, new ChoiceRenderer&lt;User&gt;(&quot;name&quot;))
  * </pre>
  * 
  * creates a DropDownChoice of users and the display value will be looked up by property expression
@@ -41,7 +41,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <p>
  * 
  * <pre>
- * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;, &quot;id&quot;))
+ * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers, new ChoiceRenderer&lt;User&gt;(&quot;name&quot;, &quot;id&quot;))
  * </pre>
  * 
  * creates a DropDownChoice of users and the display value will be looked up by property expression

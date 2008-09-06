@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * And in the java
  * 
  * <pre>
- * add(new Label(&quot;amount&quot;, new Model(&quot;$5.00&quot;)));
+ * add(new Label(&quot;amount&quot;, new Model&lt;String&gt;(&quot;$5.00&quot;)));
  * add(new BookmarkablePageLink(&quot;link&quot;, DetailsPage.class));
  * </pre>
  * 

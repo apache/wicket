@@ -28,6 +28,6 @@ public class InvalidImagePage extends WebPage
 
 	public InvalidImagePage()
 	{
-		add(new Image("invalidImage", new Model("toto.gif")));
+		add(new Image("invalidImage", new Model<String>("toto.gif")));
 	}
 }

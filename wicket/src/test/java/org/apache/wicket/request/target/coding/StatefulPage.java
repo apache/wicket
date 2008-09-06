@@ -47,27 +47,29 @@ public class StatefulPage extends WebPage
 		add(new BookmarkablePageLink("indexLink", Index.class));
 
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
+		final Link<Void> actionLink = new Link<Void>("actionLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				linkClickCount++;
 			}
 		};
 		add(actionLink);
-		actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
+		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this, "linkClickCount")));
 
-		final TextField field = new TextField("textfield", new Model());
+		final TextField<String> field = new TextField<String>("textfield", new Model<String>());
 
-		StatelessForm statelessForm = new StatelessForm("statelessform")
+		StatelessForm<Void> statelessForm = new StatelessForm<Void>("statelessform")
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				info("Submitted text: " + field.getDefaultModelObject() + ", link click count: " +

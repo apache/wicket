@@ -33,9 +33,6 @@ import org.apache.wicket.util.value.ValueMap;
  * {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
- * 
- * @param <T>
- *            The model object type, can be only of type Resource, ResouceReference or a String
  */
 public class ImageButton extends Button implements IResourceListener
 {
@@ -138,7 +135,7 @@ public class ImageButton extends Button implements IResourceListener
 	@SuppressWarnings("unchecked")
 	public ImageButton(final String id, final String string)
 	{
-		this(id, new Model(string));
+		this(id, new Model<String>(string));
 	}
 
 

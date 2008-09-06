@@ -34,15 +34,16 @@ public class FeedbackFormPage extends WebPage
 	 */
 	public FeedbackFormPage()
 	{
-		final TextField tf = new TextField("input", new Model());
+		final TextField<String> tf = new TextField<String>("input", new Model<String>());
 		final FormComponentFeedbackBorder feedback = new FormComponentFeedbackBorder("feedback");
 		feedback.add(tf);
 
-		Form form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit()
+			@Override
+            protected void onSubmit()
 			{
 				tf.error("an error");
 			}

@@ -28,11 +28,12 @@ public class ExternalLinkPage_2 extends WebPage
 	 */
 	public ExternalLinkPage_2()
 	{
-		add(new ExternalLink("myLink", new Model(null))
+		add(new ExternalLink("myLink", new Model<String>(null))
 		{
 			private static final long serialVersionUID = 1L;
 
-			public boolean isVisible()
+			@Override
+            public boolean isVisible()
 			{
 				return getDefaultModelObject() != null;
 			}

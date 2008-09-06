@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.tree;
 
 import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
@@ -72,12 +71,14 @@ public class LabelTree extends BaseTree
 	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
 	 *      org.apache.wicket.model.IModel)
 	 */
+	@Override
 	protected Component newNodeComponent(String id, IModel<Object> model)
 	{
 		return new LabelIconPanel(id, model, this)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Component newContentComponent(String componentId, BaseTree tree,
 				IModel<Object> model)
 			{

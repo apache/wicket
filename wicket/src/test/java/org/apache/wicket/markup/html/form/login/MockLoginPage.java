@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.login;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
@@ -37,9 +39,9 @@ public class MockLoginPage extends WebPage
 
 	private static final Logger log = LoggerFactory.getLogger(MockLoginPage.class);
 
-	private Form form;
+	private Form<Void> form;
 
-	private TextField textField;
+	private TextField<Serializable> textField;
 
 	/**
 	 * 
@@ -48,17 +50,17 @@ public class MockLoginPage extends WebPage
 	{
 		super();
 		add(new Label("label", "welcome please login"));
-		add(form = new Form("form")
+		add(form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit()
 			{
-				login(get("username").getDefaultModelObjectAsString().toString());
+				login(get("username").getDefaultModelObjectAsString());
 			}
 		});
-		form.add(textField = new TextField("username", new Model()));
+		form.add(textField = new TextField<Serializable>("username", new Model<Serializable>()));
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class MockLoginPage extends WebPage
 	 * 
 	 * @return form
 	 */
-	public final Form getForm()
+	public final Form<Void> getForm()
 	{
 		return form;
 	}
@@ -89,7 +91,7 @@ public class MockLoginPage extends WebPage
 	 * 
 	 * @return textfield
 	 */
-	public final TextField getTextField()
+	public final TextField<Serializable> getTextField()
 	{
 		return textField;
 	}

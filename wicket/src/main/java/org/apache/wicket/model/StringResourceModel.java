@@ -104,7 +104,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
- *             new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *             new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model&lt;String&gt;(ws)));
  *     }
  * }
  * </pre>
@@ -132,7 +132,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
- *             new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *             new StringResourceModel(&quot;weather.message&quot;, this, new Model&lt;String&gt;(ws)));
  *     }
  * }
  * </pre>
@@ -151,16 +151,16 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
- *         Model model = new Model(ws);
+ *         IModel&lt;WeatherStation&gt; model = new Model&lt;WeatherStation&gt;(ws);
  *         add(new Label(&quot;weatherMessage&quot;,
  *             new StringResourceModel(
  *                 &quot;weather.detail&quot;, this, model,
  *                     new Object[]
  *                     {
  *                         new Date(),
- *                         new PropertyModel(model, &quot;currentStatus&quot;),
- *                         new PropertyModel(model, &quot;currentTemperature&quot;),
- *                         new PropertyModel(model, &quot;units&quot;)
+ *                         new PropertyModel&lt;?&gt;(model, &quot;currentStatus&quot;),
+ *                         new PropertyModel&lt;?&gt;(model, &quot;currentTemperature&quot;),
+ *                         new PropertyModel&lt;?&gt;(model, &quot;units&quot;)
  *         }));
  *     }
  * }
@@ -256,7 +256,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			return StringResourceModel.this;
 		}
-	};
+	}
 
 	/**
 	 * Construct.
