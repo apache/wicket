@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
+ * <li>The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
  * button) is nested in this form (is a child component) and was clicked by the user. If an
  * IFormSubmittingComponent was found, and it has the defaultFormProcessing field set to false
  * (default is true), it's onSubmit method will be called right away, thus no validition is done,
@@ -79,17 +79,17 @@ import org.slf4j.LoggerFactory;
  * respect, nesting an IFormSubmittingComponent with the defaultFormProcessing field set to false
  * has the same effect as nesting a normal link. If you want you can call validate() to execute form
  * validation, hasError() to find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components. </li>
- * <li> When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
+ * updateFormComponentModels() to update the models of nested form components.</li>
+ * <li>When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
  * found, this form is processed (method process()). Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked invalid, and onError() is
- * called to allow clients to provide custom error handling code. </li>
- * <li> Form validation succeeded. The nested components will be asked to update their models and
+ * <li>Form validation failed. All nested form components will be marked invalid, and onError() is
+ * called to allow clients to provide custom error handling code.</li>
+ * <li>Form validation succeeded. The nested components will be asked to update their models and
  * persist their data is applicable. After that, method delegateSubmit with optionally the
  * submitting IFormSubmittingComponent is called. The default when there is a submitting
  * IFormSubmittingComponent is to first call onSubmit on that Component, and after that call
- * onSubmit on this form. Clients may override delegateSubmit if they want different behavior. </li>
+ * onSubmit on this form. Clients may override delegateSubmit if they want different behavior.</li>
  * </ul>
  * </li>
  * </li>
@@ -1425,6 +1425,37 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		return new CookieValuePersister();
 	}
 
+	private boolean isMultiPart()
+	{
+		if (multiPart)
+		{
+			return true;
+		}
+		else
+		{
+			final boolean[] anyEmbeddedMultipart = new boolean[] { false };
+			visitChildren(Form.class, new IVisitor()
+			{
+
+				public Object component(Component component)
+				{
+					final Form form = (Form)component;
+					if (form.multiPart)
+					{
+						anyEmbeddedMultipart[0] = true;
+						return STOP_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL;
+					}
+				}
+
+			});
+			return anyEmbeddedMultipart[0];
+		}
+	}
+
 	/**
 	 * Handles multi-part processing of the submitted data.
 	 * 
@@ -1436,7 +1467,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected boolean handleMultiPart()
 	{
-		if (multiPart && !((WebRequest)getRequest()).isAjax())
+		if (isMultiPart() && !((WebRequest)getRequest()).isAjax())
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
@@ -1600,7 +1631,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("action", Strings.escapeMarkup(url));
 			}
 
-			if (multiPart)
+			if (isMultiPart())
 			{
 				tag.put("enctype", "multipart/form-data");
 			}
