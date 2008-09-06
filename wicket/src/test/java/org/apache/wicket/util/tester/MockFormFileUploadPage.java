@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -75,11 +76,12 @@ public class MockFormFileUploadPage extends WebPage
 	public MockFormFileUploadPage()
 	{
 		domainObject = new MockDomainObjectFileUpload();
-		Form form = new Form("form", new CompoundPropertyModel(domainObject))
+		Form<MockDomainObjectFileUpload> form = new Form<MockDomainObjectFileUpload>("form", new CompoundPropertyModel<MockDomainObjectFileUpload>(domainObject))
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit()
+			@Override
+            protected void onSubmit()
 			{
 				fileUpload = fileUploadField.getFileUpload();
 			}
@@ -87,8 +89,8 @@ public class MockFormFileUploadPage extends WebPage
 		add(form);
 		form.setMultiPart(true);
 		form.setMaxSize(Bytes.kilobytes(100));
-		form.add(new TextField("text"));
-		fileUploadField = new FileUploadField("file");
+		form.add(new TextField<String>("text"));
+		fileUploadField = new FileUploadField("file", new Model<FileUpload>());
 		fileUploadField.setRequired(true);
 		form.add(fileUploadField);
 	}

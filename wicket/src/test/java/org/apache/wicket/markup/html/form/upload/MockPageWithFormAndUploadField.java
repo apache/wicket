@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.upload;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.Model;
 
 /**
  * Mock page for use in the FileUploadFieldTest
@@ -50,7 +51,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 				fileUpload = fileUploadField.getFileUpload();
 			}
 		};
-		fileUploadField = new FileUploadField("upload");
+		fileUploadField = new FileUploadField("upload", new Model<FileUpload>());
 		form.add(fileUploadField);
 		add(form);
 	}
