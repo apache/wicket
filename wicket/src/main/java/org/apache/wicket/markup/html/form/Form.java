@@ -1454,6 +1454,36 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		return new CookieValuePersister();
 	}
 
+	private boolean isMultiPart()
+	{
+		if (multiPart)
+		{
+			return true;
+		}
+		else
+		{
+			final boolean[] anyEmbeddedMultipart = new boolean[] { false };
+			visitChildren(Form.class, new IVisitor<Form<?>>()
+			{
+
+				public Object component(Form<?> form)
+				{
+					if (form.multiPart)
+					{
+						anyEmbeddedMultipart[0] = true;
+						return STOP_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL;
+					}
+				}
+
+			});
+			return anyEmbeddedMultipart[0];
+		}
+	}
+
 	/**
 	 * Handles multi-part processing of the submitted data.
 	 * 
@@ -1465,7 +1495,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected boolean handleMultiPart()
 	{
-		if (multiPart && !((WebRequest)getRequest()).isAjax())
+		if (isMultiPart() && !((WebRequest)getRequest()).isAjax())
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
@@ -1633,7 +1663,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("action", Strings.escapeMarkup(url));
 			}
 
-			if (multiPart)
+			if (isMultiPart())
 			{
 				tag.put("enctype", "multipart/form-data");
 			}
