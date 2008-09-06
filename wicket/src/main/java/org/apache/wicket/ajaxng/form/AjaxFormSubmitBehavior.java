@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ajaxng.form;
 
-import java.util.Map;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajaxng.AjaxEventBehavior;
@@ -27,17 +25,43 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
+/**
+ * Ajax event behavior that submits a form via ajax when the event it is attached to is invoked.
+ * <p>
+ *  
+ * @see AjaxEventBehavior
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
 public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	private Form<?> form;
 
+	/**
+	 * Constructor. This constructor can only be used when the component this behavior is attached
+	 * to is inside a form.
+	 * 
+	 * @param event
+	 *            javascript event this behavior is attached to
+	 */
 	public AjaxFormSubmitBehavior(String event)
 	{
 		this(null, event);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param form
+	 *            form that will be submitted
+	 * @param event
+	 *            javascript event this behavior is attached to
+	 */
 	public AjaxFormSubmitBehavior(Form<?> form, String event)
 	{
 		super(event);

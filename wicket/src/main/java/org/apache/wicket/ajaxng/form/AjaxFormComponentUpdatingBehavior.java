@@ -19,20 +19,46 @@ package org.apache.wicket.ajaxng.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.FormView;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajaxng.AjaxEventBehavior;
 import org.apache.wicket.ajaxng.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.persistence.IValuePersister;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 
+/**
+ * A behavior that updates the hosting {@link FormComponent}(s) via ajax when an event it is
+ * attached to is triggered. This behavior encapsulates the entire form-processing workflow as
+ * relevant only to this component so if validation is successful the component's model will be
+ * updated according to the submitted value.
+ * <p>
+ * NOTE: This behavior does not support persisting form component values into cookie or other
+ * {@link IValuePersister}. If this is necessary please add a request for enhancement.
+ * <p>
+ * NOTE: This behavior only validates {@link IFormValidator}s attached to this form that don't
+ * depend on any form components that are not bound to this behavior.
+ * <p>
+ * NOTE: This behavior does not work on Choices or Groups use the
+ * {@link AjaxFormChoiceComponentUpdatingBehavior} for that.
+ * 
+ * @since 1.2
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * @author Matej Knopp
+ */
 public class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param event
+	 *            event to trigger this behavior
+	 */
 	public AjaxFormComponentUpdatingBehavior(String event)
 	{
 		super(event);
@@ -81,9 +107,9 @@ public class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 	protected Form<?> getForm(List<FormComponent<?>> components)
 	{
 		FormComponent<?> first = components.get(0);
-		return first.getForm();
+		return getForm(first);
 	}
-	
+
 	@Override
 	protected Form<?> getForm(Component component)
 	{
