@@ -49,7 +49,7 @@ public class MultiLineLabel extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as MultiLineLabel(String, new Model(String))
+	 * Convenience constructor. Same as MultiLineLabel(String, new Modell&lt;String&gt;(String))
 	 * 
 	 * @param id
 	 *            See Component
@@ -61,7 +61,7 @@ public class MultiLineLabel extends WebComponent
 	@SuppressWarnings("unchecked")
 	public MultiLineLabel(final String id, String label)
 	{
-		this(id, new Model(label));
+		this(id, new Model<String>(label));
 	}
 
 	/**

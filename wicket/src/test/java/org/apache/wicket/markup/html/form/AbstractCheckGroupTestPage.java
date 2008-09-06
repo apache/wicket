@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
 
 
 /**
@@ -45,8 +45,8 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	public AbstractCheckGroupTestPage(List<String> list)
 	{
 
-		Form<?> form = new Form("form");
-		CheckGroup<String> group = new CheckGroup<String>("group", new Model((Serializable)list));
+		Form<?> form = new Form<Void>("form");
+		CheckGroup<String> group = new CheckGroup<String>("group", new CollectionModel<String>(list));
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));
 		Check<String> check2 = new Check<String>("check2", new Model<String>("check2"));

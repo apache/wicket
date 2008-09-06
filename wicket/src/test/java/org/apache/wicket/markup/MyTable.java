@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 
 
 /**
@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class MyTable extends ListView
+public class MyTable extends ListView<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,12 +41,13 @@ public class MyTable extends ListView
 	 */
 	public MyTable(final String id)
 	{
-		super(id, new Model(null));
+		super(id, new ListModel<String>());
 	}
 
-	protected void populateItem(ListItem listItem)
+	@Override
+    protected void populateItem(ListItem<String> listItem)
 	{
-		String txt = (String)listItem.getDefaultModelObject();
+		String txt = listItem.getModelObject();
 		listItem.add(new Label("txt", txt));
 	}
 
@@ -57,7 +58,7 @@ public class MyTable extends ListView
 	 */
 	public void setRowsPerPage(final int rows)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 
 		for (int i = 0; i < rows; i++)
 		{

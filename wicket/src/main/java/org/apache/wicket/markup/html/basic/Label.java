@@ -80,7 +80,7 @@ public class Label extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * Convenience constructor. Same as Label(String, new Model&lt;String&gt;(String))
 	 * 
 	 * @param id
 	 *            See Component
@@ -92,7 +92,7 @@ public class Label extends WebComponent
 	@SuppressWarnings("unchecked")
 	public Label(final String id, String label)
 	{
-		this(id, new Model(label));
+		this(id, new Model<String>(label));
 	}
 
 	/**
