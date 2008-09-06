@@ -51,6 +51,7 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -257,6 +258,7 @@ public class WicketFilter implements Filter
 					else
 					{
 						httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+						httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + Duration.hours(1).getMilliseconds());
 					}
 				}
 			}
