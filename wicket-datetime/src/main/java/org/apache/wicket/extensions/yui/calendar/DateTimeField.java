@@ -38,16 +38,17 @@ import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a
- * field for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours
- * field depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the
- * visibility of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
+ * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a field
+ * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
+ * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
+ * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -146,7 +147,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 				return MINUTES_CONVERTER;
 			}
 		});
-		minutesField.add(NumberValidator.range(0, 59));
+		minutesField.add(new RangeValidator<Integer>(0, 59));
 		minutesField.setLabel(new Model<String>("minutes"));
 		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new PropertyModel<AM_PM>(this,
 				"amOrPm"), Arrays.asList(AM_PM.values())));
@@ -288,8 +289,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 		if (dateFieldInput != null)
 		{
 			MutableDateTime date = new MutableDateTime(dateFieldInput);
-			Integer hours = (Integer)hoursField.getConvertedInput();
-			Integer minutes = (Integer)minutesField.getConvertedInput();
+			Integer hours = hoursField.getConvertedInput();
+			Integer minutes = minutesField.getConvertedInput();
 			AM_PM amOrPm = amOrPmChoice.getConvertedInput();
 
 			try

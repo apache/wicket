@@ -473,6 +473,35 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * Adds a validator to this form component
+	 * 
+	 * @param validator
+	 *            validator to be added
+	 * @return <code>this</code> for chaining
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IValidator
+	 * @see IValidatorAddListener
+	 * 
+	 */
+	public final FormComponent<T> add(final IValidator<T> validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+		// add the validator
+		validators_add(validator);
+
+		// see whether the validator listens for add events
+		if (validator instanceof IValidatorAddListener)
+		{
+			((IValidatorAddListener)validator).onAdded(this);
+		}
+		return this;
+	}
+
+	/**
 	 * Adds a validator to this form component.
 	 * 
 	 * @param validators
@@ -492,18 +521,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		for (IValidator<T> validator : validators)
 		{
-			if (validator == null)
-			{
-				throw new IllegalArgumentException("validator argument cannot be null");
-			}
-			// add the validator
-			validators_add(validator);
-
-			// see whether the validator listens for add events
-			if (validator instanceof IValidatorAddListener)
-			{
-				((IValidatorAddListener)validator).onAdded(this);
-			}
+			add(validator);
 		}
 
 		// return this for chaining
@@ -1126,6 +1144,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The validator to add to the validators Object (which may be an array of
 	 *            IValidators or a single instance, for efficiency)
 	 */
+	@SuppressWarnings("unchecked")
 	private void validators_add(final IValidator<T> validator)
 	{
 		if (validators == null)
@@ -1162,6 +1181,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The index of the validator to get
 	 * @return The validator
 	 */
+	@SuppressWarnings("unchecked")
 	private IValidator<T> validators_get(int index)
 	{
 		if (validators == null)

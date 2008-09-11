@@ -21,10 +21,11 @@ import java.util.Map;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.validation.IValidatable;
 
-// FIXME 2.0: ivaynberg: look over javadoc
 /**
  * Validator for checking numbers. Use the static factory methods to make range/minimum or maximum
  * validators for <code>double</code>s or <code>long</code>s.
+ * 
+ * @deprecated see (Range,Maximum,Minimum)Validator
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -32,7 +33,11 @@ import org.apache.wicket.validation.IValidatable;
  * @param <T>
  *            type of validatable
  * @since 1.2.6
+ * 
+ *        FIXME remove after 1.4
  */
+@Deprecated
+@SuppressWarnings("unchecked")
 public abstract class NumberValidator<T extends Number> extends AbstractValidator<T>
 {
 	/**
@@ -42,7 +47,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * a validator for ensuring for a positive number value (>0 so not including 0)
+	 * 
+	 * @deprecated see {@link MinimumValidator}
 	 */
+	@Deprecated
 	public static final NumberValidator POSITIVE = new DoubleMinimumValidator(Double.MIN_VALUE)
 	{
 		private static final long serialVersionUID = 1L;
@@ -56,7 +64,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * a validator for ensuring a negative number value (<0 so not including 0)
+	 * 
+	 * @deprecated see {@link MaximumValidator}
 	 */
+	@Deprecated
 	public static final NumberValidator NEGATIVE = new DoubleMaximumValidator(-Double.MIN_VALUE)
 	{
 		private static final long serialVersionUID = 1L;
@@ -71,7 +82,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets an Integer range validator for checking if a number falls between the minimum and
 	 * maximum values. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.range". The message keys that can be used are:
+	 * "RangeValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
@@ -89,7 +100,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the request <code>NumberValidator</code>
+	 * @deprecated see {@link RangeValidator}
 	 */
+	@Deprecated
 	public static NumberValidator range(long minimum, long maximum)
 	{
 		return new RangeValidator(minimum, maximum);
@@ -98,7 +111,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets an Integer minimum validator for checking if a number is greater than or equal to the
 	 * given minimum value. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.minimum". The message keys that can be used are:
+	 * "MinimumValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
@@ -113,7 +126,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the minimum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
+	 * @deprecated see {@link MinimumValidator}
 	 */
+	@Deprecated
 	public static NumberValidator minimum(long minimum)
 	{
 		return new MinimumValidator(minimum);
@@ -122,7 +137,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets an Integer range validator for checking if a number is smaller than or equal to the
 	 * given maximum value. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.maximum". The message keys that can be used are:
+	 * "MaximumValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
@@ -138,7 +153,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
+	 * @deprecated see {@link MaximumValidator}
 	 */
+	@Deprecated
 	public static NumberValidator maximum(long maximum)
 	{
 		return new MaximumValidator(maximum);
@@ -147,7 +164,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets a Double range validator for checking if a number falls between (including) the minimum
 	 * and maximum values. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.range". The message keys that can be used are:
+	 * "RangeValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
@@ -165,7 +182,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
+	 * @deprecated see {@link RangeValidator}
 	 */
+	@Deprecated
 	public static NumberValidator range(double minimum, double maximum)
 	{
 		return new DoubleRangeValidator(minimum, maximum);
@@ -174,7 +193,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets a Double minimum validator for checking if number is greater then or equal to the given
 	 * minimum value. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.minimum". The message keys that can be used are:
+	 * "MinimumValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
@@ -189,7 +208,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the minimum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
+	 * @deprecated see {@link MinimumValidator}
 	 */
+	@Deprecated
 	public static NumberValidator minimum(double minimum)
 	{
 		return new DoubleMinimumValidator(minimum);
@@ -198,7 +219,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Gets a Double maximum validator for checking if an number is smaller than or equal to the
 	 * given maximum value. If that is not the case, an error message will be generated with the key
-	 * "NumberValidator.maximum". The message keys that can be used are:
+	 * "MaximumValidator". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
@@ -213,7 +234,9 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
+	 * @deprecated see {@link MaximumValidator}
 	 */
+	@Deprecated
 	public static NumberValidator maximum(double maximum)
 	{
 		return new DoubleMaximumValidator(maximum);
@@ -221,7 +244,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given number is within the specified range.
+	 * 
+	 * @deprecated see {@link RangeValidator}
 	 */
+	@Deprecated
 	public static class RangeValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -261,7 +287,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.range";
+			return "RangeValidator";
 		}
 
 		/**
@@ -300,7 +326,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given number number meets the minimum requirement.
+	 * 
+	 * @deprecated see {@link MinimumValidator}
 	 */
+	@Deprecated
 	public static class MinimumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -334,7 +363,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.minimum";
+			return "MinimumValidator";
 		}
 
 		/**
@@ -363,7 +392,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given number meets the maximum requirement.
+	 * 
+	 * @deprecated see {@link MaximumValidator}
 	 */
+	@Deprecated
 	public static class MaximumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -397,7 +429,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.maximum";
+			return "MaximumValidator";
 		}
 
 		/**
@@ -425,7 +457,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given <code>double</code> is within the specified range.
+	 * 
+	 * @deprecated see {@link RangeValidator}
 	 */
+	@Deprecated
 	public static class DoubleRangeValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -465,7 +500,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.range";
+			return "RangeValidator";
 		}
 
 		/**
@@ -504,7 +539,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given <code>double</code> meets the minimum requirement.
+	 * 
+	 * @deprecated see {@link MinimumValidator}
 	 */
+	@Deprecated
 	public static class DoubleMinimumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -545,7 +583,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.minimum";
+			return "MinimumValidator";
 		}
 
 		/**
@@ -573,7 +611,10 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 
 	/**
 	 * Validator for checking if a given <code>double</code> meets a maximum requirement.
+	 * 
+	 * @deprecated see {@link MaximumValidator}
 	 */
+	@Deprecated
 	public static class DoubleMaximumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -614,7 +655,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 		@Override
 		protected String resourceKey()
 		{
-			return "NumberValidator.maximum";
+			return "MaximumValidator";
 		}
 
 		/**
