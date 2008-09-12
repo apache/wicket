@@ -31,7 +31,7 @@ import org.apache.wicket.WicketRuntimeException;
  * simple model object. The model object must be serializable, as it is stored in the session. If
  * you have large objects to store, consider using
  * {@link org.apache.wicket.model.LoadableDetachableModel} instead of this class.
- * 
+ *
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -51,7 +51,7 @@ public class Model implements IModel
 
 	/**
 	 * Construct the model, setting the given object as the wrapped object.
-	 * 
+	 *
 	 * @param object
 	 *            The model object proper
 	 */
@@ -91,7 +91,7 @@ public class Model implements IModel
 	/**
 	 * Set the model object; calls setObject(java.io.Serializable). The model object must be
 	 * serializable, as it is stored in the session
-	 * 
+	 *
 	 * @param object
 	 *            the model object
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
@@ -110,7 +110,7 @@ public class Model implements IModel
 
 	/**
 	 * Sets the model object. The model object must be serializable, as it is stored in the session
-	 * 
+	 *
 	 * @param object
 	 *            The serializable model object
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
@@ -125,6 +125,10 @@ public class Model implements IModel
 	 */
 	public void detach()
 	{
+		if (object instanceof IDetachable)
+		{
+			((IDetachable)object).detach();
+		}
 	}
 
 	/**
