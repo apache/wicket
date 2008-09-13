@@ -40,7 +40,9 @@ import org.slf4j.LoggerFactory;
 public class RequestCycle extends RequestHandlerStack
 {
 	private final Request request;
-
+	
+	private UrlRenderer urlRenderer;
+	
 	/**
 	 * Construct.
 	 * 
@@ -50,9 +52,28 @@ public class RequestCycle extends RequestHandlerStack
 	public RequestCycle(Request request, Response globalResponse)
 	{
 		super(globalResponse);
-		this.request = request;
+		this.request = request;		
 	}
 
+	protected UrlRenderer newUrlRenderer()
+	{
+		return new UrlRenderer(getRequest().getUrl());
+	}
+	
+	/**
+	 * Returns {@link UrlRenderer} for this {@link RequestCycle}.
+	 * 
+	 * @return UrlRenderer instance.
+	 */
+	public final UrlRenderer getUrlRenderer()
+	{
+		if (urlRenderer == null)
+		{
+			urlRenderer = newUrlRenderer();
+		}
+		return urlRenderer;
+	}
+	
 	/**
 	 * Resolves current request to a {@link RequestHandler}.
 	 * 
