@@ -98,8 +98,8 @@ public final class Url implements Serializable
 		{
 			throw new IllegalArgumentException("Argument 'parameters' may not be null.");
 		}
-		segments.addAll(segments);
-		parameters.addAll(parameters);
+		this.segments.addAll(segments);
+		this.parameters.addAll(parameters);
 	}
 	
 	/**
