@@ -50,14 +50,17 @@ public class UrlRenderer
 	 * Sets the base Url. All generated URLs will be relative to this Url.
 	 * 
 	 * @param base
+	 * @return original base Url
 	 */
-	public void setBaseUrl(Url base)
+	public Url setBaseUrl(Url base)
 	{
 		if (base == null)
 		{
 			throw new IllegalArgumentException("Argument 'base' may not be null.");
 		}
+		Url original = this.baseUrl;
 		this.baseUrl = base;
+		return original;
 	}
 
 	/**
