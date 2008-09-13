@@ -22,7 +22,11 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
 
-
+/**
+ * Base class for web-related responses.
+ * 
+ * @author Matej Knopp
+ */
 public abstract class WebResponse extends Response
 {
 	/**
@@ -44,18 +48,18 @@ public abstract class WebResponse extends Response
 	/**
 	 * Set a header to the string value in the servlet response stream.
 	 * 
-	 * @param header
+	 * @param name
 	 * @param value
 	 */
-	public abstract void setHeader(String header, String value);
+	public abstract void setHeader(String name, String value);
 	
 	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
-	 * @param header
+	 * @param name
 	 * @param date
 	 */
-	public abstract void setDateHeader(String header, long date);
+	public abstract void setDateHeader(String name, long date);
 	
 	/**
 	 * Set the content length on the response, if appropriate in the subclass. This default

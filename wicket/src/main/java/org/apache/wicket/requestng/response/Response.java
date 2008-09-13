@@ -16,16 +16,38 @@
  */
 package org.apache.wicket.requestng.response;
 
-
-
+/**
+ * Abstract base class for different implementations of response writing.
+ * <p>
+ * The implementation may not support calling both {@link #write(byte[])} and
+ * {@link #write(CharSequence)} on the same {@link Response} instance.
+ * 
+ * @author Matej Knopp
+ */
 public abstract class Response
 {
+	/**
+	 * Writes the {@link CharSequence} to output.
+	 * 
+	 * @param sequence
+	 * @throws IllegalStateException
+	 *             if {@link #write(byte[])} has already been called on this instance
+	 */
 	public abstract void write(CharSequence sequence);
-	
+
+	/**
+	 * Writes the buffer to output.
+	 * 
+	 * @param array
+	 * @throws IllegalStateException
+	 *             if {@link #write(CharSequence)} has already been called on this instance
+	 */
 	public abstract void write(byte[] array);
-	
+
+	/**
+	 * Closes the response
+	 */
 	public void close()
 	{
-		
-	}	
+	}
 }

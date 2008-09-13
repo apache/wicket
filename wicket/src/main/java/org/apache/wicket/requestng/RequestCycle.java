@@ -65,7 +65,16 @@ public class RequestCycle extends RequestHandlerStack
 	}
 
 	/**
-	 * Processes the request.  
+	 * @return How many times will Wicket attempt to render the exception request handler before
+	 *         giving up.
+	 */
+	protected int getExceptionRetryCount()
+	{
+		return 10;
+	}
+
+	/**
+	 * Processes the request.
 	 */
 	public void processRequest()
 	{
@@ -79,19 +88,33 @@ public class RequestCycle extends RequestHandlerStack
 			RequestHandler handler = handleException(e);
 			if (handler != null)
 			{
-				try
-				{
-					executeRequestHandler(handler);
-				}
-				catch (Exception e2)
-				{
-					log.error("Error during processing error message", e2);
-				}
+				executeExceptionRequestHandler(handler, getExceptionRetryCount());
 			}
 			else
 			{
 				log.error("Error during request processing", e);
 			}
+		}
+	}
+
+	private void executeExceptionRequestHandler(RequestHandler handler, int retryCount)
+	{
+		try
+		{
+			executeRequestHandler(handler);
+		}
+		catch (Exception e)
+		{
+			if (retryCount > 0)
+			{
+				RequestHandler next = handleException(e);
+				if (handler != null)
+				{
+					executeExceptionRequestHandler(next, retryCount - 1);
+					return;
+				}
+			}
+			log.error("Error during processing error message", e);
 		}
 	}
 

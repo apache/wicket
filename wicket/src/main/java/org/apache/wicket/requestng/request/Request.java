@@ -19,16 +19,39 @@ package org.apache.wicket.requestng.request;
 import org.apache.wicket.requestng.RequestParameters;
 import org.apache.wicket.requestng.Url;
 
+/**
+ * Request object.
+ * 
+ * @author Matej Knopp
+ */
 public abstract class Request
 {
+	/**
+	 * Returns the URL for this request.
+	 * 
+	 * @return Url instance
+	 */
 	public abstract Url getUrl();
-	
+
+	/**
+	 * @return request parameters for this request
+	 */
 	public abstract RequestParameters getRequestParameters();
-	
+
+	/**
+	 * Marker parameter for AjaxRequest.
+	 */
 	public static final String PARAM_AJAX = "wicket:ajax";
-	
+
+	/**
+	 * Returns whetehr this request is an Ajax request. This implementation only checks for value of
+	 * wicket:ajax url parameter. Subclasses can use other approach.
+	 * 
+	 * @return <code>true</code> if this request is an ajax request, <code>false</codE>
+	 *         otherwise.
+	 */
 	public boolean isAjax()
 	{
-		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false); 
+		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
 	}
 }

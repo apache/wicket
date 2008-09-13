@@ -42,7 +42,9 @@ import org.apache.wicket.util.string.Strings;
  * /foo/bar/              - segments: [&quot;&quot;, &quot;foo&quot;, &quot;bar&quot;, &quot;&quot;]
  * foo/bar//              - segments: [&quot;foo&quot;, &quot;bar&quot;, &quot;&quot;, &quot;&quot;]
  * ?a=b                   - segments: [ ], query parameters: ["a"="b"]
- * /                      - segments: ["", ""]
+ * /                      - segments: ["", ""]   (note that Url represents part after Wicket Filter 
+ *                                                - so if Wicket filter is mapped to /* this would be
+ *                                                an additional slash, i.e. //
  * </pre>
  * 
  * The Url class takes care of encoding and decoding of the segments and parameters.
@@ -72,10 +74,34 @@ public final class Url implements Serializable
 	 */
 	public Url(Url url)
 	{
+		if (url == null)
+		{
+			throw new IllegalArgumentException("Argument 'url' may not be null.");
+		}
 		segments.addAll(url.getSegments());
 		parameters.addAll(url.getQueryParameters());
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
+	 * @param parameters
+	 */
+	public Url(List<String> segments, List<QueryParameter> parameters)
+	{
+		if (segments == null)
+		{
+			throw new IllegalArgumentException("Argument 'segments' may not be null.");
+		}
+		if (parameters == null)
+		{
+			throw new IllegalArgumentException("Argument 'parameters' may not be null.");
+		}
+		segments.addAll(segments);
+		parameters.addAll(parameters);
+	}
+	
 	/**
 	 * Returns segments of the URL. Segments form the part before query string.
 	 * 
