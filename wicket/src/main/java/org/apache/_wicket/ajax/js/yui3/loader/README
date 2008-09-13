@@ -1,0 +1,6 @@
+YUI Loader
+    Added dynamic loading of YUI and external script and css files.
+    Calculates dependencies and optimizes the selection of file includes.
+
+3.0.0pr1
+    Initial Release
