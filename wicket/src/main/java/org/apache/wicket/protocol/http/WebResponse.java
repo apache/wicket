@@ -23,9 +23,9 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache._wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajaxng.AjaxRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;

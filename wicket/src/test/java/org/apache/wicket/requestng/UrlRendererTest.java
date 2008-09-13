@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.requestng;
 
+import org.apache._wicket.request.Url;
+import org.apache._wicket.request.UrlRenderer;
+
 import junit.framework.TestCase;
 
 /**

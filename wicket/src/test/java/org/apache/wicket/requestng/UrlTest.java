@@ -22,7 +22,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.requestng.Url.QueryParameter;
+import org.apache._wicket.request.Url;
+import org.apache._wicket.request.Url.QueryParameter;
 
 /**
  * @author Matej Knopp
