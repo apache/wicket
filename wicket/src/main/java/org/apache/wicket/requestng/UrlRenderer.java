@@ -86,9 +86,6 @@ public class UrlRenderer
 		List<String> baseUrlSegments = getBaseUrl().getSegments();
 		List<String> urlSegments = new ArrayList<String>(url.getSegments());
 		
-		//   /foo/bar/baz
-		//   /foo/aaa/bbb
-		
 		int common = 0;
 		for (String s : baseUrlSegments)
 		{
