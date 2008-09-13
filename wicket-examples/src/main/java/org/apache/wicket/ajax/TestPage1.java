@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.ajaxng.AjaxEventBehavior;
-import org.apache.wicket.ajaxng.AjaxRequestTarget;
-import org.apache.wicket.ajaxng.AjaxRequestTarget.ComponentEntry;
+import org.apache._wicket.ajax.AjaxRequestTarget.ComponentEntry;
+import org.apache._wicket.ajax.AjaxRequestTarget;
+import org.apache._wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
