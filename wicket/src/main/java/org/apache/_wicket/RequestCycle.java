@@ -18,6 +18,7 @@ package org.apache._wicket;
 
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.RequestHandlerStack;
+import org.apache._wicket.request.Url;
 import org.apache._wicket.request.UrlRenderer;
 import org.apache._wicket.request.request.Request;
 import org.apache._wicket.request.response.Response;
@@ -44,13 +45,13 @@ import org.slf4j.LoggerFactory;
 public class RequestCycle extends RequestHandlerStack
 {
 	private final Request request;
-	
+
 	private UrlRenderer urlRenderer;
-	
+
 	private final Response originalResponse;
-	
+
 	private final RequestCycleContext context;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -61,7 +62,7 @@ public class RequestCycle extends RequestHandlerStack
 	public RequestCycle(Request request, Response response, RequestCycleContext context)
 	{
 		super(response);
-		
+
 		if (request == null)
 		{
 			throw new IllegalArgumentException("Argument 'request' may not be null.");
@@ -74,7 +75,7 @@ public class RequestCycle extends RequestHandlerStack
 		{
 			throw new IllegalArgumentException("Argument 'context' may not be null.");
 		}
-		
+
 		this.request = request;
 		this.originalResponse = response;
 		this.context = context;
@@ -84,7 +85,7 @@ public class RequestCycle extends RequestHandlerStack
 	{
 		return new UrlRenderer(getRequest().getUrl());
 	}
-	
+
 	/**
 	 * Get the original response the request was create with. Access may be necessary with the
 	 * response has temporarily being replaced but your components requires access to lets say the
@@ -96,7 +97,7 @@ public class RequestCycle extends RequestHandlerStack
 	{
 		return originalResponse;
 	}
-	
+
 	/**
 	 * Returns {@link UrlRenderer} for this {@link RequestCycle}.
 	 * 
@@ -110,7 +111,7 @@ public class RequestCycle extends RequestHandlerStack
 		}
 		return urlRenderer;
 	}
-	
+
 	/**
 	 * Resolves current request to a {@link RequestHandler}.
 	 * 
@@ -118,7 +119,7 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	protected RequestHandler resolveRequestHandler()
 	{
-		RequestHandler handler = context.decodeRequestHandler(request); 
+		RequestHandler handler = context.decodeRequestHandler(request);
 		if (handler == null)
 		{
 			throw new WicketRuntimeException("Could not resolve handler for request.");
@@ -207,7 +208,7 @@ public class RequestCycle extends RequestHandlerStack
 
 	/** MetaDataEntry array. */
 	private MetaDataEntry<?>[] metaData;
-	
+
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For
@@ -241,6 +242,40 @@ public class RequestCycle extends RequestHandlerStack
 	{
 		return key.get(metaData);
 	}
-	
+
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
+
+	/**
+	 * Returns URL for the request handler or <code>null</code> if the handler couldn't have been
+	 * encoded.
+	 * 
+	 * @param handler
+	 * @return Url instance or <code>null</code>
+	 */
+	public Url urlFor(RequestHandler handler)
+	{
+		return context.encodeRequestHandler(handler);
+	}
+
+	/**
+	 * Returns the rendered URL for the request handler or <code>null</code> if the handler
+	 * couldn't have been rendered.
+	 * <p>
+	 * The resulting URL will be relative to current page.
+	 * 
+	 * @param handler
+	 * @return Url String or <code>null</code>
+	 */
+	public String renderUrlFor(RequestHandler handler)
+	{
+		Url url = urlFor(handler);
+		if (url != null)
+		{
+			return getUrlRenderer().renderUrl(url);
+		}
+		else
+		{
+			return null;
+		}
+	}
 }
