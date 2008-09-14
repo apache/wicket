@@ -253,7 +253,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				addStateChange(new ChoicesListChange());
 			}
 		}
-        this.choices = new WildcardListModel<E>(choices);
+		this.choices = new WildcardListModel<E>(choices);
 		return this;
 	}
 
@@ -376,6 +376,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @param selected
 	 *            The currently selected string value
 	 */
+	@SuppressWarnings("unchecked")
 	protected void appendOptionHtml(AppendingStringBuffer buffer, E choice, int index,
 		String selected)
 	{

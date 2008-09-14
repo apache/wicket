@@ -22,8 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converters.BooleanConverter;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 
@@ -63,6 +61,8 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public CheckBox(final String id, IModel<Boolean> model)
@@ -120,22 +120,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 			return false;
 		}
 		return super.getStatelessHint();
-	}
-
-	/**
-	 * CheckBox will by default always just use the boolean converter because the implementation
-	 * expects that the string is can be converted to a boolean {@link Strings#isTrue(String)}
-	 * 
-	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
-	 */
-	@Override
-	public <X> IConverter<X> getConverter(Class<X> type)
-	{
-		/*
-		 * FIXME johan: why is this override here? it doesnt make any sense. if i say
-		 * checkbox.getconverter(Integer.class) why is it still giving me a boolean converter???
-		 */
-		return (IConverter<X>)BooleanConverter.INSTANCE;
 	}
 
 	/**

@@ -81,8 +81,6 @@ import org.slf4j.LoggerFactory;
  * @see MarkupStream
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class MarkupContainer extends Component
 {

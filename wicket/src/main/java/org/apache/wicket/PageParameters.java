@@ -37,6 +37,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
+@SuppressWarnings("unused")
 public final class PageParameters extends ValueMap
 {
 	/**

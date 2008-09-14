@@ -60,8 +60,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {

@@ -81,9 +81,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @return FormComponent
 	 */
-	protected final FormComponent getFormComponent()
+	protected final FormComponent<?> getFormComponent()
 	{
-		return (FormComponent)getComponent();
+		return (FormComponent<?>)getComponent();
 	}
 
 	/**
@@ -117,7 +117,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	@Override
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
-		final FormComponent formComponent = getFormComponent();
+		final FormComponent<?> formComponent = getFormComponent();
 
 		if (getEvent().toLowerCase().equals("onblur") && disableFocusOnBlur())
 		{

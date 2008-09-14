@@ -61,6 +61,8 @@ public class Check<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public Check(String id, IModel<T> model)

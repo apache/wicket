@@ -49,8 +49,6 @@ import org.apache.wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * 
- * @param <T>
- *            The model object type
  */
 public class Button extends FormComponent<String> implements IFormSubmittingComponent
 {

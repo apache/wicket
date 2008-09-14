@@ -80,12 +80,15 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 *            collection to be used as the model
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public CheckGroup(String id, Collection<T> collection)
 	{
 		this(id, new CollectionModel<T>(collection));
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public CheckGroup(String id, IModel<Collection<T>> model)

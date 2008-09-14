@@ -28,8 +28,6 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Matej Knopp
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
 {

@@ -30,6 +30,8 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of model object
  * 
  */
 public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink

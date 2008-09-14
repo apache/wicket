@@ -26,8 +26,6 @@ import org.apache.wicket.markup.html.form.Form;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
- *            The model object type
  * @deprecated Use {@link AjaxButton} instead.
  */
 @Deprecated

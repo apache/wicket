@@ -91,7 +91,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the increment link
 	 */
 	@Override
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected Link<?> newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
 	}
@@ -109,7 +109,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the pagenumber link
 	 */
 	@Override
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
 	}

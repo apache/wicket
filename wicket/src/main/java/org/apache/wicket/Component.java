@@ -83,10 +83,10 @@ import org.slf4j.LoggerFactory;
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
  * Children may be added during construction if the Component is a MarkupContainer.
  * 
- * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler
- * such as WicketServlet. An associated Application object creates Session, Request and Response
- * objects for use by a given Component in updating its model and rendering a response. These
- * objects are stored inside a container called {@link RequestCycle} which is accessible via
+ * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
+ * as WicketServlet. An associated Application object creates Session, Request and Response objects
+ * for use by a given Component in updating its model and rendering a response. These objects are
+ * stored inside a container called {@link RequestCycle} which is accessible via
  * {@link Component#getRequestCycle()}. The convenience methods {@link Component#getRequest()},
  * {@link Component#getResponse()} and {@link Component#getSession()} provide easy access to the
  * contents of this container.
@@ -124,8 +124,8 @@ import org.slf4j.LoggerFactory;
  * <li><b>Component Models </b>- The primary responsibility of a component is to use its model (an
  * object that implements IModel), which can be set via
  * {@link Component#setDefaultModel(IModel model)} and retrieved via
- * {@link Component#getDefaultModel()}, to render a response in an appropriate markup language,
- * such as HTML. In addition, form components know how to update their models based on request
+ * {@link Component#getDefaultModel()}, to render a response in an appropriate markup language, such
+ * as HTML. In addition, form components know how to update their models based on request
  * information. Since the IModel interface is a wrapper around an actual model object, a convenience
  * method {@link Component#getDefaultModelObject()} is provided to retrieve the model Object from
  * its IModel wrapper. A further convenience method,
@@ -136,10 +136,9 @@ import org.slf4j.LoggerFactory;
  * isVisible() and will not render a response (nor will their children).
  * 
  * <li><b>Page </b>- The Page containing any given Component can be retrieved by calling
- * {@link Component#getPage()}. If the Component is not attached to a Page, an
- * IllegalStateException will be thrown. An equivalent method, {@link Component#findPage()} is
- * available for special circumstances where it might be desirable to get a null reference back
- * instead.
+ * {@link Component#getPage()}. If the Component is not attached to a Page, an IllegalStateException
+ * will be thrown. An equivalent method, {@link Component#findPage()} is available for special
+ * circumstances where it might be desirable to get a null reference back instead.
  * 
  * <li><b>Session </b>- The Page for a Component points back to the Session that contains the Page.
  * The Session for a component can be accessed with the convenience method getSession(), which
@@ -155,12 +154,12 @@ import org.slf4j.LoggerFactory;
  * Application Localizer for easy access in Components.
  * 
  * <li><b>Style </b>- The style ("skin") for a component is available through
- * {@link Component#getStyle()}, which is equivalent to getSession().getStyle(). Styles are
- * intended to give a particular look to a Component or Resource that is independent of its Locale.
- * For example, a style might be a set of resources, including images and markup files, which gives
- * the design look of "ocean" to the user. If the Session's style is set to "ocean" and these
- * resources are given names suffixed with "_ocean", Wicket's resource management logic will prefer
- * these resources to other resources, such as default resources, which are not as good of a match.
+ * {@link Component#getStyle()}, which is equivalent to getSession().getStyle(). Styles are intended
+ * to give a particular look to a Component or Resource that is independent of its Locale. For
+ * example, a style might be a set of resources, including images and markup files, which gives the
+ * design look of "ocean" to the user. If the Session's style is set to "ocean" and these resources
+ * are given names suffixed with "_ocean", Wicket's resource management logic will prefer these
+ * resources to other resources, such as default resources, which are not as good of a match.
  * 
  * <li><b>Variation </b>- Whereas Styles are Session (user) specific, variations are component
  * specific. E.g. if the Style is "ocean" and the Variation is "NorthSea", than the resources are
@@ -191,8 +190,8 @@ import org.slf4j.LoggerFactory;
  * {@link Component#setVersioned(boolean)} method. The versioning participation of a given Component
  * can be retrieved with {@link Component#isVersioned()}.
  * 
- * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page has been rendered
- * at least once by calling doRender().
+ * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page has been rendered at
+ * least once by calling doRender().
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -474,8 +473,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * <pre>
 	 * 
-	 * User u = (User)getModelObject();
-	 * u.setName(&quot;got you there!&quot;);
+	 * User u = (User)getModelObject(); u.setName(&quot;got you there!&quot;);
 	 * 
 	 * </pre>
 	 * 
@@ -497,12 +495,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <li>The 'normal' use is for controlling whether a component is rendered without having any
 	 * effect on the rest of the processing. If a strategy lets this method return 'false', then the
 	 * target component and its children will not be rendered, in the same fashion as if that
-	 * component had visibility property 'false'.</li>
-	 * <li>The other use is when a component should block the rendering of the whole page. So
-	 * instead of 'hiding' a component, what we generally want to achieve here is that we force the
-	 * user to logon/give-credentials for a higher level of authorization. For this functionality,
-	 * the strategy implementation should throw a {@link AuthorizationException}, which will then
-	 * be handled further by the framework.</li>
+	 * component had visibility property 'false'.</li> <li>The other use is when a component should
+	 * block the rendering of the whole page. So instead of 'hiding' a component, what we generally
+	 * want to achieve here is that we force the user to logon/give-credentials for a higher level
+	 * of authorization. For this functionality, the strategy implementation should throw a
+	 * {@link AuthorizationException}, which will then be handled further by the framework.</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -705,10 +702,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * What's stored here depends on what attributes are set on component. Data can contains
 	 * combination of following attributes:
 	 * <ul>
-	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
-	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
-	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate
-	 * array, they are part of the {@link #data} array
+	 * <li>Model (indicated by {@link #FLAG_MODEL_SET}) <li>MetaDataEntry (optionally
+	 * {@link MetaDataEntry}[] if more metadata entries are present) * <li>{@link IBehavior}(s)
+	 * added to component. The behaviors are not stored in separate array, they are part of the
+	 * {@link #data} array
 	 * </ul>
 	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
 	 * #data object points directly to value of that attribute. Otherwise the data is of type
@@ -1440,9 +1437,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
 	 * the markup, or an automatically generated id - in that order.
 	 * <p>
-	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return
-	 * null. Otherwise it will generate an id value that will be unique in the page. This is the
-	 * preferred way as there is no chance of id collision.
+	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return null.
+	 * Otherwise it will generate an id value that will be unique in the page. This is the preferred
+	 * way as there is no chance of id collision.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
@@ -2656,8 +2653,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Replaces this component with another. The replacing component must have the same component id
 	 * as this component. This method serves as a shortcut to <code>
-	 * this.getParent().replace(replacement)</code>
-	 * and provides a better context for errors.
+	 * this.getParent().replace(replacement)</code> and provides a better context for errors.
 	 * 
 	 * @since 1.2.1
 	 * 
@@ -2907,9 +2903,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * 
-	 * 
-	 * @return
+	 * @return model
 	 */
 	IModel<?> getModelImpl()
 	{
@@ -4127,7 +4121,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * 
+	 * @param setRenderingFlag
+	 *            rendering flag
 	 */
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -4315,8 +4310,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Determines whether or not a component should be visible, taking into account all the factors:
 	 * {@link #isVisible()}, {@link #isVisibilityAllowed()}, {@link #isRenderAllowed()}
 	 * 
-	 * @return <code>true</code> if the component should be visible, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the component should be visible, <code>false</code> otherwise
 	 */
 	public final boolean determineVisibility()
 	{

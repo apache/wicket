@@ -119,8 +119,6 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Johan Compagner
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
@@ -496,7 +494,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	@SuppressWarnings("unchecked")
 	public final Class<? extends Page> getPageClass()
 	{
 		return getClass();
