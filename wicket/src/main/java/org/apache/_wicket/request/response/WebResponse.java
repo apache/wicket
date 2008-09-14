@@ -52,7 +52,7 @@ public abstract class WebResponse extends Response
 	 * @param value
 	 */
 	public abstract void setHeader(String name, String value);
-	
+
 	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
@@ -60,7 +60,7 @@ public abstract class WebResponse extends Response
 	 * @param date
 	 */
 	public abstract void setDateHeader(String name, long date);
-	
+
 	/**
 	 * Set the content length on the response, if appropriate in the subclass. This default
 	 * implementation does nothing.
@@ -102,14 +102,13 @@ public abstract class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment" +
-				((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
-	
+
 	/**
-	 * Convenience method for setting the content-disposition:in;ine header. This header is used
-	 * if the response should be shown embedded in browser window while having custom file name 
-	 * when user saves the response.
-	 * browser.
+	 * Convenience method for setting the content-disposition:in;ine header. This header is used if
+	 * the response should be shown embedded in browser window while having custom file name when
+	 * user saves the response. browser.
 	 * 
 	 * @param filename
 	 *            file name of the attachment
@@ -117,7 +116,22 @@ public abstract class WebResponse extends Response
 	public void setInlineHeader(String filename)
 	{
 		setHeader("Content-Disposition", "inline" +
-				((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
+
+	/**
+     * Sets the status code for this response.
+     * 
+     * @param sc status code 
+     */  
+	public abstract void setStatus(int sc);
 	
+	
+	/**
+	 * Redirects the response to specified URL. The implementation is responsible for properly
+	 * encoding the URL.
+	 * 
+	 * @param url
+	 */
+	protected abstract void sendRedirect(String url);
 }

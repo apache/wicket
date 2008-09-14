@@ -50,4 +50,14 @@ public abstract class Response
 	public void close()
 	{
 	}
+	
+   
+	/**
+	 * Encodes the specified URL by including the session ID in it,
+     * or, if encoding is not needed, returns the URL unchanged.
+     * 
+	 * @param url
+	 * @return encoded URL
+	 */
+	public abstract String encodeURL(String url);
 }

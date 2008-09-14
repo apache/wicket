@@ -119,4 +119,53 @@ public class ServletWebResponse extends WebResponse
 		}
 	}
 
+	@Override
+	public void setStatus(int sc)
+	{
+		httpServletResponse.setStatus(sc);
+	}
+	
+	@Override
+	public String encodeURL(String url)
+	{
+		if (url != null)
+		{
+			if (url.length() > 0 && url.charAt(0) == '?')
+			{
+				// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
+				// when the URL starts with '?'. So we prepend the URL with ./ and remove it
+				// afterwards (unless some container prepends session id before './' or mangles
+				// the URL otherwise
+
+				String encoded = httpServletResponse.encodeURL("./" + url.toString());
+				if (encoded.startsWith("./"))
+				{
+					return encoded.substring(2);
+				}
+				else
+				{
+					return encoded;
+				}
+			}
+			else
+			{
+				return httpServletResponse.encodeURL(url.toString());
+			}
+		}		
+		return httpServletResponse.encodeURL(url);
+	}
+	
+	@Override
+	protected void sendRedirect(String url)
+	{
+		url = httpServletResponse.encodeRedirectURL(url);
+		try
+		{
+			httpServletResponse.sendRedirect(url);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
 }
