@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link RequestCycle} consists of two steps:
  * <ol>
- * <li>Resolve request hander
+ * <li>Resolve request handler
  * <li>Execute request handler
  * </ol>
  * During {@link RequestHandler} execution the handler can execute other {@link RequestHandler}s,
