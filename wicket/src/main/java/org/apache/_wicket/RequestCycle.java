@@ -83,6 +83,7 @@ public class RequestCycle extends RequestHandlerStack
 
 	protected UrlRenderer newUrlRenderer()
 	{
+		// All URLs will be rendered relative to current request (can be overriden afterwards)
 		return new UrlRenderer(getRequest().getUrl());
 	}
 

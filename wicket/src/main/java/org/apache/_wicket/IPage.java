@@ -46,4 +46,30 @@ public interface IPage extends IComponent
 	 * Renders the page 
 	 */
 	public void renderPage();
+	
+	/**
+	 * Bookmarkable page can be instantiated using a bookmarkable URL.
+	 * 
+	 * @return Returns true if the page is bookmarkable.
+	 */
+	public boolean isBookmarkable();
+
+	/**
+	 * Gets whether the page is stateless. Components on stateless page must not render any
+	 * statefull urls, and components on statefull page must not render any stateless urls.
+	 * Statefull urls are urls, which refer to a certain (current) page instance.
+	 * 
+	 * @return Whether this page is stateless
+	 */
+	public boolean isPageStateless();
+
+	/**
+	 * Returns the {@link PageParameters} for the page. Each bookmarkable page instance
+	 * should have {@link PageParameters} associated with it. The page parameters are
+	 * initialized from URL when page is created and are updated on every page render
+	 * request.
+	 * 
+	 * @return page parameters or <code>null</code>
+	 */
+	public PageParameters getPageParameters();
 }
