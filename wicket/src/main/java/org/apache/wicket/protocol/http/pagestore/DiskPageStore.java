@@ -705,7 +705,6 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 			if (data != null)
 			{
-				@SuppressWarnings("unchecked")
 				final Page ret = deserializePage(data, versionNumber);
 				return ret;
 			}

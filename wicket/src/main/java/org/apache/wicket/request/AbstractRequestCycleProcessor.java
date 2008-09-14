@@ -127,14 +127,14 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			// render?
 			// else we need to make a page (see below) or set it hard to a
 			// redirect.
-			Class accessDeniedPageClass = application.getApplicationSettings()
+			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings()
 				.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
 		else if (e instanceof PageExpiredException)
 		{
-			Class pageExpiredErrorPageClass = application.getApplicationSettings()
+			Class<? extends Page> pageExpiredErrorPageClass = application.getApplicationSettings()
 				.getPageExpiredErrorPage();
 			boolean mounted = isPageMounted(pageExpiredErrorPageClass);
 			RequestCycle.get().setRedirect(mounted);
@@ -148,9 +148,10 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			requestCycle.setRedirect(false);
 
 			// figure out which error page to show
-			Class internalErrorPageClass = application.getApplicationSettings()
+			Class<? extends Page> internalErrorPageClass = application.getApplicationSettings()
 				.getInternalErrorPage();
-			Class responseClass = responsePage != null ? responsePage.getClass() : null;
+			Class<? extends Page> responseClass = responsePage != null ? responsePage.getClass()
+				: null;
 
 			if (responseClass != internalErrorPageClass &&
 				settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
@@ -183,7 +184,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 *            the <code>Class</code> of the <code>Page</code> to be checked
 	 * @return true if the given <code>pageClass</code> is mounted, false otherwise
 	 */
-	private boolean isPageMounted(Class /* <? extends Page> */pageClass)
+	private boolean isPageMounted(Class<? extends Page> pageClass)
 	{
 		RequestCycle cycle = RequestCycle.get();
 		CharSequence path = getRequestCodingStrategy().pathForTarget(
@@ -226,15 +227,17 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
+	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
 		final RequestParameters requestParameters)
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
-		Class pageClass;
+		Class<? extends Page> pageClass;
 		try
 		{
-			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
+			pageClass = (Class<? extends Page>)session.getClassResolver().resolveClass(
+				bookmarkablePageClass);
 		}
 		catch (ClassNotFoundException e)
 		{

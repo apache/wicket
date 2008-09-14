@@ -128,7 +128,7 @@ class SerializedPagesCache
 	/**
 	 * Store the serialized page in cache
 	 * 
-	 * @return
+	 * @return serialized page
 	 * @param sessionId
 	 * @param page
 	 * @param pagesList

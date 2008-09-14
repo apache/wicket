@@ -31,7 +31,7 @@ public class DummyHomePage extends WebPage
 
 	private transient ITestPageSource testPageSource;
 
-	private final Link testPageLink;
+	private final Link<?> testPageLink;
 
 	/**
 	 * Constructor.
@@ -59,7 +59,7 @@ public class DummyHomePage extends WebPage
 	 * 
 	 * @return the test page <code>Link</code>
 	 */
-	public Link getTestPageLink()
+	public Link<?> getTestPageLink()
 	{
 		return testPageLink;
 	}
@@ -67,7 +67,7 @@ public class DummyHomePage extends WebPage
 	/**
 	 * <code>TestLink</code> class.
 	 */
-	public class TestLink extends Link
+	public class TestLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

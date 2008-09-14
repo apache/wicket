@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
  * An <code>IModel</code> change operation.
  * 
  * @author Jonathan Locke
- * @param <T>
- *            type of component's model object
  * @since 1.2.6
  */
 class ModelChange extends Change

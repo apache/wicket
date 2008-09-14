@@ -154,14 +154,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * map of path mounts for mount encoders on paths.
 	 * <p>
 	 * mountsOnPath is sorted by longest paths first to improve resolution of possible path
-	 * conflicts. <br />
-	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
-	 * Page1 uses a parameters encoder that only encodes parameter values <br />
-	 * now suppose we want to access Page1 with a single parameter param="test". we have a url
-	 * collision since both pages can be access with /page/test <br />
-	 * the sorting by longest path first guarantees that the iterator will return the mount
-	 * /page/test before it returns mount /page therefore giving deterministic behavior to path
-	 * resolution by always trying to match the longest possible path first.
+	 * conflicts. <br /> For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
+	 * Page1 uses a parameters encoder that only encodes parameter values <br /> now suppose we want
+	 * to access Page1 with a single parameter param="test". we have a url collision since both
+	 * pages can be access with /page/test <br /> the sorting by longest path first guarantees that
+	 * the iterator will return the mount /page/test before it returns mount /page therefore giving
+	 * deterministic behavior to path resolution by always trying to match the longest possible path
+	 * first.
 	 * </p>
 	 */
 	private final MountsMap mountsOnPath;
@@ -206,11 +205,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			parameters.setOnlyProcessIfPathActive(true);
 		}
 
-		Map map = request.getParameterMap();
-		Iterator iterator = map.keySet().iterator();
+		Map<String, String[]> map = request.getParameterMap();
+		Iterator<String> iterator = map.keySet().iterator();
 		while (iterator.hasNext())
 		{
-			String key = (String)iterator.next();
+			String key = iterator.next();
 			if (key.startsWith(NAME_SPACE))
 			{
 				iterator.remove();
@@ -225,9 +224,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode the given request target. If a mount is found, that mounted url will be returned.
 	 * Otherwise, one of the delegation methods will be called. In case you are using custom targets
 	 * that are not part of the default target hierarchy, you need to override
-	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults
-	 * have been tried. When that doesn't provide a url either, an exception will be thrown saying
-	 * that encoding could not be done.
+	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults have
+	 * been tried. When that doesn't provide a url either, an exception will be thrown saying that
+	 * encoding could not be done.
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
@@ -409,8 +408,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
@@ -771,10 +769,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			final Iterator iterator;
+			final Iterator<String> iterator;
 			if (UnitTestSettings.getSortUrlParameters())
 			{
-				iterator = new TreeSet(parameters.keySet()).iterator();
+				iterator = new TreeSet<String>(parameters.keySet()).iterator();
 			}
 			else
 			{
@@ -782,7 +780,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 			while (iterator.hasNext())
 			{
-				final String key = (String)iterator.next();
+				final String key = iterator.next();
 				final String values[] = parameters.getStringArray(key);
 				if (values != null)
 				{
@@ -827,10 +825,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (map != null && map.size() > 0)
 			{
 				buffer.append('?');
-				Iterator it = map.entrySet().iterator();
+				Iterator<Entry<String, String[]>> it = map.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Map.Entry<String, String[]> entry = it.next();
 					buffer.append(entry.getKey());
 					buffer.append('=');
 					buffer.append(entry.getValue());
@@ -1151,8 +1149,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Makes page map name url safe.
 	 * 
 	 * Since the default page map name in wicket is null and null does not encode well into urls
-	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed
-	 * in is not null it is returned without modification.
+	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed in
+	 * is not null it is returned without modification.
 	 * 
 	 * @param pageMapName
 	 *            page map name
