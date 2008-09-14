@@ -38,20 +38,5 @@ public abstract class Request
 	 */
 	public abstract RequestParameters getRequestParameters();
 
-	/**
-	 * Marker parameter for AjaxRequest.
-	 */
-	public static final String PARAM_AJAX = "wicket:ajax";
 
-	/**
-	 * Returns whether this request is an Ajax request. This implementation only checks for value of
-	 * wicket:ajax url parameter. Subclasses can use other approach.
-	 * 
-	 * @return <code>true</code> if this request is an ajax request, <code>false</codE>
-	 *         otherwise.
-	 */
-	public boolean isAjax()
-	{
-		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
-	}
 }
