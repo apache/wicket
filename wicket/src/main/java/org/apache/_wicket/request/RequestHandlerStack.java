@@ -60,7 +60,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Executes the specified {@link RequestHandler}. When the specified {@link RequestHandler} is
+	 * Executes the specified {@link RequestHandler}. When the specified {@link RequestHandler} 
 	 * finishes, the {@link RequestHandler} that invoked this method continues (unless the new
 	 * {@link RequestHandler} called {@link #replaceAllRequestHandlers(RequestHandler)}.
 	 * 
