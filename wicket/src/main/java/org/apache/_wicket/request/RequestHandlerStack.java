@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache._wicket.RequestCycle;
 import org.apache._wicket.request.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +68,7 @@ public abstract class RequestHandlerStack
 	 */
 	public void executeRequestHandler(RequestHandler handler)
 	{
-		final boolean first = requestHandlers.isEmpty();
-		Response response = getResponse();
+		final boolean first = requestHandlers.isEmpty();		
 		requestHandlers.add(handler);
 
 		RequestHandler replacementHandler = null;
@@ -83,6 +83,7 @@ public abstract class RequestHandlerStack
 			{
 				throw exception;
 			}
+			replacementHandler = exception.replacementRequestHandler;
 		}
 		finally
 		{
@@ -93,7 +94,7 @@ public abstract class RequestHandlerStack
 
 		if (replacementHandler != null)
 		{
-			executeRequestHandler(handler);
+			executeRequestHandler(replacementHandler);
 		}
 	}
 

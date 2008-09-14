@@ -14,10 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request;
+package org.apache._wicket;
 
+import org.apache._wicket.request.RequestHandler;
+import org.apache._wicket.request.RequestHandlerStack;
+import org.apache._wicket.request.UrlRenderer;
 import org.apache._wicket.request.request.Request;
 import org.apache._wicket.request.response.Response;
+import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,21 +47,54 @@ public class RequestCycle extends RequestHandlerStack
 	
 	private UrlRenderer urlRenderer;
 	
+	private final Response originalResponse;
+	
+	private final RequestCycleContext context;
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param request
-	 * @param globalResponse
+	 * @param response
+	 * @param context
 	 */
-	public RequestCycle(Request request, Response globalResponse)
+	public RequestCycle(Request request, Response response, RequestCycleContext context)
 	{
-		super(globalResponse);
-		this.request = request;		
+		super(response);
+		
+		if (request == null)
+		{
+			throw new IllegalArgumentException("Argument 'request' may not be null.");
+		}
+		if (response == null)
+		{
+			throw new IllegalArgumentException("Argument 'response' may not be null.");
+		}
+		if (context == null)
+		{
+			throw new IllegalArgumentException("Argument 'context' may not be null.");
+		}
+		
+		this.request = request;
+		this.originalResponse = response;
+		this.context = context;
 	}
 
 	protected UrlRenderer newUrlRenderer()
 	{
 		return new UrlRenderer(getRequest().getUrl());
+	}
+	
+	/**
+	 * Get the original response the request was create with. Access may be necessary with the
+	 * response has temporarily being replaced but your components requires access to lets say the
+	 * cookie methods of a WebResponse.
+	 * 
+	 * @return The original response object.
+	 */
+	public Response getOriginalResponse()
+	{
+		return originalResponse;
 	}
 	
 	/**
@@ -81,8 +118,12 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	protected RequestHandler resolveRequestHandler()
 	{
-		// TODO: Implement
-		return null;
+		RequestHandler handler = context.decodeRequestHandler(request); 
+		if (handler == null)
+		{
+			throw new WicketRuntimeException("Could not resolve handler for request.");
+		}
+		return handler;
 	}
 
 	/**
@@ -147,8 +188,7 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	protected RequestHandler handleException(Exception e)
 	{
-		// TODO: Implement
-		return null;
+		return context.getRequestHandlerForException(e);
 	}
 
 	/**
@@ -165,5 +205,42 @@ public class RequestCycle extends RequestHandlerStack
 		return this;
 	}
 
+	/** MetaDataEntry array. */
+	private MetaDataEntry<?>[] metaData;
+	
+	/**
+	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
+	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For
+	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @param <T>
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final <T> void setMetaData(final MetaDataKey<T> key, final T object)
+	{
+		metaData = key.set(metaData, object);
+	}
+
+	/**
+	 * Gets metadata for this request cycle using the given key.
+	 * 
+	 * @param <T>
+	 *            The type of the metadata
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata or null if no metadata was found for the given key
+	 * @see MetaDataKey
+	 */
+	public final <T> T getMetaData(final MetaDataKey<T> key)
+	{
+		return key.get(metaData);
+	}
+	
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 }

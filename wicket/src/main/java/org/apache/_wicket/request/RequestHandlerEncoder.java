@@ -16,6 +16,8 @@
  */
 package org.apache._wicket.request;
 
+import org.apache._wicket.request.request.Request;
+
 /**
  * Encodes {@link RequestHandler}(s) into {@link Url}(s) and decodes {@link Url}(s) to
  * {@link RequestHandler}(s). For {@link RequestHandler}s and {@link Url}s the implementation
@@ -30,12 +32,12 @@ public interface RequestHandlerEncoder
 	 * Returns {@link RequestHandler} for the request or <code>null</code> if the encoder does not
 	 * recognize the URL.
 	 * 
-	 * @param url
-	 * @param requestParameters
-	 *            provides access to all GET and POST request parameters
+	 * @param request
+	 *            provides access to request data (i.e. Url and Parameters)
+	 *            
 	 * @return RequestHandler instance or <code>null</code>
 	 */
-	RequestHandler decode(Url url, RequestParameters requestParameters);
+	RequestHandler decode(Request request);
 
 	/**
 	 * Returns the {@link Url} for given {@link RequestHandler} or <code>null</code> if the

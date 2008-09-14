@@ -14,44 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.request;
+package org.apache._wicket;
 
-import org.apache._wicket.request.RequestParameters;
+import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
+import org.apache._wicket.request.request.Request;
+
 
 /**
- * Request object.
+ * Interface that allows {@link RequestCycle} to communicate with the rest of Wicket.
  * 
  * @author Matej Knopp
  */
-public abstract class Request
+public interface RequestCycleContext
 {
 	/**
-	 * Returns the URL for this request.
+	 * Returns {@link RequestHandler} that handle the request. This method should never return
+	 * <code>null</codE>, every request should be handled.
 	 * 
-	 * @return Url instance
+	 * @param request
+	 * @return request handler instance
 	 */
-	public abstract Url getUrl();
+	public RequestHandler decodeRequestHandler(Request request);
 
 	/**
-	 * @return request parameters for this request (both POST and GET parameters)
-	 */
-	public abstract RequestParameters getRequestParameters();
-
-	/**
-	 * Marker parameter for AjaxRequest.
-	 */
-	public static final String PARAM_AJAX = "wicket:ajax";
-
-	/**
-	 * Returns whether this request is an Ajax request. This implementation only checks for value of
-	 * wicket:ajax url parameter. Subclasses can use other approach.
+	 * Encodes the specified {@link RequestHandler} as Url.
 	 * 
-	 * @return <code>true</code> if this request is an ajax request, <code>false</codE>
-	 *         otherwise.
+	 * @param handler
+	 * @return Url
 	 */
-	public boolean isAjax()
-	{
-		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
-	}
+	public Url encodeRequestHandler(RequestHandler handler);
+
+	/**
+	 * Returns {@link RequestHandler} that responds error page for the specified exception.
+	 * 
+	 * @param e
+	 * @return request handler instance
+	 */
+	public RequestHandler getRequestHandlerForException(Exception e);
 }
