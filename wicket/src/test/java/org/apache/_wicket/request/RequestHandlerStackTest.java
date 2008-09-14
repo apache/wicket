@@ -47,6 +47,11 @@ public class RequestHandlerStackTest extends TestCase
 			public void write(CharSequence sequence)
 			{
 			}
+			@Override
+			public String encodeURL(String url)
+			{
+				return null;
+			}
 		};
 	}
 	
