@@ -233,7 +233,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 * @see org.apache.wicket.protocol.http.WebRequest#getParameterMap()
 	 */
 	@Override
-	public Map<String, Object> getParameterMap()
+	public Map getParameterMap()
 	{
 		return parameters;
 	}
