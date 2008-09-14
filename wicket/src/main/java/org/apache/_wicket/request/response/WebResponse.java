@@ -133,5 +133,5 @@ public abstract class WebResponse extends Response
 	 * 
 	 * @param url
 	 */
-	protected abstract void sendRedirect(String url);
+	public abstract void sendRedirect(String url);
 }

@@ -148,7 +148,7 @@ public abstract class BufferedWebResponse extends WebResponse
 	private String redirectUrl = null;
 
 	@Override
-	protected void sendRedirect(String url)
+	public void sendRedirect(String url)
 	{
 		this.redirectUrl = url;
 	}

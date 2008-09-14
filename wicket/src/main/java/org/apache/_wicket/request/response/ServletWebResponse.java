@@ -156,7 +156,7 @@ public class ServletWebResponse extends WebResponse
 	}
 	
 	@Override
-	protected void sendRedirect(String url)
+	public void sendRedirect(String url)
 	{
 		url = httpServletResponse.encodeRedirectURL(url);
 		try
