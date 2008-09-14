@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -208,8 +209,10 @@ public class MockWebApplication
 			IRequestCycleSettings.ONE_PASS_RENDER);
 		// Don't buffer the response, as this can break ajax tests: see WICKET-1264
 		this.application.getRequestCycleSettings().setBufferResponse(false);
-		if (this.application.getResourceFinder() == null) {
-			this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
+		if (this.application.getResourceFinder() == null)
+		{
+			this.application.getResourceSettings().setResourceFinder(
+				new WebApplicationPath(context));
 		}
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 
@@ -377,8 +380,8 @@ public class MockWebApplication
 	 * @param pageClass
 	 * @param params
 	 */
-	public <C extends Page> void processRequestCycle(final Class<C> pageClass,
-		PageParameters params)
+	@SuppressWarnings("deprecation")
+	public <C extends Page> void processRequestCycle(final Class<C> pageClass, PageParameters params)
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
@@ -392,7 +395,8 @@ public class MockWebApplication
 				// special handling
 
 				// code is copy pasted from
-				// org.apache.wicket.protocol.http.request.WebRequestCodingStrategy.encode(RequestCycle
+				// org.apache.wicket.protocol.http.request.WebRequestCodingStrategy.encode(
+				// RequestCycle
 				// , IBookmarkablePageRequestTarget)
 				// since only the test is suffering from this problem
 

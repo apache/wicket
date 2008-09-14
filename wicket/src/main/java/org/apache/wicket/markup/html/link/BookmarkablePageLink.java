@@ -32,8 +32,10 @@ import org.apache.wicket.util.lang.Classes;
  * Renders a stable link which can be cached in a web browser and used at a later time.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object, if any
  */
-public class BookmarkablePageLink extends Link
+public class BookmarkablePageLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -194,7 +196,7 @@ public class BookmarkablePageLink extends Link
 	 *            The pagemap for this link's destination
 	 * @return This
 	 */
-	public final BookmarkablePageLink setPageMap(final IPageMap pageMap)
+	public final BookmarkablePageLink<T> setPageMap(final IPageMap pageMap)
 	{
 		if (pageMap != null)
 		{
@@ -213,7 +215,7 @@ public class BookmarkablePageLink extends Link
 	 *            The value
 	 * @return This
 	 */
-	public BookmarkablePageLink setParameter(final String property, final int value)
+	public BookmarkablePageLink<T> setParameter(final String property, final int value)
 	{
 		setParameterImpl(property, Integer.toString(value));
 		return this;
@@ -228,7 +230,7 @@ public class BookmarkablePageLink extends Link
 	 *            The value
 	 * @return This
 	 */
-	public BookmarkablePageLink setParameter(final String property, final long value)
+	public BookmarkablePageLink<T> setParameter(final String property, final long value)
 	{
 		setParameterImpl(property, Long.toString(value));
 		return this;
@@ -243,7 +245,7 @@ public class BookmarkablePageLink extends Link
 	 *            The value
 	 * @return This
 	 */
-	public BookmarkablePageLink setParameter(final String property, final String value)
+	public BookmarkablePageLink<T> setParameter(final String property, final String value)
 	{
 		setParameterImpl(property, value);
 		return this;

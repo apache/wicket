@@ -25,8 +25,10 @@ import org.apache.wicket.util.value.ValueMap;
  * A link to any ResourceReference.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  */
-public class ResourceLink extends Link implements IResourceListener
+public class ResourceLink<T> extends Link<T> implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 

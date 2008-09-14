@@ -110,9 +110,9 @@ public class PagingNavigator extends Panel
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected Link<?> newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
-		return new PagingNavigationIncrementLink(id, pageable, increment);
+		return new PagingNavigationIncrementLink<Void>(id, pageable, increment);
 	}
 
 	/**
@@ -127,9 +127,9 @@ public class PagingNavigator extends Panel
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
-		return new PagingNavigationLink(id, pageable, pageNumber);
+		return new PagingNavigationLink<Void>(id, pageable, pageNumber);
 	}
 
 	/**

@@ -24,8 +24,6 @@ import org.apache.wicket.model.IModel;
  * all.
  * 
  * @author Juergen Donnerstag
- * @param <T>
- *            The model data type
  */
 public class NoopOutputTransformerContainer extends AbstractOutputTransformerContainer
 {

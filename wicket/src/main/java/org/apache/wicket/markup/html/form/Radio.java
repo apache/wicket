@@ -58,6 +58,8 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public Radio(String id, IModel<T> model)

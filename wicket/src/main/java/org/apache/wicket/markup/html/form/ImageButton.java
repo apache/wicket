@@ -118,6 +118,8 @@ public class ImageButton extends Button implements IResourceListener
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public ImageButton(final String id, final IModel<String> model)
@@ -132,7 +134,6 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Name of image
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	@SuppressWarnings("unchecked")
 	public ImageButton(final String id, final String string)
 	{
 		this(id, new Model<String>(string));
@@ -180,7 +181,6 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public ImageButton setDefaultModel(IModel<?> model)
 	{

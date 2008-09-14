@@ -128,8 +128,10 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * autolink tags don't have wicket:id and users wouldn't know where to add the component to.
 	 * 
 	 * @author Juergen Donnerstag
+	 * @param <T>
+	 *            type of model object
 	 */
-	public final static class AutolinkBookmarkablePageLink extends BookmarkablePageLink
+	public final static class AutolinkBookmarkablePageLink<T> extends BookmarkablePageLink<T>
 	{
 		private static final long serialVersionUID = 1L;
 

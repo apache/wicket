@@ -80,7 +80,6 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 *            collection to be used as the model
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public CheckGroup(String id, Collection<T> collection)
 	{
 		this(id, new CollectionModel<T>(collection));
@@ -100,6 +99,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * @see FormComponent#convertValue(String[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{

@@ -46,7 +46,7 @@ import org.apache.wicket.util.convert.ConversionException;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,6 +60,8 @@ public class RadioGroup<T> extends FormComponent implements IOnChangeListener
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public RadioGroup(String id, IModel<T> model)
@@ -90,6 +92,7 @@ public class RadioGroup<T> extends FormComponent implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected T convertValue(String[] input) throws ConversionException
 	{

@@ -327,7 +327,7 @@ public class WicketMessageResolver implements IComponentResolver
 		 * 
 		 * @param markupStream
 		 * @param openTag
-		 * @return
+		 * @return map of child components
 		 */
 		private Map<String, CharSequence> findAndRenderChildWicketTags(
 			final MarkupStream markupStream, final ComponentTag openTag)

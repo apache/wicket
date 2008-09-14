@@ -52,11 +52,13 @@ public class TextField<T> extends AbstractTextComponent<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String id, final IModel<T> object)
+	public TextField(final String id, final IModel<T> model)
 	{
-		super(id, object);
+		super(id, model);
 	}
 
 	/**

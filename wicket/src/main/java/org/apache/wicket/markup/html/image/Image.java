@@ -135,7 +135,6 @@ public class Image extends WebComponent implements IResourceListener
 	 *            Name of image
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	@SuppressWarnings("unchecked")
 	public Image(final String id, final String string)
 	{
 		this(id, new Model<String>(string));

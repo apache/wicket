@@ -136,7 +136,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				return page;
 			}
 
-			@SuppressWarnings("unchecked")
 			public Class<? extends Page> getPageIdentity()
 			{
 				return page.getClass();

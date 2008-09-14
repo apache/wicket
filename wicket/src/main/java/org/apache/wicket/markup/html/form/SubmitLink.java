@@ -66,8 +66,6 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  * 
- * @param <T>
- *            The model object type
  */
 public class SubmitLink extends AbstractSubmitLink
 {

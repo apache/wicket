@@ -49,6 +49,8 @@ public class RequiredTextField<T> extends TextField<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public RequiredTextField(final String id, final IModel<T> model)
