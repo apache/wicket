@@ -16,10 +16,20 @@
  */
 package org.apache._wicket.request.handler;
 
+import org.apache._wicket.IPage;
 import org.apache._wicket.request.RequestHandler;
-import org.apache.wicket.Page;
 
-public interface PageInstanceRequestHandler extends RequestHandler
+/**
+ * Request handler that works with a page instance.
+ * 
+ * @author Matej Knopp
+ */
+public interface PageRequestHandler extends RequestHandler
 {
-	public Page getPageInstance();
+	/**
+	 * Returns the page
+	 * 
+	 * @return page instance
+	 */
+	public IPage getPage();
 }

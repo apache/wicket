@@ -16,15 +16,15 @@
  */
 package org.apache._wicket.request.handler.impl;
 
+import org.apache._wicket.IPage;
 import org.apache._wicket.RequestCycle;
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.handler.PageInstanceRequestHandler;
+import org.apache._wicket.request.handler.PageRequestHandler;
 import org.apache._wicket.request.response.BufferedWebResponse;
 import org.apache._wicket.request.response.Response;
 import org.apache._wicket.request.response.WebResponse;
 import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
@@ -34,9 +34,9 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * 
  * @author Matej Knopp
  */
-public class RenderPageRequestHandler implements PageInstanceRequestHandler
+public class RenderPageRequestHandler implements PageRequestHandler
 {
-	private final Page page;
+	private final IPage page;
 	private final boolean preventRedirect;
 
 	/**
@@ -44,7 +44,7 @@ public class RenderPageRequestHandler implements PageInstanceRequestHandler
 	 * 
 	 * @param page
 	 */
-	public RenderPageRequestHandler(Page page)
+	public RenderPageRequestHandler(IPage page)
 	{
 		this(page, false);
 	}
@@ -58,7 +58,7 @@ public class RenderPageRequestHandler implements PageInstanceRequestHandler
 	 *            <code>false</code> a redirect will be issued if required by the request
 	 *            strategy.
 	 */
-	public RenderPageRequestHandler(Page page, boolean preventRedirect)
+	public RenderPageRequestHandler(IPage page, boolean preventRedirect)
 	{
 		if (page == null)
 		{
@@ -68,7 +68,7 @@ public class RenderPageRequestHandler implements PageInstanceRequestHandler
 		this.page = page;
 	}
 
-	public Page getPageInstance()
+	public IPage getPage()
 	{
 		return page;
 	}
@@ -133,7 +133,7 @@ public class RenderPageRequestHandler implements PageInstanceRequestHandler
 		try
 		{
 			requestCycle.setResponse(response);
-			page.render();
+			page.renderPage();
 			return response;
 		}
 		finally
