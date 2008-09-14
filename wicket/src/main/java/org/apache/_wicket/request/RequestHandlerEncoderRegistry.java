@@ -76,7 +76,7 @@ public class RequestHandlerEncoderRegistry
 	}
 
 	/**
-	 * Searchers the registered {@link RequestHandlerEncoder}s to find one that can encode the
+	 * Searches the registered {@link RequestHandlerEncoder}s to find one that can encode the
 	 * {@link RequestHandler}. Each registered {@link RequestHandlerEncoder} is asked to encode the
 	 * {@link RequestHandler} until an encoder that can encode the {@link RequestHandler} is found
 	 * or no more encoders are left.
