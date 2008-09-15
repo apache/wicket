@@ -293,7 +293,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		final Class<?> paramClass = parameterClasses[0];
 		try
 		{
-			final IConverter<?> converter = Application.get().getConverterLocator().getConverter(
+			final IConverter converter = Application.get().getConverterLocator().getConverter(
 				paramClass);
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)

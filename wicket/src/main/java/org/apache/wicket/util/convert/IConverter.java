@@ -43,10 +43,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The converter object type
  */
-public interface IConverter<T> extends IClusterable
+public interface IConverter extends IClusterable
 {
 	/**
 	 * Converts the given {@link String} value
@@ -57,7 +55,7 @@ public interface IConverter<T> extends IClusterable
 	 *            The locale used to convert the value
 	 * @return The converted value
 	 */
-	T convertToObject(String value, Locale locale);
+	Object convertToObject(String value, Locale locale);
 
 	/**
 	 * Converts the given value to a string.
@@ -69,5 +67,5 @@ public interface IConverter<T> extends IClusterable
 	 * 
 	 * @return The converted string value
 	 */
-	String convertToString(T value, Locale locale);
+	String convertToString(Object value, Locale locale);
 }

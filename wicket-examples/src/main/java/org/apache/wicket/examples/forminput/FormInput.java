@@ -78,7 +78,7 @@ public class FormInput extends WicketExamplePage
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link("defaultLocaleLink")
+			add(new Link<Void>("defaultLocaleLink")
 			{
 				@Override
 				public void onClick()
@@ -144,15 +144,14 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
-				@SuppressWarnings("unchecked")
 				@Override
-				public <X> IConverter<X> getConverter(final Class<X> type)
+				public IConverter getConverter(final Class<?> type)
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
-						return (IConverter<X>)new IConverter<URL>()
+						return new IConverter()
 						{
-							public URL convertToObject(String value, Locale locale)
+							public Object convertToObject(String value, Locale locale)
 							{
 								try
 								{
@@ -165,7 +164,7 @@ public class FormInput extends WicketExamplePage
 								}
 							}
 
-							public String convertToString(URL value, Locale locale)
+							public String convertToString(Object value, Locale locale)
 							{
 								return value != null ? value.toString() : null;
 							}
@@ -181,15 +180,14 @@ public class FormInput extends WicketExamplePage
 			// TextField using a mask converter
 			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
-				@SuppressWarnings("unchecked")
+
 				@Override
-				public <X> IConverter<X> getConverter(final Class<X> type)
+				public IConverter getConverter(final Class<?> type)
 				{
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
 						// US telephone number mask
-						return (IConverter<X>)new MaskConverter<UsPhoneNumber>("(###) ###-####",
-							UsPhoneNumber.class);
+						return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 					}
 					else
 					{

@@ -27,14 +27,14 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class DoubleConverter extends AbstractDecimalConverter<Double>
+public final class DoubleConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a double converter
 	 */
-	public static final IConverter<Double> INSTANCE = new DoubleConverter();
+	public static final IConverter INSTANCE = new DoubleConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)

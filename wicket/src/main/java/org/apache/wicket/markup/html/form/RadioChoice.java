@@ -432,7 +432,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			if (objectClass != null && objectClass != String.class)
 			{
-				final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
+				final IConverter converter = getConverter(objectClass);
 
 				if (!converter.getClass().isAssignableFrom(objectClass))
 				{

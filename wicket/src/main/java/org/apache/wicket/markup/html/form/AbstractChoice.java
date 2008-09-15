@@ -386,7 +386,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
-			final IConverter<T> converter = getConverter(objectClass);
+			final IConverter converter = getConverter(objectClass);
 
 			displayValue = converter.convertToString(objectValue, getLocale());
 		}

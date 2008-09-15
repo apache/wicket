@@ -29,7 +29,7 @@ import org.apache.wicket.util.convert.ConversionException;
  * 
  * @author eelcohillenius
  */
-public class SqlTimestampConverter extends AbstractConverter<Timestamp>
+public class SqlTimestampConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,13 +57,13 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	}
 
 	@Override
-	public String convertToString(final Timestamp value, Locale locale)
+	public String convertToString(final Object value, Locale locale)
 	{
 		if (value == null)
 			return null;
 		if (locale == null)
 			locale = Locale.getDefault();
-		Timestamp timestamp = value;
+		Timestamp timestamp = (Timestamp)value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(timestamp);
 	}

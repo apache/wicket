@@ -44,7 +44,7 @@ import org.joda.time.format.DateTimeFormatter;
  * 
  * @author eelcohillenius
  */
-public abstract class DateConverter implements IConverter<Date>
+public abstract class DateConverter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,15 +59,12 @@ public abstract class DateConverter implements IConverter<Date>
 	private Component component = null;
 
 	/**
-	 * Construct.
-	 * </p>
-	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
-	 * date will be corrected for the time zone difference between the server and the client. For
-	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
-	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
-	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
-	 * the client sees 12/24.
-	 * </p>
+	 * Construct. </p> When applyTimeZoneDifference is true, the current time is applied on the
+	 * parsed date, and the date will be corrected for the time zone difference between the server
+	 * and the client. For instance, if I'm in Seattle and the server I'm working on is in
+	 * Amsterdam, the server is 9 hours ahead. So, if I'm inputting say 12/24 at a couple of hours
+	 * before midnight, at the server it is already 12/25. If this boolean is true, it will be
+	 * transformed to 12/25, while the client sees 12/24. </p>
 	 * 
 	 * @param applyTimeZoneDifference
 	 *            whether to apply the difference in time zones between client and server
@@ -141,9 +138,9 @@ public abstract class DateConverter implements IConverter<Date>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
-	public String convertToString(Date value, Locale locale)
+	public String convertToString(Object value, Locale locale)
 	{
-		DateTime dt = new DateTime((value).getTime(), getTimeZone());
+		DateTime dt = new DateTime(((Date)value).getTime(), getTimeZone());
 		DateTimeFormatter format = getFormat();
 
 		if (applyTimeZoneDifference)
@@ -161,13 +158,12 @@ public abstract class DateConverter implements IConverter<Date>
 	/**
 	 * Gets whether to apply the time zone difference when interpreting dates.
 	 * 
-	 * </p>
-	 * When true, the current time is applied on the parsed date, and the date will be corrected for
-	 * the time zone difference between the server and the client. For instance, if I'm in Seattle
-	 * and the server I'm working on is in Amsterdam, the server is 9 hours ahead. So, if I'm
-	 * inputting say 12/24 at a couple of hours before midnight, at the server it is already 12/25.
-	 * If this boolean is true, it will be transformed to 12/25, while the client sees 12/24.
-	 * </p>
+	 * </p> When true, the current time is applied on the parsed date, and the date will be
+	 * corrected for the time zone difference between the server and the client. For instance, if
+	 * I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9 hours ahead.
+	 * So, if I'm inputting say 12/24 at a couple of hours before midnight, at the server it is
+	 * already 12/25. If this boolean is true, it will be transformed to 12/25, while the client
+	 * sees 12/24. </p>
 	 * 
 	 * @return whether to apply the difference in time zones between client and server
 	 */

@@ -1307,7 +1307,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @deprecated To be removed. Please use/ override {@link #getConverter(Class)} instead.
 	 */
 	@Deprecated
-	public final IConverter<?> getConverter()
+	public final IConverter getConverter()
 	{
 		throw new UnsupportedOperationException("use #getConverter(Class) instead");
 	}
@@ -1320,7 +1320,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public <X> IConverter<X> getConverter(Class<X> type)
+	public IConverter getConverter(Class<?> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
@@ -1644,7 +1644,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Get converter
 			final Class<?> objectClass = modelObject.getClass();
 
-			final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
+			final IConverter converter = getConverter(objectClass);
 
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());
@@ -2385,7 +2385,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			try
 			{
-				// Call implementation to render component				
+				// Call implementation to render component
 				final IComponentBorder border = getComponentBorder();
 				if (border != null)
 				{
@@ -2399,7 +2399,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 					border.renderAfter(this);
 				}
 				// Component has been rendered
-				rendered();				
+				rendered();
 			}
 			catch (RuntimeException ex)
 			{
@@ -2607,7 +2607,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * rendered, and in development mode this would result in a runtime exception.
 	 */
 	public final void rendered()
-	{		
+	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 	}

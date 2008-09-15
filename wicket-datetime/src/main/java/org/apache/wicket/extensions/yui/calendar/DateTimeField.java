@@ -78,7 +78,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 	}
 
-	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
 
 	private static final long serialVersionUID = 1L;
 

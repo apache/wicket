@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Jonathan Locke
  * @author Al Maw
  */
-public final class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Integer>
+public final class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public final class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<
 	 *      java.util.Locale)
 	 */
 	@Override
-	public String convertToString(Integer value, Locale locale)
+	public String convertToString(Object value, Locale locale)
 	{
 		String result = super.convertToString(value, locale);
 

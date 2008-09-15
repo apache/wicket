@@ -174,9 +174,9 @@ public class Home extends WebPage
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public <X> IConverter<X> getConverter(Class<X> clazz)
+				public IConverter getConverter(Class<?> clazz)
 				{
-					return (IConverter<X>)new IConverter<URL>()
+					return new IConverter()
 					{
 						private static final long serialVersionUID = 1L;
 
@@ -200,7 +200,7 @@ public class Home extends WebPage
 						 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 						 *      java.util.Locale)
 						 */
-						public String convertToString(URL value, Locale locale)
+						public String convertToString(Object value, Locale locale)
 						{
 							return value != null ? value.toString() : null;
 						}
@@ -212,12 +212,10 @@ public class Home extends WebPage
 			{
 				private static final long serialVersionUID = 1L;
 
-				@SuppressWarnings("unchecked")
 				@Override
-				public <X> IConverter<X> getConverter(Class<X> clazz)
+				public IConverter getConverter(Class<?> clazz)
 				{
-					return (IConverter<X>)new MaskConverter<UsPhoneNumber>("(###) ###-####",
-						UsPhoneNumber.class);
+					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 

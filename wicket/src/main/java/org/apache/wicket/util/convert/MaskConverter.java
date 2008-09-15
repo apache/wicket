@@ -37,11 +37,9 @@ import org.apache.wicket.WicketRuntimeException;
  * <tr>
  * <th>Character&nbsp;</th>
  * <th>
- * <p align="left">
- * Description
+ * <p align="left"> Description
  * </p>
- * </th>
- * </tr>
+ * </th> </tr>
  * <tr>
  * <td>#</td>
  * <td>Any valid number, uses <code>Character.isDigit</code>.</td>
@@ -52,25 +50,24 @@ import org.apache.wicket.WicketRuntimeException;
  * </tr>
  * <tr>
  * <td>U</td>
- * <td>Any character (<code>Character.isLetter</code>). All lowercase letters are mapped to
- * upper case.</td>
+ * <td>Any character (<code>Character.isLetter</code>). All lowercase letters are mapped to upper
+ * case.</td>
  * </tr>
  * <tr>
  * <td>L</td>
- * <td>Any character (<code>Character.isLetter</code>). All upper case letters are mapped to
- * lower case.</td>
+ * <td>Any character (<code>Character.isLetter</code>). All upper case letters are mapped to lower
+ * case.</td>
  * </tr>
  * <tr>
  * <td>A</td>
- * <td>Any character or number (<code>Character.isLetter</code> or
- * <code>Character.isDigit</code>)</td>
+ * <td>Any character or number (<code>Character.isLetter</code> or <code>Character.isDigit</code>)</td>
  * </tr>
  * <tr>
  * <td>?</td>
  * <td>Any character (<code>Character.isLetter</code>).</td>
  * </tr>
  * <tr>
- * <td>*</td>
+ * <td></td>
  * <td>Anything.</td>
  * </tr>
  * <tr>
@@ -90,7 +87,7 @@ import org.apache.wicket.WicketRuntimeException;
  * 
  * @author Eelco Hillenius
  */
-public class MaskConverter<T> implements IConverter<T>
+public class MaskConverter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -155,11 +152,11 @@ public class MaskConverter<T> implements IConverter<T>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
 	@SuppressWarnings("unchecked")
-	public T convertToObject(String value, Locale locale)
+	public Object convertToObject(String value, Locale locale)
 	{
 		try
 		{
-			return (T)maskFormatter.stringToValue(value);
+			return maskFormatter.stringToValue(value);
 		}
 		catch (ParseException e)
 		{
@@ -172,7 +169,7 @@ public class MaskConverter<T> implements IConverter<T>
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(T value, Locale locale)
+	public String convertToString(Object value, Locale locale)
 	{
 		try
 		{

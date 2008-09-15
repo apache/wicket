@@ -65,7 +65,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * 
 	 * @return The converter or null
 	 */
-	public IConverter<?> getConverter()
+	public IConverter getConverter()
 	{
 		return converter;
 	}

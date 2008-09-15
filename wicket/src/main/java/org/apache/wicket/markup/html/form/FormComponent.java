@@ -1217,6 +1217,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * {@link FormComponent#getType()} and records any errors. Converted value is available through
 	 * {@link FormComponent#getConvertedInput()}
 	 */
+	@SuppressWarnings("unchecked")
 	protected void convertInput()
 	{
 		if (typeName == null)
@@ -1242,11 +1243,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			final IConverter<T> converter = getConverter(getType());
+			final IConverter converter = getConverter(getType());
 
 			try
 			{
-				convertedInput = converter.convertToObject(getInput(), getLocale());
+				convertedInput = (T)converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{

@@ -25,12 +25,12 @@ import java.util.Locale;
  * see IConverter
  * 
  */
-public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
+public class BigDecimalConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Class<BigDecimal> getTargetType()
+	protected Class<?> getTargetType()
 	{
 		return BigDecimal.class;
 	}

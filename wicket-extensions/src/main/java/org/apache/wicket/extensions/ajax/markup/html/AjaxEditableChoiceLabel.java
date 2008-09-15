@@ -228,9 +228,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public <X> IConverter<X> getConverter(Class<X> type)
+			public IConverter getConverter(Class<?> type)
 			{
-				IConverter<X> c = AjaxEditableChoiceLabel.this.getConverter(type);
+				IConverter c = AjaxEditableChoiceLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
 			}
 
