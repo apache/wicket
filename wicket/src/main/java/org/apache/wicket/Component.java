@@ -1504,6 +1504,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		markupId = Strings.replaceAll(markupId, "_", "__").toString();
 		markupId = markupId.replace('.', '_');
 		markupId = markupId.replace('-', '_');
+		markupId = markupId.replace(' ', '_');
 
 		return markupId;
 	}
@@ -2786,6 +2787,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setMetaData(MARKUP_ID_KEY, null);
 			return;
 		}
+
 		generatedMarkupId = -1;
 		setMetaData(MARKUP_ID_KEY, (String)markupId);
 	}
