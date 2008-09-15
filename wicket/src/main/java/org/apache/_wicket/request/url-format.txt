@@ -24,7 +24,7 @@ Page Instance - Render Hybrid
 /wicket/bookmarkable/org.apache.wicket.MyPage?2.4
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
 
-Page instance - Bookmarkable listener 
+Page Instance - Bookmarkable Listener 
 /wicket/bookmarkable/org.apache.wicket.MyPage?2:click:foo:bar:baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?2.4:click:foo:bar:baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4:click:foo:bar:baz
@@ -43,7 +43,7 @@ Page Instance - Render Hybrid
 /mount/point?2.4
 /mount/point?pageMap.2.4
 
-Page instance - Bookmarkable listener 
+Page instance - Bookmarkable Listener 
 /mount/point?2:click:foo:bar:baz
 /mount/point?2.4:click:foo:bar:baz
 /mount/point?pageMap.2.4:click:foo:bar:baz
