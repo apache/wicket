@@ -17,18 +17,32 @@
 package org.apache._wicket.request.handler;
 
 import org.apache._wicket.IPage;
+import org.apache._wicket.PageParameters;
+import org.apache._wicket.request.RequestHandler;
 
 /**
- * Request handler that works with a page instance.
+ * Request handler that works with page class.
  * 
  * @author Matej Knopp
  */
-public interface PageRequestHandler extends PageClassRequestHandler
+public interface PageClassRequestHandler extends RequestHandler
 {
 	/**
-	 * Returns the page
+	 * Returns the page class
 	 * 
-	 * @return page instance
+	 * @return page class
 	 */
-	public IPage getPage();
+	public Class<? extends IPage> getPageClass();
+	
+	/**
+	 * Returns the pagemap name
+	 * 
+	 * @return page map name
+	 */
+	public String getPageMapName();
+	
+	/**
+	 * @return page parameters
+	 */
+	public PageParameters getPageParameters();
 }

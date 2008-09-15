@@ -14,21 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.handler;
+package org.apache._wicket.request.encoder;
 
 import org.apache._wicket.IPage;
+import org.apache._wicket.PageParameters;
 
 /**
- * Request handler that works with a page instance.
+ * Utility interface for providing and creating new page instances.
  * 
  * @author Matej Knopp
  */
-public interface PageRequestHandler extends PageClassRequestHandler
+public interface EncoderContext
 {
 	/**
-	 * Returns the page
+	 * Returns existing page instance if the page exists.
 	 * 
-	 * @return page instance
+	 * @param pageMapName
+	 * @param pageId
+	 * @param versionNumber
+	 * @return page instance or <code>null</code> if the page does not exist.
 	 */
-	public IPage getPage();
+	public IPage getPageInstance(String pageMapName, int pageId, int versionNumber);
+
+	/**
+	 * Creates new page instance of page with given class.
+	 * 
+	 * @param pageMapName
+	 * @param pageClass
+	 * @param pageParameters
+	 * @return new page instance
+	 */
+	public IPage newPageInstance(String pageMapName, Class<? extends IPage> pageClass,
+		PageParameters pageParameters);
 }

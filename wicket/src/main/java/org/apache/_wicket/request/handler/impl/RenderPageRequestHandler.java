@@ -17,6 +17,7 @@
 package org.apache._wicket.request.handler.impl;
 
 import org.apache._wicket.IPage;
+import org.apache._wicket.PageParameters;
 import org.apache._wicket.RequestCycle;
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
@@ -201,4 +202,18 @@ public class RenderPageRequestHandler implements PageRequestHandler
 		}
 	}
 
+	public Class<? extends IPage> getPageClass()
+	{
+		return page.getClass();
+	}
+	
+	public String getPageMapName()
+	{
+		return page.getPageMapName();
+	}
+	
+	public PageParameters getPageParameters()
+	{
+		return page.getPageParameters();
+	}
 }
