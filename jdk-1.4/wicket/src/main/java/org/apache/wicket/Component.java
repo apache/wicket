@@ -3722,6 +3722,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
 		}
+
+		if (getApplication().getDebugSettings().isOutputComponentPath())
+		{
+			tag.put("wicket:path", getPageRelativePath());
+		}
 	}
 
 	/**
