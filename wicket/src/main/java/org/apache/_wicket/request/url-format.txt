@@ -1,0 +1,50 @@
+NOT BOOKMARKABLE
+----------------
+
+Page Instance - Render
+/wicket/page/2
+/wicket/page/2.4
+/wicket/page/abc.2.4
+
+Page Instance - Listener
+/wicket/click?2:foo:bar:baz
+/wicket/click?2.4:foo:bar:baz
+/wicket/click?pageMap.2.4:foo:bar:baz
+
+BOOKMARKABLE - NOT MOUNTED
+--------------------------
+
+Page Instance - Render
+/wicket/bookmarkable/org.apache.wicket.MyPage
+/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
+(these will redirect to hybrid alternative if page is not stateless)
+
+Page Instance - Render Hybrid 
+/wicket/bookmarkable/org.apache.wicket.MyPage?2
+/wicket/bookmarkable/org.apache.wicket.MyPage?2.4
+/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
+
+Page instance - Bookmarkable listener 
+/wicket/bookmarkable/org.apache.wicket.MyPage?2:click:foo:bar:baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?2.4:click:foo:bar:baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4:click:foo:bar:baz
+(these will redirect to hybrid if page is not stateless)
+
+BOOKMARKABLE - MOUNTED
+----------------------
+
+Page Instance - Render
+/mount/point
+/mount/point?pageMap
+(these will redirect to hybrid alternative if page is not stateless)
+
+Page Instance - Render Hybrid 
+/mount/point?2
+/mount/point?2.4
+/mount/point?pageMap.2.4
+
+Page instance - Bookmarkable listener 
+/mount/point?2:click:foo:bar:baz
+/mount/point?2.4:click:foo:bar:baz
+/mount/point?pageMap.2.4:click:foo:bar:baz
+(these will redirect to hybrid if page is not stateless)
