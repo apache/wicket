@@ -2,9 +2,9 @@ NOT BOOKMARKABLE
 ----------------
 
 Page Instance - Render
-/wicket/page/2
-/wicket/page/2.4
-/wicket/page/abc.2.4
+/wicket/page?2
+/wicket/page?2.4
+/wicket/page?abc.2.4
 
 Page Instance - Listener
 /wicket/click?2:foo:bar:baz
