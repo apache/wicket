@@ -23,18 +23,18 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
 
 /**
  * An Ajax version of a link to a page of a PageableListView.
- * 
+ *
  * @since 1.2
- * 
+ *
  * @author Martijn Dashorst
  */
-public class AjaxPagingNavigationLink extends PagingNavigationLink implements IAjaxLink
+public class AjaxPagingNavigationLink extends PagingNavigationLink<Void> implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -52,7 +52,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 
 	/**
 	 * Fallback event listener, will redisplay the current page.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
 	@Override
@@ -70,7 +70,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	/**
 	 * Performs the actual action of this component, performing a non-ajax fallback when there was
 	 * no AjaxRequestTarget available.
-	 * 
+	 *
 	 * @param target
 	 *            the request target, when <code>null</code>, a full page refresh will be
 	 *            generated
