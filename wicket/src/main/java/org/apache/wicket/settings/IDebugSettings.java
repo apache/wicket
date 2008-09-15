@@ -32,6 +32,21 @@ package org.apache.wicket.settings;
 public interface IDebugSettings
 {
 	/**
+	 * If set to <code>true</code> wicket will output component path in a <code>wicket:path</code>
+	 * attribute of the component tag. This can be useful for debugging and automating tests.
+	 * 
+	 * @param enabled
+	 */
+	void setOutputComponentPath(boolean enabled);
+
+	/**
+	 * @see #setOutputComponentPath(boolean)
+	 * @return <code>true</code> if output component path feature is enabled, <code>false</code>
+	 *         otherwise
+	 */
+	boolean isOutputComponentPath();
+
+	/**
 	 * @return true if componentUseCheck is enabled
 	 */
 	boolean getComponentUseCheck();

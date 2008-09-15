@@ -27,7 +27,7 @@ import org.apache.wicket.markup.MarkupParserFactory;
  * removed. Whitespace stripping is not HTML or JavaScript savvy and can conceivably break pages,
  * but should provide significant performance improvements.
  * <p>
- * <i>stripComments </i> (defaults to false) - Set to true to strip HTML comments during markup
+ * <i>stripComments</i> (defaults to false) - Set to true to strip HTML comments during markup
  * loading
  * 
  * @author Igor Vaynberg (ivaynberg)

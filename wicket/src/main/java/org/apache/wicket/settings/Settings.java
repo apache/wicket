@@ -92,6 +92,8 @@ public final class Settings
 		IFrameworkSettings,
 		IRequestLoggerSettings
 {
+	private boolean outputComponentPath = false;
+
 	/** Class of access denied page. */
 	private WeakReference<Class<? extends Page>> accessDeniedPage;
 
@@ -1421,4 +1423,19 @@ public final class Settings
 	{
 		parentFolderPlaceholder = sequence;
 	}
+
+
+	/** @see IDebugSettings#isOutputComponentPath() */
+	public boolean isOutputComponentPath()
+	{
+		return outputComponentPath;
+	}
+
+	/** @see IDebugSettings#setOutputComponentPath() */
+	public void setOutputComponentPath(boolean outputComponentPath)
+	{
+		this.outputComponentPath = outputComponentPath;
+	}
+
+
 }
