@@ -7,9 +7,9 @@ Page Instance - Render
 /wicket/page?abc.2.4
 
 Page Instance - Listener
-/wicket/listener?2:click:foo:bar:baz
-/wicket/listener?2.4:click:foo:bar:baz
-/wicket/listener?pageMap.2.4:click:foo:bar:baz
+/wicket/page?2:click:foo:bar:baz
+/wicket/page?2.4:click:foo:bar:baz
+/wicket/page?pageMap.2.4:click:foo:bar:baz
 
 BOOKMARKABLE - NOT MOUNTED
 --------------------------
