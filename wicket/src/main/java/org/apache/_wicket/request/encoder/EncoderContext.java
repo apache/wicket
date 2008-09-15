@@ -18,6 +18,7 @@ package org.apache._wicket.request.encoder;
 
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
+import org.apache.wicket.RequestListenerInterface;
 
 /**
  * Utility interface for providing and creating new page instances.
@@ -45,5 +46,36 @@ public interface EncoderContext
 	 * @return new page instance
 	 */
 	public IPage newPageInstance(String pageMapName, Class<? extends IPage> pageClass,
-		PageParameters pageParameters);	
+		PageParameters pageParameters);
+	
+	/**
+	 * @return the namespace for Wicket URLs.
+	 */
+	public String getNamespace();
+	
+	/**
+	 * @return identifier for non bookmarkable URLs
+	 */
+	public String getPageIdentifier();
+	
+	/**
+	 * @return identifier for bookmarkable URLs
+	 */
+	public String getBookmarkableIdentifier();
+	
+	/**
+	 * Returns the listener interface name as string.
+	 * 
+	 * @param listenerInterface
+	 * @return listener interface name as string
+	 */
+	public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface);
+	
+	/**
+	 * Returns listener interface for the name
+	 * 
+	 * @param interfaceName
+	 * @return listener interface
+	 */
+	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName);
 }

@@ -14,34 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.encoder;
+package org.apache._wicket.request.handler;
 
-public class AbstractNotMountedEncoder extends AbstractEncoder
+import org.apache._wicket.IComponent;
+import org.apache._wicket.request.RequestHandler;
+
+/**
+ * Request handler that works with a component.
+ * 
+ * @author Matje Knopp
+ */
+public interface ComponentRequestHandler extends RequestHandler
 {
-
-	protected String getNamespace()
-	{
-		// 
-		return "wicket";
-	}
-	
-	protected String getPageIdentifier()
-	{
-		// /wicket/page?abc.2.4
-		return "page";
-	}
-	
-	protected String getBookmarkableIdentifier()
-	{
-		// /wicket/bookmarkable/org.apache.wicket.MyPage
-		return "bookmarkable";
-	}
-	
-	protected String getListenerIdentifier()
-	{
-		// /wicket/listener?2:click:foo:bar:baz
-		return "listener";
-	}
-
-	
+	/**
+	 * Returns the component instance.
+	 * 
+	 * @return component instance
+	 */
+	public IComponent getComponent();
 }

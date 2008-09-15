@@ -62,6 +62,13 @@ public interface IComponent extends IDetachable
 	public String getMarkupId(boolean createIfDoesNotExist);
 	
 	/**
+	 * Returns page this component belongs to.
+	 * 
+	 * @return page instance or <code>null</code>
+	 */
+	public IPage getPage();
+	
+	/**
 	 * Gets the component at the given path.
 	 * 
 	 * @param path

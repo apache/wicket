@@ -16,50 +16,106 @@
  */
 package org.apache._wicket.request.encoder;
 
-import org.apache._wicket.request.RequestHandler;
+import org.apache._wicket.IComponent;
+import org.apache._wicket.IPage;
 import org.apache._wicket.request.RequestHandlerEncoder;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.request.Request;
+import org.apache._wicket.request.Url.QueryParameter;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 
+/**
+ * Convenience class for implementing encoders.
+ * 
+ * @author Matej Knopp
+ */
 public abstract class AbstractEncoder implements RequestHandlerEncoder
 {
 	protected EncoderContext getContext()
 	{
+		// TODO
 		return null;
 	};
 
 	protected String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
 	{
-		if (listenerInterface == null)
-		{
-			throw new IllegalArgumentException("Argument 'listenerInterface' may not be null.");
-		}
-		return listenerInterface.getName();
+		return getContext().requestListenerInterfaceToString(listenerInterface);
 	}
-	
-	protected RequestListenerInterface requestListenerIntefaceFromString(String interfaceName)
+
+	protected RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
 	{
-		if (interfaceName == null)
-		{
-			throw new IllegalArgumentException("Argument 'interfaceName' may not be null.");
-		}
-		return RequestListenerInterface.forName(interfaceName);
+		return getContext().requestListenerInterfaceFromString(interfaceName);
 	}
-	
-	public RequestHandler decode(Request request)
+
+	protected boolean urlStartsWith(Url url, String... segments)
 	{
+		if (url == null)
+		{
+			return false;
+		}
+		else
+		{
+			if (url.getSegments().size() < segments.length)
+			{
+				return false;
+			}
+			else
+			{
+				for (int i = 0; i < segments.length; ++i)
+				{
+					if (segments[i].equals(url.getSegments().get(i)) == false)
+					{
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	protected PageComponentInfo getPageComponentInfo(Url url)
+	{
+		if (url.getQueryParameters().size() > 0)
+		{
+			QueryParameter param = url.getQueryParameters().get(0);
+			if (param.getValue() == null)
+			{
+				return PageComponentInfo.parse(param.getName());
+			}
+		}
 		return null;
 	}
 
-	public Url encode(RequestHandler requestHandler)
+	protected IPage getPageInstance(PageInfo info, boolean throwExpiredExceptionIfNotFound)
 	{
-		return null;
+		IPage page = getContext().getPageInstance(info.getPageMapName(), info.getPageId(),
+			info.getVersionNumber());
+
+		if (page == null && throwExpiredExceptionIfNotFound)
+		{
+			throw new PageExpiredException("Page expired.");
+		}
+
+		return page;
 	}
 
-	public int getMachingSegmentsCount(Request request)
+	protected IPage getPageInstance(PageInfo info)
 	{
-		return 0;
+		return getPageInstance(info, true);
 	}
 
+	protected IComponent getComponent(IPage page, String componentPath)
+	{
+		IComponent component = page.get(componentPath);
+		if (component == null)
+		{
+			throw new WicketRuntimeException("Component with path " + componentPath +
+				" not found in page.");
+		}
+		else
+		{
+			return component;
+		}
+	}
 }
