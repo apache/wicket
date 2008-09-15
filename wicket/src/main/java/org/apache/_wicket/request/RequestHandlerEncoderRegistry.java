@@ -23,7 +23,9 @@ import org.apache._wicket.request.request.Request;
 
 /**
  * Thread safe registry of {@link RequestHandlerEncoder}s. The encoders are searched depending on
- * the orders they were registered. Last registered encoder has the highest priority.
+ * the orders they were registered. If the {@link RequestHandlerEncoder}s can handle
+ * {@link Request} and they have same matching segments count, the last registered encoder has
+ * higher priority.
  * 
  * @author Matej Knopp
  */
@@ -52,11 +54,8 @@ public class RequestHandlerEncoderRegistry
 	/**
 	 * Searches the registered {@link RequestHandlerEncoder}s to find one that can decode the
 	 * {@link Request}. Each registered {@link RequestHandlerEncoder} is asked to decode the
-	 * {@link Request} until an encoder that can decode the {@link Request} is found or no more
-	 * encoders are left.
-	 * <p>
-	 * The handlers are searched in reverse order as they have been registered. More recently
-	 * registered handlers have bigger priority.
+	 * {@link Request}. The encoder with highest matching segments count that can decode the
+	 * request is returned.
 	 * 
 	 * @param request
 	 * @return RequestHandler for the request or <code>null</code> if no encoder for the request
@@ -64,15 +63,44 @@ public class RequestHandlerEncoderRegistry
 	 */
 	public RequestHandler decode(Request request)
 	{
+		// last found RequestHandler with highest matching segments count
+		RequestHandler last = null;
+		int maxMatchingSegmentsCount = -1;
+
 		for (RequestHandlerEncoder encoder : encoders)
 		{
-			RequestHandler handler = encoder.decode(request);
-			if (handler != null)
+			// no handler has been found yet
+			if (last == null)
 			{
-				return handler;
+				// try to get the handler immediately, at this point we don't care for matching
+				// segments count
+				last = encoder.decode(request);
+				if (last != null)
+				{
+					// found one - get the matching segments count so that it can be compared
+					// to other encoders found later
+					maxMatchingSegmentsCount = encoder.getMachingSegmentsCount(request);
+				}
+			}
+			else
+			{
+				// we already have a handler, try to find out if this one has bigger matching
+				// segments count
+				int count = encoder.getMachingSegmentsCount(request);
+				if (count > maxMatchingSegmentsCount)
+				{
+					// seems so
+					RequestHandler handler = encoder.decode(request);
+					if (handler != null)
+					{
+						// replace the last one
+						last = handler;
+						maxMatchingSegmentsCount = count;
+					}
+				}
 			}
 		}
-		return null;
+		return last;
 	}
 
 	/**

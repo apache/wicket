@@ -30,7 +30,7 @@ import org.apache._wicket.request.handler.PageClassRequestHandler;
 public class BookmarkablePageRequestHandler implements PageClassRequestHandler
 {
 	private final Class<? extends IPage> pageClass;
-
+  
 	private final String pageMapName;
 
 	private final PageParameters pageParameters;

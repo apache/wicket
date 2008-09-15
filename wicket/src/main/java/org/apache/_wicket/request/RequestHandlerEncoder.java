@@ -38,6 +38,22 @@ public interface RequestHandlerEncoder
 	 * @return RequestHandler instance or <code>null</code>
 	 */
 	RequestHandler decode(Request request);
+	
+	/**
+	 * Returns the amount of matching segments for the request. When two {@link RequestHandlerEncoder}s 
+	 * are capable of decoding a request, the one with highest maching segments count will be used.
+	 * <p>
+	 * For example when there are two encoders for mounted page, one mapped to <code>/foo</code> another
+	 * to <code>/foo/bar</code> and the incomming reqest URL is </code>/foo/bar/baz</code>, the encoder
+	 * mapped to <code>/foo/bar</code> will handle the request as it has matching segments count of 2
+	 * while the first one has only matching segments count of 1.
+	 * <p>
+	 * Note that the method can return value &gt; 0 even if the encoder can not decode the request. 
+	 * 
+	 * @param request
+	 * @return count of matching segments
+	 */
+	public int getMachingSegmentsCount(Request request);
 
 	/**
 	 * Returns the {@link Url} for given {@link RequestHandler} or <code>null</code> if the

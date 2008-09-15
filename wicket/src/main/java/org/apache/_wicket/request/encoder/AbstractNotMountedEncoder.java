@@ -16,34 +16,32 @@
  */
 package org.apache._wicket.request.encoder;
 
-import org.apache._wicket.IPage;
-import org.apache._wicket.PageParameters;
-
-/**
- * Utility interface for providing and creating new page instances.
- * 
- * @author Matej Knopp
- */
-public interface EncoderContext
+public class AbstractNotMountedEncoder extends AbstractEncoder
 {
-	/**
-	 * Returns existing page instance if the page exists.
-	 * 
-	 * @param pageMapName
-	 * @param pageId
-	 * @param versionNumber
-	 * @return page instance or <code>null</code> if the page does not exist.
-	 */
-	public IPage getPageInstance(String pageMapName, int pageId, int versionNumber);
 
-	/**
-	 * Creates new page instance of page with given class.
-	 * 
-	 * @param pageMapName
-	 * @param pageClass
-	 * @param pageParameters
-	 * @return new page instance
-	 */
-	public IPage newPageInstance(String pageMapName, Class<? extends IPage> pageClass,
-		PageParameters pageParameters);	
+	protected String getNamespace()
+	{
+		// 
+		return "wicket";
+	}
+	
+	protected String getPageIdentifier()
+	{
+		// /wicket/page?abc.2.4
+		return "page";
+	}
+	
+	protected String getBookmarkableIdentifier()
+	{
+		// /wicket/bookmarkable/org.apache.wicket.MyPage
+		return "bookmarkable";
+	}
+	
+	protected String getListenerIdentifier()
+	{
+		// /wicket/listener?2:click:foo:bar:baz
+		return "listener";
+	}
+
+	
 }

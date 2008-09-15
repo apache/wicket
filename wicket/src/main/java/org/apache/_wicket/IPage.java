@@ -28,25 +28,25 @@ public interface IPage extends IComponent
 	/**
 	 * @return A stable identifier for this page map entry
 	 */
-	public int getPageMapId();
+	public int getNumericId();
 
 	/**
 	 * @return The current version number of this page. If the page has been changed once, the
 	 *         return value will be 1. If the page has not yet been revised, the version returned
 	 *         will be 0, indicating that the page is still in its original state.
 	 */
-	public int getPageMapVersion();
+	public int getCurrentVersionNumber();
 
 	/**
 	 * @return String The PageMap name
 	 */
 	public String getPageMapName();
-	
+
 	/**
-	 * Renders the page 
+	 * Renders the page
 	 */
 	public void renderPage();
-	
+
 	/**
 	 * Bookmarkable page can be instantiated using a bookmarkable URL.
 	 * 
@@ -55,19 +55,29 @@ public interface IPage extends IComponent
 	public boolean isBookmarkable();
 
 	/**
+	 * Returns whether the page instance was created by a bookmarkable URL. Non mounted pages have
+	 * to be created using bookmarkable URL in order to have hybrid URLs later. Otherwise it would
+	 * be a potential security risk.
+	 * 
+	 * @return <code>true</code> if this page has been created by a bookmarkable URL,
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean wasCreatedBookmarkable();
+
+	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any
 	 * statefull urls, and components on statefull page must not render any stateless urls.
 	 * Statefull urls are urls, which refer to a certain (current) page instance.
 	 * 
 	 * @return Whether this page is stateless
 	 */
-	public boolean isStateless();
+	 // noe that this has different semantics than Component#isStateless()
+	public boolean isPageStateless();
 
 	/**
-	 * Returns the {@link PageParameters} for the page. Each bookmarkable page instance
-	 * should have {@link PageParameters} associated with it. The page parameters are
-	 * initialized from URL when page is created and are updated on every page render
-	 * request.
+	 * Returns the {@link PageParameters} for the page. Each bookmarkable page instance should have
+	 * {@link PageParameters} associated with it. The page parameters are initialized from URL when
+	 * page is created and are updated on every page render request.
 	 * 
 	 * @return page parameters or <code>null</code>
 	 */
