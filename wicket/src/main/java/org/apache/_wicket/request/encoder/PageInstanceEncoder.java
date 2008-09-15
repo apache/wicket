@@ -93,7 +93,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 				return null;
 			}
 
-			PageInfo i = new PageInfo(page.getNumericId(), page.getCurrentVersionNumber(),
+			PageInfo i = new PageInfo(page.getPageId(), page.getPageVersionNumber(),
 				page.getPageMapName());
 			info = new PageComponentInfo(i, null);
 		}
@@ -104,7 +104,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 			String componentPath = handler.getComponent().getPath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
-			PageInfo pageInfo = new PageInfo(page.getNumericId(), page.getCurrentVersionNumber(),
+			PageInfo pageInfo = new PageInfo(page.getPageId(), page.getPageVersionNumber(),
 				page.getPageMapName());
 			ComponentInfo componentInfo = new ComponentInfo(
 				requestListenerInterfaceToString(listenerInterface), componentPath);

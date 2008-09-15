@@ -28,14 +28,14 @@ public interface IPage extends IComponent
 	/**
 	 * @return A stable identifier for this page map entry
 	 */
-	public int getNumericId();
+	public int getPageId();
 
 	/**
 	 * @return The current version number of this page. If the page has been changed once, the
 	 *         return value will be 1. If the page has not yet been revised, the version returned
 	 *         will be 0, indicating that the page is still in its original state.
 	 */
-	public int getCurrentVersionNumber();
+	public int getPageVersionNumber();
 
 	/**
 	 * @return String The PageMap name
