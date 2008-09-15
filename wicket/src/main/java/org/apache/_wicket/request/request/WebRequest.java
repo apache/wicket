@@ -16,6 +16,7 @@
  */
 package org.apache._wicket.request.request;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -71,13 +72,31 @@ public abstract class WebRequest extends Request
 
 	/**
 	 * Returns the value of the specified request header as a <code>long</code> value that
-	 * represents a <code>Date</code> object. Use this method with headers that contain dates,
-	 * such as <code>If-Modified-Since</code>.
+	 * represents a <code>Date</code> object. Use this method with headers that contain dates, such
+	 * as <code>If-Modified-Since</code>.
 	 * 
 	 * @param name
 	 * @return date value of request header
 	 */
 	public abstract long getDateHeader(String name);
+
+	/**
+	 * Convenience method for retrieving If-Modified-Since header.
+	 * 
+	 * @return date representing the header or <code>null</code> if not set
+	 */
+	public final Date getIfModifiedSinceHeader()
+	{
+		final long header = getDateHeader("If-Modified-Since");
+		if (header >= 0)
+		{
+			return new Date(header);
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	/**
 	 * Marker parameter for AjaxRequest.
@@ -88,8 +107,7 @@ public abstract class WebRequest extends Request
 	 * Returns whether this request is an Ajax request. This implementation only checks for value of
 	 * wicket:ajax url parameter. Subclasses can use other approach.
 	 * 
-	 * @return <code>true</code> if this request is an ajax request, <code>false</codE>
-	 *         otherwise.
+	 * @return <code>true</code> if this request is an ajax request, <code>false</codE> otherwise.
 	 */
 	public boolean isAjax()
 	{
@@ -97,4 +115,3 @@ public abstract class WebRequest extends Request
 	}
 
 }
-
