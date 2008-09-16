@@ -35,6 +35,7 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.NoCryptFactory;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 
 
@@ -67,6 +68,7 @@ public class CookieTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -77,35 +79,38 @@ public class CookieTest extends TestCase
 		final ISecuritySettings settings = tester.getApplication().getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
-		this.panel = new SignInPanel("panel")
+		panel = new SignInPanel("panel")
 		{
+			@Override
 			public boolean signIn(final String username, final String password)
 			{
 				return true;
 			}
 		};
 
-		this.panel.setPersistent(true);
-		this.form = (Form)panel.get("signInForm");
+		panel.setPersistent(true);
+		form = (Form)panel.get("signInForm");
 
-		final ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory()
-				.newCrypt();
+		final ICrypt crypt = tester.getApplication()
+			.getSecuritySettings()
+			.getCryptFactory()
+			.newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
-		this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");
-		this.cookiePassword = new Cookie("panel:signInForm:password", encryptedPassword);
-		this.cookies = new Cookie[] { cookieUsername, cookiePassword };
+		cookieUsername = new Cookie("panel.signInForm.username", "juergen");
+		cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
+		cookies = new Cookie[] { cookieUsername, cookiePassword };
 
 		tester.getServletRequest().setCookies(cookies);
 
-		cycle = new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester
-				.getWicketResponse());
+		cycle = new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(),
+			tester.getWicketResponse());
 
-		this.page = new MockPage(null);
-		page.add(this.panel);
+		page = new MockPage(null);
+		page.add(panel);
 
-		WebRequestCycle cycle = new WebRequestCycle(tester.getApplication(), tester
-				.getWicketRequest(), tester.getWicketResponse());
+		WebRequestCycle cycle = new WebRequestCycle(tester.getApplication(),
+			tester.getWicketRequest(), tester.getWicketResponse());
 	}
 
 	/**
@@ -116,7 +121,7 @@ public class CookieTest extends TestCase
 	public void testSetCookieOnForm() throws IOException, ServletException
 	{
 		// initialize
-		this.form.loadPersistentFormComponentValues();
+		form.loadPersistentFormComponentValues();
 
 		// validate
 		FormComponent username = (FormComponent)panel.get("signInForm:username");
@@ -136,8 +141,8 @@ public class CookieTest extends TestCase
 	public void testPersistCookieWithPersistenceDisabled() throws IOException, ServletException
 	{
 		// test will call persistFromComponentData(), which is private
-		this.panel.setPersistent(false);
-		this.form.onFormSubmitted();
+		panel.setPersistent(false);
+		form.onFormSubmitted();
 
 		// validate
 		Collection cookies = tester.getServletResponse().getCookies();
@@ -158,7 +163,7 @@ public class CookieTest extends TestCase
 		panel.setPersistent(true);
 
 		// test will call persistFromComponentData(), which is private
-		this.form.onFormSubmitted();
+		form.onFormSubmitted();
 
 		// validate
 		Collection cookies = tester.getServletResponse().getCookies();
@@ -167,12 +172,13 @@ public class CookieTest extends TestCase
 		while (iter.hasNext())
 		{
 			Cookie cookie = (Cookie)iter.next();
-			Assert.assertNotNull(page.get(cookie.getName()));
+			String name = cookie.getName();
+			name = Strings.replaceAll(name, ".", ":").toString();
+			Assert.assertNotNull(page.get(name));
 			// Skip "deleted" cookies
-			if (page.get(cookie.getName()).getModelObjectAsString() != "")
+			if (page.get(name).getModelObjectAsString() != "")
 			{
-				Assert.assertEquals(cookie.getValue(), page.get(cookie.getName())
-						.getModelObjectAsString());
+				Assert.assertEquals(cookie.getValue(), page.get(name).getModelObjectAsString());
 			}
 		}
 	}
@@ -195,8 +201,8 @@ public class CookieTest extends TestCase
 		Assert.assertEquals(2, cookieCollection.size());
 
 		// initialize
-		final Cookie cookieUsername = new Cookie("panel:signInForm:username", "juergen");
-		final Cookie cookiePassword = new Cookie("panel:signInForm:password", "test");
+		final Cookie cookieUsername = new Cookie("panel.signInForm.username", "juergen");
+		final Cookie cookiePassword = new Cookie("panel.signInForm.password", "test");
 		final Cookie[] cookies = new Cookie[] { cookieUsername, cookiePassword };
 
 		tester.getServletRequest().setCookies(cookies);
@@ -211,7 +217,9 @@ public class CookieTest extends TestCase
 		while (iter.hasNext())
 		{
 			Cookie cookie = (Cookie)iter.next();
-			Assert.assertNotNull(page.get(cookie.getName()));
+			String name = cookie.getName();
+			name = Strings.replaceAll(name, ".", ":").toString();
+			Assert.assertNotNull(page.get(name));
 			Assert.assertEquals(cookie.getMaxAge(), 0);
 		}
 	}
