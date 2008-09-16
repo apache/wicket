@@ -1,3 +1,10 @@
+NOTE - According to http://www.rfc-editor.org/rfc/rfc1738.txt ':' is not a valid
+       character in URL and must be encoded. 
+       In order for Wicket to produce valid URLs I've decided to use - as separator instead
+       This will only affect listener URLs anyway, which are not shown in location bar 
+       (except for bookmarkable listeners on stateless pages)
+
+
 NOT BOOKMARKABLE
 ----------------
 
@@ -7,9 +14,9 @@ Page Instance - Render
 /wicket/page?abc.2.4
 
 Page Instance - Listener
-/wicket/page?2:click:foo:bar:baz
-/wicket/page?2.4:click:foo:bar:baz
-/wicket/page?pageMap.2.4:click:foo:bar:baz
+/wicket/page?2-click-foo-bar-baz
+/wicket/page?2.4-click-foo-bar-baz
+/wicket/page?pageMap.2.4-click-foo-bar-baz
 
 BOOKMARKABLE - NOT MOUNTED
 --------------------------
@@ -25,9 +32,9 @@ Page Instance - Render Hybrid
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
 
 Page Instance - Bookmarkable Listener 
-/wicket/bookmarkable/org.apache.wicket.MyPage?2:click:foo:bar:baz
-/wicket/bookmarkable/org.apache.wicket.MyPage?2.4:click:foo:bar:baz
-/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4:click:foo:bar:baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
 (these will redirect to hybrid if page is not stateless)
 
 BOOKMARKABLE - MOUNTED
@@ -44,7 +51,7 @@ Page Instance - Render Hybrid
 /mount/point?pageMap.2.4
 
 Page instance - Bookmarkable Listener 
-/mount/point?2:click:foo:bar:baz
-/mount/point?2.4:click:foo:bar:baz
-/mount/point?pageMap.2.4:click:foo:bar:baz
+/mount/point?2-click-foo-bar-baz
+/mount/point?2.4-click-foo-bar-baz
+/mount/point?pageMap.2.4-click-foo-bar-baz
 (these will redirect to hybrid if page is not stateless)

@@ -16,58 +16,34 @@
  */
 package org.apache._wicket.request.handler.impl;
 
-import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
 import org.apache._wicket.RequestCycle;
-import org.apache._wicket.request.handler.ComponentRequestHandler;
+import org.apache._wicket.request.Url;
 import org.apache._wicket.request.handler.PageRequestHandler;
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.WicketRuntimeException;
+import org.apache._wicket.request.response.WebResponse;
 
 /**
- * Request handler that invokes the listener interface on component and renders page afterwards.
+ * Simple request handler that does a redirect to page URL and renders the page.
  * 
  * @author Matej Knopp
  */
-public class ListenerInterfaceRequestHandler implements PageRequestHandler, ComponentRequestHandler
+public class RedirectToRenderPageRequestHandler implements PageRequestHandler
 {
-	private final IComponent component;
 	private final IPage page;
-	private final RequestListenerInterface listenerInterface;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param page
-	 * @param component
-	 * @param listenerInterface
 	 */
-	public ListenerInterfaceRequestHandler(IPage page, IComponent component,
-		RequestListenerInterface listenerInterface)
+	public RedirectToRenderPageRequestHandler(IPage page)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("Argument 'component' may not be null.");
-		}
 		if (page == null)
 		{
 			throw new IllegalArgumentException("Argument 'page' may not be null.");
 		}
-		if (listenerInterface == null)
-		{
-			throw new IllegalArgumentException("Argument 'listenerInterface' may not be null.");
-		}
-		this.component = component;
 		this.page = page;
-		this.listenerInterface = listenerInterface;
-	}
-
-	public IComponent getComponent()
-	{
-		return component;
 	}
 
 	public IPage getPage()
@@ -95,28 +71,25 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 		page.detach();
 	}
 
-	/**
-	 * Returns the listener interface.
-	 * 
-	 * @return listener interface
-	 */
-	public RequestListenerInterface getListenerInterface()
+	private void redirectTo(Url url, RequestCycle requestCycle)
 	{
-		return listenerInterface;
+		WebResponse response = (WebResponse)requestCycle.getResponse();
+		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
+		response.sendRedirect(relativeUrl);
 	}
 
 	public void respond(RequestCycle requestCycle)
 	{
-		if (component.getPage() == page)
+		RenderPageRequestHandler handler = new RenderPageRequestHandler(page);
+		Url url = requestCycle.urlFor(handler);
+		if (requestCycle.getRequest().getUrl().equals(url))
 		{
-			listenerInterface.invoke((Page)page, (Component)component);
-			requestCycle.replaceCurrentRequestHandler(new RenderPageRequestHandler(page));
+			// the URLs match - RenderPageRequestTarget will render the page immediately
+			requestCycle.replaceAllRequestHandlers(handler);
 		}
 		else
 		{
-			throw new WicketRuntimeException("Component " + component +
-				" has been removed from page.");
+			redirectTo(url, requestCycle);
 		}
 	}
-
 }

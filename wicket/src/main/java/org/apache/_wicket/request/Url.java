@@ -315,7 +315,12 @@ public final class Url implements Serializable
 	{
 		try
 		{
-			return URLEncoder.encode(string, "UTF-8");
+			String s = URLEncoder.encode(string, "UTF-8");
+			
+			// According to http://www.rfc-editor.org/rfc/rfc1738.txt 
+			// ! doesn't have to be encoded
+			s = s.replace("%21", "!");
+			return s;
 		}
 		catch (UnsupportedEncodingException e)
 		{

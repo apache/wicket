@@ -24,6 +24,7 @@ import org.apache._wicket.request.Url.QueryParameter;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Convenience class for implementing encoders.
@@ -79,7 +80,7 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 		if (url.getQueryParameters().size() > 0)
 		{
 			QueryParameter param = url.getQueryParameters().get(0);
-			if (param.getValue() == null)
+			if (Strings.isEmpty(param.getValue()))
 			{
 				return PageComponentInfo.parse(param.getName());
 			}

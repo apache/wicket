@@ -29,6 +29,8 @@ class ComponentInfo
 	private final String listenerInterface;
 	private final String componentPath;
 
+	private static final char SEPARATOR = '-';
+	
 	public ComponentInfo(String listenerInterface, String componentPath)
 	{
 		this.listenerInterface = listenerInterface;
@@ -44,6 +46,38 @@ class ComponentInfo
 	{
 		return listenerInterface;
 	}
+	
+	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() + "]]]]";
+	
+	private static String encodeComponentPath(String path)
+	{
+		if (path != null)
+		{
+			path = path.replace("" + SEPARATOR, TMP_PLACEHOLDER);
+			path = path.replace(':', SEPARATOR);
+			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR + SEPARATOR);
+			return path;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	private static String decodeComponentPath(String path)
+	{
+		if (path != null)
+		{
+			path = path.replace("" + SEPARATOR + SEPARATOR, TMP_PLACEHOLDER);
+			path = path.replace(SEPARATOR, ':');
+			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR);
+			return path;
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	@Override
 	public String toString()
@@ -53,10 +87,10 @@ class ComponentInfo
 		{
 			result.append(listenerInterface);
 		}
-		result.append(":");
+		result.append(SEPARATOR);
 		if (componentPath != null)
 		{
-			result.append(componentPath);
+			result.append(encodeComponentPath(componentPath));
 		}
 		return result.toString();
 	}
@@ -73,7 +107,7 @@ class ComponentInfo
 		{
 			return null;
 		}
-		int i = string.indexOf(':');
+		int i = string.indexOf(SEPARATOR);
 		if (i == -1)
 		{
 			return null;
@@ -81,7 +115,7 @@ class ComponentInfo
 		else
 		{
 			String listenerInterface = string.substring(0, i);
-			String componentPath = string.substring(i + 1);
+			String componentPath = decodeComponentPath(string.substring(i + 1));
 
 			if (Strings.isEmpty(listenerInterface))
 			{

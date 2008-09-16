@@ -29,6 +29,8 @@ class PageComponentInfo
 	private final PageInfo pageInfo;
 	private final ComponentInfo componentInfo;
 
+	private static final char SEPARATOR = '-';
+	
 	public PageComponentInfo(PageInfo pageInfo, ComponentInfo componentInfo)
 	{
 		if (pageInfo == null)
@@ -59,7 +61,7 @@ class PageComponentInfo
 		}		
 		if (componentInfo != null)
 		{
-			result.append(":");
+			result.append(SEPARATOR);
 			result.append(componentInfo);
 		}
 		
@@ -82,7 +84,7 @@ class PageComponentInfo
 		final PageInfo pageInfo;
 		final ComponentInfo componentInfo;
 		
-		int i = s.indexOf(':');
+		int i = s.indexOf(SEPARATOR);
 		if (i == -1)
 		
 		{

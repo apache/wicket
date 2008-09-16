@@ -34,9 +34,9 @@ import org.apache.wicket.RequestListenerInterface;
  *  /wicket/page?2.4
  *  /wicket/page?abc.2.4
  * 
- *  /wicket/page?2:click:foo:bar:baz
- *  /wicket/page?2.4:click:foo:bar:baz
- *  /wicket/page?pageMap.2.4:click:foo:bar:baz
+ *  /wicket/page?2-click-foo-bar-baz
+ *  /wicket/page?2.4-click-foo-bar-baz
+ *  /wicket/page?pageMap.2.4-click-foo-bar-baz
  * </pre>
  * 
  * @author Matej Knopp
@@ -58,7 +58,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 		if (urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier()))
 		{
 			PageComponentInfo info = getPageComponentInfo(url);
-			if (info != null)
+			if (info != null && info.getPageInfo().getPageId() != null)
 			{
 				IPage page = getPageInstance(info.getPageInfo());
 				if (info.getComponentInfo() == null)
@@ -73,7 +73,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 					IComponent component = getComponent(page, componentInfo.getComponentPath());
 					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 
-					return new ListenerInterfaceRequestHandler(component, page, listenerInterface);
+					return new ListenerInterfaceRequestHandler(page, component, listenerInterface);
 				}
 			}
 		}
@@ -128,6 +128,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 
 	public int getMachingSegmentsCount(Request request)
 	{
-		return 2;
+		// always return 0 here so that the mounts have higher priority
+		return 0;
 	}
 }

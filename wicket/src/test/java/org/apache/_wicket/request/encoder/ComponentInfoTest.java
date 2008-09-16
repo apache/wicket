@@ -38,7 +38,7 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test1()
 	{
-		String s = "listener:component:path";
+		String s = "listener-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
@@ -51,7 +51,7 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test2()
 	{
-		String s = ":component:path";
+		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals(null, info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
@@ -64,7 +64,7 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test3()
 	{
-		String s = "listener:";
+		String s = "listener-";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals(null, info.getComponentPath());
@@ -77,7 +77,7 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test4()
 	{
-		String s = ":";
+		String s = "-";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals(null, info.getListenerInterface());
 		assertEquals(null, info.getComponentPath());
@@ -93,4 +93,31 @@ public class ComponentInfoTest extends TestCase
 		String s = "abcd";
 		assertEquals(null, ComponentInfo.parse(s));
 	}
+	
+	/**
+	 * 
+	 */
+	public void test6()
+	{
+		String s = "listener-compo--nent-path";
+		ComponentInfo info = ComponentInfo.parse(s);
+		assertEquals("listener", info.getListenerInterface());
+		assertEquals("compo-nent:path", info.getComponentPath());
+		
+		assertEquals(s, info.toString());
+	}
+
+	/**
+	 * 
+	 */
+	public void test7()
+	{
+		String s = "listener-co--mpo----nent-path";
+		ComponentInfo info = ComponentInfo.parse(s);
+		assertEquals("listener", info.getListenerInterface());
+		assertEquals("co-mpo--nent:path", info.getComponentPath());
+		
+		assertEquals(s, info.toString());
+	}
+
 }

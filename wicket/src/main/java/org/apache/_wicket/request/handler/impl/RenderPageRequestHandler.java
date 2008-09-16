@@ -32,6 +32,16 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * {@link RequestHandler} that renders page instance. Depending on the <code>preventRedirect</code>
  * flag and current request strategy the handler either just renders the page to the response, or
  * redirects to render the page. <code>REDIRECT_TO_BUFFER</code> strategy is also supported.
+ * <p>
+ * The redirect be issued if all of the following statements are true
+ * <ul>
+ * 	<li>request cycle strategy is not ONE_PASS_RENDER 
+ *  <li>preventRedirect flag is not set
+ *  <li>current request URL is different than page URL
+ *  <li>page being rendered is not stateless
+ *  
+ * </ul>
+ * 
  * 
  * @author Matej Knopp
  */
@@ -169,18 +179,20 @@ public class RenderPageRequestHandler implements PageRequestHandler
 		{
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (preventRedirect || isOnePassRender() || targetUrl.equals(currentUrl))
+		else if (preventRedirect || isOnePassRender() || targetUrl.equals(currentUrl) ||
+			(isRedirectToRender() && page.isPageStateless()))
 		{
 			// if the flag is set or one pass render model is on or the targetUrl matches current
-			// url just render the page 
+			// url just render the page
 			renderPage();
 		}
 		else if (isRedirectToRender())
 		{
 			redirectTo(targetUrl, requestCycle);
 		}
-		else // redirect to buffer
-		{			
+		else
+		// redirect to buffer
+		{
 			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
 
 			// check if the url hasn't changed after page has been rendered
@@ -195,23 +207,51 @@ public class RenderPageRequestHandler implements PageRequestHandler
 				// segments for stateless and stateful pages
 				response = renderPage(targetUrl2, requestCycle);
 			}
+			
+			if (page.isPageStateless() && !enableRedirectForStatelessPage())
+			{
+				// we don't want the redirect to happen for stateless page
+				// example:
+				//   when a normal mounted stateful page is hit at /mount/point
+				//   wicket renders the page to buffer and redirects to /mount/point?12
+				//   but for stateless page the redirect is not necessary
+				//   also for listener interface on stateful page we want to redirect 
+				//   after the listener is invoked, but on stateless page the user 
+				//   must ask for redirect explicitely  
+				response.writeTo((WebResponse)requestCycle.getResponse());
+			}
+			else
+			{
+				storeBufferedResponse(targetUrl2, response);
 
-			storeBufferedResponse(targetUrl2, response);
-
-			redirectTo(targetUrl2, requestCycle);
+				redirectTo(targetUrl2, requestCycle);
+			}
 		}
+	}
+
+	/**
+	 * When the page renders to buffer and it is still stateless after rendering, this flag
+	 * determines whether the redirect will take place or not.
+	 * <p>
+	 * Normally there is no reason for a stateless page to redirect 
+	 * 
+	 * @return boolean value
+	 */
+	protected boolean enableRedirectForStatelessPage()
+	{
+		return false;
 	}
 
 	public Class<? extends IPage> getPageClass()
 	{
 		return page.getClass();
 	}
-	
+
 	public String getPageMapName()
 	{
 		return page.getPageMapName();
 	}
-	
+
 	public PageParameters getPageParameters()
 	{
 		return page.getPageParameters();

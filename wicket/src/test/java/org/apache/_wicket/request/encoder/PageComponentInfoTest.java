@@ -62,7 +62,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test1()
 	{
-		String s = "2:click:foo:bar:baz";
+		String s = "2-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, null, 2, 0, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -73,7 +73,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test2()
 	{
-		String s = "2.4:click:foo:bar:baz";
+		String s = "2.4-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, null, 2, 4, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -84,7 +84,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test3()
 	{
-		String s = "pagemap.2.4:click:foo:bar:baz";
+		String s = "pagemap.2.4-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "pagemap", 2, 4, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -95,7 +95,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test4()
 	{
-		String s = "pagemap:click:foo:bar:baz";
+		String s = "pagemap-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "pagemap", null, null, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -106,7 +106,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test5()
 	{
-		String s = "123pagemap:click:foo:bar:baz";
+		String s = "123pagemap-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "123pagemap", null, null, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -117,7 +117,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test6()
 	{
-		String s = "123pagemap:click:foo:bar:baz";
+		String s = "123pagemap-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "123pagemap", null, null, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -128,7 +128,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test7()
 	{
-		String s = "123pagemap.2:click:foo:bar:baz";
+		String s = "123pagemap.2-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "123pagemap", 2, 0, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -139,7 +139,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test8()
 	{
-		String s = ".123:click:foo:bar:baz";
+		String s = ".123-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "123", null, null, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
@@ -150,7 +150,7 @@ public class PageComponentInfoTest extends TestCase
 	 */
 	public void test9()
 	{
-		String s = "123.2.0:click:foo:bar:baz";
+		String s = "123.2.0-click-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, "123", 2, 0, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
