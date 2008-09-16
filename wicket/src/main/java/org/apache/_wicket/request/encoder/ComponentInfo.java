@@ -20,7 +20,8 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Encodes listener inteface and component path in form of
- * &lt;listenerInterface&gt;:&lt;componentPath&gt;
+ * &lt;listenerInterface&gt-&lt;componentPath&gt; Also component path is escaped (':' characters are
+ * replaced by '-')
  * 
  * @author Matej Knopp
  */
@@ -30,7 +31,7 @@ class ComponentInfo
 	private final String componentPath;
 
 	private static final char SEPARATOR = '-';
-	
+
 	public ComponentInfo(String listenerInterface, String componentPath)
 	{
 		this.listenerInterface = listenerInterface;
@@ -46,9 +47,10 @@ class ComponentInfo
 	{
 		return listenerInterface;
 	}
-	
-	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() + "]]]]";
-	
+
+	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
+		"]]]]";
+
 	private static String encodeComponentPath(String path)
 	{
 		if (path != null)
@@ -63,7 +65,7 @@ class ComponentInfo
 			return null;
 		}
 	}
-	
+
 	private static String decodeComponentPath(String path)
 	{
 		if (path != null)
