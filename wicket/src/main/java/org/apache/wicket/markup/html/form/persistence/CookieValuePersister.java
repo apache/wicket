@@ -103,7 +103,12 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	protected String getName(final FormComponent<?> component)
 	{
-		return component.getPageRelativePath();
+		String name = component.getPageRelativePath();
+		// cookie names cannot contian ':',
+		// we replace ':' with '.' but first we have to encode '.' as '..'
+		name = name.replace(".", "..");
+		name = name.replace(":", ".");
+		return name;
 	}
 
 	/**
