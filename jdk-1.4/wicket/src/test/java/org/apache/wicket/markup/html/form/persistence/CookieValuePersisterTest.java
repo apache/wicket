@@ -106,7 +106,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
 			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
@@ -118,7 +118,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
 			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
@@ -153,7 +153,7 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
 		assertEquals(0, ((Cookie)getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 

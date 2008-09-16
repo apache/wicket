@@ -22,6 +22,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,11 +105,11 @@ public class CookieValuePersister implements IValuePersister
 	protected String getName(final FormComponent component)
 	{
 		String name = component.getPageRelativePath();
-		// cookie names cannot contian ':',
+		// cookie names cannot contain ':',
 		// we replace ':' with '.' but first we have to encode '.' as '..'
-		name = name.replace(".", "..");
-		name = name.replace(":", ".");
-		return name;
+		CharSequence sequence = Strings.replaceAll(name, ".", "..");
+		sequence = Strings.replaceAll(sequence, ":", ".");
+		return sequence.toString();
 	}
 
 	/**
