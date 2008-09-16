@@ -87,11 +87,6 @@ public class PageInstanceEncoder extends AbstractEncoder
 		if (requestHandler instanceof RenderPageRequestHandler)
 		{
 			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
-			if (page.isBookmarkable() && page.wasCreatedBookmarkable())
-			{
-				// this page will be handled by bookmarkable or mounted encoder
-				return null;
-			}
 
 			PageInfo i = new PageInfo(page.getPageId(), page.getPageVersionNumber(),
 				page.getPageMapName());
