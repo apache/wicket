@@ -175,30 +175,8 @@ public class DataTable<T> extends Panel implements IPageable
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new RepeatingView("topToolbars")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean isVisible()
-			{
-				return size() > 0;
-			}
-
-		};
-
-		bottomToolbars = new RepeatingView("bottomToolbars")
-		{
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean isVisible()
-			{
-				return size() > 0;
-			}
-		};
-
+		topToolbars = new ToolbarsContainer("topToolbars");
+		bottomToolbars = new ToolbarsContainer("bottomToolbars");
 		add(topToolbars);
 		add(bottomToolbars);
 	}
@@ -323,7 +301,7 @@ public class DataTable<T> extends Panel implements IPageable
 		toolbar.setRenderBodyOnly(true);
 
 		// create a container item for the toolbar (required by repeating view)
-		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
+		WebMarkupContainer item = new ToolbarContainer(container.newChildId());
 		item.setRenderBodyOnly(true);
 		item.add(toolbar);
 
@@ -390,6 +368,87 @@ public class DataTable<T> extends Panel implements IPageable
 	protected void onPageChanged()
 	{
 		// noop
+	}
+
+	/**
+	 * Acts as a container item for a single toolbar. The main feature it implements is the
+	 * visibility check, this item is visible only if the toolbar placed into it is visible.
+	 * 
+	 * TODO 1.5 optimization: this can probably be removed and items can be added directly to the
+	 * toolbarcontainer
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private final class ToolbarContainer extends WebMarkupContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * 
+		 * Construct.
+		 * 
+		 * @param id
+		 */
+		private ToolbarContainer(String id)
+		{
+			super(id);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isVisible()
+		{
+			return ((Component)iterator().next()).isVisible();
+		}
+	}
+
+	/**
+	 * This class acts as a repeater that will contain the toolbar. The key feature it implements is
+	 * the visibility check, this container is only visible if at least one child is visible. This
+	 * helps to properly hide <code>thead/tfoot</code> sections if no toolbars will be visible
+	 * because those sections cannot be empty according to html spec.
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private class ToolbarsContainer extends RepeatingView
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param id
+		 */
+		private ToolbarsContainer(String id)
+		{
+			super(id);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isVisible()
+		{
+			// only visible if at least one child is visible
+			final boolean[] visible = new boolean[] { false };
+			visitChildren(new IVisitor()
+			{
+
+				public Object component(Component component)
+				{
+					if (component.isVisible())
+					{
+						visible[0] = true;
+						return STOP_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+				}
+
+			});
+			return visible[0];
+		}
 	}
 
 }
