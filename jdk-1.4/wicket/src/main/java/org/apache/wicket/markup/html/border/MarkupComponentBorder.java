@@ -71,7 +71,8 @@ public class MarkupComponentBorder implements IComponentBorder
 		boolean insideBorderMarkup = false;
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.next();
+			MarkupElement e = stream.get();
+			stream.next();
 			if (e instanceof WicketTag)
 			{
 				WicketTag wt = (WicketTag)e;
@@ -85,9 +86,9 @@ public class MarkupComponentBorder implements IComponentBorder
 					else
 					{
 						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border " +
-										getClass().getName() + ". Tag: " + wt.toString() +
-										", expected tag: <wicket:border>");
+							"Unexpected tag encountered in markup of component border " +
+								getClass().getName() + ". Tag: " + wt.toString() +
+								", expected tag: <wicket:border>");
 					}
 				}
 				else
@@ -99,9 +100,9 @@ public class MarkupComponentBorder implements IComponentBorder
 					else
 					{
 						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border " +
-										getClass().getName() + ". Tag: " + wt.toString() +
-										", expected tag: <wicket:body> or </wicket:body>");
+							"Unexpected tag encountered in markup of component border " +
+								getClass().getName() + ". Tag: " + wt.toString() +
+								", expected tag: <wicket:body> or </wicket:body>");
 					}
 				}
 			}
@@ -114,7 +115,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		if (!stream.hasMore())
 		{
 			throw new WicketRuntimeException("Markup for component border " + getClass().getName() +
-					" ended prematurely, was expecting </wicket:border>");
+				" ended prematurely, was expecting </wicket:border>");
 		}
 	}
 
@@ -129,7 +130,8 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.next();
+			MarkupElement e = stream.get();
+			stream.next();
 			if (e instanceof WicketTag)
 			{
 				WicketTag wt = (WicketTag)e;
@@ -140,9 +142,9 @@ public class MarkupComponentBorder implements IComponentBorder
 				else
 				{
 					throw new WicketRuntimeException(
-							"Unexpected tag encountered in markup of component border " +
-									getClass().getName() + ". Tag: " + wt.toString() +
-									", expected tag: </wicket:border>");
+						"Unexpected tag encountered in markup of component border " +
+							getClass().getName() + ". Tag: " + wt.toString() +
+							", expected tag: </wicket:border>");
 				}
 			}
 			response.write(e.toCharSequence());
@@ -167,8 +169,9 @@ public class MarkupComponentBorder implements IComponentBorder
 		// logic here
 
 		// Get locator to search for the resource
-		final IResourceStreamLocator locator = Application.get().getResourceSettings()
-				.getResourceStreamLocator();
+		final IResourceStreamLocator locator = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator();
 
 
 		final Session session = Session.get();
@@ -182,13 +185,13 @@ public class MarkupComponentBorder implements IComponentBorder
 		{
 			String path = containerClass.getName().replace('.', '/');
 			IResourceStream resourceStream = locator.locate(containerClass, path, style, locale,
-					markupType);
+				markupType);
 
 			// Did we find it already?
 			if (resourceStream != null)
 			{
 				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
-						markupType);
+					markupType);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
 				break;
 			}
@@ -201,20 +204,23 @@ public class MarkupComponentBorder implements IComponentBorder
 		if (markupResourceStream == null)
 		{
 			throw new WicketRuntimeException("Could not find markup for component border `" +
-					getClass().getName() + "`");
+				getClass().getName() + "`");
 		}
 
 		try
 		{
-			Markup markup = Application.get().getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser(markupResourceStream).parse();
+			Markup markup = Application.get()
+				.getMarkupSettings()
+				.getMarkupParserFactory()
+				.newMarkupParser(markupResourceStream)
+				.parse();
 			return new MarkupStream(markup);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException(
-					"Could not parse markup from markup resource stream: " +
-							markupResourceStream.toString());
+				"Could not parse markup from markup resource stream: " +
+					markupResourceStream.toString());
 		}
 	}
 
