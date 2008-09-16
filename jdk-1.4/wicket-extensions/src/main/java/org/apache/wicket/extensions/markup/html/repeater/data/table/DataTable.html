@@ -15,16 +15,20 @@
    limitations under the License.
 -->
 <wicket:panel>
+<wicket:enclosure child="topToolbars">
 <thead>
 	<span wicket:id="topToolbars">
 		<span wicket:id="toolbar"></span>
 	</span>
 </thead>
+</wicket:enclosure>
+<wicket:enclosure child="bottomToolbars">
 <tfoot>
 	<span wicket:id="bottomToolbars">
 		<span wicket:id="toolbar"></span>
 	</span>
 </tfoot>
+</wicket:enclosure>
 <tbody>
 	<tr wicket:id="rows">
 		<td wicket:id="cells">
