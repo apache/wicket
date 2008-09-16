@@ -55,6 +55,18 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	}
 
 	/**
+	 * Creates a new {@link NumberFormat} for the given locale. The instance is later cached and is
+	 * accessible through {@link #getNumberFormat(Locale)}
+	 * 
+	 * @param locale
+	 * @return number format
+	 */
+	protected NumberFormat newNumberFormat(Locale locale)
+	{
+		return NumberFormat.getInstance(locale);
+	}
+
+	/**
 	 * @param locale
 	 *            The Locale that was used for this NumberFormat
 	 * @param numberFormat
