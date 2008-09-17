@@ -16,21 +16,15 @@
  */
 package org.apache.wicket.markup.html.form.persistence;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
-
 import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.protocol.http.*;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -55,12 +49,14 @@ public class CookieValuePersisterTest extends TestCase
 {
 	private WicketTester application;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new WicketTester();
 		application.startPage(CookieValuePersisterTestPage.class);
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
@@ -70,6 +66,7 @@ public class CookieValuePersisterTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings({"unchecked"})
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form
@@ -78,7 +75,7 @@ public class CookieValuePersisterTest extends TestCase
 
 		// Get the form and form component created
 		final TestForm form = (TestForm)page.get("form");
-		final TextField textField = (TextField)form.get("input");
+		final TextField<String> textField = (TextField<String>)form.get("input");
 
 		// Make sure a valid cycle is available through RequestCycle.get().
 		// The RequestCycle's constructor will attach the new cycle to
@@ -106,7 +103,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
 			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
@@ -118,7 +115,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
 			((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
@@ -153,7 +150,7 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
+		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
 		assertEquals(0, ((Cookie)getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 
@@ -168,8 +165,9 @@ public class CookieValuePersisterTest extends TestCase
 		return ((WebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
 	}
 
-	private List getResponseCookies(final RequestCycle cycle)
+	private List<Cookie> getResponseCookies(final RequestCycle cycle)
 	{
-		return (List)((MockHttpServletResponse)((WebResponse)cycle.getResponse()).getHttpServletResponse()).getCookies();
+		MockHttpServletResponse response = (MockHttpServletResponse) ((WebResponse) cycle.getResponse()).getHttpServletResponse();
+		return (List<Cookie>) response.getCookies();
 	}
 }
