@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
  * <li>pageId
  * <li>pageId.version
  * <li>pageMap (only if pageMap contains a letter)
- * <li>.pageMap
+ * <li>.pageMap (for pageMap without any letter (just digits))
  * <li>pageMap.pageId.version
  * <li>pageMap.pageId (only if pageMap contains a letter)
  * </ul>
