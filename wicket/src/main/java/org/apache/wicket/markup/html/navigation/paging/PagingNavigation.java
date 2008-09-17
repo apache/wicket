@@ -32,7 +32,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
  * 		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
+ * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/span&gt;
  * 		&lt;/a&gt;
  * 	&lt;/td&gt;
  * 
