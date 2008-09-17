@@ -831,9 +831,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			else
 			{
 				List pages = getPagesToSaveList(sessionId);
-				synchronized (pages)
+				if (pages != null)
 				{
-					flushPagesToSaveList(sessionId, pages);
+					synchronized (pages)
+					{
+						pages.clear();						
+					}
 					entry.unbind();
 				}
 				pagesToSaveAll.remove(sessionId);
@@ -1115,8 +1118,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Loads the data stripped by
-	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)}
-	 * .
+	 * {@link #stripSerializedPage(org.apache.wicket.protocol.http.pagestore.DiskPageStore.SerializedPageWithSession)} .
 	 * 
 	 * @param page
 	 * @return
