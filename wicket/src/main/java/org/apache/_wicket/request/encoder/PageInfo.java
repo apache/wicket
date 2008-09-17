@@ -16,6 +16,7 @@
  */
 package org.apache._wicket.request.encoder;
 
+import org.apache._wicket.IPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -48,8 +49,8 @@ class PageInfo
 	 */
 	public PageInfo(Integer pageId, Integer versionNumber, String pageMapName)
 	{
-		if ((pageId == null && (versionNumber != null || pageMapName == null)) ||
-			(versionNumber == null && (pageId != null || pageMapName == null)))
+		if ((pageId == null && versionNumber != null) ||
+			(versionNumber == null && pageId != null))
 		{
 			throw new IllegalArgumentException(
 				"Either both pageId and versionNumber must be null or none of them.");
@@ -59,6 +60,17 @@ class PageInfo
 		this.pageMapName = pageMapName;
 	}
 
+	public PageInfo(IPage page)
+	{
+		if (page == null)
+		{
+			throw new IllegalArgumentException("Argument 'page' may not be null.");
+		}
+		this.pageId = page.getPageId();
+		this.versionNumber = page.getPageVersionNumber();
+		this.pageMapName = page.getPageMapName();
+	}
+	
 	/**
 	 * @return page id
 	 */
@@ -115,7 +127,6 @@ class PageInfo
 
 		final boolean pmEmpty = Strings.isEmpty(pageMapName);
 		final boolean pmContainsLetter = !pmEmpty && !isNumber(pageMapName);
-
 
 		if (pageId != null && pmEmpty && versionNumber.intValue() == 0)
 		{

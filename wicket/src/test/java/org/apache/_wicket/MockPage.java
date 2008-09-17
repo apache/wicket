@@ -26,17 +26,41 @@ public class MockPage extends MockComponent implements IPage
 	
 	private static final long serialVersionUID = 1L;
 	
-	private final int pageId;
+	private int pageId;
 	
 	/**
 	 * Construct.
 	 * 
 	 * @param pageId
 	 */
-	public MockPage(int pageId)
+	public MockPage()
+	{
+		setPath("");
+	}
+
+	
+	/**
+	 * Construct.
+	 * @param pageId
+	 * @param pageVersion
+	 * @param pageMapName
+	 */
+	public MockPage(int pageId, int pageVersion, String pageMapName)
+	{
+		setPageId(pageId);
+		setPageVersionNumber(pageVersion);
+		setPageMapName(pageMapName);
+	}
+	
+	/**
+	 * Sets the page id
+	 * @param pageId
+	 * @return <code>this</code>
+	 */
+	public MockPage setPageId(int pageId)
 	{
 		this.pageId = pageId;
-		setPath("");
+		return this;
 	}
 	
 	@Override

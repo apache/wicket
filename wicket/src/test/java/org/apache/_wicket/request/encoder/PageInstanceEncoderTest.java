@@ -16,26 +16,19 @@
  */
 package org.apache._wicket.request.encoder;
 
-import junit.framework.TestCase;
-
 import org.apache._wicket.IComponent;
-import org.apache._wicket.IPage;
 import org.apache._wicket.MockPage;
 import org.apache._wicket.request.RequestHandler;
-import org.apache._wicket.request.RequestParameters;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.UrlRequestParameters;
 import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache._wicket.request.request.Request;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.html.link.ILinkListener;
 
 /**
  * 
  * @author Matej Knopp
  */
-public class PageInstanceEncoderTest extends TestCase
+public class PageInstanceEncoderTest extends AbstractEncoderTest
 {
 
 	/**
@@ -46,7 +39,6 @@ public class PageInstanceEncoderTest extends TestCase
 	{
 	}
 
-	private TestEncoderContext context = new TestEncoderContext();
 	private PageInstanceEncoder encoder = new PageInstanceEncoder()
 	{
 		@Override
@@ -55,39 +47,7 @@ public class PageInstanceEncoderTest extends TestCase
 			return context;
 		}
 	};
-	
-	@Override
-	protected void setUp() throws Exception
-	{
-		// inititalize the interface
-		RequestListenerInterface i = ILinkListener.INTERFACE;
-	}
-
-	private Request getRequest(final Url url)
-	{
-		return new Request()
-		{
-			@Override
-			public RequestParameters getRequestParameters()
-			{
-				return new UrlRequestParameters(getUrl());
-			}
-
-			@Override
-			public Url getUrl()
-			{
-				return url;
-			}
-		};
-	}
-
-	private void checkPage(IPage page, int id, int version, String pageMapName)
-	{
-		assertEquals(id, page.getPageId());
-		assertEquals(version, page.getPageVersionNumber());
-		assertEquals(pageMapName, page.getPageMapName());
-	}
-	
+		
 	/**
 	 * 
 	 */
@@ -173,9 +133,7 @@ public class PageInstanceEncoderTest extends TestCase
 	 */
 	public void test7()
 	{
-		MockPage page = new MockPage(15);
-		page.setPageMapName("pm1");
-		page.setPageVersionNumber(4);
+		MockPage page = new MockPage(15, 4, "pm1");
 		RequestHandler handler = new RenderPageRequestHandler(page);
 		
 		Url url = encoder.encode(handler);
@@ -187,9 +145,7 @@ public class PageInstanceEncoderTest extends TestCase
 	 */
 	public void test8()
 	{
-		MockPage page = new MockPage(15);
-		page.setPageMapName(null);
-		page.setPageVersionNumber(0);
+		MockPage page = new MockPage(15, 0, null);
 		RequestHandler handler = new RenderPageRequestHandler(page);
 		
 		Url url = encoder.encode(handler);
@@ -201,9 +157,7 @@ public class PageInstanceEncoderTest extends TestCase
 	 */
 	public void test9()
 	{
-		MockPage page = new MockPage(15);
-		page.setPageMapName(null);
-		page.setPageVersionNumber(0);
+		MockPage page = new MockPage(15, 0, null);
 		
 		IComponent c = page.get("a:b:c");
 		

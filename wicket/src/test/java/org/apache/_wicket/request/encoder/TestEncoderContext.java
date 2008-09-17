@@ -20,6 +20,7 @@ import org.apache._wicket.IPage;
 import org.apache._wicket.MockPage;
 import org.apache._wicket.PageParameters;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Simple {@link EncoderContext} implementation for testing purposes
@@ -77,7 +78,8 @@ public class TestEncoderContext implements EncoderContext
 
 	public IPage getPageInstance(String pageMapName, int pageId, int versionNumber)
 	{
-		MockPage page = new MockPage(pageId);
+		MockPage page = new MockPage();
+		page.setPageId(pageId);
 		page.setPageMapName(pageMapName);
 		page.setPageVersionNumber(versionNumber);
 		page.setBookmarkable(bookmarkable);
@@ -89,13 +91,22 @@ public class TestEncoderContext implements EncoderContext
 
 	public IPage newPageInstance(String pageMapName, Class<? extends IPage> pageClass,
 		PageParameters pageParameters)
-	{
-		MockPage page = new MockPage(++idCounter);
-		page.setPageMapName(pageMapName);
-		page.setBookmarkable(true);
-		page.setCreatedBookmarkable(true);
-		page.getPageParameters().assign(pageParameters);
-		return page;
+	{		
+		try
+		{
+			MockPage page;
+			page = (MockPage)pageClass.newInstance();
+			page.setPageId(++idCounter);
+			page.setPageMapName(pageMapName);
+			page.setBookmarkable(true);
+			page.setCreatedBookmarkable(true);
+			page.getPageParameters().assign(pageParameters);
+			return page;
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)

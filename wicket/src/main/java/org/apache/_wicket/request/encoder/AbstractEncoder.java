@@ -18,10 +18,14 @@ package org.apache._wicket.request.encoder;
 
 import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
+import org.apache._wicket.PageParameters;
 import org.apache._wicket.request.RequestHandlerEncoder;
+import org.apache._wicket.request.RequestParameters;
 import org.apache._wicket.request.Url;
 import org.apache._wicket.request.Url.QueryParameter;
+import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.util.string.Strings;
@@ -117,6 +121,124 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 		else
 		{
 			return component;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Class<? extends IPage> getPageClass(String name)
+	{
+		try
+		{			
+			if (Session.exists())				
+			{
+				Session s = Session.get();
+				return (Class<? extends IPage>)s.getClassResolver().resolveClass(name);
+
+			}
+			else
+			{
+				return (Class<? extends IPage>)Class.forName(name);
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new WicketRuntimeException("Error resolving bookmarkable page class", e);
+		}
+	}
+
+	protected PageParameters extractPageParameters(Url url, RequestParameters requestParameters,
+		int segmentsToSkip, PageParametersEncoder encoder)
+	{
+		// strip the segments and first query parameter from URL
+		Url urlCopy = new Url(url);
+		while (segmentsToSkip > 0 && urlCopy.getSegments().isEmpty() == false)
+		{
+			urlCopy.getSegments().remove(0);
+			--segmentsToSkip;
+		}
+
+		if (getPageComponentInfo(urlCopy) != null)
+		{
+			urlCopy.getQueryParameters().remove(0);
+		}
+
+		PageParameters decoded = encoder.decodePageParameters(urlCopy);
+		return decoded != null ? decoded : new PageParameters();
+	}
+
+	protected Url encodePageParameters(Url url, PageParameters pageParameters,
+		PageParametersEncoder encoder)
+	{
+		if (pageParameters == null)
+		{
+			pageParameters = new PageParameters();
+		}
+
+		Url parametersUrl = encoder.encodePageParameters(pageParameters);
+		if (parametersUrl != null)
+		{
+			// copy the url
+			url = new Url(url);
+			
+			for (String s : parametersUrl.getSegments())
+			{
+				url.getSegments().add(s);
+			}
+			for (QueryParameter p : parametersUrl.getQueryParameters())
+			{
+				url.getQueryParameters().add(p);
+			}
+		}
+		
+		return url;
+	}
+
+	protected IPage newPageInstance(String pageMapName, Class<? extends IPage> pageClass,
+		PageParameters pageParameters)
+	{
+		return getContext().newPageInstance(pageMapName, pageClass, pageParameters);
+	}
+
+	protected IPage getPageInstance(PageInfo pageInfo, Class<? extends IPage> pageClass,
+		PageParameters pageParameters)
+	{
+		return getPageInstance(pageInfo, pageClass, pageParameters, false);
+	}
+
+	protected IPage getPageInstance(PageInfo pageInfo, Class<? extends IPage> pageClass,
+		PageParameters pageParameters, boolean prepareForRenderNewPage)
+	{
+		IPage page = getContext().getPageInstance(pageInfo.getPageMapName(), pageInfo.getPageId(),
+			pageInfo.getVersionNumber());
+		if (page != null && page.getClass().equals(pageClass) == false)
+		{
+			page = null;
+		}
+		if (page == null)
+		{
+			page = getContext().newPageInstance(pageInfo.getPageMapName(), pageClass,
+				pageParameters);
+
+			// this is required for stateless listeners
+			if (prepareForRenderNewPage && page instanceof Page)
+			{
+				((Page)page).prepareForRender(false);
+			}
+		}
+		else
+		{
+			page.getPageParameters().assign(pageParameters);
+		}
+		return page;
+	}
+
+	protected void encodePageComponentInfo(Url url, PageComponentInfo info)
+	{
+		String s = info.toString();
+		if (!Strings.isEmpty(s))
+		{
+			QueryParameter parameter = new QueryParameter(s, "");
+			url.getQueryParameters().add(parameter);
 		}
 	}
 }

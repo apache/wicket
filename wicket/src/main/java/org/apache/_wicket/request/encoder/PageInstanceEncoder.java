@@ -20,7 +20,6 @@ import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.Url.QueryParameter;
 import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache._wicket.request.request.Request;
@@ -30,10 +29,12 @@ import org.apache.wicket.RequestListenerInterface;
  * Decodes and encodes the following URLs:
  * 
  * <pre>
+ *  Page Instance - Render
  *  /wicket/page?2
  *  /wicket/page?2.4
  *  /wicket/page?abc.2.4
  * 
+ *  Page Instance - Listener
  *  /wicket/page?2-click-foo-bar-baz
  *  /wicket/page?2.4-click-foo-bar-baz
  *  /wicket/page?pageMap.2.4-click-foo-bar-baz
@@ -88,8 +89,7 @@ public class PageInstanceEncoder extends AbstractEncoder
 		{
 			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
-			PageInfo i = new PageInfo(page.getPageId(), page.getPageVersionNumber(),
-				page.getPageMapName());
+			PageInfo i = new PageInfo(page);
 			info = new PageComponentInfo(i, null);
 		}
 		else if (requestHandler instanceof ListenerInterfaceRequestHandler)
@@ -99,20 +99,18 @@ public class PageInstanceEncoder extends AbstractEncoder
 			String componentPath = handler.getComponent().getPath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
-			PageInfo pageInfo = new PageInfo(page.getPageId(), page.getPageVersionNumber(),
-				page.getPageMapName());
+			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(
 				requestListenerInterfaceToString(listenerInterface), componentPath);
 			info = new PageComponentInfo(pageInfo, componentInfo);
 		}
-		
+
 		if (info != null)
 		{
 			Url url = new Url();
 			url.getSegments().add(getContext().getNamespace());
 			url.getSegments().add(getContext().getPageIdentifier());
-			QueryParameter parameter = new QueryParameter(info.toString(), "");
-			url.getQueryParameters().add(parameter);
+			encodePageComponentInfo(url, info);
 			return url;
 		}
 		else
