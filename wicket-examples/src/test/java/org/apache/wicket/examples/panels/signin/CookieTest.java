@@ -147,7 +147,7 @@ public class CookieTest extends TestCase
 			String pathOfStoredComponent = cooky.getName().replaceAll("\\.", ":");
 			Assert.assertNotNull(page.get(pathOfStoredComponent));
 			// Skip "deleted" cookies
-			if (page.get(pathOfStoredComponent).getDefaultModelObjectAsString() != "")
+			if (!page.get(pathOfStoredComponent).getDefaultModelObjectAsString().equals(""))
 			{
 				Assert.assertEquals(cooky.getValue(), page.get(pathOfStoredComponent)
 						.getDefaultModelObjectAsString());
