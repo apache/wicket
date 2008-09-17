@@ -834,9 +834,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			else
 			{
 				List<SerializedPage> pages = getPagesToSaveList(sessionId);
-				synchronized (pages)
+				if (pages != null)
 				{
-					flushPagesToSaveList(sessionId, pages);
+					synchronized (pages)
+					{
+						pages.clear();						
+					}
 					entry.unbind();
 				}
 				pagesToSaveAll.remove(sessionId);
