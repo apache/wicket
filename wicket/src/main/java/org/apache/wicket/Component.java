@@ -3833,7 +3833,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		if (getApplication().getDebugSettings().isOutputComponentPath())
 		{
-			tag.put("wicket:path", getPageRelativePath());
+			String path = getPageRelativePath();
+			path = path.replace("_", "__");
+			path = path.replace(":", "_");
+			tag.put("wicket:path", path);
 		}
 	}
 
