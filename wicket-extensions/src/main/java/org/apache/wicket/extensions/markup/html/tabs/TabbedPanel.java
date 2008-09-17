@@ -47,7 +47,7 @@ import org.apache.wicket.model.Model;
  * 
  * List tabs=new ArrayList();
  * 
- * tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ * tabs.add(new AbstractTab(new Model&lt;String&gt;(&quot;first tab&quot;)) {
  * 
  *   public Panel getPanel(String panelId)
  *   {

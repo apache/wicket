@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  * Example
  * 
  * <pre>
- * columns[0] = new PropertyColumn(new Model(&quot;First Name&quot;), &quot;name.first&quot;);
+ * columns[0] = new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;);
  * </pre>
  * 
  * The above will attach a label to the cell with a property model for the expression

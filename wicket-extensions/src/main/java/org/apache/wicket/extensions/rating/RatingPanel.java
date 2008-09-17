@@ -98,19 +98,21 @@ public abstract class RatingPanel extends Panel
 		/** For serialization. */
 		private static final long serialVersionUID = 1L;
 
-		private RatingStarBar(String id, IModel model)
+		private RatingStarBar(String id, IModel<Integer> model)
 		{
 			super(id, model);
 		}
 
+		@Override
 		protected void populateItem(LoopItem item)
 		{
 			// Use an AjaxFallbackLink for rating to make voting work even
 			// without Ajax.
-			AjaxFallbackLink link = new AjaxFallbackLink("link")
+			AjaxFallbackLink<Void> link = new AjaxFallbackLink<Void>("link")
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					LoopItem item = (LoopItem)getParent();
@@ -128,9 +130,10 @@ public abstract class RatingPanel extends Panel
 					}
 				}
 
+				@Override
 				public boolean isEnabled()
 				{
-					return !((Boolean)hasVoted.getObject()).booleanValue();
+					return !hasVoted.getObject();
 				}
 			};
 
@@ -164,17 +167,17 @@ public abstract class RatingPanel extends Panel
 	/**
 	 * The number of stars that need to be shown, should result in an Integer object.
 	 */
-	private IModel nrOfStars = new Model(new Integer(5));
+	private IModel<Integer> nrOfStars = new Model<Integer>(5);
 
 	/**
 	 * The number of votes that have been cast, should result in an Integer object.
 	 */
-	private IModel nrOfVotes;
+	private IModel<Integer> nrOfVotes;
 
 	/**
 	 * The flag on whether the current user has voted already.
 	 */
-	private IModel hasVoted;
+	private IModel<Boolean> hasVoted;
 
 	/**
 	 * Handle to the rating label to set the visibility.
@@ -201,9 +204,9 @@ public abstract class RatingPanel extends Panel
 	 * @param rating
 	 *            the model to get the rating
 	 */
-	public RatingPanel(String id, IModel rating)
+	public RatingPanel(String id, IModel<Integer> rating)
 	{
-		this(id, rating, new Model(new Integer(5)), null, new Model(Boolean.FALSE), true);
+		this(id, rating, new Model<Integer>(5), null, new Model<Boolean>(Boolean.FALSE), true);
 	}
 
 	/**
@@ -233,9 +236,9 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel rating, int nrOfStars, boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel<Integer> rating, int nrOfStars, boolean addDefaultCssStyle)
 	{
-		this(id, rating, new Model(new Integer(nrOfStars)), null, new Model(Boolean.FALSE),
+		this(id, rating, new Model<Integer>(nrOfStars), null, new Model<Boolean>(Boolean.FALSE),
 				addDefaultCssStyle);
 	}
 
@@ -255,10 +258,10 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel rating, int nrOfStars, IModel nrOfVotes,
+	public RatingPanel(String id, IModel<Integer> rating, int nrOfStars, IModel<Integer> nrOfVotes,
 			boolean addDefaultCssStyle)
 	{
-		this(id, rating, new Model(new Integer(nrOfStars)), nrOfVotes, new Model(Boolean.FALSE),
+		this(id, rating, new Model<Integer>(nrOfStars), nrOfVotes, new Model<Boolean>(Boolean.FALSE),
 				addDefaultCssStyle);
 	}
 
@@ -280,8 +283,8 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel rating, IModel nrOfStars, IModel nrOfVotes,
-			IModel hasVoted, boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel<Integer> rating, IModel<Integer> nrOfStars, IModel<Integer> nrOfVotes,
+			IModel<Boolean> hasVoted, boolean addDefaultCssStyle)
 	{
 		super(id, rating);
 
@@ -328,7 +331,7 @@ public abstract class RatingPanel extends Panel
 	 *            the number of stars to generate
 	 * @return the bar with rating stars
 	 */
-	protected Component newRatingStarBar(String id, IModel nrOfStars)
+	protected Component newRatingStarBar(String id, IModel<Integer> nrOfStars)
 	{
 		return new RatingStarBar(id, nrOfStars);
 	}
@@ -344,9 +347,9 @@ public abstract class RatingPanel extends Panel
 	 *            the model containing the number of votes (may be null)
 	 * @return the label component showing the message.
 	 */
-	protected Component newRatingLabel(String id, IModel rating, IModel nrOfVotes)
+	protected Component newRatingLabel(String id, IModel<Integer> rating, IModel<Integer> nrOfVotes)
 	{
-		IModel model = null;
+		IModel<String> model;
 		if (nrOfVotes == null)
 		{
 			Object[] parameters = new Object[] { rating };

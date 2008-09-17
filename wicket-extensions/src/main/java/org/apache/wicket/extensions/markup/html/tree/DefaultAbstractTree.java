@@ -16,17 +16,10 @@
  */
 package org.apache.wicket.extensions.markup.html.tree;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.Response;
+import org.apache.wicket.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -36,8 +29,8 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.tree.AbstractTree;
+import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.EnumeratedType;
 
 /**
@@ -50,8 +43,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * use {@link Tree}
  * <p>
  * This class allows you to choose between 3 types of links. {@link
- * DefaultAbstractTree#setLinkType(org
- * .apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
+ * DefaultAbstractTree#setLinkType(org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
  *
  * @author Matej Knopp
  */
@@ -162,7 +154,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	{
 		super(id, model);
 		init();
-	};
+	}
 
 	/**
 	 * Tree constructor.
@@ -175,7 +167,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	@SuppressWarnings("unchecked")
 	public DefaultAbstractTree(String id, TreeModel model)
 	{
-		super(id, new Model((Serializable)model));
+		super(id, new WicketTreeModel());
+		setModelObject(model);
 		init();
 	}
 
@@ -233,7 +226,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	protected ResourceReference getFolderOpen()
 	{
 		return FOLDER_OPEN;
-	};
+	}
 
 	/**
 	 * Returns the resource reference of default tree item (not folder).
@@ -294,8 +287,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.
-			 *      MarkupStream, org.apache.wicket.markup.ComponentTag)
+			 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 			 */
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
@@ -484,8 +476,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.
-				 *      AjaxRequestTarget)
+				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 				 */
 				@Override
 				public void onClick(AjaxRequestTarget target)
@@ -501,8 +492,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket
-				 *      .ajax.AjaxRequestTarget)
+				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
 				 */
 				@Override
 				public void onClick(AjaxRequestTarget target)

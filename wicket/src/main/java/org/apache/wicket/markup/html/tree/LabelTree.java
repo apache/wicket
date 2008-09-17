@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import java.io.Serializable;
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  * Simple tree component that uses label to render tree node.
@@ -64,7 +62,8 @@ public class LabelTree extends BaseTree
 	@SuppressWarnings("unchecked")
 	public LabelTree(String id, TreeModel model)
 	{
-		super(id, new Model((Serializable)model));
+		super(id, new WicketTreeModel());
+		setModelObject(model);
 	}
 
 	/**

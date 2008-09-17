@@ -51,7 +51,7 @@ public class RatingsPage extends BasePage
 	/**
 	 * Link to reset the ratings.
 	 */
-	private final class ResetRatingLink extends Link
+	private final class ResetRatingLink extends Link<RatingModel>
 	{
 		/** For serialization. */
 		private static final long serialVersionUID = 1L;
@@ -64,7 +64,7 @@ public class RatingsPage extends BasePage
 		 * @param object
 		 *            the model to reset.
 		 */
-		public ResetRatingLink(String id, IModel object)
+		public ResetRatingLink(String id, IModel<RatingModel> object)
 		{
 			super(id, object);
 		}
@@ -72,9 +72,10 @@ public class RatingsPage extends BasePage
 		/**
 		 * @see Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
-			RatingModel rating = (RatingModel)getDefaultModelObject();
+			RatingModel rating = getModelObject();
 			rating.nrOfVotes = 0;
 			rating.rating = 0;
 			rating.sumOfRatings = 0;
@@ -167,38 +168,44 @@ public class RatingsPage extends BasePage
 	 */
 	public RatingsPage()
 	{
-		add(new RatingPanel("rating1", new PropertyModel(rating1, "rating"), 5, new PropertyModel(
+		add(new RatingPanel("rating1", new PropertyModel<Integer>(rating1, "rating"), 5, new PropertyModel<Integer>(
 				rating1, "nrOfVotes"), true)
 		{
+			@Override
 			protected boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating1.isActive(star);
 			}
 
+			@Override
 			protected void onRated(int rating, AjaxRequestTarget target)
 			{
 				RatingsPage.rating1.addRating(rating);
 			}
 		});
-		add(new RatingPanel("rating2", new PropertyModel(rating2, "rating"),
-							new Model(5), new PropertyModel(rating2, "nrOfVotes"),
-							new PropertyModel(this, "hasVoted"), true)
+		add(new RatingPanel("rating2", new PropertyModel<Integer>(rating2, "rating"),
+							new Model<Integer>(5), new PropertyModel<Integer>(rating2, "nrOfVotes"),
+							new PropertyModel<Boolean>(this, "hasVoted"), true)
 		{
+			@Override
 			protected String getActiveStarUrl(int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR1).toString();
 			}
 
+			@Override
 			protected String getInactiveStarUrl(int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR0).toString();
 			}
 
+			@Override
 			protected boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating2.isActive(star);
 			}
 
+			@Override
 			protected void onRated(int rating, AjaxRequestTarget target)
 			{
 				// make sure the user can't vote again
@@ -206,8 +213,8 @@ public class RatingsPage extends BasePage
 				RatingsPage.rating2.addRating(rating);
 			}
 		});
-		add(new ResetRatingLink("reset1", new Model(rating1)));
-		add(new ResetRatingLink("reset2", new Model(rating2)));
+		add(new ResetRatingLink("reset1", new Model<RatingModel>(rating1)));
+		add(new ResetRatingLink("reset2", new Model<RatingModel>(rating2)));
 	}
 
 	/**

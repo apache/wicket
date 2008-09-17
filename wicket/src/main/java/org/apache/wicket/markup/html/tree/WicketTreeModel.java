@@ -14,46 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.util;
+package org.apache.wicket.markup.html.tree;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.swing.tree.TreeModel;
 
+import org.apache.wicket.model.util.GenericBaseModel;
 
 /**
- * Based on <code>Model</code> but for mapss of serializable objects.
- * 
  * @author Timo Rantalaiho
- * @param <K>
- *            map's key type
- * @param <V>
- *            map's value type
  */
-public class MapModel<K, V> extends GenericBaseModel<Map<K, V>>
+public class WicketTreeModel extends GenericBaseModel<TreeModel>
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Creates empty model
-	 */
-	public MapModel()
-	{
-	}
-
-	/**
-	 * Creates model that will contain <code>map</code>
-	 * 
-	 * @param map
-	 */
-	public MapModel(Map<K, V> map)
-	{
-		setObject(map);
-	}
-
-	/** {@inheritDoc} */
 	@Override
-	protected Map<K, V> createSerializableVersionOf(Map<K, V> object)
+	protected TreeModel createSerializableVersionOf(TreeModel object)
 	{
-		return new HashMap<K, V>(object);
+		return object;
 	}
 }

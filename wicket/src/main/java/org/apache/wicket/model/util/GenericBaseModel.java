@@ -24,14 +24,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Base class for models that contain collection instances. Makes sure that the object set into the
- * model is stored in a collection that can be serialized.
+ * Base class for models that contain instances that do not appear to be serializable
+ * and cannot thus use <code>Model</code> directly. Makes sure that the object set into the
+ * model can be serialized.
  * 
  * @author Timo Rantalaiho
  * @param <T>
  *            type of model object
  */
-public abstract class AbstractCollectionModel<T> implements IModel<T>
+public abstract class GenericBaseModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 	/** model object */
@@ -108,11 +109,11 @@ public abstract class AbstractCollectionModel<T> implements IModel<T>
 			return true;
 
 		}
-		if (!(obj instanceof AbstractCollectionModel))
+		if (!(obj instanceof GenericBaseModel))
 		{
 			return false;
 		}
-		AbstractCollectionModel<?> that = (AbstractCollectionModel<?>)obj;
+		GenericBaseModel<?> that = (GenericBaseModel<?>)obj;
 		return Objects.equal(object, that.object);
 	}
 }

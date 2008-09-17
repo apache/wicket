@@ -27,7 +27,7 @@ import java.util.List;
  * @param <T>
  *            type of object inside list
  */
-public class ListModel<T> extends AbstractCollectionModel<List<T>>
+public class ListModel<T> extends GenericBaseModel<List<T>>
 {
 	private static final long serialVersionUID = 1L;
 

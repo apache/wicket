@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.examples.compref;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
@@ -33,6 +29,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.WildcardCollectionModel;
 
 
 /**
@@ -44,12 +41,11 @@ import org.apache.wicket.model.Model;
 public class SelectPage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
-			"Java Lobby", "Java.Net" });
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
 
 	/** available choices for large selection box. */
-	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1",
-			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
+	private static final List<? extends String> MANY_CHOICES = Arrays.asList("Choice1",
+			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9");
 
 	/**
 	 * Constructor
@@ -83,7 +79,7 @@ public class SelectPage extends WicketExamplePage
 
 		Select choices = new Select("choices");
 		form.add(choices);
-		IOptionRenderer renderer = new IOptionRenderer()
+		IOptionRenderer<String> renderer = new IOptionRenderer<String>()
 		{
 
 			public String getDisplayValue(Object object)
@@ -91,14 +87,14 @@ public class SelectPage extends WicketExamplePage
 				return object.toString();
 			}
 
-			public IModel<Serializable> getModel(Object value)
+			public IModel<String> getModel(Object value)
 			{
-				return new Model<Serializable>((Serializable)value);
+				return new Model<String>((String) value);
 			}
 
 		};
-		choices.add(new SelectOptions("manychoices", new Model((Serializable)MANY_CHOICES),
-			renderer));
+		IModel<Collection<? extends String>> model = new WildcardCollectionModel<String>(MANY_CHOICES);
+		choices.add(new SelectOptions<String>("manychoices", model, renderer));
 
 	}
 

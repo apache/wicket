@@ -43,16 +43,15 @@ public class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, String)
 	 */
-	@SuppressWarnings("unchecked")
 	public SmartLinkLabel(String name, String label)
 	{
-		this(name, new Model(label));
+		this(name, new Model<String>(label));
 	}
 
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, IModel<?> model)
+	public SmartLinkLabel(String name, IModel<String> model)
 	{
 		super(name, model);
 	}

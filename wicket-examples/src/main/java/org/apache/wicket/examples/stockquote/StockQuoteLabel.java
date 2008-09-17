@@ -47,7 +47,7 @@ public class StockQuoteLabel extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as StockQuoteLabel(String, new Model(String))
+	 * Convenience constructor. Same as StockQuoteLabel(String, new Model&lt;String&gt;(String))
 	 * 
 	 * @param id
 	 *            See Component

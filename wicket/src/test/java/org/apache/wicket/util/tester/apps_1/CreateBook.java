@@ -45,7 +45,7 @@ public class CreateBook extends WebPage
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	public class CreateForm extends Form
+	public class CreateForm extends Form<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -58,21 +58,22 @@ public class CreateBook extends WebPage
 			super(id);
 
 			// label model here comes from java
-			add(new RequiredTextField("id", new PropertyModel(book, "id"))
-					.setLabel(new Model("id")));
+			add(new RequiredTextField<String>("id", new PropertyModel<String>(book, "id"))
+					.setLabel(new Model<String>("id")));
 			// label model here comes from CreateBook.properties
-			add(new RequiredTextField("name", new PropertyModel(book, "name")));
+			add(new RequiredTextField<String>("name", new PropertyModel<String>(book, "name")));
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			try
 			{
 				Page page = new SuccessPage();
-				page.info(getString("book.save.success", new Model(book)));
+				page.info(getString("book.save.success", new Model<Book>(book)));
 				setResponsePage(page);
 			}
 			finally

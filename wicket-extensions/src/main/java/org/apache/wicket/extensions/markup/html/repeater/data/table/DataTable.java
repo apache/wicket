@@ -53,8 +53,8 @@ import org.apache.wicket.util.string.Strings;
  * 
  * IColumn[] columns = new IColumn[2];
  * 
- * columns[0] = new PropertyColumn(new Model(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;);
- * columns[1] = new PropertyColumn(new Model(&quot;Last Name&quot;), &quot;name.last&quot;);
+ * columns[0] = new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;);
+ * columns[1] = new PropertyColumn(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;name.last&quot;);
  * 
  * DataTable table = new DataTable(&quot;datatable&quot;, columns, new UserProvider(), 10);
  * table.add(new NavigationToolbar(table));

@@ -54,7 +54,7 @@ public class FilterForm extends Form<Object>
 		this.locator = locator;
 
 		// add hidden field used for managing current focus
-		hidden = new HiddenField("focus-tracker", new Model());
+		hidden = new HiddenField<String>("focus-tracker", new Model<String>());
 
 		hidden.add(new AbstractBehavior()
 		{
@@ -109,7 +109,7 @@ public class FilterForm extends Form<Object>
 	 * @param fc
 	 *            form component
 	 */
-	public final void enableFocusTracking(FormComponent fc)
+	public final void enableFocusTracking(FormComponent<?> fc)
 	{
 		fc.add(new AbstractBehavior()
 		{

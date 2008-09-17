@@ -63,13 +63,13 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 	 */
 	public OnChangeAjaxBehaviorPage()
 	{
-		Form form = new Form("form");
+		Form<Void> form = new Form<Void>("form");
 		add(form);
 
-		final TextField field = new TextField("field", new Model(""));
+		final TextField<String> field = new TextField<String>("field", new Model<String>(""));
 		form.add(field);
 
-		final Label label = new Label("selectedValue", new Model(""));
+		final Label label = new Label("selectedValue", new Model<String>(""));
 		label.setOutputMarkupId(true);
 		form.add(label);
 

@@ -43,16 +43,15 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
-	@SuppressWarnings("unchecked")
 	public SmartLinkMultiLineLabel(String name, String label)
 	{
-		this(name, new Model(label));
+		this(name, new Model<String>(label));
 	}
 
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
 	 */
-	public SmartLinkMultiLineLabel(String name, IModel<?> model)
+	public SmartLinkMultiLineLabel(String name, IModel<String> model)
 	{
 		super(name, model);
 	}

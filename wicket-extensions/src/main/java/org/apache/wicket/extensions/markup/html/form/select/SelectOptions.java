@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -27,7 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.WildcardCollectionModel;
 
 
 /**
@@ -72,11 +70,9 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	@SuppressWarnings("unchecked")
 	public SelectOptions(String id, Collection<? extends T> elements, IOptionRenderer<T> renderer)
 	{
-		this(id, new Model((elements instanceof Serializable) ? (Serializable)elements
-			: new ArrayList<T>(elements)), renderer);
+		this(id, new WildcardCollectionModel<T>(elements), renderer);
 	}
 
 	/**
