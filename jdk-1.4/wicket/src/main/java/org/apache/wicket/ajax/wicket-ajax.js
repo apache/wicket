@@ -938,6 +938,10 @@ Wicket.Ajax.Request.prototype = {
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
 					
+					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
+					// A file download popup will appear but the page in the browser won't change.					
+					this.done();
+					
                     // support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0)==('/')||redirectUrl.match("^http://")=="http://"||redirectUrl.match("^https://")=="https://") {
 					    window.location = redirectUrl;
