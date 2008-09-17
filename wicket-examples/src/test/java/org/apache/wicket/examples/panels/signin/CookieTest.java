@@ -84,8 +84,8 @@ public class CookieTest extends TestCase
 				.newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
-		cookieUsername = new Cookie("panel:signInForm:username", "juergen");
-		Cookie cookiePassword = new Cookie("panel:signInForm:password", encryptedPassword);
+		cookieUsername = new Cookie("panel.signInForm.username", "juergen");
+		Cookie cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
 		Cookie[] cookies = new Cookie[]{cookieUsername, cookiePassword};
 
 		tester.getServletRequest().setCookies(cookies);
@@ -144,11 +144,12 @@ public class CookieTest extends TestCase
 		Assert.assertEquals(2, cookies.size());
 		for (Cookie cooky : cookies)
 		{
-			Assert.assertNotNull(page.get(cooky.getName()));
+			String pathOfStoredComponent = cooky.getName().replaceAll("\\.", ":");
+			Assert.assertNotNull(page.get(pathOfStoredComponent));
 			// Skip "deleted" cookies
-			if (page.get(cooky.getName()).getDefaultModelObjectAsString() != "")
+			if (page.get(pathOfStoredComponent).getDefaultModelObjectAsString() != "")
 			{
-				Assert.assertEquals(cooky.getValue(), page.get(cooky.getName())
+				Assert.assertEquals(cooky.getValue(), page.get(pathOfStoredComponent)
 						.getDefaultModelObjectAsString());
 			}
 		}
@@ -167,8 +168,8 @@ public class CookieTest extends TestCase
 		Assert.assertEquals(2, cookieCollection.size());
 
 		// initialize
-		final Cookie cookieUsername = new Cookie("panel:signInForm:username", "juergen");
-		final Cookie cookiePassword = new Cookie("panel:signInForm:password", "test");
+		final Cookie cookieUsername = new Cookie("panel.signInForm.username", "juergen");
+		final Cookie cookiePassword = new Cookie("panel.signInForm.password", "test");
 		final Cookie[] cookies = new Cookie[] { cookieUsername, cookiePassword };
 
 		tester.getServletRequest().setCookies(cookies);
@@ -181,7 +182,8 @@ public class CookieTest extends TestCase
 		Assert.assertEquals(4, cookieCollection.size());
 		for (Cookie cookie : cookieCollection)
 		{
-			Assert.assertNotNull(page.get(cookie.getName()));
+			String pathOfStoredComponent = cookie.getName().replaceAll("\\.", ":");
+			Assert.assertNotNull(page.get(pathOfStoredComponent));
 			Assert.assertEquals(cookie.getMaxAge(), 0);
 		}
 	}
