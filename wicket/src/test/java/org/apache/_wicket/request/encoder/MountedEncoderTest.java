@@ -192,6 +192,28 @@ public class MountedEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
+	public void testDecode8()
+	{
+		Url url = Url.parse("some/mmount/path?15-ILinkListener.4-foo-bar");
+		RequestHandler handler = encoder.decode(getRequest(url));
+
+		assertNull(handler);
+	}
+	
+	/**
+	 * 
+	 */
+	public void testDecode9()
+	{
+		// capture the home page
+		Url url = Url.parse("");
+		RequestHandler handler = encoder.decode(getRequest(url));
+		assertTrue(handler instanceof RenderPageRequestHandler);
+	}
+	
+	/**
+	 * 
+	 */
 	public void testEncode1()
 	{
 		RequestHandler handler = new BookmarkablePageRequestHandler(MockPage.class, null,

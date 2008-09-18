@@ -118,5 +118,10 @@ public class TestEncoderContext implements EncoderContext
 	{
 		return listenerInterface.getName();
 	}
+	
+	public Class<? extends IPage> getHomePageClass()
+	{
+		return MockPage.class;
+	}
 
 }

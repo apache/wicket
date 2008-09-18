@@ -80,4 +80,11 @@ public interface EncoderContext
 	 * @return listener interface
 	 */
 	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName);
+	
+	/**
+	 * Returns the home page class.
+	 * 
+	 * @return home page class
+	 */
+	public Class<? extends IPage> getHomePageClass();
 }

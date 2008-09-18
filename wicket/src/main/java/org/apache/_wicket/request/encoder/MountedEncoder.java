@@ -32,6 +32,7 @@ import org.apache._wicket.request.handler.impl.BookmarkableListenerInterfaceRequ
 import org.apache._wicket.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache._wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
 import org.apache._wicket.request.request.Request;
 import org.apache.wicket.RequestListenerInterface;
 
@@ -155,9 +156,48 @@ public class MountedEncoder extends AbstractEncoder
 			componentInfo.getBehaviorIndex());
 	}
 
+	/**
+	 * Check if the URL is for home page and the home page class match mounted class. If so,
+	 * redirect to mounted URL.
+	 * 
+	 * @param url
+	 * @return request handler or <code>null</code>
+	 */
+	private RequestHandler checkHomePage(Url url)
+	{
+		if (url.getSegments().isEmpty() && url.getQueryParameters().isEmpty())
+		{
+			// this is home page
+			if (pageClass.get().equals(getContext().getHomePageClass()) && redirectFromHomePage())
+			{
+				IPage page = newPageInstance(null, pageClass.get(), new PageParameters());
+				return new RenderPageRequestHandler(page, RedirectPolicy.ALWAYS_REDIRECT);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * If this method returns true and application home page class is same as the class mounted with
+	 * this encoder, request to home page will create a redirect to the mounted path.
+	 * 
+	 * @return whether this encode should respond to home page request when home page class is same
+	 *         as mounted class.
+	 */
+	protected boolean redirectFromHomePage()
+	{
+		return true;
+	}
+
 	public RequestHandler decode(Request request)
 	{
 		Url url = request.getUrl();
+
+		RequestHandler handler = checkHomePage(url);
+		if (handler != null)
+		{
+			return handler;
+		}
 
 		// check if the URL is long enough and starts with the proper segments
 		if (url.getSegments().size() >= mountSegments.length && urlStartsWith(url, mountSegments))
