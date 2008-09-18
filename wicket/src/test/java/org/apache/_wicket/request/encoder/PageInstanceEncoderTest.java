@@ -104,6 +104,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 		checkPage(h.getPage(), 4, 5, "abc"); 	
 		assertEquals(h.getComponent().getPath(), "a:b:c");
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
+		assertNull(h.getBehaviorIndex());
 	}
 	
 	/**
@@ -126,6 +127,23 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 		
 		RequestHandler handler = encoder.decode(getRequest(url));
 		assertNull(handler);
+	}
+	
+	/**
+	 * 
+	 */
+	public void testDecode7()
+	{
+		Url url = Url.parse("wicket/page?abc.4.5-ILinkListener.5-a-b-c");
+		
+		RequestHandler handler = encoder.decode(getRequest(url));
+		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		
+		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler) handler;
+		checkPage(h.getPage(), 4, 5, "abc"); 	
+		assertEquals(h.getComponent().getPath(), "a:b:c");
+		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
+		assertEquals((Object)5, h.getBehaviorIndex());
 	}
 	
 	/**
@@ -166,4 +184,19 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 		Url url = encoder.encode(handler);
 		assertEquals("wicket/page?15-ILinkListener-a-b-c", url.toString());
 	}
+	
+	/**
+	 * 
+	 */
+	public void testEncode4()
+	{
+		MockPage page = new MockPage(15, 0, null);
+		
+		IComponent c = page.get("a:b:c");
+		
+		RequestHandler handler = new ListenerInterfaceRequestHandler(page, c, ILinkListener.INTERFACE, 5);
+		
+		Url url = encoder.encode(handler);
+		assertEquals("wicket/page?15-ILinkListener.5-a-b-c", url.toString());
+	}	
 }

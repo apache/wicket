@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.util.lang.Classes;
@@ -75,7 +76,7 @@ public class RequestListenerInterface
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
 	 */
-	public RequestListenerInterface(final Class< ? extends IRequestListener> listenerInterfaceClass)
+	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass)
 	{
 		this(listenerInterfaceClass, true);
 	}
@@ -89,8 +90,8 @@ public class RequestListenerInterface
 	 *            Whether or not urls encoded for this interface contain the page version. If set to
 	 *            false the latest page version is always used.
 	 */
-	public RequestListenerInterface(
-		final Class< ? extends IRequestListener> listenerInterfaceClass, boolean recordsPageVersion)
+	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass,
+		boolean recordsPageVersion)
 	{
 		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
@@ -199,6 +200,57 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
 				method.getDeclaringClass() + " targeted at component " + component +
 				" threw an exception", e);
+		}
+		finally
+		{
+			page.afterCallComponent(component, this);
+		}
+	}
+
+	/**
+	 * Invokes a given interface on a component's behavior.
+	 * 
+	 * @param page
+	 *            The Page that contains the component
+	 * @param component
+	 *            The component
+	 * @param behavior
+	 */
+	public final void invoke(final Page page, final Component component, final IBehavior behavior)
+	{
+		if (!component.isEnabled() || !component.isVisibleInHierarchy())
+		{
+			// just return so that we have a silent fail and just re-render the
+			// page
+			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			return;
+		}
+
+		page.beforeCallComponent(component, this);
+
+		try
+		{
+			// Invoke the interface method on the component
+			method.invoke(behavior, new Object[] {});
+		}
+		catch (InvocationTargetException e)
+		{
+			// Honor redirect exception contract defined in IPageFactory
+			if (e.getTargetException() instanceof AbstractRestartResponseException ||
+				e.getTargetException() instanceof AuthorizationException ||
+				e.getTargetException() instanceof WicketRuntimeException)
+			{
+				throw (RuntimeException)e.getTargetException();
+			}
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+				method.getDeclaringClass() + " targeted at behavior " + behavior +
+				" on component " + component + " threw an exception", e);
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+				method.getDeclaringClass() + " targeted at behavior " + behavior +
+				" on component " + component + " threw an exception", e);
 		}
 		finally
 		{

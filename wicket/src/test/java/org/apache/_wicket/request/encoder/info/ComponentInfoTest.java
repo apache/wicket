@@ -16,8 +16,6 @@
  */
 package org.apache._wicket.request.encoder.info;
 
-import org.apache._wicket.request.encoder.info.ComponentInfo;
-
 import junit.framework.TestCase;
 
 /**
@@ -44,6 +42,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
+		assertNull(info.getBehaviorIndex());
 		
 		assertEquals(s, info.toString());
 	}
@@ -55,10 +54,7 @@ public class ComponentInfoTest extends TestCase
 	{
 		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals(null, info.getListenerInterface());
-		assertEquals("component:path", info.getComponentPath());
-		
-		assertEquals(s, info.toString());
+		assertEquals(null, info);		
 	}
 	
 	/**
@@ -67,11 +63,8 @@ public class ComponentInfoTest extends TestCase
 	public void test3()
 	{
 		String s = "listener-";
-		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
-		assertEquals(null, info.getComponentPath());
-		
-		assertEquals(s, info.toString());
+		ComponentInfo info = ComponentInfo.parse(s);		
+		assertEquals(null, info);
 	}
 	
 	/**
@@ -81,10 +74,7 @@ public class ComponentInfoTest extends TestCase
 	{
 		String s = "-";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals(null, info.getListenerInterface());
-		assertEquals(null, info.getComponentPath());
-		
-		assertEquals(s, info.toString());
+		assertEquals(null, info);
 	}
 	
 	/**
@@ -105,6 +95,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("compo-nent:path", info.getComponentPath());
+		assertNull(info.getBehaviorIndex());
 		
 		assertEquals(s, info.toString());
 	}
@@ -118,6 +109,21 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
+		assertNull(info.getBehaviorIndex());
+		
+		assertEquals(s, info.toString());
+	}
+
+	/**
+	 * 
+	 */
+	public void test8()
+	{
+		String s = "listener.12-component-path";
+		ComponentInfo info = ComponentInfo.parse(s);
+		assertEquals("listener", info.getListenerInterface());
+		assertEquals("component:path", info.getComponentPath());
+		assertEquals((Object)12, info.getBehaviorIndex());
 		
 		assertEquals(s, info.toString());
 	}

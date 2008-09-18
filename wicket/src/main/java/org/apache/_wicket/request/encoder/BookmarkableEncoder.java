@@ -51,6 +51,7 @@ import org.apache.wicket.RequestListenerInterface;
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
+ *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
  * 
@@ -102,7 +103,8 @@ public class BookmarkableEncoder extends AbstractEncoder
 		IComponent component = getComponent(page, componentInfo.getComponentPath());
 		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 
-		return new ListenerInterfaceRequestHandler(page, component, listenerInterface);
+		return new ListenerInterfaceRequestHandler(page, component, listenerInterface,
+			componentInfo.getBehaviorIndex());
 	}
 
 	public RequestHandler decode(Request request)
@@ -135,7 +137,8 @@ public class BookmarkableEncoder extends AbstractEncoder
 			else if (info.getPageInfo().getPageId() != null && info.getComponentInfo() == null)
 			{
 				// if there is page instance ifnromation in the URL but no component and listener
-				// interface then this is a hybrid URL - we need to try to reuse existing cpage instance
+				// interface then this is a hybrid URL - we need to try to reuse existing cpage
+				// instance
 				return processHybrid(info.getPageInfo(), pageClass, pageParameters);
 			}
 			else if (info.getComponentInfo() != null)
@@ -174,7 +177,7 @@ public class BookmarkableEncoder extends AbstractEncoder
 		{
 			// possibly hybrid URL - bookmarkable URL with page instance information
 			// but only allowed if the page was created by bookamarkable URL
-			
+
 			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
 			// necessary check so that we won't generate bookmarkable URLs for all pages
@@ -192,13 +195,13 @@ public class BookmarkableEncoder extends AbstractEncoder
 		}
 		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
 		{
-			// listener interface URL with page class information			
+			// listener interface URL with page class information
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
 			IPage page = handler.getPage();
 			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(
 				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponent().getPath());
+				handler.getComponent().getPath(), handler.getBehaviorIndex());
 			Url url = newUrl(page.getClass());
 			encodePageComponentInfo(url, new PageComponentInfo(pageInfo, componentInfo));
 			return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);

@@ -133,6 +133,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 		RequestHandler handler = encoder.decode(getRequest(url));
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
 		IPage page = h.getPage();
@@ -140,6 +141,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPath());
+		assertNull(h.getBehaviorIndex());
 	}
 
 	/**
@@ -168,6 +170,26 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 		assertEquals(2, p.getNamedParameterKeys().size());
 		assertEquals("b", p.getNamedParameter("a").toString());
 		assertEquals("c", p.getNamedParameter("b").toString());
+	}
+	
+	/**
+	 * 
+	 */
+	public void testDecode7()
+	{
+		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
+		RequestHandler handler = encoder.decode(getRequest(url));
+
+		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
+		
+		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+
+		IPage page = h.getPage();
+		checkPage(page, 15, 0, null);
+
+		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
+		assertEquals("foo:bar", h.getComponent().getPath());
+		assertEquals((Object)4, h.getBehaviorIndex());
 	}
 
 	/**
@@ -287,6 +309,33 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	 * 
 	 */
 	public void testEncode7()
+	{
+		MockPage page = new MockPage(15, 5, "abc");
+		page.getPageParameters().setIndexedParameter(0, "i1");
+		page.getPageParameters().setIndexedParameter(1, "i2");
+		page.getPageParameters().setNamedParameter("a", "b");
+		page.getPageParameters().setNamedParameter("b", "c");
+
+		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
+		// as this explicitely says the url must be bookmarkable
+		page.setCreatedBookmarkable(false);
+
+		IComponent c = page.get("foo:bar");
+
+		RequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(page, c,
+			ILinkListener.INTERFACE, 4);
+
+		Url url = encoder.encode(handler);
+
+		assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME +
+			"/i1/i2?abc.15.5-ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+	}
+
+	
+	/**
+	 * 
+	 */
+	public void testEncode8()
 	{
 		MockPage page = new MockPage(15, 5, "abc");
 		page.setBookmarkable(true);

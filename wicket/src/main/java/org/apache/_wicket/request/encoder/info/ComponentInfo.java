@@ -20,8 +20,9 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Encodes listener inteface and component path in form of
- * &lt;listenerInterface&gt-&lt;componentPath&gt; Also component path is escaped (':' characters are
- * replaced by '-')
+ * &lt;listenerInterface&gt-&lt;componentPath&gt; or &lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt;
+ * <p>
+ * Component path is escaped (':' characters are replaced by '-')
  * 
  * @author Matej Knopp
  */
@@ -29,18 +30,31 @@ public class ComponentInfo
 {
 	private final String listenerInterface;
 	private final String componentPath;
+	private final Integer behaviorIndex;
 
+	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
 	private static final char SEPARATOR = '-';
 
 	/**
 	 * Construct.
+	 * 
 	 * @param listenerInterface
 	 * @param componentPath
+	 * @param behaviorIndex
 	 */
-	public ComponentInfo(String listenerInterface, String componentPath)
+	public ComponentInfo(String listenerInterface, String componentPath, Integer behaviorIndex)
 	{
+		if (listenerInterface == null)
+		{
+			throw new IllegalArgumentException("Argument 'listenerInterface' may not be null.");
+		}
+		if (componentPath == null)
+		{
+			throw new IllegalArgumentException("Argument 'componentPath' may not be null.");
+		}
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;
+		this.behaviorIndex = behaviorIndex;
 	}
 
 	/**
@@ -57,6 +71,14 @@ public class ComponentInfo
 	public String getListenerInterface()
 	{
 		return listenerInterface;
+	}
+
+	/**
+	 * @return behavior index
+	 */
+	public Integer getBehaviorIndex()
+	{
+		return behaviorIndex;
 	}
 
 	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
@@ -96,15 +118,17 @@ public class ComponentInfo
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
-		if (listenerInterface != null)
+
+		result.append(listenerInterface);
+
+		if (behaviorIndex != null)
 		{
-			result.append(listenerInterface);
+			result.append(BEHAVIOR_INDEX_SEPARATOR);
+			result.append(behaviorIndex);
 		}
 		result.append(SEPARATOR);
-		if (componentPath != null)
-		{
-			result.append(encodeComponentPath(componentPath));
-		}
+		result.append(encodeComponentPath(componentPath));
+
 		return result.toString();
 	}
 
@@ -132,13 +156,30 @@ public class ComponentInfo
 
 			if (Strings.isEmpty(listenerInterface))
 			{
-				listenerInterface = null;
+				return null;
 			}
 			if (Strings.isEmpty(componentPath))
 			{
-				componentPath = null;
+				return null;
 			}
-			return new ComponentInfo(listenerInterface, componentPath);
+
+			Integer behaviorIndex = null;
+			i = listenerInterface.indexOf(BEHAVIOR_INDEX_SEPARATOR);
+			if (i != -1)
+			{				
+				String behavior = listenerInterface.substring(i + 1);
+				listenerInterface = listenerInterface.substring(0, i);
+				try
+				{
+					behaviorIndex = Integer.valueOf(behavior);
+				}
+				catch (Exception e)
+				{
+					return null;
+				}
+			}
+
+			return new ComponentInfo(listenerInterface, componentPath, behaviorIndex);
 		}
 	}
 

@@ -38,6 +38,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	private final IComponent component;
 	private final IPage page;
 	private final RequestListenerInterface listenerInterface;
+	private final Integer behaviorIndex;
 
 	/**
 	 * Construct.
@@ -45,9 +46,10 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * @param page
 	 * @param component
 	 * @param listenerInterface
+	 * @param behaviorIndex 
 	 */
 	public BookmarkableListenerInterfaceRequestHandler(IPage page, IComponent component,
-		RequestListenerInterface listenerInterface)
+		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
 		if (component == null)
 		{
@@ -64,6 +66,20 @@ public class BookmarkableListenerInterfaceRequestHandler
 		this.component = component;
 		this.page = page;
 		this.listenerInterface = listenerInterface;
+		this.behaviorIndex = behaviorIndex;
+	}
+	
+	/**
+	 * Construct.
+	 * 
+	 * @param page
+	 * @param component
+	 * @param listenerInterface
+	 */
+	public BookmarkableListenerInterfaceRequestHandler(IPage page, IComponent component,
+		RequestListenerInterface listenerInterface)
+	{
+		this(page, component, listenerInterface, null);
 	}
 
 	public IComponent getComponent()
@@ -104,6 +120,17 @@ public class BookmarkableListenerInterfaceRequestHandler
 	public RequestListenerInterface getListenerInterface()
 	{
 		return listenerInterface;
+	}
+
+	/**
+	 * Returns index of behavior this listener is targeted on or <code>null</code> if component
+	 * is the target
+	 * 
+	 * @return behavior index or <code>null</code>
+	 */
+	public Integer getBehaviorIndex()
+	{
+		return behaviorIndex;
 	}
 
 	public void respond(RequestCycle requestCycle)

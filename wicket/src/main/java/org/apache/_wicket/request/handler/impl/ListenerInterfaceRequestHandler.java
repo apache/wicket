@@ -26,6 +26,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.IBehavior;
 
 /**
  * Request handler that invokes the listener interface on component and renders page afterwards.
@@ -37,6 +38,7 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 	private final IComponent component;
 	private final IPage page;
 	private final RequestListenerInterface listenerInterface;
+	private final Integer behaviorIndex;
 
 	/**
 	 * Construct.
@@ -44,9 +46,10 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 	 * @param page
 	 * @param component
 	 * @param listenerInterface
+	 * @param behaviorIndex
 	 */
 	public ListenerInterfaceRequestHandler(IPage page, IComponent component,
-		RequestListenerInterface listenerInterface)
+		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
 		if (component == null)
 		{
@@ -63,6 +66,20 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 		this.component = component;
 		this.page = page;
 		this.listenerInterface = listenerInterface;
+		this.behaviorIndex = behaviorIndex;
+	}
+	
+	/**
+	 * Construct.
+	 * 
+	 * @param page
+	 * @param component
+	 * @param listenerInterface
+	 */
+	public ListenerInterfaceRequestHandler(IPage page, IComponent component,
+		RequestListenerInterface listenerInterface)
+	{
+		this(page, component, listenerInterface, null);
 	}
 
 	public IComponent getComponent()
@@ -105,12 +122,41 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 		return listenerInterface;
 	}
 
+	/**
+	 * Index of target behavior or <code>null</code> if component is the target.
+	 * 
+	 * @return behavior index or <code>null</code>
+	 */
+	public Integer getBehaviorIndex()
+	{
+		return behaviorIndex;
+	}
+
 	public void respond(RequestCycle requestCycle)
 	{
 		if (component.getPage() == page)
 		{
-			listenerInterface.invoke((Page)page, (Component)component);
-			requestCycle.replaceCurrentRequestHandler(new RenderPageRequestHandler(page));
+			Page page = (Page)this.page;
+			Component component = (Component)this.component;
+
+			if (getBehaviorIndex() == null)
+			{
+				listenerInterface.invoke(page, component);
+			}
+			else
+			{
+				try
+				{
+					IBehavior behavior = component.getBehaviors().get(behaviorIndex);
+					listenerInterface.invoke(page, component, behavior);
+				}
+				catch (IndexOutOfBoundsException e)
+				{
+					throw new WicketRuntimeException("Couldn't find component behavior.");
+				}
+
+			}
+			requestCycle.replaceCurrentRequestHandler(new RenderPageRequestHandler(this.page));
 		}
 		else
 		{

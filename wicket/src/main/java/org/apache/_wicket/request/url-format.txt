@@ -18,6 +18,7 @@ Page Instance - Listener (ListenerInterfaceRequestHandler)
 /wicket/page?2-click-foo-bar-baz
 /wicket/page?2.4-click-foo-bar-baz
 /wicket/page?pageMap.2.4-click-foo-bar-baz
+/wicket/page?2.4-click.1-foo-bar-baz (1 is behavior index)  
 
 BOOKMARKABLE - NOT MOUNTED
 --------------------------
@@ -36,6 +37,7 @@ Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandl
 /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
+/wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click.1-foo-bar-baz (1 is behavior index)
 (these will redirect to hybrid if page is not stateless)
 
 BOOKMARKABLE - MOUNTED
@@ -55,4 +57,5 @@ Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandl
 /mount/point?2-click-foo-bar-baz
 /mount/point?2.4-click-foo-bar-baz
 /mount/point?pageMap.2.4-click-foo-bar-baz
+/mount/point?2.4-click.1-foo-bar-baz (1 is behavior index)
 (these will redirect to hybrid if page is not stateless)

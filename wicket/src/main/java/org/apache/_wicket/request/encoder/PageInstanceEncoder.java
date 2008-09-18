@@ -41,6 +41,7 @@ import org.apache.wicket.RequestListenerInterface;
  *  /wicket/page?2-click-foo-bar-baz
  *  /wicket/page?2.4-click-foo-bar-baz
  *  /wicket/page?pageMap.2.4-click-foo-bar-bazr-baz
+ *  /wicket/page?2.4-click.1-foo-bar-baz (1 is behavior index)  
  * </pre>
  * 
  * @author Matej Knopp
@@ -77,7 +78,8 @@ public class PageInstanceEncoder extends AbstractEncoder
 					IComponent component = getComponent(page, componentInfo.getComponentPath());
 					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 
-					return new ListenerInterfaceRequestHandler(page, component, listenerInterface);
+					return new ListenerInterfaceRequestHandler(page, component, listenerInterface,
+						componentInfo.getBehaviorIndex());
 				}
 			}
 		}
@@ -104,7 +106,8 @@ public class PageInstanceEncoder extends AbstractEncoder
 
 			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(
-				requestListenerInterfaceToString(listenerInterface), componentPath);
+				requestListenerInterfaceToString(listenerInterface), componentPath,
+				handler.getBehaviorIndex());
 			info = new PageComponentInfo(pageInfo, componentInfo);
 		}
 
