@@ -16,6 +16,8 @@
  */
 package org.apache._wicket.request.encoder;
 
+import java.lang.ref.WeakReference;
+
 import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
@@ -37,50 +39,92 @@ import org.apache.wicket.RequestListenerInterface;
  * Decodes and encodes the following URLs:
  * 
  * <pre>
- *  Page Class - Render (BookmarkablePageRequestHandler)
- *  /wicket/bookmarkable/org.apache.wicket.MyPage
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
+ *  Page Class - Render (BookmarkablePageRequestHandler for mounted pages)
+ *  /mount/point
+ *  /mount/point?pageMap
  *  (these will redirect to hybrid alternative if page is not stateless)
  * 
- *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
+ *  IPage Instance - Render Hybrid (RenderPageRequestHandler for mounted pages) 
+ *  /mount/point?2
+ *  /mount/point?2.4
+ *  /mount/point?pageMap.2.4
  * 
- *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click.1-foo-bar-baz (1 is behavior index)
+ *  IPage Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages) 
+ *  /mount/point?2-click-foo-bar-baz
+ *  /mount/point?2.4-click-foo-bar-baz
+ *  /mount/point?pageMap.2.4-click-foo-bar-baz
+ *  /mount/point?2.4-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
  * 
  * @author Matej Knopp
  */
-public class BookmarkableEncoder extends AbstractEncoder
+public class MountedEncoder extends AbstractEncoder
 {
 	private final PageParametersEncoder pageParametersEncoder;
+	private final String[] mountSegments;
+
+	/** bookmarkable page class. */
+	protected final WeakReference<Class<? extends IPage>> pageClass;
+
 
 	/**
 	 * Construct.
 	 * 
+	 * @param mountPath
+	 * @param pageClass
 	 * @param pageParametersEncoder
 	 */
-	public BookmarkableEncoder(PageParametersEncoder pageParametersEncoder)
+	public MountedEncoder(String mountPath, Class<? extends IPage> pageClass,
+		PageParametersEncoder pageParametersEncoder)
 	{
 		if (pageParametersEncoder == null)
 		{
 			throw new IllegalArgumentException("Argument 'pageParametersEncoder' may not be null.");
 		}
+		if (pageClass == null)
+		{
+			throw new IllegalArgumentException("Argument 'pageClass' may not be null.");
+		}
+		if (mountPath == null)
+		{
+			throw new IllegalArgumentException("Argument 'mountPath' may not be null.");
+		}
 		this.pageParametersEncoder = pageParametersEncoder;
+		this.pageClass = new WeakReference<Class<? extends IPage>>(pageClass);
+		this.mountSegments = getMountSegments(mountPath);
+	}
+
+	private String[] getMountSegments(String mountPath)
+	{
+		if (mountPath.startsWith("/"))
+		{
+			mountPath = mountPath.substring(1);
+		}
+		Url url = Url.parse(mountPath);
+
+		if (url.getSegments().isEmpty())
+		{
+			throw new IllegalArgumentException("Mount path must have at least one segment.");
+		}
+
+		String[] res = new String[url.getSegments().size()];
+		for (int i = 0; i < res.length; ++i)
+		{
+			res[i] = url.getSegments().get(i);
+		}
+		return res;
 	}
 
 	/**
 	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClass
 	 */
-	public BookmarkableEncoder()
+	public MountedEncoder(String mountPath, Class<? extends IPage> pageClass)
 	{
-		this(new SimplePageParametersEncoder());
+		this(mountPath, pageClass, new SimplePageParametersEncoder());
 	}
 
 	private RequestHandler processBookmarkable(String pageMapName,
@@ -116,16 +160,12 @@ public class BookmarkableEncoder extends AbstractEncoder
 		Url url = request.getUrl();
 
 		// check if the URL is long enough and starts with the proper segments
-		if (url.getSegments().size() >= 3 &&
-			urlStartsWith(url, getContext().getNamespace(),
-				getContext().getBookmarkableIdentifier()))
+		if (url.getSegments().size() >= mountSegments.length && urlStartsWith(url, mountSegments))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
-			// load the page class
-			String className = url.getSegments().get(2);
-			Class<? extends IPage> pageClass = getPageClass(className);
+			Class<? extends IPage> pageClass = this.pageClass.get();
 
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(url,
@@ -158,9 +198,10 @@ public class BookmarkableEncoder extends AbstractEncoder
 	{
 		Url url = new Url();
 
-		url.getSegments().add(getContext().getNamespace());
-		url.getSegments().add(getContext().getBookmarkableIdentifier());
-		url.getSegments().add(pageClass.getName());
+		for (String s : mountSegments)
+		{
+			url.getSegments().add(s);
+		}
 
 		return url;
 	}
@@ -184,18 +225,15 @@ public class BookmarkableEncoder extends AbstractEncoder
 
 			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
-			// necessary check so that we won't generate bookmarkable URLs for all pages
-			if (page.wasCreatedBookmarkable())
+			Url url = newUrl(page.getClass());
+			PageInfo info = null;
+			if (!page.isPageStateless())
 			{
-				Url url = newUrl(page.getClass());
-				PageInfo info = null;
-				if (!page.isPageStateless())
-				{
-					info = new PageInfo(page);
-					encodePageComponentInfo(url, new PageComponentInfo(info, null));
-				}
-				return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
+				info = new PageInfo(page);
+				encodePageComponentInfo(url, new PageComponentInfo(info, null));
 			}
+			return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
+
 		}
 		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
 		{
@@ -216,8 +254,14 @@ public class BookmarkableEncoder extends AbstractEncoder
 
 	public int getMachingSegmentsCount(Request request)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		if (urlStartsWith(request.getUrl(), mountSegments))
+		{
+			return mountSegments.length;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 }
