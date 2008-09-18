@@ -19,12 +19,13 @@ package org.apache._wicket.request;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -278,11 +279,11 @@ public final class Url implements Serializable
 		public String toString()
 		{
 			StringBuilder result = new StringBuilder();
-			result.append(encode(getName()));
+			result.append(encodeParameter(getName()));
 			if (!Strings.isEmpty(getValue()))
 			{
 				result.append('=');
-				result.append(encode(getValue()));
+				result.append(encodeParameter(getValue()));
 			}
 			return result.toString();
 		}
@@ -311,33 +312,24 @@ public final class Url implements Serializable
 		return Objects.hashCode(getSegments(), getQueryParameters());
 	}
 
-	private static String encode(String string)
+	private static String encodeSegment(String string)
 	{
-		try
-		{
-			String s = URLEncoder.encode(string, "UTF-8");
-			
-			// According to http://www.rfc-editor.org/rfc/rfc1738.txt 
-			// ! doesn't have to be encoded
-			s = s.replace("%21", "!");
-			return s;
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return WicketURLEncoder.PATH_INSTANCE.encode(string);
 	}
-
-	private static String decode(String string)
+	
+	private static String decodeSegment(String string)
 	{
-		try
-		{
-			return URLDecoder.decode(string, "UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return WicketURLDecoder.PATH_INSTANCE.decode(string);
+	}		
+
+	private static String encodeParameter(String string)
+	{
+		return WicketURLEncoder.QUERY_INSTANCE.encode(string);
+	}
+	
+	private static String decodeParameter(String string)
+	{
+		return WicketURLDecoder.QUERY_INSTANCE.decode(string);
 	}
 
 	@Override
@@ -350,7 +342,7 @@ public final class Url implements Serializable
 			{
 				result.append('/');
 			}
-			result.append(encode(s));
+			result.append(encodeSegment(s));
 		}
 
 		boolean first = true;
@@ -376,7 +368,7 @@ public final class Url implements Serializable
 	{
 		if (qp.indexOf('=') == -1)
 		{
-			return new QueryParameter(decode(qp), "");
+			return new QueryParameter(decodeParameter(qp), "");
 		}
 		String parts[] = qp.split("=");
 		if (parts.length == 0)
@@ -385,11 +377,11 @@ public final class Url implements Serializable
 		}
 		else if (parts.length == 1)
 		{
-			return new QueryParameter("", decode(parts[0]));
+			return new QueryParameter("", decodeParameter(parts[0]));
 		}
 		else
 		{
-			return new QueryParameter(decode(parts[0]), decode(parts[1]));
+			return new QueryParameter(decodeParameter(parts[0]), decodeParameter(parts[1]));
 		}
 	}
 
@@ -447,7 +439,7 @@ public final class Url implements Serializable
 			{
 				if (s != null)
 				{
-					result.segments.add(decode(s));
+					result.segments.add(decodeSegment(s));
 				}
 			}
 		}

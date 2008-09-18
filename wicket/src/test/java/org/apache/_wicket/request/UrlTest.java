@@ -159,7 +159,7 @@ public class UrlTest extends TestCase
 		url.setQueryParameter("a", "b");
 		url.setQueryParameter("x?&4", "y=z");
 
-		assertEquals("foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y%3Dz", url.toString());
+		assertEquals("foo/b=r/b&z/x%3F?a=b&x?%264=y%3Dz", url.toString());
 	}
 
 }
