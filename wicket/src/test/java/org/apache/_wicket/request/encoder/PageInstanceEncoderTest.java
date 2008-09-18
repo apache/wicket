@@ -51,7 +51,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test1()
+	public void testDecode1()
 	{
 		Url url = Url.parse("wicket/page?4");
 		
@@ -65,7 +65,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test2()
+	public void testDecode2()
 	{
 		Url url = Url.parse("wicket/page?4.5");
 		
@@ -79,7 +79,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test3()
+	public void testDecode3()
 	{
 		Url url = Url.parse("wicket/page/ingore/me?abc.4.5&a=3&b=3");
 		
@@ -93,7 +93,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test4()
+	public void testDecode4()
 	{
 		Url url = Url.parse("wicket/page?abc.4.5-ILinkListener-a-b-c");
 		
@@ -109,7 +109,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test5()
+	public void testDecode5()
 	{
 		Url url = Url.parse("wickett/pagee?abc.4.5-ILinkListener-a:b-c");
 		
@@ -120,7 +120,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test6()
+	public void testDecode6()
 	{
 		Url url = Url.parse("wicket/page?abc");
 		
@@ -131,7 +131,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test7()
+	public void testEncode1()
 	{
 		MockPage page = new MockPage(15, 4, "pm1");
 		RequestHandler handler = new RenderPageRequestHandler(page);
@@ -143,7 +143,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test8()
+	public void testEncode2()
 	{
 		MockPage page = new MockPage(15, 0, null);
 		RequestHandler handler = new RenderPageRequestHandler(page);
@@ -155,7 +155,7 @@ public class PageInstanceEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test9()
+	public void testEncode3()
 	{
 		MockPage page = new MockPage(15, 0, null);
 		

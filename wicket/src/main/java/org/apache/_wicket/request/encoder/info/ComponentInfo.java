@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.encoder;
+package org.apache._wicket.request.encoder.info;
 
 import org.apache.wicket.util.string.Strings;
 
@@ -25,24 +25,35 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-class ComponentInfo
+public class ComponentInfo
 {
 	private final String listenerInterface;
 	private final String componentPath;
 
 	private static final char SEPARATOR = '-';
 
+	/**
+	 * Construct.
+	 * @param listenerInterface
+	 * @param componentPath
+	 */
 	public ComponentInfo(String listenerInterface, String componentPath)
 	{
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;
 	}
 
+	/**
+	 * @return component path
+	 */
 	public String getComponentPath()
 	{
 		return componentPath;
 	}
 
+	/**
+	 * @return listener interface name
+	 */
 	public String getListenerInterface()
 	{
 		return listenerInterface;

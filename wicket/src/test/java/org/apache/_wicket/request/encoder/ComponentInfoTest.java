@@ -16,6 +16,8 @@
  */
 package org.apache._wicket.request.encoder;
 
+import org.apache._wicket.request.encoder.info.ComponentInfo;
+
 import junit.framework.TestCase;
 
 /**

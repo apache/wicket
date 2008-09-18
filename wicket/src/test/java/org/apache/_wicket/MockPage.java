@@ -138,9 +138,23 @@ public class MockPage extends MockComponent implements IPage
 		return this;
 	}
 
+	private boolean stateless = false;
+	
+	/**
+	 * Sets the stateless flag
+	 * 
+	 * @param stateless
+	 * @return <code>this</code>
+	 */
+	public MockPage setPageStateless(boolean stateless)
+	{
+		this.stateless = stateless;
+		return this;
+	}
+	
 	public boolean isPageStateless()
 	{
-		return false;
+		return stateless;
 	}
 
 	public void renderPage()

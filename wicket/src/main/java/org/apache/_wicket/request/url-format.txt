@@ -3,17 +3,18 @@ NOTE - According to http://www.rfc-editor.org/rfc/rfc1738.txt ':' is not a valid
        In order for Wicket to produce valid URLs I've decided to use - as separator instead
        This will only affect listener URLs anyway, which are not shown in location bar 
        (except for bookmarkable listeners on stateless pages)
+       '-' in component name is encoded as '--'.
 
 
 NOT BOOKMARKABLE
 ----------------
 
-Page Instance - Render
+Page Instance - Render (RenderPageRequestHandler)
 /wicket/page?2
 /wicket/page?2.4
 /wicket/page?abc.2.4
 
-Page Instance - Listener
+Page Instance - Listener (ListenerInterfaceRequestHandler)
 /wicket/page?2-click-foo-bar-baz
 /wicket/page?2.4-click-foo-bar-baz
 /wicket/page?pageMap.2.4-click-foo-bar-baz
@@ -21,17 +22,17 @@ Page Instance - Listener
 BOOKMARKABLE - NOT MOUNTED
 --------------------------
 
-Page Instance - Render
+Page Class - Render (BookmarkablePageRequestHandler)
 /wicket/bookmarkable/org.apache.wicket.MyPage
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
 (these will redirect to hybrid alternative if page is not stateless)
 
-Page Instance - Render Hybrid 
+Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
 /wicket/bookmarkable/org.apache.wicket.MyPage?2
 /wicket/bookmarkable/org.apache.wicket.MyPage?2.4
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
 
-Page Instance - Bookmarkable Listener 
+Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
 /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
 /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
@@ -40,17 +41,17 @@ Page Instance - Bookmarkable Listener
 BOOKMARKABLE - MOUNTED
 ----------------------
 
-Page Instance - Render
+Page Class - Render (BookmarkablePageRequestHandler for mounted pages)
 /mount/point
 /mount/point?pageMap
 (these will redirect to hybrid alternative if page is not stateless)
 
-Page Instance - Render Hybrid 
+Page Instance - Render Hybrid (RenderPageRequestHandler for mounted pages) 
 /mount/point?2
 /mount/point?2.4
 /mount/point?pageMap.2.4
 
-Page instance - Bookmarkable Listener 
+Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages) 
 /mount/point?2-click-foo-bar-baz
 /mount/point?2.4-click-foo-bar-baz
 /mount/point?pageMap.2.4-click-foo-bar-baz

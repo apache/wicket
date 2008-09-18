@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.encoder;
+package org.apache._wicket.request.encoder.info;
 
 import org.apache.wicket.util.string.Strings;
 
@@ -24,13 +24,18 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-class PageComponentInfo
+public class PageComponentInfo
 {
 	private final PageInfo pageInfo;
 	private final ComponentInfo componentInfo;
 
 	private static final char SEPARATOR = '-';
 	
+	/**
+	 * Construct.
+	 * @param pageInfo
+	 * @param componentInfo
+	 */
 	public PageComponentInfo(PageInfo pageInfo, ComponentInfo componentInfo)
 	{
 		if (pageInfo == null)
@@ -40,12 +45,18 @@ class PageComponentInfo
 		this.pageInfo = pageInfo;
 		this.componentInfo = componentInfo;
 	}
-	
+
+	/**
+	 * @return page info instance
+	 */
 	public PageInfo getPageInfo()
 	{
 		return pageInfo;
 	}
 	
+	/**
+	 * @return component info instance or <code>null</code>
+	 */
 	public ComponentInfo getComponentInfo()
 	{
 		return componentInfo;

@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.encoder;
+package org.apache._wicket.request.encoder.parameters;
 
 import org.apache._wicket.PageParameters;
 import org.apache._wicket.request.RequestHandler;
+import org.apache._wicket.request.RequestParameters;
 import org.apache._wicket.request.Url;
 
 /**
@@ -41,7 +42,10 @@ public interface PageParametersEncoder
 	 * {@link RequestHandler} specified segments/parameters stripped.
 	 * 
 	 * @param url
+	 * @param parameters
+	 *            provides all request (GET and POST) parameters. Some encoders might require the
+	 *            POST parameters which are not part of the URL
 	 * @return {@link PageParameters} instance
 	 */
-	public PageParameters decodePageParameters(Url url);
+	public PageParameters decodePageParameters(Url url, RequestParameters parameters);
 }

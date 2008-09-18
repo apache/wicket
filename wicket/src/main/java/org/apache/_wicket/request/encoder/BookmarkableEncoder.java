@@ -21,6 +21,11 @@ import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
+import org.apache._wicket.request.encoder.info.ComponentInfo;
+import org.apache._wicket.request.encoder.info.PageComponentInfo;
+import org.apache._wicket.request.encoder.info.PageInfo;
+import org.apache._wicket.request.encoder.parameters.PageParametersEncoder;
+import org.apache._wicket.request.encoder.parameters.SimplePageParametersEncoder;
 import org.apache._wicket.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache._wicket.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -32,17 +37,17 @@ import org.apache.wicket.RequestListenerInterface;
  * Decodes and encodes the following URLs:
  * 
  * <pre>
- *  Page Instance - Render
+ *  Page Class - Render (BookmarkablePageRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
  *  (these will redirect to hybrid alternative if page is not stateless)
  * 
- *  Page Instance - Render Hybrid 
+ *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
  * 
- *  Page Instance - Bookmarkable Listener 
+ *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
@@ -54,16 +59,17 @@ import org.apache.wicket.RequestListenerInterface;
 public class BookmarkableEncoder extends AbstractEncoder
 {
 	private final PageParametersEncoder pageParametersEncoder;
-	
+
 	/**
 	 * Construct.
-	 * @param pageParametersEncoder 
+	 * 
+	 * @param pageParametersEncoder
 	 */
 	public BookmarkableEncoder(PageParametersEncoder pageParametersEncoder)
 	{
 		this.pageParametersEncoder = pageParametersEncoder;
 	}
-	
+
 	/**
 	 * Construct.
 	 */
@@ -102,28 +108,39 @@ public class BookmarkableEncoder extends AbstractEncoder
 	public RequestHandler decode(Request request)
 	{
 		Url url = request.getUrl();
+
+		// check if the URL is long enough and starts with the proper segments
 		if (url.getSegments().size() >= 3 &&
 			urlStartsWith(url, getContext().getNamespace(),
 				getContext().getBookmarkableIdentifier()))
 		{
+			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
+			// load the page class
 			String className = url.getSegments().get(2);
 			Class<? extends IPage> pageClass = getPageClass(className);
+
+			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(url,
 				request.getRequestParameters(), 3, pageParametersEncoder);
 
 			if (info == null || info.getPageInfo().getPageId() == null)
 			{
+				// if there are is no page instance information (only page map name - optionally)
+				// then this is a simple bookmarkable URL
 				String pageMap = info != null ? info.getPageInfo().getPageMapName() : null;
 				return processBookmarkable(pageMap, pageClass, pageParameters);
 			}
 			else if (info.getPageInfo().getPageId() != null && info.getComponentInfo() == null)
 			{
+				// if there is page instance ifnromation in the URL but no component and listener
+				// interface then this is a hybrid URL - we need to try to reuse existing cpage instance
 				return processHybrid(info.getPageInfo(), pageClass, pageParameters);
 			}
 			else if (info.getComponentInfo() != null)
 			{
+				// with both page instance and component+listener this is a listener interface URL
 				return processListener(info, pageClass, pageParameters);
 			}
 		}
@@ -145,6 +162,7 @@ public class BookmarkableEncoder extends AbstractEncoder
 	{
 		if (requestHandler instanceof BookmarkablePageRequestHandler)
 		{
+			// simple bookmarkable URL with no page instance information
 			BookmarkablePageRequestHandler handler = (BookmarkablePageRequestHandler)requestHandler;
 			Url url = newUrl(handler.getPageClass());
 
@@ -154,19 +172,27 @@ public class BookmarkableEncoder extends AbstractEncoder
 		}
 		else if (requestHandler instanceof RenderPageRequestHandler)
 		{
+			// possibly hybrid URL - bookmarkable URL with page instance information
+			// but only allowed if the page was created by bookamarkable URL
+			
 			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
 			// necessary check so that we won't generate bookmarkable URLs for all pages
 			if (page.wasCreatedBookmarkable())
 			{
 				Url url = newUrl(page.getClass());
-				PageInfo info = new PageInfo(page);
-				encodePageComponentInfo(url, new PageComponentInfo(info, null));
+				PageInfo info = null;
+				if (!page.isPageStateless())
+				{
+					info = new PageInfo(page);
+					encodePageComponentInfo(url, new PageComponentInfo(info, null));
+				}
 				return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
 			}
 		}
 		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
 		{
+			// listener interface URL with page class information			
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
 			IPage page = handler.getPage();
 			PageInfo pageInfo = new PageInfo(page);
@@ -183,6 +209,7 @@ public class BookmarkableEncoder extends AbstractEncoder
 
 	public int getMachingSegmentsCount(Request request)
 	{
+		// always return 0 here so that the mounts have higher priority
 		return 0;
 	}
 

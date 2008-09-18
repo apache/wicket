@@ -38,7 +38,9 @@ public interface EncoderContext
 	public IPage getPageInstance(String pageMapName, int pageId, int versionNumber);
 
 	/**
-	 * Creates new page instance of page with given class.
+	 * Creates new page instance of page with given class. The page should be marked as
+	 * create bookmarkable, so subsequent calls to {@link IPage#wasCreatedBookmarkable()}
+	 * must return <code>true</code>
 	 * 
 	 * @param pageMapName
 	 * @param pageClass

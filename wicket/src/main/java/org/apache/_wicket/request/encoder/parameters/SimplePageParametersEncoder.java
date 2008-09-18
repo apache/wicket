@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache._wicket.request.encoder;
+package org.apache._wicket.request.encoder.parameters;
 
 import java.util.List;
 
 import org.apache._wicket.PageParameters;
+import org.apache._wicket.request.RequestParameters;
 import org.apache._wicket.request.Url;
 import org.apache._wicket.request.Url.QueryParameter;
 import org.apache.wicket.util.string.StringValue;
@@ -37,7 +38,7 @@ public class SimplePageParametersEncoder implements PageParametersEncoder
 	{
 	}
 
-	public PageParameters decodePageParameters(Url url)
+	public PageParameters decodePageParameters(Url url, RequestParameters requestParameters)
 	{
 		PageParameters parameters = new PageParameters();
 		

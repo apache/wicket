@@ -56,7 +56,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test1()
+	public void testDecode1()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME);
 		RequestHandler handler = encoder.decode(getRequest(url));
@@ -71,7 +71,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test2()
+	public void testDecode2()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		RequestHandler handler = encoder.decode(getRequest(url));
@@ -92,7 +92,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test3()
+	public void testDecode3()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15");
 		RequestHandler handler = encoder.decode(getRequest(url));
@@ -105,7 +105,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test4()
+	public void testDecode4()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?abc.15.5&a=b&b=c");
 		RequestHandler handler = encoder.decode(getRequest(url));
@@ -127,7 +127,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test5()
+	public void testDecode5()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
 		RequestHandler handler = encoder.decode(getRequest(url));
@@ -145,7 +145,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test6()
+	public void testDecode6()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME +
 			"/i1/i2?abc.15.5-ILinkListener-foo-bar&a=b&b=c");
@@ -173,7 +173,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test7()
+	public void testEncode1()
 	{
 		RequestHandler handler = new BookmarkablePageRequestHandler(MockPage.class, null,
 			new PageParameters());
@@ -184,7 +184,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test8()
+	public void testEncode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.setIndexedParameter(0, "i1");
@@ -200,7 +200,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test9()
+	public void testEncode3()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.setIndexedParameter(0, "i1");
@@ -219,7 +219,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test10()
+	public void testEncode4()
 	{
 		MockPage page = new MockPage(15, 5, "abc");
 		page.getPageParameters().setIndexedParameter(0, "i1");
@@ -238,7 +238,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test11()
+	public void testEncode5()
 	{
 		MockPage page = new MockPage(15, 5, "abc");
 		page.getPageParameters().setIndexedParameter(0, "i1");
@@ -260,7 +260,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	/**
 	 * 
 	 */
-	public void test12()
+	public void testEncode6()
 	{
 		MockPage page = new MockPage(15, 5, "abc");
 		page.getPageParameters().setIndexedParameter(0, "i1");
@@ -281,5 +281,22 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
 		assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME +
 			"/i1/i2?abc.15.5-ILinkListener-foo-bar&a=b&b=c", url.toString());
+	}
+	
+	/**
+	 * 
+	 */
+	public void testEncode7()
+	{
+		MockPage page = new MockPage(15, 5, "abc");
+		page.setBookmarkable(true);
+		page.setCreatedBookmarkable(true);
+		page.setPageStateless(true);
+		
+		RequestHandler handler = new RenderPageRequestHandler(page);
+		
+		Url url = encoder.encode(handler);
+		
+		assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME, url.toString());
 	}
 }

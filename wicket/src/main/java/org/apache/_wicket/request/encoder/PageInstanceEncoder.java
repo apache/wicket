@@ -20,6 +20,9 @@ import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
+import org.apache._wicket.request.encoder.info.ComponentInfo;
+import org.apache._wicket.request.encoder.info.PageComponentInfo;
+import org.apache._wicket.request.encoder.info.PageInfo;
 import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache._wicket.request.request.Request;
@@ -29,15 +32,15 @@ import org.apache.wicket.RequestListenerInterface;
  * Decodes and encodes the following URLs:
  * 
  * <pre>
- *  Page Instance - Render
+ *  Page Instance - Render (RenderPageRequestHandler)
  *  /wicket/page?2
  *  /wicket/page?2.4
  *  /wicket/page?abc.2.4
  * 
- *  Page Instance - Listener
+ *  Page Instance - Listener (ListenerInterfaceRequestHandler)
  *  /wicket/page?2-click-foo-bar-baz
  *  /wicket/page?2.4-click-foo-bar-baz
- *  /wicket/page?pageMap.2.4-click-foo-bar-baz
+ *  /wicket/page?pageMap.2.4-click-foo-bar-bazr-baz
  * </pre>
  * 
  * @author Matej Knopp
