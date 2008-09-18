@@ -29,26 +29,44 @@ import org.apache.wicket.Application;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
- * {@link RequestHandler} that renders page instance. Depending on the <code>preventRedirect</code>
+ * {@link RequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
  * flag and current request strategy the handler either just renders the page to the response, or
  * redirects to render the page. <code>REDIRECT_TO_BUFFER</code> strategy is also supported.
  * <p>
- * The redirect be issued if all of the following statements are true
- * <ul>
- * 	<li>request cycle strategy is not ONE_PASS_RENDER 
- *  <li>preventRedirect flag is not set
- *  <li>current request URL is different than page URL
- *  <li>page being rendered is not stateless
- *  
- * </ul>
- * 
  * 
  * @author Matej Knopp
  */
 public class RenderPageRequestHandler implements PageRequestHandler
 {
 	private final IPage page;
-	private final boolean preventRedirect;
+	private final RedirectPolicy redirectPolicy;
+
+	/**
+	 * Determines whether Wicket does a redirect when rendering a page
+	 * 
+	 * @author Matej Knopp
+	 */
+	public enum RedirectPolicy {
+		/**
+		 * Always redirect if current request URL is different than page URL.
+		 */
+		ALWAYS_REDIRECT,
+
+		/**
+		 * Never redirect - always render the page to current response.
+		 */
+		NEVER_REDIRECT,
+
+		/**
+		 * Redirect if necessary. The redirect will happen when all of the following conditions are
+		 * met:
+		 * <ul>
+		 * <li>current request URL is different than page URL
+		 * <li>page is not stateless
+		 * <li>render strategy is either REDIRECT_TO_BUFFER or REDIRECT_TO_RENDER </li>
+		 */
+		AUTO_REDIRECT
+	};
 
 	/**
 	 * Construct. Renders the page with a redirect if necessary.
@@ -57,31 +75,42 @@ public class RenderPageRequestHandler implements PageRequestHandler
 	 */
 	public RenderPageRequestHandler(IPage page)
 	{
-		this(page, false);
+		this(page, RedirectPolicy.AUTO_REDIRECT);
 	}
 
 	/**
 	 * Construct.
 	 * 
 	 * @param page
-	 * @param preventRedirect
-	 *            If <code>true</code> the page is always rendered to current response. If
-	 *            <code>false</code> a redirect will be issued if required by the request
-	 *            strategy.
+	 * @param redirectPolicy
 	 */
-	public RenderPageRequestHandler(IPage page, boolean preventRedirect)
+	public RenderPageRequestHandler(IPage page, RedirectPolicy redirectPolicy)
 	{
 		if (page == null)
 		{
 			throw new IllegalArgumentException("Argument 'page' may not be null.");
 		}
-		this.preventRedirect = preventRedirect;
+		if (redirectPolicy == null)
+		{
+			throw new IllegalArgumentException("Argument 'redirectPolicy' may no be null.");
+		}
+		this.redirectPolicy = redirectPolicy;
 		this.page = page;
 	}
 
 	public IPage getPage()
 	{
 		return page;
+	}
+
+	/**
+	 * Returns the {@link RedirectPolicy}
+	 * 
+	 * @return redirect policy
+	 */
+	public RedirectPolicy getRedirectPolicy()
+	{
+		return redirectPolicy;
 	}
 
 	public void detach(RequestCycle requestCycle)
@@ -177,22 +206,25 @@ public class RenderPageRequestHandler implements PageRequestHandler
 
 		if (bufferedResponse != null)
 		{
+			// if there is saved response for this URL render it
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (preventRedirect || isOnePassRender() || targetUrl.equals(currentUrl) ||
-			(isRedirectToRender() && page.isPageStateless()))
+		else if (redirectPolicy == RedirectPolicy.NEVER_REDIRECT || isOnePassRender() ||
+			targetUrl.equals(currentUrl) || (isRedirectToRender() && page.isPageStateless()))
 		{
-			// if the flag is set or one pass render model is on or the targetUrl matches current
-			// url just render the page
+			// if the policy is never to redirect
+			//   or one pass render mode is on 
+			//   or the targetUrl matches current url 
+			// just render the page
 			renderPage();
 		}
-		else if (isRedirectToRender())
-		{
+		else if (redirectPolicy == RedirectPolicy.ALWAYS_REDIRECT || isRedirectToRender())
+		{			
 			redirectTo(targetUrl, requestCycle);
 		}
-		else
-		// redirect to buffer
+		else		
 		{
+			// redirect to buffer
 			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
 
 			// check if the url hasn't changed after page has been rendered
@@ -207,17 +239,17 @@ public class RenderPageRequestHandler implements PageRequestHandler
 				// segments for stateless and stateful pages
 				response = renderPage(targetUrl2, requestCycle);
 			}
-			
+
 			if (page.isPageStateless() && !enableRedirectForStatelessPage())
 			{
 				// we don't want the redirect to happen for stateless page
 				// example:
-				//   when a normal mounted stateful page is hit at /mount/point
-				//   wicket renders the page to buffer and redirects to /mount/point?12
-				//   but for stateless page the redirect is not necessary
-				//   also for listener interface on stateful page we want to redirect 
-				//   after the listener is invoked, but on stateless page the user 
-				//   must ask for redirect explicitely  
+				// when a normal mounted stateful page is hit at /mount/point
+				// wicket renders the page to buffer and redirects to /mount/point?12
+				// but for stateless page the redirect is not necessary
+				// also for listener interface on stateful page we want to redirect
+				// after the listener is invoked, but on stateless page the user
+				// must ask for redirect explicitely
 				response.writeTo((WebResponse)requestCycle.getResponse());
 			}
 			else
@@ -233,7 +265,7 @@ public class RenderPageRequestHandler implements PageRequestHandler
 	 * When the page renders to buffer and it is still stateless after rendering, this flag
 	 * determines whether the redirect will take place or not.
 	 * <p>
-	 * Normally there is no reason for a stateless page to redirect 
+	 * Normally there is no reason for a stateless page to redirect
 	 * 
 	 * @return boolean value
 	 */
