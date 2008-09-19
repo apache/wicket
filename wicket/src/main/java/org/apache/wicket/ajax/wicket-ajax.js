@@ -1430,7 +1430,7 @@ Wicket.Head.Contributor.prototype = {
 					var req = new Wicket.Ajax.Request(src, onLoad, false, false);
 					req.debugContent = false;
 					if (Wicket.Browser.isKHTML())
-						// konqueror can't process the ajax response asynchronously, threfore the 
+						// konqueror can't process the ajax response asynchronously, therefore the 
 						// javascript loading must be also synchronous
 						req.async = false;
 					// get the javascript
@@ -1440,8 +1440,18 @@ Wicket.Head.Contributor.prototype = {
 				// serialize the element content to string
 				var text = Wicket.DOM.serializeNodeChildren(node);
 				
-				// add javascript to document head
-				Wicket.Head.addJavascript(text, node.getAttribute("id"));
+				var id = node.getAttribute("id");
+				
+				if (typeof(id) == "string" && id.length > 0) {					
+					// add javascript to document head
+					Wicket.Head.addJavascript(text, id);
+				} else {
+					try {
+						eval(text);
+					} catch (e) {
+						Wicket.Log.error(e);
+					}
+				}
 				
 				// continue to next step
 				notify();
