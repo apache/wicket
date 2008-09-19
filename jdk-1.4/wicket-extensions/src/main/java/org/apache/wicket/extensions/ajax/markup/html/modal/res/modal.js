@@ -1251,9 +1251,9 @@ Wicket.Window.Mask.prototype = {
 		this.document = doc;
 		
 		// disable user interaction
-		this.hideSelectBoxes();						
-		this.disableTabs();
-		this.disableFocus();		
+		setTimeout(function() {this.hideSelectBoxes()}.bind(this), 300);
+		setTimeout(function() {this.disableTabs()}.bind(this), 400);
+		setTimeout(function() {this.disableFocus()}.bind(this), 1000); 		
 	},
 	
 	/**
