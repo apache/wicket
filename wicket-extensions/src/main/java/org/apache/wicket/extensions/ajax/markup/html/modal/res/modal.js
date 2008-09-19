@@ -242,11 +242,13 @@ Wicket.Window.get = function() {
 	return win;
 } 
 
+
 /**
  * Closes the current wicket open window. This method is supposed to 
  * be called from inside the window (therefore it checks window.parent).
  */
 Wicket.Window.close = function() {
+	
 	var win;
 	try {		
 		win = window.parent.Wicket.Window;
@@ -300,7 +302,7 @@ Wicket.Window.prototype = {
 		
 			title: null, /* window title. if null and window content is iframe, title of iframe document will be used. */
 		
-			onCloseButton: function() {
+			onCloseButton: function() {				
 				/* On firefox on Linux, at least, we need to blur() textfields, etc.
 				 * to get it to update its DOM model. Otherwise you'll lose any changes
 				 * made to the current form component you're editing.
@@ -441,7 +443,7 @@ Wicket.Window.prototype = {
 			this.bind(this.topRight, this.onMove);
 			this.bind(this.top, this.onMove);
 		}	
-		
+				
 		this.caption.getElementsByTagName("a")[0].onclick = this.settings.onCloseButton.bind(this);
 	},
 
@@ -1251,9 +1253,9 @@ Wicket.Window.Mask.prototype = {
 		this.document = doc;
 		
 		// disable user interaction
-		this.hideSelectBoxes();						
-		this.disableTabs();
-		this.disableFocus();		
+		setTimeout(function() {this.hideSelectBoxes()}.bind(this), 300);
+		setTimeout(function() {this.disableTabs()}.bind(this), 400);
+		setTimeout(function() {this.disableFocus()}.bind(this), 1000); 			
 	},
 	
 	/**
@@ -1545,3 +1547,4 @@ Wicket.Cookie = {
 		document.cookie = name + "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate);
 	}
 };
+
