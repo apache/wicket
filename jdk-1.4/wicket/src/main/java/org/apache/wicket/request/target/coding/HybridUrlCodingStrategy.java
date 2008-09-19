@@ -75,6 +75,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		boolean redirectOnBookmarkableRequest)
 	{
 		super(mountPath);
+
+		if (mountPath.endsWith("/"))
+		{
+			throw new IllegalArgumentException("mountPath can not end with a '/': " + mountPath);
+		}
+
 		pageClassRef = new WeakReference(pageClass);
 		this.redirectOnBookmarkableRequest = redirectOnBookmarkableRequest;
 	}
