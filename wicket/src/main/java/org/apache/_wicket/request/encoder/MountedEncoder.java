@@ -18,23 +18,13 @@ package org.apache._wicket.request.encoder;
 
 import java.lang.ref.WeakReference;
 
-import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
-import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.encoder.info.ComponentInfo;
 import org.apache._wicket.request.encoder.info.PageComponentInfo;
-import org.apache._wicket.request.encoder.info.PageInfo;
 import org.apache._wicket.request.encoder.parameters.PageParametersEncoder;
 import org.apache._wicket.request.encoder.parameters.SimplePageParametersEncoder;
-import org.apache._wicket.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
-import org.apache._wicket.request.handler.impl.BookmarkablePageRequestHandler;
-import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
-import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache._wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
 import org.apache._wicket.request.request.Request;
-import org.apache.wicket.RequestListenerInterface;
 
 /**
  * Decodes and encodes the following URLs:
@@ -60,7 +50,7 @@ import org.apache.wicket.RequestListenerInterface;
  * 
  * @author Matej Knopp
  */
-public class MountedEncoder extends AbstractEncoder
+public class MountedEncoder extends AbstractBookmarkableEncoder
 {
 	private final PageParametersEncoder pageParametersEncoder;
 	private final String[] mountSegments;
@@ -96,27 +86,6 @@ public class MountedEncoder extends AbstractEncoder
 		this.mountSegments = getMountSegments(mountPath);
 	}
 
-	private String[] getMountSegments(String mountPath)
-	{
-		if (mountPath.startsWith("/"))
-		{
-			mountPath = mountPath.substring(1);
-		}
-		Url url = Url.parse(mountPath);
-
-		if (url.getSegments().isEmpty())
-		{
-			throw new IllegalArgumentException("Mount path must have at least one segment.");
-		}
-
-		String[] res = new String[url.getSegments().size()];
-		for (int i = 0; i < res.length; ++i)
-		{
-			res[i] = url.getSegments().get(i);
-		}
-		return res;
-	}
-
 	/**
 	 * Construct.
 	 * 
@@ -128,32 +97,49 @@ public class MountedEncoder extends AbstractEncoder
 		this(mountPath, pageClass, new SimplePageParametersEncoder());
 	}
 
-	private RequestHandler processBookmarkable(String pageMapName,
-		Class<? extends IPage> pageClass, PageParameters pageParameters)
+	@Override
+	protected UrlInfo parseRequest(Request request)
 	{
-		IPage page = newPageInstance(pageMapName, pageClass, pageParameters);
-		return new RenderPageRequestHandler(page);
+		Url url = request.getUrl();
+
+		// when redirect to buffer/render is active and redirectFromHomePage returns true
+		// check mounted class against the home page class. if it matches let wicket redirect
+		// to the mounted URL
+		if (redirectFromHomePage() && checkHomePage(url))
+		{
+			UrlInfo info = new UrlInfo(null, getContext().getHomePageClass(), new PageParameters());
+			return info;
+		}
+		// check if the URL is long enough and starts with the proper segments
+		else if (url.getSegments().size() >= mountSegments.length &&
+			urlStartsWith(url, mountSegments))
+		{
+			// try to extract page and component information from URL
+			PageComponentInfo info = getPageComponentInfo(url);
+
+			Class<? extends IPage> pageClass = this.pageClass.get();
+
+			// extract the PageParameters from URL if there are any
+			PageParameters pageParameters = extractPageParameters(url,
+				request.getRequestParameters(), 3, pageParametersEncoder);
+			return new UrlInfo(info, pageClass, pageParameters);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
-	private RequestHandler processHybrid(PageInfo pageInfo, Class<? extends IPage> pageClass,
-		PageParameters pageParameters)
+	@Override
+	protected Url buildUrl(UrlInfo info)
 	{
-		IPage page = getPageInstance(pageInfo, pageClass, pageParameters);
-		return new RenderPageRequestHandler(page);
-	}
-
-	private RequestHandler processListener(PageComponentInfo pageComponentInfo,
-		Class<? extends IPage> pageClass, PageParameters pageParameters)
-	{
-		PageInfo pageInfo = pageComponentInfo.getPageInfo();
-		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
-
-		IPage page = getPageInstance(pageInfo, pageClass, pageParameters, true);
-		IComponent component = getComponent(page, componentInfo.getComponentPath());
-		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
-
-		return new ListenerInterfaceRequestHandler(page, component, listenerInterface,
-			componentInfo.getBehaviorIndex());
+		Url url = new Url();
+		for (String s : mountSegments)
+		{
+			url.getSegments().add(s);			
+		}		
+		encodePageComponentInfo(url, info.getPageComponentInfo());
+		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);		
 	}
 
 	/**
@@ -163,18 +149,17 @@ public class MountedEncoder extends AbstractEncoder
 	 * @param url
 	 * @return request handler or <code>null</code>
 	 */
-	private RequestHandler checkHomePage(Url url)
+	private boolean checkHomePage(Url url)
 	{
 		if (url.getSegments().isEmpty() && url.getQueryParameters().isEmpty())
 		{
 			// this is home page
 			if (pageClass.get().equals(getContext().getHomePageClass()) && redirectFromHomePage())
 			{
-				IPage page = newPageInstance(null, pageClass.get(), new PageParameters());
-				return new RenderPageRequestHandler(page, RedirectPolicy.ALWAYS_REDIRECT);
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	/**
@@ -189,107 +174,10 @@ public class MountedEncoder extends AbstractEncoder
 		return true;
 	}
 
-	public RequestHandler decode(Request request)
+	@Override
+	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
-		Url url = request.getUrl();
-
-		RequestHandler handler = checkHomePage(url);
-		if (handler != null)
-		{
-			return handler;
-		}
-
-		// check if the URL is long enough and starts with the proper segments
-		if (url.getSegments().size() >= mountSegments.length && urlStartsWith(url, mountSegments))
-		{
-			// try to extract page and component information from URL
-			PageComponentInfo info = getPageComponentInfo(url);
-
-			Class<? extends IPage> pageClass = this.pageClass.get();
-
-			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(url,
-				request.getRequestParameters(), 3, pageParametersEncoder);
-
-			if (info == null || info.getPageInfo().getPageId() == null)
-			{
-				// if there are is no page instance information (only page map name - optionally)
-				// then this is a simple bookmarkable URL
-				String pageMap = info != null ? info.getPageInfo().getPageMapName() : null;
-				return processBookmarkable(pageMap, pageClass, pageParameters);
-			}
-			else if (info.getPageInfo().getPageId() != null && info.getComponentInfo() == null)
-			{
-				// if there is page instance ifnromation in the URL but no component and listener
-				// interface then this is a hybrid URL - we need to try to reuse existing cpage
-				// instance
-				return processHybrid(info.getPageInfo(), pageClass, pageParameters);
-			}
-			else if (info.getComponentInfo() != null)
-			{
-				// with both page instance and component+listener this is a listener interface URL
-				return processListener(info, pageClass, pageParameters);
-			}
-		}
-		return null;
-	}
-
-	private Url newUrl(Class<? extends IPage> pageClass)
-	{
-		Url url = new Url();
-
-		for (String s : mountSegments)
-		{
-			url.getSegments().add(s);
-		}
-
-		return url;
-	}
-
-	public Url encode(RequestHandler requestHandler)
-	{
-		if (requestHandler instanceof BookmarkablePageRequestHandler)
-		{
-			// simple bookmarkable URL with no page instance information
-			BookmarkablePageRequestHandler handler = (BookmarkablePageRequestHandler)requestHandler;
-			Url url = newUrl(handler.getPageClass());
-
-			PageInfo info = new PageInfo(null, null, handler.getPageMapName());
-			encodePageComponentInfo(url, new PageComponentInfo(info, null));
-			return encodePageParameters(url, handler.getPageParameters(), pageParametersEncoder);
-		}
-		else if (requestHandler instanceof RenderPageRequestHandler)
-		{
-			// possibly hybrid URL - bookmarkable URL with page instance information
-			// but only allowed if the page was created by bookamarkable URL
-
-			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
-
-			Url url = newUrl(page.getClass());
-			PageInfo info = null;
-			if (!page.isPageStateless())
-			{
-				info = new PageInfo(page);
-				encodePageComponentInfo(url, new PageComponentInfo(info, null));
-			}
-			return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
-
-		}
-		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
-		{
-			// listener interface URL with page class information
-			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
-			IPage page = handler.getPage();
-			PageInfo pageInfo = new PageInfo(page);
-			ComponentInfo componentInfo = new ComponentInfo(
-				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponent().getPath(), handler.getBehaviorIndex());
-			Url url = newUrl(page.getClass());
-			encodePageComponentInfo(url, new PageComponentInfo(pageInfo, componentInfo));
-			return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
-		}
-
-		return null;
+		return false;
 	}
 
 	public int getMachingSegmentsCount(Request request)
@@ -303,5 +191,4 @@ public class MountedEncoder extends AbstractEncoder
 			return 0;
 		}
 	}
-
 }

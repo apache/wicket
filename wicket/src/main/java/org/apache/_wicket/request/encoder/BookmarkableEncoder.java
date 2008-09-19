@@ -16,22 +16,13 @@
  */
 package org.apache._wicket.request.encoder;
 
-import org.apache._wicket.IComponent;
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
-import org.apache._wicket.request.RequestHandler;
 import org.apache._wicket.request.Url;
-import org.apache._wicket.request.encoder.info.ComponentInfo;
 import org.apache._wicket.request.encoder.info.PageComponentInfo;
-import org.apache._wicket.request.encoder.info.PageInfo;
 import org.apache._wicket.request.encoder.parameters.PageParametersEncoder;
 import org.apache._wicket.request.encoder.parameters.SimplePageParametersEncoder;
-import org.apache._wicket.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
-import org.apache._wicket.request.handler.impl.BookmarkablePageRequestHandler;
-import org.apache._wicket.request.handler.impl.ListenerInterfaceRequestHandler;
-import org.apache._wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache._wicket.request.request.Request;
-import org.apache.wicket.RequestListenerInterface;
 
 /**
  * Decodes and encodes the following URLs:
@@ -57,7 +48,7 @@ import org.apache.wicket.RequestListenerInterface;
  * 
  * @author Matej Knopp
  */
-public class BookmarkableEncoder extends AbstractEncoder
+public class BookmarkableEncoder extends AbstractBookmarkableEncoder
 {
 	private final PageParametersEncoder pageParametersEncoder;
 
@@ -83,39 +74,23 @@ public class BookmarkableEncoder extends AbstractEncoder
 		this(new SimplePageParametersEncoder());
 	}
 
-	private RequestHandler processBookmarkable(String pageMapName,
-		Class<? extends IPage> pageClass, PageParameters pageParameters)
+	@Override
+	protected Url buildUrl(UrlInfo info)
 	{
-		IPage page = newPageInstance(pageMapName, pageClass, pageParameters);
-		return new RenderPageRequestHandler(page);
+		Url url = new Url();
+		url.getSegments().add(getContext().getNamespace());
+		url.getSegments().add(getContext().getBookmarkableIdentifier());
+		url.getSegments().add(info.getPageClass().getName());
+
+		encodePageComponentInfo(url, info.getPageComponentInfo());
+
+		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
 	}
 
-	private RequestHandler processHybrid(PageInfo pageInfo, Class<? extends IPage> pageClass,
-		PageParameters pageParameters)
-	{
-		IPage page = getPageInstance(pageInfo, pageClass, pageParameters);
-		return new RenderPageRequestHandler(page);
-	}
-
-	private RequestHandler processListener(PageComponentInfo pageComponentInfo,
-		Class<? extends IPage> pageClass, PageParameters pageParameters)
-	{
-		PageInfo pageInfo = pageComponentInfo.getPageInfo();
-		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
-
-		IPage page = getPageInstance(pageInfo, pageClass, pageParameters, true);
-		IComponent component = getComponent(page, componentInfo.getComponentPath());
-		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
-
-		return new ListenerInterfaceRequestHandler(page, component, listenerInterface,
-			componentInfo.getBehaviorIndex());
-	}
-
-	public RequestHandler decode(Request request)
+	@Override
+	protected UrlInfo parseRequest(Request request)
 	{
 		Url url = request.getUrl();
-
-		// check if the URL is long enough and starts with the proper segments
 		if (url.getSegments().size() >= 3 &&
 			urlStartsWith(url, getContext().getNamespace(),
 				getContext().getBookmarkableIdentifier()))
@@ -131,87 +106,15 @@ public class BookmarkableEncoder extends AbstractEncoder
 			PageParameters pageParameters = extractPageParameters(url,
 				request.getRequestParameters(), 3, pageParametersEncoder);
 
-			if (info == null || info.getPageInfo().getPageId() == null)
-			{
-				// if there are is no page instance information (only page map name - optionally)
-				// then this is a simple bookmarkable URL
-				String pageMap = info != null ? info.getPageInfo().getPageMapName() : null;
-				return processBookmarkable(pageMap, pageClass, pageParameters);
-			}
-			else if (info.getPageInfo().getPageId() != null && info.getComponentInfo() == null)
-			{
-				// if there is page instance ifnromation in the URL but no component and listener
-				// interface then this is a hybrid URL - we need to try to reuse existing cpage
-				// instance
-				return processHybrid(info.getPageInfo(), pageClass, pageParameters);
-			}
-			else if (info.getComponentInfo() != null)
-			{
-				// with both page instance and component+listener this is a listener interface URL
-				return processListener(info, pageClass, pageParameters);
-			}
+			return new UrlInfo(info, pageClass, pageParameters);
 		}
 		return null;
 	}
-
-	private Url newUrl(Class<? extends IPage> pageClass)
+	
+	@Override
+	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
-		Url url = new Url();
-
-		url.getSegments().add(getContext().getNamespace());
-		url.getSegments().add(getContext().getBookmarkableIdentifier());
-		url.getSegments().add(pageClass.getName());
-
-		return url;
-	}
-
-	public Url encode(RequestHandler requestHandler)
-	{
-		if (requestHandler instanceof BookmarkablePageRequestHandler)
-		{
-			// simple bookmarkable URL with no page instance information
-			BookmarkablePageRequestHandler handler = (BookmarkablePageRequestHandler)requestHandler;
-			Url url = newUrl(handler.getPageClass());
-
-			PageInfo info = new PageInfo(null, null, handler.getPageMapName());
-			encodePageComponentInfo(url, new PageComponentInfo(info, null));
-			return encodePageParameters(url, handler.getPageParameters(), pageParametersEncoder);
-		}
-		else if (requestHandler instanceof RenderPageRequestHandler)
-		{
-			// possibly hybrid URL - bookmarkable URL with page instance information
-			// but only allowed if the page was created by bookamarkable URL
-
-			IPage page = ((RenderPageRequestHandler)requestHandler).getPage();
-
-			// necessary check so that we won't generate bookmarkable URLs for all pages
-			if (page.wasCreatedBookmarkable())
-			{
-				Url url = newUrl(page.getClass());
-				PageInfo info = null;
-				if (!page.isPageStateless())
-				{
-					info = new PageInfo(page);
-					encodePageComponentInfo(url, new PageComponentInfo(info, null));
-				}
-				return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
-			}
-		}
-		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
-		{
-			// listener interface URL with page class information
-			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
-			IPage page = handler.getPage();
-			PageInfo pageInfo = new PageInfo(page);
-			ComponentInfo componentInfo = new ComponentInfo(
-				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponent().getPath(), handler.getBehaviorIndex());
-			Url url = newUrl(page.getClass());
-			encodePageComponentInfo(url, new PageComponentInfo(pageInfo, componentInfo));
-			return encodePageParameters(url, page.getPageParameters(), pageParametersEncoder);
-		}
-
-		return null;
+		return true;
 	}
 
 	public int getMachingSegmentsCount(Request request)
