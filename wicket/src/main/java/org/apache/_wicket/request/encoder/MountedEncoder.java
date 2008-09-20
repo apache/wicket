@@ -198,8 +198,9 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 	}
 
 	/**
-	 * If this method returns true and application home page class is same as the class mounted with
-	 * this encoder, request to home page will create a redirect to the mounted path.
+	 * If this method returns <code>true</code> and application home page class is same as the
+	 * class mounted with this encoder, request to home page will result in a redirect to the
+	 * mounted path.
 	 * 
 	 * @return whether this encode should respond to home page request when home page class is same
 	 *         as mounted class.
