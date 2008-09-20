@@ -27,6 +27,11 @@ import org.apache._wicket.request.encoder.parameters.SimplePageParametersEncoder
 import org.apache._wicket.request.request.Request;
 
 /**
+ * Encoder for mounted URL. The mount path can contain parameter placeholders, i.e.
+ * <code>/mount/${foo}/path</code>. In that case the appropriate segment from the URL will be
+ * accessible as named parameter "foo" in the {@link PageParameters}. Similarly when the URL is
+ * constructed, the second segment will contain the value of the "foo" named page parameter.
+ * <p>
  * Decodes and encodes the following URLs:
  * 
  * <pre>
@@ -122,7 +127,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(url,
 				request.getRequestParameters(), mountSegments.length, pageParametersEncoder);
-			
+
 			// check if there are placeholders in mount segments
 			for (int i = 0; i < mountSegments.length; ++i)
 			{
@@ -133,7 +138,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 					pageParameters.addNamedParameter(placeholder, url.getSegments().get(i));
 				}
 			}
-			
+
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
 		else
@@ -141,7 +146,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 			return null;
 		}
 	}
-	
+
 	protected PageParameters newPageParameters()
 	{
 		return new PageParameters();
@@ -153,12 +158,12 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 		Url url = new Url();
 		for (String s : mountSegments)
 		{
-			url.getSegments().add(s);			
-		}		
+			url.getSegments().add(s);
+		}
 		encodePageComponentInfo(url, info.getPageComponentInfo());
-		
+
 		PageParameters copy = new PageParameters(info.getPageParameters());
-		
+
 		for (int i = 0; i < mountSegments.length; ++i)
 		{
 			String placeholder = getPlaceholder(mountSegments[i]);
@@ -168,8 +173,8 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 				copy.removeNamedParameter(placeholder);
 			}
 		}
-		
-		return encodePageParameters(url, copy, pageParametersEncoder);		
+
+		return encodePageParameters(url, copy, pageParametersEncoder);
 	}
 
 	/**
