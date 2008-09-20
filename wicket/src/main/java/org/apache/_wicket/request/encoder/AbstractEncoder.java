@@ -76,8 +76,21 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 		return getContext().requestListenerInterfaceFromString(interfaceName);
 	}
 
+	protected static String getPlaceholder(String s)
+	{
+		if (s == null || s.length() < 4 || !s.startsWith("${") || !s.endsWith("}"))
+		{
+			return null;
+		}
+		else
+		{
+			return s.substring(2, s.length() - 1);
+		}		
+	}
+		
 	/**
-	 * Returns true if the given url starts with specified segments
+	 * Returns true if the given url starts with specified segments. Segments that contain
+	 * placelhoders are not compared.
 	 * 
 	 * @param url
 	 * @param segments
@@ -100,7 +113,8 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 			{
 				for (int i = 0; i < segments.length; ++i)
 				{
-					if (segments[i].equals(url.getSegments().get(i)) == false)
+					if (segments[i].equals(url.getSegments().get(i)) == false &&
+						getPlaceholder(segments[i]) == null)
 					{
 						return false;
 					}

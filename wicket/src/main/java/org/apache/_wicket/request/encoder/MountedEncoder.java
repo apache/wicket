@@ -107,7 +107,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 		// to the mounted URL
 		if (redirectFromHomePage() && checkHomePage(url))
 		{
-			UrlInfo info = new UrlInfo(null, getContext().getHomePageClass(), new PageParameters());
+			UrlInfo info = new UrlInfo(null, getContext().getHomePageClass(), newPageParameters());
 			return info;
 		}
 		// check if the URL is long enough and starts with the proper segments
@@ -122,12 +122,29 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(url,
 				request.getRequestParameters(), mountSegments.length, pageParametersEncoder);
+			
+			// check if there are placeholders in mount segments
+			for (int i = 0; i < mountSegments.length; ++i)
+			{
+				String placeholder = getPlaceholder(mountSegments[i]);
+				if (placeholder != null)
+				{
+					// extract the parameter from URL
+					pageParameters.addNamedParameter(placeholder, url.getSegments().get(i));
+				}
+			}
+			
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
 		else
 		{
 			return null;
 		}
+	}
+	
+	protected PageParameters newPageParameters()
+	{
+		return new PageParameters();
 	}
 
 	@Override
@@ -139,7 +156,20 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 			url.getSegments().add(s);			
 		}		
 		encodePageComponentInfo(url, info.getPageComponentInfo());
-		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);		
+		
+		PageParameters copy = new PageParameters(info.getPageParameters());
+		
+		for (int i = 0; i < mountSegments.length; ++i)
+		{
+			String placeholder = getPlaceholder(mountSegments[i]);
+			if (placeholder != null)
+			{
+				url.getSegments().set(i, copy.getNamedParameter(placeholder).toString());
+				copy.removeNamedParameter(placeholder);
+			}
+		}
+		
+		return encodePageParameters(url, copy, pageParametersEncoder);		
 	}
 
 	/**

@@ -52,6 +52,15 @@ public class MountedEncoderTest extends AbstractEncoderTest
 		}
 	};
 
+	private MountedEncoder placeholderEncoder = new MountedEncoder("/some/${param1}/path/${param2}", MockPage.class)
+	{
+		@Override
+		protected EncoderContext getContext()
+		{
+			return context;
+		}
+	};
+	
 	/**
 	 * 
 	 */
@@ -396,5 +405,63 @@ public class MountedEncoderTest extends AbstractEncoderTest
 		{
 			// ok
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void testPlaceholderDecode1()
+	{
+		Url url = Url.parse("some/p1/path/p2");
+		RequestHandler handler = placeholderEncoder.decode(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IPage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedParamsCount());
+		assertTrue(page.getPageParameters().getNamedParameterKeys().size() == 2);
+		assertEquals("p1", page.getPageParameters().getNamedParameter("param1").toString());
+		assertEquals("p2", page.getPageParameters().getNamedParameter("param2").toString());
+	}
+
+	/**
+	 * 
+	 */
+	public void testPlaceholderDecode2()
+	{
+		Url url = Url.parse("some/p1/path/p2/indexed1?a=b&b=c");
+		RequestHandler handler = placeholderEncoder.decode(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IPage page = ((RenderPageRequestHandler)handler).getPage();
+
+		PageParameters p = page.getPageParameters();
+		assertEquals(1, p.getIndexedParamsCount());
+		assertEquals("indexed1", p.getIndexedParameter(0).toString());
+
+		assertEquals(4, p.getNamedParameterKeys().size());
+		assertEquals("b", p.getNamedParameter("a").toString());
+		assertEquals("c", p.getNamedParameter("b").toString());		
+		assertEquals("p1", page.getPageParameters().getNamedParameter("param1").toString());
+		assertEquals("p2", page.getPageParameters().getNamedParameter("param2").toString());
+	}
+	
+	/**
+	 * 
+	 */
+	public void testPlaceholderEncode2()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.setIndexedParameter(0, "i1");
+		parameters.setIndexedParameter(1, "i2");
+		parameters.setNamedParameter("a", "b");
+		parameters.setNamedParameter("b", "c");
+		parameters.setNamedParameter("param1", "p1");
+		parameters.setNamedParameter("param2", "p2");
+		
+		RequestHandler handler = new BookmarkablePageRequestHandler(MockPage.class, null,
+			parameters);
+		Url url = placeholderEncoder.encode(handler);
+		assertEquals("some/p1/path/p2/i1/i2?a=b&b=c", url.toString());
 	}
 }
