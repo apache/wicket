@@ -59,3 +59,7 @@ Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandl
 /mount/point?pageMap.2.4-click-foo-bar-baz
 /mount/point?2.4-click.1-foo-bar-baz (1 is behavior index)
 (these will redirect to hybrid if page is not stateless)
+
+mount path can also contain parameter placeholders
+e.g. when mount path is /foo/${bar}/baz and the incomming url is /foo/abc/baz   the extracted page parameters will 
+contain named parameter bar="abc".
