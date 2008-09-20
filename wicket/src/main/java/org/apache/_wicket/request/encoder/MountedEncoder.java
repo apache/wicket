@@ -164,7 +164,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 			String placeholder = getPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
-				url.getSegments().set(i, copy.getNamedParameter(placeholder).toString());
+				url.getSegments().set(i, copy.getNamedParameter(placeholder).toString(""));
 				copy.removeNamedParameter(placeholder);
 			}
 		}
