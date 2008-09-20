@@ -121,7 +121,7 @@ public class MountedEncoder extends AbstractBookmarkableEncoder
 
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(url,
-				request.getRequestParameters(), 3, pageParametersEncoder);
+				request.getRequestParameters(), mountSegments.length, pageParametersEncoder);
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
 		else
