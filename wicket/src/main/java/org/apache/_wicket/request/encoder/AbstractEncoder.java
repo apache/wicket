@@ -28,9 +28,9 @@ import org.apache._wicket.request.encoder.info.PageInfo;
 import org.apache._wicket.request.encoder.parameters.PageParametersEncoder;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -247,30 +247,13 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 	 * @param name
 	 * @return class
 	 */
-	@SuppressWarnings("unchecked")
 	protected Class<? extends IPage> getPageClass(String name)
 	{
 		if (name == null)
 		{
 			throw new IllegalArgumentException("Argument 'name' may not be null");
 		}
-		try
-		{
-			if (Session.exists())
-			{
-				Session s = Session.get();
-				return (Class<? extends IPage>)s.getClassResolver().resolveClass(name);
-
-			}
-			else
-			{
-				return (Class<? extends IPage>)Class.forName(name);
-			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new WicketRuntimeException("Error resolving bookmarkable page class", e);
-		}
+		return Classes.resolveClass(name);
 	}
 
 	/**
