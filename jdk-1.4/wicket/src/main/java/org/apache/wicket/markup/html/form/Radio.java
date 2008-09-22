@@ -100,9 +100,9 @@ public class Radio extends LabeledWebMarkupContainer
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
-					"Radio component [" +
-							getPath() +
-							"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+				"Radio component [" +
+					getPath() +
+					"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 
@@ -150,13 +150,13 @@ public class Radio extends LabeledWebMarkupContainer
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
-						"=' + this.value;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+					"=' + this.value;");
 			}
 		}
 
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		if (!isEnableAllowed() || !isEnabled() || !group.isEnabled() || !group.isEnableAllowed())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
