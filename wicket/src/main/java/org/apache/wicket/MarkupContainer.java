@@ -965,6 +965,18 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Returns child component at the specified index
+	 * 
+	 * @param index
+	 * @throws ArrayIndexOutOfBoundsException
+	 * @return child component at the specified index
+	 */
+	public final Component get(int index)
+	{
+		return children_get(index);
+	}
+
+	/**
 	 * 
 	 * @param index
 	 * @return The child component
