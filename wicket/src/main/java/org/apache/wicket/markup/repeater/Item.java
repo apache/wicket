@@ -57,6 +57,18 @@ public class Item<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * @param id
+	 *            component id
+	 * @param index
+	 *            relative index of this item in the pageable view
+	 */
+	public Item(final String id, int index)
+	{
+		super(id.intern());
+		this.index = index;
+	}
+
+	/**
 	 * Sets the index of this item
 	 * 
 	 * @param index
