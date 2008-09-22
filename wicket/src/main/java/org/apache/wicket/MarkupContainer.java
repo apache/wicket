@@ -1861,4 +1861,50 @@ public abstract class MarkupContainer extends Component
 			}
 		}
 	}
+
+	/**
+	 * Swaps position of children. This method is particularly useful for adjusting positions of
+	 * repeater's items without rebuilding the component hierarchy
+	 * 
+	 * @param idx1
+	 *            index of first component to be swapped
+	 * @param idx2
+	 *            index of second component to be swapped
+	 */
+	public final void swap(int idx1, int idx2)
+	{
+		int size = children_size();
+		if (idx1 < 0 || idx1 >= size)
+		{
+			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx1 + "<>[0," +
+				size + ")");
+		}
+
+		if (idx2 < 0 || idx2 >= size)
+		{
+			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx2 + "<>[0," +
+				size + ")");
+		}
+
+		if (idx1 == idx2)
+		{
+			return;
+		}
+
+		if (children instanceof Object[])
+		{
+			final Object[] array = (Object[])children;
+			Object tmp = array[idx1];
+			array[idx1] = array[idx2];
+			array[idx2] = tmp;
+		}
+		else
+		{
+			ChildList list = (ChildList)children;
+			Object tmp = list.childs[idx1];
+			list.childs[idx1] = list.childs[idx2];
+			list.childs[idx2] = tmp;
+		}
+
+	}
 }
