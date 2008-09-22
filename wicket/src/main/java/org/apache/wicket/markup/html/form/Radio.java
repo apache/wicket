@@ -161,7 +161,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		}
 
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		if (!isEnableAllowed() || !isEnabled() || !group.isEnabled() || !group.isEnableAllowed())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
