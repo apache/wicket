@@ -52,7 +52,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 	var objonkeypress;
 	var objonchange;
 	var objonchangeoriginal;
-	var objonfocus;
 	
 	// holds the eventual margins, padding, etc. of the menu container.
 	// it is computed when the menu is first rendered, and then reused.
@@ -79,7 +78,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         objonblur=obj.onblur;
         objonkeyup=obj.onkeyup;
         objonkeypress=obj.onkeypress;
-        objonfocus = obj.onfocus;
         
         // WICKET-1280
         objonchangeoriginal=obj.onchange; 
@@ -150,10 +148,13 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_ENTER:
 	                return killEvent(event);
+                case KEY_TAB:
+                    if (cfg.showListOnFocusGain)
+                        updateChoices();
+                    break;
                 case KEY_UP:
                 case KEY_DOWN:
                 case KEY_ESC:
-                case KEY_TAB:
                 case KEY_RIGHT:
                 case KEY_LEFT:
                 case KEY_SHIFT:
@@ -175,12 +176,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
                 }
             }
 			if(typeof objonkeypress=="function")objonkeypress(event);
-        }
-
-        obj.onfocus=function(event){
-            if (cfg.showListOnFocusGain)
-                updateChoices();
-            if(typeof objonfocus=="function")objonfocus();		
         }
     }
 
@@ -276,7 +271,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         var input=wicketGet(elementId);
         var index=getOffsetParentZIndex(elementId);
         container.show();
-        container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
+        container.style.zIndex=(!isNaN(Number(index))?Number(index)+1:index);
         container.style.left=position[0]+'px'
         container.style.top=(input.offsetHeight+position[1])+'px';
         if(cfg.adjustInputWidth)
@@ -310,7 +305,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
     
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
-   		if (!cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
+   		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			return;
    		}
