@@ -27,8 +27,8 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -71,8 +71,7 @@ import org.slf4j.LoggerFactory;
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** log. */
-	private static final Logger log = LoggerFactory
-			.getLogger(CryptedUrlWebRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(CryptedUrlWebRequestCodingStrategy.class);
 
 	/** The default request coding strategy most of the methods are delegated to */
 	private final IRequestCodingStrategy defaultStrategy;
@@ -201,11 +200,11 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 					// encrypt the query string
 					String encryptedQueryString = urlCrypt.encryptUrlSafe(queryString);
 
-                    encryptedQueryString = WicketURLEncoder.QUERY_INSTANCE.encode(encryptedQueryString);
+					encryptedQueryString = WicketURLEncoder.QUERY_INSTANCE.encode(encryptedQueryString);
 
 					// build the new complete url
 					return new AppendingStringBuffer(urlPrefix).append("?x=").append(
-							encryptedQueryString);
+						encryptedQueryString);
 				}
 			}
 		}
@@ -243,8 +242,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 				secureParam = WicketURLDecoder.QUERY_INSTANCE.decode(secureParam);
 
 				// Get the crypt implementation from the application
-				final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory()
-						.newCrypt();
+				final ICrypt urlCrypt = Application.get()
+					.getSecuritySettings()
+					.getCryptFactory()
+					.newCrypt();
 
 				// Decrypt the query string
 				String queryString = urlCrypt.decryptUrlSafe(secureParam);
@@ -256,7 +257,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			}
 			catch (Exception ex)
 			{
-				return onError(ex);
+				return onError(ex, url);
 			}
 		}
 		return null;
@@ -266,12 +267,18 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 * @param ex
 	 * 
 	 * @return decoded URL
+	 * @deprecated Use {@link #onError(Exception, String)}
 	 */
 	protected String onError(final Exception ex)
 	{
-		log.error("Invalid URL", ex);
-
 		throw new HackAttackException("Invalid URL");
+	}
+
+	protected String onError(final Exception ex, String url)
+	{
+		log.error("Invalid URL: " + url, ex);
+
+		return onError(ex);
 	}
 
 	/**
@@ -285,19 +292,19 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected CharSequence shortenUrl(CharSequence queryString)
 	{
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1*");
+			WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2*");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3*");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4*");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5*");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6*");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6*");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=", "7*");
+			WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=", "7*");
 
 		// For debugging only: determine possibilities to further shorten
 		// the query string
@@ -328,19 +335,19 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected String rebuildUrl(CharSequence queryString)
 	{
 		queryString = Strings.replaceAll(queryString, "1*",
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
+			WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
 		queryString = Strings.replaceAll(queryString, "2*",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener");
 		queryString = Strings.replaceAll(queryString, "3*",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener");
 		queryString = Strings.replaceAll(queryString, "4*",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener");
 		queryString = Strings.replaceAll(queryString, "5*",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener");
 		queryString = Strings.replaceAll(queryString, "6*",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=");
+			WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=");
 		queryString = Strings.replaceAll(queryString, "7*",
-				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
+			WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
 
 		return queryString.toString();
 	}
@@ -371,7 +378,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * @param encodedParamReplacement
 		 */
 		public DecodedUrlRequest(final Request request, final String url,
-				final String encodedParamReplacement)
+			final String encodedParamReplacement)
 		{
 			this.request = request;
 
@@ -381,7 +388,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// Remove the 'x' parameter which contains ALL the encoded params
 			parameterMap.remove("x");
 			String decodedParamReplacement = encodedParamReplacement;
-            decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(encodedParamReplacement);
+			decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(encodedParamReplacement);
 
 			// Add ALL of the params from the decoded 'x' param
 			ValueMap params = new ValueMap();
@@ -397,7 +404,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			int pos2 = url.indexOf("&");
 
 			AppendingStringBuffer urlBuf = new AppendingStringBuffer(url.length() +
-					encodedParamReplacement.length());
+				encodedParamReplacement.length());
 			urlBuf.append(url.subSequence(0, pos1 + 1));
 			urlBuf.append(encodedParamReplacement);
 			if (pos2 != -1)
