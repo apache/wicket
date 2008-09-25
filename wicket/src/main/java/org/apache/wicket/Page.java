@@ -727,6 +727,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Determine the "statelessness" of the page while not changing the cached value. 
+	 * 
+	 * @return boolean value
+	 */
+	private boolean peekPageStateless()
+	{
+		Boolean old = stateless;
+		Boolean res = isPageStateless();
+		stateless = old;
+		return res;
+	}
+	
+	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any
 	 * statefull urls, and components on statefull page must not render any stateless urls.
 	 * Statefull urls are urls, which refer to a certain (current) page instance.
@@ -1445,7 +1458,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended
 		// for links rendered before first stateful component
-		if (getSession().isTemporary() && !isPageStateless())
+		if (getSession().isTemporary() && !peekPageStateless())
 		{
 			getSession().bind();
 		}
