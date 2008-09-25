@@ -72,8 +72,8 @@ public class PalettePage extends WicketExamplePage
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(f);<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;List persons = ComponentReferenceApplication.getPersons();;<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new ListModel&lt;Person&gt;(new ArrayList&lt;Person&gt;()), new CollectionModel&lt;Person&gt;(<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;persons), renderer, 10, true);<br/>";
 		add(new ExplainPanel(html, code));
 	}
 }

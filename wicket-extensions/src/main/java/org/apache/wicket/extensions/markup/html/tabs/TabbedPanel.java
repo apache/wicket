@@ -56,7 +56,7 @@ import org.apache.wicket.model.Model;
  * 
  * });
  * 
- * tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ * tabs.add(new AbstractTab(new Model&lt;String&gt;(&quot;second tab&quot;)) {
  * 
  *   public Panel getPanel(String panelId)
  *   {

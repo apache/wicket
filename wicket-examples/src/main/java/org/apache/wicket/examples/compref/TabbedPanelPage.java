@@ -206,13 +206,13 @@ public class TabbedPanelPage extends WicketExamplePage
 	{
 		String html = "<span wicket:id=\"tabs\" class=\"tabpanel\">[tabbed panel will be here]</span>\n";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;List tabs=new ArrayList();<br/>"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"first tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model&lt;String&gt;(\"first tab\")) {<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel1(panelId); }<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"second tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model&lt;String&gt;(\"second tab\")) {<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel2(panelId); }<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model(\"third tab\")) {<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;tabs.add(new AbstractTab(new Model&lt;String&gt;(\"third tab\")) {<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel3(panelId); }<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;add(new TabbedPanel(\"tabs\", tabs)<br/>";
