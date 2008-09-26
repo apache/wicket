@@ -81,15 +81,15 @@ public class RedirectRequestTarget implements IRequestTarget
 			}
 			else
 			{
-				String location = RequestCycle.get() 
-						.getRequest() 
-						.getRelativePathPrefixToContextRoot() + 
-						this.redirectUrl.substring(1); 
+				String location = RequestCycle.get()
+					.getProcessor()
+					.getRequestCodingStrategy()
+					.rewriteStaticRelativeUrl(redirectUrl.substring(1));
 				if (location.startsWith("./"))
-				{ 
-					location = location.substring(2); 
-				} 
-				response.redirect(location); 
+				{
+					location = location.substring(2);
+				}
+				response.redirect(location);
 			}
 		}
 		else if (redirectUrl.contains("://"))

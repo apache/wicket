@@ -21,7 +21,6 @@ import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * A behavior that converts the provider url fragment to a context-relative url. For example if the
@@ -62,24 +61,15 @@ public class ContextPathGenerator extends AbstractBehavior
 	@Override
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
-		// get the path
+		// get path
 		final String path = contextRelativePath.getObject();
 
-		// generate prefix that will make path context relative
-		final String prefix = component.getRequest().getRelativePathPrefixToContextRoot();
+		final String rewritten = component.getRequestCycle()
+			.getProcessor()
+			.getRequestCodingStrategy()
+			.rewriteStaticRelativeUrl(path);
 
-		final String contextRelativePath;
-		if (!Strings.isEmpty(prefix))
-		{
-			// join the two path pieces
-			contextRelativePath = Strings.join("/", prefix, path);
-		}
-		else
-		{
-			contextRelativePath = path;
-		}
-
-		tag.put("src", contextRelativePath);
+		tag.put("src", rewritten);
 	}
 
 	/** {@inheritDoc} **/

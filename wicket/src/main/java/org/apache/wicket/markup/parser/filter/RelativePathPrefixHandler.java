@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.request.IRequestCodingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			String prefix = null;
+			IRequestCodingStrategy coder = RequestCycle.get()
+				.getProcessor()
+				.getRequestCodingStrategy();
 
 			// Modify all relevant attributes
 			for (int i = 0; i < attributeNames.length; i++)
@@ -88,17 +91,11 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
 
+
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					if (prefix == null)
-					{
-						prefix = RequestCycle.get()
-							.getRequest()
-							.getRelativePathPrefixToContextRoot();
-					}
-					attrValue = prefix + attrValue;
-					tag.getAttributes().put(attrName, attrValue);
+					tag.getAttributes().put(attrName, coder.rewriteStaticRelativeUrl(attrValue));
 				}
 			}
 		}

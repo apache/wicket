@@ -161,8 +161,10 @@ public class ExternalLink extends AbstractLink
 					{
 						url = url.substring(1);
 					}
-					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() +
-						url;
+					url = RequestCycle.get()
+						.getProcessor()
+						.getRequestCodingStrategy()
+						.rewriteStaticRelativeUrl(url);
 				}
 
 				// if the tag is an anchor proper

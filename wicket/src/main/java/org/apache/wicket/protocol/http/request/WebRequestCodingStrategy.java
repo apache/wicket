@@ -61,6 +61,7 @@ import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1214,6 +1215,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			return false;
 		}
+	}
+
+	/** {@inheritDoc} */
+	public String rewriteStaticRelativeUrl(String string)
+	{
+		return UrlUtils.rewriteToContextRelative(string, RequestCycle.get().getRequest());
 	}
 
 }
