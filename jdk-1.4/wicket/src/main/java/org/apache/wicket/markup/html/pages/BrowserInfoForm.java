@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html.pages;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -32,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Form for posting JavaScript properties.
  */
-public class BrowserInfoForm extends Panel
+public class BrowserInfoForm extends Panel implements IHeaderContributor
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BrowserInfoForm.class);
@@ -99,6 +102,7 @@ public class BrowserInfoForm extends Panel
 		form.add(new TextField("utcDSTOffset"));
 		form.add(new TextField("browserWidth"));
 		form.add(new TextField("browserHeight"));
+		form.add(new TextField("SVGsupport"));
 		add(form);
 	}
 
@@ -120,6 +124,10 @@ public class BrowserInfoForm extends Panel
 	protected void afterSubmit()
 	{
 
+	}
+
+	public void renderHead(IHeaderResponse response) {
+		response.renderJavascriptReference(new ResourceReference(this.getClass(), "detectSVG.js"));
 	}
 
 	/**
@@ -144,6 +152,7 @@ public class BrowserInfoForm extends Panel
 		private String utcDSTOffset;
 		private String browserWidth;
 		private String browserHeight;
+		private String SVGsupport;
 
 		/**
 		 * Gets browserHeight.
@@ -310,6 +319,7 @@ public class BrowserInfoForm extends Panel
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
 			properties.setUtcDSTOffset(utcDSTOffset);
+			properties.setSVGsupport(SVGsupport);
 		}
 
 		/**
@@ -499,6 +509,25 @@ public class BrowserInfoForm extends Panel
 				// Do nothing
 			}
 			return intValue;
+		}
+
+		/**
+		 * Sets SVGsupport
+		 * 
+		 * @param SVGsupport
+		 *            SVGsupport
+		 */
+		public void setSVGsupport(String gsupport) {
+			SVGsupport = gsupport;
+		}
+
+		/**
+		 * Gets SVGsupport
+		 * 
+		 * @return SVGsupport
+		 */
+		public String getSVGsupport() {
+			return SVGsupport;
 		}
 	}
 }
