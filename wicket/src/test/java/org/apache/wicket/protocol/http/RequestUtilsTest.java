@@ -83,5 +83,11 @@ public class RequestUtilsTest extends TestCase
 			"http://aif.ru/blah/zzz");
 		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/blah/test", "zzz"),
 			"http://aif.ru/blah/zzz");
+		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/blah/test", "./zzz"),
+			"http://aif.ru/blah/zzz");
+		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/blah/test", "./"),
+			"http://aif.ru/blah/");
+		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/", "./"), "http://aif.ru/");
+
 	}
 }
