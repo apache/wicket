@@ -370,7 +370,10 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		}
 		else if (component instanceof Page)
 		{
-			throw new IllegalArgumentException("component cannot be a page");
+			if (component != page)
+			{
+				throw new IllegalArgumentException("component cannot be a page");
+			}
 		}
 		else if (component instanceof AbstractRepeater)
 		{
@@ -522,6 +525,17 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
+		final WebResponse response = (WebResponse)requestCycle.getResponse();
+
+		if (markupIdToComponent.values().contains(page))
+		{
+			// the page itself has been added to the request target, we simply issue a redirect back
+			// to the page
+			final String url = requestCycle.urlFor(page).toString();
+			response.redirect(url);
+			return;
+		}
+
 		for (ITargetRespondListener listener : respondListeners)
 		{
 			listener.onTargetRespond(this);
@@ -533,7 +547,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		final WebResponse response = (WebResponse)requestCycle.getResponse();
 		response.setCharacterEncoding(encoding);
 		response.setContentType("text/xml; charset=" + encoding);
 
@@ -732,7 +745,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
-		final Page page = (Page)component.findParent(Page.class);
+		final Page page = component.findParent(Page.class);
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
