@@ -767,7 +767,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("[MarkupContainer ");
-		buffer.append(super.toString(true));
+		buffer.append(super.toString(detailed));
 		if (detailed)
 		{
 			if (getMarkupStream() != null)

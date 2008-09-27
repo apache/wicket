@@ -3049,7 +3049,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public String toString()
 	{
-		return toString(true);
+		return toString(false);
 	}
 
 	/**
