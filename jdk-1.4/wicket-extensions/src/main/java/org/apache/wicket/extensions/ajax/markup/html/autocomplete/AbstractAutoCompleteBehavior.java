@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * @since 1.2
@@ -55,6 +56,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	protected final String constructInitJS()
 	{
+		final String indicatorId = findIndicatorId();
+
 		StringBuffer sb = new StringBuffer();
 		sb.append("new Wicket.AutoComplete('")
 			.append(getComponent().getMarkupId())
@@ -62,21 +65,30 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			.append(getCallbackUrl())
 			.append("',")
 			.append(constructSettingsJS())
-			.append(");");
+			.append(",");
+		if (Strings.isEmpty(indicatorId))
+		{
+			sb.append("null");
+		}
+		else
+		{
+			sb.append("'").append(findIndicatorId()).append("'");
+		}
+		sb.append(");");
 		return sb.toString();
 	}
 
 	protected final String constructSettingsJS()
 	{
 		final StringBuffer sb = new StringBuffer();
-        sb.append("{preselect: ").append(settings.getPreselect());
-        sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
-        sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
-        sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
-        sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
-        if(settings.getCssClassName() != null)
-            sb.append(",className: '").append(settings.getCssClassName()).append('\'');
-        sb.append('}');
+		sb.append("{preselect: ").append(settings.getPreselect());
+		sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
+		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
+		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
+		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
+		if (settings.getCssClassName() != null)
+			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
+		sb.append('}');
 		return sb.toString();
 	}
 
