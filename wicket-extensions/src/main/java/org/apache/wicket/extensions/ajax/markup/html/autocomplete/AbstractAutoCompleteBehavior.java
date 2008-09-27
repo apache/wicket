@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * @since 1.2
@@ -49,23 +50,34 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		super.renderHead(response);
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
-		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s);", id,
-			getCallbackUrl(), constructSettingsJS());
+
+		String indicatorId = findIndicatorId();
+		if (Strings.isEmpty(indicatorId))
+		{
+			indicatorId = "null";
+		}
+		else
+		{
+			indicatorId = "'" + indicatorId + "'";
+		}
+
+		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
+			getCallbackUrl(), constructSettingsJS(), indicatorId);
 		response.renderOnDomReadyJavascript(initJS);
 	}
 
 	protected final String constructSettingsJS()
 	{
-        final StringBuilder sb = new StringBuilder();
-        sb.append("{preselect: ").append(settings.getPreselect());
-        sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
-        sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
-        sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
-        if(settings.getCssClassName() != null)
-            sb.append(",className: '").append(settings.getCssClassName()).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
+		final StringBuilder sb = new StringBuilder();
+		sb.append("{preselect: ").append(settings.getPreselect());
+		sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
+		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
+		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
+		if (settings.getCssClassName() != null)
+			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()

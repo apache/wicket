@@ -27,7 +27,7 @@ Wicket.AutoCompleteSettings =  {
 	enterHidesWithNoSelection : false
 };
 
-Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
+Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     var KEY_TAB=9;
     var KEY_ENTER=13;
     var KEY_ESC=27;
@@ -257,11 +257,24 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
 
     function actualUpdateChoices()
     {
+    	showIndicator();
         var value = wicketGet(elementId).value;
        	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();
     }
-
+    
+    function showIndicator() {
+    	if (indicatorId!=null) {
+    		Wicket.$(indicatorId).style.display='';
+    	}
+    }
+    
+    function hideIndicator() {
+    	if (indicatorId!=null) {
+    		Wicket.$(indicatorId).style.display='none';
+    	}
+    }
+    
     function processValue(param) {
         return (encodeURIComponent)?encodeURIComponent(param):escape(param);
     }
@@ -353,6 +366,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg){
         
         Wicket.Log.info("Response processed successfully.");
         Wicket.Ajax.invokePostCallHandlers();
+        hideIndicator();
     }
     
     function scheduleEmptyCheck() {
