@@ -49,6 +49,7 @@ import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -1210,9 +1211,39 @@ public class MockHttpServletRequest implements HttpServletRequest
 						component.getClass());
 			}
 
+			// manually create the url using default strategy and format
 			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
 				component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
 				Classes.simpleName(clazz) + "::");
+
+			// see if we can replace our manual listener url with a properly generated one...
+
+			try
+			{
+				RequestListenerInterface rli = (RequestListenerInterface)clazz.getField("INTERFACE")
+					.get(clazz);
+
+				String auto = component.getRequestCycle().urlFor(component, rli).toString();
+				int idx = auto.indexOf(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+				if (idx >= 0)
+				{
+					auto = auto.substring(idx +
+						WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
+				}
+				idx = auto.indexOf("&");
+				if (idx >= 0)
+				{
+					auto = auto.substring(0, idx);
+				}
+
+				parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, auto);
+
+			}
+			catch (Exception e)
+			{
+				// noop
+			}
+
 
 			if (component.isStateless() && component.getPage().isBookmarkable())
 			{
