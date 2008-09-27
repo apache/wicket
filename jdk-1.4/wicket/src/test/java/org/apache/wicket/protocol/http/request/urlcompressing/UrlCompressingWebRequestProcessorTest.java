@@ -18,7 +18,10 @@ package org.apache.wicket.protocol.http.request.urlcompressing;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.IRequestCycleProcessor;
+import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
@@ -61,8 +64,8 @@ public class UrlCompressingWebRequestProcessorTest extends TestCase
 	 */
 	public void test2()
 	{
-		// @TODO Johan, why does this fail with a NumberException????
-		// tester.startPage(new MyPage());
+
+		tester.startPage(new MyPage());
 	}
 
 	/**
@@ -70,17 +73,16 @@ public class UrlCompressingWebRequestProcessorTest extends TestCase
 	 */
 	public void test3()
 	{
-		// @TODO Johan, why does this fail with a NumberException????
-// tester.startPage(new ITestPageSource()
-// {
-// private static final long serialVersionUID = 1L;
-//
-// public Page getTestPage()
-// {
-// PageParameters params = new PageParameters();
-// params.add("0", "param");
-// return new MyPage();
-// }
-// });
+		tester.startPage(new ITestPageSource()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				PageParameters params = new PageParameters();
+				params.add("0", "param");
+				return new MyPage();
+			}
+		});
 	}
 }
