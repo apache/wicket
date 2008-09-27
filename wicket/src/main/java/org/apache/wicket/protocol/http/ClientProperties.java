@@ -93,8 +93,6 @@ public class ClientProperties implements IClusterable
 	private String utcDSTOffset;
 
 	private String utcOffset;
-	private String SVGsupport;
-
 
 	/**
 	 * @return The browser height at the time it was measured
@@ -1052,20 +1050,7 @@ public class ClientProperties implements IClusterable
 		this.utcOffset = utcOffset;
 	}
 
-	/**
-	 * @return null if there is no SVG support, otherwise a String like "<Name>,<Version>" (e.g. "Gecko,2")
-	 */
-	public String getSVGsupport() {
-		return SVGsupport;
-	}
-
-	/**
-	 * @param svgsupport the SVGsupport to set
-	 */
-	public void setSVGsupport(String svgsupport) {
-		SVGsupport = svgsupport;
-	}
-
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();

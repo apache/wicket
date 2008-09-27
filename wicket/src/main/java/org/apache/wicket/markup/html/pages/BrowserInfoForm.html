@@ -43,17 +43,6 @@
           document.postback.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
           document.postback.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
 
-          // SVG detection
-          var svginfo = detectSVG();
-          if(svginfo.support){
-          	  var svgstate = null;
-          	  if(svginfo.support=="Builtin")
-          		   svgstate=svginfo.builtin + ',' + svginfo.builtinVersion;
-          	  else
-          		   svgstate=svginfo.plugin + ',' + svginfo.pluginVersion + ',' + svginfo.IID;
-          	  document.postback.SVGsupport.value = svgstate;
-          }
-
  		  document.postback.submit();
 		}
 		</script>
@@ -75,7 +64,6 @@
 			<input type="text" wicket:id="utcDSTOffset" />
 			<input type="text" wicket:id="browserWidth" />
 			<input type="text" wicket:id="browserHeight" />
-			<input type="text" wicket:id="SVGsupport" />
 		</form>
 	</wicket:panel>
 </html>
