@@ -1578,4 +1578,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 
 	}
+
+	public String getMarkupType()
+	{
+		throw new UnsupportedOperationException(
+			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");
+	}
+
 }
