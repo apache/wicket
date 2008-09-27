@@ -727,7 +727,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Determine the "statelessness" of the page while not changing the cached value. 
+	 * Determine the "statelessness" of the page while not changing the cached value.
 	 * 
 	 * @return boolean value
 	 */
@@ -738,7 +738,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		stateless = old;
 		return res;
 	}
-	
+
 	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any
 	 * statefull urls, and components on statefull page must not render any stateless urls.
@@ -1613,4 +1613,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public void onPageAttached()
 	{
 	}
+
+	@Override
+	public String getMarkupType()
+	{
+		throw new UnsupportedOperationException(
+			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");
+	}
+
 }
