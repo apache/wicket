@@ -185,6 +185,52 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		public abstract void validate(FormComponent<?> formComponent);
 	}
 
+
+	/**
+	 * Visitor used to update component models
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static class FormModelUpdateVisitor implements Component.IVisitor<Component>
+	{
+		private final Form<?> formFilter;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param formFilter
+		 */
+		public FormModelUpdateVisitor(Form<?> formFilter)
+		{
+			this.formFilter = formFilter;
+		}
+
+		/** {@inheritDoc} */
+		public Object component(Component component)
+		{
+			if (component instanceof IFormModelUpdateListener)
+			{
+				final Form<?> form = Form.findForm(component);
+				if (form != null)
+				{
+					if (this.formFilter == null || this.formFilter == form)
+					{
+						if (form.isEnabled() && form.isEnableAllowed())
+						{
+							if (component.isEnabled() && component.isEnableAllowed() &&
+								component.isVisibleInHierarchy())
+							{
+								((IFormModelUpdateListener)component).updateModel();
+							}
+						}
+					}
+				}
+			}
+			return Component.IVisitor.CONTINUE_TRAVERSAL;
+		}
+	}
+
+
 	/**
 	 * 
 	 */
@@ -1871,19 +1917,22 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void internalUpdateFormComponentModels()
 	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
+		FormComponent.visitComponentsPostOrder(this, new FormModelUpdateVisitor(this));
+
+		MarkupContainer border = findParent(Border.class);
+		if (border != null)
 		{
-			@Override
-			public void validate(FormComponent<?> formComponent)
+			Iterator<? extends Component> iter = border.iterator();
+			Component.IVisitor<Component> visitor = new FormModelUpdateVisitor(null);
+			while (iter.hasNext())
 			{
-				Form<?> form = formComponent.getForm();
-				if (form == Form.this)
+				Component child = iter.next();
+				if (child instanceof IFormModelUpdateListener)
 				{
-					// Potentially update the model
-					formComponent.updateModel();
+					visitor.component(child);
 				}
 			}
-		});
+		}
 	}
 
 	/**
@@ -2110,5 +2159,36 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		setDefaultModelObject(object);
 	}
 
+	/**
+	 * @param component
+	 * @return The parent form for component
+	 */
+	public static Form<?> findForm(Component component)
+	{
+		class FindFormVisitor implements Component.IVisitor<Form<?>>
+		{
+			Form<?> form = null;
 
+			public Object component(Form<?> component)
+			{
+				form = component;
+				return Component.IVisitor.STOP_TRAVERSAL;
+			}
+		}
+
+		Form<?> form = component.findParent(Form.class);
+		if (form == null)
+		{
+			// check whether the form is a child of a surrounding border
+			final Border border = component.findParent(Border.class);
+			if (border != null)
+			{
+				FindFormVisitor formVisitor = new FindFormVisitor();
+				border.visitChildren(Form.class, formVisitor);
+				form = formVisitor.form;
+			}
+		}
+		return form;
+
+	}
 }

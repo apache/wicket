@@ -35,7 +35,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
@@ -92,7 +91,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	implements
-		IFormVisitorParticipant
+		IFormVisitorParticipant,
+		IFormModelUpdateListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -430,6 +430,72 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		return null;
 	}
 
+	/**
+	 * Visits any form components inside component if it is a container, or component itself if it
+	 * is itself a form component
+	 * 
+	 * @param component
+	 *            starting point of the traversal
+	 * 
+	 * @param visitor
+	 *            The visitor to call
+	 */
+	public static final void visitComponentsPostOrder(Component component,
+		final Component.IVisitor<Component> visitor)
+	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("Argument `visitor` cannot be null");
+		}
+
+		visitComponentsPostOrderHelper(component, visitor);
+	}
+
+
+	private static final Object visitComponentsPostOrderHelper(Component component,
+		final Component.IVisitor<Component> visitor)
+	{
+		if (component instanceof MarkupContainer)
+		{
+			final MarkupContainer container = (MarkupContainer)component;
+			if (container.size() > 0)
+			{
+				boolean visitChildren = true;
+				if (container instanceof IFormVisitorParticipant)
+				{
+					visitChildren = ((IFormVisitorParticipant)container).processChildren();
+				}
+				if (visitChildren)
+				{
+					final Iterator<? extends Component> children = container.iterator();
+					while (children.hasNext())
+					{
+						final Component child = children.next();
+						Object value = visitComponentsPostOrderHelper(child, visitor);
+						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						{
+							return value;
+						}
+						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL)
+						{
+							// noop
+						}
+						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER)
+						{
+							// noop
+						}
+						else
+						{
+							return value;
+						}
+					}
+				}
+			}
+		}
+		return visitor.component(component);
+	}
+
+
 	private transient T convertedInput;
 
 	/**
@@ -646,35 +712,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public Form<?> getForm()
 	{
-		class FindFormVisitor implements Component.IVisitor<Form<?>>
-		{
-			Form<?> form = null;
-
-			public Object component(Form<?> component)
-			{
-				form = component;
-				return Component.IVisitor.STOP_TRAVERSAL;
-			}
-		}
-
-		Form<?> form = findParent(Form.class);
+		Form<?> form = Form.findForm(this);
 		if (form == null)
 		{
-			// check whether the form is a child of a surrounding border
-			final Border border = findParent(Border.class);
-			if (border != null)
-			{
-				FindFormVisitor formVisitor = new FindFormVisitor();
-				border.visitChildren(Form.class, formVisitor);
-				form = formVisitor.form;
-			}
-			if (form == null)
-			{
-				throw new WicketRuntimeException("Could not find Form parent for " + this);
-			}
+			throw new WicketRuntimeException("Could not find Form parent for " + this);
 		}
 		return form;
 	}
+
 
 	/**
 	 * Gets the request parameter for this component as a string.
