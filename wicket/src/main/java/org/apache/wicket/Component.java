@@ -3144,7 +3144,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	@Override
 	public String toString()
 	{
-		return toString(true);
+		return toString(false);
 	}
 
 	/**
