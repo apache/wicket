@@ -51,10 +51,9 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * reusable components/containers that are packaged with their own string resource bundles it should
  * be the actual component/container rather than the page. For more information on this please see
  * {@link org.apache.wicket.resource.loader.ComponentStringResourceLoader}. The relative component
- * may actually be <code>null</code> when all resource loading is to be done from a global
- * resource loader. However, we recommend that a relative component is still supplied even in these
- * cases in order to 'future proof' your application with regards to changing resource loading
- * strategies.
+ * may actually be <code>null</code> when all resource loading is to be done from a global resource
+ * loader. However, we recommend that a relative component is still supplied even in these cases in
+ * order to 'future proof' your application with regards to changing resource loading strategies.
  * <li><b>model </b>- This parameter is mandatory if either the resourceKey, the found string
  * resource (see below) or any of the substitution parameters (see below) contain property
  * expressions. Where property expressions are present they will all be evaluated relative to this
@@ -65,10 +64,10 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * <code>java.text.MessageFormat</code> object. Each parameter may be an ordinary Object, in which
  * case it will be processed by the standard formatting rules associated with
  * <code>java.text.MessageFormat</code>. Alternatively, the parameter may be an instance of
- * <code>IModel</code> in which case the <code>getObject()</code> method will be applied prior
- * to the parameter being passed to the <code>java.text.MessageFormat</code>. This allows such
- * features dynamic parameters that are obtained using a <code>PropertyModel</code> object or even
- * nested string resource models.
+ * <code>IModel</code> in which case the <code>getObject()</code> method will be applied prior to
+ * the parameter being passed to the <code>java.text.MessageFormat</code>. This allows such features
+ * dynamic parameters that are obtained using a <code>PropertyModel</code> object or even nested
+ * string resource models.
  * </ul>
  * As well as the supplied parameters, the found string resource can contain formatting information.
  * It may contain property expressions in which case these are evaluated using the model object
@@ -468,6 +467,12 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 			{
 				throw new IllegalStateException("No localizer has been set");
 			}
+		}
+
+		// Make sure we have the locale
+		if (locale == null)
+		{
+			locale = Session.get().getLocale();
 		}
 
 		String value = null;
