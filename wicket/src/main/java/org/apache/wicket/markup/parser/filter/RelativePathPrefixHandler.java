@@ -68,7 +68,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	public static final String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "_relative_path_prefix_";
 
 	/** List of attribute names considered */
-	private static final String attributeNames[] = new String[] { "href", "src", "background" };
+	private static final String attributeNames[] = new String[] { "href", "src", "background",
+			"action" };
 
 	/**
 	 * Behavior that adds a prefix to src, href and background attributes to make them
