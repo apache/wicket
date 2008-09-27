@@ -23,8 +23,9 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.wicket.protocol.http.UnitTestSettings;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -39,13 +40,12 @@ import org.slf4j.LoggerFactory;
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRequestTargetUrlCodingStrategy
-		implements
-			IRequestTargetUrlCodingStrategy,
-			IMountableRequestTargetUrlCodingStrategy
+	implements
+		IRequestTargetUrlCodingStrategy,
+		IMountableRequestTargetUrlCodingStrategy
 {
 	/** log. */
-	private static final Logger log = LoggerFactory
-			.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
 
 	/** mounted path. */
 	private final String mountPath;
@@ -168,9 +168,9 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		// If we don't have an even number of pairs
 		if (pairs.length % 2 != 0)
 		{
-			// give up
-			throw new IllegalStateException("URL fragment has unmatched key/value " + "pair: " +
-					urlFragment);
+			log.warn("URL fragment has unmatched key/value pairs, responding with 404. Fragment: " +
+				urlFragment);
+			throw new AbortWithWebErrorCodeException(404);
 		}
 
 		// Loop through pairs
@@ -192,76 +192,78 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		return parameters;
 	}
 
-    /**
-     * Url encodes a string that is mean for a URL path (e.g., between slashes)
-     *
-     * @param string
-     *            string to be encoded
-     * @return encoded string
-     */
-    protected String urlEncodePathComponent(String string)
-    {
-        return WicketURLEncoder.PATH_INSTANCE.encode(string);
-    }
+	/**
+	 * Url encodes a string that is mean for a URL path (e.g., between slashes)
+	 * 
+	 * @param string
+	 *            string to be encoded
+	 * @return encoded string
+	 */
+	protected String urlEncodePathComponent(String string)
+	{
+		return WicketURLEncoder.PATH_INSTANCE.encode(string);
+	}
 
-    /**
+	/**
 	 * Returns a decoded value of the given value (taken from a URL path section)
-	 *
+	 * 
 	 * @param value
 	 * @return Decodes the value
 	 */
 	protected String urlDecodePathComponent(String value)
 	{
-        return WicketURLDecoder.PATH_INSTANCE.decode(value);
+		return WicketURLDecoder.PATH_INSTANCE.decode(value);
 	}
 
-    /**
+	/**
 	 * Url encodes a string mean for a URL query string
-	 *
+	 * 
 	 * @param string
 	 *            string to be encoded
 	 * @return encoded string
 	 */
 	protected String urlEncodeQueryComponent(String string)
 	{
-        return WicketURLEncoder.QUERY_INSTANCE.encode(string);
-	}
-
-    /**
-     * Returns a decoded value of the given value (taken from a URL query string)
-     *
-     * @param value
-     * @return Decodes the value
-     */
-    protected String urlDecodeQueryComponent(String value)
-    {
-        return WicketURLDecoder.QUERY_INSTANCE.decode(value);
-    }
-
-    /**
-	 * @deprecated  Use urlEncodePathComponent or urlEncodeQueryComponent instead
-	 */
-	protected String urlDecode(String value)
-	{
-        return urlDecodePathComponent(value);
+		return WicketURLEncoder.QUERY_INSTANCE.encode(string);
 	}
 
 	/**
-	 * @deprecated  Use urlEncodePathComponent or urlEncodeQueryComponent instead
+	 * Returns a decoded value of the given value (taken from a URL query string)
+	 * 
+	 * @param value
+	 * @return Decodes the value
 	 */
-	protected String urlEncode(String string)
+	protected String urlDecodeQueryComponent(String value)
 	{
-        return urlEncodePathComponent(string);
+		return WicketURLDecoder.QUERY_INSTANCE.decode(value);
 	}
 
-    /**
-     * Does given path match this mount? We match /mount/point or /mount/point/with/extra/path, but not
-	 * /mount/pointXXX.
-     *
-     * @param path
-     * @return true if matches, false otherwise
-     */
-    public boolean matches(String path)
+	/**
+	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
+	 */
+	@Deprecated
+	protected String urlDecode(String value)
+	{
+		return urlDecodePathComponent(value);
+	}
+
+	/**
+	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
+	 */
+	@Deprecated
+	protected String urlEncode(String string)
+	{
+		return urlEncodePathComponent(string);
+	}
+
+	/**
+	 * Does given path match this mount? We match /mount/point or /mount/point/with/extra/path, but
+	 * not /mount/pointXXX.
+	 * 
+	 * @param path
+	 * @return true if matches, false otherwise
+	 */
+	public boolean matches(String path)
 	{
 		if (path.startsWith(mountPath))
 		{
