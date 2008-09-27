@@ -48,11 +48,11 @@ public class Application implements ApplicationMBean
 		// do this so that we don't have to cast all the time
 		if (application instanceof WebApplication)
 		{
-			this.webApplication = (WebApplication)application;
+			webApplication = (WebApplication)application;
 		}
 		else
 		{
-			this.webApplication = null;
+			webApplication = null;
 		}
 	}
 
@@ -137,5 +137,13 @@ public class Application implements ApplicationMBean
 	public String getWicketVersion() throws IOException
 	{
 		return application.getFrameworkSettings().getVersion();
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.ApplicationMBean#clearLocalizerCache()
+	 */
+	public void clearLocalizerCache() throws IOException
+	{
+		application.getResourceSettings().getLocalizer().clearCache();
 	}
 }

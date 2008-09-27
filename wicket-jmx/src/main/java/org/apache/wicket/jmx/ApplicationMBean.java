@@ -91,4 +91,11 @@ public interface ApplicationMBean
 	 * @throws IOException
 	 */
 	String getWicketVersion() throws IOException;
+
+	/**
+	 * Clears the localizer cache.
+	 * 
+	 * @throws IOException
+	 */
+	void clearLocalizerCache() throws IOException;
 }
