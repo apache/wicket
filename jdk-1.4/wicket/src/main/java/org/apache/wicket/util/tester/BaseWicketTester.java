@@ -1128,19 +1128,8 @@ public class BaseWicketTester extends MockWebApplication
 		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
 			" which matches the event: " + event;
 		notNull(failMessage, ajaxEventBehavior);
+		WebRequestCycle requestCycle = resolveRequestCycle();
 
-		// initialize the request only if needed to allow the user to pass
-		// request parameters, see
-		// WICKET-254
-		WebRequestCycle requestCycle;
-		if (RequestCycle.get() == null)
-		{
-			requestCycle = setupRequestAndResponse(true);
-		}
-		else
-		{
-			requestCycle = (WebRequestCycle)RequestCycle.get();
-		}
 		// when the requestcycle is not created via setupRequestAndResponse(true), it can happen
 		// that the request is not an ajax request -> we have to set the header manually
 		if (!requestCycle.getWebRequest().isAjax())
@@ -1163,6 +1152,23 @@ public class BaseWicketTester extends MockWebApplication
 
 		// process the request target
 		processRequestCycle(requestCycle);
+	}
+
+	protected WebRequestCycle resolveRequestCycle()
+	{
+		// initialize the request only if needed to allow the user to pass
+		// request parameters, see
+		// WICKET-254
+		WebRequestCycle requestCycle;
+		if (RequestCycle.get() == null)
+		{
+			requestCycle = setupRequestAndResponse(true);
+		}
+		else
+		{
+			requestCycle = (WebRequestCycle)RequestCycle.get();
+		}
+		return requestCycle;
 	}
 
 	/**

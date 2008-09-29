@@ -61,6 +61,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
+				target.addComponent(this);
 			}
 		});
 	}
