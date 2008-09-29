@@ -46,7 +46,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 	 */
 	public MockPageWithFormAndCheckGroup()
 	{
-		Form<?> form = new Form("form");
+		Form<?> form = new Form<Void>("form");
 		add(form);
 
 
@@ -64,6 +64,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
+				target.addComponent(this);
 			}
 		});
 	}
