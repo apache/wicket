@@ -681,21 +681,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		else
 		{
 			final StringBuffer buf = new StringBuffer();
-            for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-            {
-                final String name = (String)iterator.next();
-                final String value = parameters.getString(name);
-                if (name != null)
-                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
-                buf.append('=');
-                if (value != null)
-                    buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
-                if (iterator.hasNext())
-                {
-                    buf.append('&');
-                }
-            }
-            return buf.toString();
+			for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String name = (String)iterator.next();
+				final String value = parameters.getString(name);
+				if (name != null)
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
+				buf.append('=');
+				if (value != null)
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
+				if (iterator.hasNext())
+				{
+					buf.append('&');
+				}
+			}
+			return buf.toString();
 		}
 	}
 
@@ -1224,6 +1224,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 					auto = auto.substring(idx +
 						WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
 				}
+				else
+				{
+					// additional check for crypted strategy
+					idx = auto.indexOf("x=6*");
+					if (idx >= 0)
+					{
+						auto = auto.substring(idx + 4);
+					}
+				}
+
 				idx = auto.indexOf("&");
 				if (idx >= 0)
 				{
