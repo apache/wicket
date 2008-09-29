@@ -1230,6 +1230,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 					auto = auto.substring(idx +
 						WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
 				}
+				else
+				{
+					// additional check for crypted strategy
+					idx = auto.indexOf("x=6*");
+					if (idx >= 0)
+					{
+						auto = auto.substring(idx + 4);
+					}
+				}
+
 				idx = auto.indexOf("&");
 				if (idx >= 0)
 				{
