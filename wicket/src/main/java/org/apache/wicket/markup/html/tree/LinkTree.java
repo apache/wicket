@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
 /**
  * Simple tree component that provides node panel with link allowing user to select individual
  * nodes.
- * 
+ *
  * @author Matej Knopp
  */
 public class LinkTree extends LabelTree
@@ -35,7 +35,7 @@ public class LinkTree extends LabelTree
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 */
 	public LinkTree(String id)
@@ -44,9 +44,9 @@ public class LinkTree extends LabelTree
 	}
 
 	/**
-	 * 
+	 *
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 *            model that provides the {@link TreeModel}
@@ -57,14 +57,13 @@ public class LinkTree extends LabelTree
 	}
 
 	/**
-	 * 
+	 *
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 *            Tree model
 	 */
-	@SuppressWarnings("unchecked")
 	public LinkTree(String id, TreeModel model)
 	{
 		super(id, new WicketTreeModel());
@@ -100,7 +99,7 @@ public class LinkTree extends LabelTree
 
 	/**
 	 * Method invoked after the node has been selected / unselected.
-	 * 
+	 *
 	 * @param node
 	 * @param tree
 	 * @param target
