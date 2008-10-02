@@ -122,8 +122,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy)
 	{
@@ -387,8 +386,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			// Remove the 'x' parameter which contains ALL the encoded params
 			parameterMap.remove("x");
-			String decodedParamReplacement = encodedParamReplacement;
-			decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(encodedParamReplacement);
+			// first replace all &amp; with & else the they wont be encoded because there where
+			// encrypted.
+			String decodedParamReplacement = Strings.replaceAll(encodedParamReplacement, "&amp;",
+				"&").toString();
+
+			decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(decodedParamReplacement);
 
 			// Add ALL of the params from the decoded 'x' param
 			ValueMap params = new ValueMap();
