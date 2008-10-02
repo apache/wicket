@@ -868,12 +868,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					{
 						formToProcess = submittingComponent.getForm();
 					}
+
 					// process the form for this request
-					if (formToProcess.process())
-					{
-						// let clients handle further processing
-						delegateSubmit(submittingComponent);
-					}
+					process(submittingComponent);
 				}
 			}
 		}
@@ -885,6 +882,33 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 	}
 
+
+	/**
+	 * Process the form. Though you can override this method to provide your own algorithm, it is
+	 * not recommended to do so.
+	 * 
+	 * <p>
+	 * See the class documentation for further details on the form processing
+	 * </p>
+	 * 
+	 * @param submittingComponent
+	 *            component responsible for submitting the form, or <code>null</code> if none (eg
+	 *            the form has been submitted via the enter key or javascript calling
+	 *            form.onsubmit())
+	 * 
+	 * @see #delegateSubmit(IFormSubmittingComponent) for an easy way to process submitting
+	 *      component in the default manner
+	 */
+	public void process(IFormSubmittingComponent submittingComponent)
+	{
+		// process the form for this request
+		if (process())
+		{
+			// let clients handle further processing
+			delegateSubmit(submittingComponent);
+		}
+	}
+
 	/**
 	 * Process the form. Though you can override this method to provide your whole own algorithm, it
 	 * is not recommended to do so.
@@ -892,8 +916,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * See the class documentation for further details on the form processing
 	 * </p>
 	 * 
+	 * @deprecated use {@link #process(IFormSubmittingComponent)}
+	 * 
 	 * @return False if the form had an error
 	 */
+	@Deprecated
 	public boolean process()
 	{
 		if (!isEnabled() || !isEnableAllowed() || !isVisibleInHierarchy())
