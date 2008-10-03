@@ -346,6 +346,8 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// flag markup as non-existent
+
+		markupKeyCache.put(cacheKey, cacheKey);
 		return putIntoCache(cacheKey, container, Markup.NO_MARKUP);
 	}
 
