@@ -34,6 +34,8 @@ import java.util.Random;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.time.Time;
 
 
@@ -118,8 +120,9 @@ public final class CaptchaImageResource extends DynamicImageResource
 		return new String(b);
 	}
 
-	private final String challengeId;
-	private final List<CharAttributes> charAttsList;
+	private final IModel<String> challengeId;
+	private Integer challengeIdhashCode;
+	private List<CharAttributes> charAttsList;
 
 	private final List<String> fontNames = Arrays.asList(new String[] { "Helventica", "Arial",
 			"Courier" });
@@ -135,6 +138,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	private int width = 0;
 
+
 	/**
 	 * Construct.
 	 */
@@ -147,9 +151,21 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * Construct.
 	 * 
 	 * @param challengeId
-	 * 		The id of the challenge
+	 *            The id of the challenge
 	 */
 	public CaptchaImageResource(String challengeId)
+	{
+		this(new Model<String>(challengeId));
+	}
+
+	/**
+	 * 
+	 * Construct.
+	 * 
+	 * @param challengeId
+	 *            The id of the challenge
+	 */
+	public CaptchaImageResource(IModel<String> challengeId)
 	{
 		this(challengeId, 48, 30);
 	}
@@ -158,21 +174,105 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * Construct.
 	 * 
 	 * @param challengeId
-	 * 		The id of the challenge
+	 *            The id of the challenge
 	 * @param fontSize
-	 * 		The font size
+	 *            The font size
 	 * @param margin
-	 * 		The image's margin
+	 *            The image's margin
 	 */
-	public CaptchaImageResource(String challengeId, int fontSize, int margin)
+	public CaptchaImageResource(IModel<String> challengeId, int fontSize, int margin)
 	{
 		this.challengeId = challengeId;
 		fontStyle = 1;
 		this.fontSize = fontSize;
 		this.margin = margin;
-		width = this.margin * 2;
-		height = this.margin * 2;
-		char[] chars = challengeId.toCharArray();
+	}
+
+	/**
+	 * 
+	 * Construct.
+	 * 
+	 * @param challengeId
+	 *            The id of the challenge
+	 * @param fontSize
+	 *            The font size
+	 * @param margin
+	 *            The image's margin
+	 */
+	public CaptchaImageResource(String challengeId, int fontSize, int margin)
+	{
+		this(new Model<String>(challengeId), fontSize, margin);
+	}
+
+	/**
+	 * Gets the id for the challenge.
+	 * 
+	 * @return The id for the challenge
+	 */
+	public final String getChallengeId()
+	{
+		return challengeId.getObject();
+	}
+
+	/**
+	 * Gets the id for the challenge
+	 * 
+	 * @return The id for the challenge
+	 */
+	public final IModel<String> getChallengeIdModel()
+	{
+		return challengeId;
+	}
+
+	/**
+	 * Causes the image to be redrawn the next time its requested.
+	 * 
+	 * @see org.apache.wicket.Resource#invalidate()
+	 */
+	@Override
+	public final void invalidate()
+	{
+		challengeIdhashCode = null;
+		imageData = null;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
+	 */
+	@Override
+	protected final byte[] getImageData()
+	{
+		// get image data is always called in sync block
+		byte[] data = null;
+		if (imageData != null && challengeIdhashCode != null &&
+			challengeIdhashCode.equals(challengeId.getObject().hashCode()))
+		{
+			data = imageData.get();
+		}
+		if (data == null)
+		{
+			data = render();
+			imageData = new SoftReference<byte[]>(data);
+			setLastModifiedTime(Time.now());
+		}
+		return data;
+	}
+
+	private Font getFont(String fontName)
+	{
+		return new Font(fontName, fontStyle, fontSize);
+	}
+
+	/**
+	 * Renders this image
+	 * 
+	 * @return The image data
+	 */
+	private final byte[] render()
+	{
+		width = margin * 2;
+		height = margin * 2;
+		char[] chars = challengeId.getObject().toCharArray();
 		charAttsList = new ArrayList<CharAttributes>();
 		TextLayout text;
 		AffineTransform textAt;
@@ -200,62 +300,6 @@ public final class CaptchaImageResource extends DynamicImageResource
 				height = (int)shape.getBounds2D().getHeight() + rise;
 			}
 		}
-	}
-
-	/**
-	 * Gets the id for the challenge.
-	 * 
-	 * @return The the id for the challenge
-	 */
-	public final String getChallengeId()
-	{
-		return challengeId;
-	}
-
-	/**
-	 * Causes the image to be redrawn the next time its requested.
-	 * 
-	 * @see org.apache.wicket.Resource#invalidate()
-	 */
-	@Override
-	public final void invalidate()
-	{
-		imageData = null;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
-	 */
-	@Override
-	protected final byte[] getImageData()
-	{
-		// get image data is always called in sync block
-		byte[] data = null;
-		if (imageData != null)
-		{
-			data = imageData.get();
-		}
-		if (data == null)
-		{
-			data = render();
-			imageData = new SoftReference<byte[]>(data);
-			setLastModifiedTime(Time.now());
-		}
-		return data;
-	}
-
-	private Font getFont(String fontName)
-	{
-		return new Font(fontName, fontStyle, fontSize);
-	}
-
-	/**
-	 * Renders this image
-	 * 
-	 * @return The image data
-	 */
-	private final byte[] render()
-	{
 		while (true)
 		{
 			final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -265,13 +309,13 @@ public final class CaptchaImageResource extends DynamicImageResource
 			for (int i = 0; i < charAttsList.size(); i++)
 			{
 				CharAttributes cf = charAttsList.get(i);
-				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()),
+				text = new TextLayout(cf.getChar() + "", getFont(cf.getName()),
 					gfx.getFontRenderContext());
-				AffineTransform textAt = new AffineTransform();
+				textAt = new AffineTransform();
 				textAt.translate(curWidth, height - cf.getRise());
 				textAt.rotate(cf.getRotation());
 				textAt.shear(cf.getShearX(), cf.getShearY());
-				Shape shape = text.getOutline(textAt);
+				shape = text.getOutline(textAt);
 				curWidth += shape.getBounds().getWidth();
 				gfx.setXORMode(Color.BLACK);
 				gfx.fill(shape);
