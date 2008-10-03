@@ -1165,7 +1165,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * convertInput(), and validateValidators(). This method should only be used if the form
 	 * component needs to be fully validated outside the form process.
 	 */
-	public final void validate()
+	public void validate()
 	{
 		validateRequired();
 		if (isValid())
