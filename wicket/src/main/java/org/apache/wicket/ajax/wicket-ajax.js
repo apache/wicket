@@ -271,12 +271,15 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	}
 
     // remove the original element
+	if(element.style.backgroundImage)
+		element.style.backgroundImage = "";
 	parent.removeChild(element);
-
 	element.outerHTML = "";	
 	element = "";
 	
 	if (window.parent == window || window.parent == null) {
+		if(tempDiv.style.backgroundImage)
+			tempDiv.style.backgroundImage = "";
 		document.body.removeChild(tempDiv);
 	}	
 	
