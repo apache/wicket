@@ -18,14 +18,12 @@ package org.apache.wicket.request.target.basic;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
@@ -66,9 +64,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	public PageParameters decodeParameters(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
-				getMountPath().length());
-		return new PageParameters(decodeParameters(parametersFragment, requestParameters
-				.getParameters()));
+			getMountPath().length());
+		return new PageParameters(decodeParameters(parametersFragment,
+			requestParameters.getParameters()));
 	}
 
 	/**
@@ -92,7 +90,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
 			throw new IllegalArgumentException("This encoder can only be used with " +
-					"instances of " + IBookmarkablePageRequestTarget.class.getName());
+				"instances of " + IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -106,8 +104,8 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-					.encodePageMapName(pagemap));
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP,
+				WebRequestCodingStrategy.encodePageMapName(pagemap));
 		}
 		appendParameters(url, pageParameters);
 		return url;
@@ -133,6 +131,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 * @param parameters
 	 *            parameter names mapped to parameter values
 	 */
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 
@@ -148,15 +147,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 		// Copied from QueryStringUrlCodingStrategy
 		if (parameters != null && parameters.size() > 0)
 		{
-			final Iterator entries;
-			if (UnitTestSettings.getSortUrlParameters())
-			{
-				entries = new TreeMap(parameters).entrySet().iterator();
-			}
-			else
-			{
-				entries = parameters.entrySet().iterator();
-			}
+			final Iterator entries = parameters.entrySet().iterator();
 			WebRequestEncoder encoder = new WebRequestEncoder(url);
 			while (entries.hasNext())
 			{
@@ -184,6 +175,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
+	@Override
 	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		// Hack off any leading slash

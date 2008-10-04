@@ -36,7 +36,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
@@ -316,10 +315,6 @@ public class WicketTester extends BaseWicketTester
 	public WicketTester(final WebApplication application, final String path)
 	{
 		super(application, path);
-
-		// We need to turn this on for unit testing so that url encoding will be
-		// done on sorted maps of parameters and they will string compare
-		UnitTestSettings.setSortUrlParameters(true);
 	}
 
 

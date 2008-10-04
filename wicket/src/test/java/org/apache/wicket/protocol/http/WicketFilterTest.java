@@ -48,7 +48,6 @@ import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 public class WicketFilterTest extends TestCase
 {
 	private static WebApplication application;
-	private final DateFormat fullDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 	private final DateFormat headerDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z",
 		Locale.UK);
 
@@ -117,8 +116,7 @@ public class WicketFilterTest extends TestCase
 		Calendar nextWeek = Calendar.getInstance();
 		nextWeek.add(Calendar.DATE, 7);
 		nextWeek.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String ifModifiedSince = fullDateFormat.format(nextWeek.getTime());
-		request.addHeader("If-Modified-Since", ifModifiedSince);
+		request.addDateHeader("If-Modified-Since", nextWeek.getTimeInMillis());
 	}
 
 	private String getFilterPath(String string, InputStream in)

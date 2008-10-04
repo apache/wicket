@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -272,6 +273,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 			headers.put(name, list);
 		}
 		list.add(value);
+	}
+
+	/**
+	 * @param name
+	 * @param date
+	 */
+	public void addDateHeader(String name, long date)
+	{
+		DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
+		String dateString = df.format(new Date(date));
+		addHeader(name, dateString);
 	}
 
 	/**

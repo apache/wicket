@@ -19,10 +19,8 @@ package org.apache.wicket.request.target.coding;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -90,15 +88,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
-			final Iterator entries;
-			if (UnitTestSettings.getSortUrlParameters())
-			{
-				entries = new TreeMap(parameters).entrySet().iterator();
-			}
-			else
-			{
-				entries = parameters.entrySet().iterator();
-			}
+			final Iterator entries = parameters.entrySet().iterator();
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();

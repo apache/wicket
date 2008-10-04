@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeSet;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -426,15 +425,7 @@ public class MockWebApplication
 					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
 				if (params != null)
 				{
-					final Iterator<String> iterator;
-					if (UnitTestSettings.getSortUrlParameters())
-					{
-						iterator = new TreeSet<String>(params.keySet()).iterator();
-					}
-					else
-					{
-						iterator = params.keySet().iterator();
-					}
+					final Iterator<String> iterator = params.keySet().iterator();
 					while (iterator.hasNext())
 					{
 						final String key = iterator.next();

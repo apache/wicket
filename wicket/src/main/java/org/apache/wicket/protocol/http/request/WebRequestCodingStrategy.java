@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
@@ -44,7 +43,6 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -155,13 +153,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * map of path mounts for mount encoders on paths.
 	 * <p>
 	 * mountsOnPath is sorted by longest paths first to improve resolution of possible path
-	 * conflicts. <br /> For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
-	 * Page1 uses a parameters encoder that only encodes parameter values <br /> now suppose we want
-	 * to access Page1 with a single parameter param="test". we have a url collision since both
-	 * pages can be access with /page/test <br /> the sorting by longest path first guarantees that
-	 * the iterator will return the mount /page/test before it returns mount /page therefore giving
-	 * deterministic behavior to path resolution by always trying to match the longest possible path
-	 * first.
+	 * conflicts. <br />
+	 * For example: <br/>
+	 * we mount Page1 on /page and Page2 on /page/test <br />
+	 * Page1 uses a parameters encoder that only encodes parameter values <br />
+	 * now suppose we want to access Page1 with a single parameter param="test". we have a url
+	 * collision since both pages can be access with /page/test <br />
+	 * the sorting by longest path first guarantees that the iterator will return the mount
+	 * /page/test before it returns mount /page therefore giving deterministic behavior to path
+	 * resolution by always trying to match the longest possible path first.
 	 * </p>
 	 */
 	private final MountsMap mountsOnPath;
@@ -770,15 +770,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			final Iterator<String> iterator;
-			if (UnitTestSettings.getSortUrlParameters())
-			{
-				iterator = new TreeSet<String>(parameters.keySet()).iterator();
-			}
-			else
-			{
-				iterator = parameters.keySet().iterator();
-			}
+			final Iterator<String> iterator = parameters.keySet().iterator();
 			while (iterator.hasNext())
 			{
 				final String key = iterator.next();

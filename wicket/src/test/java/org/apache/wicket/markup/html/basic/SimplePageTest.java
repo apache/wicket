@@ -105,7 +105,7 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
-			"<span testAttr=\"myValue\" wicket:id=\"myBorder2\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
 			document);
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
@@ -116,7 +116,7 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
-			"<span testAttr=\"myValue\" wicket:id=\"myBorder2\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
 			document);
 
 		WebMarkupContainer container = (WebMarkupContainer)tester.getLastRenderedPage().get("test");
@@ -185,7 +185,7 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
-			"<span testAttr=\"myValue\" wicket:id=\"myBorder2\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
 			document);
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
@@ -196,7 +196,7 @@ public class SimplePageTest extends WicketTestCase
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
-			"<span testAttr=\"myValue\" wicket:id=\"myBorder2\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
 			document);
 
 		WebMarkupContainer container = (WebMarkupContainer)page.get("test");

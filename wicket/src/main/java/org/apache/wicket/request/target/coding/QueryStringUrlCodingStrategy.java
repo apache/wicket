@@ -18,13 +18,11 @@ package org.apache.wicket.request.target.coding;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -36,15 +34,15 @@ import org.apache.wicket.util.value.ValueMap;
  * in a URL query string rather than integrated into a URL hierarchical path.
  * <p>
  * For example, whereas
- * {@link org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy BookmarkablePageRequestTargetUrlCodingStrategy}
- * might encode a request target as
+ * {@link org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy
+ * BookmarkablePageRequestTargetUrlCodingStrategy} might encode a request target as
  * "mywebapp/myservlet/admin/productmanagement/action/edit/product/4995",
  * <code>QueryStringRequestTargetUrlCodingStrategy</code> would encode the same target as
  * "mywebapp/myservlet/admin/productmanagement?action=edit&amp;product=4995".
  * <p>
  * URLs encoded in this way can be bookmarked just as easily as those produced by
- * <code>BookmarkablePageRequestTargetUrlCodingStrategy</code>. For example, Google searches
- * produce bookmarkable links with query strings.
+ * <code>BookmarkablePageRequestTargetUrlCodingStrategy</code>. For example, Google searches produce
+ * bookmarkable links with query strings.
  * <p>
  * Whether <code>BookmarkablePageRequestTargetUrlCodingStrategy</code> or
  * <code>QueryStringRequestTargetUrlCodingStrategy</code> is appropriate for a given mount depends
@@ -73,17 +71,17 @@ import org.apache.wicket.util.value.ValueMap;
  * to insert a bookmarkable link to the request target.
  * <p>
  * This example demonstrates how to mount a path with
- * <code>QueryStringRequestTargetUrlCodingStrategy</code> within the <code>init</code> method of
- * a class implementing {@link org.apache.wicket.protocol.http.WebApplication WebApplication}:
+ * <code>QueryStringRequestTargetUrlCodingStrategy</code> within the <code>init</code> method of a
+ * class implementing {@link org.apache.wicket.protocol.http.WebApplication WebApplication}:
  * <p>
  * <code>mount(new QueryStringUrlCodingStrategy("/admin/productmanagement", admin.ProductManagement.class));</code>
  * <p>
  * Note that, as with the main BookmarkablePageRequestTargetUrlCodingStrategy, if the output of this
  * coding strategy is passed through
- * {@link javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String) HttpServletResponse.encodeURL}
- * and the client has cookies turned off, the client's session ID will be stored in a path
- * parameter, like so:
- * "/mywebapp/myservlet/admin/productmanagement;jsessionid=730EC527564AF1C73F8C2FB19B604F55?action=edit&amp;product=4995".
+ * {@link javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
+ * HttpServletResponse.encodeURL} and the client has cookies turned off, the client's session ID
+ * will be stored in a path parameter, like so:"/mywebapp/myservlet/admin/productmanagement;jsessionid=730EC527564AF1C73F8C2FB19B604F55?action=edit&amp;product=4995"
+ * .
  * 
  * @author Benjamin Hawkes-Lewis
  */
@@ -111,19 +109,12 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @param parameters
 	 *            parameter names mapped to parameter values
 	 */
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
-			final Iterator entries;
-			if (UnitTestSettings.getSortUrlParameters())
-			{
-				entries = new TreeMap(parameters).entrySet().iterator();
-			}
-			else
-			{
-				entries = parameters.entrySet().iterator();
-			}
+			final Iterator entries = parameters.entrySet().iterator();
 			WebRequestEncoder encoder = new WebRequestEncoder(url);
 			while (entries.hasNext())
 			{
@@ -137,6 +128,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		}
 	}
 
+	@Override
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		String pageMapName = requestParameters.getPageMapName();
@@ -147,9 +139,8 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		if (requestParameters.getInterfaceName() != null)
 		{
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-				(Class)bookmarkablePageClassRef.get(), parameters,
-				requestParameters.getComponentPath(), requestParameters.getInterfaceName(),
-				requestParameters.getVersionNumber());
+				bookmarkablePageClassRef.get(), parameters, requestParameters.getComponentPath(),
+				requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else
 		{
@@ -168,6 +159,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * 
 	 * @return Parameters
 	 */
+	@Override
 	protected ValueMap decodeParameters(String fragment, Map passedParameters)
 	{
 		ValueMap parameters = new ValueMap();
