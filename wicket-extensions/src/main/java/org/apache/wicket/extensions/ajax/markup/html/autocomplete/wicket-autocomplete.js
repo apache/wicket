@@ -128,7 +128,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                         var value = getSelectedValue();
                         if(value = handleSelection(value)) {
                           obj.value = value;
-                          if(typeof objonchange=="function") objonchange();
+                          if(typeof objonchange=="function") objonchange(event);
                         }
                         hideAutoComplete();
                         hidingAutocomplete = 1;
@@ -137,7 +137,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                         hidingAutocomplete = 1;
                     }
 	                mouseactive=0;
-	                if(typeof objonkeydown=="function")objonkeydown();
+	                if(typeof objonkeydown=="function")objonkeydown(event);
 
 	                if(selected>-1){
 	                	//return killEvent(event);
@@ -152,10 +152,13 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_ENTER:
 	                return killEvent(event);
+                case KEY_TAB:
+                    if (cfg.showListOnFocusGain)
+                        updateChoices();
+                    break;
                 case KEY_UP:
                 case KEY_DOWN:
                 case KEY_ESC:
-                case KEY_TAB:
                 case KEY_RIGHT:
                 case KEY_LEFT:
                 case KEY_SHIFT:
@@ -165,7 +168,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 default:
     	            updateChoices();
             }
-			if(typeof objonkeyup=="function")objonkeyup();
+			if(typeof objonkeyup=="function")objonkeyup(event);
             return null;
         }
 
@@ -176,7 +179,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			        return killEvent(event);
                 }
             }
-			if(typeof objonkeypress=="function")objonkeypress();
+			if(typeof objonkeypress=="function")objonkeypress(event);
         }
     }
 
@@ -285,7 +288,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         var input=wicketGet(elementId);
         var index=getOffsetParentZIndex(elementId);
         container.show();
-        container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index);
+        container.style.zIndex=(!isNaN(Number(index))?Number(index)+1:index);
         container.style.left=position[0]+'px'
         container.style.top=(input.offsetHeight+position[1])+'px';
         if(cfg.adjustInputWidth)
@@ -319,7 +322,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
-   		if (!cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
+   		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			return;
    		}
@@ -335,8 +338,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			if(value = handleSelection(value)) {
 				wicketGet(elementId).value=value;
 				if (typeof objonchange=="function") {objonchange();}
-				hideAutoComplete();
 			}
+			hideAutoComplete();
 		};
 			
 		var mouseOverFunc = function(event){
