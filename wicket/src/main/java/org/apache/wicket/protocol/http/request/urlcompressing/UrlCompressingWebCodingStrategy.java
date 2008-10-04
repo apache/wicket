@@ -60,7 +60,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 	 * @return the encoded url
 	 */
 	protected CharSequence encode(RequestCycle requestCycle,
-			IListenerInterfaceRequestTarget requestTarget)
+		IListenerInterfaceRequestTarget requestTarget)
 	{
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
@@ -89,7 +89,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 			url.append(page.getId());
 			url.append(Component.PATH_SEPARATOR);
 			url.append(((WebPage)page).getUrlCompressor().getUIDForComponentAndInterface(component,
-					listenerName));
+				listenerName));
 			listenerName = null;
 		}
 		else
@@ -131,10 +131,10 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		{
 			url.append(params.getUrlDepth());
 		}
-		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
+		if (IActivePageBehaviorListener.INTERFACE.getName().equals(rli.getName()))
 		{
 			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
-					IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}

@@ -262,7 +262,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			}
 			catch (Exception ex)
 			{
-				return onError(ex);
+				return onError(ex, url);
 			}
 		}
 		return null;
@@ -272,12 +272,18 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 * @param ex
 	 * 
 	 * @return decoded URL
+	 * @deprecated Use {@link #onError(Exception, String)}
 	 */
 	protected String onError(final Exception ex)
 	{
-		log.error("Invalid URL", ex);
-
 		throw new HackAttackException("Invalid URL");
+	}
+
+	protected String onError(final Exception ex, String url)
+	{
+		log.error("Invalid URL: " + url, ex);
+
+		return onError(ex);
 	}
 
 	/**
@@ -386,8 +392,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			// Remove the 'x' parameter which contains ALL the encoded params
 			parameterMap.remove("x");
-			String decodedParamReplacement = encodedParamReplacement;
-			decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(encodedParamReplacement);
+			// first replace all &amp; with & else the they wont be encoded because there where
+			// encrypted.
+			String decodedParamReplacement = Strings.replaceAll(encodedParamReplacement, "&amp;",
+				"&").toString();
+
+			decodedParamReplacement = WicketURLDecoder.QUERY_INSTANCE.decode(decodedParamReplacement);
 
 			// Add ALL of the params from the decoded 'x' param
 			ValueMap params = new ValueMap();
