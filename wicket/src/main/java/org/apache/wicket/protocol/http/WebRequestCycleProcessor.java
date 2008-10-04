@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.AccessStackPageMap.Access;
@@ -58,10 +59,10 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	 *      org.apache.wicket.request.RequestParameters)
 	 */
 	public IRequestTarget resolve(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+		final RequestParameters requestParameters)
 	{
 		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-				.getRequestCodingStrategy();
+			.getRequestCodingStrategy();
 
 		final String path = requestParameters.getPath();
 		IRequestTarget target = null;
@@ -88,7 +89,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 
 					Session session = Session.get();
 					IPageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
-							false);
+						false);
 					if (pageMap == null)
 					{
 						// requested pagemap no longer exists - ignore this
@@ -101,11 +102,10 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 						if (accessStackPageMap.getAccessStack().size() > 0)
 						{
 							final Access access = (Access)accessStackPageMap.getAccessStack()
-									.peek();
+								.peek();
 
-							final int pageId = Integer
-									.parseInt(Strings.firstPathComponent(requestParameters
-											.getComponentPath(), Component.PATH_SEPARATOR));
+							final int pageId = Integer.parseInt(Strings.firstPathComponent(
+								requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
 
 							if (pageId != access.getId())
 							{
@@ -117,7 +117,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 							{
 								final int version = requestParameters.getVersionNumber();
 								if (version != Page.LATEST_VERSION &&
-										version != access.getVersion())
+									version != access.getVersion())
 								{
 									// version is no longer the active version -
 									// ignore this request
@@ -145,7 +145,16 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 			else
 			{
-				throw new PageExpiredException("Request cannot be processed");
+				Request request = requestCycle.getRequest();
+				if (request instanceof WebRequest && ((WebRequest)request).isAjax())
+				{
+					// if processRequest is false in an ajax request just have an empty ajax target
+					target = EmptyAjaxRequestTarget.getInstance();
+				}
+				else
+				{
+					throw new PageExpiredException("Request cannot be processed");
+				}
 			}
 		}
 		// See whether this request points to a shared resource
@@ -179,10 +188,10 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 				// If the target is still null and there was a component path
 				// then the Page could not be located in the session
 				throw new PageExpiredException(
-						"Cannot find the rendered page in session [pagemap=" +
-								requestParameters.getPageMapName() + ",componentPath=" +
-								requestParameters.getComponentPath() + ",versionNumber=" +
-								requestParameters.getVersionNumber() + "]");
+					"Cannot find the rendered page in session [pagemap=" +
+						requestParameters.getPageMapName() + ",componentPath=" +
+						requestParameters.getComponentPath() + ",versionNumber=" +
+						requestParameters.getVersionNumber() + "]");
 			}
 		}
 		else
@@ -190,28 +199,25 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			// a target was found, but not by looking up a mount. check whether
 			// this is allowed
 			if (Application.get().getSecuritySettings().getEnforceMounts() &&
-					requestCodingStrategy.pathForTarget(target) != null)
+				requestCodingStrategy.pathForTarget(target) != null)
 			{
 				String msg = "Direct access not allowed for mounted targets";
 				// the target was mounted, but we got here via another path
 				// : deny the request
 				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target +
-						",session=" + Session.get() + "]");
+					",session=" + Session.get() + "]");
 				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
 			}
 		}
 
-		// (WICKET-1356) in case no target was found, return null here. RequestCycle will deal with it
-		// possible letting wicket filter to pass the request down the filter chain		
+		// (WICKET-1356) in case no target was found, return null here. RequestCycle will deal with
+		// it
+		// possible letting wicket filter to pass the request down the filter chain
 		/*
-		if (target == null)
-		{
-			// if we get here, we have no recognized Wicket target, and thus
-			// regard this as a external (non-wicket) resource request on
-			// this server
-			return resolveExternalResource(requestCycle);
-		}
-		*/
+		 * if (target == null) { // if we get here, we have no recognized Wicket target, and thus //
+		 * regard this as a external (non-wicket) resource request on // this server return
+		 * resolveExternalResource(requestCycle); }
+		 */
 
 		return target;
 	}
