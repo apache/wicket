@@ -258,7 +258,8 @@ public class WicketFilter implements Filter
 					else
 					{
 						httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-						httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + Duration.hours(1).getMilliseconds());
+						httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() +
+							Duration.hours(1).getMilliseconds());
 					}
 				}
 			}
@@ -322,42 +323,7 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
 
-			// If the request does not provide information about the encoding of
-			// its body (which includes POST parameters), than assume the
-			// default encoding as defined by the wicket application. Bear in
-			// mind that the encoding of the request usually is equal to the
-			// previous response.
-			// However it is a known bug of IE that it does not provide this
-			// information. Please see the wiki for more details and why all
-			// other browser deliberately copied that bug.
-			if (servletRequest.getCharacterEncoding() == null)
-			{
-				try
-				{
-					// It this request is a wicket-ajax request, we need decode the
-					// request always by UTF-8, because the request data is encoded by
-					// encodeUrlComponent() JavaScript function, which always encode data
-					// by UTF-8.
-					String wicketAjaxHeader = servletRequest.getHeader("wicket-ajax");
-					if (wicketAjaxHeader != null && wicketAjaxHeader.equals("true"))
-					{
-						servletRequest.setCharacterEncoding("UTF-8");
-					}
-					else
-					{
-						// The encoding defined by the wicket settings is used to
-						// encode the responses. Thus, it is reasonable to assume
-						// the request has the same encoding. This is especially
-						// important for forms and form parameters.
-						servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
-							.getResponseRequestEncoding());
-					}
-				}
-				catch (UnsupportedEncodingException ex)
-				{
-					throw new WicketRuntimeException(ex.getMessage());
-				}
-			}
+			checkCharacterEncoding(servletRequest);
 
 			// Create a new webrequest
 			final WebRequest request = webApplication.newWebRequest(servletRequest);
@@ -465,6 +431,46 @@ public class WicketFilter implements Filter
 			}
 		}
 		return true;
+	}
+
+	private void checkCharacterEncoding(final HttpServletRequest servletRequest)
+	{
+		// If the request does not provide information about the encoding of
+		// its body (which includes POST parameters), than assume the
+		// default encoding as defined by the wicket application. Bear in
+		// mind that the encoding of the request usually is equal to the
+		// previous response.
+		// However it is a known bug of IE that it does not provide this
+		// information. Please see the wiki for more details and why all
+		// other browser deliberately copied that bug.
+		if (servletRequest.getCharacterEncoding() == null)
+		{
+			try
+			{
+				// It this request is a wicket-ajax request, we need decode the
+				// request always by UTF-8, because the request data is encoded by
+				// encodeUrlComponent() JavaScript function, which always encode data
+				// by UTF-8.
+				String wicketAjaxHeader = servletRequest.getHeader("wicket-ajax");
+				if (wicketAjaxHeader != null && wicketAjaxHeader.equals("true"))
+				{
+					servletRequest.setCharacterEncoding("UTF-8");
+				}
+				else
+				{
+					// The encoding defined by the wicket settings is used to
+					// encode the responses. Thus, it is reasonable to assume
+					// the request has the same encoding. This is especially
+					// important for forms and form parameters.
+					servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
+						.getResponseRequestEncoding());
+				}
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				throw new WicketRuntimeException(ex.getMessage());
+			}
+		}
 	}
 
 	/**
@@ -1011,6 +1017,8 @@ public class WicketFilter implements Filter
 				// If resource found and it is cacheable
 				if ((resource != null) && resource.isCacheable())
 				{
+					// first check the char encoding for getting the parameters
+					checkCharacterEncoding(servletRequest);
 
 					final WebRequest request = webApplication.newWebRequest(servletRequest);
 					// make the session available.
