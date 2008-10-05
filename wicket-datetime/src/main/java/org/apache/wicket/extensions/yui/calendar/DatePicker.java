@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -72,6 +73,21 @@ import org.joda.time.DateTime;
  */
 public class DatePicker extends AbstractBehavior implements IHeaderContributor
 {
+	private static Method GETINSTANCEMETHOD = null;
+	static
+	{
+		try
+		{
+			GETINSTANCEMETHOD = DateFormatSymbols.class.getMethod("getInstance",
+					new Class[] { Locale.class });
+		}
+		catch (Exception e)
+		{
+			// ignore
+		}
+
+	}
+
 	/**
 	 * Exception thrown when the bound component does not produce a format this date picker can work
 	 * with.
@@ -524,7 +540,25 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	protected void localize(Map<String, Object> widgetProperties)
 	{
-		DateFormatSymbols dfSymbols = new DateFormatSymbols(getLocale());
+		DateFormatSymbols dfSymbols = null;
+		if (GETINSTANCEMETHOD != null)
+		{
+			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
+			try
+			{
+				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null,
+						new Object[] { getLocale() });
+			}
+			catch (Exception e)
+			{
+				// ignore
+			}
+		}
+		if (dfSymbols == null)
+		{
+			dfSymbols = new DateFormatSymbols(getLocale());
+		}
+
 		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()))
 		{
 			dfSymbols.setShortWeekdays(new String[] { "", "\u65E5", "\u4E00", "\u4E8C", "\u4E09",
@@ -597,7 +631,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * selection of month and year.
 	 * 
 	 * @return <code>true</code> if select boxes should be rendered to allow month and year
-	 *         selection.<br/><code>false</code> to render just plain text.
+	 *         selection.<br/>
+	 *         <code>false</code> to render just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
 	{
@@ -607,9 +642,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Indicates whether the calendar should be hidden after a date was selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden after the date selection
-	 *         <br/><code>false</code> if the calendar should remain visible after the date
-	 *         selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden after the date selection <br/>
+	 *         <code>false</code> if the calendar should remain visible after the date selection.
 	 */
 	protected boolean hideOnSelect()
 	{
@@ -631,8 +665,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * Override this method to further customize the YUI Calendar with additional Javascript code.
 	 * The code returned by this method is executed right after the Calendar has been constructed
 	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code> in
-	 * your code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
+	 * your code.<br/>
+	 * See <a href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for
+	 * more information about the YUI Calendar.<br/>
+	 * Example:
 	 * 
 	 * <pre>
 	 * protected String getAdditionalJavascript()
