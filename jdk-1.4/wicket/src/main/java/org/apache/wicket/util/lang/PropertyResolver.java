@@ -36,23 +36,27 @@ import org.slf4j.LoggerFactory;
  * NOTE: THIS CLASS IS NOT PART OF THE WICKET PUBLIC API, DO NOT USE IT UNLESS YOU KNOW WHAT YOU ARE
  * DOING.
  * <p>
- * This class parses expressions to lookup or set a value on the object that is given. <br/> The
- * supported expressions are:
+ * This class parses expressions to lookup or set a value on the object that is given. <br/>
+ * The supported expressions are:
  * <p>
  * "property": This can can then be a bean property with get and set method. Or if a map is given as
  * an object it will be lookup with the property as a key when there is not get method for that
- * property. <p/>
+ * property.
+ * <p/>
  * <p>
  * "property1.property2": Both properties are lookup as written above. If property1 evaluates to
  * null then if there is a setMethod (or if it is a map) and the Class of the property has a default
- * constructor then the object will be constructed and set on the object. <p/>
+ * constructor then the object will be constructed and set on the object.
+ * <p/>
  * <p>
  * "property.index": If the property is a List or Array then the second property can be a index on
  * that list like: 'mylist.0' this expression will also map on a getProperty(index) or
  * setProperty(index,value) methods. If the object is a List then the list will grow automatically
- * if the index is greater then the size <p/>
+ * if the index is greater then the size
+ * <p/>
  * <p>
- * Index or map properties can also be written as: "property[index]" or "property[key]" <p/>
+ * Index or map properties can also be written as: "property[index]" or "property[key]"
+ * <p/>
  * 
  * @author jcompagner
  */
@@ -722,7 +726,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
@@ -759,7 +763,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
@@ -815,7 +819,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
@@ -867,7 +871,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
@@ -943,7 +947,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
@@ -1102,7 +1106,8 @@ public final class PropertyResolver
 			else
 			{
 				throw new WicketRuntimeException("no set method defined for value: " + value +
-					" on object: " + object);
+					" on object: " + object + " while respective getMethod being " +
+					getMethod.getName());
 			}
 		}
 
@@ -1266,7 +1271,7 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(Object, Object,
 		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
