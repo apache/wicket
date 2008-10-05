@@ -23,7 +23,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class LastButton extends WizardButton
+public class LastButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +43,7 @@ public final class LastButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return getWizardModel().isLastAvailable();
@@ -51,6 +52,7 @@ public final class LastButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#isVisible()
 	 */
+	@Override
 	public final boolean isVisible()
 	{
 		return getWizardModel().isLastVisible();
@@ -59,6 +61,7 @@ public final class LastButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();

@@ -24,7 +24,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class NextButton extends WizardButton
+public class NextButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,7 @@ public final class NextButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return getWizardModel().isNextAvailable();
@@ -50,6 +51,7 @@ public final class NextButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
@@ -67,13 +69,14 @@ public final class NextButton extends WizardButton
 		else
 		{
 			error(getLocalizer().getString(
-					"org.apache.wicket.extensions.wizard.NextButton.step.did.not.complete", this));
+				"org.apache.wicket.extensions.wizard.NextButton.step.did.not.complete", this));
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
+	@Override
 	protected final void onBeforeRender()
 	{
 		getForm().setDefaultButton(this);

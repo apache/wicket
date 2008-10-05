@@ -22,7 +22,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class PreviousButton extends WizardButton
+public class PreviousButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +43,7 @@ public final class PreviousButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return getWizardModel().isPreviousAvailable();
@@ -51,6 +52,7 @@ public final class PreviousButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		getWizardModel().previous();

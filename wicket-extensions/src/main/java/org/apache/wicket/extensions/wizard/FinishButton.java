@@ -22,7 +22,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class FinishButton extends WizardButton
+public class FinishButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,7 @@ public final class FinishButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		IWizardStep activeStep = getWizardModel().getActiveStep();
@@ -51,6 +52,7 @@ public final class FinishButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
@@ -67,7 +69,7 @@ public final class FinishButton extends WizardButton
 		else
 		{
 			error(getLocalizer().getString(
-					"org.apache.wicket.extensions.wizard.FinishButton.step.did.not.complete", this));
+				"org.apache.wicket.extensions.wizard.FinishButton.step.did.not.complete", this));
 		}
 	}
 }
