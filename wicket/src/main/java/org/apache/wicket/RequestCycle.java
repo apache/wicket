@@ -1352,6 +1352,7 @@ public abstract class RequestCycle
 					// if a redirect exception has been issued we abort what we
 					// were doing and begin responding to the top target on the
 					// stack
+					response.reset();
 					currentStep = RESPOND;
 				}
 			}
