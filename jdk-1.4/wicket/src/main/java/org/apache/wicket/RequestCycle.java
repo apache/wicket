@@ -835,6 +835,10 @@ public abstract class RequestCycle
 			{
 				pageParameters = new PageParameters();
 			}
+			else
+			{
+				pageParameters = (PageParameters)pageParameters.clone();
+			}
 
 			if (params != null)
 			{
