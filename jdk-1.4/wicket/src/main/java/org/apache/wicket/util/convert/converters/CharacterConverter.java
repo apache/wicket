@@ -27,7 +27,7 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CharacterConverter extends AbstractConverter
+public class CharacterConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 

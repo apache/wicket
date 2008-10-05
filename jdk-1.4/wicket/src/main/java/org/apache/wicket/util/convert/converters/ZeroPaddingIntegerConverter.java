@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Jonathan Locke
  * @author Al Maw
  */
-public final class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
+public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 

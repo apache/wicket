@@ -27,7 +27,7 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class DoubleConverter extends AbstractDecimalConverter
+public class DoubleConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
