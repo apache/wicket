@@ -22,7 +22,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class CancelButton extends WizardButton
+public class CancelButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 

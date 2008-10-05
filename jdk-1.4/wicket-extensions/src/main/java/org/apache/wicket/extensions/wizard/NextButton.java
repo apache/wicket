@@ -24,7 +24,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class NextButton extends WizardButton
+public class NextButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
@@ -67,7 +67,7 @@ public final class NextButton extends WizardButton
 		else
 		{
 			error(getLocalizer().getString(
-					"org.apache.wicket.extensions.wizard.NextButton.step.did.not.complete", this));
+				"org.apache.wicket.extensions.wizard.NextButton.step.did.not.complete", this));
 		}
 	}
 

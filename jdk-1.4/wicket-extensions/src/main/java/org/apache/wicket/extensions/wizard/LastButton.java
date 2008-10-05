@@ -23,7 +23,7 @@ package org.apache.wicket.extensions.wizard;
  * 
  * @author Eelco Hillenius
  */
-public final class LastButton extends WizardButton
+public class LastButton extends WizardButton
 {
 	private static final long serialVersionUID = 1L;
 
