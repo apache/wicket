@@ -774,10 +774,22 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			{
 				// ignore this one could be a result off.
 			}
+			// Restore original response
+			RequestCycle.get().setResponse(originalResponse);
+			encodingBodyResponse.reset();
 			throw e;
 		}
 
-		component.renderComponent();
+		try
+		{
+			component.renderComponent();
+		}
+		catch (RuntimeException e)
+		{
+			RequestCycle.get().setResponse(originalResponse);
+			encodingBodyResponse.reset();
+			throw e;
+		}
 
 		page.endComponentRender(component);
 

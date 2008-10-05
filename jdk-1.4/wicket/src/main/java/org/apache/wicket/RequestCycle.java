@@ -22,7 +22,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.protocol.http.*;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.IRequestLogger;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
@@ -76,8 +79,7 @@ import org.slf4j.LoggerFactory;
  * argument will be used. Links to bookmarkable pages are created by calling the urlFor(Class,
  * PageParameters) method, where Class is the page class and PageParameters are the parameters to
  * encode into the URL.
- * <p>
- * </td>
+ * <p></td>
  * </tr>
  * <tr>
  * <td valign = "top"><b>2. </b></td>
@@ -117,9 +119,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th>
- * <th align = "left">Interface</th>
- * <th align="left">Purpose</th>
+ * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -844,13 +844,13 @@ public abstract class RequestCycle
 					final Map.Entry entry = (Entry)it.next();
 					final String key = entry.getKey().toString();
 					final String value = entry.getValue().toString();
-                    // Do not encode values here.  It is the encoder's job
-                    // to do the endoding.  This leads to double encoding
-                    // - Doug Donohoe
-                    // @see https://issues.apache.org/jira/browse/WICKET-1627
-                    //pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
-                    pageParameters.add(key, value);
-                }
+					// Do not encode values here. It is the encoder's job
+					// to do the endoding. This leads to double encoding
+					// - Doug Donohoe
+					// @see https://issues.apache.org/jira/browse/WICKET-1627
+					// pageParameters.add(encodeQueryStringItem(key), encodeQueryStringItem(value));
+					pageParameters.add(key, value);
+				}
 			}
 
 			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
@@ -904,7 +904,7 @@ public abstract class RequestCycle
 	 */
 	private static String encodeQueryStringItem(String value)
 	{
-        return WicketURLEncoder.QUERY_INSTANCE.encode(value);
+		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
 	}
 
 	/**
@@ -1354,6 +1354,7 @@ public abstract class RequestCycle
 					// if a redirect exception has been issued we abort what we
 					// were doing and begin responding to the top target on the
 					// stack
+					response.reset();
 					currentStep = RESPOND;
 				}
 			}
@@ -1421,8 +1422,8 @@ public abstract class RequestCycle
 	/**
 	 * Called when an unrecoverable runtime exception during request cycle handling occurred, which
 	 * will result in displaying a user facing error page. Clients can override this method in case
-	 * they want to customize logging. NOT called for
-	 * {@link PageExpiredException page expired exceptions}.
+	 * they want to customize logging. NOT called for {@link PageExpiredException page expired
+	 * exceptions}.
 	 * 
 	 * @param e
 	 *            the runtime exception
