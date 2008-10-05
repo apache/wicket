@@ -27,7 +27,7 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FloatConverter extends AbstractDecimalConverter
+public class FloatConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 

@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class BooleanConverter extends AbstractConverter
+public class BooleanConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
