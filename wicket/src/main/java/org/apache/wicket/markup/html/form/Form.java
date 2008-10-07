@@ -870,7 +870,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					}
 
 					// process the form for this request
-					process(submittingComponent);
+					formToProcess.process(submittingComponent);
 				}
 			}
 		}
