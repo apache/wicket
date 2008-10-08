@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.target.basic;
 
-import java.io.OutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.wicket.Application;
@@ -24,8 +24,6 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.util.resource.StringBufferResourceStream;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -43,19 +41,49 @@ public class StringRequestTarget implements IRequestTarget
 	private final String contentType;
 
 	/** charset of the string */
-	private final Charset charset;
+	private final String encoding;
 
 
 	/**
-	 * Creates a string request target with content type <code>text/plain</code> and default charset
-	 * (usually UTF-8)
+	 * Creates a string request target with content type <code>text/plain</code> and default
+	 * charset (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response
 	 */
 	public StringRequestTarget(String string)
 	{
-		this("text/plain", getDefaultCharset(), string);
+		this("text/plain", getDefaultEncoding(), string);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param contentType
+	 *            content type of the data the string represents eg
+	 *            <code>text/html; charset=utf-8</code>
+	 * @param encoding
+	 *            charset to use
+	 * @param string
+	 *            string for the response
+	 */
+	public StringRequestTarget(String contentType, String encoding, String string)
+	{
+		if (string == null)
+		{
+			throw new IllegalArgumentException("Argument string must be not null");
+		}
+		if (Strings.isEmpty(contentType))
+		{
+			throw new IllegalArgumentException("Argument contentType must not be null or empty");
+		}
+		if (encoding == null)
+		{
+			throw new IllegalArgumentException("Argument charset must not be null");
+		}
+		this.contentType = contentType;
+		this.string = string;
+		this.encoding = encoding;
 	}
 
 	/**
@@ -68,24 +96,11 @@ public class StringRequestTarget implements IRequestTarget
 	 *            charset to use
 	 * @param string
 	 *            string for the response
+	 * @deprecated use {@link #StringRequestTarget(String, String, String)} instead
 	 */
 	public StringRequestTarget(String contentType, Charset charset, String string)
 	{
-		if (string == null)
-		{
-			throw new IllegalArgumentException("Argument string must be not null");
-		}
-		if (Strings.isEmpty(contentType))
-		{
-			throw new IllegalArgumentException("Argument contentType must not be null or empty");
-		}
-		if (charset == null)
-		{
-			throw new IllegalArgumentException("Argument charset must not be null");
-		}
-		this.contentType = contentType;
-		this.string = string;
-		this.charset = charset;
+		this(contentType, (String)charset.aliases().iterator().next(), string);
 	}
 
 	/**
@@ -93,13 +108,9 @@ public class StringRequestTarget implements IRequestTarget
 	 * 
 	 * @return charset
 	 */
-	private static Charset getDefaultCharset()
+	private static String getDefaultEncoding()
 	{
-		final String charsetName = Application.get()
-			.getRequestCycleSettings()
-			.getResponseRequestEncoding();
-
-		return Charset.forName(charsetName);
+		return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 	}
 
 
@@ -112,28 +123,16 @@ public class StringRequestTarget implements IRequestTarget
 	{
 		// Get servlet response to use when responding with resource
 		final Response response = requestCycle.getResponse();
-		response.setContentType(contentType);
-		final StringBufferResourceStream stream = new StringBufferResourceStream(contentType);
-		stream.setCharset(charset);
-		stream.append(string);
+		response.setContentType(contentType + ";charset=" + encoding);
 
-		// Respond with resource
+		// send string to client
 		try
 		{
-			final OutputStream out = response.getOutputStream();
-			try
-			{
-				Streams.copy(stream.getInputStream(), out);
-			}
-			finally
-			{
-				stream.close();
-				out.flush();
-			}
+			response.getOutputStream().write(string.getBytes(encoding));
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new WicketRuntimeException("Unable to render resource stream " + stream, e);
+			throw new WicketRuntimeException("Unable to render string: " + e.getMessage(), e);
 		}
 	}
 
