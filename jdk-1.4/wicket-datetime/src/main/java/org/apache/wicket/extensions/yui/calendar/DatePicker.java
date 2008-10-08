@@ -355,6 +355,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 *            the name space id of the widget
 	 * @param b
 	 *            the buffer to append the script to
+	 * @deprecated this method is never called since a while, and it seems that
+	 *             {@link #getAdditionalJavascript()} is good enough of a replacement. To be removed
+	 *             in 1.4 and up.
 	 */
 	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
 			StringBuffer b)
@@ -626,8 +629,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * selection of month and year.
 	 * 
 	 * @return <code>true</code> if select boxes should be rendered to allow month and year
-	 *         selection.<br/>
-	 *         <code>false</code> to render just plain text.
+	 *         selection.<br/> <code>false</code> to render just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
 	{
@@ -637,8 +639,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Indicates whether the calendar should be hidden after a date was selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden after the date selection <br/>
-	 *         <code>false</code> if the calendar should remain visible after the date selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden after the date
+	 *         selection <br/> <code>false</code> if the calendar should remain visible after the
+	 *         date selection.
 	 */
 	protected boolean hideOnSelect()
 	{
@@ -659,11 +662,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Override this method to further customize the YUI Calendar with additional Javascript code.
 	 * The code returned by this method is executed right after the Calendar has been constructed
-	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code> in
-	 * your code.<br/>
-	 * See <a href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for
-	 * more information about the YUI Calendar.<br/>
-	 * Example:
+	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code>
+	 * in your code.<br/> See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
+	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
 	 * 
 	 * <pre>
 	 * protected String getAdditionalJavascript()
