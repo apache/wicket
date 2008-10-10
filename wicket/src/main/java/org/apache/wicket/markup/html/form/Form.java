@@ -1971,15 +1971,24 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * that can be added using addValidator().
 	 * </p>
 	 */
-	protected void validate()
+	protected final void validate()
 	{
 		if (isEnabled() && isEnableAllowed() && isVisibleInHierarchy())
 		{
 			// since this method can be called directly by users, this additional check is needed
 			validateComponents();
 			validateFormValidators();
+			onValidate();
 			validateNestedForms();
 		}
+	}
+
+	/**
+	 * Callback during the validation stage of the form
+	 */
+	protected void onValidate()
+	{
+
 	}
 
 	/**
@@ -2098,6 +2107,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				{
 					form.validateComponents();
 					form.validateFormValidators();
+					form.onValidate();
 					return CONTINUE_TRAVERSAL;
 				}
 				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
