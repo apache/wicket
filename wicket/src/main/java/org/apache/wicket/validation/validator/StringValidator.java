@@ -96,7 +96,8 @@ public abstract class StringValidator extends AbstractValidator<String>
 		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("length", new Integer((validatable.getValue()).length()));
+			map.put("length", (validatable.getValue() != null) ? new Integer(
+				(validatable.getValue()).length()) : 0);
 			map.put("exact", new Integer(length));
 			return map;
 		}
