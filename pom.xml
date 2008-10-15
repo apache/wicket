@@ -29,14 +29,6 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<distributionManagement>
-	  <snapshotRepository>
-	    <id>repo</id>
-	    <name>Local Bamboo/Tomcat repository</name>
-	    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
-	    <uniqueVersion>false</uniqueVersion>
-	  </snapshotRepository>
-	</distributionManagement>			
 	<profiles>
 		<profile>
 			<id>jdk-1.4</id>
@@ -108,51 +100,67 @@
 					</plugin>
 				</plugins>
 			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>repo</id>
+					<name>Local Bamboo/Tomcat repository</name>
+					<url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>			
 		</profile>
-				<profile>
-					<id>bamboo-jdk-1.5</id>
-					<activation>
-						<activeByDefault>false</activeByDefault>
-					</activation>
-					<modules>
-						<module>jdk-1.5</module>
-					</modules>
-					<build>
-						<plugins>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-assembly-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-		<!--
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-gpg-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-		-->
-							<plugin>
-								<artifactId>maven-remote-resources-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-javadoc-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-source-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-surefire-plugin</artifactId>
-								<inherited>true</inherited>
-							</plugin>
-						</plugins>
-					</build>
-				</profile>
+		<profile>
+			<id>bamboo-jdk-1.5</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>jdk-1.5</module>
+			</modules>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+<!--
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+-->
+					<plugin>
+						<artifactId>maven-remote-resources-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>repo</id>
+					<name>Local Bamboo/Tomcat repository</name>
+					<url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>			
+		</profile>
 		<profile>
 			<id>release</id>
 			<activation>
