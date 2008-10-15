@@ -1595,6 +1595,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Creates an IValidatable that can be used to validate this form component. This validatable
 	 * encorporates error key lookups that correspend to this form component.
 	 * 
+	 * This method is useful when validation needs to happen outside the regular validation workflow
+	 * but error messages should still be properly reported against the form component.
+	 * 
 	 * @return IValidatable<T> for this form component
 	 */
 	public final IValidatable<T> newValidatable()
