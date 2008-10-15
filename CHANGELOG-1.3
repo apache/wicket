@@ -1,4 +1,186 @@
-This file contains the changes done to the 1.3.x releases sinse 1.3-final.
+This file contains the changes done to the 1.3.x releases since 1.3-final.
+
+Release Notes - Wicket - Version 1.3.5
+
+** Sub-task
+    * [WICKET-1580] - StatelessForm doesn't work if GET method on form is used
+    * [WICKET-1805] - Allow to change charset in StringRequestTarget: change CharSet used by the OutStream as well
+
+** Bug
+    * [WICKET-406] - form fields are reset when a file upload fails
+    * [WICKET-431] - Modal window can not be closed after session timeout
+    * [WICKET-622] - Component.toString() is unsafe 
+    * [WICKET-625] - Wicket doesn't clean up properly when hot-deploying; hangs onto Class references.
+    * [WICKET-847] - setResponsePage redirects to wrong url
+    * [WICKET-861] - NumberFormatException with UrlCompressingWebRequestProcessor in WicketTester
+    * [WICKET-928] - Exception when clicking two times rapidly on the "next" button in a wizard
+    * [WICKET-1003] - Modal Window Does Not Close When Using IndicatingAjaxButton
+    * [WICKET-1104] - Modal window sticks to cursor on resize
+    * [WICKET-1120] - Problem closing a ModalWindow when used through an IFrame
+    * [WICKET-1161] - DiskPageStore should write the sessions index file to disk on destroy (from WicketFilter.destroy())
+    * [WICKET-1205] - Relative path calculations for inline paths in non-bookmarkable pages are incorrect on Tomcat.
+    * [WICKET-1346] - Generated HTML page contains incorrect content when "WicketMessage: No get method defined for class"
+    * [WICKET-1376] - Using AbstractAjaxTimerBehavior and mounting that page gives exception
+    * [WICKET-1413] - RequestUtils.toAbsolutePath() has a bug regarding to UTF-8 encoded page parameter.
+    * [WICKET-1425] - appendToInit() method is not called in class DatePicker
+    * [WICKET-1437] - Pagemap lock calculates timeout wrong
+    * [WICKET-1449] - './' appended to URL causes HTTP 404 in Internet Explorer (using root context)
+    * [WICKET-1450] - Ajax Re-render does not work after AbstractRestartResponseException()
+    * [WICKET-1471] - FeedbackPanel does not work properly in clustered environment
+    * [WICKET-1478] - AbortWithWebErrorCodeException in onBeforeRender causes WicketRuntimeException
+    * [WICKET-1494] - IntegerConvert cannot handle locale specific input/output
+    * [WICKET-1496] - DataTable.html does not validate (HTML 4.01/XHTML-Strict)
+    * [WICKET-1520] - JavaScriptStripper breaks prototype.js 
+    * [WICKET-1535] - ExternalLink JavaScript not working in FF 3
+    * [WICKET-1577] - Int based PropertyModel throws convertion error
+    * [WICKET-1582] - WicketTester executeAjaxEvent onclick generating non-AJAX response
+    * [WICKET-1634] - ClassName needs conversion from Path to dotted notation in AutoLinkResolver
+    * [WICKET-1636] - WebPage.onAfterRender compares configurationType String using ==  operator, not equals method
+    * [WICKET-1648] - AbstractRequestTargetUrlCodingStrategy(line 174) throws confusing exception. It would be better redirect to 404-page in this case. 
+    * [WICKET-1652] - Hard-coded quotes in xml prologue
+    * [WICKET-1664] - WebPage ERROR message 
+    * [WICKET-1679] - Memory leak in DiskPageStore
+    * [WICKET-1704] - ResourceStreamRequestTarget.configure set wrong ContentLength for non-ascii characters
+    * [WICKET-1713] - ModalWindow JavaScript does not restore tabIndexes correctly on IE 6
+    * [WICKET-1714] - PackagedTextTemplate does not load resource from application resource stream locator
+    * [WICKET-1719] - StringResourceModel may fail to format numbers using MessageFormat
+    * [WICKET-1724] - Clicking on AjaxLink (when used on a page mounted through QueryStringUrlCodingStrategy) after session-expiry throws a NullPointerException in IE and Safari (i.e. in BookmarkableListenerInterfaceRequestTarget.processEvents)
+    * [WICKET-1728] - remove obsolete check from LocalizedImageResource
+    * [WICKET-1730] - RfcCompliantEmailAddressValidator accepts whitespace and tab
+    * [WICKET-1731] - When used in inherited markup, <wicket:link> tries to load a class with an illegal name
+    * [WICKET-1736] - Allow Access to AutoCompleteTextField AutoCompleteBehavior
+    * [WICKET-1737] - wicketTester does not find HTML mark-up if custom location is used.
+    * [WICKET-1740] - RequestCycle.urlFor modifies page parameters
+    * [WICKET-1746] - gecko: ajax javascript reference rendering problem
+    * [WICKET-1755] - In html Include component isAbsolute method returns false for an absolute path in unix-like systems 
+    * [WICKET-1759] - Typo in method name: AttributeModifier#replaceAttibuteValue
+    * [WICKET-1765] - Extending from org.apache.wicket.Page causes StackOverflowError
+    * [WICKET-1769] - AjaxPagingNavigation usare results in AjaxPaginNavigator not found exception
+    * [WICKET-1773] - DiskPageStore-FileNotFoundException
+    * [WICKET-1777] - Overflow when setting Expires header in WebResource 
+    * [WICKET-1780] - NPE in feedback panel
+    * [WICKET-1787] - AjaxSubmitLink in Internet Explorer does not work with Wicket's automatically genreated id's
+    * [WICKET-1788] - "Invalid procedure call or argument" on AJAX call with IE7
+    * [WICKET-1789] - Border fails to render if its contents are not visible by default
+    * [WICKET-1792] - wicket-1.3.x uses class from java 1.5, therefore doesn't compile on java 1.4 as it should
+    * [WICKET-1793] - Problem with submit
+    * [WICKET-1797] - Bug with default RadioChoice "for" attribute on label generation.
+    * [WICKET-1799] - wicket-extensions has unused reference to commons-collections.jar
+    * [WICKET-1806] - JavascriptStripper ignores context when looking for multiline comments
+    * [WICKET-1809] - wicket does not compile for 1.3.x because of method usage > jdk 1.4
+    * [WICKET-1816] - Wicket 1.3.4 violates servlet standard, Glassfish spews warnings
+    * [WICKET-1818] - wicket:id attribute with a value containing spaces generates invalid markup
+    * [WICKET-1820] - Embedded forms do not support multipart
+    * [WICKET-1827] - AutoCompleteTextField shows completion list even if focus is not in the text field anymore
+    * [WICKET-1829] - MarkupComponentBorder skips first tag in MarkupStream
+    * [WICKET-1834] - Invalid Cookie Names for persistence used according to RFC (doesn't work in tomcat 6.x)
+    * [WICKET-1839] - IAjaxIndicatorAware/WicketAjaxIndicatorAppender with AutoCompleteTextField doesn't work
+    * [WICKET-1843] - Disabling RadioGroup via authorization strategy does not disable contained Radio buttons
+    * [WICKET-1846] - Dutch text message for NumberValidator incorrect
+    * [WICKET-1857] - Unfound markup information is not entirely cached even in deployment mode
+    * [WICKET-1867] - BrowserInfoForm markup has reference to non existent component
+
+** Improvement
+    * [WICKET-1502] - Slow opening of ModalWindow for complex pages
+    * [WICKET-1622] - expose the IItemFactory in RefreshingView
+    * [WICKET-1638] - Wickets unique IDs cause problems for automated testing
+    * [WICKET-1692] - on Java 6+ DatePicker.localize should use DateFormatSymbols.getInstance(Locale) instead of new DateFormatSymbols(Locale)  to support DateFormatSymbolsProviders
+    * [WICKET-1748] - 304 Last Modified responses should include an Expires header
+    * [WICKET-1770] - PagingNavigation's javadoc contains malformed html snippet
+    * [WICKET-1782] - Protection against CSRF (cross-site request forgery) attacks
+    * [WICKET-1786] - Adding SVG support detection to ClientProperties
+    * [WICKET-1795] - Make it possible for to encode unicode strings in component
+    * [WICKET-1801] - Make AbstractDefaultAjaxBehavior.findIndicatorId() protected
+    * [WICKET-1802] - Propertyresolver could be more informative
+    * [WICKET-1810] - StringRequestTarget is bloated and needs some care
+    * [WICKET-1830] - Include Component Path in Generated Markup
+    * [WICKET-1840] - Defaults to ReloadingWicketFilter in maven's archetype and quickstart
+    * [WICKET-1844] - Wizard button implementations should not be final
+
+** New Feature
+    * [WICKET-1716] - make autocompleter more customizable
+    * [WICKET-1720] - Add clearLocalizerCache to Application JMX bean
+
+** Wish
+    * [WICKET-399] - Make RestartResponseAtInterceptPageException with a SignIn-type page work correctly from AjaxFallbackLink
+    * [WICKET-1460] - Move JavaScript function killEvent from wicketautocomplete.js to wicket-event.js
+    * [WICKET-1758] - Make DiskPageStore#getSessionFolder protected (rather than private)
+
+Release Notes - Wicket - Version 1.3.4
+
+** Bug
+    * [WICKET-613] - Prototype scoped Spring beans
+    * [WICKET-1152] - MetaDataRoleAuthorizationStrategy.unauthorize() doesn't work
+    * [WICKET-1188] - <wicket:enclosure child="xxx"> bug when located as first level son of a non transparent border 
+    * [WICKET-1292] - WicketTester continueToOriginalDestination() uses application home page instead of original redictor
+    * [WICKET-1366] - "ava.lang.IllegalStateException: No Page found for component" when collapsing nodes in a LinkTree
+    * [WICKET-1409] - RequestLogger counts active requests wrong
+    * [WICKET-1418] - org.apache.wicket.MarkupContainer swallows AbortException
+    * [WICKET-1453] - WicketServlet does not set content type on fallback()
+    * [WICKET-1473] - BaseWicketTester.isComponentOnAjaxResponse() test is too strong
+    * [WICKET-1476] - Referencing Page may cause StackOverflowError
+    * [WICKET-1499] - AjaxEditableMultiLineLabel + race condition / 
+    * [WICKET-1501] - MarkupCache.putIntoCache doesn't behave correctly!!
+    * [WICKET-1504] - AutoCompleteTextField - javascript error "type mismatch" in line 227 in IE
+    * [WICKET-1507] - MarkupCache style/variation/locale support broken
+    * [WICKET-1510] - FormDispatcherRequest creates invalid parameter map
+    * [WICKET-1521] - ClassCastException in MixedUrlCodingStrategy
+    * [WICKET-1527] - WicketTester can not deal with null values in page parameters
+    * [WICKET-1536] - Enclosure permanently hides direct children after it has been itself hidden once
+    * [WICKET-1537] - SelectOption generates non xhtml compliant markup
+    * [WICKET-1541] - PopupSettings' windowName fixes for IE
+    * [WICKET-1544] - Update Javadoc for AbstractValidator
+    * [WICKET-1547] - Add getterfor IPageable to PagingNavigation
+    * [WICKET-1548] - PagingNavigator calls factory methods from constructor
+    * [WICKET-1549] - Memory leak with PropertyResolver (in running test suites)
+    * [WICKET-1551] - javascript status variable hides the window.status variable because it is not declared as a far in wicket-ajax.js
+    * [WICKET-1556] - Non-existant package resources lazily added to pool
+    * [WICKET-1558] - WicketTester.startPage(page) throws "No requestCycle is currently set"
+    * [WICKET-1560] - MarkupFragmentFinder fails on transparent resolvers within Repeaters
+    * [WICKET-1569] - AjaxButton break form data when IRequestSettings.#getResponseRequestEncoding is not UTF-8.
+    * [WICKET-1570] - We should mark session dirty when at least one page is touched
+    * [WICKET-1575] - AjaxEventBehavior does not check for component.isEnableAllowed before adding the ajax event to the tag
+    * [WICKET-1598] - Typos in JavaDoc of IMarkupResourceStreamProvider.java
+    * [WICKET-1607] - addDomReadyEvent unreliable for Safari
+    * [WICKET-1626] - Typo in src/main/java/org/apache/wicket/protocol/http/WebApplication.java
+    * [WICKET-1632] - IE bug causes wicket problems when id auto generation is active
+    * [WICKET-1635] - Stripping javascript comments and whitespace breaks application when using prototype library
+
+    * [WICKET-1645] - Syntactic errors in the manifest OSGi headers
+    * [WICKET-1646] - AjaxFormComponentUpdatingBehavior not working correctly when using IE 7
+    * [WICKET-1649] - Manifests use incorrect Dynamic-ImportPackage header
+    * [WICKET-1658] - WicketTester#clickLink doesn't update lastRenderedPage
+    * [WICKET-1659] - Prolem with 'mouseactive' in wicket-autocomplete.js when AutoCompleteBehaviour is added (twice) during Ajax roundtrip
+    * [WICKET-1667] - Memory leak in Localizer
+    * [WICKET-1669] - TimeFrame.equals(Object)  does not work as expected
+    * [WICKET-1670] - Time.valueOf() does not clear miliseconds
+    * [WICKET-1682] - HtmlHandler can't handle tags not requiring closed tags if the tag names are uppercase
+    * [WICKET-1697] - Bad caching in <wicket:message> tag for the same key in same markup structure
+    * [WICKET-1701] - org.apache.wicket.markup.html.CompressedPackageResource$CompressingResourceStream.cache needs to avoid being serialized
+    * [WICKET-1705] - GuiceComponentInjector mishandles static fields
+    * [WICKET-1706] - org.apache.wicket.util.lang.Objects.convertValue returns null if it cannot convert the value
+
+** Improvement
+    * [WICKET-1492] - Allow form to specify prefix for formcomponent names
+    * [WICKET-1524] - Disable javadoc plugin in regular build to make it faster
+    * [WICKET-1590] - AjaxEditableChoiceLabel ignores ChoiceRenderer in newLabel(...)
+    * [WICKET-1592] - html.form.Form object should have method to obtain all FormValidator objects associated with
+    * [WICKET-1595] - AutoCompleteTextField: Scrolling down the Choice Menu Only When the Bottom of the Menu Is Reached
+    * [WICKET-1608] - make AutoCompleteBehavior's configuration more flexible
+    * [WICKET-1618] - Localizer API should be enhanced so that the cache implementation can be overwritten
+    * [WICKET-1668] - Application_es.properties (added translations)
+    * [WICKET-1708] - Allow the module init parameter to contain multiple class names
+    * [WICKET-1709] - Allow configuration of the guice Stage for GuiceWebApplicationFactory
+    * [WICKET-1711] - Improve Locale fallback in BundleStringResourceLoader
+
+** New Feature
+    * [WICKET-1322] - NormalUrlCodingStrategy: It does not append / to the end of the url before the parameters
+    * [WICKET-1428] - AutoLinkResolver and Parent-Relative (../) Links
+    * [WICKET-1609] - add RedirectToExternalException
+    * [WICKET-1641] - provide OSGi metadata
+
+** Wish
+    * [WICKET-1562] - Autocomplete should display the selection list even if the input field is empty
 
 Release Notes - Wicket - Version 1.3.3
 
