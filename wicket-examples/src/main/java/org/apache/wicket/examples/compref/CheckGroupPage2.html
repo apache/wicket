@@ -1,0 +1,56 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.CheckGroup</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A CheckBoxGroup and CheckBoxComponnet components let users select multiple values from a group of checkboxes. These components are more flexible then the CheckBoxMultipleChoice component in that individual checkboxes are full components, unlike with CheckBoxMultipleChoice, and thus can be used anywhere in the markup.
+	</p>
+	<p>
+	 <form wicket:id="form">
+		<wicket:container wicket:id="group">
+			<wicket:container wicket:id="group2">
+				<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
+				 <tr>
+				  <td valign="top">Select persons</td>
+				  <td>
+					  <input type="checkbox" wicket:id="groupselector">check/uncheck all in selection 1</input><br/>
+					  <input type="checkbox" wicket:id="groupselector2">check/uncheck all in selection 2</input><br/>
+					  <table cellspacing="0" cellpadding="2">
+						<tr>
+							<td><b>Select1</b></td>
+							<td><b>Select2</b></td>
+							<td><b>First Name</b></td>
+							<td><b>Last Name</b></td>
+						</tr>
+					  	<tr wicket:id="persons">
+					  		<td><input type="checkbox" wicket:id="checkbox"/></td>
+					  		<td><input type="checkbox" wicket:id="checkbox2"/></td>
+					  		<td><span wicket:id="name">[this is where name will be]</span></td>
+					  		<td><span wicket:id="lastName">[this is where lastname will be]</span></td>
+					  	</tr>
+					  </table>
+					  <span valign="top">
+					  </span>
+				  </td>
+				 </tr>
+				 <tr>
+				  <td colspan="2" align="center">
+				   <input type="submit" value="submit" />
+				  </td>
+				 </tr>
+				</table>
+			</wicket:container>
+		</wicket:container>
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+</body>
+</html>
