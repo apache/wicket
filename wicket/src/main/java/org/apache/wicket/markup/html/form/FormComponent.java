@@ -1561,7 +1561,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		final int size = validators_size();
 
-		final IValidatable<T> validatable = new ValidatableAdapter();
+		final IValidatable<T> validatable = newValidatable();
 
 		int i = 0;
 		IValidator<T> validator = null;
@@ -1591,6 +1591,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 	}
 
+	/**
+	 * Creates an IValidatable that can be used to validate this form component. This validatable
+	 * encorporates error key lookups that correspend to this form component.
+	 * 
+	 * @return IValidatable<T> for this form component
+	 */
+	public final IValidatable<T> newValidatable()
+	{
+		return new ValidatableAdapter();
+	}
 
 	/**
 	 * Gets model
