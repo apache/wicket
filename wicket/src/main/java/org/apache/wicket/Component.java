@@ -3777,7 +3777,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Called just before a component is rendered.
 	 * <p>
-	 **NOTE* If you override this, you *must* call super.onBeforeRender() within your
+	 * NOTE* If you override this, you *must* call super.onBeforeRender() within your
 	 * implementation.
 	 * 
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
@@ -3839,7 +3839,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			String path = getPageRelativePath();
 			path = path.replace("_", "__");
 			path = path.replace(":", "_");
-			tag.put("wicket:path", path);
+			tag.put("wicketpath", path);
 		}
 	}
 
