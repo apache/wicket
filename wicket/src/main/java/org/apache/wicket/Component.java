@@ -1048,11 +1048,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * We need to postpone calling beforeRender() on components that implement IFeedback, to be sure
-	 * that all other component's beforeRender() has been already called, so that IFeedbacks can
-	 * collect all feedback messages. This is the key under list of postponed IFeedback is stored to
-	 * request cycle metadata. The List is then iterated over in {@link #prepareForRender()} after
-	 * calling {@link #beforeRender()}, to initialize postponed components.
+	 * We need to postpone calling beforeRender() on components that implement {@link IFeedback}, to
+	 * be sure that all other component's beforeRender() has been already called, so that IFeedbacks
+	 * can collect all feedback messages. This is the key under list of postponed {@link IFeedback}
+	 * is stored to request cycle metadata. The List is then iterated over in
+	 * {@link #prepareForRender()} after calling {@link #beforeRender()}, to initialize postponed
+	 * components.
 	 */
 	private static final MetaDataKey<List<Component>> FEEDBACK_LIST = new MetaDataKey<List<Component>>()
 	{
@@ -2215,9 +2216,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 * <p>
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
+	 * </p>
 	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
@@ -2655,8 +2657,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Replaces this component with another. The replacing component must have the same component id
-	 * as this component. This method serves as a shortcut to <code>
-	 * this.getParent().replace(replacement)</code>
+	 * as this component. This method serves as a shortcut to
+	 * 
+	 * <code>this.getParent().replace(replacement)</code>
+	 * 
 	 * and provides a better context for errors.
 	 * 
 	 * @since 1.2.1
@@ -3777,8 +3781,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Called just before a component is rendered.
 	 * <p>
-	 * NOTE* If you override this, you *must* call super.onBeforeRender() within your
-	 * implementation.
+	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
+	 * your implementation.
 	 * 
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
