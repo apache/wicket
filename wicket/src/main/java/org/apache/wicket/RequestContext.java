@@ -17,8 +17,26 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 
 /**
+ * Handles url rewriting, provides access to the namespace for markup Ids and isolated session
+ * state.
+ * 
+ * <p>
+ * This is the base strategy for encoding URLs, which is to leave them as is. This is mainly so that
+ * PortletRequestContext can implement it's portlet encoding strategies as portlets need to have
+ * special URLs encoded with portal information and portlet namespace.
+ * 
+ * <p>
+ * For url rewriting, only three methods are needed to support creating Portlet ActionURLs, Portlet
+ * RenderURLs and Resource/Ajax URLs.
+ * 
+ * FIXME Class name. Perhaps RequestContext isn't a good name, as it's confusing with the 'context'
+ * meanings as there are many, and it doesn't address the abilities of the class to encode URLS.
+ * 
+ * @see PortletRequestContext
  * @author Ate Douma
  */
 public class RequestContext
@@ -48,7 +66,7 @@ public class RequestContext
 	}
 
 	/**
-	 * 
+	 * Resets the {@link RequestContext} for the current threads active request.
 	 */
 	public static final void unset()
 	{
@@ -56,6 +74,7 @@ public class RequestContext
 	}
 
 	/**
+	 * Sets the {@link RequestContext} for the current threads active request.
 	 * 
 	 * @param context
 	 */
@@ -65,7 +84,9 @@ public class RequestContext
 	}
 
 	/**
-	 * @return CharSequence
+	 * @see PortletRequestContext#getNamespace()
+	 * @return CharSequence the namespace of this request, typically overridden by the portlet
+	 *         implementation.
 	 */
 	public CharSequence getNamespace()
 	{
@@ -73,8 +94,15 @@ public class RequestContext
 	}
 
 	/**
+	 * FIXME javadoc
+	 * 
+	 * <p>
+	 * Encodes markup Ids, typically overridden by the portlet implementation.
+	 * 
+	 * @see PortletRequestContext#encodeMarkupId(String)
 	 * @param markupId
-	 * @return The encoded markup
+	 *            the markup Id to encode
+	 * @return the encoded markup
 	 */
 	public String encodeMarkupId(String markupId)
 	{
@@ -82,8 +110,15 @@ public class RequestContext
 	}
 
 	/**
+	 * FIXME javadoc
+	 * 
+	 * <p>
+	 * Encodes URL's for action URLs, typically overridden by the portlet implementation.
+	 * 
+	 * @see PortletRequestContext#encodeActionURL(CharSequence)
 	 * @param path
-	 * @return The encoded url
+	 *            the URL to encode
+	 * @return the encoded url
 	 */
 	public CharSequence encodeActionURL(CharSequence path)
 	{
@@ -91,8 +126,15 @@ public class RequestContext
 	}
 
 	/**
+	 * FIXME javadoc
+	 * 
+	 * <p>
+	 * Encodes URL's for render URLs, typically overridden by the portlet implementation.
+	 * 
+	 * @see PortletRequestContext#encodeRenderURL(CharSequence)
 	 * @param path
-	 * @return The encoded url
+	 *            the URL to encode
+	 * @return the encoded url
 	 */
 	public CharSequence encodeRenderURL(CharSequence path)
 	{
@@ -100,8 +142,12 @@ public class RequestContext
 	}
 
 	/**
+	 * Encodes URL's for resource targets, typically overridden by the portlet implementation.
+	 * 
+	 * @see PortletRequestContext#encodeResourceURL(CharSequence)
 	 * @param path
-	 * @return The encoded url
+	 *            the URL to encode
+	 * @return the encoded url
 	 */
 	public CharSequence encodeResourceURL(CharSequence path)
 	{
@@ -109,8 +155,14 @@ public class RequestContext
 	}
 
 	/**
+	 * Encodes URL's for shared resource targets, typically overridden by the portlet
+	 * implementation.
+	 * 
+	 * @see ISharedResourceRequestTarget
+	 * @see PortletRequestContext#encodeSharedResourceURL(CharSequence)
 	 * @param path
-	 * @return The encoded url
+	 *            the URL to encode
+	 * @return the encoded url
 	 */
 	public CharSequence encodeSharedResourceURL(CharSequence path)
 	{
@@ -118,6 +170,9 @@ public class RequestContext
 	}
 
 	/**
+	 * Used to override response objects, typically used by the portlet implementation.
+	 * 
+	 * @see PortletRequestContext#getHeaderResponse()
 	 * @return The IHeaderResponse
 	 */
 	public IHeaderResponse getHeaderResponse()
@@ -126,7 +181,7 @@ public class RequestContext
 	}
 
 	/**
-	 * @return boolean if this is a portlet request
+	 * @return boolean true if this is a portlet request
 	 */
 	public boolean isPortletRequest()
 	{

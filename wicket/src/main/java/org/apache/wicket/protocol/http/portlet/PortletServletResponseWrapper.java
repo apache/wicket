@@ -22,14 +22,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
+ * General class for all Portal responses, wrapping Servlet responses with Portal specific
+ * functionality.
+ * 
+ * @see PortletMimeServletResponseWrapper
  * @author Ate Douma
  */
 public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 {
-	private WicketResponseState responseState;
+	private final WicketResponseState responseState;
 
 	public PortletServletResponseWrapper(HttpServletResponse response,
-			WicketResponseState responseState)
+		WicketResponseState responseState)
 	{
 		super(response);
 		this.responseState = responseState;
@@ -38,6 +42,7 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 	/**
 	 * @see javax.servlet.http.HttpServletResponseWrapper#sendError(int, java.lang.String)
 	 */
+	@Override
 	public void sendError(int errorCode, String errorMessage) throws IOException
 	{
 		responseState.setErrorCode(errorCode);
@@ -47,6 +52,7 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 	/**
 	 * @see javax.servlet.http.HttpServletResponseWrapper#sendError(int)
 	 */
+	@Override
 	public void sendError(int errorCode) throws IOException
 	{
 		responseState.setErrorCode(errorCode);
@@ -56,6 +62,7 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 	/**
 	 * @see javax.servlet.http.HttpServletResponseWrapper#sendRedirect(java.lang.String)
 	 */
+	@Override
 	public void sendRedirect(String redirectLocation) throws IOException
 	{
 		responseState.setRedirectLocation(redirectLocation);
@@ -64,17 +71,20 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 	/**
 	 * @see javax.servlet.http.HttpServletResponseWrapper#setStatus(int)
 	 */
+	@Override
 	public void setStatus(int statusCode)
 	{
 		responseState.setStatusCode(statusCode);
 	}
 
+	@Override
 	public String encodeRedirectUrl(String url)
 	{
 		String s = super.encodeRedirectUrl(url);
 		return s != null ? s : url;
 	}
 
+	@Override
 	public String encodeRedirectURL(String url)
 	{
 		String s = super.encodeRedirectURL(url);

@@ -19,6 +19,14 @@ package org.apache.wicket.protocol.http.portlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.protocol.http.WicketFilter;
+
+/**
+ * Wraps the HttpServletRequest and HttpServletResponse objects for convenience during
+ * {@link WicketFilterPortletContext} and {@link WicketFilter}'s processing.
+ * 
+ * @author Ate Douma
+ */
 public final class FilterRequestContext
 {
 	private HttpServletRequest request;

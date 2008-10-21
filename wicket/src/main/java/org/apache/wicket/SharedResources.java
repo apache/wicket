@@ -32,6 +32,13 @@ import org.slf4j.LoggerFactory;
  * Class which holds shared resources. Resources can be shared by name. An optional scope can be
  * given to prevent naming conflicts and a locale and/or style can be given as well.
  * 
+ * <p>
+ * Unlike component hosted resources, shared resources have stable URLs, which makes them suitable
+ * for indexing by web crawlers and caching by web browsers. As they are also not synchronised on
+ * the {@link Session}, they can be loaded asynchronously, which is important with images and
+ * resources such as JavaScript and CSS.
+ * 
+ * @see Resource
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
@@ -42,8 +49,10 @@ public class SharedResources
 	private static final Logger log = LoggerFactory.getLogger(SharedResources.class);
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts _[locale] and
-	 * _[style] into path just before any extension that might exist.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * <p>
+	 * Inserts _[locale] and _[style] into path just before any extension that might exist.
 	 * 
 	 * @param path
 	 *            The resource path

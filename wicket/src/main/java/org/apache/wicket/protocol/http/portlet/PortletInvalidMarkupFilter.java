@@ -48,6 +48,16 @@ public class PortletInvalidMarkupFilter implements IResponseFilter
 		return responseBuffer;
 	}
 
+	/**
+	 * Removes entire html fragments from the response buffer (inclusive of fragment body).
+	 * 
+	 * @param responseBuffer
+	 *            the buffer to delete from
+	 * @param prefix
+	 *            the beginning string to delete
+	 * @param postfix
+	 *            the end string to delete
+	 */
 	private void deleteFragment(AppendingStringBuffer responseBuffer, String prefix, String postfix)
 	{
 		int startIndex, endIndex;
@@ -60,6 +70,14 @@ public class PortletInvalidMarkupFilter implements IResponseFilter
 		}
 	}
 
+	/**
+	 * Finds and removes the opening and closing tag, if it exists, from the responseBuffer.
+	 * 
+	 * @param responseBuffer
+	 *            the buffer to search
+	 * @param tagName
+	 *            the tag to delete
+	 */
 	private void deleteOpenTag(AppendingStringBuffer responseBuffer, String tagName)
 	{
 		int startIndex, endIndex;

@@ -25,75 +25,99 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * <p>
+ * Portlet Action specific response wrapper.
+ * 
+ * <p>
+ * Overrides many of the {@link PortletServletResponseWrapper} with no-op methods as they are not
+ * applicable in Action response situations because a response is not actually going to be sent to
+ * the client - the response actually sent to the client is wrapped in
+ * {@link PortletRenderServletResponseWrapper}.
+ * 
+ * @see PortletServletResponseWrapper
  * @author Ate Douma
  */
 public class PortletActionServletResponseWrapper extends PortletServletResponseWrapper
 {
 
 	public PortletActionServletResponseWrapper(HttpServletResponse response,
-			WicketResponseState responseState)
+		WicketResponseState responseState)
 	{
 		super(response, responseState);
 	}
 
+	@Override
 	public void addCookie(Cookie cookie)
 	{
 	}
 
+	@Override
 	public void addDateHeader(String s, long l)
 	{
 	}
 
+	@Override
 	public void addHeader(String s, String s1)
 	{
 	}
 
+	@Override
 	public void addIntHeader(String s, int i)
 	{
 	}
 
+	@Override
 	public String encodeUrl(String s)
 	{
 		return s;
 	}
 
+	@Override
 	public String encodeURL(String s)
 	{
 		return s;
 	}
 
+	@Override
 	public void flushBuffer() throws IOException
 	{
 	}
 
+	@Override
 	public int getBufferSize()
 	{
 		return 0;
 	}
 
+	@Override
 	public ServletOutputStream getOutputStream() throws IOException
 	{
 		return null;
 	}
 
+	@Override
 	public PrintWriter getWriter() throws IOException
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isCommitted()
 	{
 		return false;
 	}
 
+	@Override
 	public void reset()
 	{
 	}
 
+	@Override
 	public void resetBuffer()
 	{
 	}
 
+	@Override
 	public void setBufferSize(int i)
 	{
 	}
@@ -102,26 +126,32 @@ public class PortletActionServletResponseWrapper extends PortletServletResponseW
 	{
 	}
 
+	@Override
 	public void setContentLength(int i)
 	{
 	}
 
+	@Override
 	public void setContentType(String s)
 	{
 	}
 
+	@Override
 	public void setDateHeader(String s, long l)
 	{
 	}
 
+	@Override
 	public void setHeader(String s, String s1)
 	{
 	}
 
+	@Override
 	public void setIntHeader(String s, int i)
 	{
 	}
 
+	@Override
 	public void setLocale(Locale locale)
 	{
 	}

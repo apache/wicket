@@ -20,10 +20,19 @@ import java.io.IOException;
 
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.wicket.RequestContext;
 
 /**
+ * FIXME javadoc - can be more specific? Doesn't seem to do much except for sendRedirect()
+ * 
+ * <p>
+ * Wraps the PortletServletResponseWrapper object with Render request specifics - mainly used to
+ * override the {@link PortletServletResponseWrapper} (see {@link HttpServletResponseWrapper}) when
+ * serving render responses.
+ * 
+ * @see HttpServletResponseWrapper
  * @author Ate Douma
  */
 public class PortletRenderServletResponseWrapper extends PortletServletResponseWrapper
@@ -31,7 +40,7 @@ public class PortletRenderServletResponseWrapper extends PortletServletResponseW
 	RenderResponse renderResponse;
 
 	public PortletRenderServletResponseWrapper(HttpServletResponse response,
-			RenderResponse renderResponse, WicketResponseState responseState)
+		RenderResponse renderResponse, WicketResponseState responseState)
 	{
 		super(response, responseState);
 		this.renderResponse = renderResponse;
@@ -40,11 +49,18 @@ public class PortletRenderServletResponseWrapper extends PortletServletResponseW
 	/**
 	 * @see javax.servlet.ServletResponseWrapper#setContentType(java.lang.String)
 	 */
+	@Override
 	public void setContentType(String arg0)
 	{
 		renderResponse.setContentType(arg0);
 	}
 
+	/**
+	 * FIXME javadoc - implementation requires explanation
+	 * 
+	 * @see org.apache.wicket.protocol.http.portlet.PortletServletResponseWrapper#sendRedirect(java.lang.String)
+	 */
+	@Override
 	public void sendRedirect(String redirectLocation) throws IOException
 	{
 		RequestContext rc = RequestContext.get();
@@ -58,7 +74,7 @@ public class PortletRenderServletResponseWrapper extends PortletServletResponseW
 			else
 			{
 				String contextPath = ((PortletRequestContext)rc).getPortletRequest()
-						.getContextPath();
+					.getContextPath();
 				if (redirectLocation.startsWith(contextPath + "/"))
 				{
 					redirectLocation = redirectLocation.substring(contextPath.length());

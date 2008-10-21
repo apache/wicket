@@ -17,6 +17,8 @@
 package org.apache.wicket.protocol.http.portlet;
 
 /**
+ * Holds the current state of the response and the redirect location for Portlets.
+ * 
  * @author Ate Douma
  */
 public class WicketResponseState
