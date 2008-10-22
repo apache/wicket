@@ -18,7 +18,7 @@ echo "----------------------------"
 echo "Building a release for Apache Wicket. We will need the passphrase for"
 echo "GPG to sign the release."
 echo "This program assumes you use a jdk 1.5 explicitly configured when"
-echo "invoking the 'mvn' Maven 2 command."
+echo "invoking the 'mvn5' Maven 2 command."
 echo ""
 
 echo "Enter your GPG passphrase (input will be hidden)"
@@ -58,11 +58,11 @@ done
 
 # clean all projects
 echo "Clean all projects"
-mvn clean -Pall
+mvn5 clean -Pall
 
 # package and assemble the release
 echo "Package and assemble the release"
-mvn -ff -Dgpg.passphrase=$passphrase -Prelease deploy assembly:attached $1
+mvn5 -ff -Dgpg.passphrase=$passphrase -Prelease deploy assembly:attached $1
 
 filename=`ls target/dist/apache-wicket*gz`
 gpg --print-md MD5 $filename > $filename.md5
