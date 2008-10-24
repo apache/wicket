@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -44,7 +45,33 @@ public abstract class AjaxButton extends Button
 	 */
 	public AjaxButton(String id)
 	{
-		this(id, null);
+		this(id, null, null);
+	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
+	 */
+	public AjaxButton(String id, IModel model)
+	{
+		this(id, model, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
+	 * @param form
+	 */
+	public AjaxButton(String id, final Form form)
+	{
+		this(id, null, form);
 	}
 
 	/**
@@ -69,11 +96,13 @@ public abstract class AjaxButton extends Button
 	 * Construct.
 	 * 
 	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
 	 * @param form
 	 */
-	public AjaxButton(String id, final Form form)
+	public AjaxButton(String id, IModel model, final Form form)
 	{
-		super(id);
+		super(id, model);
 		this.form = form;
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
@@ -130,7 +159,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 * 
-	 * TODO 1.3: Make abstract to be consistent with onSubmit()
+	 *            TODO 1.3: Make abstract to be consistent with onSubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form form)
 	{
