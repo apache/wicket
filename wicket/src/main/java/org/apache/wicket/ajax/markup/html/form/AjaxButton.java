@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
@@ -45,37 +46,46 @@ public abstract class AjaxButton extends Button
 	 */
 	public AjaxButton(String id)
 	{
-		this(id, null);
+		this(id, null, null);
 	}
 
 	/**
-	 * Returns the form if it was set in constructor, otherwise returns the form nearest in parent
-	 * hierarchy.
 	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
 	 */
-	@Override
-	public Form<?> getForm()
+	public AjaxButton(String id, IModel<String> model)
 	{
-		if (form != null)
-		{
-			return form;
-		}
-		else
-		{
-			return super.getForm();
-		}
+		this(id, model, null);
 	}
 
 	/**
+	 * 
 	 * Construct.
 	 * 
 	 * @param id
 	 * @param form
 	 */
-	public AjaxButton(String id, final Form<?> form)
+	public AjaxButton(String id, Form<?> form)
 	{
-		super(id);
+		this(id, null, form);
+	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
+	 * @param form
+	 */
+	public AjaxButton(String id, IModel<String> model, final Form<?> form)
+	{
+		super(id, model);
 		this.form = form;
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
@@ -136,6 +146,26 @@ public abstract class AjaxButton extends Button
 	}
 
 	/**
+	 * Returns the form if it was set in constructor, otherwise returns the form nearest in parent
+	 * hierarchy.
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
+	 */
+	@Override
+	public Form<?> getForm()
+	{
+		if (form != null)
+		{
+			return form;
+		}
+		else
+		{
+			return super.getForm();
+		}
+	}
+
+
+	/**
 	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
 	 * This is the preferred way of changing the javascript in the onclick handler
 	 * 
@@ -160,7 +190,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 * 
-	 * TODO 1.3: Make abstract to be consistent with onSubmit()
+	 *            TODO 1.3: Make abstract to be consistent with onSubmit()
 	 */
 	protected void onError(AjaxRequestTarget target, Form<?> form)
 	{
