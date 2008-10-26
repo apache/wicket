@@ -33,8 +33,10 @@ import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
  * For url rewriting, only three methods are needed to support creating Portlet ActionURLs, Portlet
  * RenderURLs and Resource/Ajax URLs.
  * 
- * FIXME Class name. Perhaps RequestContext isn't a good name, as it's confusing with the 'context'
- * meanings as there are many, and it doesn't address the abilities of the class to encode URLS.
+ * The RequestContext is somewhat comparable to the JSF ExternalContext interface which abstracts
+ * the external environment (like web or portlet) in which the application is currently running.
+ * As this is request dependent (the same application can technically be accessed even concurrently
+ * as web or portlet), in Wicket this context has been termed RequestContext.
  * 
  * @see PortletRequestContext
  * @author Ate Douma
@@ -94,9 +96,6 @@ public class RequestContext
 	}
 
 	/**
-	 * FIXME javadoc
-	 * 
-	 * <p>
 	 * Encodes markup Ids, typically overridden by the portlet implementation.
 	 * 
 	 * @see PortletRequestContext#encodeMarkupId(String)
@@ -110,9 +109,6 @@ public class RequestContext
 	}
 
 	/**
-	 * FIXME javadoc
-	 * 
-	 * <p>
 	 * Encodes URL's for action URLs, typically overridden by the portlet implementation.
 	 * 
 	 * @see PortletRequestContext#encodeActionURL(CharSequence)
@@ -126,9 +122,6 @@ public class RequestContext
 	}
 
 	/**
-	 * FIXME javadoc
-	 * 
-	 * <p>
 	 * Encodes URL's for render URLs, typically overridden by the portlet implementation.
 	 * 
 	 * @see PortletRequestContext#encodeRenderURL(CharSequence)
@@ -171,6 +164,11 @@ public class RequestContext
 
 	/**
 	 * Used to override response objects, typically used by the portlet implementation.
+	 * <p>
+	 * In a Portlet environment, this allows the portlet container/portal to capture the
+	 * HeaderResponse as a separate stream for merging in the overall page header (together
+	 * with header output for other portlets).
+	 * </p>
 	 * 
 	 * @see PortletRequestContext#getHeaderResponse()
 	 * @return The IHeaderResponse
