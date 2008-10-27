@@ -26,6 +26,7 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
@@ -270,13 +271,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	protected String onError(final Exception ex)
 	{
-		throw new HackAttackException("Invalid URL");
+		throw new PageExpiredException("Invalid URL");
 	}
 
 	protected String onError(final Exception ex, String url)
 	{
-		log.error("Invalid URL: " + url, ex);
-
+		log.info("Invalid URL: " + url + ", message:" + ex.getMessage());
 		return onError(ex);
 	}
 
