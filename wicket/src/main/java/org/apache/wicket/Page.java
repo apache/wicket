@@ -1629,7 +1629,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public PageId getPageId()
 	{
+		setStatelessHint(false);
 		return new PageId(pageMapName, numericId, getCurrentVersionNumber());
+
 	}
 
 }
