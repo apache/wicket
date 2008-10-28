@@ -31,6 +31,7 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageId;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Request;
@@ -54,8 +55,10 @@ import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
+import org.apache.wicket.request.target.component.PageIdRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -256,6 +259,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle,
 				(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
+		}
+		else if (requestTarget instanceof PageIdRequestTarget)
+		{
+			url = encode(requestCycle, (PageIdRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -833,6 +840,50 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 			return buffer;
 		}
+	}
+
+
+	/**
+	 * Encode a pageid request target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected CharSequence encode(RequestCycle requestCycle, PageIdRequestTarget requestTarget)
+	{
+		final PageId id = requestTarget.getPageId();
+
+		// Start string buffer for url
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
+		url.append('?');
+		url.append(INTERFACE_PARAMETER_NAME);
+		url.append('=');
+
+		// add pagemap
+		if (!Objects.equal(PageMap.DEFAULT_NAME, id.getPageMapName()))
+		{
+			url.append(id.getPageMapName());
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// add page id
+		url.append(id.getPageNumber());
+		url.append(Component.PATH_SEPARATOR);
+
+		// add version
+		url.append(id.getPageVersion());
+		url.append(Component.PATH_SEPARATOR);
+
+		// add listener interface (noop because we default to redirect listener which is default)
+		url.append(Component.PATH_SEPARATOR);
+
+		// behavior id (noop because we dont care aboute behaviors
+		url.append(Component.PATH_SEPARATOR);
+
+		return url;
 	}
 
 	/**

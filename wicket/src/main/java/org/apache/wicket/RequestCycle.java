@@ -35,6 +35,7 @@ import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
+import org.apache.wicket.request.target.component.PageIdRequestTarget;
 import org.apache.wicket.request.target.component.PageRequestTarget;
 import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
@@ -974,6 +975,20 @@ public abstract class RequestCycle
 		IRequestTarget target = new PageRequestTarget(page);
 		getSession().touch(((IPageRequestTarget)target).getPage());
 		return encodeUrlFor(target);
+	}
+
+	/**
+	 * Returns a URL that references the page pointed to by <code>id</code>
+	 * 
+	 * @see PageIdRequestTarget for more details
+	 * 
+	 * @param id
+	 *            page id
+	 * @return url pointing to the page
+	 */
+	public final CharSequence urlFor(final PageId id)
+	{
+		return urlFor(new PageIdRequestTarget(id));
 	}
 
 	/**

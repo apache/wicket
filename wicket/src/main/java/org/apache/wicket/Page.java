@@ -416,7 +416,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code> then the rendering for that container is checked.
+	 * MarkupContainer</code>
+	 * then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -1619,6 +1620,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		throw new UnsupportedOperationException(
 			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");
+	}
+
+	/**
+	 * Gets page instance's unique identifier
+	 * 
+	 * @return instance unique identifier
+	 */
+	public PageId getPageId()
+	{
+		return new PageId(pageMapName, numericId, getCurrentVersionNumber());
 	}
 
 }
