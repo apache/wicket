@@ -452,13 +452,16 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				String id = getChoiceRenderer().getIdValue(choice, index);
 				final String idAttr = getMarkupId() + "_" + id;
 
+				boolean enabled = isEnabled() && isEnableAllowed() &&
+					!isDisabled(choice, index, selected);
+
 				// Add radio tag
 				buffer.append("<input name=\"")
 					.append(getInputName())
 					.append("\"")
 					.append(" type=\"radio\"")
 					.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-					.append((isEnabled() ? "" : " disabled=\"disabled\""))
+					.append((enabled ? "" : " disabled=\"disabled\""))
 					.append(" value=\"")
 					.append(id)
 					.append("\" id=\"")
