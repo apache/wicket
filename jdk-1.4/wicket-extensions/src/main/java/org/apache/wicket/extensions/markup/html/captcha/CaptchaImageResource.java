@@ -54,12 +54,12 @@ public final class CaptchaImageResource extends DynamicImageResource
 	private static final class CharAttributes implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		private char c;
-		private String name;
-		private int rise;
-		private double rotation;
-		private double shearX;
-		private double shearY;
+		private final char c;
+		private final String name;
+		private final int rise;
+		private final double rotation;
+		private final double shearX;
+		private final double shearY;
 
 		CharAttributes(char c, String name, double rotation, int rise, double shearX, double shearY)
 		{
@@ -118,10 +118,10 @@ public final class CaptchaImageResource extends DynamicImageResource
 		return new String(b);
 	}
 
-	private String challengeId;
+	private final String challengeId;
 	private final List charAttsList;
 
-	private List fontNames = Arrays.asList(new String[] { "Helventica", "Arial", "Courier" });
+	private final List fontNames = Arrays.asList(new String[] { "Helvetica", "Arial", "Courier" });
 	private final int fontSize;
 	private final int fontStyle;
 
@@ -166,11 +166,11 @@ public final class CaptchaImageResource extends DynamicImageResource
 	public CaptchaImageResource(String challengeId, int fontSize, int margin)
 	{
 		this.challengeId = challengeId;
-		this.fontStyle = 1;
+		fontStyle = 1;
 		this.fontSize = fontSize;
 		this.margin = margin;
-		this.width = this.margin * 2;
-		this.height = this.margin * 2;
+		width = this.margin * 2;
+		height = this.margin * 2;
 		char[] chars = challengeId.toCharArray();
 		charAttsList = new ArrayList();
 		TextLayout text;
@@ -185,18 +185,18 @@ public final class CaptchaImageResource extends DynamicImageResource
 			double shearX = ran.nextDouble() * 0.2;
 			double shearY = ran.nextDouble() * 0.2;
 			CharAttributes cf = new CharAttributes(chars[i], fontName, rotation, rise, shearX,
-					shearY);
+				shearY);
 			charAttsList.add(cf);
 			text = new TextLayout(chars[i] + "", getFont(fontName), new FontRenderContext(null,
-					false, false));
+				false, false));
 			textAt = new AffineTransform();
 			textAt.rotate(rotation);
 			textAt.shear(shearX, shearY);
 			shape = text.getOutline(textAt);
-			this.width += (int)shape.getBounds2D().getWidth();
-			if (this.height < (int)shape.getBounds2D().getHeight() + rise)
+			width += (int)shape.getBounds2D().getWidth();
+			if (height < (int)shape.getBounds2D().getHeight() + rise)
 			{
-				this.height = (int)shape.getBounds2D().getHeight() + rise;
+				height = (int)shape.getBounds2D().getHeight() + rise;
 			}
 		}
 	}
@@ -262,8 +262,8 @@ public final class CaptchaImageResource extends DynamicImageResource
 			for (int i = 0; i < charAttsList.size(); i++)
 			{
 				CharAttributes cf = (CharAttributes)charAttsList.get(i);
-				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx
-						.getFontRenderContext());
+				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()),
+					gfx.getFontRenderContext());
 				AffineTransform textAt = new AffineTransform();
 				textAt.translate(curWidth, height - cf.getRise());
 				textAt.rotate(cf.getRotation());
