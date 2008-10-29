@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Locale;
+
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
-import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * HTML checkbox input component.
@@ -57,7 +56,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 */
 	public CheckBox(final String id)
 	{
-		super(id);
+		this(id, null);
 	}
 
 	/**
@@ -68,6 +67,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	public CheckBox(final String id, IModel<Boolean> model)
 	{
 		super(id, model);
+		setType(Boolean.class);
 	}
 
 	/**
@@ -136,24 +136,17 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		final String value = getValue();
-		if (value != null)
+		final IConverter converter = getConverter(Boolean.class);
+		final Boolean checked = (Boolean)converter.convertToObject(value, getLocale());
+
+		if (Boolean.TRUE.equals(checked))
 		{
-			try
-			{
-				if (Strings.isTrue(value))
-				{
-					tag.put("checked", "checked");
-				}
-				else
-				{
-					// In case the attribute was added at design time
-					tag.remove("checked");
-				}
-			}
-			catch (StringValueConversionException e)
-			{
-				throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"", e);
-			}
+			tag.put("checked", "checked");
+		}
+		else
+		{
+			// In case the attribute was added at design time
+			tag.remove("checked");
 		}
 
 		// Should a roundtrip be made (have onSelectionChanged called) when the
@@ -202,20 +195,49 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
+	 * Final because we made {@link #convertInput()} final and it no longer delegates to
+	 * {@link #getConverter(Class)}
+	 * 
+	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	protected Boolean convertValue(String[] value)
+	public final IConverter getConverter(Class<?> type)
 	{
-		String tmp = value != null && value.length > 0 ? value[0] : null;
-		try
+		return super.getConverter(type);
+	}
+
+	/**
+	 * Converter specific to the check box
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private static class CheckBoxConverter implements IConverter
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
+		 *      java.util.Locale)
+		 */
+		public Object convertToObject(String value, Locale locale)
 		{
-			return Strings.toBoolean(tmp);
+			if ("on".equals(value) || "true".equals(value))
+			{
+				return Boolean.TRUE;
+			}
+			else
+			{
+				return Boolean.FALSE;
+			}
 		}
-		catch (StringValueConversionException e)
+
+		/**
+		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
+		 *      java.util.Locale)
+		 */
+		public String convertToString(Object value, Locale locale)
 		{
-			throw new ConversionException("Invalid boolean input value posted \"" + getInput() +
-				"\"", e).setTargetType(Boolean.class);
+			return ((Boolean)value).toString();
 		}
 	}
 
