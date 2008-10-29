@@ -203,7 +203,14 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	@Override
 	public final IConverter getConverter(Class<?> type)
 	{
-		return super.getConverter(type);
+		if (Boolean.class.equals(type))
+		{
+			return CheckBoxConverter.INSTANCE;
+		}
+		else
+		{
+			return super.getConverter(type);
+		}
 	}
 
 	/**
@@ -214,6 +221,16 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	private static class CheckBoxConverter implements IConverter
 	{
 		private static final long serialVersionUID = 1L;
+
+		private static final IConverter INSTANCE = new CheckBoxConverter();
+
+		/**
+		 * Constructor
+		 */
+		private CheckBoxConverter()
+		{
+
+		}
 
 		/**
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
