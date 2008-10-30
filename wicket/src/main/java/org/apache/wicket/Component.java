@@ -1640,7 +1640,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            Model object to convert to string
 	 * @return The string
 	 */
-	@SuppressWarnings("unchecked")
 	public final String getDefaultModelObjectAsString(final Object modelObject)
 	{
 		if (modelObject != null)
@@ -1708,14 +1707,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		return page;
-	}
-
-	/**
-	 * @return The page factory for the session that this component is in
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return getSession().getPageFactory();
 	}
 
 	/**
@@ -2182,36 +2173,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			page.componentModelChanging(this);
 		}
-	}
-
-	/**
-	 * Creates a new page using the component's page factory
-	 * 
-	 * @param <C>
-	 * 
-	 * @param c
-	 *            The class of page to create
-	 * @return The new page
-	 */
-	public final <C extends Page> Page newPage(final Class<C> c)
-	{
-		return getPageFactory().newPage(c);
-	}
-
-	/**
-	 * Creates a new page using the component's page factory
-	 * 
-	 * @param <C>
-	 * 
-	 * @param c
-	 *            The class of page to create
-	 * @param parameters
-	 *            Any parameters to pass to the constructor
-	 * @return The new page
-	 */
-	public final <C extends Page> Page newPage(final Class<C> c, final PageParameters parameters)
-	{
-		return getPageFactory().newPage(c, parameters);
 	}
 
 	/**

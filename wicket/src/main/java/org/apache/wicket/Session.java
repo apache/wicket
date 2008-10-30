@@ -795,20 +795,6 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * @param page
-	 *            The page, or null if no page context is available
-	 * @return The page factory for the page, or the default page factory if page was null
-	 */
-	public final IPageFactory getPageFactory(final Page page)
-	{
-		if (page != null)
-		{
-			return page.getPageFactory();
-		}
-		return getPageFactory();
-	}
-
-	/**
 	 * @return A list of all PageMaps in this session.
 	 */
 	public final List<IPageMap> getPageMaps()

@@ -65,7 +65,7 @@ public class PageLink<T> extends Link<T>
 			public Page getPage()
 			{
 				// Create page using page factory
-				return PageLink.this.getPage().getPageFactory().newPage(c);
+				return getSession().getPageFactory().newPage(c);
 			}
 
 			public Class<? extends Page> getPageIdentity()
