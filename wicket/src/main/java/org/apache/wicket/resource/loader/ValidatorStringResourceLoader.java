@@ -19,10 +19,12 @@ package org.apache.wicket.resource.loader;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.validation.IValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,61 +32,49 @@ import org.slf4j.LoggerFactory;
 /**
  * This is one of Wicket's default string resource loaders.
  * <p>
- * The package based string resource loader attempts to find the resource from a bundle that
- * corresponds to the supplied component objects package or one of its parent packages.
- * <p>
- * The search order for resources is component object package towards root package.
+ * The validator string resource loader checks resource bundles attached to validators (eg
+ * MinimumValidator.properties). The validator list is pulled from the form component in error.
  * <p>
  * This implementation is fully aware of both locale and style values when trying to obtain the
  * appropriate resources.
  * <p>
  * 
- * @author Juergen Donnerstag
  * @author igor.vaynberg
  */
-public class PackageStringResourceLoader extends ComponentStringResourceLoader
+public class ValidatorStringResourceLoader implements IStringResourceLoader
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(PackageStringResourceLoader.class);
-
-	/** The name (without extension) of the properties file */
-	private String filename = "package";
+	private static final Logger log = LoggerFactory.getLogger(ValidatorStringResourceLoader.class);
 
 	/**
 	 * Create and initialize the resource loader.
 	 */
-	public PackageStringResourceLoader()
+	public ValidatorStringResourceLoader()
 	{
 	}
 
 	/**
-	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	@Override
-	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
+	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
-		if (clazz == null)
+		// only care about IValidator subclasses
+		if (clazz == null || !IValidator.class.isAssignableFrom(clazz))
 		{
 			return null;
 		}
 
-		String packageName = clazz.getPackage().getName();
-		packageName = packageName.replace('.', '/');
-
-		// Load the properties associated with the path
 		IPropertiesFactory propertiesFactory = Application.get()
 			.getResourceSettings()
 			.getPropertiesFactory();
 
-		while (packageName.length() > 0)
+		while (true)
 		{
-			// Create the base path
-			String path = packageName + "/" + filename;
+			// figure out the base path for the class
+			String path = clazz.getName().replace('.', '/');
 
-			// Iterator over all the combinations
+			// iterate over all the combinations
 			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
 			while (iter.hasNext())
 			{
@@ -107,33 +97,48 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 				}
 			}
 
-			// Didn't find the key yet, continue searching if possible
-			packageName = Strings.beforeLast(packageName, '/');
+			// Move to the next superclass
+			clazz = clazz.getSuperclass();
+
+			if (clazz == null || Object.class.equals(clazz))
+			{
+				// nothing more to search, done
+				break;
+			}
 		}
 
 		// not found
 		return null;
 	}
 
-
 	/**
-	 * Gets the properties file filename (without extension)
 	 * 
-	 * @return filename
+	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
+	 *      java.lang.String)
 	 */
-	public String getFilename()
+	public String loadStringResource(final Component component, final String key)
 	{
-		return filename;
+		if (component == null || !(component instanceof FormComponent))
+		{
+			return null;
+		}
+
+		FormComponent<?> fc = (FormComponent<?>)component;
+
+		Locale locale = component.getLocale();
+		String style = component.getStyle();
+
+		for (IValidator<?> validator : fc.getValidators())
+		{
+			String resource = loadStringResource(validator.getClass(), key, locale, style);
+			if (resource != null)
+			{
+				return resource;
+			}
+		}
+
+		// not found
+		return null;
 	}
 
-	/**
-	 * Sets the properties filename (without extension)
-	 * 
-	 * @param filename
-	 *            filename
-	 */
-	public void setFilename(String filename)
-	{
-		this.filename = filename;
-	}
 }

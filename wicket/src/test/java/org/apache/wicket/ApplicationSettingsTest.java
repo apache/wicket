@@ -25,6 +25,7 @@ import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
+import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -37,11 +38,13 @@ public class ApplicationSettingsTest extends TestCase
 {
 	WicketTester tester;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -105,13 +108,15 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		Settings settings = new Settings(tester.getApplication());
 		List loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 3 default loaders", 3, loaders.size());
+		Assert.assertEquals("There should be 4 default loaders", 4, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 			loaders.get(0) instanceof ComponentStringResourceLoader);
 		Assert.assertTrue("Second loader should be the application one",
 			loaders.get(1) instanceof PackageStringResourceLoader);
 		Assert.assertTrue("Third loader should be the application one",
 			loaders.get(2) instanceof ClassStringResourceLoader);
+		Assert.assertTrue("Fourth loader should be the validator one",
+			loaders.get(3) instanceof ValidatorStringResourceLoader);
 	}
 
 	/**
