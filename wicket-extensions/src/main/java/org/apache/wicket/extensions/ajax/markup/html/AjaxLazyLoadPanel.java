@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.version.undo.Change;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component
@@ -37,6 +38,12 @@ import org.apache.wicket.model.IModel;
 public abstract class AjaxLazyLoadPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
+
+	// state,
+	// 0:add loading component
+	// 1:loading component added, waiting for ajax replace
+	// 2:ajax replacement completed
+	private byte state = 0;
 
 	/**
 	 * @param id
@@ -54,8 +61,6 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	{
 		super(id, model);
 		setOutputMarkupId(true);
-		final Component loadingComponent = getLoadingComponent("content");
-		add(loadingComponent.setRenderBodyOnly(true));
 
 		add(new AbstractDefaultAjaxBehavior()
 		{
@@ -67,6 +72,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				Component component = getLazyLoadComponent("content");
 				AjaxLazyLoadPanel.this.replace(component.setRenderBodyOnly(true));
 				target.addComponent(AjaxLazyLoadPanel.this);
+				setState((byte)2);
 			}
 
 			@Override
@@ -79,9 +85,30 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			@Override
 			public boolean isEnabled(Component component)
 			{
-				return get("content") == loadingComponent;
+				return state < 2;
 			}
 		});
+	}
+
+	@Override
+	protected void onBeforeRender()
+	{
+		if (state == 0)
+		{
+			Component loadingComponent = getLoadingComponent("content");
+			add(loadingComponent.setRenderBodyOnly(true));
+			setState((byte)1);
+		}
+		super.onBeforeRender();
+	}
+
+	private void setState(byte state)
+	{
+		if (this.state != state)
+		{
+			addStateChange(new StateChange(this.state));
+		}
+		this.state = state;
 	}
 
 	/**
@@ -102,4 +129,22 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
 	}
 
+	private final class StateChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final byte state;
+
+		public StateChange(byte state)
+		{
+			this.state = state;
+		}
+
+		@Override
+		public void undo()
+		{
+			AjaxLazyLoadPanel.this.state = state;
+		}
+
+	}
 }
