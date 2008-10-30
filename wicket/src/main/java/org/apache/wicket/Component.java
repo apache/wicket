@@ -3313,7 +3313,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IVisitor<Component> visitor)
 	{
 		// Start here
-		Component current = this;
+		Component current = getParent();
 
 		// Walk up containment hierarchy
 		while (current != null)
