@@ -157,7 +157,8 @@ public final class EditBook extends AuthenticatedWebPage
 			PageParameters parameters = new PageParameters();
 			final Book book = getModelObject();
 			parameters.put("id", book.getId());
-			cycle.setResponsePage(getPageFactory().newPage(BookDetails.class, parameters));
+			cycle.setResponsePage(getSession().getPageFactory().newPage(BookDetails.class,
+				parameters));
 			cycle.setRedirect(true);
 		}
 	}
