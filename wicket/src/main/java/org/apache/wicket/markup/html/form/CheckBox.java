@@ -149,6 +149,10 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 			tag.remove("checked");
 		}
 
+		// remove value attribute, because it overrides the browser's submitted value, eg a [input
+		// type="checkbox" value=""] will always submit as false
+		tag.remove("value");
+
 		// Should a roundtrip be made (have onSelectionChanged called) when the
 		// checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
