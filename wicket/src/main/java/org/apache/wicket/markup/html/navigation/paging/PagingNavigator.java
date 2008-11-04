@@ -112,7 +112,16 @@ public class PagingNavigator extends Panel
 	 */
 	protected Link<?> newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
-		return new PagingNavigationIncrementLink<Void>(id, pageable, increment);
+		return new PagingNavigationIncrementLink<Void>(id, pageable, increment)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isEnabled()
+			{
+				return PagingNavigator.this.isEnabled() && PagingNavigator.this.isEnableAllowed();
+			}
+		};
 	}
 
 	/**
@@ -129,7 +138,16 @@ public class PagingNavigator extends Panel
 	 */
 	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
-		return new PagingNavigationLink<Void>(id, pageable, pageNumber);
+		return new PagingNavigationLink<Void>(id, pageable, pageNumber)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isEnabled()
+			{
+				return PagingNavigator.this.isEnabled() && PagingNavigator.this.isEnableAllowed();
+			}
+		};
 	}
 
 	/**
@@ -144,7 +162,16 @@ public class PagingNavigator extends Panel
 	protected PagingNavigation newNavigation(final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return new PagingNavigation("navigation", pageable, labelProvider);
+		return new PagingNavigation("navigation", pageable, labelProvider)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isEnabled()
+			{
+				return PagingNavigator.this.isEnabled() && PagingNavigator.this.isEnableAllowed();
+			}
+		};
 	}
 
 	/**
