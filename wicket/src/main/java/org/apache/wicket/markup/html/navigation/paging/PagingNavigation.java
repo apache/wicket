@@ -345,7 +345,8 @@ public class PagingNavigation extends Loop
 			@Override
 			public boolean isEnabled()
 			{
-				return PagingNavigation.this.isEnabled() && PagingNavigation.this.isEnableAllowed();
+				return super.isEnabled() && PagingNavigation.this.isEnabled() &&
+					PagingNavigation.this.isEnableAllowed();
 			}
 		};
 	}
