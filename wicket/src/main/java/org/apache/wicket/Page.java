@@ -858,6 +858,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
+		
+		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+		{
+			Class<?> klass = getClass();
+			while (klass.isAnonymousClass())
+			{
+				klass = klass.getSuperclass();
+			}
+			getResponse().write("<!-- Page Class ");
+			getResponse().write(klass.getName());
+			getResponse().write(" -->\n");
+		}
+		
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
