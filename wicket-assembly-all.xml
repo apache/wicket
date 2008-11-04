@@ -37,6 +37,10 @@
 			</excludes>
 		</fileSet>
 		<fileSet>
+			<directory>target/site/apidocs</directory>
+			<outputDirectory>apidocs</outputDirectory>
+		</fileSet>
+		<fileSet>
 			<directory>testing</directory>
 			<outputDirectory>src/testing</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
@@ -79,7 +83,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>${basedir}</directory>
-			<outputDirectory></outputDirectory>
+			<outputDirectory/>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<includes>
 				<include>LICENSE</include>

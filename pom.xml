@@ -14,18 +14,15 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
 	<version>1.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
-
 	<profiles>
 		<profile>
 			<id>bamboo</id>
@@ -80,13 +77,13 @@
 				</plugins>
 			</build>
 			<distributionManagement>
-			  <snapshotRepository>
-			    <id>repo</id>
-			    <name>Local Bamboo/Tomcat repository</name>
-			    <url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
-			    <uniqueVersion>false</uniqueVersion>
-			  </snapshotRepository>
-			</distributionManagement>			
+				<snapshotRepository>
+					<id>repo</id>
+					<name>Local Bamboo/Tomcat repository</name>
+					<url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>
 		</profile>
 		<profile>
 			<id>release</id>
@@ -133,6 +130,9 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<inherited>true</inherited>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -184,15 +184,12 @@
 			</modules>
 		</profile>
 	</profiles>
-
 	<url>http://wicket.apache.org/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
-
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://apache.org</url>
 	</organization>
-
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -200,23 +197,19 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
 	<issueManagement>
 		<system>jira</system>
 		<url>http://issues.apache.org/jira/browse/WICKET</url>
 	</issueManagement>
-
 	<ciManagement>
 		<system>bamboo</system>
 		<url>http://wicketstuff.org/bamboo</url>
 	</ciManagement>
-
 	<scm>
 		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/trunk</connection>
 		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/trunk</developerConnection>
 		<url>http://svn.apache.org/viewvc/wicket/trunk</url>
 	</scm>
-
 	<mailingLists>
 		<mailingList>
 			<name>Wicket Announcements List</name>
@@ -246,7 +239,6 @@
 			<archive>http://mail-archives.apache.org/mod_mbox/wicket-commits/</archive>
 		</mailingList>
 	</mailingLists>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -488,7 +480,6 @@
 				<version>1.0-alpha-6</version>
 			</extension>
 		</extensions>
-
 		<resources>
 			<resource>
 				<filtering>false</filtering>
@@ -511,7 +502,6 @@
 				</excludes>
 			</resource>
 		</resources>
-
 		<testResources>
 			<testResource>
 				<filtering>false</filtering>
@@ -524,7 +514,6 @@
 				</excludes>
 			</testResource>
 		</testResources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -553,7 +542,7 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>	
+				<artifactId>maven-jar-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
@@ -562,7 +551,6 @@
 				<inherited>true</inherited>
 			</plugin>
 		</plugins>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -636,16 +624,16 @@
 							</manifestEntries>
 						</archive>
 					</configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>test-jar</goal>
-                            </goals>
-                            <configuration>
-                                <useDefaultManifestFile>false</useDefaultManifestFile>
-                            </configuration>
-                        </execution>
-                    </executions>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+							<configuration>
+								<useDefaultManifestFile>false</useDefaultManifestFile>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -658,7 +646,7 @@
 					</configuration>
 					<executions>
 						<execution>
-							<id>attach-sources</id>
+							<id>attach-javadocs</id>
 							<goals>
 								<goal>jar</goal>
 							</goals>
@@ -721,27 +709,27 @@
 					</executions>
 					<inherited>true</inherited>
 				</plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>1.4.3</version>
-                    <executions>
-                        <execution>
-                            <id>bundle-manifest</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>manifest</goal>
-                            </goals>
-                            <configuration>
-                                <instructions>
-                                    <Import-Package>org.apache.wicket*</Import-Package>
-                                    <DynamicImport-Package>*</DynamicImport-Package>
-                                    <_nouses>true</_nouses>
-                                </instructions>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>1.4.3</version>
+					<executions>
+						<execution>
+							<id>bundle-manifest</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>manifest</goal>
+							</goals>
+							<configuration>
+								<instructions>
+									<Import-Package>org.apache.wicket*</Import-Package>
+									<DynamicImport-Package>*</DynamicImport-Package>
+									<_nouses>true</_nouses>
+								</instructions>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

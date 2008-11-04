@@ -62,7 +62,7 @@ mvn5 clean -Pall
 
 # package and assemble the release
 echo "Package and assemble the release"
-mvn5 -ff -Dgpg.passphrase=$passphrase -Prelease deploy assembly:attached $1
+mvn5 -ff -Dgpg.passphrase=$passphrase -Prelease deploy javadoc:javadoc assembly:attached $1
 
 filename=`ls target/dist/apache-wicket*gz`
 gpg --print-md MD5 $filename > $filename.md5
