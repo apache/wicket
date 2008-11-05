@@ -50,8 +50,8 @@ import org.apache.wicket.model.ResourceModel;
  * <p>
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
  * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>onchange</code> event.
- * The behavior should be attached by overriding {@link #newRecorderComponent()}
+ * attached to the recorder component which supports the javascript <code>onchange</code> event. The
+ * behavior should be attached by overriding {@link #newRecorderComponent()}
  * 
  * Example:
  * 
@@ -183,7 +183,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	@Override
 	protected void onBeforeRender()
 	{
-		if (!hasBeenRendered())
+		if (get("recorder") == null)
 		{
 			initFactories();
 		}
@@ -405,7 +405,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Map<String,String> getAdditionalAttributes(Object choice)
+			protected Map<String, String> getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForSelection(choice);
 			}
@@ -415,7 +415,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
-	protected Map<String,String> getAdditionalAttributesForSelection(Object choice)
+	protected Map<String, String> getAdditionalAttributesForSelection(Object choice)
 	{
 		return null;
 	}
@@ -432,7 +432,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Map<String,String> getAdditionalAttributes(Object choice)
+			protected Map<String, String> getAdditionalAttributes(Object choice)
 			{
 				return Palette.this.getAdditionalAttributesForChoices(choice);
 			}
@@ -442,7 +442,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
-	protected Map<String,String> getAdditionalAttributesForChoices(Object choice)
+	protected Map<String, String> getAdditionalAttributesForChoices(Object choice)
 	{
 		return null;
 	}
