@@ -27,9 +27,11 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of model
  * 
  */
-public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
+public abstract class IndicatingAjaxFallbackLink<T> extends AjaxFallbackLink<T>
 	implements
 		IAjaxIndicatorAware
 {
@@ -56,7 +58,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxFallbackLink(String id, IModel<?> model)
+	public IndicatingAjaxFallbackLink(String id, IModel<T> model)
 	{
 		super(id, model);
 		add(indicatorAppender);
