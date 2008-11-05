@@ -49,8 +49,8 @@ import org.apache.wicket.model.ResourceModel;
  * <p>
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
  * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
- * attached to the recorder component which supports the javascript <code>onchange</code> event.
- * The recorder component can be retrieved via a call to {@link #getRecorderComponent()}.
+ * attached to the recorder component which supports the javascript <code>onchange</code> event. The
+ * recorder component can be retrieved via a call to {@link #getRecorderComponent()}.
  * 
  * Example:
  * 
@@ -172,7 +172,7 @@ public class Palette extends Panel implements IHeaderContributor
 
 	protected void onBeforeRender()
 	{
-		if (!hasBeenRendered())
+		if (get("recorder") == null)
 		{
 			initFactories();
 		}
