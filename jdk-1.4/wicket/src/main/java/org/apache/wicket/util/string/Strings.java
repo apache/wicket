@@ -899,17 +899,18 @@ public final class Strings
 		if (ixSemiColon != -1)
 		{
 			int ixEnd = path.indexOf("?");
-			if (ixEnd == -1)
-			{
-				ixEnd = path.length();
-			}
 
-			if (ixEnd < ixSemiColon)
+
+			if (ixEnd <= ixSemiColon)
 			{
 				// ? is before ; - no jsessionid in the url
 				return url.toString();
 			}
 
+			if (ixEnd == -1)
+			{
+				ixEnd = path.length();
+			}
 
 			path.delete(ixSemiColon, ixEnd);
 		}
