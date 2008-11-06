@@ -34,6 +34,7 @@ import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.basic.EmptyAjaxRequestTarget;
+import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,8 +102,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 						AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
 						if (accessStackPageMap.getAccessStack().size() > 0)
 						{
-							final Access access = (Access)accessStackPageMap.getAccessStack()
-								.peek();
+							final Access access = accessStackPageMap.getAccessStack().peek();
 
 							final int pageId = Integer.parseInt(Strings.firstPathComponent(
 								requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
@@ -201,12 +201,27 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			if (Application.get().getSecuritySettings().getEnforceMounts() &&
 				requestCodingStrategy.pathForTarget(target) != null)
 			{
-				String msg = "Direct access not allowed for mounted targets";
-				// the target was mounted, but we got here via another path
-				// : deny the request
-				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target +
-					",session=" + Session.get() + "]");
-				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
+
+				// we make an excepion if the homepage itself was mounted, see WICKET-1898
+				boolean homepage = false;
+				if (target instanceof BookmarkablePageRequestTarget)
+				{
+					final BookmarkablePageRequestTarget bt = (BookmarkablePageRequestTarget)target;
+					if (bt.getPageClass().equals(Application.get().getHomePage()))
+					{
+						homepage = true;
+					}
+				}
+
+				if (!homepage)
+				{
+					String msg = "Direct access not allowed for mounted targets";
+					// the target was mounted, but we got here via another path
+					// : deny the request
+					log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target +
+						",session=" + Session.get() + "]");
+					throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
+				}
 			}
 		}
 
@@ -225,6 +240,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	/**
 	 * @see org.apache.wicket.request.AbstractRequestCycleProcessor#newRequestCodingStrategy()
 	 */
+	@Override
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		return new WebRequestCodingStrategy();
