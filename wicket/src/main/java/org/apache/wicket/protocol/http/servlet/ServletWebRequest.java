@@ -61,12 +61,6 @@ public class ServletWebRequest extends WebRequest
 	private int previousUrlDepth;
 
 	/**
-	 * Marks this request as an ajax request. This is a cache used by and initialized in
-	 * {@link #isAjax()}
-	 */
-	private Boolean ajax;
-
-	/**
 	 * Protected constructor.
 	 * 
 	 * @param httpServletRequest
@@ -419,25 +413,20 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public boolean isAjax()
 	{
-		if (ajax == null)
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
 		{
-			ajax = false;
-
-			String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
-			if (Strings.isEmpty(ajaxHeader) == false)
+			try
 			{
-				try
-				{
-					ajax = Strings.isTrue(ajaxHeader);
-				}
-				catch (StringValueConversionException e)
-				{
-					// We are not interested in this exception but we log it anyway
-					log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
-				}
+				return Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
 			}
 		}
-		return ajax;
+		return false;
 	}
 
 	/**
