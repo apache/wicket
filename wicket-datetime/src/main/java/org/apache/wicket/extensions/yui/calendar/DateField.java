@@ -174,7 +174,9 @@ public class DateField extends FormComponentPanel<Date>
 	protected void onBeforeRender()
 	{
 		dateField.setRequired(isRequired());
-		dateField.setEnabled(isEnabled() && isEnableAllowed());
+
+		// obsolete with WICKET-1919
+		// dateField.setEnabled(isEnabledInHierarchy());
 
 		Date d = (Date)getDefaultModelObject();
 		if (d != null)

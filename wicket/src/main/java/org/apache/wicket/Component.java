@@ -1143,6 +1143,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setModelImpl(null);
 			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
+
+		// clear out enabled state metadata
+		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
 	}
 
 	/**
@@ -4329,4 +4332,44 @@ public abstract class Component implements IClusterable, IConverterLocator
 			s.defaultReadObject();
 		}
 	}
+
+	/**
+	 * Calculates enabled state of the component taking its hierarchy into account. A component is
+	 * enabled iff it is itself enabled ({@link #isEnabled()} and {@link #isEnableAllowed()} both
+	 * return <code>true</code>), and all of its parents are enabled.
+	 * 
+	 * @return <code>true</code> if this component is enabled</code>
+	 */
+	public final boolean isEnabledInHierarchy()
+	{
+		Boolean state = getMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY);
+		if (state == null)
+		{
+			state = isEnabled() && isEnableAllowed();
+			if (state)
+			{
+				Component parent = getParent();
+				if (parent != null)
+				{
+					state = state && parent.isEnabledInHierarchy();
+				}
+			}
+			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
+		}
+		return state;
+	}
+
+
+	/**
+	 * Keeps metadata about the enabled state of the component
+	 * 
+	 * The states are: null - not calculated, true and false
+	 */
+	private static final MetaDataKey<Boolean> ENABLED_IN_HIERARCHY_CACHE_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	};
+
+
 }

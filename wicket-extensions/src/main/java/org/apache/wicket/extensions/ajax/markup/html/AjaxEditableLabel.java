@@ -406,7 +406,8 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			initLabelAndEditor(getParentModel());
 		}
-		label.setEnabled(isEnableAllowed() && isEnabled());
+		// obsolete with WICKET-1919
+		// label.setEnabled(isEnabledInHierarchy());
 	}
 
 	/**

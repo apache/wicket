@@ -1452,7 +1452,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		tag.put("name", getInputName());
 
-		if (!isEnabled() || !isEnableAllowed())
+		if (!isEnabledInHierarchy())
 		{
 			onDisabled(tag);
 		}

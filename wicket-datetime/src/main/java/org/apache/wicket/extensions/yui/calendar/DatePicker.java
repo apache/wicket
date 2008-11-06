@@ -66,7 +66,8 @@ import org.joda.time.DateTime;
  * The CalendarNavigator can be configured by overriding {@link #configure(Map)} and setting the
  * property or by returning <code>true</code> for {@link #enableMonthYearSelection()}.
  * 
- * @see <a href="http://developer.yahoo.com/yui/calendar/">http://developer.yahoo.com/yui/calendar/</a>
+ * @see <a
+ *      href="http://developer.yahoo.com/yui/calendar/">http://developer.yahoo.com/yui/calendar/</a>
  * 
  * @author eelcohillenius
  */
@@ -611,7 +612,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * selection of month and year.
 	 * 
 	 * @return <code>true</code> if select boxes should be rendered to allow month and year
-	 *         selection.<br/> <code>false</code> to render just plain text.
+	 *         selection.<br/>
+	 *         <code>false</code> to render just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
 	{
@@ -621,9 +623,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Indicates whether the calendar should be hidden after a date was selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden after the date
-	 *         selection <br/> <code>false</code> if the calendar should remain visible after the
-	 *         date selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden after the date selection <br/>
+	 *         <code>false</code> if the calendar should remain visible after the date selection.
 	 */
 	protected boolean hideOnSelect()
 	{
@@ -644,9 +645,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Override this method to further customize the YUI Calendar with additional Javascript code.
 	 * The code returned by this method is executed right after the Calendar has been constructed
-	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code>
-	 * in your code.<br/> See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
+	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code> in
+	 * your code.<br/>
+	 * See <a href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for
+	 * more information about the YUI Calendar.<br/>
+	 * Example:
 	 * 
 	 * <pre>
 	 * protected String getAdditionalJavascript()
@@ -669,6 +672,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	@Override
 	public boolean isEnabled(Component component)
 	{
-		return component.isEnabled() && component.isEnableAllowed();
+		return component.isEnabledInHierarchy();
 	}
 }

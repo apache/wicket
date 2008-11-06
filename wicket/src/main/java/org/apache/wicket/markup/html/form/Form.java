@@ -155,14 +155,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				FormComponent<?> formComponent = (FormComponent<?>)component;
 
 				Form<?> form = formComponent.getForm();
-				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
+				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					// do not validate formComponent or any of formComponent's children
 					return Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
 
 				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
-					formComponent.isEnabled() && formComponent.isEnableAllowed())
+					formComponent.isEnabledInHierarchy())
 				{
 					validate(formComponent);
 				}
@@ -215,9 +215,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				{
 					if (this.formFilter == null || this.formFilter == form)
 					{
-						if (form.isEnabled() && form.isEnableAllowed())
+						if (form.isEnabledInHierarchy())
 						{
-							if (component.isEnabled() && component.isEnableAllowed() &&
+							if (component.isEnabledInHierarchy() &&
 								component.isVisibleInHierarchy())
 							{
 								((IFormModelUpdateListener)component).updateModel();
@@ -923,7 +923,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	@Deprecated
 	public boolean process()
 	{
-		if (!isEnabled() || !isEnableAllowed() || !isVisibleInHierarchy())
+		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{
 			// since process() can be called outside of the default form workflow, an additional
 			// check is needed
@@ -977,7 +977,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Component component)
 			{
 				final Form<?> form = (Form<?>)component;
-				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
+				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
@@ -1003,7 +1003,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Component component)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.isEnabled() && form.isEnableAllowed() && isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -1457,7 +1457,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Form<?> component)
 			{
 				Form<?> form = component;
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.onSubmit();
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -1677,7 +1677,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Form<?> component)
 			{
 				Form<?> form = component;
-				if (form.isEnableAllowed() && form.isEnabled() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.internalMarkFormComponentsValid();
 					return CONTINUE_TRAVERSAL;
@@ -1927,7 +1927,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public Object component(Form<?> form)
 			{
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.internalUpdateFormComponentModels();
 					return CONTINUE_TRAVERSAL;
@@ -1973,7 +1973,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validate()
 	{
-		if (isEnabled() && isEnableAllowed() && isVisibleInHierarchy())
+		if (isEnabledInHierarchy() && isVisibleInHierarchy())
 		{
 			// since this method can be called directly by users, this additional check is needed
 			validateComponents();
@@ -2002,8 +2002,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public void validate(final FormComponent<?> formComponent)
 			{
 				final Form<?> form = formComponent.getForm();
-				if (form == Form.this && form.isEnabled() && form.isEnableAllowed() &&
-					form.isVisibleInHierarchy())
+				if (form == Form.this && form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					formComponent.validate();
 				}
@@ -2103,7 +2102,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public Object component(Form<?> form)
 			{
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.validateComponents();
 					form.validateFormValidators();

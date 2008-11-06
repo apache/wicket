@@ -361,10 +361,11 @@ public class DateTimeField extends FormComponentPanel<Date>
 		hoursField.setRequired(isRequired());
 		minutesField.setRequired(isRequired());
 
-		dateField.setEnabled(isEnabled() && isEnableAllowed());
-		hoursField.setEnabled(isEnabled() && isEnableAllowed());
-		minutesField.setEnabled(isEnabled() && isEnableAllowed());
-		amOrPmChoice.setEnabled(isEnabled() && isEnableAllowed());
+		// obsolete with WICKET-1919
+		// dateField.setEnabled(isEnabledInHierarchy());
+		// hoursField.setEnabled(isEnabledInHierarchy());
+		// minutesField.setEnabled(isEnabledInHierarchy());
+		// amOrPmChoice.setEnabled(isEnabledInHierarchy());
 
 		boolean use12HourFormat = use12HourFormat();
 		amOrPmChoice.setVisible(use12HourFormat);
@@ -414,7 +415,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Checks whether the current {@link Locale} uses the 12h or 24h time format. This method can be
 	 * overridden to e.g. always use 24h format.
 	 * 
-	 * @return true, if the current {@link Locale} uses the 12h format.<br/>false, otherwise
+	 * @return true, if the current {@link Locale} uses the 12h format.<br/>
+	 *         false, otherwise
 	 */
 	protected boolean use12HourFormat()
 	{

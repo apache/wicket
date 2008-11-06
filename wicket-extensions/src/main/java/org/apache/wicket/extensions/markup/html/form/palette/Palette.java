@@ -244,7 +244,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	 */
 	public final boolean isPaletteEnabled()
 	{
-		return isEnabled() && isEnableAllowed();
+		return isEnabledInHierarchy();
 	}
 
 
