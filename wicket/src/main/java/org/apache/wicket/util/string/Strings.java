@@ -890,7 +890,7 @@ public final class Strings
 		{
 			int ixEnd = path.indexOf("?");
 
-			if (ixEnd < ixSemiColon)
+			if (ixEnd <= ixSemiColon)
 			{
 				// ? is before ; - no jsessionid in the url
 				return url.toString();
