@@ -434,7 +434,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				}
 
 				CharSequence escaped;
-				if (isEscapeLabelMarkup() || getEscapeModelStrings())
+				if (getEscapeModelStrings())
 				{
 					escaped = Strings.escapeMarkup(display, false, true);
 				}
@@ -466,6 +466,6 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	@Deprecated
 	protected final boolean isEscapeLabelMarkup()
 	{
-		return true;
+		return getEscapeModelStrings();
 	}
 }
