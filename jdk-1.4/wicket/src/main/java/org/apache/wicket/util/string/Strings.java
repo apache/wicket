@@ -903,6 +903,14 @@ public final class Strings
 			{
 				ixEnd = path.length();
 			}
+
+			if (ixEnd < ixSemiColon)
+			{
+				// ? is before ; - no jsessionid in the url
+				return url.toString();
+			}
+
+
 			path.delete(ixSemiColon, ixEnd);
 		}
 		return path.toString();
