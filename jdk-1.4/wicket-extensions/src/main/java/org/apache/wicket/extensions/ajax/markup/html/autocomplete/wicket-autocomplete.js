@@ -343,12 +343,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 render();
                 showAutoComplete();
             };
-
-            var node=element.firstChild.childNodes[0];
-            for(var i=0;i<elementCount;i++) {
+            var parentNode = element.firstChild; 
+            for(var i = 0;i < elementCount; i++) {
+                var node = parentNode.childNodes[i];
                 node.onclick = clickFunc;
                 node.onmouseover = mouseOverFunc;
-                node = node.nextSibling;
             }
         } else {
             elementCount=0;
