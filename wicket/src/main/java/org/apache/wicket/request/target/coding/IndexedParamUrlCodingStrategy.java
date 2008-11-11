@@ -64,17 +64,28 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 *            name of pagemap
 	 */
 	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-			String pageMapName)
+		String pageMapName)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 	}
 
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		int i = 0;
 		while (parameters.containsKey(String.valueOf(i)))
 		{
-			String value = (String)parameters.get(String.valueOf(i));
+			String value = null;
+			Object parameter = parameters.get(String.valueOf(i));
+			if (parameter instanceof String[] && ((String[])parameter).length > 0)
+			{
+				value = ((String[])parameter)[0];
+			}
+			else
+			{
+				value = parameter.toString();
+			}
+
 			if (!url.endsWith("/"))
 			{
 				url.append("/");
@@ -92,8 +103,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			{
 				url.append("/");
 			}
-			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncodePathComponent(pageMap))
-					.append("/");
+			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
+				urlEncodePathComponent(pageMap)).append("/");
 		}
 
 		String intface = (String)parameters.get(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
@@ -105,16 +116,17 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				url.append("/");
 			}
 			url.append(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME).append("/").append(
-					urlEncodePathComponent(intface)).append("/");
+				urlEncodePathComponent(intface)).append("/");
 		}
 		if (i != parameters.size())
 		{
 			throw new WicketRuntimeException(
-					"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: " +
-							parameters.keySet().toString());
+				"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: " +
+					parameters.keySet().toString());
 		}
 	}
 
+	@Override
 	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		PageParameters params = new PageParameters();
@@ -139,14 +151,15 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 				{
 					i++;
-					params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-							.decodePageMapName(urlDecodePathComponent(parts[i])));
+					params.put(
+						WebRequestCodingStrategy.PAGEMAP,
+						WebRequestCodingStrategy.decodePageMapName(urlDecodePathComponent(parts[i])));
 				}
 				else if (WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.equals(parts[i]))
 				{
 					i++;
 					params.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,
-							urlDecodePathComponent(parts[i]));
+						urlDecodePathComponent(parts[i]));
 				}
 				else
 				{
