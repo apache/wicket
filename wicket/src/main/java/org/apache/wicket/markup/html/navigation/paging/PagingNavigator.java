@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -110,7 +110,8 @@ public class PagingNavigator extends Panel
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link<?> newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected AbstractLink newPagingNavigationIncrementLink(String id, IPageable pageable,
+		int increment)
 	{
 		return new PagingNavigationIncrementLink<Void>(id, pageable, increment);
 	}
@@ -127,7 +128,7 @@ public class PagingNavigator extends Panel
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
-	protected Link<?> newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new PagingNavigationLink<Void>(id, pageable, pageNumber);
 	}
