@@ -254,7 +254,7 @@ public abstract class AutoCompleteTextField extends TextField
 		super.onComponentTag(tag);
 
 		// disable browser autocomplete
-		tag.put("autocomplete", "false");
+		tag.put("autocomplete", "off");
 	}
 
 	/**
