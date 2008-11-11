@@ -288,8 +288,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         var input=wicketGet(elementId);
         var index=getOffsetParentZIndex(elementId);
         container.show();
-        container.style.zIndex=(!isNaN(Number(index))?Number(index)+1:index);
-        container.style.left=position[0]+'px'
+        container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index); 
+        container.style.left=position[0]+'px';
         container.style.top=(input.offsetHeight+position[1])+'px';
         if(cfg.adjustInputWidth)
           container.style.width=input.offsetWidth+'px';
