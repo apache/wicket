@@ -97,6 +97,22 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
+	 * Unregisters the given {@link ResourceReference}.
+	 * 
+	 * @param reference
+	 */
+	public void unregisterResourceReference(ResourceReference reference)
+	{
+		if (reference == null)
+		{
+			throw new IllegalArgumentException("Argument 'reference' may not be null.");
+		}
+		Key key = new Key(reference.getScope().getName(), reference.getPath(),
+			reference.getLocale(), reference.getStyle());
+		map.remove(key);
+	}
+
+	/**
 	 * Looks up resource reference with specified attributes. If the reference is not found and
 	 * <code>strict</code> is set to <code>false</code>, result of
 	 * {@link #createDefaultResourceReference(Class, String, Locale, String)} is returned.
