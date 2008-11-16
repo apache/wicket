@@ -63,3 +63,10 @@ Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandl
 mount path can also contain parameter placeholders
 e.g. when mount path is /foo/${bar}/baz and the incomming url is /foo/abc/baz   the extracted page parameters will 
 contain named parameter bar="abc".
+
+RESOURCES
+---------
+/wicket/resource/org.apache.wicket.ResourceScope/resource/path.xyz?en_EN-style
+/mounted/resource?en_EN-style
+/mounted/resource/with/locale/and/style
+

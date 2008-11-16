@@ -144,6 +144,11 @@ public class RenderPageRequestHandler implements PageRequestHandler
 		return null;
 	}
 
+	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
+	{
+		// TODO:
+	}
+	
 	/**
 	 * Renders page to a {@link BufferedWebResponse}. All URLs in page will be rendered relative to
 	 * <code>targetUrl</code>
@@ -182,11 +187,6 @@ public class RenderPageRequestHandler implements PageRequestHandler
 			requestCycle.setResponse(originalResponse);
 			requestCycle.getUrlRenderer().setBaseUrl(originalBaseUrl);
 		}
-	}
-
-	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
-	{
-		// TODO:
 	}
 
 	private void redirectTo(Url url, RequestCycle requestCycle)
