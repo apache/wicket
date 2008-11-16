@@ -32,8 +32,8 @@ import org.apache._wicket.request.response.Response;
 public interface Resource extends Serializable
 {
 	/**
-	 * Attributes that are provided to resource in the {@link Resource#respond(Attributes)}
-	 * method. Attributes are set by the {@link ResourceRequestHandler}.
+	 * Attributes that are provided to resource in the {@link Resource#respond(Attributes)} method.
+	 * Attributes are set by the {@link ResourceRequestHandler}.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -96,7 +96,7 @@ public interface Resource extends Serializable
 		{
 			return response;
 		}
-		
+
 		/**
 		 * Returns requested locale. The locale is never null.
 		 * 
@@ -106,22 +106,23 @@ public interface Resource extends Serializable
 		{
 			return locale;
 		}
-		
+
 		/**
 		 * If specified returns requested style. The style is optional.
-		 *  
+		 * 
 		 * @return style or <code>null</code>
 		 */
 		public String getStyle()
 		{
 			return style;
 		}
-		
+
 		/**
-		 * Returns additional parameters extracted from the request. If resource is mounted,
-		 * this method returns all (indexed and query) parameters after the mount path. 
-		 * For non mounted global resources this method will only return the query parameters.
-		 * For component specific resources the behavior depends on the component.   
+		 * Returns additional parameters extracted from the request. If resource is created mounted
+		 * {@link ResourceReference}, this method returns all (indexed and query) parameters after
+		 * the mount path. For non mounted {@link ResourceReference}s this method will only return
+		 * the query parameters. For component specific resources the behavior depends on the
+		 * component.
 		 * 
 		 * @return page parameters or <code>null</code>
 		 */
