@@ -33,8 +33,8 @@ import org.apache.wicket.util.string.Strings;
  * can be modified with these AttributeAppenders:
  * 
  * <pre>
- * link.add(new AttributeAppender(&quot;class&quot;, new Model(&quot;hot&quot;), &quot; &quot;));
- * link.add(new AttributeAppender(&quot;onmouseover&quot;, new Model(&quot;foo();return false;&quot;), &quot;;&quot;));
+ * link.add(new AttributeAppender(&quot;class&quot;, new Model&lt;String&gt;(&quot;hot&quot;), &quot; &quot;));
+ * link.add(new AttributeAppender(&quot;onmouseover&quot;, new Model&lt;String&gt;(&quot;foo();return false;&quot;), &quot;;&quot;));
  * </pre>
  * 
  * this will result in the following markup:

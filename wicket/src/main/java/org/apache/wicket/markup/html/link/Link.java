@@ -72,6 +72,8 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @param <T>
+ *            type of model object
  */
 public abstract class Link<T> extends AbstractLink implements ILinkListener
 {
@@ -131,11 +133,13 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Link(final String id, IModel<T> object)
+	public Link(final String id, IModel<T> model)
 	{
-		super(id, object);
+		super(id, model);
 	}
 
 	/**
@@ -229,7 +233,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 *            The anchor
 	 * @return this
 	 */
-	public Link setAnchor(Component anchor)
+	public Link<T> setAnchor(Component anchor)
 	{
 		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
@@ -243,7 +247,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 *            whether this link should automatically enable/disable based on current page.
 	 * @return This
 	 */
-	public final Link setAutoEnable(final boolean autoEnable)
+	public final Link<T> setAutoEnable(final boolean autoEnable)
 	{
 		this.autoEnable = autoEnable;
 		return this;
@@ -257,7 +261,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 *            the popup specification.
 	 * @return This
 	 */
-	public final Link setPopupSettings(final PopupSettings popupSettings)
+	public final Link<T> setPopupSettings(final PopupSettings popupSettings)
 	{
 		this.popupSettings = popupSettings;
 		return this;

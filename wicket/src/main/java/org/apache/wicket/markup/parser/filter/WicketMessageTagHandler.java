@@ -180,7 +180,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID +
+				wc = new TransparentContainer(WICKET_MESSAGE_CONTAINER_ID +
 					container.getPage().getAutoIndex());
 			}
 
@@ -188,5 +188,21 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			return true;
 		}
 		return false;
+	}
+
+	private static class TransparentContainer extends WebMarkupContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public TransparentContainer(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
 	}
 }

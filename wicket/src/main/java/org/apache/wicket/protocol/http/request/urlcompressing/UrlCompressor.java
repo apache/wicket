@@ -24,7 +24,6 @@ import java.util.Iterator;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.collections.IntHashMap;
-import org.apache.wicket.util.collections.IntHashMap.Entry;
 
 
 /**
@@ -82,7 +81,7 @@ public class UrlCompressor implements IClusterable
 		}
 	}
 
-	private static class IntKeyWeakReference extends WeakReference
+	private static class IntKeyWeakReference extends WeakReference<Object>
 	{
 		private final int uid;
 
@@ -91,7 +90,7 @@ public class UrlCompressor implements IClusterable
 		 * @param referent
 		 * @param q
 		 */
-		public IntKeyWeakReference(int uid, Object referent, ReferenceQueue q)
+		public IntKeyWeakReference(int uid, Object referent, ReferenceQueue<Object> q)
 		{
 			super(referent, q);
 			this.uid = uid;
@@ -100,9 +99,14 @@ public class UrlCompressor implements IClusterable
 
 	private static final long serialVersionUID = 1L;
 
-	private transient ReferenceQueue queue = new ReferenceQueue();
+	private transient ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
 
-	private transient IntHashMap directComponentRefs = new IntHashMap(); // uid->component/interface
+	private transient IntHashMap<ComponentAndInterface> directComponentRefs = new IntHashMap<ComponentAndInterface>(); // uid
+	// -
+	// >
+	// component
+	// /
+	// interface
 
 	private int uid = 1;
 
@@ -120,7 +124,7 @@ public class UrlCompressor implements IClusterable
 			directComponentRefs.remove(ref.uid);
 		}
 		int uid = Integer.parseInt(uidString);
-		ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);
+		ComponentAndInterface cai = directComponentRefs.get(uid);
 		return cai;
 	}
 
@@ -145,11 +149,12 @@ public class UrlCompressor implements IClusterable
 	public int getUIDForComponentAndInterface(Component component, String interfaceName)
 	{
 		int uid = 0;
-		Iterator it = directComponentRefs.entrySet().iterator();
+		Iterator<IntHashMap.Entry<ComponentAndInterface>> it = directComponentRefs.entrySet()
+			.iterator();
 		while (it.hasNext())
 		{
-			IntHashMap.Entry entry = (IntHashMap.Entry)it.next();
-			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
+			IntHashMap.Entry<ComponentAndInterface> entry = it.next();
+			ComponentAndInterface cai = entry.getValue();
 			if (cai.getInterfaceName().equals(interfaceName) && cai.getComponent() == component)
 			{
 				uid = entry.getKey();
@@ -170,8 +175,8 @@ public class UrlCompressor implements IClusterable
 		s.defaultReadObject();
 
 		int size = s.readInt();
-		queue = new ReferenceQueue();
-		directComponentRefs = new IntHashMap((int)(size * 1.25));
+		queue = new ReferenceQueue<Object>();
+		directComponentRefs = new IntHashMap<ComponentAndInterface>((int)(size * 1.25));
 
 		while (--size >= 0)
 		{
@@ -197,13 +202,14 @@ public class UrlCompressor implements IClusterable
 
 		s.writeInt(directComponentRefs.size());
 
-		Iterator it = directComponentRefs.entrySet().iterator();
+		Iterator<IntHashMap.Entry<ComponentAndInterface>> it = directComponentRefs.entrySet()
+			.iterator();
 		while (it.hasNext())
 		{
-			IntHashMap.Entry entry = (Entry)it.next();
+			IntHashMap.Entry<ComponentAndInterface> entry = it.next();
 
 			s.writeInt(entry.getKey());
-			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
+			ComponentAndInterface cai = entry.getValue();
 			s.writeObject(cai.getComponent());
 			s.writeUTF(cai.getInterfaceName());
 		}

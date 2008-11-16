@@ -27,7 +27,7 @@ import java.util.Set;
  * @param <T>
  *            type of object inside set
  */
-public class SetModel<T> extends AbstractCollectionModel<Set<T>>
+public class SetModel<T> extends GenericBaseModel<Set<T>>
 {
 	private static final long serialVersionUID = 1L;
 

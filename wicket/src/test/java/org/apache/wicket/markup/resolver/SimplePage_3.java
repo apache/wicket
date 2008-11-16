@@ -37,7 +37,7 @@ public class SimplePage_3 extends WebPage
 	{
 		ValueMap modelData = new ValueMap();
 		modelData.put("testData", "123456");
-		setDefaultModel(new Model(modelData));
+		setDefaultModel(new Model<ValueMap>(modelData));
 	}
 
 	/**

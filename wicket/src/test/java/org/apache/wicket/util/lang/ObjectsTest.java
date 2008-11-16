@@ -104,11 +104,12 @@ public class ObjectsTest extends WicketTestCase
 	/**
 	 * Test method for component cloning
 	 */
+	@SuppressWarnings({"unchecked"})
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),
+		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test", new Model<String>("test")),
 				"modelObject");
-		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
+		PropertyModel<String> pm2 = (PropertyModel<String>)Objects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
 

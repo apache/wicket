@@ -16,20 +16,17 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  * Simple tree component that provides node panel with link allowing user to select individual
  * nodes.
- * 
+ *
  * @author Matej Knopp
  */
 public class LinkTree extends LabelTree
@@ -38,7 +35,7 @@ public class LinkTree extends LabelTree
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 */
 	public LinkTree(String id)
@@ -47,29 +44,30 @@ public class LinkTree extends LabelTree
 	}
 
 	/**
-	 * 
+	 *
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 *            model that provides the {@link TreeModel}
 	 */
-	public LinkTree(String id, IModel model)
+	public LinkTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 	}
 
 	/**
-	 * 
+	 *
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 *            Tree model
 	 */
 	public LinkTree(String id, TreeModel model)
 	{
-		super(id, new Model((Serializable)model));
+		super(id, new WicketTreeModel());
+		setModelObject(model);
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class LinkTree extends LabelTree
 	 *      org.apache.wicket.model.IModel)
 	 */
 	@Override
-	protected Component newNodeComponent(String id, IModel model)
+	protected Component newNodeComponent(String id, IModel<Object> model)
 	{
 		return new LinkIconPanel(id, model, LinkTree.this)
 		{
@@ -91,7 +89,8 @@ public class LinkTree extends LabelTree
 			}
 
 			@Override
-			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+			protected Component newContentComponent(String componentId, BaseTree tree,
+				IModel<Object> model)
 			{
 				return new Label(componentId, getNodeTextModel(model));
 			}
@@ -100,7 +99,7 @@ public class LinkTree extends LabelTree
 
 	/**
 	 * Method invoked after the node has been selected / unselected.
-	 * 
+	 *
 	 * @param node
 	 * @param tree
 	 * @param target

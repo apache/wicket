@@ -71,7 +71,8 @@ public class MarkupComponentBorder implements IComponentBorder
 		boolean insideBorderMarkup = false;
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.next();
+			MarkupElement e = stream.get();
+			stream.next();
 			if (e instanceof WicketTag)
 			{
 				WicketTag wt = (WicketTag)e;
@@ -129,7 +130,8 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.next();
+			MarkupElement e = stream.get();
+			stream.next();
 			if (e instanceof WicketTag)
 			{
 				WicketTag wt = (WicketTag)e;

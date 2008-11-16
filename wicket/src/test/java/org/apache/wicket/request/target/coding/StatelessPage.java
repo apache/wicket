@@ -39,17 +39,18 @@ public class StatelessPage extends WebPage
 	public StatelessPage()
 	{
 		setStatelessHint(true);
-		add(new BookmarkablePageLink("indexLink", Index.class));
-		final TextField field = new TextField("textfield", new Model());
+		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
+		final TextField<String> field = new TextField<String>("textfield", new Model<String>());
 		field.setRequired(true);
 
-		StatelessForm statelessForm = new StatelessForm("statelessform")
+		StatelessForm<Void> statelessForm = new StatelessForm<Void>("statelessform")
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				info("Submitted text: " + field.getDefaultModelObject());

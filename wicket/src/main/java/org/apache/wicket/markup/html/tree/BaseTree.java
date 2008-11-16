@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.tree;
 
+import javax.swing.tree.TreeModel;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IComponentBorder;
@@ -62,7 +64,7 @@ public abstract class BaseTree extends AbstractTree
 	 * @param id
 	 * @param model
 	 */
-	public BaseTree(String id, IModel model)
+	public BaseTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 
@@ -96,6 +98,7 @@ public abstract class BaseTree extends AbstractTree
 	 * @see org.apache.wicket.markup.html.tree.AbstractTree#populateTreeItem(org.apache.wicket.markup.html.WebMarkupContainer,
 	 *      int)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
@@ -106,7 +109,8 @@ public abstract class BaseTree extends AbstractTree
 		item.add(junctionLink);
 
 		// add node component
-		Component nodeComponent = newNodeComponent(NODE_COMPONENT_ID, item.getDefaultModel());
+		Component nodeComponent = newNodeComponent(NODE_COMPONENT_ID,
+			(IModel<Object>)item.getDefaultModel());
 		item.add(nodeComponent);
 
 		// add behavior that conditionally adds the "selected" CSS class name
@@ -166,7 +170,7 @@ public abstract class BaseTree extends AbstractTree
 	 *            model that returns the node
 	 * @return component for node
 	 */
-	protected abstract Component newNodeComponent(String id, IModel model);
+	protected abstract Component newNodeComponent(String id, IModel<Object> model);
 
 	/**
 	 * Returns whether the provided node is last child of it's parent.
@@ -417,7 +421,7 @@ public abstract class BaseTree extends AbstractTree
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
-			return new Link(id)
+			return new Link<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -433,7 +437,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else if (getLinkType() == LinkType.AJAX)
 		{
-			return new AjaxLink(id)
+			return new AjaxLink<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -449,7 +453,7 @@ public abstract class BaseTree extends AbstractTree
 		}
 		else
 		{
-			return new AjaxFallbackLink(id)
+			return new AjaxFallbackLink<Void>(id)
 			{
 				private static final long serialVersionUID = 1L;
 

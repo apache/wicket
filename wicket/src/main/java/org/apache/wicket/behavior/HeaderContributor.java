@@ -52,7 +52,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class< ? > scope, final String path)
+	public static final HeaderContributor forCss(final Class<?> scope, final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -78,7 +78,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class< ? > scope, final String path,
+	public static final HeaderContributor forCss(final Class<?> scope, final String path,
 		final String media)
 	{
 		return new HeaderContributor(new IHeaderContributor()
@@ -203,7 +203,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final Class< ? > scope, final String path)
+	public static final HeaderContributor forJavaScript(final Class<?> scope, final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -276,7 +276,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 		else
 		{
-			return RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + location;
+			return RequestCycle.get()
+				.getProcessor()
+				.getRequestCodingStrategy()
+				.rewriteStaticRelativeUrl(location);
 		}
 	}
 

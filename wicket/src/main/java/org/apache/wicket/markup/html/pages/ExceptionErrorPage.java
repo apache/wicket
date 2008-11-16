@@ -89,7 +89,7 @@ public class ExceptionErrorPage extends WebPage
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
 
-		add(new Link("displayPageViewLink")
+		add(new Link<Void>("displayPageViewLink")
 		{
 			private static final long serialVersionUID = 1L;
 

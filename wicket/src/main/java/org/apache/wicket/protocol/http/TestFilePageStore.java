@@ -181,8 +181,7 @@ public class TestFilePageStore implements IPageStore
 						" for session " + sessionId + " took " + (t2 - t1) +
 						" miliseconds to read in and " + (t3 - t2) + " miliseconds to deserialize");
 				}
-				@SuppressWarnings("unchecked")
-				final Page ret = (Page)page;
+				final Page ret = page;
 				return ret;
 			}
 			catch (Exception e)

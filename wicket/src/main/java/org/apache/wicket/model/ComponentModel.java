@@ -24,8 +24,10 @@ import org.apache.wicket.Component;
  * component is needed in the model.
  * 
  * @author jcompagner
+ * @param <T>
+ *            type of model object
  */
-public class ComponentModel implements IModel, IComponentAssignedModel
+public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +36,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public final Object getObject()
+	public final T getObject()
 	{
 		throw new RuntimeException("get object call not expected on a IComponentAssignedModel");
 	}
@@ -54,7 +56,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	 *            The component which has this model.
 	 * @return The object of the model.
 	 */
-	protected Object getObject(Component component)
+	protected T getObject(Component component)
 	{
 		return null;
 	}
@@ -81,12 +83,12 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
-	public IWrapModel wrapOnAssignment(Component comp)
+	public IWrapModel<T> wrapOnAssignment(Component comp)
 	{
 		return new WrapModel(comp);
 	}
 
-	private class WrapModel implements IWrapModel
+	private class WrapModel implements IWrapModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -103,7 +105,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getWrappedModel()
+		public IModel<T> getWrappedModel()
 		{
 			return ComponentModel.this;
 		}
@@ -111,7 +113,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		/**
 		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
-		public Object getObject()
+		public T getObject()
 		{
 			return ComponentModel.this.getObject(component);
 		}

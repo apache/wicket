@@ -27,8 +27,8 @@ import org.apache.wicket.util.string.Strings;
  * A MultiLineLabel component replaces its body with the model object.
  * <p>
  * Unlike {@link Label}, {@link MultiLineLabel} shows text that spans multiple lines by inserting
- * line breaks (<code>BR</code> tags) for newlines and paragraph markers (<code>P</code> tags)
- * for sequences of more than one newline.
+ * line breaks (<code>BR</code> tags) for newlines and paragraph markers (<code>P</code> tags) for
+ * sequences of more than one newline.
  * 
  * @author Jonathan Locke
  */
@@ -49,7 +49,7 @@ public class MultiLineLabel extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as MultiLineLabel(String, new Model(String))
+	 * Convenience constructor. Same as MultiLineLabel(String, new Modell&lt;String&gt;(String))
 	 * 
 	 * @param id
 	 *            See Component
@@ -58,10 +58,9 @@ public class MultiLineLabel extends WebComponent
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	@SuppressWarnings("unchecked")
 	public MultiLineLabel(final String id, String label)
 	{
-		this(id, new Model(label));
+		this(id, new Model<String>(label));
 	}
 
 	/**

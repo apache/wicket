@@ -43,7 +43,7 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#clear(org.apache.wicket.markup.html.form.FormComponent)
 	 */
-	public void clear(final FormComponent component)
+	public void clear(final FormComponent<?> component)
 	{
 		final Cookie cookie = getCookie(component);
 		if (cookie != null)
@@ -59,7 +59,7 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#load(org.apache.wicket.markup.html.form.FormComponent)
 	 */
-	public void load(final FormComponent component)
+	public void load(final FormComponent<?> component)
 	{
 		final Cookie cookie = getCookie(component);
 		if (cookie != null)
@@ -76,7 +76,7 @@ public class CookieValuePersister implements IValuePersister
 	/**
 	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#save(org.apache.wicket.markup.html.form.FormComponent)
 	 */
-	public void save(final FormComponent component)
+	public void save(final FormComponent<?> component)
 	{
 		final String name = getName(component);
 		final String value = component.getValue();
@@ -101,9 +101,14 @@ public class CookieValuePersister implements IValuePersister
 	 *            Component to get name for
 	 * @return The name of the component.
 	 */
-	protected String getName(final FormComponent component)
+	protected String getName(final FormComponent<?> component)
 	{
-		return component.getPageRelativePath();
+		String name = component.getPageRelativePath();
+		// cookie names cannot contian ':',
+		// we replace ':' with '.' but first we have to encode '.' as '..'
+		name = name.replace(".", "..");
+		name = name.replace(":", ".");
+		return name;
 	}
 
 	/**
@@ -150,7 +155,7 @@ public class CookieValuePersister implements IValuePersister
 	 *            The form component
 	 * @return The cookie for the component or null if none is available
 	 */
-	private Cookie getCookie(final FormComponent component)
+	private Cookie getCookie(final FormComponent<?> component)
 	{
 		// Gets the cookie's name
 		final String name = getName(component);

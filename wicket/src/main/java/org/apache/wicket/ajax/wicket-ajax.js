@@ -271,12 +271,15 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	}
 
     // remove the original element
+	if(element.style.backgroundImage)
+		element.style.backgroundImage = "";
 	parent.removeChild(element);
-
 	element.outerHTML = "";	
 	element = "";
 	
 	if (window.parent == window || window.parent == null) {
+		if(tempDiv.style.backgroundImage)
+			tempDiv.style.backgroundImage = "";
 		document.body.removeChild(tempDiv);
 	}	
 	
@@ -833,14 +836,6 @@ Wicket.Ajax.Request.prototype = {
 			
 			var t = this.transport;
 			if (t != null) {
-				if (Wicket.Browser.isGecko()) {
-					var href = document.location.href;
-					var lastIndexOf = href.lastIndexOf('/');
-					if (lastIndexOf > 0)
-					{
-						url = href.substring(0,lastIndexOf+1) + url;
-					}
-				} 
 				t.open("GET", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
@@ -937,6 +932,10 @@ Wicket.Ajax.Request.prototype = {
 				// the redirect header was set, go to new url
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
+					
+					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
+					// A file download popup will appear but the page in the browser won't change.					
+					this.done();
 					
                     // support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0)==('/')||redirectUrl.match("^http://")=="http://"||redirectUrl.match("^https://")=="https://") {
@@ -1434,7 +1433,7 @@ Wicket.Head.Contributor.prototype = {
 					var req = new Wicket.Ajax.Request(src, onLoad, false, false);
 					req.debugContent = false;
 					if (Wicket.Browser.isKHTML())
-						// konqueror can't process the ajax response asynchronously, threfore the 
+						// konqueror can't process the ajax response asynchronously, therefore the 
 						// javascript loading must be also synchronous
 						req.async = false;
 					// get the javascript
@@ -1444,8 +1443,18 @@ Wicket.Head.Contributor.prototype = {
 				// serialize the element content to string
 				var text = Wicket.DOM.serializeNodeChildren(node);
 				
-				// add javascript to document head
-				Wicket.Head.addJavascript(text, node.getAttribute("id"));
+				var id = node.getAttribute("id");
+				
+				if (typeof(id) == "string" && id.length > 0) {					
+					// add javascript to document head
+					Wicket.Head.addJavascript(text, id);
+				} else {
+					try {
+						eval(text);
+					} catch (e) {
+						Wicket.Log.error(e);
+					}
+				}
 				
 				// continue to next step
 				notify();

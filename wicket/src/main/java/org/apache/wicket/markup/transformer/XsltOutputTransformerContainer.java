@@ -37,8 +37,6 @@ import org.apache.wicket.model.Model;
  * @see org.apache.wicket.markup.transformer.XsltTransformerBehavior
  * 
  * @author Juergen Donnerstag
- * @param <T>
- *            The model data type
  */
 public class XsltOutputTransformerContainer extends AbstractOutputTransformerContainer
 {

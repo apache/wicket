@@ -37,7 +37,7 @@ public class SimplePage_14 extends WebPage
 	public SimplePage_14()
 	{
 		WebMarkupContainer container = new WebMarkupContainer("html");
-		container.add(new AttributeModifier("lang", new Model("de")));
+		container.add(new AttributeModifier("lang", new Model<String>("de")));
 		container.add(new Label("label", "label"));
 		add(container);
 	}

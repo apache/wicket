@@ -25,8 +25,9 @@ package org.apache.wicket.markup.html.link;
  * 
  * @author jcompagner
  * 
+ * 
  */
-public abstract class StatelessLink extends Link
+public abstract class StatelessLink extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
 

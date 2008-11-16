@@ -52,8 +52,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param interfaceName
 	 * @param versionNumber
 	 */
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
-		PageParameters pageParameters, String componentPath, String interfaceName, int versionNumber)
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
+		Class<? extends Page> pageClass, PageParameters pageParameters, String componentPath,
+		String interfaceName, int versionNumber)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
@@ -73,8 +74,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param component
 	 * @param listenerInterface
 	 */
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
-		PageParameters pageParameters, Component component,
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
+		Class<? extends Page> pageClass, PageParameters pageParameters, Component component,
 		RequestListenerInterface listenerInterface)
 	{
 		this(pageMapName, pageClass, pageParameters, component.getPath(),

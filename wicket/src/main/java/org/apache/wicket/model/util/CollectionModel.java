@@ -27,7 +27,7 @@ import java.util.Collection;
  * @param <T>
  *            type of object inside collection
  */
-public class CollectionModel<T> extends AbstractCollectionModel<Collection<T>>
+public class CollectionModel<T> extends GenericBaseModel<Collection<T>>
 {
 	private static final long serialVersionUID = 1L;
 

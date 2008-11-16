@@ -19,6 +19,7 @@ package org.apache.wicket.request;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.util.string.UrlUtils;
 
 /**
  * Implementations of this interface are responsible for digesting the incoming request and creating
@@ -56,4 +57,22 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 * @return the url to the provided target
 	 */
 	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget);
+
+
+	/**
+	 * Rewrites relative paths found in static markup attributes (<code>src,href,background</code>)
+	 * of wicket pages. Since we do not know the url depth at which the page will be rendered the
+	 * implementations should usually simply append a prefix, eg <code>../../</code>, to make the
+	 * path context-relative. If the url is not relative it is returned intact.
+	 * 
+	 * Implementations can be as simple as delegating to
+	 * {@link UrlUtils#rewriteToContextRelative(String, Request)}
+	 * 
+	 * @see Request#getRelativePathPrefixToContextRoot()
+	 * @see UrlUtils#rewriteToContextRelative(String, Request)
+	 * 
+	 * @param string
+	 * @return rewritten path
+	 */
+	String rewriteStaticRelativeUrl(String string);
 }

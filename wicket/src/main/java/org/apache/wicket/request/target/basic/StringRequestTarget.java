@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.request.target.basic;
 
-import java.io.OutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.util.resource.StringBufferResourceStream;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -40,15 +40,20 @@ public class StringRequestTarget implements IRequestTarget
 	/** content type for the string */
 	private final String contentType;
 
+	/** charset of the string */
+	private final String encoding;
+
+
 	/**
-	 * Constructor
+	 * Creates a string request target with content type <code>text/plain</code> and default
+	 * charset (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response
 	 */
 	public StringRequestTarget(String string)
 	{
-		this("text/plain", string);
+		this("text/plain", getDefaultEncoding(), string);
 	}
 
 	/**
@@ -57,10 +62,12 @@ public class StringRequestTarget implements IRequestTarget
 	 * @param contentType
 	 *            content type of the data the string represents eg
 	 *            <code>text/html; charset=utf-8</code>
+	 * @param encoding
+	 *            charset to use
 	 * @param string
 	 *            string for the response
 	 */
-	public StringRequestTarget(String contentType, String string)
+	public StringRequestTarget(String contentType, String encoding, String string)
 	{
 		if (string == null)
 		{
@@ -70,8 +77,41 @@ public class StringRequestTarget implements IRequestTarget
 		{
 			throw new IllegalArgumentException("Argument contentType must not be null or empty");
 		}
+		if (encoding == null)
+		{
+			throw new IllegalArgumentException("Argument charset must not be null");
+		}
 		this.contentType = contentType;
 		this.string = string;
+		this.encoding = encoding;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param contentType
+	 *            content type of the data the string represents eg
+	 *            <code>text/html; charset=utf-8</code>
+	 * @param charset
+	 *            charset to use
+	 * @param string
+	 *            string for the response
+	 * @deprecated use {@link #StringRequestTarget(String, String, String)} instead
+	 */
+	@Deprecated
+	public StringRequestTarget(String contentType, Charset charset, String string)
+	{
+		this(contentType, charset.aliases().iterator().next(), string);
+	}
+
+	/**
+	 * Retrieves default charset configured in application
+	 * 
+	 * @return charset
+	 */
+	private static String getDefaultEncoding()
+	{
+		return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 	}
 
 
@@ -84,27 +124,16 @@ public class StringRequestTarget implements IRequestTarget
 	{
 		// Get servlet response to use when responding with resource
 		final Response response = requestCycle.getResponse();
-		response.setContentType(contentType);
-		final StringBufferResourceStream stream = new StringBufferResourceStream(contentType);
-		stream.append(string);
+		response.setContentType(contentType + ";charset=" + encoding);
 
-		// Respond with resource
+		// send string to client
 		try
 		{
-			final OutputStream out = response.getOutputStream();
-			try
-			{
-				Streams.copy(stream.getInputStream(), out);
-			}
-			finally
-			{
-				stream.close();
-				out.flush();
-			}
+			response.getOutputStream().write(string.getBytes(encoding));
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new WicketRuntimeException("Unable to render resource stream " + stream, e);
+			throw new WicketRuntimeException("Unable to render string: " + e.getMessage(), e);
 		}
 	}
 
@@ -128,6 +157,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof StringRequestTarget)
@@ -141,6 +171,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "StringRequestTarget".hashCode();
@@ -151,6 +182,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[StringRequestTarget@" + hashCode() + " " + string + "]";

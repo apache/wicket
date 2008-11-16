@@ -29,7 +29,7 @@ import java.util.Map;
  * @param <V>
  *            map's value type
  */
-public class MapModel<K, V> extends AbstractCollectionModel<Map<K, V>>
+public class MapModel<K, V> extends GenericBaseModel<Map<K, V>>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -22,12 +22,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.protocol.http.MockPage;
 
 
@@ -61,13 +61,13 @@ public class CheckGroupTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Set prop1 = new HashSet();
+		private Set<Object> prop1 = new HashSet<Object>();
 		private String prop2;
 
 		/**
 		 * @return prop1
 		 */
-		public Set getProp1()
+		public Set<Object> getProp1()
 		{
 			return prop1;
 		}
@@ -75,7 +75,7 @@ public class CheckGroupTest extends WicketTestCase
 		/**
 		 * @param prop1
 		 */
-		public void setProp1(Set prop1)
+		public void setProp1(Set<Object> prop1)
 		{
 			this.prop1 = prop1;
 		}
@@ -116,42 +116,43 @@ public class CheckGroupTest extends WicketTestCase
 		modelObject.setProp2(check2);
 
 		// test model constructors
-		List list = new ArrayList();
-		Model model = new Model((Serializable)list);
+		List<Object> list = new ArrayList<Object>();
+		CollectionModel<Object> model = new CollectionModel<Object>(list);
 
-		final CheckGroup group2 = new CheckGroup("group2", model);
+		final CheckGroup<Object> group2 = new CheckGroup<Object>("group2", model);
 		assertTrue(group2.getDefaultModelObject() == list);
 
-		final CheckGroup group3 = new CheckGroup("group3", list);
+		final CheckGroup<Object> group3 = new CheckGroup<Object>("group3", list);
 		assertTrue(group3.getDefaultModelObject() == list);
 
 
 		// set up necessary objects to emulate a form submission
 
-		RequestCycle cycle = tester.createRequestCycle();
+        tester.createRequestCycle();
 
 		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
 		// create component hierarchy
 
-		final Form form = new Form("form", new CompoundPropertyModel(modelObject))
+		final Form<MockModelObject> form = new Form<MockModelObject>("form", new CompoundPropertyModel<MockModelObject>(modelObject))
 		{
 			private static final long serialVersionUID = 1L;
 
-			public String getMarkupId()
+			@Override
+            public String getMarkupId()
 			{
 				// hack for the fact that this test doesn't relate to any markup
 				return "foo";
 			}
 		};
 
-		final CheckGroup group = new CheckGroup("prop1");
+		final CheckGroup<Object> group = new CheckGroup<Object>("prop1");
 
 		final WebMarkupContainer container = new WebMarkupContainer("container");
 
-		final Check choice1 = new Check("check1", new Model(check1));
-		final Check choice2 = new Check("prop2");
+		final Check<Serializable> choice1 = new Check<Serializable>("check1", new Model<Serializable>(check1));
+		final Check<String> choice2 = new Check<String>("prop2");
 
 		page.add(form);
 		form.add(group);

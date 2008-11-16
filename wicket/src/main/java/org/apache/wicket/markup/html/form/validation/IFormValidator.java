@@ -37,7 +37,7 @@ public interface IFormValidator extends IClusterable
 	/**
 	 * @return array of {@link FormComponent}s that this validator depends on
 	 */
-	FormComponent[] getDependentFormComponents();
+	FormComponent<?>[] getDependentFormComponents();
 
 	/**
 	 * This method is ran if all components returned by
@@ -46,5 +46,5 @@ public interface IFormValidator extends IClusterable
 	 * @param form
 	 *            form this validator is added to
 	 */
-	void validate(Form< ? > form);
+	void validate(Form<?> form);
 }

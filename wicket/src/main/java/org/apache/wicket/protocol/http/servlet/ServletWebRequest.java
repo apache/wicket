@@ -413,8 +413,6 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public boolean isAjax()
 	{
-		boolean ajax = false;
-
 		if (Strings.isTrue(httpServletRequest.getParameter("wicket:ajax")))
 		{
 			return true;
@@ -425,7 +423,7 @@ public class ServletWebRequest extends WebRequest
 		{
 			try
 			{
-				ajax = Strings.isTrue(ajaxHeader);
+				return Strings.isTrue(ajaxHeader);
 			}
 			catch (StringValueConversionException e)
 			{
@@ -433,8 +431,7 @@ public class ServletWebRequest extends WebRequest
 				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
 			}
 		}
-
-		return ajax;
+		return false;
 	}
 
 	/**

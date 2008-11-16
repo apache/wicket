@@ -184,8 +184,7 @@ public final class RequestUtils
 	 *            path, relative to requestPath
 	 * @return absolute path for given url
 	 */
-	public final static String toAbsolutePath(final String requestPath,
-		final String relativePagePath)
+	public final static String toAbsolutePath(final String requestPath, String relativePagePath)
 	{
 		final StringBuffer result;
 		if (requestPath.endsWith("/"))
@@ -196,6 +195,11 @@ public final class RequestUtils
 		{
 			// Remove everything after last slash (but not slash itself)
 			result = new StringBuffer(requestPath.substring(0, requestPath.lastIndexOf('/') + 1));
+		}
+
+		if (relativePagePath.startsWith("./"))
+		{
+			relativePagePath = relativePagePath.substring(2);
 		}
 
 		if (relativePagePath.startsWith("../"))

@@ -29,6 +29,6 @@ public class InvalidImageButtonPage extends WebPage
 
 	public InvalidImageButtonPage()
 	{
-		add(new ImageButton("invalidImage", new Model("toto.gif")));
+		add(new ImageButton("invalidImage", new Model<String>("toto.gif")));
 	}
 }

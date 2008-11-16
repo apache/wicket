@@ -34,11 +34,13 @@ public class ValidatorPropertiesTest extends TestCase
 {
 	WicketTester tester;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester(new MyTesterApplication());
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -84,34 +86,60 @@ public class ValidatorPropertiesTest extends TestCase
 		page.getText12().setInput("");
 		page.getText12().validateRequired();
 
-		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("ok: text3333 is missing", page.getText3().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("ok: Text4Label is missing", page.getText4().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("ok: text is missing", page.getText5().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("found it in panel", page.getText9().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("found it in form", page.getText10().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("found it in page", page.getText11().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("found it in page", page.getText12().getFeedbackMessage().getMessage()
-				.toString());
+		assertEquals("text1label is required", page.getText1()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("text2 is required", page.getText2()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("ok: text3333 is missing", page.getText3()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("ok: Text4Label is missing", page.getText4()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("ok: text is missing", page.getText5()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("Default message: text6 required", page.getText6()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("input for text7-Label is missing", page.getText7()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("Default message: text8-Label required", page.getText8()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("found it in panel", page.getText9()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("found it in form", page.getText10()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("found it in page", page.getText11()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("found it in page", page.getText12()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
 
 		// Test caching
-		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
-				.getMessage().toString());
+		assertEquals("Default message: text8-Label required", page.getText8()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
 
 		// now test Dutch
 
@@ -145,33 +173,57 @@ public class ValidatorPropertiesTest extends TestCase
 		page.getText12().setInput("");
 		page.getText12().validateRequired();
 
-		assertEquals("text1label is verplicht", page.getText1().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("text2 is verplicht", page.getText2().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("ok: text3333 mist", page.getText3().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("ok: Text4Label mist", page.getText4().getFeedbackMessage().getMessage()
-				.toString());
+		assertEquals("text1label is verplicht", page.getText1()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("text2 is verplicht", page.getText2()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("ok: text3333 mist", page.getText3()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("ok: Text4Label mist", page.getText4()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
 		assertEquals("ok: text mist", page.getText5().getFeedbackMessage().getMessage().toString());
-		assertEquals("Default message: text6 verplicht", page.getText6().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("input for text7-Label mist", page.getText7().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("Default message: text8-Label verplicht", page.getText8().getFeedbackMessage()
-				.getMessage().toString());
-		assertEquals("gevonden in panel", page.getText9().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("gevonden in form", page.getText10().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("gevonden in page", page.getText11().getFeedbackMessage().getMessage()
-				.toString());
-		assertEquals("gevonden in page", page.getText12().getFeedbackMessage().getMessage()
-				.toString());
+		assertEquals("Default message: text6 verplicht", page.getText6()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("input for text7-Label mist", page.getText7()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("Default message: text8-Label verplicht", page.getText8()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("gevonden in panel", page.getText9()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("gevonden in form", page.getText10()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("gevonden in page", page.getText11()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
+		assertEquals("gevonden in page", page.getText12()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
 
 		// Test caching
-		assertEquals("Default message: text8-Label verplicht", page.getText8().getFeedbackMessage()
-				.getMessage().toString());
+		assertEquals("Default message: text8-Label verplicht", page.getText8()
+			.getFeedbackMessage()
+			.getMessage()
+			.toString());
 	}
 
 	/**
@@ -184,8 +236,8 @@ public class ValidatorPropertiesTest extends TestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 
 		String str = tester.getApplication().getResourceSettings().getLocalizer().getString("XXX",
-				null);
-		assertEquals("[Warning: String resource for 'XXX' not found]", str);
+			null);
+		assertEquals("[Warning: Property for 'XXX' not found]", str);
 	}
 
 	/**

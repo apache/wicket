@@ -385,6 +385,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		sessionId = sessionId.replace('*', '_');
 		sessionId = sessionId.replace('/', '_');
+		sessionId = sessionId.replace(':', '_');
 
 		File sessionFolder = new File(storeFolder, sessionId);
 		if (create && sessionFolder.exists() == false)
@@ -705,7 +706,6 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 			if (data != null)
 			{
-				@SuppressWarnings("unchecked")
 				final Page ret = deserializePage(data, versionNumber);
 				return ret;
 			}
@@ -835,9 +835,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			else
 			{
 				List<SerializedPage> pages = getPagesToSaveList(sessionId);
-				synchronized (pages)
+				if (pages != null)
 				{
-					flushPagesToSaveList(sessionId, pages);
+					synchronized (pages)
+					{
+						pages.clear();						
+					}
 					entry.unbind();
 				}
 				pagesToSaveAll.remove(sessionId);

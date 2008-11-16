@@ -81,8 +81,6 @@ import org.slf4j.LoggerFactory;
  * @see MarkupStream
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class MarkupContainer extends Component
 {
@@ -648,10 +646,18 @@ public abstract class MarkupContainer extends Component
 			renderComponentTag(associatedMarkupOpenTag);
 			associatedMarkupStream.next();
 
+			String className = null;
+			
 			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 			{
+				Class<?> klass = getClass();
+				while (klass.isAnonymousClass())
+				{
+					klass = klass.getSuperclass();
+				}
+				className = klass.getName();
 				getResponse().write("<!-- MARKUP FOR ");
-				getResponse().write(getClass().getName());
+				getResponse().write(className);
 				getResponse().write(" BEGIN -->");
 			}
 
@@ -660,7 +666,7 @@ public abstract class MarkupContainer extends Component
 			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 			{
 				getResponse().write("<!-- MARKUP FOR ");
-				getResponse().write(getClass().getName());
+				getResponse().write(className);
 				getResponse().write(" END -->");
 			}
 
@@ -789,7 +795,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("[MarkupContainer ");
-		buffer.append(super.toString(true));
+		buffer.append(super.toString(detailed));
 		if (detailed)
 		{
 			if (getMarkupStream() != null)
@@ -964,6 +970,18 @@ public abstract class MarkupContainer extends Component
 			}
 			((ChildList)children).add(child);
 		}
+	}
+
+	/**
+	 * Returns child component at the specified index
+	 * 
+	 * @param index
+	 * @throws ArrayIndexOutOfBoundsException
+	 * @return child component at the specified index
+	 */
+	public final Component get(int index)
+	{
+		return children_get(index);
 	}
 
 	/**
@@ -1862,5 +1880,51 @@ public abstract class MarkupContainer extends Component
 				System.arraycopy(oldData, 0, childs, 0, size);
 			}
 		}
+	}
+
+	/**
+	 * Swaps position of children. This method is particularly useful for adjusting positions of
+	 * repeater's items without rebuilding the component hierarchy
+	 * 
+	 * @param idx1
+	 *            index of first component to be swapped
+	 * @param idx2
+	 *            index of second component to be swapped
+	 */
+	public final void swap(int idx1, int idx2)
+	{
+		int size = children_size();
+		if (idx1 < 0 || idx1 >= size)
+		{
+			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx1 + "<>[0," +
+				size + ")");
+		}
+
+		if (idx2 < 0 || idx2 >= size)
+		{
+			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx2 + "<>[0," +
+				size + ")");
+		}
+
+		if (idx1 == idx2)
+		{
+			return;
+		}
+
+		if (children instanceof Object[])
+		{
+			final Object[] array = (Object[])children;
+			Object tmp = array[idx1];
+			array[idx1] = array[idx2];
+			array[idx2] = tmp;
+		}
+		else
+		{
+			ChildList list = (ChildList)children;
+			Object tmp = list.childs[idx1];
+			list.childs[idx1] = list.childs[idx2];
+			list.childs[idx2] = tmp;
+		}
+
 	}
 }

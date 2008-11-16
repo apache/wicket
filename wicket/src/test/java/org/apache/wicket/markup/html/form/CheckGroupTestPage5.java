@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
 
 
 /**
@@ -38,12 +38,12 @@ public class CheckGroupTestPage5 extends WebPage
 	 */
 	public CheckGroupTestPage5()
 	{
-		List list = new ArrayList();
-		Form form = new Form("form");
-		CheckGroup group = new CheckGroup("group", new Model((Serializable)list));
+		List<String> list = new ArrayList<String>();
+		Form<Void> form = new Form<Void>("form");
+		CheckGroup<String> group = new CheckGroup<String>("group", new CollectionModel<String>(list));
 		WebMarkupContainer container = new WebMarkupContainer("container");
-		Check check1 = new Check("check1", new Model("check1"));
-		Check check2 = new Check("check2", new Model("check2"));
+		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));
+		Check<String> check2 = new Check<String>("check2", new Model<String>("check2"));
 
 
 		add(form);

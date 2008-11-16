@@ -27,10 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The converter object type
  */
-public abstract class AbstractDecimalConverter<T extends Number> extends AbstractNumberConverter<T>
+public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -54,6 +52,18 @@ public abstract class AbstractDecimalConverter<T extends Number> extends Abstrac
 			numberFormats.put(locale, numberFormat);
 		}
 		return (NumberFormat)numberFormat.clone();
+	}
+
+	/**
+	 * Creates a new {@link NumberFormat} for the given locale. The instance is later cached and is
+	 * accessible through {@link #getNumberFormat(Locale)}
+	 * 
+	 * @param locale
+	 * @return number format
+	 */
+	protected NumberFormat newNumberFormat(Locale locale)
+	{
+		return NumberFormat.getInstance(locale);
 	}
 
 	/**

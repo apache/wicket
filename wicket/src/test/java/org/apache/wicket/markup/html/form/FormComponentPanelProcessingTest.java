@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.io.Serializable;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -46,7 +48,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		ft.submit();
 	}
 
-	private static class TestFormComponentPanel extends FormComponentPanel
+	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
 		implements
 			IMarkupResourceStreamProvider
 	{
@@ -55,10 +57,10 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		private boolean childValidated = false;
 		private boolean childModelUpdated = false;
 
-		private TestFormComponentPanel(String id, IModel model)
+		private TestFormComponentPanel(String id, IModel<Serializable> model)
 		{
 			super(id, model);
-			add(new TextField("text", new Model())
+			add(new TextField<Serializable>("text", new Model<Serializable>())
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -109,7 +111,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<wicket:panel><input wicket:id='text' type='text'/></wicket:panel>");
@@ -123,13 +125,13 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		public TestPage()
 		{
-			Form form = new Form("form");
+			Form<Void> form = new Form<Void>("form");
 			add(form);
-			form.add(new TestFormComponentPanel("panel", new Model()));
+			form.add(new TestFormComponentPanel("panel", new Model<Serializable>()));
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<body><form wicket:id='form'><div wicket:id='panel'></div></form></body>");

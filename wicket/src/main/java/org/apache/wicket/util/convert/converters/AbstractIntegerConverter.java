@@ -26,10 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Jonathan Locke
  * 
- * @param <T>
- *            The converter object type
  */
-public abstract class AbstractIntegerConverter<T extends Number> extends AbstractNumberConverter<T>
+public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
 	private static final long serialVersionUID = 1L;
 

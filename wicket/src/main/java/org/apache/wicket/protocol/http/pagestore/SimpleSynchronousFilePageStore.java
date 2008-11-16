@@ -100,7 +100,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
-	 * @return
+	 * @return page file
 	 */
 	private File getPageFile(File sessionDir, String pageMapName, int pageId, int versionNumber,
 		int ajaxVersionNumber)

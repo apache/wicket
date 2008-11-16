@@ -76,7 +76,7 @@ public class Files
 	public static String filename(final String path)
 	{
 		return Strings.lastPathComponent(path.replace('/', java.io.File.separatorChar),
-				java.io.File.separatorChar);
+			java.io.File.separatorChar);
 	}
 
 	/**
@@ -92,7 +92,8 @@ public class Files
 		if (!file.delete())
 		{
 			// NOTE: fix for java/win bug. see:
-			// http://forum.java.sun.com/thread.jsp?forum=4&thread=158689&tstart=0&trange=15
+			// http://forum.java.sun.com/thread.jsp?forum=4&thread=158689&tstart=
+			// 0&trange=15
 			System.gc();
 			try
 			{
@@ -119,7 +120,7 @@ public class Files
 	 * @throws IOException
 	 */
 	public static final int writeTo(final java.io.File file, final InputStream input)
-			throws IOException
+		throws IOException
 	{
 		final FileOutputStream out = new FileOutputStream(file);
 		try
@@ -132,10 +133,32 @@ public class Files
 		}
 	}
 
+	private static String FORBIDDEN_IN_NAME = new String("\"*/:<>?\\|,");
+
+	/**
+	 * <p>
+	 * Replaces commonly unsupported characters with '_'
+	 * </p>
+	 * 
+	 * @param filename
+	 *            to be cleaned
+	 * @return cleaned filename
+	 */
+	public static final String cleanupFilename(final String filename)
+	{
+		String name = filename;
+		for (int i = 0; i < FORBIDDEN_IN_NAME.length(); i++)
+		{
+			name = name.replace(FORBIDDEN_IN_NAME.charAt(i), '_');
+		}
+		return name;
+	}
+
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
 	private Files()
 	{
 	}
+
 }

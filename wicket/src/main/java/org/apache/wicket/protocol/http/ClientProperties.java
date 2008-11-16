@@ -94,7 +94,6 @@ public class ClientProperties implements IClusterable
 
 	private String utcOffset;
 
-
 	/**
 	 * @return The browser height at the time it was measured
 	 */
@@ -1051,6 +1050,7 @@ public class ClientProperties implements IClusterable
 		this.utcOffset = utcOffset;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();

@@ -27,14 +27,14 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class IntegerConverter extends AbstractIntegerConverter<Integer>
+public class IntegerConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a integer converter
 	 */
-	public static final IConverter<Integer> INSTANCE = new IntegerConverter();
+	public static final IConverter INSTANCE = new IntegerConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)

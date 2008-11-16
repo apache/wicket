@@ -625,6 +625,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeFields()
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void writeFields() throws IOException
 	{

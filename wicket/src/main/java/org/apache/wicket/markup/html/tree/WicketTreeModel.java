@@ -14,35 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.markup.html.tree;
+
+import javax.swing.tree.TreeModel;
+
+import org.apache.wicket.model.util.GenericBaseModel;
 
 /**
- * Holds settings for rendering responses under unit testing.
- * 
- * @author Jonathan
+ * @author Timo Rantalaiho
  */
-public class UnitTestSettings
+public class WicketTreeModel extends GenericBaseModel<TreeModel>
 {
-	/**
-	 * True when unit testing is going on and we need to sort coded parameters so they will string
-	 * compare.
-	 */
-	private static boolean sortUrlParameters = false;
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @return True if URL parameters should be sorted
-	 */
-	public static boolean getSortUrlParameters()
+	@Override
+	protected TreeModel createSerializableVersionOf(TreeModel object)
 	{
-		return UnitTestSettings.sortUrlParameters;
-	}
-
-	/**
-	 * @param sortUrlParameters
-	 *            True if URL parameters should be sorted
-	 */
-	public static void setSortUrlParameters(boolean sortUrlParameters)
-	{
-		UnitTestSettings.sortUrlParameters = sortUrlParameters;
+		return object;
 	}
 }

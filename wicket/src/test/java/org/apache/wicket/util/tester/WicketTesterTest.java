@@ -20,11 +20,8 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.MockPageWithLink;
-import org.apache.wicket.MockPageWithOneComponent;
-import org.apache.wicket.Page;
-import org.apache.wicket.Session;
+import org.apache.wicket.*;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -465,6 +462,20 @@ public class WicketTesterTest extends TestCase
 
 		// Click the submit
 		tester.clickLink("submitLink");
+	}
+
+	public void testTesterCanBeOverridenToNotReuseExistingRequestCycleInExecuteAjaxEvent()
+	{
+		tester = new WicketTester(new MyMockApplication()) {
+			@Override
+			protected WebRequestCycle resolveRequestCycle()
+			{
+				return setupRequestAndResponse(true);
+			}
+		};
+		tester.startPage(MockPageWithFormAndCheckGroup.class);
+		tester.executeAjaxEvent("submitLink", "onclick");
+		tester.assertComponentOnAjaxResponse("submitLink");
 	}
 
 	/**

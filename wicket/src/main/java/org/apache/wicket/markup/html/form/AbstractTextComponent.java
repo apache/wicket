@@ -75,6 +75,8 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractTextComponent(final String id, final IModel<T> model)
@@ -179,7 +181,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 *            the value to set this flag.
 	 * @return this
 	 */
-	public final FormComponent setConvertEmptyInputStringToNull(boolean flag)
+	public final FormComponent<T> setConvertEmptyInputStringToNull(boolean flag)
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;

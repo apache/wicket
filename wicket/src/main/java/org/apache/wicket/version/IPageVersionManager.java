@@ -42,8 +42,6 @@ import org.apache.wicket.version.undo.Change;
  * retrieved by calling <code>getCurrentVersionNumber</code>.
  * 
  * @author Jonathan Locke
- * @param <T>
- *            type of page
  * @since 1.2.6
  */
 public interface IPageVersionManager extends IClusterable

@@ -27,19 +27,19 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CharacterConverter extends AbstractConverter<Character>
+public class CharacterConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a character converter
 	 */
-	public static final IConverter<Character> INSTANCE = new CharacterConverter();
+	public static final IConverter INSTANCE = new CharacterConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Character convertToObject(final String value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
 		int length = value.length();
 		if (length == 0)

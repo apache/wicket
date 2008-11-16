@@ -29,7 +29,7 @@ import org.apache.wicket.request.IRequestCycleProcessor;
  * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page
  * that is to be created from the provided page class. This is typically used for redirects to
  * bookmarkable pages or mounted pages.
- * 
+ *
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -49,9 +49,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param pageClass
 	 *            the class of the page
 	 */
@@ -62,9 +62,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param pageClass
 	 *            the class of the page
 	 * @param pageParameters
@@ -78,12 +78,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param pageMapName
 	 *            optional page map name
-	 * 
+	 *
 	 * @param pageClass
 	 *            the class of the page
 	 */
@@ -94,10 +94,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param <C>
 	 *            type of page
-	 * 
+	 *
 	 * @param pageMapName
 	 *            optional page map name
 	 * @param pageClass
@@ -237,6 +237,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 				String redirectUrl = processor.getRequestCodingStrategy()
 					.encode(requestCycle, this)
 					.toString();
+				if (redirectUrl.startsWith("./"))
+				{
+					redirectUrl = redirectUrl.substring(2);
+				}
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -259,10 +263,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Constructs a new instance of a page given its class name
-	 * 
+	 *
 	 * @param <C>
 	 *            type of page
-	 * 
+	 *
 	 * @param pageClass
 	 *            class name of the page to be created
 	 * @param requestCycle
@@ -292,7 +296,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Gets a newly constructed page if we are not in a redirect.
-	 * 
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 * @return the page

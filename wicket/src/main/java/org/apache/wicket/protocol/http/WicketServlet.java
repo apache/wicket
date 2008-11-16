@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * 
  * Please use {@link WicketFilter} if you require advanced chaining of resources.
  * 
+ * <p>
  * Servlet class for all wicket applications. The specific application class to instantiate should
  * be specified to the application server via an init-params argument named "applicationClassName"
  * in the servlet declaration, which is typically in a <i>web.xml </i> file. The servlet declaration
@@ -56,7 +57,8 @@ import org.slf4j.LoggerFactory;
  * Note that the applicationClassName parameter you specify must be the fully qualified name of a
  * class that extends WebApplication. If your class cannot be found, does not extend WebApplication
  * or cannot be instantiated, a runtime exception of type WicketRuntimeException will be thrown.
- * </p> As an alternative, you can configure an application factory instead. This looks like:
+ * </p>
+ * As an alternative, you can configure an application factory instead. This looks like:
  * 
  * <pre>
  * &lt;init-param&gt;

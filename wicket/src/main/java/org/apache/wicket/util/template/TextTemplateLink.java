@@ -26,9 +26,11 @@ import org.apache.wicket.markup.html.link.ResourceLink;
  * useful for creating dynamic JNLP descriptors, among other things.
  * 
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  * @since 1.2.6
  */
-public class TextTemplateLink extends ResourceLink
+public class TextTemplateLink<T> extends ResourceLink<T>
 {
 	private static final long serialVersionUID = 1L;
 

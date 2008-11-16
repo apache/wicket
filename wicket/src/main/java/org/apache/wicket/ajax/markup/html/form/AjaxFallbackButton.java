@@ -156,6 +156,6 @@ public abstract class AjaxFallbackButton extends Button
 	 */
 	protected final boolean isButtonEnabled()
 	{
-		return isEnabled() && isEnableAllowed();
+		return isEnabledInHierarchy();
 	}
 }

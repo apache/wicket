@@ -26,13 +26,15 @@ import java.util.List;
  * checked, the rest of the validator chain is ignored.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable
  * @since 1.2.6
  */
-public class CompoundValidator implements IValidator
+public class CompoundValidator<T> implements IValidator<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final List<IValidator> validators = new ArrayList<IValidator>(2);
+	private final List<IValidator<T>> validators = new ArrayList<IValidator<T>>(2);
 
 	/**
 	 * Constructor.
@@ -48,7 +50,7 @@ public class CompoundValidator implements IValidator
 	 *            an <code>IValidator</code> to be added
 	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
-	public final CompoundValidator add(IValidator validator)
+	public final CompoundValidator<T> add(IValidator<T> validator)
 	{
 		if (validator == null)
 		{
@@ -61,9 +63,9 @@ public class CompoundValidator implements IValidator
 	/**
 	 * @see IValidator#validate(IValidatable)
 	 */
-	public final void validate(IValidatable validatable)
+	public final void validate(IValidatable<T> validatable)
 	{
-		Iterator<IValidator> it = validators.iterator();
+		Iterator<IValidator<T>> it = validators.iterator();
 		while (it.hasNext() && validatable.isValid())
 		{
 			it.next().validate(validatable);
@@ -75,7 +77,7 @@ public class CompoundValidator implements IValidator
 	 * 
 	 * @return unmodifiable list of delegate {@link IValidator}s inside this one
 	 */
-	public final List<IValidator> getValidators()
+	public final List<IValidator<T>> getValidators()
 	{
 		return Collections.unmodifiableList(validators);
 	}

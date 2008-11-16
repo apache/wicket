@@ -67,11 +67,11 @@ public class WicketTesterHelper
 	 */
 	public static List<WicketTesterHelper.ComponentData> getComponentData(final Page page)
 	{
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		if (page != null)
 		{
-			page.visitChildren(new IVisitor()
+			page.visitChildren(new IVisitor<Component>()
 			{
 				public Object component(final Component component)
 				{
@@ -114,7 +114,7 @@ public class WicketTesterHelper
 	 * @param actuals
 	 *            a <code>Collection</code> object
 	 */
-	public static void assertEquals(final Collection expects, final Collection actuals)
+	public static void assertEquals(final Collection<?> expects, final Collection<?> actuals)
 	{
 		if (!expects.containsAll(actuals) || !actuals.containsAll(expects))
 		{
@@ -130,7 +130,8 @@ public class WicketTesterHelper
 	 * @param actuals
 	 *            a <code>Collection</code> object
 	 */
-	public static void failWithVerboseMessage(final Collection expects, final Collection actuals)
+	public static void failWithVerboseMessage(final Collection<?> expects,
+		final Collection<?> actuals)
 	{
 		Assert.fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was (" +
 			actuals.size() + "):\n" + asLined(actuals));
@@ -143,10 +144,10 @@ public class WicketTesterHelper
 	 *            a <code>Collection</code> object
 	 * @return a <code>String</code> representation of the <code>Collection</code>
 	 */
-	public static String asLined(final Collection objects)
+	public static String asLined(final Collection<?> objects)
 	{
 		StringBuffer lined = new StringBuffer();
-		for (Iterator iter = objects.iterator(); iter.hasNext();)
+		for (Iterator<?> iter = objects.iterator(); iter.hasNext();)
 		{
 			String objectString = iter.next().toString();
 			lined.append("   ");

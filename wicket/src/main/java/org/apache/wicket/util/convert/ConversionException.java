@@ -35,7 +35,7 @@ public class ConversionException extends WicketRuntimeException
 	private static final long serialVersionUID = 1L;
 
 	/** The converter that was used. */
-	private IConverter< ? > converter;
+	private IConverter converter;
 
 	/** Pattern that was used for conversion. */
 	private Format format;
@@ -95,7 +95,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the used converter.
 	 */
-	public final IConverter< ? > getConverter()
+	public final IConverter getConverter()
 	{
 		return converter;
 	}
@@ -135,7 +135,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the target property type.
 	 */
-	public final Class< ? > getTargetType()
+	public final Class<?> getTargetType()
 	{
 		return Classes.resolveClass(targetTypeName);
 	}
@@ -147,7 +147,7 @@ public class ConversionException extends WicketRuntimeException
 	 *            the converter.
 	 * @return This
 	 */
-	public final ConversionException setConverter(IConverter< ? > converter)
+	public final ConversionException setConverter(IConverter converter)
 	{
 		this.converter = converter;
 		return this;
@@ -199,7 +199,7 @@ public class ConversionException extends WicketRuntimeException
 	 *            sets the target property type
 	 * @return This
 	 */
-	public final ConversionException setTargetType(Class< ? > targetType)
+	public final ConversionException setTargetType(Class<?> targetType)
 	{
 		targetTypeName = targetType.getName();
 		return this;

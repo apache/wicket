@@ -25,12 +25,15 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.response.StringResponse;
 
 /**
+ * Portlet behaviour override of the {@link HeaderResponse} implementation, responsible for writing
+ * header contributions from portlets in the body of the response, as opposed to the head.
+ * 
  * @author Ate Douma
  */
 public class EmbeddedPortletHeaderResponse extends HeaderResponse
 {
-	private Response realResponse;
-	private StringResponse bufferedResponse;
+	private final Response realResponse;
+	private final StringResponse bufferedResponse;
 
 	public EmbeddedPortletHeaderResponse(Response realResponse)
 	{
@@ -38,6 +41,7 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 		bufferedResponse = new StringResponse();
 	}
 
+	@Override
 	public void renderCSSReference(String url, String media)
 	{
 		if (!isClosed())
@@ -54,8 +58,7 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 				{
 					getResponse().write("elem.setAttribute(\"media\",\"" + media + "\");");
 				}
-				getResponse()
-						.write("document.getElementsByTagName(\"head\")[0].appendChild(elem);");
+				getResponse().write("document.getElementsByTagName(\"head\")[0].appendChild(elem);");
 				getResponse().println("</script>");
 				markRendered(token);
 			}
@@ -63,9 +66,10 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 	}
 
 
-	/**
+	/*
 	 * @see org.apache.wicket.markup.html.internal.HeaderResponse#close()
 	 */
+	@Override
 	public void close()
 	{
 		super.close();
@@ -101,16 +105,17 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 		if (output.length() > 0)
 		{
 			realResponse.write("<span id=\"" + RequestContext.get().getNamespace() +
-					"_embedded_head\" style=\"display:none\">");
+				"_embedded_head\" style=\"display:none\">");
 			realResponse.write(output);
 			realResponse.write("</span>");
 		}
 		bufferedResponse.reset();
 	}
 
-	/**
+	/*
 	 * @see org.apache.wicket.markup.html.internal.HeaderResponse#getRealResponse()
 	 */
+	@Override
 	protected Response getRealResponse()
 	{
 		return bufferedResponse;

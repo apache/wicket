@@ -56,4 +56,9 @@ public class MarkupContainerTest extends WicketTestCase
 			assertEquals(Integer.toString(i++), component.getId());
 		}
 	}
+
+	public void testMarkupId() throws Exception
+	{
+		executeTest(MarkupIdTestPage.class, "MarkupIdTestPageExpectedResult.html");
+	}
 }

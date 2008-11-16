@@ -47,128 +47,129 @@ public class MyComponent extends WebMarkupContainer
 	 */
 	public MyComponent(final String id)
 	{
-		super(id, new Model(""));
+		super(id, new Model<String>(""));
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param intParam
 	 */
-	public void setIntParam(final int param)
+	public void setIntParam(final int intParam)
 	{
-		this.intParam = param;
+		this.intParam = intParam;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param integerParam
 	 */
-	public void setIntegerParam(final Integer param)
+	public void setIntegerParam(final Integer integerParam)
 	{
-		this.integerParam = param;
+		this.integerParam = integerParam;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param long1Param
 	 */
-	public void setLong1Param(final long param)
+	public void setLong1Param(final long long1Param)
 	{
-		this.long1Param = param;
+		this.long1Param = long1Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param long2Param
 	 */
-	public void setLong2Param(final Long param)
+	public void setLong2Param(final Long long2Param)
 	{
-		this.long2Param = param;
+		this.long2Param = long2Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param float1Param
 	 */
-	public void setFloat1Param(final float param)
+	public void setFloat1Param(final float float1Param)
 	{
-		this.float1Param = param;
+		this.float1Param = float1Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param float2Param
 	 */
-	public void setFloat2Param(final Float param)
+	public void setFloat2Param(final Float float2Param)
 	{
-		this.float2Param = param;
+		this.float2Param = float2Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param double1Param
 	 */
-	public void setDouble1Param(final double param)
+	public void setDouble1Param(final double double1Param)
 	{
-		this.double1Param = param;
+		this.double1Param = double1Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param double2Param
 	 */
-	public void setDouble2Param(final Double param)
+	public void setDouble2Param(final Double double2Param)
 	{
-		this.double2Param = param;
+		this.double2Param = double2Param;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param dateParam
 	 */
-	// public void setDateParam(final Date param)
-	public void setDateParam(final String param)
+	// public void setDateParam(final Date dateParam)
+	public void setDateParam(final String dateParam)
 	{
-		this.dateParam = param;
+		this.dateParam = dateParam;
 	}
 
 	/**
 	 * Sets the number of rows per page.
 	 * 
-	 * @param param
+	 * @param hexParam
 	 */
-	public void setHexParam(final String param)
+	public void setHexParam(final String hexParam)
 	{
-		this.hexParam = param;
+		this.hexParam = hexParam;
 	}
 
 	/**
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	@Override
+    protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		StringBuffer str = new StringBuffer();
 
-		str.append("intParam: " + intParam + "<br/>");
-		str.append("integerParam: " + integerParam.toString() + "<br/>");
-		str.append("long1Param: " + long1Param + "<br/>");
-		str.append("long2Param: " + long2Param.toString() + "<br/>");
-		str.append("float1Param: " + float1Param + "<br/>");
-		str.append("float2Param: " + float2Param.toString() + "<br/>");
-		str.append("double1Param: " + double1Param + "<br/>");
-		str.append("double2Param: " + double2Param.toString() + "<br/>");
-		str.append("dateParam: " + dateParam + "<br/>");
-		str.append("hexParam: " + hexParam + "<br/>");
+        str.append("intParam: ").append(intParam).append("<br/>");
+        str.append("integerParam: ").append(integerParam.toString()).append("<br/>");
+        str.append("long1Param: ").append(long1Param).append("<br/>");
+        str.append("long2Param: ").append(long2Param.toString()).append("<br/>");
+        str.append("float1Param: ").append(float1Param).append("<br/>");
+        str.append("float2Param: ").append(float2Param.toString()).append("<br/>");
+        str.append("double1Param: ").append(double1Param).append("<br/>");
+        str.append("double2Param: ").append(double2Param.toString()).append("<br/>");
+        str.append("dateParam: ").append(dateParam).append("<br/>");
+        str.append("hexParam: ").append(hexParam).append("<br/>");
 
 		getResponse().write(str);
 

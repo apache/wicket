@@ -19,8 +19,7 @@ package org.apache.wicket.markup.html.list;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
-
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -37,19 +36,20 @@ public class ListViewTest extends TestCase
 	 *            of elements to go into the list
 	 * @return list view
 	 */
-	private ListView createListView(final int modelListSize)
+	private ListView<Integer> createListView(final int modelListSize)
 	{
-		ArrayList modelList = new ArrayList();
+		ArrayList<Integer> modelList = new ArrayList<Integer>();
 		for (int i = 0; i < modelListSize; i++)
 		{
-			modelList.add(new Integer(i));
+			modelList.add(i);
 		}
 
-		return new ListView("listView", new Model(modelList))
+		return new ListView<Integer>("listView", new ListModel<Integer>(modelList))
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(final ListItem listItem)
+			@Override
+            protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}
@@ -63,7 +63,7 @@ public class ListViewTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 
-		ListView lv = createListView(4);
+		ListView<Integer> lv = createListView(4);
 		assertEquals(4, lv.getList().size());
 		assertEquals(4, lv.getViewSize());
 		assertEquals(0, lv.getStartIndex());
@@ -102,18 +102,19 @@ public class ListViewTest extends TestCase
 		WicketTester tester = new WicketTester();
 
 		// Empty tables
-		ListView lv = createListView(0);
+		ListView<?> lv = createListView(0);
 		assertEquals(0, lv.getStartIndex());
 		assertEquals(0, lv.getViewSize());
 
 		// null tables are a special case used for table navigation
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
-		lv = new ListView("listView", new Model(null))
+		lv = new ListView<Void>("listView", new ListModel<Void>())
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(final ListItem listItem)
+			@Override
+            protected void populateItem(final ListItem<Void> listItem)
 			{
 				// do nothing
 			}

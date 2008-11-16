@@ -49,8 +49,6 @@ import org.apache.wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * 
- * @param <T>
- *            The model object type
  */
 public class Button extends FormComponent<String> implements IFormSubmittingComponent
 {
@@ -243,6 +241,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * Override this method to provide special submit handling in a multi-button form. It is called
 	 * whenever the user clicks this particular button.
 	 */
+	// TODO 1.5: make this method abstract
 	public void onSubmit()
 	{
 	}

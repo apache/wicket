@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
@@ -32,6 +31,7 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageId;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Request;
@@ -44,7 +44,6 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
-import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -56,11 +55,14 @@ import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
+import org.apache.wicket.request.target.component.PageIdRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,7 +157,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * <p>
 	 * mountsOnPath is sorted by longest paths first to improve resolution of possible path
 	 * conflicts. <br />
-	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
+	 * For example: <br/>
+	 * we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
 	 * now suppose we want to access Page1 with a single parameter param="test". we have a url
 	 * collision since both pages can be access with /page/test <br />
@@ -206,11 +209,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			parameters.setOnlyProcessIfPathActive(true);
 		}
 
-		Map map = request.getParameterMap();
-		Iterator iterator = map.keySet().iterator();
+		Map<String, String[]> map = request.getParameterMap();
+		Iterator<String> iterator = map.keySet().iterator();
 		while (iterator.hasNext())
 		{
-			String key = (String)iterator.next();
+			String key = iterator.next();
 			if (key.startsWith(NAME_SPACE))
 			{
 				iterator.remove();
@@ -225,9 +228,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode the given request target. If a mount is found, that mounted url will be returned.
 	 * Otherwise, one of the delegation methods will be called. In case you are using custom targets
 	 * that are not part of the default target hierarchy, you need to override
-	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults
-	 * have been tried. When that doesn't provide a url either, an exception will be thrown saying
-	 * that encoding could not be done.
+	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults have
+	 * been tried. When that doesn't provide a url either, an exception will be thrown saying that
+	 * encoding could not be done.
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
@@ -256,6 +259,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle,
 				(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
+		}
+		else if (requestTarget instanceof PageIdRequestTarget)
+		{
+			url = encode(requestCycle, (PageIdRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -409,8 +416,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
@@ -771,18 +777,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			final Iterator iterator;
-			if (UnitTestSettings.getSortUrlParameters())
-			{
-				iterator = new TreeSet(parameters.keySet()).iterator();
-			}
-			else
-			{
-				iterator = parameters.keySet().iterator();
-			}
+			final Iterator<String> iterator = parameters.keySet().iterator();
 			while (iterator.hasNext())
 			{
-				final String key = (String)iterator.next();
+				final String key = iterator.next();
 				final String values[] = parameters.getStringArray(key);
 				if (values != null)
 				{
@@ -827,10 +825,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (map != null && map.size() > 0)
 			{
 				buffer.append('?');
-				Iterator it = map.entrySet().iterator();
+				Iterator<Entry<String, String[]>> it = map.entrySet().iterator();
 				while (it.hasNext())
 				{
-					Map.Entry entry = (Entry)it.next();
+					Map.Entry<String, String[]> entry = it.next();
 					buffer.append(entry.getKey());
 					buffer.append('=');
 					buffer.append(entry.getValue());
@@ -842,6 +840,50 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 			return buffer;
 		}
+	}
+
+
+	/**
+	 * Encode a pageid request target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected CharSequence encode(RequestCycle requestCycle, PageIdRequestTarget requestTarget)
+	{
+		final PageId id = requestTarget.getPageId();
+
+		// Start string buffer for url
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
+		url.append('?');
+		url.append(INTERFACE_PARAMETER_NAME);
+		url.append('=');
+
+		// add pagemap
+		if (!Objects.equal(PageMap.DEFAULT_NAME, id.getPageMapName()))
+		{
+			url.append(id.getPageMapName());
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// add page id
+		url.append(id.getPageNumber());
+		url.append(Component.PATH_SEPARATOR);
+
+		// add version
+		url.append(id.getPageVersion());
+		url.append(Component.PATH_SEPARATOR);
+
+		// add listener interface (noop because we default to redirect listener which is default)
+		url.append(Component.PATH_SEPARATOR);
+
+		// behavior id (noop because we dont care aboute behaviors
+		url.append(Component.PATH_SEPARATOR);
+
+		return url;
 	}
 
 	/**
@@ -1151,8 +1193,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Makes page map name url safe.
 	 * 
 	 * Since the default page map name in wicket is null and null does not encode well into urls
-	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed
-	 * in is not null it is returned without modification.
+	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed in
+	 * is not null it is returned without modification.
 	 * 
 	 * @param pageMapName
 	 *            page map name
@@ -1216,6 +1258,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			return false;
 		}
+	}
+
+	/** {@inheritDoc} */
+	public String rewriteStaticRelativeUrl(String string)
+	{
+		return UrlUtils.rewriteToContextRelative(string, RequestCycle.get().getRequest());
 	}
 
 }

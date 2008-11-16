@@ -40,13 +40,14 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public HeaderSectionMyLabel(final String id, final String label)
 	{
-		super(id, new Model(label));
+		super(id, new Model<String>(label));
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
@@ -58,6 +59,7 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		this.renderHeadFromAssociatedMarkupFile(container);

@@ -35,13 +35,25 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 	/** */
 	private static final long serialVersionUID = 1L;
 
+	private final CheckGroup<?> group;
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
 	public CheckGroupSelector(String id)
 	{
+		this(id, null);
+	}
+
+	/**
+	 * @param id
+	 * @param group
+	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 */
+	public CheckGroupSelector(String id, CheckGroup<?> group)
+	{
 		super(id);
+		this.group = group;
 	}
 
 	/**
@@ -55,13 +67,17 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<?> group = findParent(CheckGroup.class);
+		CheckGroup<?> group = this.group;
 		if (group == null)
 		{
-			throw new WicketRuntimeException(
-				"CheckGroupSelector component [" +
-					getPath() +
-					"] cannot find its parent CheckGroup. All CheckGroupSelector components must be a child of or below in the hierarchy of a CheckGroup component.");
+			group = findParent(CheckGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException(
+					"CheckGroupSelector component [" +
+						getPath() +
+						"] cannot find its parent CheckGroup. All CheckGroupSelector components must be a child of or below in the hierarchy of a CheckGroup component.");
+			}
 		}
 
 		tag.put(

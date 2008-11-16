@@ -22,6 +22,11 @@ import org.apache.wicket.MarkupContainer;
  * To be implemented by MarkupContainers that wish to implement their own algorithms for the markup
  * cache key.
  * 
+ * <p>
+ * If {@link #getCacheKey(MarkupContainer, Class)} method returns <code>null</code> the markup is
+ * not cached.
+ * </p>
+ * 
  * @see IMarkupResourceStreamProvider
  * 
  * @author Juergen Donnerstag

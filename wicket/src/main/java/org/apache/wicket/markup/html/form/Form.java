@@ -155,14 +155,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				FormComponent<?> formComponent = (FormComponent<?>)component;
 
 				Form<?> form = formComponent.getForm();
-				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
+				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					// do not validate formComponent or any of formComponent's children
 					return Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
 
 				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
-					formComponent.isEnabled() && formComponent.isEnableAllowed())
+					formComponent.isEnabledInHierarchy())
 				{
 					validate(formComponent);
 				}
@@ -184,6 +184,52 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public abstract void validate(FormComponent<?> formComponent);
 	}
+
+
+	/**
+	 * Visitor used to update component models
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static class FormModelUpdateVisitor implements Component.IVisitor<Component>
+	{
+		private final Form<?> formFilter;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param formFilter
+		 */
+		public FormModelUpdateVisitor(Form<?> formFilter)
+		{
+			this.formFilter = formFilter;
+		}
+
+		/** {@inheritDoc} */
+		public Object component(Component component)
+		{
+			if (component instanceof IFormModelUpdateListener)
+			{
+				final Form<?> form = Form.findForm(component);
+				if (form != null)
+				{
+					if (this.formFilter == null || this.formFilter == form)
+					{
+						if (form.isEnabledInHierarchy())
+						{
+							if (component.isEnabledInHierarchy() &&
+								component.isVisibleInHierarchy())
+							{
+								((IFormModelUpdateListener)component).updateModel();
+							}
+						}
+					}
+				}
+			}
+			return Component.IVisitor.CONTINUE_TRAVERSAL;
+		}
+	}
+
 
 	/**
 	 * 
@@ -822,12 +868,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					{
 						formToProcess = submittingComponent.getForm();
 					}
+
 					// process the form for this request
-					if (formToProcess.process())
-					{
-						// let clients handle further processing
-						delegateSubmit(submittingComponent);
-					}
+					formToProcess.process(submittingComponent);
 				}
 			}
 		}
@@ -839,6 +882,33 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 	}
 
+
+	/**
+	 * Process the form. Though you can override this method to provide your own algorithm, it is
+	 * not recommended to do so.
+	 * 
+	 * <p>
+	 * See the class documentation for further details on the form processing
+	 * </p>
+	 * 
+	 * @param submittingComponent
+	 *            component responsible for submitting the form, or <code>null</code> if none (eg
+	 *            the form has been submitted via the enter key or javascript calling
+	 *            form.onsubmit())
+	 * 
+	 * @see #delegateSubmit(IFormSubmittingComponent) for an easy way to process submitting
+	 *      component in the default manner
+	 */
+	public void process(IFormSubmittingComponent submittingComponent)
+	{
+		// process the form for this request
+		if (process())
+		{
+			// let clients handle further processing
+			delegateSubmit(submittingComponent);
+		}
+	}
+
 	/**
 	 * Process the form. Though you can override this method to provide your whole own algorithm, it
 	 * is not recommended to do so.
@@ -846,11 +916,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * See the class documentation for further details on the form processing
 	 * </p>
 	 * 
+	 * @deprecated use {@link #process(IFormSubmittingComponent)}
+	 * 
 	 * @return False if the form had an error
 	 */
+	@Deprecated
 	public boolean process()
 	{
-		if (!isEnabled() || !isEnableAllowed() || !isVisibleInHierarchy())
+		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{
 			// since process() can be called outside of the default form workflow, an additional
 			// check is needed
@@ -904,7 +977,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Component component)
 			{
 				final Form<?> form = (Form<?>)component;
-				if (!form.isEnabled() || !form.isEnableAllowed() || !form.isVisibleInHierarchy())
+				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 				{
 					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
@@ -930,7 +1003,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Component component)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.isEnabled() && form.isEnableAllowed() && isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -1324,9 +1397,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" name=\"");
 		buffer.append(defaultSubmittingComponent.getInputName());
-		buffer.append("\" onclick=\" var b=Wicket.$('");
+		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer.append("'); if (b!=null&&typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1384,7 +1457,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Form<?> component)
 			{
 				Form<?> form = component;
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.onSubmit();
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -1454,6 +1527,36 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		return new CookieValuePersister();
 	}
 
+	private boolean isMultiPart()
+	{
+		if (multiPart)
+		{
+			return true;
+		}
+		else
+		{
+			final boolean[] anyEmbeddedMultipart = new boolean[] { false };
+			visitChildren(Form.class, new IVisitor<Form<?>>()
+			{
+
+				public Object component(Form<?> form)
+				{
+					if (form.multiPart)
+					{
+						anyEmbeddedMultipart[0] = true;
+						return STOP_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL;
+					}
+				}
+
+			});
+			return anyEmbeddedMultipart[0];
+		}
+	}
+
 	/**
 	 * Handles multi-part processing of the submitted data.
 	 * 
@@ -1465,7 +1568,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected boolean handleMultiPart()
 	{
-		if (multiPart && !((WebRequest)getRequest()).isAjax())
+		if (isMultiPart() && !((WebRequest)getRequest()).isAjax())
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
@@ -1574,7 +1677,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public Object component(Form<?> component)
 			{
 				Form<?> form = component;
-				if (form.isEnableAllowed() && form.isEnabled() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.internalMarkFormComponentsValid();
 					return CONTINUE_TRAVERSAL;
@@ -1633,7 +1736,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("action", Strings.escapeMarkup(url));
 			}
 
-			if (multiPart)
+			if (isMultiPart())
 			{
 				tag.put("enctype", "multipart/form-data");
 			}
@@ -1824,7 +1927,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public Object component(Form<?> form)
 			{
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.internalUpdateFormComponentModels();
 					return CONTINUE_TRAVERSAL;
@@ -1841,19 +1944,22 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void internalUpdateFormComponentModels()
 	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
+		FormComponent.visitComponentsPostOrder(this, new FormModelUpdateVisitor(this));
+
+		MarkupContainer border = findParent(Border.class);
+		if (border != null)
 		{
-			@Override
-			public void validate(FormComponent<?> formComponent)
+			Iterator<? extends Component> iter = border.iterator();
+			Component.IVisitor<Component> visitor = new FormModelUpdateVisitor(null);
+			while (iter.hasNext())
 			{
-				Form<?> form = formComponent.getForm();
-				if (form == Form.this)
+				Component child = iter.next();
+				if (child instanceof IFormModelUpdateListener)
 				{
-					// Potentially update the model
-					formComponent.updateModel();
+					visitor.component(child);
 				}
 			}
-		});
+		}
 	}
 
 	/**
@@ -1865,15 +1971,24 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * that can be added using addValidator().
 	 * </p>
 	 */
-	protected void validate()
+	protected final void validate()
 	{
-		if (isEnabled() && isEnableAllowed() && isVisibleInHierarchy())
+		if (isEnabledInHierarchy() && isVisibleInHierarchy())
 		{
 			// since this method can be called directly by users, this additional check is needed
 			validateComponents();
 			validateFormValidators();
+			onValidate();
 			validateNestedForms();
 		}
+	}
+
+	/**
+	 * Callback during the validation stage of the form
+	 */
+	protected void onValidate()
+	{
+
 	}
 
 	/**
@@ -1887,8 +2002,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			public void validate(final FormComponent<?> formComponent)
 			{
 				final Form<?> form = formComponent.getForm();
-				if (form == Form.this && form.isEnabled() && form.isEnableAllowed() &&
-					form.isVisibleInHierarchy())
+				if (form == Form.this && form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					formComponent.validate();
 				}
@@ -1988,10 +2102,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public Object component(Form<?> form)
 			{
-				if (form.isEnabled() && form.isEnableAllowed() && form.isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.validateComponents();
 					form.validateFormValidators();
+					form.onValidate();
 					return CONTINUE_TRAVERSAL;
 				}
 				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -2080,5 +2195,36 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		setDefaultModelObject(object);
 	}
 
+	/**
+	 * @param component
+	 * @return The parent form for component
+	 */
+	public static Form<?> findForm(Component component)
+	{
+		class FindFormVisitor implements Component.IVisitor<Form<?>>
+		{
+			Form<?> form = null;
 
+			public Object component(Form<?> component)
+			{
+				form = component;
+				return Component.IVisitor.STOP_TRAVERSAL;
+			}
+		}
+
+		Form<?> form = component.findParent(Form.class);
+		if (form == null)
+		{
+			// check whether the form is a child of a surrounding border
+			final Border border = component.findParent(Border.class);
+			if (border != null)
+			{
+				FindFormVisitor formVisitor = new FindFormVisitor();
+				border.visitChildren(Form.class, formVisitor);
+				form = formVisitor.form;
+			}
+		}
+		return form;
+
+	}
 }

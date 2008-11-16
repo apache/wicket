@@ -83,7 +83,7 @@ public class FileChannelPool
 	 * @param createIfDoesNotExist
 	 *            in case the file does not exist this parameter determines if the file should be
 	 *            created
-	 * @return
+	 * @return file channel or null
 	 */
 	private FileChannel newFileChannel(String fileName, boolean createIfDoesNotExist)
 	{
@@ -159,7 +159,7 @@ public class FileChannelPool
 	 * 
 	 * @param fileName
 	 * @param createIfDoesNotExist
-	 * @return
+	 * @return file channel
 	 */
 	public synchronized FileChannel getFileChannel(String fileName, boolean createIfDoesNotExist)
 	{

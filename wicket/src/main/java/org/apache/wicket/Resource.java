@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
  * ImageButton components in this example are like all other components in Wicket and cannot be
  * shared.
  * 
+ * @see SharedResources
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Gili Tzabari
@@ -148,7 +149,7 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that parameterize this resource
 	 */
-	public final void setParameters(final Map< ? , ? > parameters)
+	public final void setParameters(final Map<?, ?> parameters)
 	{
 		if (parameters == null)
 		{

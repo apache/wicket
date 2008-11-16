@@ -60,6 +60,7 @@ public class Localizer
 	/** Cache properties */
 	private Map<String, String> cache = newCache();
 
+	/** */
 	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
 
 	/**
@@ -130,8 +131,8 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component,
-		final String defaultValue) throws MissingResourceException
+	public String getString(final String key, final Component component, final String defaultValue)
+		throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
 	}
@@ -257,8 +258,8 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " +
-				key);
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '" +
+				key + "'");
 			if (component != null)
 			{
 				message.append(" for component: ");
@@ -269,7 +270,7 @@ public class Localizer
 				? component.getClass().getName() : ""), key);
 		}
 
-		return "[Warning: String resource for '" + key + "' not found]";
+		return "[Warning: Property for '" + key + "' not found]";
 	}
 
 	/**
@@ -281,7 +282,9 @@ public class Localizer
 	protected void putIntoCache(final String cacheKey, final String string)
 	{
 		if (cache == null)
+		{
 			return;
+		}
 
 		// ConcurrentHashMap does not allow null values
 		if (string == null)

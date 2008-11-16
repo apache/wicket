@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -107,38 +106,39 @@ public class RadioGroupTest extends WicketTestCase
 		MockModelObject modelObject = new MockModelObject();
 
 		// object used to test regular model
-		Model model = new Model();
+		Model<String> model = new Model<String>();
 
 		// set up necessary objects to emulate a form submission
 
-		RequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
 		// create component hierarchy
 
-		final Form form = new Form("form", new CompoundPropertyModel(modelObject))
+		final Form<MockModelObject> form = new Form<MockModelObject>("form", new CompoundPropertyModel<MockModelObject>(modelObject))
 		{
 			private static final long serialVersionUID = 1L;
 
-			public String getMarkupId()
+			@Override
+            public String getMarkupId()
 			{
 				// hack for the fact that this test doesn't relate to any markup
 				return "foo";
 			}
 		};
 
-		final RadioGroup group = new RadioGroup("prop1");
+		final RadioGroup<String> group = new RadioGroup<String>("prop1");
 
 		final WebMarkupContainer container = new WebMarkupContainer("container");
 
-		final Radio choice1 = new Radio("radio1", new Model(radio1));
-		final Radio choice2 = new Radio("prop2");
+		final Radio<String> choice1 = new Radio<String>("radio1", new Model<String>(radio1));
+		final Radio<String> choice2 = new Radio<String>("prop2");
 
-		final RadioGroup group2 = new RadioGroup("group2", model);
+		final RadioGroup<String> group2 = new RadioGroup<String>("group2", model);
 
-		final Radio choice3 = new Radio("radio3", new Model(radio1));
+		final Radio<String> choice3 = new Radio<String>("radio3", new Model<String>(radio1));
 
 		page.add(form);
 		form.add(group);

@@ -19,7 +19,6 @@ package org.apache.wicket.resource.loader;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
@@ -41,8 +40,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 
  * @author Juergen Donnerstag
+ * @author igor.vaynberg
  */
-public class PackageStringResourceLoader implements IStringResourceLoader
+public class PackageStringResourceLoader extends ComponentStringResourceLoader
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PackageStringResourceLoader.class);
@@ -62,6 +62,7 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
+	@Override
 	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
@@ -114,24 +115,6 @@ public class PackageStringResourceLoader implements IStringResourceLoader
 		return null;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String)
-	 */
-	public String loadStringResource(final Component component, final String key)
-	{
-		if (component == null)
-		{
-			return null;
-		}
-
-		// The return value
-		Locale locale = component.getLocale();
-		String style = component.getStyle();
-
-		return loadStringResource(component.getClass(), key, locale, style);
-	}
 
 	/**
 	 * Gets the properties file filename (without extension)

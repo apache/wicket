@@ -27,14 +27,14 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FloatConverter extends AbstractDecimalConverter<Float>
+public class FloatConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a float converter
 	 */
-	public static final IConverter<Float> INSTANCE = new FloatConverter();
+	public static final IConverter INSTANCE = new FloatConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)

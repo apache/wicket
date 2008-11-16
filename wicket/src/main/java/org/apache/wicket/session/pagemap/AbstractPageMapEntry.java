@@ -52,10 +52,9 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	 * 
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	@SuppressWarnings("unchecked")
 	public Class<? extends Page> getPageClass()
 	{
-		return (Class<? extends Page>)getPage().getClass();
+		return getPage().getClass();
 	}
 
 	/**

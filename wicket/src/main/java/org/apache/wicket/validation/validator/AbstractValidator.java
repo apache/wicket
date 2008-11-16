@@ -34,28 +34,30 @@ import org.apache.wicket.validation.ValidationError;
  * <p>
  * Error messages can be registered by calling one of the error (<code>IValidatable</code>)
  * overloads. By default this class will skip validation if the {@link IValidatable#getValue()}
- * returns <code>null</code>. Validators that wish to validate the <code>null</code> value need
- * to override {@link #validateOnNullValue()} and return <code>true</code>.
+ * returns <code>null</code>. Validators that wish to validate the <code>null</code> value need to
+ * override {@link #validateOnNullValue()} and return <code>true</code>.
  * 
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable
  * @since 1.2.6
  */
-public abstract class AbstractValidator implements INullAcceptingValidator, IClusterable
+public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Indicates whether or not to validate the value if it is <code>null</code>. It is usually
-	 * desirable to skip validation if the value is <code>null</code>, unless we want to make
-	 * sure the value is in fact <code>null</code> (a rare use case). Validators that extend this
-	 * and wish to ensure the value is <code>null</code> should override this method and return
+	 * desirable to skip validation if the value is <code>null</code>, unless we want to make sure
+	 * the value is in fact <code>null</code> (a rare use case). Validators that extend this and
+	 * wish to ensure the value is <code>null</code> should override this method and return
 	 * <code>true</code>.
 	 * 
-	 * @return <code>true</code> to validate on <code>null</code> value, <code>false</code> to
-	 *         skip validation on <code>null</code> value
+	 * @return <code>true</code> to validate on <code>null</code> value, <code>false</code> to skip
+	 *         validation on <code>null</code> value
 	 */
 	public boolean validateOnNullValue()
 	{
@@ -68,12 +70,12 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @param validatable
 	 *            the given <code>IValidatable</code> instance
 	 */
-	protected abstract void onValidate(IValidatable validatable);
+	protected abstract void onValidate(IValidatable<T> validatable);
 
 	/**
 	 * @see IValidator#validate(IValidatable)
 	 */
-	public final void validate(IValidatable validatable)
+	public final void validate(IValidatable<T> validatable)
 	{
 		if (validatable.getValue() != null || validateOnNullValue())
 		{
@@ -90,7 +92,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 *            the <code>IValidatable</code> instance being validated
 	 * 
 	 */
-	public void error(final IValidatable validatable)
+	public void error(final IValidatable<T> validatable)
 	{
 		error(validatable, resourceKey(), variablesMap(validatable));
 	}
@@ -106,7 +108,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 *            the message resource key to use
 	 * 
 	 */
-	public void error(final IValidatable validatable, String resourceKey)
+	public void error(final IValidatable<T> validatable, String resourceKey)
 	{
 		if (resourceKey == null)
 		{
@@ -125,7 +127,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @param vars
 	 *            <code>Map</code> of variables for variable interpolation
 	 */
-	public void error(final IValidatable validatable, final Map<String, Object> vars)
+	public void error(final IValidatable<T> validatable, final Map<String, Object> vars)
 	{
 		if (vars == null)
 		{
@@ -145,7 +147,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @param vars
 	 *            <code>Map</code> of variables for variable interpolation
 	 */
-	public void error(final IValidatable validatable, final String resourceKey,
+	public void error(final IValidatable<T> validatable, final String resourceKey,
 		Map<String, Object> vars)
 	{
 		if (validatable == null)
@@ -196,7 +198,7 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * 
 	 * @return a <code>Map</code> of variables for variable interpolation
 	 */
-	protected Map<String, Object> variablesMap(IValidatable validatable)
+	protected Map<String, Object> variablesMap(IValidatable<T> validatable)
 	{
 		final Map<String, Object> resourceModel = new HashMap<String, Object>(1);
 		return resourceModel;
@@ -209,11 +211,9 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * 
 	 * Gets the default variables for interpolation. These are:
 	 * <ul>
-	 * <li>${input}: the user's input</li>
-	 * <li>${name}: the name of the component</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes from
-	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
-	 * order</li>
+	 * <li>${input}: the user's input</li> <li>${name}: the name of the component</li> <li>${label}:
+	 * the label of the <code>Component</code> - either comes from <code>FormComponent.labelModel
+	 * </code> or resource key [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param formComponent
@@ -224,10 +224,10 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @throws UnsupportedOperationException
 	 * 
 	 * 
-	 * FIXME 2.0: remove asap
+	 *             FIXME 2.0: remove asap
 	 */
 	@Deprecated
-	protected final Map<String, Object> messageModel(final FormComponent formComponent)
+	protected final Map<String, Object> messageModel(final FormComponent<T> formComponent)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -246,11 +246,11 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @throws UnsupportedOperationException
 	 * 
 	 * 
-	 * FIXME 2.0: remove asap
+	 *             FIXME 2.0: remove asap
 	 * 
 	 */
 	@Deprecated
-	protected final String resourceKey(final FormComponent formComponent)
+	protected final String resourceKey(final FormComponent<T> formComponent)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
@@ -273,10 +273,10 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * @throws UnsupportedOperationException
 	 * 
 	 * 
-	 * FIXME 2.0: remove asap
+	 *             FIXME 2.0: remove asap
 	 */
 	@Deprecated
-	public final void validate(final FormComponent component)
+	public final void validate(final FormComponent<T> component)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}

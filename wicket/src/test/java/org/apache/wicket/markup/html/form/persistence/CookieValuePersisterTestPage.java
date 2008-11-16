@@ -50,7 +50,7 @@ public class CookieValuePersisterTestPage extends WebPage
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	public final class TestForm extends Form
+	public final class TestForm extends Form<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -64,13 +64,14 @@ public class CookieValuePersisterTestPage extends WebPage
 		{
 			super(id);
 
-			add(new TextField("input", new Model("test")));
+			add(new TextField<String>("input", new Model<String>("test")));
 		}
 
 		/**
 		 * Dummy
 		 */
-		public final void onSubmit()
+		@Override
+        public final void onSubmit()
 		{
 		}
 	}

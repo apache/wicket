@@ -50,4 +50,12 @@ public class OutputTransformerContainerTest extends WicketTestCase
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+		executeTest(Page_3.class, "PageExpectedResult_3.html");
+	}
 }

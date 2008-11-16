@@ -38,7 +38,7 @@ public class LinkIconPanel extends LabelIconPanel
 	 *            model that is used to access the TreeNode
 	 * @param tree
 	 */
-	public LinkIconPanel(String id, IModel model, BaseTree tree)
+	public LinkIconPanel(String id, IModel<Object> model, BaseTree tree)
 	{
 		super(id, model, tree);
 	}
@@ -48,7 +48,7 @@ public class LinkIconPanel extends LabelIconPanel
 	 *      org.apache.wicket.markup.html.tree.BaseTree)
 	 */
 	@Override
-	protected void addComponents(final IModel model, final BaseTree tree)
+	protected void addComponents(final IModel<Object> model, final BaseTree tree)
 	{
 		BaseTree.ILinkCallback callback = new BaseTree.ILinkCallback()
 		{

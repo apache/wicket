@@ -27,7 +27,7 @@ import java.util.Set;
  * @param <T>
  *            type of object inside set
  */
-public class WildcardSetModel<T> extends AbstractCollectionModel<Set<? extends T>>
+public class WildcardSetModel<T> extends GenericBaseModel<Set<? extends T>>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -52,20 +52,48 @@ public class Check<T> extends LabeledWebMarkupContainer
 	 */
 	private short uuid = -1;
 
+	private final CheckGroup<T> group;
+
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
 	public Check(String id)
 	{
-		super(id);
+		this(id, null, null);
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public Check(String id, IModel<T> model)
 	{
+		this(id, model, null);
+	}
+
+	/**
+	 * @param id
+	 * @param group
+	 *            parent {@link CheckGroup} of this check
+	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 */
+	public Check(String id, CheckGroup<T> group)
+	{
+		this(id, null, group);
+	}
+
+	/**
+	 * @param id
+	 * @param model
+	 * @param group
+	 *            parent {@link CheckGroup} of this check
+	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 */
+	public Check(String id, IModel<T> model, CheckGroup<T> group)
+	{
 		super(id, model);
+		this.group = group;
 	}
 
 
@@ -100,12 +128,15 @@ public class Check<T> extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<?> group = findParent(CheckGroup.class);
-
+		CheckGroup<?> group = this.group;
 		if (group == null)
 		{
-			throw new WicketRuntimeException("Check component [" + getPath() +
-				"] cannot find its parent CheckGroup");
+			group = findParent(CheckGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException("Check component [" + getPath() +
+					"] cannot find its parent CheckGroup");
+			}
 		}
 
 		final String uuid = getValue();

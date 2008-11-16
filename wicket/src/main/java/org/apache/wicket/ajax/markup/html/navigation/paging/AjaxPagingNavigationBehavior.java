@@ -76,7 +76,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		owner.onClick(target);
 
 		// find the PagingNavigator parent of this link
-		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component)owner).findParent(AjaxPagingNavigator.class);
+		AjaxPagingNavigator navigator = ((Component)owner).findParent(AjaxPagingNavigator.class);
 		if (navigator == null)
 		{
 			throw new WicketRuntimeException(
@@ -103,7 +103,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		if (getComponent().isEnabled() && getComponent().isEnableAllowed())
+		if (getComponent().isEnabledInHierarchy())
 		{
 			super.onComponentTag(tag);
 		}

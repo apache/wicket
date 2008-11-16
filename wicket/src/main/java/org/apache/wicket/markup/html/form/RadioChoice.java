@@ -432,14 +432,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			if (objectClass != null && objectClass != String.class)
 			{
-				final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
-
-				if (!converter.getClass().isAssignableFrom(objectClass))
-				{
-					throw new IllegalArgumentException("converter can not convert " +
-						objectClass.getName() + " to string");
-				}
-
+				final IConverter converter = getConverter(objectClass);
 				label = converter.convertToString(displayValue, getLocale());
 			}
 			else if (displayValue != null)
@@ -457,7 +450,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
-				final String idAttr = getInputName() + "_" + id;
+				final String idAttr = getMarkupId() + "_" + id;
+
+				boolean enabled = isEnabledInHierarchy() && !isDisabled(choice, index, selected);
 
 				// Add radio tag
 				buffer.append("<input name=\"")
@@ -465,7 +460,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					.append("\"")
 					.append(" type=\"radio\"")
 					.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-					.append((isEnabled() ? "" : " disabled=\"disabled\""))
+					.append((enabled ? "" : " disabled=\"disabled\""))
 					.append(" value=\"")
 					.append(id)
 					.append("\" id=\"")
@@ -516,7 +511,15 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
-				CharSequence escaped = Strings.escapeMarkup(display, false, true);
+				final CharSequence escaped;
+				if (getEscapeModelStrings())
+				{
+					escaped = Strings.escapeMarkup(display, false, true);
+				}
+				else
+				{
+					escaped = display;
+				}
 				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
 					"</label>");
 

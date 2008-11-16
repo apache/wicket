@@ -17,9 +17,10 @@
 package org.apache.wicket.markup.html.list;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 
 
 /**
@@ -47,19 +48,20 @@ public class TableTest extends WicketTestCase
 	 *            size of a page
 	 * @return table
 	 */
-	private PageableListView createTable(final int modelListSize, final int pageSize)
+	private PageableListView<Integer> createTable(final int modelListSize, final int pageSize)
 	{
-		ArrayList modelList = new ArrayList();
+		List<Integer> modelList = new ArrayList<Integer>();
 		for (int i = 0; i < modelListSize; i++)
 		{
-			modelList.add(new Integer(i));
+			modelList.add(i);
 		}
 
-		return new PageableListView("table", new Model(modelList), pageSize)
+		return new PageableListView<Integer>("table", new ListModel<Integer>(modelList), pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(final ListItem listItem)
+			@Override
+            protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}
@@ -71,7 +73,7 @@ public class TableTest extends WicketTestCase
 	 */
 	public void testTable()
 	{
-		PageableListView table = createTable(20, 4);
+		PageableListView<?> table = createTable(20, 4);
 		assertEquals(4, table.getRowsPerPage());
 		assertEquals(0, table.getCurrentPage());
 		assertEquals(5, table.getPageCount());
@@ -103,7 +105,7 @@ public class TableTest extends WicketTestCase
 	 */
 	public void testEmptyTable()
 	{
-		PageableListView table = createTable(0, 4);
+		PageableListView<?> table = createTable(0, 4);
 		assertEquals(4, table.getRowsPerPage());
 		assertEquals(0, table.getCurrentPage());
 		assertEquals(0, table.getPageCount());
@@ -112,11 +114,12 @@ public class TableTest extends WicketTestCase
 		// null tables are a special case used for table navigation
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
-		table = new PageableListView("table", new Model(null), 10)
+		table = new PageableListView<Void>("table", new ListModel<Void>(), 10)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void populateItem(final ListItem listItem)
+			@Override
+            protected void populateItem(final ListItem<Void> listItem)
 			{
 				// do nothing
 			}

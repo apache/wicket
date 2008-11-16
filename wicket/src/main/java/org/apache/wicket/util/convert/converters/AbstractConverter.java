@@ -29,10 +29,8 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author Eelco Hillenius
  * 
- * @param <T>
- *            The converter object type
  */
-public abstract class AbstractConverter<T> implements IConverter<T>
+public abstract class AbstractConverter implements IConverter
 {
 	/**
 	 * 
@@ -88,12 +86,12 @@ public abstract class AbstractConverter<T> implements IConverter<T>
 	/**
 	 * @return The target type of this type converter
 	 */
-	protected abstract Class<T> getTargetType();
+	protected abstract Class<?> getTargetType();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(T value, Locale locale)
+	public String convertToString(Object value, Locale locale)
 	{
 		if (value == null)
 		{

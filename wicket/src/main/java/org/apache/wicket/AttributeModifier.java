@@ -366,14 +366,14 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * gets replacement with null check.
 	 * 
 	 * @param component
-	 * @return
+	 * @return replacement value
 	 */
 	private Object getReplacementOrNull(final Component component)
 	{
 		IModel<?> model = replaceModel;
 		if (model instanceof IComponentAssignedModel)
 		{
-			model = ((IComponentAssignedModel)model).wrapOnAssignment(component);
+			model = ((IComponentAssignedModel<?>)model).wrapOnAssignment(component);
 		}
 		return (model != null) ? model.getObject() : null;
 	}
@@ -382,7 +382,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * gets replacement as a string with null check.
 	 * 
 	 * @param replacementValue
-	 * @return
+	 * @return replacement value as a string
 	 */
 	private String toStringOrNull(final Object replacementValue)
 	{

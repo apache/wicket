@@ -50,6 +50,7 @@ import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
+import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
@@ -92,6 +93,8 @@ public final class Settings
 		IFrameworkSettings,
 		IRequestLoggerSettings
 {
+	private boolean outputComponentPath = false;
+
 	/** Class of access denied page. */
 	private WeakReference<Class<? extends Page>> accessDeniedPage;
 
@@ -329,6 +332,7 @@ public final class Settings
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
+		stringResourceLoaders.add(new ValidatorStringResourceLoader());
 	}
 
 	/**
@@ -1421,4 +1425,19 @@ public final class Settings
 	{
 		parentFolderPlaceholder = sequence;
 	}
+
+
+	/** @see IDebugSettings#isOutputComponentPath() */
+	public boolean isOutputComponentPath()
+	{
+		return outputComponentPath;
+	}
+
+	/** @see IDebugSettings#setOutputComponentPath() */
+	public void setOutputComponentPath(boolean outputComponentPath)
+	{
+		this.outputComponentPath = outputComponentPath;
+	}
+
+
 }

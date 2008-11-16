@@ -49,20 +49,48 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 */
 	private short uuid = -1;
 
+	private final RadioGroup<T> group;
+
+
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
 	public Radio(String id)
 	{
-		super(id);
+		this(id, null, null);
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public Radio(String id, IModel<T> model)
 	{
+		this(id, model, null);
+	}
+
+	/**
+	 * @param group
+	 *            parent {@link RadioGroup}
+	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 */
+	public Radio(String id, RadioGroup<T> group)
+	{
+		this(id, null, group);
+	}
+
+	/**
+	 * @param id
+	 * @param model
+	 * @param group
+	 *            parent {@link RadioGroup}
+	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 */
+	public Radio(String id, IModel<T> model, RadioGroup<T> group)
+	{
 		super(id, model);
+		this.group = group;
 	}
 
 
@@ -99,13 +127,17 @@ public class Radio<T> extends LabeledWebMarkupContainer
 
 		final String value = getValue();
 
-		RadioGroup<?> group = findParent(RadioGroup.class);
+		RadioGroup<?> group = this.group;
 		if (group == null)
 		{
-			throw new WicketRuntimeException(
-				"Radio component [" +
-					getPath() +
-					"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+			group = findParent(RadioGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException(
+					"Radio component [" +
+						getPath() +
+						"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+			}
 		}
 
 
@@ -159,7 +191,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		}
 
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		if (!isEnabledInHierarchy())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}

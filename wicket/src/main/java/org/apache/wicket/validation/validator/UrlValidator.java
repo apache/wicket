@@ -31,12 +31,11 @@ import org.apache.wicket.validation.IValidatable;
  * The behavior of validation is modified by passing in one of these options:
  * <p>
  * <ul>
- * <li><code>ALLOW_2_SLASHES - [FALSE]</code>: Allows double '/' characters in the path
- * component.</li>
+ * <li><code>ALLOW_2_SLASHES - [FALSE]</code>: Allows double '/' characters in the path component.</li>
  * <li><code>NO_FRAGMENT- [FALSE]</code>: By default fragments are allowed. If this option is
  * included then fragments are flagged as illegal.</li>
- * <li><code>ALLOW_ALL_SCHEMES - [FALSE]</code>: By default only http, https, and ftp are
- * considered valid schemes. Enabling this option will let any scheme pass validation.</li>
+ * <li><code>ALLOW_ALL_SCHEMES - [FALSE]</code>: By default only http, https, and ftp are considered
+ * valid schemes. Enabling this option will let any scheme pass validation.</li>
  * </ul>
  * <p>
  * This was originally based <code>org.apache.commons.validator.UrlValidator</code>, but the
@@ -44,17 +43,16 @@ import org.apache.wicket.validation.IValidatable;
  * <p>
  * 
  * <pre>
- * <code>
+ * &lt;code&gt;
  * Component.add(new UrlValidator({&quot;http&quot;, &quot;https&quot;}));
- * </code>
+ * &lt;/code&gt;
  * </pre>
  * 
  * @author Vincent Demay
  * @since 1.2.6
- * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">Uniform Resource Identifiers (URI): Generic
- *      Syntax (RFC 2396)</a>
+ * @see "http://www.ietf.org/rfc/rfc2396.txt"
  */
-public class UrlValidator extends AbstractValidator
+public class UrlValidator extends AbstractValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -174,8 +172,8 @@ public class UrlValidator extends AbstractValidator
 	 * 
 	 * @param schemes
 	 *            Pass in one or more <code>URL</code> schemes to consider valid. Passing in a
-	 *            <code>null</code> will default to "<code>http,https,ftp</code>" being used.
-	 *            If a non-<code>null</code> scheme is specified, then all valid schemes must be
+	 *            <code>null</code> will default to "<code>http,https,ftp</code>" being used. If a
+	 *            non-<code>null</code> scheme is specified, then all valid schemes must be
 	 *            specified. Setting the <code>ALLOW_ALL_SCHEMES</code> option will ignore the
 	 *            contents of <code>schemes</code>.
 	 */
@@ -204,8 +202,8 @@ public class UrlValidator extends AbstractValidator
 	 * 
 	 * @param schemes
 	 *            Pass in one or more <code>URL</code> schemes to consider valid. Passing in a
-	 *            <code>null</code> will default to "<code>http,https,ftp</code>" being used.
-	 *            If a non-<code>null</code> scheme is specified, then all valid schemes must be
+	 *            <code>null</code> will default to "<code>http,https,ftp</code>" being used. If a
+	 *            non-<code>null</code> scheme is specified, then all valid schemes must be
 	 *            specified. Setting the <code>ALLOW_ALL_SCHEMES</code> option will ignore the
 	 *            contents of <code>schemes</code>.
 	 * @param options
@@ -236,9 +234,9 @@ public class UrlValidator extends AbstractValidator
 	 * @see AbstractValidator#onValidate(IValidatable)
 	 */
 	@Override
-	protected void onValidate(IValidatable validatable)
+	protected void onValidate(IValidatable<String> validatable)
 	{
-		String url = (String)validatable.getValue();
+		String url = validatable.getValue();
 		if (url != null && !isValid(url))
 		{
 			error(validatable);
@@ -246,8 +244,8 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Checks if a field has a valid <code>URL</code>. This method is public because it is
-	 * directly used in tests.
+	 * Checks if a field has a valid <code>URL</code>. This method is public because it is directly
+	 * used in tests.
 	 * 
 	 * @param value
 	 *            The value validation is being performed on. A <code>null</code> value is
@@ -305,8 +303,8 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates a scheme. If schemes[] was initialized to non-<code>null</code>, then only
-	 * those schemes are allowed. Note that this is slightly different than for the constructor.
+	 * Validates a scheme. If schemes[] was initialized to non-<code>null</code>, then only those
+	 * schemes are allowed. Note that this is slightly different than for the constructor.
 	 * 
 	 * @param scheme
 	 *            The scheme to validate. A <code>null</code> value is considered invalid.
@@ -338,8 +336,7 @@ public class UrlValidator extends AbstractValidator
 
 	/**
 	 * Returns <code>true</code> if the authority is properly formatted. An authority is the
-	 * combination of host name and port. A <code>null</code> authority value is considered
-	 * invalid.
+	 * combination of host name and port. A <code>null</code> authority value is considered invalid.
 	 * 
 	 * @param authority
 	 *            an authority value to validate
@@ -519,8 +516,8 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Returns <code>true</code> if the query is <code>null</code> or if it's a
-	 * properly-formatted query string.
+	 * Returns <code>true</code> if the query is <code>null</code> or if it's a properly-formatted
+	 * query string.
 	 * 
 	 * @param query
 	 *            a query value to validate
@@ -581,8 +578,8 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Checks if the field isn't <code>null</code> and if length of the field is greater than
-	 * zero, not including whitespace.
+	 * Checks if the field isn't <code>null</code> and if length of the field is greater than zero,
+	 * not including whitespace.
 	 * 
 	 * @param value
 	 *            the value validation is being performed on

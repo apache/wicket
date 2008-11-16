@@ -190,19 +190,19 @@ public interface IValueMap extends Map<String, Object>
 	boolean isImmutable();
 
 	/**
-	 * Makes this <code>IValueMap</code> immutable by changing the underlying map representation
-	 * to a <code>Collections.unmodifiableMap</code>. After calling this method, any attempt to
-	 * modify this <code>IValueMap</code> will result in a <code>RuntimeException</code> being
-	 * thrown by the <code>Collections</code> framework.
+	 * Makes this <code>IValueMap</code> immutable by changing the underlying map representation to
+	 * a <code>Collections.unmodifiableMap</code>. After calling this method, any attempt to modify
+	 * this <code>IValueMap</code> will result in a <code>RuntimeException</code> being thrown by
+	 * the <code>Collections</code> framework.
 	 * 
 	 * @return this <code>IValueMap</code>
 	 */
 	IValueMap makeImmutable();
 
 	/**
-	 * Provided that the hash key is a <code>String</code> and you need to access the value
-	 * ignoring the key's case (upper- or lowercase letters), then you may use this method to get
-	 * the correct writing.
+	 * Provided that the hash key is a <code>String</code> and you need to access the value ignoring
+	 * the key's case (upper- or lowercase letters), then you may use this method to get the correct
+	 * writing.
 	 * 
 	 * @param key
 	 *            the key
@@ -379,6 +379,9 @@ public interface IValueMap extends Map<String, Object>
 	/**
 	 * Retrieves an <code>Enum</code> value by key.
 	 * 
+	 * @param <T>
+	 *            type of enum
+	 * 
 	 * @param key
 	 *            the key
 	 * 
@@ -394,6 +397,9 @@ public interface IValueMap extends Map<String, Object>
 	/**
 	 * Retrieves an <code>Enum</code> value by key.
 	 * 
+	 * @param <T>
+	 *            type of enum
+	 * 
 	 * @param key
 	 *            the key
 	 * 
@@ -408,6 +414,9 @@ public interface IValueMap extends Map<String, Object>
 
 	/**
 	 * Retrieves an <code>Enum</code> value by key.
+	 * 
+	 * @param <T>
+	 *            type of enum
 	 * 
 	 * @param key
 	 *            the key

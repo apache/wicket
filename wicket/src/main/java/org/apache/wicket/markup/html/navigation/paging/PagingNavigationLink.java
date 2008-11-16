@@ -25,8 +25,10 @@ import org.apache.wicket.markup.html.link.Link;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Martijn Dashorst
+ * @param <T>
+ *            type of model object
  */
-public class PagingNavigationLink extends Link
+public class PagingNavigationLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 

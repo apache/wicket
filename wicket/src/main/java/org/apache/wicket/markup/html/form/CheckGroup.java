@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +25,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 
@@ -83,10 +82,12 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 */
 	public CheckGroup(String id, Collection<T> collection)
 	{
-		this(id, new Model((Serializable)collection));
+		this(id, new CollectionModel<T>(collection));
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
 	public CheckGroup(String id, IModel<Collection<T>> model)
@@ -96,8 +97,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
+	 * @see FormComponent#convertValue(String[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{
@@ -174,7 +176,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * Check group does not support persistence through cookies
 	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
+	 * @see FormComponent#supportsPersistence()
 	 */
 	@Override
 	protected final boolean supportsPersistence()
@@ -183,8 +185,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.
-	 *      ComponentTag)
+	 * @see FormComponent#onComponentTag(ComponentTag)
 	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)

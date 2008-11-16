@@ -57,7 +57,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	 * @deprecated no need for a model in this component
 	 */
 	@Deprecated
-	public FormComponentFeedbackIndicator(final String id, IModel model)
+	public FormComponentFeedbackIndicator(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}

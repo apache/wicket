@@ -27,8 +27,10 @@ import org.apache.wicket.Page;
  * 
  * @see IPageLink
  * @author Jonathan Locke
+ * @param <T>
+ *            type of model object
  */
-public class PageLink extends Link
+public class PageLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +65,7 @@ public class PageLink extends Link
 			public Page getPage()
 			{
 				// Create page using page factory
-				return PageLink.this.getPage().getPageFactory().newPage(c);
+				return getSession().getPageFactory().newPage(c);
 			}
 
 			public Class<? extends Page> getPageIdentity()
@@ -120,7 +122,6 @@ public class PageLink extends Link
 				return page;
 			}
 
-			@SuppressWarnings("unchecked")
 			public Class<? extends Page> getPageIdentity()
 			{
 				return page.getClass();

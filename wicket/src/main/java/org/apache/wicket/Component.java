@@ -83,10 +83,10 @@ import org.slf4j.LoggerFactory;
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
  * Children may be added during construction if the Component is a MarkupContainer.
  * 
- * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler
- * such as WicketServlet. An associated Application object creates Session, Request and Response
- * objects for use by a given Component in updating its model and rendering a response. These
- * objects are stored inside a container called {@link RequestCycle} which is accessible via
+ * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
+ * as WicketServlet. An associated Application object creates Session, Request and Response objects
+ * for use by a given Component in updating its model and rendering a response. These objects are
+ * stored inside a container called {@link RequestCycle} which is accessible via
  * {@link Component#getRequestCycle()}. The convenience methods {@link Component#getRequest()},
  * {@link Component#getResponse()} and {@link Component#getSession()} provide easy access to the
  * contents of this container.
@@ -124,8 +124,8 @@ import org.slf4j.LoggerFactory;
  * <li><b>Component Models </b>- The primary responsibility of a component is to use its model (an
  * object that implements IModel), which can be set via
  * {@link Component#setDefaultModel(IModel model)} and retrieved via
- * {@link Component#getDefaultModel()}, to render a response in an appropriate markup language,
- * such as HTML. In addition, form components know how to update their models based on request
+ * {@link Component#getDefaultModel()}, to render a response in an appropriate markup language, such
+ * as HTML. In addition, form components know how to update their models based on request
  * information. Since the IModel interface is a wrapper around an actual model object, a convenience
  * method {@link Component#getDefaultModelObject()} is provided to retrieve the model Object from
  * its IModel wrapper. A further convenience method,
@@ -136,10 +136,9 @@ import org.slf4j.LoggerFactory;
  * isVisible() and will not render a response (nor will their children).
  * 
  * <li><b>Page </b>- The Page containing any given Component can be retrieved by calling
- * {@link Component#getPage()}. If the Component is not attached to a Page, an
- * IllegalStateException will be thrown. An equivalent method, {@link Component#findPage()} is
- * available for special circumstances where it might be desirable to get a null reference back
- * instead.
+ * {@link Component#getPage()}. If the Component is not attached to a Page, an IllegalStateException
+ * will be thrown. An equivalent method, {@link Component#findPage()} is available for special
+ * circumstances where it might be desirable to get a null reference back instead.
  * 
  * <li><b>Session </b>- The Page for a Component points back to the Session that contains the Page.
  * The Session for a component can be accessed with the convenience method getSession(), which
@@ -155,12 +154,12 @@ import org.slf4j.LoggerFactory;
  * Application Localizer for easy access in Components.
  * 
  * <li><b>Style </b>- The style ("skin") for a component is available through
- * {@link Component#getStyle()}, which is equivalent to getSession().getStyle(). Styles are
- * intended to give a particular look to a Component or Resource that is independent of its Locale.
- * For example, a style might be a set of resources, including images and markup files, which gives
- * the design look of "ocean" to the user. If the Session's style is set to "ocean" and these
- * resources are given names suffixed with "_ocean", Wicket's resource management logic will prefer
- * these resources to other resources, such as default resources, which are not as good of a match.
+ * {@link Component#getStyle()}, which is equivalent to getSession().getStyle(). Styles are intended
+ * to give a particular look to a Component or Resource that is independent of its Locale. For
+ * example, a style might be a set of resources, including images and markup files, which gives the
+ * design look of "ocean" to the user. If the Session's style is set to "ocean" and these resources
+ * are given names suffixed with "_ocean", Wicket's resource management logic will prefer these
+ * resources to other resources, such as default resources, which are not as good of a match.
  * 
  * <li><b>Variation </b>- Whereas Styles are Session (user) specific, variations are component
  * specific. E.g. if the Style is "ocean" and the Variation is "NorthSea", than the resources are
@@ -191,8 +190,8 @@ import org.slf4j.LoggerFactory;
  * {@link Component#setVersioned(boolean)} method. The versioning participation of a given Component
  * can be retrieved with {@link Component#isVersioned()}.
  * 
- * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page has been rendered
- * at least once by calling doRender().
+ * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page has been rendered at
+ * least once by calling doRender().
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -501,8 +500,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <li>The other use is when a component should block the rendering of the whole page. So
 	 * instead of 'hiding' a component, what we generally want to achieve here is that we force the
 	 * user to logon/give-credentials for a higher level of authorization. For this functionality,
-	 * the strategy implementation should throw a {@link AuthorizationException}, which will then
-	 * be handled further by the framework.</li>
+	 * the strategy implementation should throw a {@link AuthorizationException}, which will then be
+	 * handled further by the framework.</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -707,8 +706,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <ul>
 	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
 	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
-	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate
-	 * array, they are part of the {@link #data} array
+	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate array,
+	 * they are part of the {@link #data} array
 	 * </ul>
 	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
 	 * #data object points directly to value of that attribute. Otherwise the data is of type
@@ -1049,11 +1048,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * We need to postpone calling beforeRender() on components that implement IFeedback, to be sure
-	 * that all other component's beforeRender() has been already called, so that IFeedbacks can
-	 * collect all feedback messages. This is the key under list of postponed IFeedback is stored to
-	 * request cycle metadata. The List is then iterated over in {@link #prepareForRender()} after
-	 * calling {@link #beforeRender()}, to initialize postponed components.
+	 * We need to postpone calling beforeRender() on components that implement {@link IFeedback}, to
+	 * be sure that all other component's beforeRender() has been already called, so that IFeedbacks
+	 * can collect all feedback messages. This is the key under list of postponed {@link IFeedback}
+	 * is stored to request cycle metadata. The List is then iterated over in
+	 * {@link #prepareForRender()} after calling {@link #beforeRender()}, to initialize postponed
+	 * components.
 	 */
 	private static final MetaDataKey<List<Component>> FEEDBACK_LIST = new MetaDataKey<List<Component>>()
 	{
@@ -1143,6 +1143,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setModelImpl(null);
 			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
+
+		// clear out enabled state metadata
+		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
 	}
 
 	/**
@@ -1310,7 +1313,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @deprecated To be removed. Please use/ override {@link #getConverter(Class)} instead.
 	 */
 	@Deprecated
-	public final IConverter<?> getConverter()
+	public final IConverter getConverter()
 	{
 		throw new UnsupportedOperationException("use #getConverter(Class) instead");
 	}
@@ -1323,7 +1326,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public <X> IConverter<X> getConverter(Class<X> type)
+	public IConverter getConverter(Class<?> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}
@@ -1440,9 +1443,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
 	 * the markup, or an automatically generated id - in that order.
 	 * <p>
-	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return
-	 * null. Otherwise it will generate an id value that will be unique in the page. This is the
-	 * preferred way as there is no chance of id collision.
+	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return null.
+	 * Otherwise it will generate an id value that will be unique in the page. This is the preferred
+	 * way as there is no chance of id collision.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
@@ -1507,6 +1510,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		markupId = Strings.replaceAll(markupId, "_", "__").toString();
 		markupId = markupId.replace('.', '_');
 		markupId = markupId.replace('-', '_');
+		markupId = markupId.replace(' ', '_');
 
 		return markupId;
 	}
@@ -1639,7 +1643,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            Model object to convert to string
 	 * @return The string
 	 */
-	@SuppressWarnings("unchecked")
 	public final String getDefaultModelObjectAsString(final Object modelObject)
 	{
 		if (modelObject != null)
@@ -1647,7 +1650,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Get converter
 			final Class<?> objectClass = modelObject.getClass();
 
-			final IConverter<Object> converter = (IConverter<Object>)getConverter(objectClass);
+			final IConverter converter = getConverter(objectClass);
 
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());
@@ -1707,14 +1710,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		return page;
-	}
-
-	/**
-	 * @return The page factory for the session that this component is in
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return getSession().getPageFactory();
 	}
 
 	/**
@@ -2184,40 +2179,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Creates a new page using the component's page factory
-	 * 
-	 * @param <C>
-	 * 
-	 * @param c
-	 *            The class of page to create
-	 * @return The new page
-	 */
-	public final <C extends Page> Page newPage(final Class<C> c)
-	{
-		return getPageFactory().newPage(c);
-	}
-
-	/**
-	 * Creates a new page using the component's page factory
-	 * 
-	 * @param <C>
-	 * 
-	 * @param c
-	 *            The class of page to create
-	 * @param parameters
-	 *            Any parameters to pass to the constructor
-	 * @return The new page
-	 */
-	public final <C extends Page> Page newPage(final Class<C> c, final PageParameters parameters)
-	{
-		return getPageFactory().newPage(c, parameters);
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 * <p>
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
+	 * </p>
 	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
@@ -2388,7 +2354,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			try
 			{
-				// Call implementation to render component				
+				// Call implementation to render component
 				final IComponentBorder border = getComponentBorder();
 				if (border != null)
 				{
@@ -2402,7 +2368,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 					border.renderAfter(this);
 				}
 				// Component has been rendered
-				rendered();				
+				rendered();
 			}
 			catch (RuntimeException ex)
 			{
@@ -2610,7 +2576,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * rendered, and in development mode this would result in a runtime exception.
 	 */
 	public final void rendered()
-	{		
+	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 	}
@@ -2656,8 +2622,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Replaces this component with another. The replacing component must have the same component id
-	 * as this component. This method serves as a shortcut to <code>
-	 * this.getParent().replace(replacement)</code>
+	 * as this component. This method serves as a shortcut to
+	 * 
+	 * <code>this.getParent().replace(replacement)</code>
+	 * 
 	 * and provides a better context for errors.
 	 * 
 	 * @since 1.2.1
@@ -2791,6 +2759,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setMetaData(MARKUP_ID_KEY, null);
 			return;
 		}
+
 		generatedMarkupId = -1;
 		setMetaData(MARKUP_ID_KEY, (String)markupId);
 	}
@@ -2908,9 +2877,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * 
-	 * 
-	 * @return
+	 * @return model
 	 */
 	IModel<?> getModelImpl()
 	{
@@ -3149,7 +3116,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	@Override
 	public String toString()
 	{
-		return toString(true);
+		return toString(false);
 	}
 
 	/**
@@ -3311,7 +3278,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IVisitor<Component> visitor)
 	{
 		// Start here
-		Component current = this;
+		Component current = getParent();
 
 		// Walk up containment hierarchy
 		while (current != null)
@@ -3779,8 +3746,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Called just before a component is rendered.
 	 * <p>
-	 * *NOTE* If you override this, you *must* call super.onBeforeRender() within your
-	 * implementation.
+	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
+	 * your implementation.
 	 * 
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
@@ -3834,6 +3801,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 		{
 			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
+		}
+
+		if (getApplication().getDebugSettings().isOutputComponentPath())
+		{
+			String path = getPageRelativePath();
+			path = path.replace("_", "__");
+			path = path.replace(":", "_");
+			tag.put("wicketpath", path);
 		}
 	}
 
@@ -4128,7 +4103,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * 
+	 * @param setRenderingFlag
+	 *            rendering flag
 	 */
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -4316,8 +4292,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Determines whether or not a component should be visible, taking into account all the factors:
 	 * {@link #isVisible()}, {@link #isVisibilityAllowed()}, {@link #isRenderAllowed()}
 	 * 
-	 * @return <code>true</code> if the component should be visible, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the component should be visible, <code>false</code> otherwise
 	 */
 	public final boolean determineVisibility()
 	{
@@ -4358,4 +4333,44 @@ public abstract class Component implements IClusterable, IConverterLocator
 			s.defaultReadObject();
 		}
 	}
+
+	/**
+	 * Calculates enabled state of the component taking its hierarchy into account. A component is
+	 * enabled iff it is itself enabled ({@link #isEnabled()} and {@link #isEnableAllowed()} both
+	 * return <code>true</code>), and all of its parents are enabled.
+	 * 
+	 * @return <code>true</code> if this component is enabled</code>
+	 */
+	public final boolean isEnabledInHierarchy()
+	{
+		Boolean state = getMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY);
+		if (state == null)
+		{
+			state = isEnabled() && isEnableAllowed();
+			if (state)
+			{
+				Component parent = getParent();
+				if (parent != null)
+				{
+					state = state && parent.isEnabledInHierarchy();
+				}
+			}
+			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
+		}
+		return state;
+	}
+
+
+	/**
+	 * Keeps metadata about the enabled state of the component
+	 * 
+	 * The states are: null - not calculated, true and false
+	 */
+	private static final MetaDataKey<Boolean> ENABLED_IN_HIERARCHY_CACHE_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	};
+
+
 }

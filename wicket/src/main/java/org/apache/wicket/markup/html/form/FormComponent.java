@@ -35,7 +35,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
@@ -92,7 +91,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	implements
-		IFormVisitorParticipant
+		IFormVisitorParticipant,
+		IFormModelUpdateListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -318,7 +318,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @author ivaynberg
 	 */
-	private class ValidatableAdapter implements IValidatable
+	private class ValidatableAdapter implements IValidatable<T>
 	{
 
 		/**
@@ -332,7 +332,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		/**
 		 * @see org.apache.wicket.validation.IValidatable#getValue()
 		 */
-		public Object getValue()
+		public T getValue()
 		{
 			return getConvertedInput();
 		}
@@ -430,6 +430,72 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		return null;
 	}
 
+	/**
+	 * Visits any form components inside component if it is a container, or component itself if it
+	 * is itself a form component
+	 * 
+	 * @param component
+	 *            starting point of the traversal
+	 * 
+	 * @param visitor
+	 *            The visitor to call
+	 */
+	public static final void visitComponentsPostOrder(Component component,
+		final Component.IVisitor<Component> visitor)
+	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("Argument `visitor` cannot be null");
+		}
+
+		visitComponentsPostOrderHelper(component, visitor);
+	}
+
+
+	private static final Object visitComponentsPostOrderHelper(Component component,
+		final Component.IVisitor<Component> visitor)
+	{
+		if (component instanceof MarkupContainer)
+		{
+			final MarkupContainer container = (MarkupContainer)component;
+			if (container.size() > 0)
+			{
+				boolean visitChildren = true;
+				if (container instanceof IFormVisitorParticipant)
+				{
+					visitChildren = ((IFormVisitorParticipant)container).processChildren();
+				}
+				if (visitChildren)
+				{
+					final Iterator<? extends Component> children = container.iterator();
+					while (children.hasNext())
+					{
+						final Component child = children.next();
+						Object value = visitComponentsPostOrderHelper(child, visitor);
+						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						{
+							return value;
+						}
+						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL)
+						{
+							// noop
+						}
+						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER)
+						{
+							// noop
+						}
+						else
+						{
+							return value;
+						}
+					}
+				}
+			}
+		}
+		return visitor.component(component);
+	}
+
+
 	private transient T convertedInput;
 
 	/**
@@ -473,6 +539,35 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * Adds a validator to this form component
+	 * 
+	 * @param validator
+	 *            validator to be added
+	 * @return <code>this</code> for chaining
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IValidator
+	 * @see IValidatorAddListener
+	 * 
+	 */
+	public final FormComponent<T> add(final IValidator<T> validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+		// add the validator
+		validators_add(validator);
+
+		// see whether the validator listens for add events
+		if (validator instanceof IValidatorAddListener)
+		{
+			((IValidatorAddListener)validator).onAdded(this);
+		}
+		return this;
+	}
+
+	/**
 	 * Adds a validator to this form component.
 	 * 
 	 * @param validators
@@ -483,27 +578,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IValidator
 	 * @see IValidatorAddListener
 	 */
-	public final FormComponent<?> add(final IValidator... validators)
+	public final FormComponent<T> add(final IValidator<T>... validators)
 	{
 		if (validators == null)
 		{
 			throw new IllegalArgumentException("validator argument cannot be null");
 		}
 
-		for (IValidator validator : validators)
+		for (IValidator<T> validator : validators)
 		{
-			if (validator == null)
-			{
-				throw new IllegalArgumentException("validator argument cannot be null");
-			}
-			// add the validator
-			validators_add(validator);
-
-			// see whether the validator listens for add events
-			if (validator instanceof IValidatorAddListener)
-			{
-				((IValidatorAddListener)validator).onAdded(this);
-			}
+			add(validator);
 		}
 
 		// return this for chaining
@@ -628,35 +712,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public Form<?> getForm()
 	{
-		class FindFormVisitor implements Component.IVisitor<Form<?>>
-		{
-			Form<?> form = null;
-
-			public Object component(Form<?> component)
-			{
-				form = component;
-				return Component.IVisitor.STOP_TRAVERSAL;
-			}
-		}
-
-		Form<?> form = findParent(Form.class);
+		Form<?> form = Form.findForm(this);
 		if (form == null)
 		{
-			// check whether the form is a child of a surrounding border
-			final Border border = findParent(Border.class);
-			if (border != null)
-			{
-				FindFormVisitor formVisitor = new FindFormVisitor();
-				border.visitChildren(Form.class, formVisitor);
-				form = formVisitor.form;
-			}
-			if (form == null)
-			{
-				throw new WicketRuntimeException("Could not find Form parent for " + this);
-			}
+			throw new WicketRuntimeException("Could not find Form parent for " + this);
 		}
 		return form;
 	}
+
 
 	/**
 	 * Gets the request parameter for this component as a string.
@@ -782,7 +845,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return List of validators
 	 */
-	public final List<IValidator> getValidators()
+	public final List<IValidator<T>> getValidators()
 	{
 		final int size = validators_size();
 		if (size == 0)
@@ -791,7 +854,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			final List<IValidator> list = new ArrayList<IValidator>(size);
+			final List<IValidator<T>> list = new ArrayList<IValidator<T>>(size);
 			for (int i = 0; i < size; i++)
 			{
 				list.add(validators_get(i));
@@ -1102,7 +1165,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * convertInput(), and validateValidators(). This method should only be used if the form
 	 * component needs to be fully validated outside the form process.
 	 */
-	public final void validate()
+	public void validate()
 	{
 		validateRequired();
 		if (isValid())
@@ -1126,7 +1189,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The validator to add to the validators Object (which may be an array of
 	 *            IValidators or a single instance, for efficiency)
 	 */
-	private void validators_add(final IValidator validator)
+	@SuppressWarnings("unchecked")
+	private void validators_add(final IValidator<T> validator)
 	{
 		if (validators == null)
 		{
@@ -1138,7 +1202,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			final int size = validators_size();
 
 			// Create array that holds size + 1 elements
-			final IValidator[] validators = new IValidator[size + 1];
+			final IValidator<T>[] validators = new IValidator[size + 1];
 
 			// Loop through existing validators copying them
 			for (int i = 0; i < size; i++)
@@ -1162,7 +1226,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The index of the validator to get
 	 * @return The validator
 	 */
-	private IValidator validators_get(int index)
+	@SuppressWarnings("unchecked")
+	private IValidator<T> validators_get(int index)
 	{
 		if (validators == null)
 		{
@@ -1172,7 +1237,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			return ((IValidator[])validators)[index];
 		}
-		return (IValidator)validators;
+		return (IValidator<T>)validators;
 	}
 
 	/**
@@ -1197,6 +1262,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * {@link FormComponent#getType()} and records any errors. Converted value is available through
 	 * {@link FormComponent#getConvertedInput()}
 	 */
+	@SuppressWarnings("unchecked")
 	protected void convertInput()
 	{
 		if (typeName == null)
@@ -1222,11 +1288,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			final IConverter<T> converter = getConverter(getType());
+			final IConverter converter = getConverter(getType());
 
 			try
 			{
-				convertedInput = converter.convertToObject(getInput(), getLocale());
+				convertedInput = (T)converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{
@@ -1386,7 +1452,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		tag.put("name", getInputName());
 
-		if (!isEnabled() || !isEnableAllowed())
+		if (!isEnabledInHierarchy())
 		{
 			onDisabled(tag);
 		}
@@ -1495,10 +1561,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		final int size = validators_size();
 
-		final IValidatable validatable = new ValidatableAdapter();
+		final IValidatable<T> validatable = newValidatable();
 
 		int i = 0;
-		IValidator validator = null;
+		IValidator<T> validator = null;
 
 		boolean isNull = getConvertedInput() == null;
 
@@ -1525,6 +1591,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 	}
 
+	/**
+	 * Creates an IValidatable that can be used to validate this form component. This validatable
+	 * encorporates error key lookups that correspend to this form component.
+	 * 
+	 * This method is useful when validation needs to happen outside the regular validation workflow
+	 * but error messages should still be properly reported against the form component.
+	 * 
+	 * @return IValidatable<T> for this form component
+	 */
+	public final IValidatable<T> newValidatable()
+	{
+		return new ValidatableAdapter();
+	}
 
 	/**
 	 * Gets model

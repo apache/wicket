@@ -141,7 +141,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 */
 	protected final boolean isLinkEnabled()
 	{
-		return isEnabled() && isEnableAllowed();
+		return isEnabledInHierarchy();
 	}
 
 	/**

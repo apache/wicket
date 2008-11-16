@@ -114,6 +114,9 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.setupRequestAndResponse();
 		// Fake an Ajax request
 		(tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
+		// Set ajax mode again, as it is done in setupRequestAndResponse() only
+		tester.getWicketResponse().setAjax(tester.getWicketRequest().isAjax());
+
 		tester.getServletRequest().setURL(callbackUrl);
 
 		// Do not call tester.processRequestCycle() because it throws an

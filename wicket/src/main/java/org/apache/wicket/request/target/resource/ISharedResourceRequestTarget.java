@@ -17,11 +17,20 @@
 package org.apache.wicket.request.target.resource;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.SharedResources;
 import org.apache.wicket.request.RequestParameters;
 
 /**
- * Target that denotes a shared {@link org.apache.wicket.Resource}.
+ * Target that denotes a shared {@link org.apache.wicket.Resource}, i.e a resource that doesn't need
+ * a host component.
  * 
+ * <p>
+ * Shared resources for an application are contained in the {@link SharedResources} class.
+ * 
+ * @see SharedResources
+ * @see ResourceReference
+ * @see org.apache.wicket.Resource
  * @author Eelco Hillenius
  */
 public interface ISharedResourceRequestTarget extends IRequestTarget

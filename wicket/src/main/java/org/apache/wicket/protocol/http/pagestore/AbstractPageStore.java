@@ -176,7 +176,6 @@ public abstract class AbstractPageStore implements IPageStore
 	 *            page to be serialized
 	 * @return list of {@link SerializedPage}s
 	 */
-	@SuppressWarnings("unchecked")
 	protected List<SerializedPage> serializePage(Page page)
 	{
 		final List<SerializedPage> result = new ArrayList<SerializedPage>();
@@ -218,7 +217,6 @@ public abstract class AbstractPageStore implements IPageStore
 	 *            kept
 	 * @return page instance
 	 */
-	@SuppressWarnings("unchecked")
 	protected Page deserializePage(byte[] data, int versionNumber)
 	{
 		boolean set = Page.serializer.get() == null;
@@ -319,8 +317,8 @@ public abstract class AbstractPageStore implements IPageStore
 			stream.defaultWriteObject();
 		}
 
-		public void deserializePage(int id, String pageMapName, Page page,
-			ObjectInputStream stream) throws IOException, ClassNotFoundException
+		public void deserializePage(int id, String pageMapName, Page page, ObjectInputStream stream)
+			throws IOException, ClassNotFoundException
 		{
 			// get the page instance registry
 			IntHashMap<Page> pages = SecondLevelCacheSessionStore.getUsedPages(pageMapName);

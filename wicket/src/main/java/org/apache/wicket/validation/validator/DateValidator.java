@@ -33,7 +33,7 @@ import org.apache.wicket.validation.IValidatable;
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public abstract class DateValidator extends AbstractValidator
+public abstract class DateValidator extends AbstractValidator<Date>
 {
 
 	/**
@@ -42,10 +42,10 @@ public abstract class DateValidator extends AbstractValidator
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Gets a <code>Date</code> range validator for checking if the <code>Date</code> value
-	 * falls between the minimum and maximum <code>Date</code> values. If that is not the case, an
-	 * error message will be generated with the key "DateValidator.range". The message keys that can
-	 * be used are:
+	 * Gets a <code>Date</code> range validator for checking if the <code>Date</code> value falls
+	 * between the minimum and maximum <code>Date</code> values. If that is not the case, an error
+	 * message will be generated with the key "DateValidator.range". The message keys that can be
+	 * used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum date</li>
@@ -133,7 +133,7 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
@@ -151,9 +151,9 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<Date> validatable)
 		{
-			Date value = (Date)validatable.getValue();
+			Date value = validatable.getValue();
 			if (value.before(minimum) || value.after(maximum))
 			{
 				error(validatable);
@@ -174,7 +174,7 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
@@ -189,9 +189,9 @@ public abstract class DateValidator extends AbstractValidator
 
 
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<Date> validatable)
 		{
-			Date value = (Date)validatable.getValue();
+			Date value = validatable.getValue();
 			if (value.before(minimum))
 			{
 				error(validatable);
@@ -212,7 +212,7 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		@Override
-		protected Map<String, Object> variablesMap(IValidatable validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", maximum);
@@ -227,9 +227,9 @@ public abstract class DateValidator extends AbstractValidator
 
 
 		@Override
-		protected void onValidate(IValidatable validatable)
+		protected void onValidate(IValidatable<Date> validatable)
 		{
-			Date value = (Date)validatable.getValue();
+			Date value = validatable.getValue();
 			if (value.after(maximum))
 			{
 				error(validatable);

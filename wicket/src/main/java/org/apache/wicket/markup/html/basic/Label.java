@@ -39,7 +39,7 @@ import org.apache.wicket.model.Model;
  * <pre>
  * 
  *       add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
- *  
+ * 
  * </pre>
  * 
  * In this case, the Label component will replace the body of the tag it is attached to with the
@@ -80,7 +80,7 @@ public class Label extends WebComponent
 	}
 
 	/**
-	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * Convenience constructor. Same as Label(String, new Model&lt;String&gt;(String))
 	 * 
 	 * @param id
 	 *            See Component
@@ -89,10 +89,9 @@ public class Label extends WebComponent
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	@SuppressWarnings("unchecked")
 	public Label(final String id, String label)
 	{
-		this(id, new Model(label));
+		this(id, new Model<String>(label));
 	}
 
 	/**

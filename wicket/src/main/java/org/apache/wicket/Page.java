@@ -119,8 +119,6 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Johan Compagner
  * 
- * @param <T>
- *            The model object type
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
@@ -418,7 +416,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code> then the rendering for that container is checked.
+	 * MarkupContainer</code>
+	 * then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -496,7 +495,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	@SuppressWarnings("unchecked")
 	public final Class<? extends Page> getPageClass()
 	{
 		return getClass();
@@ -730,6 +728,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Determine the "statelessness" of the page while not changing the cached value.
+	 * 
+	 * @return boolean value
+	 */
+	private boolean peekPageStateless()
+	{
+		Boolean old = stateless;
+		Boolean res = isPageStateless();
+		stateless = old;
+		return res;
+	}
+
+	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any
 	 * statefull urls, and components on statefull page must not render any stateless urls.
 	 * Statefull urls are urls, which refer to a certain (current) page instance.
@@ -847,6 +858,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
+		
+		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+		{
+			Class<?> klass = getClass();
+			while (klass.isAnonymousClass())
+			{
+				klass = klass.getSuperclass();
+			}
+			getResponse().write("<!-- Page Class ");
+			getResponse().write(klass.getName());
+			getResponse().write(" -->\n");
+		}
+		
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -1448,7 +1472,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended
 		// for links rendered before first stateful component
-		if (getSession().isTemporary() && !isPageStateless())
+		if (getSession().isTemporary() && !peekPageStateless())
 		{
 			getSession().bind();
 		}
@@ -1603,4 +1627,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public void onPageAttached()
 	{
 	}
+
+	@Override
+	public String getMarkupType()
+	{
+		throw new UnsupportedOperationException(
+			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");
+	}
+
+	/**
+	 * Gets page instance's unique identifier
+	 * 
+	 * @return instance unique identifier
+	 */
+	public PageId getPageId()
+	{
+		setStatelessHint(false);
+		return new PageId(pageMapName, numericId, getCurrentVersionNumber());
+
+	}
+
 }

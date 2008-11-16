@@ -53,9 +53,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
-	/**
-	 * Listeners will be invoked after changes to property file have been detected
-	 */
+	/** Listeners will be invoked after changes to property file have been detected */
 	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<IPropertiesChangeListener>();
 
 	/** Cache for all property files loaded */
@@ -64,7 +62,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Application */
 	private final Application application;
 
-	/** LIst of Properties Loader */
+	/** List of Properties Loader */
 	private final List<IPropertiesLoader> propertiesLoader;
 
 	/**
@@ -79,7 +77,7 @@ public class PropertiesFactory implements IPropertiesFactory
 
 		propertiesLoader = new ArrayList<IPropertiesLoader>();
 		propertiesLoader.add(new PropertiesFilePropertiesLoader());
-		propertiesLoader.add(new XmlFilePropertiesLoader());
+		propertiesLoader.add(new XmlFilePropertiesLoader("xml"));
 	}
 
 	/**
@@ -174,7 +172,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		 * 
 		 * @param clazz
 		 * @param path
-		 * @return
+		 * @return Properties
 		 */
 		Properties load(final Class<?> clazz, final String path);
 	}
@@ -193,14 +191,14 @@ public class PropertiesFactory implements IPropertiesFactory
 
 		/**
 		 * 
-		 * @return
+		 * @return File extension
 		 */
 		abstract protected String getFileExtension();
 
 		/**
 		 * 
 		 * @param in
-		 * @return
+		 * @return java.util.Properties
 		 * @throws IOException
 		 */
 		abstract protected java.util.Properties loadProperties(BufferedInputStream in)
@@ -334,7 +332,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		/**
 		 * 
 		 * @param in
-		 * @return
+		 * @return java.util.Properties
 		 * @throws IOException
 		 */
 		@Override
@@ -351,11 +349,16 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	public class XmlFilePropertiesLoader extends AbstractPropertiesLoader
 	{
+		private final String fileExtension;
+
 		/**
 		 * Construct.
+		 * 
+		 * @param fileExtension
 		 */
-		public XmlFilePropertiesLoader()
+		public XmlFilePropertiesLoader(final String fileExtension)
 		{
+			this.fileExtension = fileExtension;
 		}
 
 		/**
@@ -365,13 +368,13 @@ public class PropertiesFactory implements IPropertiesFactory
 		@Override
 		protected String getFileExtension()
 		{
-			return "xml";
+			return fileExtension;
 		}
 
 		/**
 		 * 
 		 * @param in
-		 * @return
+		 * @return java.util.Properties
 		 * @throws IOException
 		 */
 		@Override

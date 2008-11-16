@@ -27,7 +27,7 @@ import java.util.Collection;
  * @param <T>
  *            type of object inside collection
  */
-public class WildcardCollectionModel<T> extends AbstractCollectionModel<Collection<? extends T>>
+public class WildcardCollectionModel<T> extends GenericBaseModel<Collection<? extends T>>
 {
 	private static final long serialVersionUID = 1L;
 

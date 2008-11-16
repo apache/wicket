@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  */
 public class MockPageWithForm extends WebPage
 {
-	private final class MyForm extends Form
+	private final class MyForm extends Form<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,8 @@ public class MockPageWithForm extends WebPage
 			super(id);
 		}
 
-		protected void onSubmit()
+		@Override
+        protected void onSubmit()
 		{
 			submitted = true;
 		}
@@ -56,14 +57,15 @@ public class MockPageWithForm extends WebPage
 	 */
 	public MockPageWithForm()
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("Select me");
 		MyForm form = new MyForm("form");
-		DropDownChoice dropDown = new DropDownChoice("dropdown", new Model(), list)
+		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropdown", new Model<String>(), list)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSelectionChanged(Object newSelection)
+			@Override
+            protected void onSelectionChanged(String newSelection)
 			{
 				selected = true;
 			}
@@ -71,7 +73,8 @@ public class MockPageWithForm extends WebPage
 			/**
 			 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 			 */
-			protected boolean wantOnSelectionChangedNotifications()
+			@Override
+            protected boolean wantOnSelectionChangedNotifications()
 			{
 				return true;
 			}

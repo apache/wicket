@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.Model;
 
 
 /**
@@ -37,6 +36,7 @@ public class MarkupComponentBorderTestPage extends WebPage
 	 */
 	public MarkupComponentBorderTestPage()
 	{
-		add(new Label("label", new Model("label")).setComponentBorder(new BeforeAndAfterBorder()));
+		add(new Label("label", "label").setComponentBorder(new BeforeAndAfterBorder()));
+		add(new Label("label2", "label2").setComponentBorder(new BeforeAndAfterBorder2()));
 	}
 }

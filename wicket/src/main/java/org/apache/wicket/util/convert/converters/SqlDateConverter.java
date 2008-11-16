@@ -25,7 +25,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * Converts to {@link java.sql.Date}.
  */
-public class SqlDateConverter extends AbstractConverter<Date>
+public class SqlDateConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class SqlDateConverter extends AbstractConverter<Date>
 	 *      java.util.Locale)
 	 */
 	@Override
-	public String convertToString(final Date value, Locale locale)
+	public String convertToString(final Object value, Locale locale)
 	{
 		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null)

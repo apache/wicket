@@ -26,16 +26,18 @@ import org.apache.wicket.IClusterable;
  * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of validatable value
  * @since 1.2.6
  */
-public interface IValidator extends IClusterable
+public interface IValidator<T> extends IClusterable
 {
 	/**
-	 * Validates the <code>IValidatable</code> instance. Validation errors should be reported
-	 * using the {@link IValidatable#error(IValidationError)} method.
+	 * Validates the <code>IValidatable</code> instance. Validation errors should be reported using
+	 * the {@link IValidatable#error(IValidationError)} method.
 	 * 
 	 * @param validatable
 	 *            the <code>IValidatable</code> instance being validated
 	 */
-	void validate(IValidatable validatable);
+	void validate(IValidatable<T> validatable);
 }

@@ -39,17 +39,17 @@ public class AttributeModifierComponentPage extends WebPage
 	public AttributeModifierComponentPage()
 	{
 		// Label with attribute modifier
-		Label label1 = new Label("label1", new Model("Label 1"));
+		Label label1 = new Label("label1", new Model<String>("Label 1"));
 		add(label1);
 
 		// Label with override attribute modifier
-		Label label2 = new Label("label2", new Model("Label 2"));
-		label2.add(new AttributeModifier("class", new Model("overrideLabel")));
-		label2.add(new AttributeModifier("unknown", new Model("invalid")));
+		Label label2 = new Label("label2", new Model<String>("Label 2"));
+		label2.add(new AttributeModifier("class", new Model<String>("overrideLabel")));
+		label2.add(new AttributeModifier("unknown", new Model<String>("invalid")));
 		add(label2);
 
 		// Label with attribute inserter
-		Label label3 = new Label("label3", new Model("Label 3"));
+		Label label3 = new Label("label3", new Model<String>("Label 3"));
 		label3.add(new AttributeModifier("class", true, new LoadableDetachableModel()
 		{
 			private static final long serialVersionUID = 1L;

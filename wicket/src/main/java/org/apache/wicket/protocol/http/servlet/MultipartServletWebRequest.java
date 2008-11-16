@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ import org.apache.wicket.util.value.ValueMap;
 public class MultipartServletWebRequest extends ServletWebRequest implements IMultipartWebRequest
 {
 	/** Map of file items. */
-	private final ValueMap files = new ValueMap();
+	private final Map<String, FileItem> files = new HashMap<String, FileItem>();
 
 	/** Map of parameters. */
 	private final ValueMap parameters = new ValueMap();
@@ -74,7 +75,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize)
-			throws FileUploadException
+		throws FileUploadException
 	{
 		super(request);
 
@@ -108,12 +109,13 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 		upload.setSizeMax(maxSize.bytes());
 
-		final List items;
+		final List<FileItem> items;
 
 		if (wantUploadProgressUpdates())
 		{
 			ServletRequestContext ctx = new ServletRequestContext(request)
 			{
+				@Override
 				public InputStream getInputStream() throws IOException
 				{
 					return new CountingInputStream(super.getInputStream());
@@ -132,10 +134,10 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		}
 
 		// Loop through items
-		for (Iterator i = items.iterator(); i.hasNext();)
+		for (Iterator<FileItem> i = items.iterator(); i.hasNext();)
 		{
 			// Get next item
-			final FileItem item = (FileItem)i.next();
+			final FileItem item = i.next();
 
 			// If item is a form field
 			if (item.isFormField())
@@ -200,7 +202,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @return Returns the files.
 	 */
-	public Map getFiles()
+	public Map<String, FileItem> getFiles()
 	{
 		return files;
 	}
@@ -214,12 +216,13 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 */
 	public FileItem getFile(final String fieldName)
 	{
-		return (FileItem)files.get(fieldName);
+		return files.get(fieldName);
 	}
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#getParameter(java.lang.String)
 	 */
+	@Override
 	public String getParameter(final String key)
 	{
 		String[] val = (String[])parameters.get(key);
@@ -229,6 +232,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#getParameterMap()
 	 */
+	@Override
 	public Map getParameterMap()
 	{
 		return parameters;
@@ -237,6 +241,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#getParameters(java.lang.String)
 	 */
+	@Override
 	public String[] getParameters(final String key)
 	{
 		return (String[])parameters.get(key);
@@ -305,6 +310,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		/**
 		 * @see java.io.InputStream#read()
 		 */
+		@Override
 		public int read() throws IOException
 		{
 			int read = in.read();
@@ -316,6 +322,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		/**
 		 * @see java.io.InputStream#read(byte[])
 		 */
+		@Override
 		public int read(byte[] b) throws IOException
 		{
 			int read = in.read(b);
@@ -327,6 +334,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		/**
 		 * @see java.io.InputStream#read(byte[], int, int)
 		 */
+		@Override
 		public int read(byte[] b, int off, int len) throws IOException
 		{
 			int read = in.read(b, off, len);

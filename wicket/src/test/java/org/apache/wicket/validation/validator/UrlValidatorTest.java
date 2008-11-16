@@ -16,23 +16,22 @@
  */
 package org.apache.wicket.validation.validator;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
+/**
+ * {@link UrlValidator} test
+ * 
+ * @author igor.vaynberg
+ */
 public class UrlValidatorTest extends TestCase
 {
 
-	private boolean printStatus = false;
-	private boolean printIndex = false;// print index that indicates current scheme,host,port,path,
+	private final boolean printStatus = false;
+	private final boolean printIndex = false;// print index that indicates current
+												// scheme,host,port,path,
 
-	// query test were using.
 
-	public static Test suite()
-	{
-		return new TestSuite(UrlValidatorTest.class);
-	}
-
+	@Override
 	protected void setUp()
 	{
 		for (int index = 0; index < testPartsIndex.length - 1; index++)
@@ -41,20 +40,27 @@ public class UrlValidatorTest extends TestCase
 		}
 	}
 
+	@Override
 	protected void tearDown()
 	{
 	}
 
+	/**
+	 * test
+	 */
 	public void testIsValid()
 	{
 		testIsValid(testUrlParts, UrlValidator.ALLOW_ALL_SCHEMES);
 		setUp();
 		int options = UrlValidator.ALLOW_2_SLASHES + UrlValidator.ALLOW_ALL_SCHEMES +
-				UrlValidator.NO_FRAGMENTS;
+			UrlValidator.NO_FRAGMENTS;
 
 		testIsValid(testUrlPartsOptions, options);
 	}
 
+	/**
+	 * test
+	 */
 	public void testIsValidScheme()
 	{
 		if (printStatus)
@@ -94,6 +100,7 @@ public class UrlValidatorTest extends TestCase
 	 * 
 	 * @param testObjects
 	 *            Used to create a url.
+	 * @param options
 	 */
 	public void testIsValid(Object[] testObjects, int options)
 	{
@@ -152,20 +159,24 @@ public class UrlValidatorTest extends TestCase
 		}
 	}
 
+	/**
+	 * test
+	 */
 	public void testValidator202()
 	{
 		String[] schemes = { "http", "https" };
 		UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.NO_FRAGMENTS);
-		urlValidator
-				.isValid("http://www.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.log");
+		urlValidator.isValid("http://www.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.log");
 	}
 
+	/**
+	 * test
+	 */
 	public void testValidator204()
 	{
 		String[] schemes = { "http", "https" };
 		UrlValidator UrlValidator = new UrlValidator(schemes);
-		assertTrue(UrlValidator
-				.isValid("http://tech.yahoo.com/rc/desktops/102;_ylt=Ao8yevQHlZ4On0O3ZJGXLEQFLZA5"));
+		assertTrue(UrlValidator.isValid("http://tech.yahoo.com/rc/desktops/102;_ylt=Ao8yevQHlZ4On0O3ZJGXLEQFLZA5"));
 	}
 
 	static boolean incrementTestPartsIndex(int[] testPartsIndex, Object[] testParts)
@@ -216,6 +227,9 @@ public class UrlValidatorTest extends TestCase
 
 	}
 
+	/**
+	 * test
+	 */
 	public void testValidateUrl()
 	{
 		assertTrue(true);
@@ -224,11 +238,9 @@ public class UrlValidatorTest extends TestCase
 	// -------------------- Test data for creating a composite URL
 	/**
 	 * The data given below approximates the 4 parts of a URL <scheme>://<authority><path>?<query>
-	 * except that the port number
-	 * is broken out of authority to increase the number of permutations.
-	 * A complete URL is composed of a scheme+authority+port+path+query,
-	 * all of which must be individually valid for the entire URL to be considered
-	 * valid.
+	 * except that the port number is broken out of authority to increase the number of
+	 * permutations. A complete URL is composed of a scheme+authority+port+path+query, all of which
+	 * must be individually valid for the entire URL to be considered valid.
 	 */
 	ResultPair[] testUrlScheme = { new ResultPair("http://", true), new ResultPair("ftp://", true),
 			new ResultPair("h3t://", true), new ResultPair("3ht://", false),

@@ -36,6 +36,6 @@ public class PanelWithAttributeModifier extends Panel
 	public PanelWithAttributeModifier(final String id)
 	{
 		super(id);
-		add(new AttributeModifier("class", true, new Model("test")));
+		add(new AttributeModifier("class", true, new Model<String>("test")));
 	}
 }

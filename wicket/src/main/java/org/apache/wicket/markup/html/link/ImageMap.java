@@ -66,7 +66,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public CircleLink(final int x, final int y, final int radius, final Link link)
+		public CircleLink(final int x, final int y, final int radius, final Link<?> link)
 		{
 			super(link);
 			this.x = x;
@@ -111,7 +111,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public PolygonLink(final int[] coordinates, final Link link)
+		public PolygonLink(final int[] coordinates, final Link<?> link)
 		{
 			super(link);
 			this.coordinates = coordinates;
@@ -179,7 +179,8 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            the link
 		 */
-		public RectangleLink(final int x1, final int y1, final int x2, final int y2, final Link link)
+		public RectangleLink(final int x1, final int y1, final int x2, final int y2,
+			final Link<?> link)
 		{
 			super(link);
 			this.x1 = x1;
@@ -217,7 +218,7 @@ public final class ImageMap extends WebMarkupContainer
 		 */
 		private static final long serialVersionUID = 1L;
 		/** The link. */
-		private final Link link;
+		private final Link<?> link;
 
 		/**
 		 * Constructor.
@@ -225,7 +226,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * @param link
 		 *            The link
 		 */
-		public ShapeLink(final Link link)
+		public ShapeLink(final Link<?> link)
 		{
 			this.link = link;
 		}
@@ -299,7 +300,7 @@ public final class ImageMap extends WebMarkupContainer
 	 *            the link
 	 * @return This
 	 */
-	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link link)
+	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link<?> link)
 	{
 		add(link);
 		shapeLinks.add(new CircleLink(x1, y1, radius, link));
@@ -315,7 +316,7 @@ public final class ImageMap extends WebMarkupContainer
 	 *            the link
 	 * @return This
 	 */
-	public ImageMap addPolygonLink(final int[] coordinates, final Link link)
+	public ImageMap addPolygonLink(final int[] coordinates, final Link<?> link)
 	{
 		add(link);
 		shapeLinks.add(new PolygonLink(coordinates, link));
@@ -337,7 +338,7 @@ public final class ImageMap extends WebMarkupContainer
 	 * @return This
 	 */
 	public ImageMap addRectangleLink(final int x1, final int y1, final int x2, final int y2,
-		final Link link)
+		final Link<?> link)
 	{
 		add(link);
 		shapeLinks.add(new RectangleLink(x1, y1, x2, y2, link));

@@ -16,13 +16,10 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  * Simple tree component that uses label to render tree node.
@@ -50,7 +47,7 @@ public class LabelTree extends BaseTree
 	 * @param model
 	 *            model that provides the {@link TreeModel}
 	 */
-	public LabelTree(String id, IModel model)
+	public LabelTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
 	}
@@ -61,23 +58,27 @@ public class LabelTree extends BaseTree
 	 * @param id
 	 * @param model
 	 *            Tree model
-	 */
+	 */	
 	public LabelTree(String id, TreeModel model)
 	{
-		super(id, new Model((Serializable)model));
+		super(id, new WicketTreeModel());
+		setModelObject(model);
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
 	 *      org.apache.wicket.model.IModel)
 	 */
-	protected Component newNodeComponent(String id, IModel model)
+	@Override
+	protected Component newNodeComponent(String id, IModel<Object> model)
 	{
 		return new LabelIconPanel(id, model, this)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected Component newContentComponent(String componentId, BaseTree tree, IModel model)
+			@Override
+			protected Component newContentComponent(String componentId, BaseTree tree,
+				IModel<Object> model)
 			{
 				return super.newContentComponent(componentId, tree, getNodeTextModel(model));
 			}
@@ -102,7 +103,7 @@ public class LabelTree extends BaseTree
 	 *            model representing the current tree node
 	 * @return model used for text
 	 */
-	protected IModel getNodeTextModel(IModel nodeModel)
+	protected IModel<Object> getNodeTextModel(IModel<Object> nodeModel)
 	{
 		return nodeModel;
 	}

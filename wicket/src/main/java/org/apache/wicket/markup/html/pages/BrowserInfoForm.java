@@ -502,5 +502,6 @@ public class BrowserInfoForm extends Panel
 			}
 			return intValue;
 		}
+
 	}
 }

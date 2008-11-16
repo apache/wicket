@@ -179,7 +179,7 @@ public class PageWindowManager implements Serializable
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
-	 * @return
+	 * @return window index
 	 */
 	private int getWindowIndex(int pageId, int versionNumber, int ajaxVersionNumber)
 	{
@@ -205,7 +205,7 @@ public class PageWindowManager implements Serializable
 	 * Increments the {@link #indexPointer}. If the maximum file size has been reached, the
 	 * {@link #indexPointer} is set to 0.
 	 * 
-	 * @return
+	 * @return new index pointer
 	 */
 	private int incrementIndexPointer()
 	{
@@ -225,7 +225,7 @@ public class PageWindowManager implements Serializable
 	 * previous page offset and adding the previous page size to it.
 	 * 
 	 * @param index
-	 * @return
+	 * @return window file offset
 	 */
 	private int getWindowFileOffset(int index)
 	{
@@ -346,7 +346,7 @@ public class PageWindowManager implements Serializable
 	 * 
 	 * @param index
 	 * @param size
-	 * @return
+	 * @return page window
 	 */
 	private PageWindowInternal allocatePageWindow(int index, int size)
 	{
@@ -445,7 +445,7 @@ public class PageWindowManager implements Serializable
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
 	 * @param size
-	 * @return
+	 * @return page window
 	 */
 	public PageWindow createPageWindow(int pageId, int versionNumber, int ajaxVersionNumber,
 		int size)
@@ -560,7 +560,7 @@ public class PageWindowManager implements Serializable
 	 * Returns last n saved page windows.
 	 * 
 	 * @param count
-	 * @return
+	 * @return list of page windows
 	 */
 	public synchronized List<PageWindow> getLastPageWindows(int count)
 	{
@@ -608,7 +608,7 @@ public class PageWindowManager implements Serializable
 	/**
 	 * Returns the size of all saved pages
 	 * 
-	 * @return
+	 * @return total size
 	 */
 	public int getTotalSize()
 	{

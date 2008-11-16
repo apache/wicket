@@ -16,16 +16,13 @@
  */
 package org.apache.wicket.util.value;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
@@ -61,45 +58,10 @@ import org.apache.wicket.util.time.Time;
  * @author Doug Donohoe
  * @since 1.2.6
  */
-public class ValueMap extends TreeMap<String, Object> implements IValueMap
+public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 {
 	/** an empty <code>ValueMap</code>. */
 	public static final ValueMap EMPTY_MAP;
-
-	/**
-	 * Comparator to allow null keys. This is because we use a {@link TreeMap} instead of a
-	 * {@link HashMap}, so we must provide a null safe comparator to avoid null pointer exceptions
-	 * with null keys.
-	 */
-	private static class NullSafeKeyComparator implements Comparator<String>, Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		public int compare(String o1, String o2)
-		{
-			int compare = 0;
-
-			if (o1 != null && o2 != null)
-			{
-				compare = o1.compareTo(o2);
-			}
-			else if (o1 != null)
-			{
-				compare = -1;
-			}
-			else if (o2 != null)
-			{
-				compare = 1;
-			}
-
-			return compare;
-		}
-	}
-
-	/**
-	 * We only need one comparator.
-	 */
-	private static final NullSafeKeyComparator COMPARATOR = new NullSafeKeyComparator();
 
 	/** create EMPTY_MAP, make immutable * */
 	static
@@ -120,7 +82,7 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	 */
 	public ValueMap()
 	{
-		super(COMPARATOR);
+		super();
 	}
 
 	/**
@@ -131,7 +93,7 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	 */
 	public ValueMap(final Map map)
 	{
-		super(COMPARATOR);
+		super();
 
 		super.putAll(map);
 	}
@@ -139,11 +101,12 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	/**
 	 * Constructor.
 	 * <p>
-	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly
-	 * decode a request URL.
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly decode
+	 * a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by commas. For example, "<code>param1=foo,param2=bar</code>"
+	 *            list of key/value pairs separated by commas. For example, "
+	 *            <code>param1=foo,param2=bar</code>"
 	 */
 	public ValueMap(final String keyValuePairs)
 	{
@@ -153,18 +116,18 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	/**
 	 * Constructor.
 	 * <p>
-	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly
-	 * decode a request URL.
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly decode
+	 * a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by a given delimiter. For example, "<code>param1=foo,param2=bar</code>"
-	 *            where delimiter is "<code>,</code>".
+	 *            list of key/value pairs separated by a given delimiter. For example, "
+	 *            <code>param1=foo,param2=bar</code>" where delimiter is "<code>,</code>".
 	 * @param delimiter
 	 *            delimiter <code>String</code> used to separate key/value pairs
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
-		super(COMPARATOR);
+		super();
 
 		int start = 0;
 		int equalsIndex = keyValuePairs.indexOf('=');
@@ -214,17 +177,18 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	 * Constructor.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by a given delimiter. For example, "<code>param1=foo,param2=bar</code>"
-	 *            where delimiter is "<code>,</code>".
+	 *            list of key/value pairs separated by a given delimiter. For example, "
+	 *            <code>param1=foo,param2=bar</code>" where delimiter is "<code>,</code>".
 	 * @param delimiter
 	 *            delimiter string used to separate key/value pairs
 	 * @param valuePattern
-	 *            pattern for value. To pass a simple regular expression, pass "<code>new MetaPattern(regexp)</code>".
+	 *            pattern for value. To pass a simple regular expression, pass "
+	 *            <code>new MetaPattern(regexp)</code>".
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter,
 		final MetaPattern valuePattern)
 	{
-		super(COMPARATOR);
+		super();
 
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
@@ -481,16 +445,16 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * Adds the value to this <code>ValueMap</code> with the given key. If the key already is in
-	 * the <code>ValueMap</code> it will combine the values into a <code>String</code> array,
-	 * else it will just store the value itself.
+	 * Adds the value to this <code>ValueMap</code> with the given key. If the key already is in the
+	 * <code>ValueMap</code> it will combine the values into a <code>String</code> array, else it
+	 * will just store the value itself.
 	 * 
 	 * @param key
 	 *            the key to store the value under
 	 * @param value
 	 *            the value that must be added/merged to the <code>ValueMap</code>
-	 * @return the value itself if there was no previous value, or a <code>String</code> array
-	 *         with the combined values
+	 * @return the value itself if there was no previous value, or a <code>String</code> array with
+	 *         the combined values
 	 */
 	public final Object add(final String key, final String value)
 	{
@@ -564,9 +528,8 @@ public class ValueMap extends TreeMap<String, Object> implements IValueMap
 	/**
 	 * Generates a <code>String</code> representation of this object.
 	 * 
-	 * @return <code>String</code> representation of this <code>ValueMap</code> consistent with
-	 *         the tag-attribute style of markup elements. For example:
-	 *         <code>a="x" b="y" c="z"</code>.
+	 * @return <code>String</code> representation of this <code>ValueMap</code> consistent with the
+	 *         tag-attribute style of markup elements. For example: <code>a="x" b="y" c="z"</code>.
 	 */
 	@Override
 	public String toString()

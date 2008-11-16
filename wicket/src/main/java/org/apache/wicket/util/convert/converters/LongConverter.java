@@ -27,14 +27,14 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class LongConverter extends AbstractIntegerConverter<Long>
+public class LongConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a long converter
 	 */
-	public static final IConverter<Long> INSTANCE = new LongConverter();
+	public static final IConverter INSTANCE = new LongConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.List;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Request;
@@ -25,6 +27,8 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A session subclass for the HTTP protocol.
@@ -34,6 +38,9 @@ import org.apache.wicket.util.string.Strings;
 public class WebSession extends Session
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(WebSession.class);
+
 	/**
 	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
 	 * null).
@@ -71,6 +78,7 @@ public class WebSession extends Session
 	 * @param request
 	 *            The current request
 	 */
+	@Deprecated
 	public WebSession(final Application application, Request request)
 	{
 		super(application, request);
@@ -86,6 +94,7 @@ public class WebSession extends Session
 	 * @param request
 	 *            The current request
 	 */
+	@Deprecated
 	public WebSession(final WebApplication application, Request request)
 	{
 		super(application, request);
@@ -105,6 +114,7 @@ public class WebSession extends Session
 	/**
 	 * @see org.apache.wicket.Session#isCurrentRequestValid(org.apache.wicket.RequestCycle)
 	 */
+	@Override
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
 	{
 		WebRequest lockedRequest = (WebRequest)lockedRequestCycle.getRequest();
@@ -125,9 +135,10 @@ public class WebSession extends Session
 		}
 
 		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters()
-				.getComponentPath(), Component.PATH_SEPARATOR);
+			.getComponentPath(), Component.PATH_SEPARATOR);
 		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
-				.getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR);
+			.getRequestParameters()
+			.getComponentPath(), Component.PATH_SEPARATOR);
 
 		int lockedVersion = lockedRequest.getRequestParameters().getVersionNumber();
 		int currentVersion = currentRequest.getRequestParameters().getVersionNumber();
@@ -144,6 +155,7 @@ public class WebSession extends Session
 	/**
 	 * @see org.apache.wicket.Session#cleanupFeedbackMessages()
 	 */
+	@Override
 	public void cleanupFeedbackMessages()
 	{
 		// remove all component feedback messages if we are either using one
@@ -152,14 +164,31 @@ public class WebSession extends Session
 		// used, when we're doing the render request (isRedirect should return
 		// false in that case)
 		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER ||
-				((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
-				(!RequestCycle.get().isRedirect()))
+			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
+			(!RequestCycle.get().isRedirect()))
 		{
 			// If session scoped, rendered messages got indeed cleaned up, mark
 			// the session as dirty
 			if (getFeedbackMessages().clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
 			{
 				dirty();
+			}
+
+			// see if any component related feedback messages were left unrendered and warn if in
+			// dev mode
+			if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
+			{
+				List<FeedbackMessage> messages = getFeedbackMessages().messages(
+					WebSession.MESSAGES_FOR_COMPONENTS);
+				for (FeedbackMessage message : messages)
+				{
+					if (!message.isRendered())
+					{
+						logger.warn(
+							"Component-targetted feedback message was left unrendered. This could be because you are missing a FeedbackPanel on the page.  Message: {}",
+							message);
+					}
+				}
 			}
 
 			// clean up all component related feedback messages

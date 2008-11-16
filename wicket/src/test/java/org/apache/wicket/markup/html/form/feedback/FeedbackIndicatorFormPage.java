@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.feedback;
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -34,15 +36,16 @@ public class FeedbackIndicatorFormPage extends WebPage
 	 */
 	public FeedbackIndicatorFormPage()
 	{
-		final TextField tf = new TextField("input", new Model());
+		final TextField<Serializable> tf = new TextField<Serializable>("input", new Model<Serializable>());
 		final FormComponentFeedbackIndicator feedback = new FormComponentFeedbackIndicator(
 			"feedback");
 
-		Form form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onSubmit()
+			@Override
+            protected void onSubmit()
 			{
 				tf.error("an error");
 			}

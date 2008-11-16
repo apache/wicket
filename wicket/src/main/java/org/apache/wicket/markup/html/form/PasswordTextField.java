@@ -40,10 +40,9 @@ public class PasswordTextField extends TextField<String>
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
-	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be editable, or
-	 * resubmitted.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
+	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
+	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
 	 */
 	private boolean resetPassword = true;
 
@@ -56,6 +55,8 @@ public class PasswordTextField extends TextField<String>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public PasswordTextField(final String id, IModel<String> model)
@@ -66,10 +67,9 @@ public class PasswordTextField extends TextField<String>
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
-	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be editable, or
-	 * resubmitted.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
+	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
+	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
 	 * 
 	 * @return Returns the resetPassword.
 	 */
@@ -80,10 +80,9 @@ public class PasswordTextField extends TextField<String>
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
-	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be editable, or
-	 * resubmitted.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
+	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
+	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
 	 * 
 	 * @param resetPassword
 	 *            The resetPassword to set.

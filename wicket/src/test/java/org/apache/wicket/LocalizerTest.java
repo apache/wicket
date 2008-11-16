@@ -22,11 +22,11 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
@@ -47,20 +47,20 @@ public class LocalizerTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		DropDownChoice drop1;
-		DropDownChoice drop2;
+		DropDownChoice<String> drop1;
+		DropDownChoice<String> drop2;
 
 		/**
 		 * Construct.
 		 */
 		public MyMockPage()
 		{
-			final Form form = new Form("form");
+			final Form<Void> form = new Form<Void>("form");
 			add(form);
 
 			String[] choices = { "choice1", "choice2" };
-			drop1 = new DropDownChoice("drop1", Arrays.asList(choices));
-			drop2 = new DropDownChoice("drop2", Arrays.asList(choices));
+			drop1 = new DropDownChoice<String>("drop1", Arrays.asList(choices));
+			drop2 = new DropDownChoice<String>("drop2", Arrays.asList(choices));
 
 			form.add(drop1);
 			form.add(drop2);
@@ -86,6 +86,7 @@ public class LocalizerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
@@ -121,7 +122,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(false);
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
-			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
 				"unknown.string", null, null, null));
 	}
 
@@ -133,7 +134,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
 				"unknown.string", null, null, "DEFAULT"));
 	}
 
@@ -162,7 +163,7 @@ public class LocalizerTest extends WicketTestCase
 	{
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
-		Model model = new Model(vm);
+		IModel<ValueMap> model = new Model<ValueMap>(vm);
 		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe",
 			localizer.getString("test.substitute", null, model, null));
 	}
@@ -172,7 +173,7 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testInComponentConstructor()
 	{
-		Component myComponent = new MyLabel("myLabel");
+		new MyLabel("myLabel");
 	}
 
 	/**
@@ -200,16 +201,16 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testGetStringUseModel()
 	{
-		HashMap model = new HashMap();
+		HashMap<String, String> model = new HashMap<String, String>();
 		model.put("user", "juergen");
 
 		Assert.assertEquals("Expected string should be returned", "Welcome, juergen",
-			localizer.getString("test.substitute", null, new PropertyModel(model, null),
+			localizer.getString("test.substitute", null, new PropertyModel<String>(model, null),
 				"DEFAULT {user}"));
 
 		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
 			localizer.getString("test.substituteDoesNotExist", null,
-				new PropertyModel(model, null), "DEFAULT ${user}"));
+				new PropertyModel<String>(model, null), "DEFAULT ${user}"));
 	}
 
 	/**

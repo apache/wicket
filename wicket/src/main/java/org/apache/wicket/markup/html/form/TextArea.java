@@ -41,6 +41,8 @@ public class TextArea<T> extends AbstractTextComponent<T>
 	}
 
 	/**
+	 * @param id
+	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public TextArea(final String id, final IModel<T> model)

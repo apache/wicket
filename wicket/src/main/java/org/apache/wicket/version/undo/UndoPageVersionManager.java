@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
  * managed.
  * 
  * @author Jonathan Locke
- * @param <T>
- *            Type of Page
  * @since 1.2.6
  */
 public class UndoPageVersionManager implements IPageVersionManager
