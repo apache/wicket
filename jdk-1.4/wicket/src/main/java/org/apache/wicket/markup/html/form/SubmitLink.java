@@ -20,7 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 
 /**
- * A link which can be used exactly like a Button to submit a Form. The href of the link will use
+ * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
  * JavaScript to submit the form.
  * 
  * <p>
@@ -211,8 +211,7 @@ public class SubmitLink extends AbstractSubmitLink
 				{
 					sb.append("var ff=f;");
 				}
-				sb
-						.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
+				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
 			}
 			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
