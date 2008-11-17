@@ -20,7 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 
 /**
- * A link which can be used exactly like a Button to submit a Form. The href of the link will use
+ * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
  * JavaScript to submit the form.
  * 
  * <p>
