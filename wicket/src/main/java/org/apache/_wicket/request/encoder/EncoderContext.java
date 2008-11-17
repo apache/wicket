@@ -18,6 +18,7 @@ package org.apache._wicket.request.encoder;
 
 import org.apache._wicket.IPage;
 import org.apache._wicket.PageParameters;
+import org.apache._wicket.resource.ResourceReferenceRegistry;
 import org.apache.wicket.RequestListenerInterface;
 
 /**
@@ -64,6 +65,16 @@ public interface EncoderContext
 	 * @return identifier for bookmarkable URLs
 	 */
 	public String getBookmarkableIdentifier();
+	
+	/**
+	 * @return identifier for resources
+	 */
+	public String getResourceIdentifier();
+	
+	/**
+	 * @return {@link ResourceReferenceRegistry}
+	 */
+	public ResourceReferenceRegistry getResourceReferenceRegistry();
 	
 	/**
 	 * Returns the listener interface name as string.

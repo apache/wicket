@@ -16,60 +16,43 @@
  */
 package org.apache._wicket.request.handler.resource;
 
-import java.util.Locale;
-
 import org.apache._wicket.PageParameters;
 import org.apache._wicket.RequestCycle;
 import org.apache._wicket.request.RequestHandler;
-import org.apache._wicket.resource.Resource;
+import org.apache._wicket.resource.ResourceReference;
 
 /**
- * Request handler that renders a resource.
+ * Request handler for {@link ResourceReference}. This handler is only used to generate URLs.
  * 
  * @author Matej Knopp
  */
-public class ResourceRequestHandler implements RequestHandler
+public class ResourceReferenceRequestHandler implements RequestHandler
 {
-	private final Resource resource;
-	private final Locale locale;
-	private final String style;
+	private final ResourceReference resourceReference;
 	private final PageParameters pageParameters;
-
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param resource
-	 * @param locale
-	 * @param style
+	 * @param resourceReference
 	 * @param pageParameters
 	 */
-	public ResourceRequestHandler(Resource resource, Locale locale, String style,
-		PageParameters pageParameters)
+	public ResourceReferenceRequestHandler(ResourceReference resourceReference, PageParameters pageParameters)
 	{
-		if (resource == null)
+		if (resourceReference == null)
 		{
-			throw new IllegalArgumentException("Argument 'resource' may not be null.");
-		}
-		this.resource = resource;
-		this.locale = locale;
-		this.style = style;
-		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
-	}
-
-	/**
-	 * @return locale
-	 */
-	public Locale getLocale()
-	{
-		return locale;
+			throw new IllegalArgumentException("Argument 'resourceReference' may not be null.");
+		}		
+		this.resourceReference = resourceReference;
+		this.pageParameters = pageParameters;
 	}
 	
 	/**
-	 * @return style
+	 * @return resource reference
 	 */
-	public String getStyle()
+	public ResourceReference getResourceReference()
 	{
-		return style;
+		return resourceReference;
 	}
 	
 	/**
@@ -79,23 +62,13 @@ public class ResourceRequestHandler implements RequestHandler
 	{
 		return pageParameters;
 	}
-	
-	/**
-	 * @return resource
-	 */
-	public Resource getResource()
-	{
-		return resource;
-	}
-
-	public void respond(RequestCycle requestCycle)
-	{
-		Resource.Attributes a = new Resource.Attributes(requestCycle.getRequest(),
-			requestCycle.getResponse(), locale, style, pageParameters);
-		resource.respond(a);
-	}
 
 	public void detach(RequestCycle requestCycle)
 	{
 	}
+
+	public void respond(RequestCycle requestCycle)
+	{
+	}
+
 }

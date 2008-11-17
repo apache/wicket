@@ -85,9 +85,9 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 		else
 		{
 			return s.substring(2, s.length() - 1);
-		}		
+		}
 	}
-		
+
 	/**
 	 * Returns true if the given url starts with specified segments. Segments that contain
 	 * placelhoders are not compared.
@@ -287,7 +287,8 @@ public abstract class AbstractEncoder implements RequestHandlerEncoder
 			--segmentsToSkip;
 		}
 
-		if (getPageComponentInfo(urlCopy) != null)
+		if (!urlCopy.getQueryParameters().isEmpty() &&
+			Strings.isEmpty(urlCopy.getQueryParameters().get(0).getValue()))
 		{
 			urlCopy.getQueryParameters().remove(0);
 		}

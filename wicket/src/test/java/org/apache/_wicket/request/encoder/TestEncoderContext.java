@@ -19,6 +19,7 @@ package org.apache._wicket.request.encoder;
 import org.apache._wicket.IPage;
 import org.apache._wicket.MockPage;
 import org.apache._wicket.PageParameters;
+import org.apache._wicket.resource.ResourceReferenceRegistry;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 
@@ -51,7 +52,19 @@ public class TestEncoderContext implements EncoderContext
 	{
 		return "page";
 	}
+	
+	public String getResourceIdentifier()
+	{
+		return "resource";
+	}
 
+	public ResourceReferenceRegistry getResourceReferenceRegistry()
+	{
+		return registry;
+	}
+	
+	private ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
+	
 	private boolean bookmarkable = true;
 
 	/**

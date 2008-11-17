@@ -32,23 +32,23 @@ public class ResourceReferenceRegistry
 	private static class Key
 	{
 		private final String scope;
-		private final String path;
+		private final String name;
 		private final Locale locale;
 		private final String style;
 
-		public Key(String scope, String path, Locale locale, String style)
+		public Key(String scope, String name, Locale locale, String style)
 		{
 			if (scope == null)
 			{
 				throw new IllegalArgumentException("Argument 'scope' can not be null.");
 			}
-			this.scope = scope.toString();
+			this.scope = scope;
 
-			if (path == null)
+			if (name == null)
 			{
-				throw new IllegalArgumentException("Argument 'path' can not be null.");
+				throw new IllegalArgumentException("Argument 'name' can not be null.");
 			}
-			this.path = path;
+			this.name = name;
 			this.locale = locale;
 			this.style = style;
 		}
@@ -60,13 +60,13 @@ public class ResourceReferenceRegistry
 			{
 				return true;
 			}
-			if (obj instanceof Key)
+			if (obj instanceof Key == false)
 			{
 				return false;
 			}
 			Key that = (Key)obj;
 			return Objects.equal(scope, that.scope) && //
-				Objects.equal(path, that.path) && //
+				Objects.equal(name, that.name) && //
 				Objects.equal(locale, that.locale) && //
 				Objects.equal(style, that.style);
 		}
@@ -74,11 +74,11 @@ public class ResourceReferenceRegistry
 		@Override
 		public int hashCode()
 		{
-			return Objects.hashCode(scope, path, locale, style);
+			return Objects.hashCode(scope, name, locale, style);
 		}
 	};
 
-	private static Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
+	private Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
 
 	/**
 	 * Registers the given {@link ResourceReference}.
@@ -91,7 +91,7 @@ public class ResourceReferenceRegistry
 		{
 			throw new IllegalArgumentException("Argument 'reference' may not be null.");
 		}
-		Key key = new Key(reference.getScope().getName(), reference.getPath(),
+		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle());
 		map.put(key, reference);
 	}
@@ -107,7 +107,7 @@ public class ResourceReferenceRegistry
 		{
 			throw new IllegalArgumentException("Argument 'reference' may not be null.");
 		}
-		Key key = new Key(reference.getScope().getName(), reference.getPath(),
+		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle());
 		map.remove(key);
 	}
