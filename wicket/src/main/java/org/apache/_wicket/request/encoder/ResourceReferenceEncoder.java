@@ -31,6 +31,14 @@ import org.apache.wicket.util.lang.Classes;
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
  * {@link ResourceReference}s.
+ * <p>
+ * Decodes and encodes the following URLs:
+ * <pre>
+ *    /wicket/resource/org.apache.wicket.ResourceScope/name
+ *    /wicket/resource/org.apache.wicket.ResourceScope/name?en
+ *    /wicket/resource/org.apache.wicket.ResourceScope/name?-style
+ *    /wicket/resource/org.apache.wicket.ResourceScope/resource/name.xyz?en_EN-style
+ * </pre>
  * 
  * @author Matej Knopp
  */
