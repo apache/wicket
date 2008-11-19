@@ -208,6 +208,14 @@ public class DataTable<T> extends Panel implements IPageable
 	}
 
 	/**
+	 * @return dataprovider
+	 */
+	public final IDataProvider<T> getDataProvider()
+	{
+		return datagrid.getDataProvider();
+	}
+
+	/**
 	 * @return array of column objects this table displays
 	 */
 	public final IColumn<?>[] getColumns()
