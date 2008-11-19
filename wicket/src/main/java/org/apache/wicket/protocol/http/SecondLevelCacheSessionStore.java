@@ -376,8 +376,17 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				Object page = lastPage;
 				if (store instanceof ISerializationAwarePageStore)
 				{
-					page = ((ISerializationAwarePageStore)store).prepareForSerialization(sessionId,
-						page);
+					if (page != null)
+					{
+						page = ((ISerializationAwarePageStore)store).prepareForSerialization(sessionId,
+							page);
+						
+						if (page == null)
+						{
+							log.warn("PageStore prepared non-null page as null for serialization");
+						}
+						
+					}
 				}
 
 				try
@@ -401,7 +410,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			if (sessionId != null && store instanceof IClusteredPageStore == false)
 			{
 				Object lastPage = s.readObject();
-				if (store instanceof ISerializationAwarePageStore)
+				if (lastPage == null)
+				{
+					log.warn("PageMap deserialization - got nulll lastPage");
+				}
+				else if (store instanceof ISerializationAwarePageStore)
 				{
 					lastPage = ((ISerializationAwarePageStore)store).restoreAfterSerialization((Serializable)lastPage);
 				}
