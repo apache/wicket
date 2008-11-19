@@ -32,12 +32,14 @@ import org.apache.wicket.model.PropertyModel;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  *            The model object type
+ * @param <Y>
+ *            The column model object type
  * 
  */
-public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
+public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T>
 {
 	private static final long serialVersionUID = 1L;
-	private final IModel<List<? extends T>> filterChoices;
+	private final IModel<List<? extends Y>> filterChoices;
 
 	/**
 	 * @param displayModel
@@ -47,7 +49,7 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 *            collection choices used in the choice filter
 	 */
 	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
-		String propertyExpression, IModel<List<? extends T>> filterChoices)
+		String propertyExpression, IModel<List<? extends Y>> filterChoices)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -60,7 +62,7 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 *            collection of choices used in the choice filter
 	 */
 	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String propertyExpression,
-		IModel<List<? extends T>> filterChoices)
+		IModel<List<? extends Y>> filterChoices)
 	{
 		super(displayModel, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -85,10 +87,10 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 */
 	public Component getFilter(String componentId, FilterForm form)
 	{
-		ChoiceFilter<T> filter = new ChoiceFilter<T>(componentId, getFilterModel(form), form,
+		ChoiceFilter<Y> filter = new ChoiceFilter<Y>(componentId, getFilterModel(form), form,
 			filterChoices, enableAutoSubmit());
 
-		IChoiceRenderer<T> renderer = getChoiceRenderer();
+		IChoiceRenderer<Y> renderer = getChoiceRenderer();
 		if (renderer != null)
 		{
 			filter.getChoice().setChoiceRenderer(renderer);
@@ -104,9 +106,9 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<T> getFilterModel(FilterForm form)
+	protected IModel<Y> getFilterModel(FilterForm form)
 	{
-		return new PropertyModel<T>(form.getDefaultModel(), getPropertyExpression());
+		return new PropertyModel<Y>(form.getDefaultModel(), getPropertyExpression());
 	}
 
 	/**
@@ -125,7 +127,7 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 * 
 	 * @return choice renderer that will be used to create the choice filter
 	 */
-	protected IChoiceRenderer<T> getChoiceRenderer()
+	protected IChoiceRenderer<Y> getChoiceRenderer()
 	{
 		return null;
 	}
@@ -133,7 +135,7 @@ public class ChoiceFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	/**
 	 * @return filter choices model
 	 */
-	protected final IModel<List<? extends T>> getFilterChoices()
+	protected final IModel<List<? extends Y>> getFilterChoices()
 	{
 		return filterChoices;
 	}
