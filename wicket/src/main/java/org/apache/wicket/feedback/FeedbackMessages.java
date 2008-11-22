@@ -344,7 +344,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the message
 	 */
-	final void add(FeedbackMessage message)
+	public final void add(FeedbackMessage message)
 	{
 		if (log.isDebugEnabled())
 		{
