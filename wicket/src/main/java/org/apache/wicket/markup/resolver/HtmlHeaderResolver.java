@@ -148,7 +148,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 			else
 			{
 				throw new MarkupException(
-					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel> and <wicket:border>");
+					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>");
 			}
 
 			// Yes, we handled the tag
