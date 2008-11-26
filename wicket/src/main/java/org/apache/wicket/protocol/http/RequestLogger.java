@@ -274,40 +274,49 @@ public class RequestLogger implements IRequestLogger
 	 * @param rd
 	 * @param sd
 	 */
-	private void log(RequestData rd, SessionData sd)
+	protected void log(RequestData rd, SessionData sd)
 	{
 		if (log.isInfoEnabled())
 		{
-			AppendingStringBuffer asb = new AppendingStringBuffer(150);
-			asb.append("time=");
-			asb.append(rd.getTimeTaken());
-			asb.append(",event=");
-			asb.append(rd.getEventTarget());
-			asb.append(",response=");
-			asb.append(rd.getResponseTarget());
-			if (rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
-			{
-				asb.append(",sessioninfo=");
-				asb.append(rd.getSessionInfo());
-			}
-			else
-			{
-				asb.append(",sessionid=");
-				asb.append(rd.getSessionId());
-			}
-			asb.append(",sessionsize=");
-			asb.append(rd.getSessionSize());
-			if (sd != null)
-			{
-				asb.append(",sessionstart=");
-				asb.append(sd.getStartDate());
-				asb.append(",requests=");
-				asb.append(sd.getNumberOfRequests());
-				asb.append(",totaltime=");
-				asb.append(sd.getTotalTimeTaken());
-			}
-			asb.append(",activerequests=");
-			asb.append(rd.getActiveRequest());
+			log.info(createLogString(rd, sd, true).toString());
+		}
+	}
+
+	protected final AppendingStringBuffer createLogString(RequestData rd, SessionData sd,
+		boolean includeRuntimeInfo)
+	{
+		AppendingStringBuffer asb = new AppendingStringBuffer(150);
+		asb.append("time=");
+		asb.append(rd.getTimeTaken());
+		asb.append(",event=");
+		asb.append(rd.getEventTarget());
+		asb.append(",response=");
+		asb.append(rd.getResponseTarget());
+		if (rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
+		{
+			asb.append(",sessioninfo=");
+			asb.append(rd.getSessionInfo());
+		}
+		else
+		{
+			asb.append(",sessionid=");
+			asb.append(rd.getSessionId());
+		}
+		asb.append(",sessionsize=");
+		asb.append(rd.getSessionSize());
+		if (sd != null)
+		{
+			asb.append(",sessionstart=");
+			asb.append(sd.getStartDate());
+			asb.append(",requests=");
+			asb.append(sd.getNumberOfRequests());
+			asb.append(",totaltime=");
+			asb.append(sd.getTotalTimeTaken());
+		}
+		asb.append(",activerequests=");
+		asb.append(rd.getActiveRequest());
+		if (includeRuntimeInfo)
+		{
 			Runtime runtime = Runtime.getRuntime();
 			long max = runtime.maxMemory() / 1000000;
 			long total = runtime.totalMemory() / 1000000;
@@ -319,8 +328,8 @@ public class RequestLogger implements IRequestLogger
 			asb.append("M,used=");
 			asb.append(used);
 			asb.append("M");
-			log.info(asb.toString());
 		}
+		return asb;
 	}
 
 	private Object getSessionInfo(Session session)
