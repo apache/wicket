@@ -75,12 +75,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		boolean redirectOnBookmarkableRequest)
 	{
 		super(mountPath);
-		
+
 		if (mountPath.endsWith("/"))
 		{
 			throw new IllegalArgumentException("mountPath can not end with a '/': " + mountPath);
 		}
-		
+
 		pageClassRef = new WeakReference(pageClass);
 		this.redirectOnBookmarkableRequest = redirectOnBookmarkableRequest;
 	}
@@ -280,7 +280,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
-			return (Integer)page.getMetaData(ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY);
+			return page.getMetaData(ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY);
 		}
 		return null;
 	}
@@ -361,7 +361,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	public static PageParameters getInitialPagePageParameters(Page page)
 	{
-		return (PageParameters)page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
+		return page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
 	}
 
 	/**
@@ -882,7 +882,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
 	 */
 	@Override
-	public boolean matches(String path)
+	public boolean matches(String path, boolean caseSensitive)
 	{
 		RequestCycle rc = RequestCycle.get();
 
@@ -894,7 +894,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			return false;
 		}
 
-		if (path.startsWith(getMountPath()))
+		if (Strings.startsWith(path, getMountPath(), caseSensitive))
 		{
 			/*
 			 * We need to match /mount/point or /mount/point/with/extra/path, but not

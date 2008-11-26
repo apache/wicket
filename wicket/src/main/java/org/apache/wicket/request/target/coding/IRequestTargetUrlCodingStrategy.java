@@ -68,7 +68,10 @@ public interface IRequestTargetUrlCodingStrategy
 	 * Returns true if this mounter is applicable for the URL path
 	 * 
 	 * @param path
-	 * @return
+	 * @param caseSensitive
+	 *            whether the strategy should treat <code>path</code> argument with case sensitivity
+	 *            or not
+	 * @return true if this strategy matches the path
 	 */
-	boolean matches(String path);
+	boolean matches(String path, boolean caseSensitive);
 }

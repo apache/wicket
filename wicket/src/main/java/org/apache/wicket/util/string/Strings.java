@@ -1375,6 +1375,25 @@ public final class Strings
 
 	}
 
+	/**
+	 * Extended {@link String#startsWith(String)} with support for case sensitivity
+	 * 
+	 * @param str
+	 * @param prefix
+	 * @param caseSensitive
+	 * @return <code>true</code> if <code>str</code> starts with <code>prefix</code>
+	 */
+	public static boolean startsWith(String str, String prefix, boolean caseSensitive)
+	{
+		if (caseSensitive)
+		{
+			return str.startsWith(prefix);
+		}
+		else
+		{
+			return str.toLowerCase().startsWith(prefix.toLowerCase());
+		}
+	}
 
 	/**
 	 * Private constructor prevents construction.

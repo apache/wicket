@@ -251,11 +251,14 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * not /mount/pointXXX.
 	 * 
 	 * @param path
+	 * @param caseSensitive
+	 *            whether the strategy should treat <code>path</code> argument with case sensitivity
+	 *            or not
 	 * @return true if matches, false otherwise
 	 */
-	public boolean matches(String path)
+	public boolean matches(String path, boolean caseSensitive)
 	{
-		if (path.startsWith(mountPath))
+		if (Strings.startsWith(path, mountPath, caseSensitive))
 		{
 			/*
 			 * We need to match /mount/point or /mount/point/with/extra/path, but not

@@ -1083,7 +1083,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				if (path.startsWith(key))
 				{
 					IRequestTargetUrlCodingStrategy strategy = entry.getValue();
-					if (strategy.matches(path))
+					if (strategy.matches(path, caseSensitiveMounts))
 					{
 						return strategy;
 					}
