@@ -142,9 +142,8 @@ public abstract class RatingPanel extends Panel
 			// add the star image, which is either active (highlighted) or
 			// inactive (no star)
 			link.add(new WebMarkupContainer("star").add(new SimpleAttributeModifier("src",
-					(onIsStarActive(iteration)
-							? getActiveStarUrl(iteration)
-							: getInactiveStarUrl(iteration)))));
+				(onIsStarActive(iteration) ? getActiveStarUrl(iteration)
+					: getInactiveStarUrl(iteration)))));
 			item.add(link);
 		}
 	}
@@ -156,13 +155,13 @@ public abstract class RatingPanel extends Panel
 	 * Star image for no selected star
 	 */
 	public static final ResourceReference STAR0 = new ResourceReference(RatingPanel.class,
-			"star0.gif");
+		"star0.gif");
 
 	/**
 	 * Star image for selected star
 	 */
 	public static final ResourceReference STAR1 = new ResourceReference(RatingPanel.class,
-			"star1.gif");
+		"star1.gif");
 
 	/**
 	 * The number of stars that need to be shown, should result in an Integer object.
@@ -172,12 +171,12 @@ public abstract class RatingPanel extends Panel
 	/**
 	 * The number of votes that have been cast, should result in an Integer object.
 	 */
-	private IModel<Integer> nrOfVotes;
+	private final IModel<Integer> nrOfVotes;
 
 	/**
 	 * The flag on whether the current user has voted already.
 	 */
-	private IModel<Boolean> hasVoted;
+	private final IModel<Boolean> hasVoted;
 
 	/**
 	 * Handle to the rating label to set the visibility.
@@ -204,7 +203,7 @@ public abstract class RatingPanel extends Panel
 	 * @param rating
 	 *            the model to get the rating
 	 */
-	public RatingPanel(String id, IModel<Integer> rating)
+	public RatingPanel(String id, IModel<? extends Number> rating)
 	{
 		this(id, rating, new Model<Integer>(5), null, new Model<Boolean>(Boolean.FALSE), true);
 	}
@@ -236,10 +235,11 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel<Integer> rating, int nrOfStars, boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel<? extends Number> rating, int nrOfStars,
+		boolean addDefaultCssStyle)
 	{
 		this(id, rating, new Model<Integer>(nrOfStars), null, new Model<Boolean>(Boolean.FALSE),
-				addDefaultCssStyle);
+			addDefaultCssStyle);
 	}
 
 	/**
@@ -258,11 +258,11 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel<Integer> rating, int nrOfStars, IModel<Integer> nrOfVotes,
-			boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel<? extends Number> rating, int nrOfStars,
+		IModel<Integer> nrOfVotes, boolean addDefaultCssStyle)
 	{
-		this(id, rating, new Model<Integer>(nrOfStars), nrOfVotes, new Model<Boolean>(Boolean.FALSE),
-				addDefaultCssStyle);
+		this(id, rating, new Model<Integer>(nrOfStars), nrOfVotes,
+			new Model<Boolean>(Boolean.FALSE), addDefaultCssStyle);
 	}
 
 	/**
@@ -283,8 +283,8 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel<Integer> rating, IModel<Integer> nrOfStars, IModel<Integer> nrOfVotes,
-			IModel<Boolean> hasVoted, boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel<? extends Number> rating, IModel<Integer> nrOfStars,
+		IModel<Integer> nrOfVotes, IModel<Boolean> hasVoted, boolean addDefaultCssStyle)
 	{
 		super(id, rating);
 
@@ -347,7 +347,8 @@ public abstract class RatingPanel extends Panel
 	 *            the model containing the number of votes (may be null)
 	 * @return the label component showing the message.
 	 */
-	protected Component newRatingLabel(String id, IModel<Integer> rating, IModel<Integer> nrOfVotes)
+	protected Component newRatingLabel(String id, IModel<? extends Number> rating,
+		IModel<Integer> nrOfVotes)
 	{
 		IModel<String> model;
 		if (nrOfVotes == null)
@@ -403,8 +404,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Returns <code>true</code> when the star identified by its sequence number should be shown
-	 * as active.
+	 * Returns <code>true</code> when the star identified by its sequence number should be shown as
+	 * active.
 	 * 
 	 * @param star
 	 *            the sequence number of the star (ranging from 0 to nrOfStars)
@@ -414,8 +415,8 @@ public abstract class RatingPanel extends Panel
 
 	/**
 	 * Notification of a click on a rating star. Add your own components to the request target when
-	 * you want to have them updated in the Ajax request. <strong>NB</strong> the target may be
-	 * null when the click isn't handled using AJAX, but using a fallback scenario.
+	 * you want to have them updated in the Ajax request. <strong>NB</strong> the target may be null
+	 * when the click isn't handled using AJAX, but using a fallback scenario.
 	 * 
 	 * @param rating
 	 *            the number of the star that is clicked, ranging from 1 to nrOfStars
