@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.util.Locale;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -123,7 +124,7 @@ public class FormTesterTest extends WicketTestCase
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setFile("file", new File(getBasedir() +
-				"src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
+			"src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
 		formTester.setValue("text", "Mock value");
 		formTester.submit();
 
@@ -136,7 +137,7 @@ public class FormTesterTest extends WicketTestCase
 		assertNotNull(fileUpload);
 
 		assertTrue("uploaded content does not have the right size, expected 428, got " +
-				fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
+			fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
 		assertEquals("bg.jpg", fileUpload.getClientFileName());
 		assertEquals("image/jpeg", fileUpload.getContentType());
 	}
@@ -157,6 +158,26 @@ public class FormTesterTest extends WicketTestCase
 		assertNull(page.getFileUpload());
 
 		tester.assertErrorMessages(new String[] { "Field 'file' is required." });
+	}
+
+	/**
+	 * Test that formTester deal with Multipart form correctly when no actual upload
+	 */
+	public void testSubmitMultipartForm()
+	{
+		tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=false"));
+		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
+		MockDomainObjectFileUpload domainObject = page.getDomainObject();
+
+		Session.get().setLocale(Locale.US);
+
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("text", "Mock Value");
+		formTester.submit();
+
+		assertFalse(formTester.getForm().hasError());
+		assertNull(page.getFileUpload());
+		assertEquals("Mock Value", domainObject.getText());
 	}
 
 }

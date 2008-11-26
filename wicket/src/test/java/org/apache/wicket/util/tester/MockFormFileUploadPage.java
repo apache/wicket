@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.io.Serializable;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -70,18 +71,25 @@ public class MockFormFileUploadPage extends WebPage
 
 	private FileUpload fileUpload;
 
+
+	public MockFormFileUploadPage()
+	{
+		this(new PageParameters("required=true"));
+	}
+
 	/**
 	 * Construct.
 	 */
-	public MockFormFileUploadPage()
+	public MockFormFileUploadPage(final PageParameters param)
 	{
 		domainObject = new MockDomainObjectFileUpload();
-		Form<MockDomainObjectFileUpload> form = new Form<MockDomainObjectFileUpload>("form", new CompoundPropertyModel<MockDomainObjectFileUpload>(domainObject))
+		Form<MockDomainObjectFileUpload> form = new Form<MockDomainObjectFileUpload>("form",
+			new CompoundPropertyModel<MockDomainObjectFileUpload>(domainObject))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void onSubmit()
+			protected void onSubmit()
 			{
 				fileUpload = fileUploadField.getFileUpload();
 			}
@@ -91,7 +99,7 @@ public class MockFormFileUploadPage extends WebPage
 		form.setMaxSize(Bytes.kilobytes(100));
 		form.add(new TextField<String>("text"));
 		fileUploadField = new FileUploadField("file", new Model<FileUpload>());
-		fileUploadField.setRequired(true);
+		fileUploadField.setRequired(param.getAsBoolean("required", true));
 		form.add(fileUploadField);
 	}
 
