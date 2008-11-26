@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * This is a tag resolver which handles &lt;head&gt; and &lt;wicket:head&gt;tags. It must be
@@ -147,8 +149,15 @@ public class HtmlHeaderResolver implements IComponentResolver
 			}
 			else
 			{
+				final Page page = container.getPage();
+				final String pageClassName = (page != null) ? page.getClass().getName() : "unknown";
+				final IResourceStream stream = markupStream.getResource();
+				final String streamName = (stream != null) ? stream.toString() : "unknown";
+
 				throw new MarkupException(
-					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>");
+					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>. Error occured while rendering page: " +
+						pageClassName + " using markup stream: " + streamName);
+
 			}
 
 			// Yes, we handled the tag
