@@ -456,7 +456,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * <pre>
 	 * 
-	 * User u = (User)getModelObject(); u.setName(&quot;got you there!&quot;);
+	 * User u = (User)getModelObject();
+	 * u.setName(&quot;got you there!&quot;);
 	 * 
 	 * </pre>
 	 * 
@@ -478,11 +479,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <li>The 'normal' use is for controlling whether a component is rendered without having any
 	 * effect on the rest of the processing. If a strategy lets this method return 'false', then the
 	 * target component and its children will not be rendered, in the same fashion as if that
-	 * component had visibility property 'false'.</li> <li>The other use is when a component should
-	 * block the rendering of the whole page. So instead of 'hiding' a component, what we generally
-	 * want to achieve here is that we force the user to logon/give-credentials for a higher level
-	 * of authorization. For this functionality, the strategy implementation should throw a
-	 * {@link AuthorizationException}, which will then be handled further by the framework.</li>
+	 * component had visibility property 'false'.</li>
+	 * <li>The other use is when a component should block the rendering of the whole page. So
+	 * instead of 'hiding' a component, what we generally want to achieve here is that we force the
+	 * user to logon/give-credentials for a higher level of authorization. For this functionality,
+	 * the strategy implementation should throw a {@link AuthorizationException}, which will then be
+	 * handled further by the framework.</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -685,10 +687,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * What's stored here depends on what attributes are set on component. Data can contains
 	 * combination of following attributes:
 	 * <ul>
-	 * <li>Model (indicated by {@link #FLAG_MODEL_SET}) <li>MetaDataEntry (optionally
-	 * {@link MetaDataEntry}[] if more metadata entries are present) * <li>{@link IBehavior}(s)
-	 * added to component. The behaviors are not stored in separate array, they are part of the
-	 * {@link #data} array
+	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
+	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
+	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate array,
+	 * they are part of the {@link #data} array
 	 * </ul>
 	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
 	 * #data object points directly to value of that attribute. Otherwise the data is of type
@@ -994,8 +996,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	private final void internalBeforeRender()
 	{
-		if ((isVisible() || callOnBeforeRenderIfNotVisible()) && !getFlag(FLAG_RENDERING) &&
-			!getFlag(FLAG_PREPARED_FOR_RENDER))
+		if ((determineVisibility() || callOnBeforeRenderIfNotVisible()) &&
+			!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
@@ -2575,7 +2577,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Replaces this component with another. The replacing component must have the same component id
 	 * as this component. This method serves as a shortcut to <code>
-	 * this.getParent().replace(replacement)</code> and provides a better context for errors.
+	 * this.getParent().replace(replacement)</code>
+	 * and provides a better context for errors.
 	 * 
 	 * @since 1.2.1
 	 * 
@@ -3667,7 +3670,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Called just before a component is rendered.
 	 * <p>
-	 * *NOTE* If you override this, you *must* call super.onBeforeRender() within your
+	 * NOTE* If you override this, you *must* call super.onBeforeRender() within your
 	 * implementation.
 	 * 
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
