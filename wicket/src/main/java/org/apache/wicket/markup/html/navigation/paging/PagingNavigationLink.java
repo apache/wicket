@@ -73,6 +73,18 @@ public class PagingNavigationLink<T> extends Link<T>
 	 */
 	public final int getPageNumber()
 	{
+		return cullPageNumber(pageNumber);
+	}
+
+	/**
+	 * Allows the link to cull the page number to the valid range before it is retrieved from the
+	 * link
+	 * 
+	 * @param pageNumber
+	 * @return culled page number
+	 */
+	protected int cullPageNumber(int pageNumber)
+	{
 		int idx = pageNumber;
 		if (idx < 0)
 		{
