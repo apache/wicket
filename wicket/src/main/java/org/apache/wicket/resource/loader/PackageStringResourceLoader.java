@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
  * This implementation is fully aware of both locale and style values when trying to obtain the
  * appropriate resources.
  * <p>
+ * Looks for file called <code>package.properties</code>
  * 
  * @author Juergen Donnerstag
  * @author igor.vaynberg
