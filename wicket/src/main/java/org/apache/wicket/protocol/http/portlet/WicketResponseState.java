@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.protocol.http.portlet;
 
+import org.apache.wicket.settings.IRequestCycleSettings;
+
 /**
  * Holds the current state of the response and the redirect location for Portlets.
  * 
+ * @see IRequestCycleSettings#REDIRECT_TO_RENDER
  * @author Ate Douma
  */
 public class WicketResponseState
@@ -26,6 +29,16 @@ public class WicketResponseState
 	private int errorCode;
 	private String errorMessage;
 	private int statusCode;
+
+	/**
+	 * FIXME javadoc
+	 * 
+	 * Stores the effective wicket url which is used by {@link WicketPortlet} in the view phase to
+	 * request a render from wicket core.
+	 * 
+	 * @see IRequestCycleSettings#REDIRECT_TO_RENDER
+	 * @see WicketFilterPortletHelper#initFilter
+	 */
 	private String redirectLocation;
 
 	/**
@@ -83,6 +96,7 @@ public class WicketResponseState
 	/**
 	 * Sets redirectLocation.
 	 * 
+	 * @see WicketResponseState#redirectLocation
 	 * @param redirectLocation
 	 *            redirectLocation
 	 */

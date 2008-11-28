@@ -28,16 +28,17 @@ import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
  * This is the base strategy for encoding URLs, which is to leave them as is. This is mainly so that
  * PortletRequestContext can implement it's portlet encoding strategies as portlets need to have
  * special URLs encoded with portal information and portlet namespace.
- * 
+ * </p>
  * <p>
  * For url rewriting, only three methods are needed to support creating Portlet ActionURLs, Portlet
  * RenderURLs and Resource/Ajax URLs.
- * 
+ * </p>
+ * <p>
  * The RequestContext is somewhat comparable to the JSF ExternalContext interface which abstracts
  * the external environment (like web or portlet) in which the application is currently running.
  * As this is request dependent (the same application can technically be accessed even concurrently
  * as web or portlet), in Wicket this context has been termed RequestContext.
- * 
+ * </p>
  * @see PortletRequestContext
  * @author Ate Douma
  */
@@ -164,12 +165,13 @@ public class RequestContext
 
 	/**
 	 * Used to override response objects, typically used by the portlet implementation.
+	 *
 	 * <p>
 	 * In a Portlet environment, this allows the portlet container/portal to capture the
 	 * HeaderResponse as a separate stream for merging in the overall page header (together
 	 * with header output for other portlets).
 	 * </p>
-	 * 
+	 *
 	 * @see PortletRequestContext#getHeaderResponse()
 	 * @return The IHeaderResponse
 	 */

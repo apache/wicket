@@ -707,7 +707,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
 	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
 	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate array,
-	 * they are part of the {@link #data} array
+	 * they are part of the {@link #data} array (this is in order to save the space of the pointer
+	 * to an empty array as most components have no behaviours). - FIXME - explain why - is this
+	 * correct?
 	 * </ul>
 	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
 	 * #data object points directly to value of that attribute. Otherwise the data is of type
@@ -918,7 +920,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Adds an behavior modifier to the component.
+	 * Adds a behavior modifier to the component.
 	 * 
 	 * <p>
 	 * Note: this method is override to enable users to do things like discussed in <a
@@ -2329,8 +2331,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void render(final MarkupStream markupStream)
 	{
 		// We need to know the index before we do the visibility check.
-		// Otherwise
-		// we wouldn't know the markup index for invisible components
+		// Otherwise we wouldn't know the markup index for invisible components
 		if (markupStream != null)
 		{
 			markupIndex = markupStream.getCurrentIndex();
@@ -2959,8 +2960,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * set to the value returned from {@link Component#getMarkupId()}.
 	 * 
 	 * @param output
-	 *            True if the component will out the id attribute into markup. Please note that the
-	 *            default behavior is to use the same id as the component. This means that your
+	 *            True if the component will output the id attribute into markup. Please note that
+	 *            the default behavior is to use the same id as the component. This means that your
 	 *            component must begin with [a-zA-Z] in order to generate a valid markup id
 	 *            according to: http://www.w3.org/TR/html401/types.html#type-name
 	 * 
@@ -3633,7 +3634,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
+     * <p>
 	 * Called when a request begins.
+     * </p>
 	 * 
 	 * @Deprecated use {@link #onBeforeRender()} instead
 	 */
@@ -3644,7 +3647,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
+     * <p>
 	 * Called when a request ends.
+     * </p>
 	 * 
 	 * @Deprecated use {@link #onBeforeRender()} instead
 	 * 
@@ -3656,7 +3661,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
+     * <p>
 	 * Called anytime a model is changed via setModel or setModelObject.
+     * </p>
 	 */
 	protected void internalOnModelChanged()
 	{

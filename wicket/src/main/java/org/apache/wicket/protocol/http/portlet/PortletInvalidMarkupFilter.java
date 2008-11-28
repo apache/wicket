@@ -20,17 +20,16 @@ import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
-
 /**
- * This filter removes html page top level markup elements like <html>, <head> and <body>. The
- * filter is configured automatically by WicketFilter if it detects the application is (potentially)
- * invoked as a Portlet.
+ * This filter removes html page top level markup elements like <code>&lt;html&gt;</code>,
+ * <code>&lt;head&gt</code> and <code>&lt;body&gt;</code>. The filter is configured automatically by
+ * WicketFilter if it detects the application is (potentially) invoked as a Portlet.
  * 
  * @author Ate Douma
  */
 public class PortletInvalidMarkupFilter implements IResponseFilter
 {
-	/**
+	/*
 	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)
 	 */
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
@@ -81,14 +80,14 @@ public class PortletInvalidMarkupFilter implements IResponseFilter
 	private void deleteOpenTag(AppendingStringBuffer responseBuffer, String tagName)
 	{
 		int startIndex, endIndex;
-		// find and remove opening tag
+		// find and remove opening tag, if it exists
 		if ((startIndex = responseBuffer.indexOf("<" + tagName)) > -1)
 		{
 			if ((endIndex = responseBuffer.indexOf(">", startIndex)) > -1)
 			{
 				responseBuffer.delete(startIndex, endIndex + 1);
 			}
-			// remove closing tag
+			// remove closing tag, if it exists
 			if ((startIndex = responseBuffer.indexOf("</" + tagName + ">")) > -1)
 			{
 				responseBuffer.delete(startIndex, startIndex + tagName.length() + 3);

@@ -671,20 +671,24 @@ public abstract class Session implements IClusterable
 	 * 
 	 * Get the page for the given path.
 	 * 
+	 * FIXME javadoc - where does it look? where does it get the page from?
+	 * 
 	 * @param pageMapName
 	 *            The name of the page map where the page is
-	 * @param path
+	 * @param componentPath
 	 *            Component path
 	 * @param versionNumber
 	 *            The version of the page required
 	 * @return The page based on the first path component (the page id), or null if the requested
 	 *         version of the page cannot be found.
 	 */
-	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
+	public final Page getPage(final String pageMapName, final String componentPath,
+		final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
+			log.debug("Getting page [path = " + componentPath + ", versionNumber = " +
+				versionNumber + "]");
 		}
 
 		// Get page map by name, creating the default page map automatically
@@ -740,7 +744,7 @@ public abstract class Session implements IClusterable
 						AppendingStringBuffer asb = new AppendingStringBuffer(100);
 						asb.append("After " + timeout + " the Pagemap " + pageMapName +
 							" is still locked by: " + t +
-							", giving up trying to get the page for path: " + path);
+							", giving up trying to get the page for path: " + componentPath);
 						// if it is still not the right thread..
 						// This either points to long running code (a report
 						// page?) or a deadlock or such
@@ -767,7 +771,8 @@ public abstract class Session implements IClusterable
 				newEntry.thread = Thread.currentThread();
 				newEntry.requestCycle = RequestCycle.get();
 				pageMapsUsedInRequest.put(pageMap, newEntry);
-				final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+				final String id = Strings.firstPathComponent(componentPath,
+					Component.PATH_SEPARATOR);
 				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 				if (page == null)
 				{
@@ -915,7 +920,7 @@ public abstract class Session implements IClusterable
 	 */
 	public final IPageMap newPageMap(final String name)
 	{
-		// Check that session doesn't have too many page maps already
+		// Check that session doesn't have too many page maps already, if so, evict
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
 		synchronized (usedPageMaps)
 		{
@@ -1377,6 +1382,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * INTERNAL API. The request cycle when detached will call this.
 	 * 
+	 * FIXME javadoc - does what?
 	 */
 	final void requestDetached()
 	{

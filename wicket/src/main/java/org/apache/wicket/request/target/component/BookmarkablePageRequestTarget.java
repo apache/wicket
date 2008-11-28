@@ -24,12 +24,19 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.request.IRequestCycleProcessor;
+import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
- * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page
- * that is to be created from the provided page class. This is typically used for redirects to
+ * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page that
+ * is to be created from the provided page class. This is typically used for redirects to
  * bookmarkable pages or mounted pages.
- *
+ * 
+ * <p>
+ * We cannot issue redirects even with {@link IRequestCycleSettings#REDIRECT_TO_RENDER} because the
+ * url has to be bookmarkable, eg user actually being able to bookmark it in the browser. if we
+ * always redirected to a stateful url (e.g. /?wicket:interface=:0::::)that wouldn't work, as it
+ * wouldn't be bookmarkable.
+ * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -38,7 +45,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/** the page that was created in response for cleanup */
 	private Page page;
 
-	/** the class of the page. */
+	/**
+	 * the class of the page. FIXME javadoc why use weak reference?
+	 * */
 	private final WeakReference<Class<? extends Page>> pageClassRef;
 
 	/** optional page map name. */
@@ -213,8 +222,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		return 17 * result;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.target.IEventProcessor#processEvents(org.apache.wicket.RequestCycle)
+	/*
+	 * @see
+	 * org.apache.wicket.request.target.IEventProcessor#processEvents(org.apache.wicket.RequestCycle
+	 * )
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{
@@ -224,7 +235,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 	}
 
-	/**
+	/*
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)

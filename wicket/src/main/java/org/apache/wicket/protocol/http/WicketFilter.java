@@ -220,18 +220,22 @@ public class WicketFilter implements Filter
 		boolean inPortletContext = false;
 		if (filterPortletContext != null)
 		{
+			// collect the request and response together for convenience handling
 			FilterRequestContext filterRequestContext = new FilterRequestContext(
 				(HttpServletRequest)request, (HttpServletResponse)response);
 
-			// FIXME comment
+			// sets up the FilterRequestContext for this request, such as wrapping the request and
+			// response objects
 			inPortletContext = filterPortletContext.setupFilter(getFilterConfig(),
 				filterRequestContext, getFilterPath((HttpServletRequest)request));
 
+			// Retrieve and assign the portlet wrapped request/response objects
 			httpServletRequest = filterRequestContext.getRequest();
 			httpServletResponse = filterRequestContext.getResponse();
 		}
 		else
 		{
+			// assign plane HTTP servlet request/response objects
 			httpServletRequest = (HttpServletRequest)request;
 			httpServletResponse = (HttpServletResponse)response;
 		}
@@ -248,6 +252,7 @@ public class WicketFilter implements Filter
 
 		final String relativePath = getRelativePath(httpServletRequest);
 
+		// check against ignore paths and pass on if a match is found
 		if (ignorePaths.size() > 0 && relativePath.length() > 0)
 		{
 			for (String path : ignorePaths)
@@ -274,12 +279,14 @@ public class WicketFilter implements Filter
 				// Set the webapplication for this thread
 				Application.set(webApplication);
 
+				// last modified time stamp
 				long lastModified = getLastModified(httpServletRequest);
 				if (lastModified == -1)
 				{
 					// servlet doesn't support if-modified-since, no reason
 					// to go through further expensive logic
-					if (doGet(httpServletRequest, httpServletResponse) == false)
+					boolean requestHandledByWicket = doGet(httpServletRequest, httpServletResponse);
+					if (requestHandledByWicket == false)
 					{
 						chain.doFilter(request, response);
 					}
@@ -328,6 +335,7 @@ public class WicketFilter implements Filter
 		}
 		else
 		{
+			// request isn't for us
 			chain.doFilter(request, response);
 		}
 	}
@@ -381,19 +389,21 @@ public class WicketFilter implements Filter
 
 			checkCharacterEncoding(servletRequest);
 
-			// Create a new webrequest
+			// Create a new webrequest to wrap the request
 			final WebRequest request = webApplication.newWebRequest(servletRequest);
 
 			// Are we using REDIRECT_TO_BUFFER?
 			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 			{
 				// Try to see if there is a redirect stored
+				// try get an existing session
 				ISessionStore sessionStore = webApplication.getSessionStore();
 				String sessionId = sessionStore.getSessionId(request, false);
 				if (sessionId != null)
 				{
 					BufferedHttpServletResponse bufferedResponse = null;
 					String queryString = servletRequest.getQueryString();
+					// look for buffered response
 					if (!Strings.isEmpty(queryString))
 					{
 						bufferedResponse = webApplication.popBufferedResponse(sessionId,
@@ -404,7 +414,7 @@ public class WicketFilter implements Filter
 						bufferedResponse = webApplication.popBufferedResponse(sessionId,
 							relativePath);
 					}
-
+					// if a buffered response was found
 					if (bufferedResponse != null)
 					{
 						bufferedResponse.writeTo(servletResponse);
@@ -415,6 +425,7 @@ public class WicketFilter implements Filter
 				}
 			}
 
+			// either not REDIRECT_TO_BUFFER or no waiting buffer found - begin the request cycle
 			WebResponse response = null;
 			boolean externalCall = !Application.exists();
 			try
@@ -709,6 +720,7 @@ public class WicketFilter implements Filter
 		finally
 		{
 			Application.unset();
+			// restore the class loader if it was replaced
 			if (newClassLoader != previousClassLoader)
 			{
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
@@ -933,7 +945,7 @@ public class WicketFilter implements Filter
 	 */
 	private boolean isWicketRequest(String relativePath)
 	{
-		// default location, like
+		// relativePath is emtpy - thus it's the default location, like
 		// /wicket-examples/forminput/?wicket:interface=:0::::
 		// the relative path here is empty (wicket-examples is the web
 		// application and the filter is mapped to /forminput/*

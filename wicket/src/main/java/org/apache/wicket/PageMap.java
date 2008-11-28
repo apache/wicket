@@ -27,6 +27,8 @@ import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.lang.Objects;
 
 /**
+ * FIXME javadoc
+ * 
  * @author Jonathan Locke
  * @author jcompagner
  */

@@ -55,6 +55,9 @@ public class RequestParameters implements IClusterable
 	/** any version number; 0 for no version. */
 	private int versionNumber;
 
+	/**
+	 * FIXME javadoc
+	 */
 	private boolean onlyProcessIfPathActive = false;
 
 	/** any callable interface name (e.g. {@link ILinkListener}). */
@@ -83,8 +86,8 @@ public class RequestParameters implements IClusterable
 
 	/** depth of the page for relative URLs. */
 	private int urlDepth = -1;
-	
-	/* the request query string */
+
+	/** the request query string */
 	private String queryString;
 
 	/**
@@ -365,6 +368,7 @@ public class RequestParameters implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer("[RequestParameters ");
@@ -431,7 +435,7 @@ public class RequestParameters implements IClusterable
 		b.append("]");
 		return b.toString();
 	}
-	
+
 	/**
 	 * @return request query string
 	 */
@@ -439,7 +443,7 @@ public class RequestParameters implements IClusterable
 	{
 		return queryString;
 	}
-	
+
 	/**
 	 * @param queryString
 	 */

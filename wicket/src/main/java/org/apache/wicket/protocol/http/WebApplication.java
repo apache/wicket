@@ -374,9 +374,9 @@ public abstract class WebApplication extends Application
 		getRequestCycleProcessor().getRequestCodingStrategy().addIgnoreMountPath(path);
 	}
 
-	/**
+	/*
 	 * @see org.apache.wicket.Application#newRequestCycle(org.apache.wicket.Request,
-	 *      org.apache.wicket.Response)
+	 * org.apache.wicket.Response)
 	 */
 	@Override
 	public RequestCycle newRequestCycle(final Request request, final Response response)
@@ -542,7 +542,7 @@ public abstract class WebApplication extends Application
 		configure();
 	}
 
-	/**
+	/*
 	 * @see org.apache.wicket.Application#getConfigurationType()
 	 */
 	@Override

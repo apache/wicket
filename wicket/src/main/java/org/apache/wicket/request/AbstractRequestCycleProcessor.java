@@ -251,6 +251,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			if (requestParameters.getComponentPath() != null &&
 				requestParameters.getInterfaceName() != null)
 			{
+				// try to retrieve an existing page
 				final String componentPath = requestParameters.getComponentPath();
 				final Page page = session.getPage(requestParameters.getPageMapName(),
 					componentPath, requestParameters.getVersionNumber());
@@ -262,6 +263,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 				}
 				else
 				{
+					// create a new page
 					return new BookmarkableListenerInterfaceRequestTarget(
 						requestParameters.getPageMapName(), pageClass, params,
 						requestParameters.getComponentPath(), requestParameters.getInterfaceName(),

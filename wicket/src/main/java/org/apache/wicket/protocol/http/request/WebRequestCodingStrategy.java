@@ -211,6 +211,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		Map<String, String[]> map = request.getParameterMap();
 		Iterator<String> iterator = map.keySet().iterator();
+		// remove the parameters with a wicket namepsace prefix from the paramter list
 		while (iterator.hasNext())
 		{
 			String key = iterator.next();

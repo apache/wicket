@@ -28,6 +28,7 @@ import org.apache.wicket.response.StringResponse;
  * Portlet behaviour override of the {@link HeaderResponse} implementation, responsible for writing
  * header contributions from portlets in the body of the response, as opposed to the head.
  * 
+ * @see HeaderResponse
  * @author Ate Douma
  */
 public class EmbeddedPortletHeaderResponse extends HeaderResponse
@@ -47,7 +48,9 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 		if (!isClosed())
 		{
 			List token = Arrays.asList(new Object[] { "css", url, media });
+
 			if (wasRendered(token) == false)
+			// The CSS reference has not been written to the response yet
 			{
 				getResponse().write("<script type=\"text/javascript\">");
 				getResponse().write("var elem=document.createElement(\"link\");");
@@ -64,7 +67,6 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 			}
 		}
 	}
-
 
 	/*
 	 * @see org.apache.wicket.markup.html.internal.HeaderResponse#close()

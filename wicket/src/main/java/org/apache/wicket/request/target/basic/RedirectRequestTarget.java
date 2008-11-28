@@ -22,6 +22,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.request.target.component.listener.RedirectPageRequestTarget;
 
 /**
  * A RequestTarget that will send a redirect url to the browser. Use this if you want to direct the
@@ -31,6 +32,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * If you want to redirect with a delay the {@link RedirectPage} will do a meta tag redirect with a
  * delay.
  * 
+ * @see RedirectPageRequestTarget
  * @author jcompagner
  */
 public class RedirectRequestTarget implements IRequestTarget
@@ -63,6 +65,8 @@ public class RedirectRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * FIXME javadoc - what's special about this implementation?
+	 * 
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)

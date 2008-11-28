@@ -49,6 +49,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
  * For url rewriting, only three methods are needed to support creating Portlet ActionURLs, Portlet
  * RenderURLs and Resource/Ajax URLs.
  * 
+ * @see RequestContext
  * @author Ate Douma
  */
 public class PortletRequestContext extends RequestContext
@@ -57,6 +58,7 @@ public class PortletRequestContext extends RequestContext
 	private final PortletConfig portletConfig;
 	private final PortletRequest portletRequest;
 	private final PortletResponse portletResponse;
+
 	/**
 	 * Needed for JSR-168 support which only allows PortletURLs to be created by RenderResponse with
 	 * JSR-286 PortletResponse can do that too.
@@ -72,7 +74,7 @@ public class PortletRequestContext extends RequestContext
 	 */
 	private String portletWindowId;
 	/**
-	 * Parameter name by which to store the parameter name to store the original Wicket URL.
+	 * Stores the parameter name by which to store the Wicket URL as a request parameter.
 	 */
 	private final String wicketUrlPortletParameter;
 	/**
@@ -89,6 +91,8 @@ public class PortletRequestContext extends RequestContext
 	private final boolean resourceRequest;
 	/**
 	 * Stores the last Wicket URL encoding as a key value pair.
+	 * 
+	 * FIXME javadoc - is usage explained enough?
 	 * 
 	 * @see #saveLastEncodedUrl(String, String)
 	 */
@@ -189,7 +193,7 @@ public class PortletRequestContext extends RequestContext
 	 * FIXME javadoc
 	 * 
 	 * <p>
-	 * Encodes the given path into a portlet URL, saving the original URL against the
+	 * Encodes the given path into a portlet URL, saving the original Wicket URL against the
 	 * {@link PortletURL} and in the class {@link #saveLastEncodedUrl(String, String)}.
 	 * 
 	 * @see #saveLastEncodedUrl(String, String)
@@ -254,8 +258,9 @@ public class PortletRequestContext extends RequestContext
 	 * FIXME javadoc
 	 * 
 	 * <p>
-	 * Encodes the given path into a portlet URL, saving the original URL against the
-	 * {@link PortletURL} and in the class {@link #saveLastEncodedUrl(String, String)}.
+	 * Encodes the given path into a portlet URL, saving the original Wicket URL against the
+	 * {@link PortletURL} and in the class {@link #saveLastEncodedUrl(String, String)} and also
+	 * includes the portlet view mode in the url link..
 	 * 
 	 * @see #saveLastEncodedUrl(String, String)
 	 * @param path

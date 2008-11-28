@@ -397,6 +397,33 @@ public abstract class Application
 	 * debugging checks and resource polling is inefficient and may leak resources, particularly on
 	 * webapp redeploy.
 	 * 
+	 * <div style="bored-width:10px;border-style:solid;">
+	 * <p>
+	 * To change the deployment mode, add the following to your web.xml, inside your <servlet>
+	 * mapping (or <filter> mapping if you're using 1.3.x):
+	 * 
+	 * <pre>
+	 * &lt;init-param&gt;
+	 *             &lt;param-name&gt;configuration&lt;/param-name&gt;
+	 *             &lt;param-value&gt;deployment&lt;/param-value&gt;
+	 * &lt;/init-param&gt;
+	 * </pre>
+	 * 
+	 * <p>
+	 * You can alternatively set this as a &lt;context-param&gt; on the whole context.
+	 * 
+	 * <p>
+	 * Another option is to set the "wicket.configuration" system property to either "deployment" or
+	 * "development". The value is not case-sensitive.
+	 * 
+	 * <p>
+	 * The system property is checked first, allowing you to add a web.xml param for deployment, and
+	 * a command-line override when you want to run in development mode during development.
+	 * 
+	 * <p>
+	 * You may also override Application.getConfigurationType() to provide your own custom switch,
+	 * in which case none of the above logic is used. </div>
+	 * 
 	 * @return configuration
 	 * @since 1.2.3 (function existed as a property getter)
 	 * @since 1.3.0 (abstract, used to configure things)

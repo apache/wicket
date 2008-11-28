@@ -23,6 +23,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.time.Duration;
@@ -139,6 +140,11 @@ public interface IRequestCycleSettings
 	 * be aware that for one logical request, actually two instances of RequestCycle are created and
 	 * processed.
 	 * </p>
+	 * <p>
+	 * Also, even with this strategy set, it is ignored for
+	 * {@link BookmarkableListenerInterfaceRequestTarget}s, because otherwise they wouldn't be
+	 * bookmarkable.
+     * </p>
 	 */
 	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_RENDER = new IRequestCycleSettings.RenderStrategy(
 		"CLIENT_SIDE_REDIRECT");

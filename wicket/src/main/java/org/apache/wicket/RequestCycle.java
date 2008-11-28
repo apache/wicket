@@ -316,7 +316,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Get the original response the request was create with. Access may be necessary with the
+	 * Get the original response the request was created with. Access may be necessary with the
 	 * response has temporarily being replaced but your components requires access to lets say the
 	 * cookie methods of a WebResponse.
 	 * 
@@ -1045,13 +1045,16 @@ public abstract class RequestCycle
 			detach();
 			throw new WicketRuntimeException(
 				"RequestCycles are non-reusable objects. This instance (" + this +
-					") already executed");
+					") has already been executed");
 		}
 	}
 
 	/**
-	 * THIS METHOD IS WICKET PRIVATE API. DO NOT CALL UNLESS YOU KNOW WHAT YOU ARE DOING. Clean up
-	 * the request cycle.
+	 * THIS METHOD IS WICKET PRIVATE API. DO NOT CALL UNLESS YOU KNOW WHAT YOU ARE DOING.
+	 * 
+	 * <p>
+	 * Clean up the request cycle.
+     * </p>
 	 */
 	public void detach()
 	{
@@ -1184,8 +1187,10 @@ public abstract class RequestCycle
 	 */
 	private final void processEventsAndRespond()
 	{
-		// let the processor handle/ issue any events
+		// let the processor handle/ issue any events, including building the component hireachy
 		processor.processEvents(this);
+		// process portlet events - or, perhaps save the event on the session, and get it back out
+		// later
 
 		// set current stage manually this time
 		currentStep = RESPOND;

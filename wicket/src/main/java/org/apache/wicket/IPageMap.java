@@ -19,6 +19,8 @@ package org.apache.wicket;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 
 /**
+ * FIXME IPageMap javadoc
+ * 
  * @author eelcohillenius
  * @author Johan Compagner
  */

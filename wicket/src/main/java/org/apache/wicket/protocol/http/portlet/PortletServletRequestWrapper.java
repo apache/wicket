@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 /**
- * Wraps servlet request object with Portal specific functionality by overriding the
+ * Wraps servlet request object with Portlet specific functionality by overriding the
  * {@link HttpServletRequestWrapper} retrieval of the context path, path info, request URI etc... to
  * return the portal specific translations.
  * 
@@ -98,6 +98,7 @@ public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 		{
 			session = request.getSession(false);
 		}
+
 		servletPath = makeServletPath(filterPath);
 		// retrieve the correct contextPath, requestURI and queryString
 		// if request is an include

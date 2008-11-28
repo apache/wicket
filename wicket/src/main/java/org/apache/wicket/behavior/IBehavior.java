@@ -21,15 +21,23 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * Behaviors are kind of plug-ins for Components. They allow to be added to a component and get
- * essential events forwarded by the component. they can be bound to a concrete component (using the
- * bind method is called when the behavior is attached), but they don't need to. They can modify the
- * components markup by changing the rendered ComponentTag. Behaviors can have their own models as
- * well, and they are notified when these are to be detached by the component.
+ * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
+ * component and get essential events forwarded by the component. They can be bound to a concrete
+ * component (using the bind method which is called when the behavior is attached), but they don't
+ * need to. They can modify the components markup by changing the rendered ComponentTag. Behaviors
+ * can have their own models as well, and they are notified when these are to be detached by the
+ * component.
  * <p>
  * It is recommended that you extend from {@link org.apache.wicket.behavior.AbstractBehavior}
  * instead of directly implementing this interface.
  * </p>
+ * 
+ * <p>
+ * Note that behavors are only called during render. They are not the same as events like link
+ * listeners etc.
+ * </p>
+ * <p>
+ * You also cannot modify a components model with a behavor.
  * 
  * @see org.apache.wicket.behavior.IBehaviorListener
  * @see org.apache.wicket.markup.html.IHeaderContributor
@@ -82,8 +90,7 @@ public interface IBehavior extends IClusterable
 	/**
 	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
 	 * onException() will be called for any behavior. Typically, if you clean up resources in
-	 * {@link #afterRender(Component)}, you should do the same in the implementation of this
-	 * method.
+	 * {@link #afterRender(Component)}, you should do the same in the implementation of this method.
 	 * 
 	 * @param component
 	 *            the component that has a reference to this behavior and during which processing
@@ -127,8 +134,9 @@ public interface IBehavior extends IClusterable
 
 	/**
 	 * Specifies whether or not this behavior is temporary. Temporary behaviors are removed at the
-	 * end of request. Such behaviors are useful for modifying component rendering only when it
-	 * renders next. Usecases include javascript effects, initial clientside dom setup, etc.
+	 * end of request and never reattached. Such behaviors are useful for modifying component
+	 * rendering only when it renders next. Usecases include javascript effects, initial clientside
+	 * dom setup, etc.
 	 * 
 	 * @return true if this behavior is temporary
 	 */

@@ -19,11 +19,16 @@ package org.apache.wicket.request.target.component.listener;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 
 /**
  * Specialization of page request that denotes that we are actually handling a redirect request of a
- * page.
+ * page. It does not actually cause a redirect itself.
  * 
+ * <p>
+ * FIXME javadoc - how is this used? What is it's relationship to {@link RedirectRequestTarget}?
+ * 
+ * @see RedirectRequestTarget
  * @author Eelco Hillenius
  */
 public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestTarget
@@ -40,10 +45,14 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	}
 
 	/**
+	 * FIXME javadoc - why does this not call onProcessEvents like ListenerInterfaceRequestTarget
+	 * does?
+	 * 
 	 * @see org.apache.wicket.request.target.IEventProcessor#processEvents(org.apache.wicket.RequestCycle)
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
+		// onProcessEvents(requestCycle);
 		getRequestListenerInterface().invoke(getPage(), getTarget());
 	}
 }

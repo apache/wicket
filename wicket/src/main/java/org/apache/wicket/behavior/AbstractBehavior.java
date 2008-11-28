@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 /**
  * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It is recommended to
  * extend from this class instead of directly implementing
- * {@link org.apache.wicket.behavior.IBehavior} as this class has an extra clean
+ * {@link org.apache.wicket.behavior.IBehavior} as this class has an extra {@link #cleanup()} call.
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius

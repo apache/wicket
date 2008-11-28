@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -1260,7 +1261,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * Converts and validates the conversion of the raw input string into the object specified by
 	 * {@link FormComponent#getType()} and records any errors. Converted value is available through
-	 * {@link FormComponent#getConvertedInput()}
+	 * {@link FormComponent#getConvertedInput()}.
+	 * 
+	 * <p>
+	 * Usually the user should do custom conversions by specifying an {@link IConverter} by
+	 * registering it with the application by overriding {@link Application#getConverterLocator()},
+	 * or at the component level by overriding {@link #getConverter()}.
+     * </p>
+	 * 
+	 * @see IConverterLocator
+	 * @see Application#newConverterLocator()
 	 */
 	@SuppressWarnings("unchecked")
 	protected void convertInput()
@@ -1335,7 +1345,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	/**
 	 * Subclasses should overwrite this if the conversion is not done through the type field and the
-	 * IConverter. <strong>WARNING: this method may be removed in future versions.</strong>
+	 * {@link IConverter}. <strong>WARNING: this method may be removed in future versions.</strong>
 	 * 
 	 * If conversion fails then a ConversionException should be thrown
 	 * 

@@ -21,10 +21,18 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.wicket.settings.IRequestCycleSettings;
+
 /**
  * General class for all Portal responses, wrapping Servlet responses with Portal specific
- * functionality.
+ * functionality. Records various settings in the {@link WicketResponseState}, like the redirect
+ * location, which as when running as a portlet wicket uses the
+ * {@link IRequestCycleSettings#REDIRECT_TO_RENDER} strategy, is used in the render phase to know
+ * what Wicket url to request Wicket Core to render.
  * 
+ * 
+ * @see WicketPortlet#processActionResponseState
+ * @see IRequestCycleSettings#REDIRECT_TO_RENDER
  * @see PortletMimeServletResponseWrapper
  * @author Ate Douma
  */

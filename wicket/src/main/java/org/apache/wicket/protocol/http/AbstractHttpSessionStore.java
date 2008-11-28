@@ -171,7 +171,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		// nop
 	}
 
-	/**
+	/*
 	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request, boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)

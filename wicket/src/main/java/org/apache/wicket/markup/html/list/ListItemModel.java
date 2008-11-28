@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
 /**
  * Model for list items.
  * 
+ * @see ListView
  * @param <T>
  *            Model object type
  * 
