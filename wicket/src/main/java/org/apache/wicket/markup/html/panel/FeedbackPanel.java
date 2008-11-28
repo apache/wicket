@@ -249,20 +249,26 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @param filter
 	 *            The message filter to install on the feedback messages model
+	 * 
+	 * @return FeedbackPanel this.
 	 */
-	public final void setFilter(IFeedbackMessageFilter filter)
+	public final FeedbackPanel setFilter(IFeedbackMessageFilter filter)
 	{
 		getFeedbackMessagesModel().setFilter(filter);
+		return this;
 	}
 
 	/**
 	 * @param maxMessages
 	 *            The maximum number of feedback messages that this feedback panel should show at
 	 *            one time
+	 * 
+	 * @return FeedbackPanel this.
 	 */
-	public final void setMaxMessages(int maxMessages)
+	public final FeedbackPanel setMaxMessages(int maxMessages)
 	{
 		messageListView.setViewSize(maxMessages);
+		return this;
 	}
 
 	/**
@@ -270,10 +276,13 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @param sortingComparator
 	 *            comparator used for sorting the messages.
+	 * 
+	 * @return FeedbackPanel this.
 	 */
-	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
+	public final FeedbackPanel setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
 		getFeedbackMessagesModel().setSortingComparator(sortingComparator);
+		return this;
 	}
 
 	/**
