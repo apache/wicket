@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.io.File;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -121,6 +123,7 @@ public class MockWebApplication
 	private final ServletContext context;
 
 	private final WicketFilter filter;
+	private Set<Cookie> cookiesOfThisSession = new HashSet<Cookie>();
 
 	/**
 	 * Create the mock http tester that can be used for testing.
@@ -195,7 +198,15 @@ public class MockWebApplication
 		servletSession = new MockHttpSession(context);
 		servletSession.setTemporary(initializeHttpSessionAsTemporary());
 		servletRequest = new MockHttpServletRequest(this.application, servletSession, context);
-		servletResponse = new MockHttpServletResponse(servletRequest);
+		servletResponse = new MockHttpServletResponse(servletRequest)
+		{
+			@Override
+			public void addCookie(Cookie cookie)
+			{
+				super.addCookie(cookie);
+				cookiesOfThisSession.add(cookie);
+			}
+		};
 
 		// Construct request and response using factories
 		wicketRequest = this.application.newWebRequest(servletRequest);
@@ -620,6 +631,7 @@ public class MockWebApplication
 	{
 		servletRequest.initialize();
 		servletResponse.initialize();
+		servletRequest.addCookies(cookiesOfThisSession);
 		servletRequest.setParameters(parametersForNextRequest);
 		if (isAjax)
 		{

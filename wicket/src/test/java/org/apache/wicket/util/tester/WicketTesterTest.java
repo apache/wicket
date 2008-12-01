@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.util.tester;
 
+import javax.servlet.http.Cookie;
+import java.util.Collection;
 import java.util.Locale;
 
 import junit.framework.TestCase;
-
-import org.apache.wicket.*;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.Component;
+import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.MockPageWithOneComponent;
+import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -31,6 +35,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
@@ -602,6 +607,26 @@ public class WicketTesterTest extends TestCase
 		tester.setupRequestAndResponse();
 		form.setValue("text", "");
 		setTextFieldAndAssertSubmit(false);
+	}
+
+	public void testCookieIsFoundWhenAddedToServletRequest()
+	{
+		tester.getServletRequest().addCookie(new Cookie("name", "value"));
+		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
+	}
+
+	public void testCookieIsFoundWhenAddedToServletResponse()
+	{
+		tester.getServletResponse().addCookie(new Cookie("name", "value"));
+		Collection<Cookie> cookies = tester.getServletResponse().getCookies();
+		assertEquals(cookies.iterator().next().getValue(), "value");
+	}
+
+	public void testCookieIsFoundOnNextRequestWhenAddedToWicketResponse()
+	{
+		tester.getWicketResponse().addCookie(new Cookie("name", "value"));
+		tester.setupRequestAndResponse();
+		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
 	}
 
 	private void setTextFieldAndAssertSubmit(boolean expected)
