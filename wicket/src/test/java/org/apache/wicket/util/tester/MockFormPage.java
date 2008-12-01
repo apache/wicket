@@ -103,12 +103,12 @@ public class MockFormPage extends WebPage
 	public MockFormPage()
 	{
 		domainObject = new MockDomainObject();
-		Form form = new Form("form", new CompoundPropertyModel(domainObject));
+		Form<MockDomainObject> form = new Form<MockDomainObject>("form", new CompoundPropertyModel<MockDomainObject>(domainObject));
 		add(form);
 
-		form.add(new TextField("text"));
+		form.add(new TextField<String>("text"));
 		form.add(new CheckBox("checkbox"));
-		form.add(new TextArea("textarea"));
+		form.add(new TextArea<String>("textarea"));
 		form.add(new Button("submit"));
 	}
 
