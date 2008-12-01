@@ -173,18 +173,18 @@ public class FormTester
 		 * @return the id value at the selected index
 		 */
 		@SuppressWarnings("unchecked")
-		private String selectAbstractChoice(FormComponent formComponent, final int index)
+		private String selectAbstractChoice(FormComponent<?> formComponent, final int index)
 		{
 			try
 			{
 				Method getChoicesMethod = formComponent.getClass().getMethod("getChoices",
-					(Class[])null);
+					(Class<?>[])null);
 				getChoicesMethod.setAccessible(true);
 				List<Object> choices = (List<Object>)getChoicesMethod.invoke(formComponent,
 					(Object[])null);
 
 				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
-					"getChoiceRenderer", (Class[])null);
+					"getChoiceRenderer", (Class<?>[])null);
 				getChoiceRendererMethod.setAccessible(true);
 				IChoiceRenderer<Object> choiceRenderer = (IChoiceRenderer<Object>)getChoiceRendererMethod.invoke(
 					formComponent, (Object[])null);
@@ -380,7 +380,7 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -413,9 +413,9 @@ public class FormTester
 				{
 					final String[] modelValues = formComponent.getValue().split(
 						FormComponent.VALUE_SEPARATOR);
-					for (int i = 0; i < modelValues.length; i++)
+					for (String modelValue : modelValues)
 					{
-						addFormComponentValue(formComponent, modelValues[i]);
+						addFormComponentValue(formComponent, modelValue);
 					}
 				}
 				else if (formComponent instanceof CheckGroup)
@@ -515,10 +515,10 @@ public class FormTester
 			try
 			{
 				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod(
-					"wantOnSelectionChangedNotifications", new Class[0]);
+					"wantOnSelectionChangedNotifications");
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
-				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod.invoke(
-					component, new Object[0])).booleanValue();
+				boolean wantOnSelectionChangedNotifications = (Boolean) wantOnSelectionChangedNotificationsMethod.invoke(
+						component);
 				if (wantOnSelectionChangedNotifications)
 				{
 					((DropDownChoice<?>)component).onSelectionChanged();
@@ -549,9 +549,9 @@ public class FormTester
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent<?>)workingForm.get(formComponentId));
 
-		for (int i = 0; i < indexes.length; i++)
+		for (int index : indexes)
 		{
-			choiceSelector.doSelect(indexes[i]);
+			choiceSelector.doSelect(index);
 		}
 	}
 
