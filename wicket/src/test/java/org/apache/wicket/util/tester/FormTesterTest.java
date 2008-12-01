@@ -68,6 +68,25 @@ public class FormTesterTest extends WicketTestCase
 		assertTrue(domainObject.isCheckbox());
 	}
 
+	public void testCheckboxValuesCanBeSelectedWithBoolean()
+	{
+		tester.startPage(MockFormPage.class);
+		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
+		MockDomainObject domainObject = page.getDomainObject();
+		assertFalse(domainObject.isCheckbox());
+
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("checkbox", true);
+		formTester.submit();
+		assertTrue(domainObject.isCheckbox());
+
+		formTester = tester.newFormTester("form");
+		formTester.setValue("checkbox", false);
+		formTester.submit();
+		assertFalse(domainObject.isCheckbox());
+	}
+
+
 	/**
 	 * Test that the user can use
 	 * {@link FormTester#setFile(String, org.apache.wicket.util.file.File, String)} to test that

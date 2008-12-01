@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -577,6 +577,11 @@ public class FormTester
 		{
 			setFormComponentValue((FormComponent<?>)component, value);
 		}
+	}
+
+	public void setValue(String checkBoxId, boolean value)
+	{
+		setValue(checkBoxId, Boolean.toString(value));
 	}
 
 	/**
