@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,15 +26,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
@@ -211,7 +209,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (previousObject instanceof List)
 		{
-			((List)previousObject).add(object);
+			((List<Object>)previousObject).add(object);
 		}
 		else
 		{
@@ -228,7 +226,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
-		headers.put(name, new Long(date));
+		headers.put(name, date);
 	}
 
 	/**
@@ -237,7 +235,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
-		addHeaderObject(name, new Long(date));
+		addHeaderObject(name, date);
 	}
 
 	/**
@@ -273,7 +271,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addIntHeader(String name, int value)
 	{
 		testAndCreateHeaders();
-		addHeaderObject(name, new Integer(value));
+		addHeaderObject(name, value);
 	}
 
 	/**
@@ -519,21 +517,18 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		if (headers != null)
 		{
-			Iterator<Entry<String, Object>> it = headers.entrySet().iterator();
-			while (it.hasNext())
+			for (Entry<String, Object> stringObjectEntry : headers.entrySet())
 			{
-				Entry<String, Object> entry = it.next();
-				String name = entry.getKey();
-				Object value = entry.getValue();
+				String name = stringObjectEntry.getKey();
+				Object value = stringObjectEntry.getValue();
 				if (value instanceof List)
 				{
-					List<?> lst = (List<?>)value;
-					for (int i = 0; i < lst.size(); i++)
+					List<?> lst = (List<?>) value;
+					for (Object aLst : lst)
 					{
-						addHeader(name, lst.get(i), servletResponse);
+						addHeader(name, aLst, servletResponse);
 					}
-				}
-				else
+				} else
 				{
 					setHeader(name, value, servletResponse);
 				}
@@ -542,9 +537,8 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 		if (cookies != null)
 		{
-			for (int i = 0; i < cookies.size(); i++)
+			for (Cookie cookie : cookies)
 			{
-				Cookie cookie = cookies.get(i);
 				servletResponse.addCookie(cookie);
 			}
 		}
@@ -578,11 +572,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (value instanceof Long)
 		{
-			servletResponse.setDateHeader(name, ((Long)value).longValue());
+			servletResponse.setDateHeader(name, (Long) value);
 		}
 		else if (value instanceof Integer)
 		{
-			servletResponse.setIntHeader(name, ((Integer)value).intValue());
+			servletResponse.setIntHeader(name, (Integer) value);
 		}
 	}
 
@@ -602,11 +596,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (value instanceof Long)
 		{
-			servletResponse.addDateHeader(name, ((Long)value).longValue());
+			servletResponse.addDateHeader(name, (Long) value);
 		}
 		else if (value instanceof Integer)
 		{
-			servletResponse.addIntHeader(name, ((Integer)value).intValue());
+			servletResponse.addIntHeader(name, (Integer) value);
 		}
 	}
 }

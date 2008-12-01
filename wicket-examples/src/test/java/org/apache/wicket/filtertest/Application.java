@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.filtertest;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
@@ -45,7 +46,8 @@ public class Application extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	@Override
+	public Class<? extends Page> getHomePage()
 	{
 		return HelloWorld.class;
 	}

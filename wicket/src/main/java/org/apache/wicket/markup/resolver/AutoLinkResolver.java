@@ -419,7 +419,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				try
 				{
 					final Class<? extends Page> clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
-					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters,
+					return new AutolinkBookmarkablePageLink<Void>(autoId, clazz, pathInfo.pageParameters,
 						pathInfo.anchor);
 				}
 				catch (ClassNotFoundException ex)
@@ -454,7 +454,7 @@ public final class AutoLinkResolver implements IComponentResolver
 						try
 						{
 							clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
-							return new AutolinkBookmarkablePageLink(autoId, clazz,
+							return new AutolinkBookmarkablePageLink<Void>(autoId, clazz,
 								pathInfo.getPageParameters(), pathInfo.anchor);
 						}
 						catch (ClassNotFoundException ex)

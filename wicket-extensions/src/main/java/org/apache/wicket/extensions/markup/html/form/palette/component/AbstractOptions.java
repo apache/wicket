@@ -76,7 +76,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			final T choice = options.next();
 			String id = renderer.getIdValue(choice, 0);
 			Object displayValue = renderer.getDisplayValue(choice);
-			Class displayClass = displayValue == null ? null : displayValue.getClass();
+			Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
@@ -85,12 +85,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			Map<String, String> additionalAttributesMap = getAdditionalAttributes(choice);
 			if (additionalAttributesMap != null)
 			{
-				Iterator<String> iter = additionalAttributesMap.keySet().iterator();
-				while (iter.hasNext())
+				for (String s : additionalAttributesMap.keySet())
 				{
-					String next = iter.next();
-					buffer.append(" " + next + "=\"" +
-						additionalAttributesMap.get(next).toString() + "\"");
+					buffer.append(" " + s + "=\"" +
+							additionalAttributesMap.get(s) + "\"");
 				}
 			}
 
@@ -124,7 +122,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		IValueMap attrs = tag.getAttributes();
 
 		attrs.put("multiple", null);
-		attrs.put("size", new Integer(getPalette().getRows()));
+		attrs.put("size", getPalette().getRows());
 
 		if (!palette.isPaletteEnabled())
 		{

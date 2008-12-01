@@ -34,7 +34,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Eelco Hillenius
  */
-public abstract class BreadCrumbLink extends Link
+public abstract class BreadCrumbLink extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,6 +58,7 @@ public abstract class BreadCrumbLink extends Link
 	/**
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// get the currently active particpant
@@ -76,6 +77,7 @@ public abstract class BreadCrumbLink extends Link
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void undo()
 			{
 				breadCrumbModel.setActive(active);

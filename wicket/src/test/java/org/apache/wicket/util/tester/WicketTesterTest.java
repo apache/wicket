@@ -297,7 +297,7 @@ public class WicketTesterTest extends TestCase
 	public void testAssertComponentOnAjaxResponse()
 	{
 		final Page page = new MockPageWithLink();
-		AjaxLink ajaxLink = new AjaxLink(MockPageWithLink.LINK_ID)
+		AjaxLink<Void> ajaxLink = new AjaxLink<Void>(MockPageWithLink.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -305,14 +305,13 @@ public class WicketTesterTest extends TestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				// Replace the link with a normal Link
-				Link link = new Link(MockPageWithLink.LINK_ID)
+				Link<Void> link = new Link<Void>(MockPageWithLink.LINK_ID)
 				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick()
 					{
-						// Do nothing
 					}
 				};
 				link.setOutputMarkupId(true);
@@ -381,7 +380,7 @@ public class WicketTesterTest extends TestCase
 		label.setOutputMarkupId(true);
 
 		final Page page = new MockPageWithLinkAndLabel();
-		AjaxLink ajaxLink = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
+		AjaxLink<Void> ajaxLink = new AjaxLink<Void>(MockPageWithLinkAndLabel.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 

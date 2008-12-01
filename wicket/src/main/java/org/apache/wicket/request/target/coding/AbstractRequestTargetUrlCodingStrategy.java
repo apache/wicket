@@ -17,7 +17,6 @@
 package org.apache.wicket.request.target.coding;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -84,28 +83,25 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * @param parameters
 	 *            Map object to be encoded
 	 */
-	protected void appendParameters(AppendingStringBuffer url, Map parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map<?,?> parameters)
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
-			final Iterator entries = parameters.entrySet().iterator();
-			while (entries.hasNext())
+			for (Entry<?, ?> entry1 : parameters.entrySet())
 			{
-				Map.Entry entry = (Entry)entries.next();
-				Object value = entry.getValue();
+				Object value = ((Entry<?, ?>) entry1).getValue();
 				if (value != null)
 				{
 					if (value instanceof String[])
 					{
-						String[] values = (String[])value;
-						for (int i = 0; i < values.length; i++)
+						String[] values = (String[]) value;
+						for (String value1 : values)
 						{
-							appendValue(url, entry.getKey().toString(), values[i]);
+							appendValue(url, ((Entry<?, ?>) entry1).getKey().toString(), value1);
 						}
-					}
-					else
+					} else
 					{
-						appendValue(url, entry.getKey().toString(), value.toString());
+						appendValue(url, ((Entry<?, ?>) entry1).getKey().toString(), value.toString());
 					}
 				}
 			}
@@ -134,7 +130,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
+	protected ValueMap decodeParameters(String urlFragment, Map<String,Object> urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))

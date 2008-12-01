@@ -62,7 +62,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	public void testBasicAjaxLinkClick()
 	{
 		// Create a link, which we test is actually invoked
-		final AjaxLink ajaxLink = new AjaxLink("ajaxLink")
+		final AjaxLink<Void> ajaxLink = new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

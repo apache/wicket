@@ -58,6 +58,6 @@ public class AjaxDataTablePage extends BasePage
 		columns.add(new PropertyColumn<String>(new Model<String>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<String>(new Model<String>("Cell Phone"), "cellPhone"));
 
-		add(new AjaxFallbackDefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
+		add(new AjaxFallbackDefaultDataTable<Contact>("table", columns, new SortableContactDataProvider(), 8));
 	}
 }

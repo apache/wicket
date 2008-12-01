@@ -75,7 +75,7 @@ public class AuthorizationTest extends WicketTestCase
 			new DummyAuthorizationStrategy()
 			{
 				@Override
-				public boolean isInstantiationAuthorized(Class c)
+				public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
 				{
 					return false;
 				}
@@ -206,7 +206,7 @@ public class AuthorizationTest extends WicketTestCase
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean isInstantiationAuthorized(Class c)
+		public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
 		{
 			return true;
 		}
@@ -263,7 +263,7 @@ public class AuthorizationTest extends WicketTestCase
 		}
 
 		/** test form. */
-		private class TestForm extends Form
+		private class TestForm extends Form<Input>
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -275,8 +275,8 @@ public class AuthorizationTest extends WicketTestCase
 			public TestForm(String id)
 			{
 				super(id);
-				setDefaultModel(new CompoundPropertyModel(input = new Input()));
-				add(new TextField("stringInput"));
+				setDefaultModel(new CompoundPropertyModel<Input>(input = new Input()));
+				add(new TextField<String>("stringInput"));
 			}
 
 			/**

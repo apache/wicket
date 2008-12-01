@@ -16,16 +16,14 @@
  */
 package org.apache.wicket.util.tester;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -407,8 +405,8 @@ public class BaseWicketTester extends MockWebApplication
 					{
 						try
 						{
-							Constructor<? extends Panel> c = panelClass.getConstructor(new Class[] { String.class });
-							return c.newInstance(new Object[] { panelId });
+							Constructor<? extends Panel> c = panelClass.getConstructor(String.class);
+							return c.newInstance(panelId);
 						}
 						catch (SecurityException e)
 						{
@@ -774,7 +772,7 @@ public class BaseWicketTester extends MockWebApplication
 				{
 					Field parametersField = BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
-						"getPageParameters", (Class[])null);
+						"getPageParameters", (Class<?>[])null);
 					getParametersMethod.setAccessible(true);
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
@@ -987,10 +985,9 @@ public class BaseWicketTester extends MockWebApplication
 	public void debugComponentTrees(String filter)
 	{
 		log.info("debugging ----------------------------------------------");
-		for (Iterator<WicketTesterHelper.ComponentData> iter = WicketTesterHelper.getComponentData(
-			getLastRenderedPage()).iterator(); iter.hasNext();)
+		for (WicketTesterHelper.ComponentData obj : WicketTesterHelper.getComponentData(
+				getLastRenderedPage()))
 		{
-			WicketTesterHelper.ComponentData obj = iter.next();
 			if (obj.path.matches(".*" + filter + ".*"))
 			{
 				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
@@ -1246,9 +1243,8 @@ public class BaseWicketTester extends MockWebApplication
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(FormComponent formComponent)
+			public void onFormComponent(FormComponent<?> formComponent)
 			{
 				// !(formComponent instanceof Button) &&
 				if (!(formComponent instanceof RadioGroup) &&
@@ -1376,7 +1372,7 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		try
 		{
-			Method method = RequestCycle.class.getDeclaredMethod("onBeginRequest", (Class[])null);
+			Method method = RequestCycle.class.getDeclaredMethod("onBeginRequest", (Class<?>[])null);
 			method.setAccessible(true);
 			method.invoke(rc, (Object[])null);
 		}

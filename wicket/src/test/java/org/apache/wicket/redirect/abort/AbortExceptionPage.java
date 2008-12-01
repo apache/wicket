@@ -58,14 +58,13 @@ public class AbortExceptionPage extends WebPage
 			}
 		};
 
-		add(new ListView("test", model)
+		add(new ListView<Object>("test", model)
 		{
 			private static final long serialVersionUID = -4176346513350288174L;
 
 			@Override
-			protected void populateItem(final ListItem item)
+			protected void populateItem(final ListItem<Object> item)
 			{
-				// not used
 			}
 		});
 	}

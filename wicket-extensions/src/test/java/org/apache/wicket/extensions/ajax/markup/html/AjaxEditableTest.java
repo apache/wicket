@@ -42,10 +42,11 @@ public class AjaxEditableTest extends WicketTestCase
 	/**
 	 * Tests default AjaxEditableLabel behavior
 	 */
+	@SuppressWarnings({"unchecked"})
 	public void testAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();
-		AjaxEditableLabel ajaxLabel = (AjaxEditableLabel)page.get("ajaxLabel");
+		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
 
 		AbstractAjaxBehavior labelBehavior = (AbstractAjaxBehavior)ajaxLabel.get("label")
 			.getBehaviors()
@@ -69,11 +70,12 @@ public class AjaxEditableTest extends WicketTestCase
 	 * Tests whether disabling/enabling an AjaxEditableLabel also disables/enables the
 	 * <code>LabelBehavior</code>
 	 */
+	@SuppressWarnings({"unchecked"})
 	public void testDisabledAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();
-		AjaxEditableLabel ajaxLabel = (AjaxEditableLabel)page.get("ajaxLabel");
-		AjaxLink toggle = (AjaxLink)page.get("toggle");
+		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
+		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
 
 		AbstractAjaxBehavior toggleBehavior = (AbstractAjaxBehavior)toggle.getBehaviors().get(0);
 

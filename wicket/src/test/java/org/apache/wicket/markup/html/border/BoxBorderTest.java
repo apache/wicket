@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
@@ -68,15 +69,16 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings({"unchecked"})
 	public void test3() throws Exception
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
 		Border border = (Border)tester.getLastRenderedPage().get("border");
 		assertNotNull(border);
-		Form form = (Form)tester.getLastRenderedPage().get("border:myForm");
+		Form<?> form = (Form<?>)tester.getLastRenderedPage().get("border:myForm");
 
-		TextField input = (TextField)tester.getLastRenderedPage().get("border:name");
+		TextField<String> input = (TextField<String>)tester.getLastRenderedPage().get("border:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
 		tester.setupRequestAndResponse();
@@ -87,7 +89,7 @@ public class BoxBorderTest extends WicketTestCase
 
 		tester.processRequestCycle();
 
-		input = (TextField)tester.getLastRenderedPage().get("border:name");
+		input = (TextField<String>)tester.getLastRenderedPage().get("border:name");
 		assertEquals("jdo", input.getDefaultModelObjectAsString());
 	}
 
@@ -99,7 +101,7 @@ public class BoxBorderTest extends WicketTestCase
 	 */
 	public void test4() throws Exception
 	{
-		Class pageClass = BorderTestHierarchyPage_4.class;
+		Class<? extends Page> pageClass = BorderTestHierarchyPage_4.class;
 
 		System.out.println("=== " + pageClass.getName() + " ===");
 

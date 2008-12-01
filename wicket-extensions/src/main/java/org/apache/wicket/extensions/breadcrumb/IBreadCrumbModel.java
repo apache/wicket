@@ -80,7 +80,7 @@ public interface IBreadCrumbModel extends IClusterable
 	 * @return The bread crumbs participants, as list with
 	 *         {@link IBreadCrumbParticipant bread crumb participants}.
 	 */
-	List allBreadCrumbParticipants();
+	List<IBreadCrumbParticipant> allBreadCrumbParticipants();
 
 	/**
 	 * Gets the currently active participant, if any.

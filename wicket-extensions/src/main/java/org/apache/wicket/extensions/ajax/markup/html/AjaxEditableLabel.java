@@ -119,8 +119,7 @@ public class AjaxEditableLabel<T> extends Panel
 		protected void respond(AjaxRequestTarget target)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
-			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"))
-				.booleanValue();
+			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"));
 
 			if (save)
 			{
@@ -196,7 +195,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 *            The validator
 	 * @return This
 	 */
-	public final AjaxEditableLabel add(IValidator validator)
+	public final AjaxEditableLabel<T> add(IValidator<T> validator)
 	{
 		getEditor().add(validator);
 		return this;
@@ -224,7 +223,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel setLabel(final IModel<String> labelModel)
+	public final AjaxEditableLabel<T> setLabel(final IModel<String> labelModel)
 	{
 		getEditor().setLabel(labelModel);
 		return this;
@@ -234,7 +233,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @see org.apache.wicket.MarkupContainer#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public final AjaxEditableLabel setDefaultModel(IModel<?> model)
+	public final AjaxEditableLabel<T> setDefaultModel(IModel<?> model)
 	{
 		super.setDefaultModel(model);
 		getLabel().setDefaultModel(model);
@@ -248,7 +247,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param required
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel setRequired(final boolean required)
+	public final AjaxEditableLabel<T> setRequired(final boolean required)
 	{
 		getEditor().setRequired(required);
 		return this;
@@ -261,7 +260,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel setType(Class<?> type)
+	public final AjaxEditableLabel<T> setType(Class<?> type)
 	{
 		getEditor().setType(type);
 		return this;

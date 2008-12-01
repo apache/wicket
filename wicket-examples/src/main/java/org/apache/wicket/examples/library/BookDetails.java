@@ -102,10 +102,10 @@ public final class BookDetails extends AuthenticatedWebPage
 	 *            The title to show if book is null
 	 * @return The external page link
 	 */
-	public static BookmarkablePageLink link(final String name, final Book book,
+	public static BookmarkablePageLink<Void> link(final String name, final Book book,
 		final String noBookTitle)
 	{
-		final BookmarkablePageLink link = new BookmarkablePageLink(name, BookDetails.class);
+		final BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>(name, BookDetails.class);
 
 		if (book != null)
 		{

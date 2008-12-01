@@ -47,7 +47,7 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 		// components to the border.
 // border.add(new TextField("text"));
 // border.add(new Image("img"));
-		border.getBodyContainer().add(new TextField("text"));
+		border.getBodyContainer().add(new TextField<String>("text"));
 		border.getBodyContainer().add(new Image("img"));
 	}
 }

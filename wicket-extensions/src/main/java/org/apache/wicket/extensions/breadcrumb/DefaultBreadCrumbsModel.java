@@ -32,7 +32,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	private IBreadCrumbParticipant activeParticipant = null;
 
 	/** Holds the current list of crumbs. */
-	private List crumbs = new ArrayList();
+	private List<IBreadCrumbParticipant> crumbs = new ArrayList<IBreadCrumbParticipant>();
 
 	/** listeners utility. */
 	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();
@@ -49,13 +49,13 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	 */
 	public final void addListener(IBreadCrumbModelListener listener)
 	{
-		this.listenerSupport.addListener(listener);
+		listenerSupport.addListener(listener);
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
-	public final List allBreadCrumbParticipants()
+	public final List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return crumbs;
 	}
@@ -73,7 +73,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	 */
 	public final void removeListener(IBreadCrumbModelListener listener)
 	{
-		this.listenerSupport.removeListener(listener);
+		listenerSupport.removeListener(listener);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 		int i = len;
 		while (i > -1)
 		{
-			IBreadCrumbParticipant temp = (IBreadCrumbParticipant)crumbs.get(i);
+			IBreadCrumbParticipant temp = crumbs.get(i);
 
 			// if we found the bread crumb
 			if (breadCrumbParticipant.equals(temp))
@@ -98,7 +98,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 				while (j > i)
 				{
 					// remove and fire event
-					IBreadCrumbParticipant removed = (IBreadCrumbParticipant)crumbs.remove(j--);
+					IBreadCrumbParticipant removed = crumbs.remove(j--);
 					listenerSupport.fireBreadCrumbRemoved(removed);
 				}
 
@@ -133,10 +133,10 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	protected final void activate(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		// get old value
-		IBreadCrumbParticipant previousParticipant = this.activeParticipant;
+		IBreadCrumbParticipant previousParticipant = activeParticipant;
 
 		// and set the provided participant as the active one
-		this.activeParticipant = breadCrumbParticipant;
+		activeParticipant = breadCrumbParticipant;
 
 		// fire bread crumb activated event
 		listenerSupport.fireBreadCrumbActivated(previousParticipant, breadCrumbParticipant);

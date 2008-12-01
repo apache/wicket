@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.breadcrumb;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -78,6 +77,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected IBreadCrumbParticipant getParticipant(String componentId)
 				{
 					return breadCrumbParticipant;
@@ -92,7 +92,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * List view for rendering the bread crumbs.
 	 */
-	protected class BreadCrumbsListView extends ListView implements IBreadCrumbModelListener
+	protected class BreadCrumbsListView extends ListView<IBreadCrumbParticipant> implements IBreadCrumbModelListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -114,10 +114,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected Object load()
 				{
 					// save a copy
-					List l = new ArrayList(allBreadCrumbParticipants());
+					List<IBreadCrumbParticipant> l = new ArrayList<IBreadCrumbParticipant>(allBreadCrumbParticipants());
 					size = l.size();
 					return l;
 				}
@@ -163,6 +164,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#onBeforeRender()
 		 */
+		@Override
 		protected void onBeforeRender()
 		{
 			super.onBeforeRender();
@@ -175,7 +177,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
 		 */
-		protected void populateItem(ListItem item)
+		@Override
+		protected void populateItem(ListItem<IBreadCrumbParticipant> item)
 		{
 			int index = item.getIndex();
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getDefaultModelObject();
@@ -214,7 +217,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
-	public List allBreadCrumbParticipants()
+	public List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return decorated.allBreadCrumbParticipants();
 	}
@@ -280,19 +283,18 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
-		for (Iterator i = decorated.allBreadCrumbParticipants().iterator(); i.hasNext();)
+		for (IBreadCrumbParticipant crumb : decorated.allBreadCrumbParticipants())
 		{
-			IBreadCrumbParticipant crumb = (IBreadCrumbParticipant)i.next();
 			if (crumb instanceof Component)
 			{
-				((Component)crumb).detach();
-			}
-			else if (crumb instanceof IDetachable)
+				((Component) crumb).detach();
+			} else if (crumb instanceof IDetachable)
 			{
-				((IDetachable)crumb).detach();
+				((IDetachable) crumb).detach();
 			}
 		}
 	}

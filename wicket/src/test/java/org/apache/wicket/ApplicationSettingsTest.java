@@ -20,10 +20,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.Settings;
@@ -107,7 +107,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testDefaultStringResourceLoaderSetup()
 	{
 		Settings settings = new Settings(tester.getApplication());
-		List loaders = settings.getStringResourceLoaders();
+		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 4 default loaders", 4, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 			loaders.get(0) instanceof ComponentStringResourceLoader);
@@ -130,7 +130,7 @@ public class ApplicationSettingsTest extends TestCase
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
 			"org.apache.wicket.resource.DummyResources"));
 		settings.addStringResourceLoader(new ComponentStringResourceLoader());
-		List loaders = settings.getStringResourceLoaders();
+		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the bundle one",
 			loaders.get(0) instanceof BundleStringResourceLoader);

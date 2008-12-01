@@ -43,7 +43,7 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
-		Form form = new Form("form");
+		Form<Void> form = new Form<Void>("form");
 		add(form);
 
 		final AutoCompleteTextField<String> field = new AutoCompleteTextField<String>("ac",
@@ -62,9 +62,8 @@ public class AutoCompletePage extends BasePage
 
 				Locale[] locales = Locale.getAvailableLocales();
 
-				for (int i = 0; i < locales.length; i++)
+				for (final Locale locale : locales)
 				{
-					final Locale locale = locales[i];
 					final String country = locale.getDisplayCountry();
 
 					if (country.toUpperCase().startsWith(input.toUpperCase()))

@@ -40,7 +40,7 @@ public class BoxBorderTestPage_2 extends WebPage
 		BoxBorder border = new BoxBorder("box");
 		add(border);
 
-		border.add(new TextField("text"));
+		border.add(new TextField<String>("text"));
 		border.add(new Image("img"));
 	}
 }
