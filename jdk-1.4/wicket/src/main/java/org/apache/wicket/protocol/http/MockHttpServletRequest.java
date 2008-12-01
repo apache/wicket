@@ -28,6 +28,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -213,7 +214,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		cookies.add(cookie);
 	}
 
-	public void addCookies(Iterable cookies)
+	public void addCookies(Collection cookies)
 	{
 		for (Iterator it = cookies.iterator(); it.hasNext();)
 		{
