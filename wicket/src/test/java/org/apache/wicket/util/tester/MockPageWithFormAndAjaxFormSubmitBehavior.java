@@ -49,10 +49,10 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 	{
 		pojo = new Pojo("Mock name");
 
-		Form form = new Form("form", new CompoundPropertyModel(pojo));
+		Form<Pojo> form = new Form<Pojo>("form", new CompoundPropertyModel<Pojo>(pojo));
 		add(form);
 
-		form.add(new TextField("name"));
+		form.add(new TextField<String>("name"));
 
 		// The Event behavior
 		WebComponent eventComponent = new WebComponent(EVENT_COMPONENT);
@@ -61,11 +61,13 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				executed = true;
 			}
 
+			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
 			}
