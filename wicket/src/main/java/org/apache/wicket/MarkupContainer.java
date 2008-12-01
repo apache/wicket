@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -466,7 +465,6 @@ public abstract class MarkupContainer extends Component
 	 *            The comparator
 	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
-	@SuppressWarnings("unchecked")
 	public final Iterator<Component> iterator(Comparator<Component> comparator)
 	{
 		final List<Component> sorted;
@@ -481,13 +479,15 @@ public abstract class MarkupContainer extends Component
 				sorted = new ArrayList<Component>(1);
 				sorted.add((Component)children);
 			}
-			else if (children instanceof ChildList)
-			{
-				sorted = new ArrayList((ChildList)children);
-			}
 			else
 			{
-				sorted = Arrays.asList((Component[])children);
+				int size = children_size();
+				sorted = new ArrayList<Component>(size);
+				for (int i = 0; i < size; i++)
+				{
+					sorted.add(children_get(i));
+				}
+
 			}
 		}
 		Collections.sort(sorted, comparator);
@@ -647,7 +647,7 @@ public abstract class MarkupContainer extends Component
 			associatedMarkupStream.next();
 
 			String className = null;
-			
+
 			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 			{
 				Class<?> klass = getClass();
