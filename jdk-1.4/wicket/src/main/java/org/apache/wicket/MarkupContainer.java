@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -469,13 +468,15 @@ public abstract class MarkupContainer extends Component
 				sorted = new ArrayList(1);
 				sorted.add(children);
 			}
-			else if (children instanceof ChildList)
-			{
-				sorted = new ArrayList((ChildList)children);
-			}
 			else
 			{
-				sorted = Arrays.asList((Object[])children);
+				int size = children_size();
+				sorted = new ArrayList(size);
+				for (int i = 0; i < size; i++)
+				{
+					sorted.add(children_get(i));
+				}
+
 			}
 		}
 		Collections.sort(sorted, comparator);
