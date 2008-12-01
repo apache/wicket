@@ -35,7 +35,7 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class Captcha extends WicketExamplePage
 {
-	private final class CaptchaForm extends Form
+	private final class CaptchaForm<T> extends Form<T>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class Captcha extends WicketExamplePage
 
 			captchaImageResource = new CaptchaImageResource(imagePass);
 			add(new Image("captchaImage", captchaImageResource));
-			add(new RequiredTextField("password", new PropertyModel(properties, "password"))
+			add(new RequiredTextField<String>("password", new PropertyModel<String>(properties, "password"))
 			{
 				@Override
 				protected final void onComponentTag(final ComponentTag tag)
@@ -115,7 +115,7 @@ public class Captcha extends WicketExamplePage
 	{
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
-		add(new CaptchaForm("captchaForm"));
+		add(new CaptchaForm<Void>("captchaForm"));
 	}
 
 	private String getPassword()
