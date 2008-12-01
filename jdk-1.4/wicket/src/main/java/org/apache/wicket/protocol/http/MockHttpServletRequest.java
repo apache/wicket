@@ -213,6 +213,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 		cookies.add(cookie);
 	}
 
+	public void addCookies(Iterable cookies)
+	{
+		for (Iterator it = cookies.iterator(); it.hasNext();)
+		{
+			Cookie cookie = (Cookie) it.next();
+			addCookie(cookie);
+		}
+	}
+
+
 	/**
 	 * Add an uploaded file to the request. Use this to simulate a file that has been uploaded to a
 	 * field.
