@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.protocol.http;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,13 +42,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -213,6 +212,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		cookies.add(cookie);
 	}
+
+	public void addCookies(Iterable<Cookie> cookies)
+	{
+		for (Cookie cookie : cookies)
+		{
+			addCookie(cookie);
+		}
+	}
+
 
 	/**
 	 * Add an uploaded file to the request. Use this to simulate a file that has been uploaded to a
