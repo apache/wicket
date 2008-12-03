@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.form.Form;
  * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
  * progress.
  * 
- * @param <T>
  * @author evan
  * 
  */
