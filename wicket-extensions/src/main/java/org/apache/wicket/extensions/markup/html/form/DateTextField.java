@@ -21,8 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
@@ -41,7 +41,7 @@ import org.apache.wicket.util.convert.converters.DateConverter;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class DateTextField extends TextField implements ITextFormatProvider
+public class DateTextField extends TextField<Date> implements ITextFormatProvider
 {
 
 	private static final long serialVersionUID = 1L;
@@ -85,7 +85,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, IModel model)
+	public DateTextField(String id, IModel<Date> model)
 	{
 		this(id, model, DEFAULT_PATTERN);
 	}
@@ -117,17 +117,18 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, IModel model, String datePattern)
+	public DateTextField(String id, IModel<Date> model, String datePattern)
 	{
 		super(id, model, Date.class);
 		this.datePattern = datePattern;
-		this.converter = new DateConverter()
+		converter = new DateConverter()
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * @see org.apache.wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
 			 */
+			@Override
 			public DateFormat getDateFormat(Locale locale)
 			{
 				return new SimpleDateFormat(DateTextField.this.datePattern);
@@ -146,7 +147,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public IConverter getConverter(Class type)
+	@Override
+	public IConverter getConverter(Class<?> type)
 	{
 		if (converter == null)
 		{
