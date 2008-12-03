@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
 public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjaxIndicatorAware
 {
 	private static final long serialVersionUID = 1L;
-	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
+	private final AjaxIndicatorAppender indicatorAppender = new AjaxIndicatorAppender();
 
 	/**
 	 * Constructor
