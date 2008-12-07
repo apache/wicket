@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><b>Children </b>- Children can be added by calling the add() method, and they can be looked
  * up using a dotted path. For example, if a container called "a" held a nested container "b" which
- * held a nested component "c", then a.get("b.c") would return the Component with id "c". The number
+ * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
  * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
  * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
  * implementation of Component.IVisitor.
