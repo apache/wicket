@@ -22,7 +22,8 @@ import org.apache.wicket.IClusterable;
  * This class encapsulates various settings for {@link AbstractAutoCompleteBehavior}. See the
  * documentation for the property accessors of this class for further information.
  * <p>
- * Default settings: <table>
+ * Default settings:
+ * <table>
  * <tr>
  * <th>setting</th>
  * <th>default value</th>
@@ -54,13 +55,15 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean showListOnEmptyInput = false;
 
-    private String cssClassName = null;
+	private String cssClassName = null;
 
-    private boolean adjustInputWidth = true;
-    
-    private boolean showListOnFocusGain = false;
+	private boolean adjustInputWidth = true;
 
-  /**
+	private boolean showListOnFocusGain = false;
+
+	private boolean showCompleteListOnFocusGain = false;
+
+	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
 	 * 
@@ -143,72 +146,98 @@ public final class AutoCompleteSettings implements IClusterable
 		return this;
 	}
 
-    /**
-     * Get CSS class name to add to the autocompleter markup container
-     *
-     * @return CSS class name, or <code>null</code> if not used
-     */
-    public String getCssClassName()
-    {
-        return cssClassName;
-    }
+	/**
+	 * Get CSS class name to add to the autocompleter markup container
+	 * 
+	 * @return CSS class name, or <code>null</code> if not used
+	 */
+	public String getCssClassName()
+	{
+		return cssClassName;
+	}
 
-    /**
-     * Sets an CSS class name to add to the autocompleter markup container
-     * <p/>
-     * This makes it easier to have multiple autocompleters in your application
-     * with different style and layout.
-     *
-     * @param cssClassName valid CSS class name
-     */
-    public void setCssClassName(final String cssClassName)
-    {
-        this.cssClassName = cssClassName;
-    }
+	/**
+	 * Sets an CSS class name to add to the autocompleter markup container
+	 * <p/>
+	 * This makes it easier to have multiple autocompleters in your application with different style
+	 * and layout.
+	 * 
+	 * @param cssClassName
+	 *            valid CSS class name
+	 */
+	public void setCssClassName(final String cssClassName)
+	{
+		this.cssClassName = cssClassName;
+	}
 
-    /**
-     * Tells if wicket should adjust the width of the autocompleter selection window
-     * to the width of the related input field.
-     *
-     * @return   <code>true</code> if the autocompleter should have the same size as
-     *             the input field, <code>false</code> for default browser behavior
-     */
-    public boolean isAdjustInputWidth()
-    {
-        return adjustInputWidth;
-    }
+	/**
+	 * Tells if wicket should adjust the width of the autocompleter selection window to the width of
+	 * the related input field.
+	 * 
+	 * @return <code>true</code> if the autocompleter should have the same size as the input field,
+	 *         <code>false</code> for default browser behavior
+	 */
+	public boolean isAdjustInputWidth()
+	{
+		return adjustInputWidth;
+	}
 
-  /**
-   * Adjust the width of the autocompleter selection window to the width of the related input field.
-   * <p/>
-   * Otherwise the size will depend on the default browser behavior and CSS.
-   *
-    * @param adjustInputWidth  <code>true</code> if the autocompleter should have the same size  as
-   *                           the input field, <code>false</code> for default browser behavior
-   */
-    public void setAdjustInputWidth(final boolean adjustInputWidth)
-    {
-        this.adjustInputWidth = adjustInputWidth;
-    }
-    
-    /**
+	/**
+	 * Adjust the width of the autocompleter selection window to the width of the related input
+	 * field.
+	 * <p/>
+	 * Otherwise the size will depend on the default browser behavior and CSS.
+	 * 
+	 * @param adjustInputWidth
+	 *            <code>true</code> if the autocompleter should have the same size as the input
+	 *            field, <code>false</code> for default browser behavior
+	 */
+	public void setAdjustInputWidth(final boolean adjustInputWidth)
+	{
+		this.adjustInputWidth = adjustInputWidth;
+	}
+
+	/**
 	 * Indicates whether the autocomplete list will be shown when the input field receives focus.
 	 * 
-	 * @return true if the autocomplete list will be shown when the input field receives focus, false
-	 *         otherwise
+	 * @return true if the autocomplete list will be shown when the input field receives focus,
+	 *         false otherwise
 	 */
-    public boolean getShowListOnFocusGain()
-    {
-        return this.showListOnFocusGain;
-    }
-    
-    /**
+	public boolean getShowListOnFocusGain()
+	{
+		return showListOnFocusGain;
+	}
+
+	/**
 	 * Sets whether the list should be shown when the input field receives focus.
 	 * 
-	 * @param showListOnEmptyInput the flag
+	 * @param showListOnEmptyInput
+	 *            the flag
 	 */
-    public void setShowListOnFocusGain(final boolean showListOnFocusGain)
-    {
-        this.showListOnFocusGain = showListOnFocusGain;
-    }
+	public void setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
+	{
+		this.showCompleteListOnFocusGain = showCompleteListOnFocusGain;
+	}
+
+	/**
+	 * Indicates whether the autocomplete list will be shown when the input field receives focus.
+	 * 
+	 * @return true if the autocomplete list will be shown when the input field receives focus,
+	 *         false otherwise
+	 */
+	public boolean getShowCompleteListOnFocusGain()
+	{
+		return showCompleteListOnFocusGain;
+	}
+
+	/**
+	 * Sets whether the list should be shown when the input field receives focus.
+	 * 
+	 * @param showListOnEmptyInput
+	 *            the flag
+	 */
+	public void setShowListOnFocusGain(final boolean showListOnFocusGain)
+	{
+		this.showListOnFocusGain = showListOnFocusGain;
+	}
 }

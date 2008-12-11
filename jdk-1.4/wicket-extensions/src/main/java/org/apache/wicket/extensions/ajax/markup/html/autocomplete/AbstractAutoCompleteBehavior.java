@@ -86,6 +86,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
 		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
 		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
+		sb.append(",showCompleteListOnFocusGain: ").append(
+			settings.getShowCompleteListOnFocusGain());
 		if (settings.getCssClassName() != null)
 			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
 		sb.append('}');
