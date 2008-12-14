@@ -890,6 +890,10 @@ public final class Strings
 		{
 			int ixEnd = path.indexOf("?");
 
+			// there is no ? in the path so set it to the length (no arguments)
+			if (ixEnd == -1)
+				ixEnd = path.length();
+
 			if (ixEnd <= ixSemiColon)
 			{
 				// ? is before ; - no jsessionid in the url
