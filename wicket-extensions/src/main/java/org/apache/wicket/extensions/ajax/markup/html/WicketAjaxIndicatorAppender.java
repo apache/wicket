@@ -17,10 +17,11 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 /**
- * @deprecated  Use AjaxIndicatorAppender instead.
- * @see         org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender
+ * @deprecated Use AjaxIndicatorAppender instead.
+ * @see org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender
  */
 @Deprecated
 public class WicketAjaxIndicatorAppender extends AjaxIndicatorAppender
 {
+	private static final long serialVersionUID = 1L;
 }
