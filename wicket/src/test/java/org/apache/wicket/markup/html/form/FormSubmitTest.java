@@ -22,18 +22,23 @@ import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
 import org.apache.wicket.util.tester.FormTester;
 
 /**
- * @see <a href="http://cwiki.apache.org/WICKET/nested-forms.html">"Specification"</a> of nested
- *      forms handling
+ * Please see <a href="http://cwiki.apache.org/WICKET/nested-forms.html">"Nested Forms"</a> for more
+ * details on nested forms
+ * 
  * @author Gerolf Seitz
  */
 public class FormSubmitTest extends WicketTestCase
 {
-
 	private Page page;
 	private NestableForm outerForm;
 	private NestableForm middleForm;
 	private NestableForm innerForm;
 
+	/**
+	 * 
+	 * @see org.apache.wicket.WicketTestCase#setUp()
+	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -43,7 +48,6 @@ public class FormSubmitTest extends WicketTestCase
 		middleForm = (NestableForm)page.get("outerForm:middleForm");
 		innerForm = (NestableForm)page.get("outerForm:middleForm:innerForm");
 	}
-
 
 	/**
 	 * 
@@ -86,7 +90,6 @@ public class FormSubmitTest extends WicketTestCase
 		assertOnSubmitCalled(false, false, true);
 		assertOnErrorCalled(false, false, false);
 	}
-
 
 	/**
 	 * 
@@ -217,7 +220,12 @@ public class FormSubmitTest extends WicketTestCase
 		assertOnErrorCalled(false, false, false);
 	}
 
-
+	/**
+	 * 
+	 * @param isOuterFormEnabled
+	 * @param isMiddleFormEnabled
+	 * @param isInnerFormEnabled
+	 */
 	private void assertEnabledState(boolean isOuterFormEnabled, boolean isMiddleFormEnabled,
 		boolean isInnerFormEnabled)
 	{
@@ -226,7 +234,12 @@ public class FormSubmitTest extends WicketTestCase
 		assertEquals(isInnerFormEnabled, innerForm.isEnabled());
 	}
 
-
+	/**
+	 * 
+	 * @param isOuterFormOnErrorCalled
+	 * @param isMiddleFormOnErrorCalled
+	 * @param isInnerFormOnErrorCalled
+	 */
 	private void assertOnErrorCalled(boolean isOuterFormOnErrorCalled,
 		boolean isMiddleFormOnErrorCalled, boolean isInnerFormOnErrorCalled)
 	{
@@ -235,7 +248,12 @@ public class FormSubmitTest extends WicketTestCase
 		assertEquals(isInnerFormOnErrorCalled, innerForm.onErrorCalled);
 	}
 
-
+	/**
+	 * 
+	 * @param isOuterFormOnSubmitCalled
+	 * @param isMiddleFormOnSubmitCalled
+	 * @param isInnerFormOnSubmitCalled
+	 */
 	private void assertOnSubmitCalled(boolean isOuterFormOnSubmitCalled,
 		boolean isMiddleFormOnSubmitCalled, boolean isInnerFormOnSubmitCalled)
 	{
@@ -243,7 +261,6 @@ public class FormSubmitTest extends WicketTestCase
 		assertEquals(isMiddleFormOnSubmitCalled, middleForm.onSubmitCalled);
 		assertEquals(isInnerFormOnSubmitCalled, innerForm.onSubmitCalled);
 	}
-
 
 	/**
 	 * @param formToBeSubmitted
@@ -261,5 +278,4 @@ public class FormSubmitTest extends WicketTestCase
 		formTester.submit("submit");
 		return formTester;
 	}
-
 }
