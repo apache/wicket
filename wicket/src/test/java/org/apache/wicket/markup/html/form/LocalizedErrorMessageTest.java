@@ -64,4 +64,47 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		tester.assertErrorMessages(new String[] { "'foo' is not a valid Integer." });
 	}
+
+	/**
+	 * WicketTester.assertErrorMessages returns FeedbackMessages in iso-8859-1 encoding only. Hence
+	 * assertErrorMessage will fail for special characters in languages like e.g. German. Testcase
+	 * for WICKET-1972.
+	 * 
+	 */
+	public void testWICKET_1927()
+	{
+		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+		tester.setupRequestAndResponse();
+
+		tester.getWicketSession().setLocale(new Locale("de"));
+
+		LocalizedMessagePage page = new LocalizedMessagePage();
+		tester.startPage(page);
+		tester.processRequestCycle();
+		tester.setupRequestAndResponse();
+
+		tester.getServletRequest().setRequestToComponent(page.form);
+		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
+
+		page.form.onFormSubmitted();
+
+		tester.assertErrorMessages(new String[] { "'foo' ist kein gültiger Wert für 'Integer'." });
+		tester.getWicketSession().setLocale(new Locale("pl"));
+
+		tester.getWicketSession().cleanupFeedbackMessages();
+
+		tester.setupRequestAndResponse();
+
+		page = new LocalizedMessagePage();
+		tester.startPage(page);
+		tester.processRequestCycle();
+		tester.setupRequestAndResponse();
+
+		tester.getServletRequest().setRequestToComponent(page.form);
+		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
+
+		page.form.onFormSubmitted();
+
+		tester.assertErrorMessages(new String[] { "'foo' nie jest w\u0142a\u015Bciwym Integer." });
+	}
 }
