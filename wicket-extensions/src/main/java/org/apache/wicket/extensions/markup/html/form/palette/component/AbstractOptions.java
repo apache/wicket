@@ -78,7 +78,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			Object displayValue = renderer.getDisplayValue(choice);
 			Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
-			value = getLocalizer().getString(id + "." + value, this, value);
+			value = getLocalizer().getString(value, this, value);
 
 			buffer.append("\n<option value=\"").append(id).append("\"");
 
@@ -87,8 +87,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			{
 				for (String s : additionalAttributesMap.keySet())
 				{
-					buffer.append(" " + s + "=\"" +
-							additionalAttributesMap.get(s) + "\"");
+					buffer.append(" " + s + "=\"" + additionalAttributesMap.get(s) + "\"");
 				}
 			}
 
