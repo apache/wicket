@@ -34,7 +34,7 @@ public interface IOptionRenderer<T> extends IClusterable
 	 *            SelectOption model object
 	 * @return the value for displaying to the user.
 	 */
-	public String getDisplayValue(Object object);
+	public String getDisplayValue(T object);
 
 	/**
 	 * Gets the model that will be used to represent the value object.

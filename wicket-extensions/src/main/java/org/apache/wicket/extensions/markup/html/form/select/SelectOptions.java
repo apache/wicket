@@ -120,7 +120,7 @@ public class SelectOptions<T> extends RepeatingView
 					add(row);
 
 					// we add our actual SelectOption component to the row
-					Object value = it.next();
+					T value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel<T> model = renderer.getModel(value);
 					row.add(newOption(text, model));
