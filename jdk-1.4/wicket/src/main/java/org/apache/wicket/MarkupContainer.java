@@ -123,12 +123,12 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer add(final Component child)
 	{
-		checkHierarchyChange(child);
-
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child may not be null");
 		}
+
+		checkHierarchyChange(child);
 
 		if (log.isDebugEnabled())
 		{
