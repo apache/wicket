@@ -85,7 +85,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		{
 			// ignore
 		}
-
 	}
 
 	/**
@@ -111,13 +110,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * Format to be used when configuring YUI calendar. Can be used when using the
 	 * &quot;selected&quot; property.
 	 */
-	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
+	// See wicket-1988: SimpleDateFormat is not thread safe. Do not use static final
+	public final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
 
 	/**
 	 * For specifying which page (month/year) to show in the calendar, use this format for the date.
 	 * This is to be used together with the property &quot;pagedate&quot;
 	 */
-	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
+	// See wicket-1988: SimpleDateFormat is not thread safe. Do not use static final
+	public final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
 
 	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
 
