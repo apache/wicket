@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.examples.compref;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
@@ -41,11 +45,12 @@ import org.apache.wicket.model.util.WildcardCollectionModel;
 public class SelectPage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",
+		"Java.Net");
 
 	/** available choices for large selection box. */
-	private static final List<? extends String> MANY_CHOICES = Arrays.asList("Choice1",
-			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9");
+	private static final List<? extends String> MANY_CHOICES = Arrays.asList("Choice1", "Choice2",
+		"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9");
 
 	/**
 	 * Constructor
@@ -81,19 +86,19 @@ public class SelectPage extends WicketExamplePage
 		form.add(choices);
 		IOptionRenderer<String> renderer = new IOptionRenderer<String>()
 		{
-
-			public String getDisplayValue(Object object)
+			public String getDisplayValue(String object)
 			{
 				return object.toString();
 			}
 
 			public IModel<String> getModel(Object value)
 			{
-				return new Model<String>((String) value);
+				return new Model<String>((String)value);
 			}
 
 		};
-		IModel<Collection<? extends String>> model = new WildcardCollectionModel<String>(MANY_CHOICES);
+		IModel<Collection<? extends String>> model = new WildcardCollectionModel<String>(
+			MANY_CHOICES);
 		choices.add(new SelectOptions<String>("manychoices", model, renderer));
 
 	}
