@@ -230,6 +230,17 @@ public class DateTimeField extends FormComponentPanel<Date>
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
 		setDefaultModelObject(date);
+
+		Integer hours = getHours();
+		Integer minutes = getMinutes();
+		boolean use12HourFormat = use12HourFormat();
+		if (hours != null)
+		{
+			this.date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
+					(use12HourFormat ? 12 : 24));
+			this.date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
+		}
+		setDefaultModelObject(this.date.toDate());
 	}
 
 	/**
@@ -378,6 +389,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 		else
 		{
 			date = null;
+			hours = null;
+			minutes = null;
 		}
 
 		if (date != null)
