@@ -159,6 +159,105 @@ public class Localizer
 	}
 
 	/**
+	 * This is similar to {@link #getString(String, Component, IModel, String)} except that the
+	 * resource settings are ignored. This allows to to code something like
+	 * 
+	 * <pre>
+	 * String option = getLocalizer().getStringIgnoreSettings(getId() + &quot;.null&quot;, this, &quot;&quot;);
+	 * if (Strings.isEmpty(option))
+	 * {
+	 * 	option = getLocalizer().getString(&quot;null&quot;, this, CHOOSE_ONE);
+	 * }
+	 * </pre>
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for substitutions in the strings (optional)
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 */
+	public String getStringIgnoreSettings(final String key, final Component component,
+		final IModel<?> model, final String defaultValue)
+	{
+		boolean addedToPage = false;
+		if (component != null)
+		{
+			if ((component instanceof Page) || null != component.findParent(Page.class))
+			{
+				addedToPage = true;
+			}
+
+			if (!addedToPage)
+			{
+				logger.warn(
+					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
+						+ "This can sometimes lead to an invalid or no localized resource returned. "
+						+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
+						+ "Offending component: {}", component);
+			}
+		}
+
+		String cacheKey = null;
+		String value = null;
+
+		// If this component is not yet added to page we do not want to check
+		// cache as we can generate an invalid cache key
+		if ((cache != null) && addedToPage)
+		{
+			cacheKey = getCacheKey(key, component);
+		}
+
+		// Value not found are cached as well (value = null)
+		if ((cacheKey != null) && cache.containsKey(cacheKey))
+		{
+			value = getFromCache(cacheKey);
+		}
+		else
+		{
+			// Iterate over all registered string resource loaders until the
+			// property has been found
+			Iterator<IStringResourceLoader> iter = Application.get()
+				.getResourceSettings()
+				.getStringResourceLoaders()
+				.iterator();
+
+			while (iter.hasNext())
+			{
+				IStringResourceLoader loader = iter.next();
+				value = loader.loadStringResource(component, key);
+				if (value != null)
+				{
+					break;
+				}
+			}
+
+			// Cache the result incl null if not found
+			if (cacheKey != null)
+			{
+				putIntoCache(cacheKey, value);
+			}
+		}
+
+		if (value == null)
+		{
+			value = defaultValue;
+		}
+
+		// If a property value has been found, or a default value was given,
+		// than replace the placeholder and we are done
+		if (value != null)
+		{
+			return substitutePropertyExpressions(component, value, model);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the localized string using all of the supplied parameters. This method is left public to
 	 * allow developers full control over string resource loading. However, it is recommended that
 	 * one of the other convenience methods in the class are used as they handle all of the work
@@ -181,91 +280,37 @@ public class Localizer
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
-		boolean addedToPage = false;
-		if (component != null)
-		{
-			if ((component instanceof Page) || null != component.findParent(Page.class))
-			{
-				addedToPage = true;
-			}
-
-			if (!addedToPage)
-			{
-				logger.warn(
-					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-						+ "This can sometimes lead to an invalid or no localized resource returned. "
-						+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
-						+ "Offending component: {}", component);
-			}
-		}
-
-
-		String cacheKey = null;
-		String string = null;
-
-		// If this component is not yet added to page we do not want to check
-		// cache as we can generate an invalid cache key
-		if ((cache != null) && addedToPage)
-		{
-			cacheKey = getCacheKey(key, component);
-		}
-
-		// Value not found are cached as well (value = null)
-		if ((cacheKey != null) && cache.containsKey(cacheKey))
-		{
-			string = getFromCache(cacheKey);
-		}
-		else
-		{
-			// Iterate over all registered string resource loaders until the
-			// property has been found
-
-			Iterator<IStringResourceLoader> iter = resourceSettings.getStringResourceLoaders()
-				.iterator();
-			while (iter.hasNext())
-			{
-				IStringResourceLoader loader = iter.next();
-				string = loader.loadStringResource(component, key);
-				if (string != null)
-				{
-					break;
-				}
-			}
-
-			// Cache the result incl null if not found
-			if (cacheKey != null)
-			{
-				putIntoCache(cacheKey, string);
-			}
-		}
-
-		if ((string == null) && (defaultValue != null))
+		String value = getStringIgnoreSettings(key, component, model, null);
+		if ((value == null) && (defaultValue != null))
 		{
 			// Resource not found, so handle missing resources based on
 			// application configuration and try the default value
 			if (resourceSettings.getUseDefaultOnMissingResource())
 			{
-				string = defaultValue;
+				value = defaultValue;
 			}
 		}
 
 		// If a property value has been found, or a default value was given,
 		// than replace the placeholder and we are done
-		if (string != null)
+		if (value != null)
 		{
-			return substitutePropertyExpressions(component, string, model);
+			return substitutePropertyExpressions(component, value, model);
 		}
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '" +
-				key + "'");
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '");
+			message.append(key);
+			message.append("'");
+
 			if (component != null)
 			{
 				message.append(" for component: ");
 				message.append(component.getPageRelativePath());
 				message.append(" [class=").append(component.getClass().getName()).append("]");
 			}
+
 			throw new MissingResourceException(message.toString(), (component != null
 				? component.getClass().getName() : ""), key);
 		}

@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -32,6 +33,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -209,8 +211,54 @@ public class LocalizerTest extends WicketTestCase
 				"DEFAULT {user}"));
 
 		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
-			localizer.getString("test.substituteDoesNotExist", null,
-				new PropertyModel<String>(model, null), "DEFAULT ${user}"));
+			localizer.getString("test.substituteDoesNotExist", null, new PropertyModel<String>(
+				model, null), "DEFAULT ${user}"));
+	}
+
+	/**
+	 * See https://issues.apache.org/jira/browse/WICKET-1851
+	 */
+	public void test_1851_1()
+	{
+		MyMockPage page = new MyMockPage();
+
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
+		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
+
+		String option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, "default");
+		assertEquals(option, "default");
+
+		option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, null);
+		assertNull(option);
+		if (Strings.isEmpty(option))
+		{
+			option = localizer.getString("null", page.drop1, "CHOOSE_ONE");
+		}
+		assertEquals(option, "value 1");
+
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
+		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
+
+		option = localizer.getString("dummy.null", page.drop1, null, "default");
+		assertEquals(option, "[Warning: Property for 'dummy.null' not found]");
+
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
+		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(true);
+
+		option = localizer.getString("dummy.null", page.drop1, null, "default");
+		assertEquals(option, "default");
+
+		try
+		{
+			localizer.getString("dummy.null", page.drop1, null, null);
+			assertTrue("Expected an exception to happen", false);
+		}
+		catch (MissingResourceException ex)
+		{
+			assertEquals(
+				ex.getMessage(),
+				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]");
+		}
 	}
 
 	/**
