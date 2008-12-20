@@ -162,16 +162,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			// First use the parent for resolving so that
 			// form1.textfield1.Required can be used.
 
-			// Note: It is important that the default value of "" is provided
-			// to getString() not to throw a MissingResourceException or to
-			// return a default string like "[Warning: String ..."
 			String message = getString(localizer, resource, formComponent.getParent());
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
 			{
 				// Try a variation of the resource key
-
 				resource = prefix + key;
 
 				message = getString(localizer, resource, formComponent.getParent());
@@ -208,6 +204,13 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			return message;
 		}
 
+		/**
+		 * 
+		 * @param localizer
+		 * @param key
+		 * @param component
+		 * @return string
+		 */
 		private String getString(Localizer localizer, String key, Component component)
 		{
 			triedKeys.add(key);
@@ -1267,7 +1270,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Usually the user should do custom conversions by specifying an {@link IConverter} by
 	 * registering it with the application by overriding {@link Application#getConverterLocator()},
 	 * or at the component level by overriding {@link #getConverter()}.
-     * </p>
+	 * </p>
 	 * 
 	 * @see IConverterLocator
 	 * @see Application#newConverterLocator()

@@ -211,6 +211,7 @@ public class WicketMessageResolver implements IComponentResolver
 			}
 			else
 			{
+				// TODO Doesn't localizer already throw an exception?!?!
 				if (isThrowExceptionIfPropertyNotFound() == true)
 				{
 					throw new WicketRuntimeException("Property '" + key +

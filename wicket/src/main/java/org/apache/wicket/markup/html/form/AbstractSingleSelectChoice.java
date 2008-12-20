@@ -232,7 +232,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			String option = getLocalizer().getString(getId() + ".nullValid", this, "");
+			String option = getLocalizer().getStringIgnoreSettings(getId() + ".nullValid", this,
+				null, null);
 			if (Strings.isEmpty(option))
 			{
 				option = getLocalizer().getString("nullValid", this, "");
@@ -240,7 +241,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
-
 
 			// Add option tag
 			buffer.append("\n<option");
@@ -262,7 +262,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 				selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
-				String option = getLocalizer().getString(getId() + ".null", this, "");
+				String option = getLocalizer().getStringIgnoreSettings(getId() + ".null", this,
+					null, null);
 				if (Strings.isEmpty(option))
 				{
 					option = getLocalizer().getString("null", this, CHOOSE_ONE);
