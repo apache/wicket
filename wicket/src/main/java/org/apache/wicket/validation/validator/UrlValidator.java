@@ -260,15 +260,13 @@ public class UrlValidator extends AbstractValidator<String>
 		}
 
 		Matcher matchAsciiPat = Pattern.compile(LEGAL_ASCII_PATTERN).matcher(value);
-		Matcher matchUrlPat = Pattern.compile(URL_PATTERN).matcher(value);
-
-
 		if (!matchAsciiPat.matches())
 		{
 			return false;
 		}
 
 		// Check the whole url address structure
+		Matcher matchUrlPat = Pattern.compile(URL_PATTERN).matcher(value);
 		if (!matchUrlPat.matches())
 		{
 			return false;
@@ -363,7 +361,6 @@ public class UrlValidator extends AbstractValidator<String>
 		Matcher matchIPV4Pat = Pattern.compile(IP_V4_DOMAIN_PATTERN).matcher(hostIP);
 		ipV4Address = matchIPV4Pat.matches();
 
-
 		if (ipV4Address)
 		{
 			// this is an IP address so check components
@@ -429,24 +426,22 @@ public class UrlValidator extends AbstractValidator<String>
 					segmentCount++;
 				}
 			}
-			String topLevel = domainSegment[segmentCount - 1];
-			if (topLevel.length() < 2 || topLevel.length() > 4)
-			{
-				return false;
-			}
 
-			// First letter of top level must be a alpha
-			Matcher alphaMatcher = Pattern.compile(ALPHA_PATTERN).matcher(topLevel.substring(0, 1));
-
-			if (!alphaMatcher.matches())
+			if (segmentCount > 1)
 			{
-				return false;
-			}
+				String topLevel = domainSegment[segmentCount - 1];
+				if (topLevel.length() < 2 || topLevel.length() > 4)
+				{
+					return false;
+				}
 
-			// Make sure there's a host name preceding the authority.
-			if (segmentCount < 2)
-			{
-				return false;
+				// First letter of top level must be a alpha
+				Matcher alphaMatcher = Pattern.compile(ALPHA_PATTERN).matcher(
+					topLevel.substring(0, 1));
+				if (!alphaMatcher.matches())
+				{
+					return false;
+				}
 			}
 		}
 

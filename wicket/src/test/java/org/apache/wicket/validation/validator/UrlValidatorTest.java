@@ -25,12 +25,16 @@ import junit.framework.TestCase;
  */
 public class UrlValidatorTest extends TestCase
 {
-
 	private final boolean printStatus = false;
-	private final boolean printIndex = false;// print index that indicates current
-												// scheme,host,port,path,
 
+	private final boolean printIndex = false; // print index that indicates current
+	// scheme,host,port,path,
 
+	private final boolean printDebug = true;
+
+	/**
+	 * 
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -40,6 +44,9 @@ public class UrlValidatorTest extends TestCase
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	protected void tearDown()
 	{
@@ -91,7 +98,6 @@ public class UrlValidatorTest extends TestCase
 		{
 			System.out.println();
 		}
-
 	}
 
 	/**
@@ -107,6 +113,17 @@ public class UrlValidatorTest extends TestCase
 		UrlValidator urlVal = new UrlValidator(null, options);
 		assertTrue(urlVal.isValid("http://www.google.com"));
 		assertTrue(urlVal.isValid("http://www.google.com/"));
+
+		// some of the following combinations can not be properly modeled with the
+		// ResultPair
+		assertTrue(urlVal.isValid("http://localhost"));
+		assertTrue(urlVal.isValid("http://localhost/"));
+		assertTrue(urlVal.isValid("http://localhost:8080"));
+		assertTrue(urlVal.isValid("http://localhost/test1"));
+		assertTrue(urlVal.isValid("http://localhost/test1/"));
+		assertTrue(urlVal.isValid("http://localhost?action=view"));
+		assertTrue(urlVal.isValid("http://localhost/test1?action=view"));
+
 		int statusPerLine = 60;
 		int printed = 0;
 		if (printIndex)
@@ -115,6 +132,7 @@ public class UrlValidatorTest extends TestCase
 		}
 		do
 		{
+			String output = "";
 			StringBuffer testBuffer = new StringBuffer();
 			boolean expected = true;
 			for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex)
@@ -123,9 +141,17 @@ public class UrlValidatorTest extends TestCase
 				ResultPair[] part = (ResultPair[])testObjects[testPartsIndexIndex];
 				testBuffer.append(part[index].item);
 				expected &= part[index].valid;
+				if (printDebug)
+				{
+					output += "" + part[index].valid + ":";
+				}
 			}
 			String url = testBuffer.toString();
 			boolean result = urlVal.isValid(url);
+			if (printDebug && (expected != result))
+			{
+				System.out.println(output + " - " + expected + " - " + url);
+			}
 			assertEquals(url, expected, result);
 			if (printStatus)
 			{
@@ -179,6 +205,12 @@ public class UrlValidatorTest extends TestCase
 		assertTrue(UrlValidator.isValid("http://tech.yahoo.com/rc/desktops/102;_ylt=Ao8yevQHlZ4On0O3ZJGXLEQFLZA5"));
 	}
 
+	/**
+	 * 
+	 * @param testPartsIndex
+	 * @param testParts
+	 * @return
+	 */
 	static boolean incrementTestPartsIndex(int[] testPartsIndex, Object[] testParts)
 	{
 		boolean carry = true; // add 1 to lowest order part.
@@ -208,6 +240,10 @@ public class UrlValidatorTest extends TestCase
 		return (!maxIndex);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private String testPartsIndextoString()
 	{
 		StringBuffer carryMsg = new StringBuffer("{");
@@ -255,7 +291,11 @@ public class UrlValidatorTest extends TestCase
 			new ResultPair("1.2.3", false), new ResultPair(".1.2.3.4", false),
 			new ResultPair("go.a", false), new ResultPair("go.a1a", true),
 			new ResultPair("go.1aa", false), new ResultPair("aaa.", false),
-			new ResultPair(".aaa", false), new ResultPair("aaa", false), new ResultPair("", false) };
+			new ResultPair(".aaa", false), new ResultPair("aaa", true)
+	/*
+	 * , new ResultPair("", false) In combination with "http:/" + "/test1" the expected result is
+	 * true
+	 */};
 	ResultPair[] testUrlPort = { new ResultPair(":80", true), new ResultPair(":65535", true),
 			new ResultPair(":0", true), new ResultPair("", true), new ResultPair(":-1", false),
 			new ResultPair(":65636", true), new ResultPair(":65a", false) };
