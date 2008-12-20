@@ -17,7 +17,6 @@
 package org.apache.wicket.util.resource.locator;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -25,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -54,7 +54,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceNameIterator implements Iterator<String>
 {
-	private static final Pattern LOCALE_PATTERN = Pattern.compile("_[a-zA-Z]{2}($|(?=_))");
+	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
 
 	// The locale to search for the resource file
 	private final Locale locale;
@@ -70,10 +70,10 @@ public class ResourceNameIterator implements Iterator<String>
 	// The latest exact Locale used
 	private Locale currentLocale;
 
-	private final Set<String> isoCountries = new HashSet<String>(
+	private final static Set<String> isoCountries = new ConcurrentHashSet<String>(
 		Arrays.asList(Locale.getISOCountries()));
 
-	private final Set<String> isoLanguages = new HashSet<String>(
+	private final static Set<String> isoLanguages = new ConcurrentHashSet<String>(
 		Arrays.asList(Locale.getISOLanguages()));
 
 	/**
@@ -102,63 +102,56 @@ public class ResourceNameIterator implements Iterator<String>
 			this.extensions = extensions;
 		}
 
-		Matcher matcher = LOCALE_PATTERN.matcher(path);
+		String filename = Strings.lastPathComponent(path, '/');
+		Matcher matcher = LOCALE_PATTERN.matcher(filename);
 		if (matcher.find())
 		{
-			String language = null;
-			String country = null;
-			String variant = null;
-			int firstValidLocalePatternFragment = -1;
-			do
-			{
-				String s = matcher.group().substring(1, 3);
-				if (Character.isLowerCase(s.charAt(0)))
-				{
-					if (isoLanguages.contains(s))
-					{
-						language = s;
-						firstValidLocalePatternFragment = matcher.start();
-						break;
-					}
-				}
-			}
-			while (matcher.find());
+			String language = matcher.group(1);
+			String country = matcher.group(3);
+			String variant = matcher.group(5);
 
 			// did we find a language?
 			if (language != null)
 			{
-				// check for country
-				if (matcher.find())
+				if (isoLanguages.contains(language) == false)
 				{
-					do
-					{
-						String s = matcher.group().substring(1, 3);
-						if (Character.isUpperCase(s.charAt(0)))
-						{
-							if (isoCountries.contains(s))
-							{
-								country = s;
-								break;
-							}
-						}
-					}
-					while (matcher.find());
+					language = null;
+					country = null;
+					variant = null;
 				}
-				if (country != null)
+			}
+
+			// did we find a country?
+			if ((language != null) && (country != null))
+			{
+				if (isoCountries.contains(country) == false)
 				{
-					// country found... just get the rest of the string for any variant
-					if (matcher.find())
-					{
-						variant = path.substring(matcher.start());
-					}
+					country = null;
+					variant = null;
 				}
-				path = path.substring(0, firstValidLocalePatternFragment);
+			}
+
+			if (language != null)
+			{
+				path = path.substring(0, path.length() - filename.length() + matcher.start());
 				localeIterator = new LocaleResourceNameIterator(path, new Locale(language,
 					country != null ? country : "", variant != null ? variant : ""));
-			} // else skip the whole thing... probably user specific underscores used
-		}
+			}
+		} // else skip the whole thing... probably user specific underscores used
 
 		styleIterator = new StyleAndVariationResourceNameIterator(path, style, null);
+	}
+
+	/**
+	 * 
+	 * @param language
+	 * @param country
+	 * @param variant
+	 * @return Locale
+	 */
+	private Locale newLocale(String language, String country, String variant)
+	{
+		return new Locale(language, country != null ? country : "", variant != null ? variant : "");
 	}
 
 	/**
