@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
 
@@ -171,6 +172,9 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * weather.detail=The report for {0,date}, shows the temperature as {2,number,###.##} {3} \
  *     and the weather to be {1}
  * </pre>
+ * 
+ * @see ComponentStringResourceLoader for additional information especially on the component search
+ *      order
  * 
  * @author Chris Turner
  */
