@@ -33,10 +33,16 @@ public class JavascriptUtils
 	/** Script close tag */
 	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
 
-	/** Script open tag */
+	/** 
+     * Script open tag. If this tag is changed, also update 
+     * Wicket.Head.Contributor.processScript() function from wicket-ajax.js 
+     */
 	public final static String SCRIPT_CONTENT_PREFIX = "<!--/*--><![CDATA[/*><!--*/\n";
 
-	/** Script close tag */
+	/** 
+     * Script close tag. If this tag is changed, also update 
+     * Wicket.Head.Contributor.processScript() function from wicket-ajax.js 
+     */
 	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
 
 

@@ -1442,6 +1442,9 @@ Wicket.Head.Contributor.prototype = {
 			} else {
 				// serialize the element content to string
 				var text = Wicket.DOM.serializeNodeChildren(node);
+				// get rid of prefix and suffix, they are not eval-d correctly
+				text = text.replace(/^<!--\/\*--><!\[CDATA\[\/\*><!--\*\//, "");
+				text = text.replace(/\/\*-->]]>\*\/$/, "");
 				
 				var id = node.getAttribute("id");
 				
