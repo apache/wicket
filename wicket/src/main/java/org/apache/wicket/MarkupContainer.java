@@ -1432,7 +1432,12 @@ public abstract class MarkupContainer extends Component
 					}
 					else
 					{
-						markupStream.throwMarkupException("Failed to handle: " + tag.toString());
+						markupStream.throwMarkupException("Failed to handle: " +
+							tag.toString() +
+							". It might be that no resolver has been registered to handle this special tag. " +
+							" But it also be that you declared wicket:id=" + id +
+							" in your markup, but that you either did not add the " +
+							"component to your page at all, or that the hierarchy does not match.");
 					}
 				}
 

@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
  * </code>
  * 
  * Notice that we had to attach the repeater to a component tag - in this case a <code>span</code>,
- * but a span is not a legal tag to nest under <code>table</code>. So we can rewrite the example
- * as following:
+ * but a span is not a legal tag to nest under <code>table</code>. So we can rewrite the example as
+ * following:
  * 
  * <code>
  * 	<table>
@@ -61,14 +61,13 @@ public class WicketContainerResolver implements IComponentResolver
 {
 	private static final Logger log = LoggerFactory.getLogger(WicketContainerResolver.class);
 
+	private static final long serialVersionUID = 1L;
+
 	static
 	{
 		// register "wicket:container"
 		WicketTagIdentifier.registerWellKnownTagName("container");
 	}
-
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container and render it.
