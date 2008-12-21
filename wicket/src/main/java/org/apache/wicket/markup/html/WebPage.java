@@ -64,6 +64,11 @@ import org.slf4j.LoggerFactory;
  */
 public class WebPage extends Page implements INewBrowserWindowListener
 {
+	/** log. */
+	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Tries to determine whether this page was opened in a new window or tab. If it is (and this
 	 * checker were able to recognize that), a new page map is created for this page instance, so
@@ -162,14 +167,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		}
 	}
 
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
-
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
 		"cookies.js");
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The url compressor that will compress the urls by collapsing the component path and listener
@@ -374,7 +374,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		return (WebRequestCycle)getRequestCycle();
 	}
 
-
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
 	 * 
@@ -387,77 +386,98 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		return new BookmarkablePageLink(id, getApplication().getHomePage());
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onAfterRender()
+	 */
 	@Override
 	protected void onAfterRender()
 	{
 		super.onAfterRender();
+
+		// only in development mode validate the headers
 		if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
 		{
-			HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component>()
+			// Ignore if an exception and a redirect happened in between (e.g.
+			// RestartResponseAtInterceptPageException)
+			if (getRequestCycle().getResponsePage() == this)
 			{
-				public Object component(Component component)
-				{
-					if (component instanceof HtmlHeaderContainer)
-					{
-						return component;
-					}
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-			if (header == null)
+				validateHeaders();
+			}
+		}
+	}
+
+	/**
+	 * Validate that each component which wanted to contribute to the header section actually was
+	 * able to do so.
+	 */
+	private void validateHeaders()
+	{
+		HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component>()
+		{
+			public Object component(Component component)
 			{
-				// the markup must at least contain a <body> tag for wicket to automatically
-				// create a HtmlHeaderContainer. Log an error if no header container
-				// was created but any of the components or behavior want to contribute
-				// something to the header.
-				header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
-				add(header);
-
-				Response orgResponse = getRequestCycle().getResponse();
-				try
+				if (component instanceof HtmlHeaderContainer)
 				{
-					final StringResponse response = new StringResponse();
-					getRequestCycle().setResponse(response);
+					return component;
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 
-					// Render all header sections of all components on the page
-					renderHead(header);
+		if (header == null)
+		{
+			// the markup must at least contain a <body> tag for wicket to automatically
+			// create a HtmlHeaderContainer. Log an error if no header container
+			// was created but any of the components or behaviors want to contribute
+			// something to the header.
+			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+			add(header);
 
-					// Make sure all Components interested in contributing to the header
-					// and there attached behaviors are asked.
-					final HtmlHeaderContainer finalHeader = header;
-					visitChildren(new IVisitor<Component>()
+			Response orgResponse = getRequestCycle().getResponse();
+			try
+			{
+				final StringResponse response = new StringResponse();
+				getRequestCycle().setResponse(response);
+
+				// Render all header sections of all components on the page
+				renderHead(header);
+
+				// Make sure all Components interested in contributing to the header
+				// and there attached behaviors are asked.
+				final HtmlHeaderContainer finalHeader = header;
+				visitChildren(new IVisitor<Component>()
+				{
+					/**
+					 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+					 */
+					public Object component(Component component)
 					{
-						/**
-						 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
-						 */
-						public Object component(Component component)
-						{
-							component.renderHead(finalHeader);
-							return CONTINUE_TRAVERSAL;
-						}
-					});
-					response.close();
-
-					if (response.getBuffer().length() > 0)
-					{
-						// @TODO it is not yet working properly. JDo to fix it
-						log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-						log.error("You probably forgot to add a <body> or <header> tag to your markup since no Header Container was \n" +
-							"found but components where found which want to write to the <head> section.\n" +
-							response.getBuffer());
-						log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+						component.renderHead(finalHeader);
+						return CONTINUE_TRAVERSAL;
 					}
-				}
-				catch (Exception e)
+				});
+				response.close();
+
+				if (response.getBuffer().length() > 0)
 				{
-					// just swallow this exception, there isn't much we can do about.
-					log.error("header/body check throws exception", e);
+					// @TODO it is not yet working properly. JDo to fix it
+					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					log.error("You probably forgot to add a <body> or <header> tag to your markup since no Header Container was \n" +
+						"found but components where found which want to write to the <head> section.\n" +
+						response.getBuffer());
+					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 				}
-				finally
-				{
-					this.remove(header);
-					getRequestCycle().setResponse(orgResponse);
-				}
+			}
+			catch (Exception e)
+			{
+				// just swallow this exception, there isn't much we can do about.
+				log.error("header/body check throws exception", e);
+			}
+			finally
+			{
+				this.remove(header);
+				getRequestCycle().setResponse(orgResponse);
 			}
 		}
 	}
