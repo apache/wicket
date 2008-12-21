@@ -78,6 +78,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         objonblur=obj.onblur;
         objonkeyup=obj.onkeyup;
         objonkeypress=obj.onkeypress;
+        objonfocus=obj.onfocus;
         
         // WICKET-1280
         objonchangeoriginal=obj.onchange; 
@@ -96,6 +97,17 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
           	if(typeof objonblur=="function")objonblur();
         }
       	
+      	obj.onfocus=function(event){
+            if (cfg.showListOnFocusGain) {
+                if (cfg.showCompleteListOnFocusGain) {
+                    updateChoices(true);
+                } else {
+                    updateChoices();
+                }
+            }
+          	if(typeof objonfocus=="function")objonfocus();
+        }
+
         obj.onkeydown=function(event){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_UP:
@@ -152,10 +164,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_ENTER:
 	                return killEvent(event);
-                case KEY_TAB:
-                    if (cfg.showListOnFocusGain)
-                        updateChoices();
-                    break;
+	            case KEY_TAB:
+	                break;
                 case KEY_UP:
                 case KEY_DOWN:
                 case KEY_ESC:
@@ -248,14 +258,25 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         return false;
     }
 
-    function updateChoices(){
+    function updateChoices(showAll){
         if(cfg.preselect==true){
         	selected = 0;
         }
         else{
         	selected=-1;
         }
-        localThrottler.throttle(getMenuId(), throttleDelay, actualUpdateChoices);
+        if (showAll) {
+            localThrottler.throttle(getMenuId(), throttleDelay, actualUpdateChoicesShowAll);
+        } else {
+            localThrottler.throttle(getMenuId(), throttleDelay, actualUpdateChoices);
+        }
+    }
+
+    function actualUpdateChoicesShowAll()
+    {
+    	showIndicator();
+       	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+       	request.get();
     }
 
     function actualUpdateChoices()
