@@ -78,8 +78,8 @@ public class FilterForm extends Form<Object>
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				AppendingStringBuffer script = new AppendingStringBuffer(
-					"<script>_filter_focus_restore('").append(getFocusTrackerFieldCssId()).append(
-					"');</script>");
+					"<script type='text/javascript'>_filter_focus_restore('").append(
+					getFocusTrackerFieldCssId()).append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});
@@ -92,7 +92,6 @@ public class FilterForm extends Form<Object>
 	{
 		return hidden.getPageRelativePath();
 	}
-
 
 	/**
 	 * @return IFilterStateLocator passed to this form
@@ -193,7 +192,5 @@ public class FilterForm extends Form<Object>
 		public void detach()
 		{
 		}
-
 	}
-
 }
