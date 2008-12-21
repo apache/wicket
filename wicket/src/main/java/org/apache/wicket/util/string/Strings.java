@@ -889,6 +889,9 @@ public final class Strings
 		if (ixSemiColon != -1)
 		{
 			int ixEnd = path.indexOf("?");
+			// there is no ? in the path so set it to the length (no arguments)
+			if (ixEnd == -1)
+				ixEnd = path.length();
 
 			// there is no ? in the path so set it to the length (no arguments)
 			if (ixEnd == -1)
