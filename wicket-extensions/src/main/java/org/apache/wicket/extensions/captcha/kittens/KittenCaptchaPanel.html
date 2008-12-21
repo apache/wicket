@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<wicket:head>
+	<script type="text/javascript">
+		function getEventX(element, event) {
+			if (event.offsetX != null) {
+				return event.offsetX;
+			}
+			return event.pageX - element.offsetLeft;
+		}
+		function getEventY(element, event) {
+			if (event.offsetY != null) {
+				return event.offsetY;
+			}
+			return event.pageY - element.offsetTop;
+		}
+		function getImage() {
+			return Wicket.$("imageContainer").getElementsByTagName("img")[0];
+			
+		}
+		function showLoadingIndicator() {
+			Wicket.$('loading').style.visibility="visible";
+		}
+		function hideLoadingIndicator() {
+			Wicket.$('loading').style.visibility="hidden";
+		}
+	</script>
+</wicket:head>
+<body>
+<wicket:panel>
+	<div wicket:id="animalSelectionLabel"></div>
+	<p/>
+	<div id="imageContainer">
+		<img src="" wicket:id="image"></img>
+		<p/>
+		<div id="loading">
+			<wicket:message key="pleaseWait"></wicket:message>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Wicket.Event.add(getImage(), "load", function() { hideLoadingIndicator(); } );
+	</script>	
+</wicket:panel>
+</body>
+</html>

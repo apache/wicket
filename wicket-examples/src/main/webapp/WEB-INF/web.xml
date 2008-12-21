@@ -412,6 +412,15 @@
             <param-value>org.apache.wicket.examples.dates.DatesApplication</param-value>
 		</init-param>
 	</filter>
+
+	<filter>
+		<filter-name>KittenCaptcha</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.kittenCaptcha.WicketApplication</param-value>
+		</init-param>
+	</filter>
 	
 	<!-- The WicketSesionFilter can be used to provide thread local access to servlets/ JSPs/ etc -->
 	<filter>
@@ -697,6 +706,13 @@
 	<filter-mapping>
 		<filter-name>DatesApplication</filter-name>
         <url-pattern>/dates/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>KittenCaptcha</filter-name>
+        <url-pattern>/kitten-captcha/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
