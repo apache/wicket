@@ -206,6 +206,16 @@ public class UrlValidatorTest extends TestCase
 	}
 
 	/**
+	 * test
+	 */
+	public void testValidator206()
+	{
+		UrlValidator urlVal = new UrlValidator(null, UrlValidator.ALLOW_ALL_SCHEMES);
+		assertTrue(urlVal.isValid("http://user@host:80/path"));
+		assertTrue(urlVal.isValid("http://user:password@host:80/path"));
+	}
+
+	/**
 	 * 
 	 * @param testPartsIndex
 	 * @param testParts

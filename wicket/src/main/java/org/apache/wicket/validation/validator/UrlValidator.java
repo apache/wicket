@@ -91,22 +91,14 @@ public class UrlValidator extends AbstractValidator<String>
 	 * This expression derived/taken from the BNF for URI (RFC2396).
 	 */
 	private static final String URL_PATTERN = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?";
-	// 12 3 4 5 6 7 8 9
 
 	/**
 	 * Schema / Protocol (<code>http:</code>, <code>ftp:</code>, <code>file:</code>, etc).
 	 */
 	private static final int PARSE_URL_SCHEME = 2;
-
-	/**
-	 * Includes hostname / ip and port number.
-	 */
-	private static final int PARSE_URL_AUTHORITY = 4;
-
+	private static final int PARSE_URL_AUTHORITY = 4; // Includes hostname / ip and port number.
 	private static final int PARSE_URL_PATH = 5;
-
 	private static final int PARSE_URL_QUERY = 7;
-
 	private static final int PARSE_URL_FRAGMENT = 9;
 
 	/**
@@ -114,17 +106,14 @@ public class UrlValidator extends AbstractValidator<String>
 	 */
 	private static final String SCHEME_PATTERN = "^[" + SCHEME_CHARS + "].*$";
 
-	private static final String AUTHORITY_PATTERN = "^([" + AUTHORITY_CHARS + "]*)(:\\d*)?(.*)?";
-	// 1 2 3 4
+	private static final String AUTHORITY_PATTERN = "^(.+(:.*)?@)?([" + AUTHORITY_CHARS +
+		"]*)(:\\d*)?(.*)?";
 
-	private static final int PARSE_AUTHORITY_HOST_IP = 1;
-
-	private static final int PARSE_AUTHORITY_PORT = 2;
-
-	/**
-	 * Should always be empty.
-	 */
-	private static final int PARSE_AUTHORITY_EXTRA = 3;
+	private static final int PARSE_AUTHORITY_USER = 1;
+	private static final int PARSE_AUTHORITY_PASSWORD = 2;
+	private static final int PARSE_AUTHORITY_HOST_IP = 3;
+	private static final int PARSE_AUTHORITY_PORT = 4;
+	private static final int PARSE_AUTHORITY_EXTRA = 5; // Should always be empty.
 
 	private static final String PATH_PATTERN = "^(/[-\\w:@&?=+,.!/~*'%$_;]*)?$";
 
@@ -348,7 +337,6 @@ public class UrlValidator extends AbstractValidator<String>
 		}
 
 		Matcher authorityMatcher = Pattern.compile(AUTHORITY_PATTERN).matcher(authority);
-
 		if (!authorityMatcher.matches())
 		{
 			return false;
