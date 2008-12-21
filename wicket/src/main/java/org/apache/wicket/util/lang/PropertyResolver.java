@@ -66,7 +66,7 @@ public final class PropertyResolver
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private final static Map<Object, Map<Class<?>, Map<String, IGetAndSet>>> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
+	private final static Map<Object, IClassCache> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
@@ -307,7 +307,7 @@ public final class PropertyResolver
 
 	private final static IGetAndSet getGetAndSetter(String exp, Class<?> clz)
 	{
-		Map<Class<?>, Map<String, IGetAndSet>> classesToGetAndSetters = getClassesToGetAndSetters();
+		IClassCache classesToGetAndSetters = getClassesToGetAndSetters();
 		Map<String, IGetAndSet> getAndSetters = classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
@@ -625,7 +625,10 @@ public final class PropertyResolver
 	}
 
 
-	private static interface IGetAndSet
+	/**
+	 * @author jcompagner
+	 */
+	public static interface IGetAndSet
 	{
 		/**
 		 * @param object
@@ -1312,7 +1315,7 @@ public final class PropertyResolver
 		}
 	}
 
-	private static Map<Class<?>, Map<String, IGetAndSet>> getClassesToGetAndSetters()
+	private static IClassCache getClassesToGetAndSetters()
 	{
 		Object key = null;
 		if (Application.exists())
@@ -1323,14 +1326,10 @@ public final class PropertyResolver
 		{
 			key = PropertyResolver.class;
 		}
-		Map<Class<?>, Map<String, IGetAndSet>> result = applicationToClassesToGetAndSetters.get(key);
+		IClassCache result = applicationToClassesToGetAndSetters.get(key);
 		if (result == null)
 		{
-			// Don't synchronize this - Doesn't matter if we create two of them,
-			// as it's only a cache and the first will go out of scope and get
-			// GC'ed.
-			result = Generics.newConcurrentHashMap(64);
-			applicationToClassesToGetAndSetters.put(key, result);
+			applicationToClassesToGetAndSetters.put(key, result = new DefaultClassCache());
 		}
 		return result;
 	}
@@ -1343,5 +1342,77 @@ public final class PropertyResolver
 	public static void destroy(Application application)
 	{
 		applicationToClassesToGetAndSetters.remove(application);
+	}
+
+
+	/**
+	 * Sets the {@link IClassCache} for the given application.
+	 * 
+	 * If the Application is null then it will be the default if no application is found. So if you
+	 * want to be sure that your {@link IClassCache} is handled in all situations then call this
+	 * method twice with your implementations. One time for the application and the second time with
+	 * null.
+	 * 
+	 * @param application
+	 *            to use or null if the default must be set.
+	 * @param classCache
+	 */
+	public static void setClassCache(Application application, IClassCache classCache)
+	{
+		if (application != null)
+		{
+			applicationToClassesToGetAndSetters.put(application, classCache);
+		}
+		else
+		{
+			applicationToClassesToGetAndSetters.put(PropertyResolver.class, classCache);
+		}
+	}
+
+
+	/**
+	 * An implementation of the class can be set on the
+	 * {@link PropertyResolver#setClassCacheCreator(Application, IClassCache)} method for a specific
+	 * application. This class cache can then be a special map with an eviction policy or do nothing
+	 * if nothing should be cached for the given class.
+	 * 
+	 * For example if you have proxy classes that are constantly created you could opt for not
+	 * caching those at all or have a special Map implementation that will evict that class at a
+	 * certain point.
+	 * 
+	 * @author jcompagner
+	 */
+	public static interface IClassCache
+	{
+		/**
+		 * Put the class into the cache, or if that class shouldn't be cached do nothing.
+		 * 
+		 * @param clz
+		 * @param values
+		 */
+		void put(Class<?> clz, Map<String, IGetAndSet> values);
+
+		/**
+		 * Returns the class map from the cache.
+		 * 
+		 * @param clz
+		 * @return the map of the given class
+		 */
+		Map<String, IGetAndSet> get(Class<?> clz);
+	}
+
+	private static class DefaultClassCache implements IClassCache
+	{
+		private final ConcurrentHashMap<Class<?>, Map<String, IGetAndSet>> map = Generics.newConcurrentHashMap(16);
+
+		public Map<String, IGetAndSet> get(Class<?> clz)
+		{
+			return map.get(clz);
+		}
+
+		public void put(Class<?> clz, Map<String, IGetAndSet> values)
+		{
+			map.put(clz, values);
+		}
 	}
 }
