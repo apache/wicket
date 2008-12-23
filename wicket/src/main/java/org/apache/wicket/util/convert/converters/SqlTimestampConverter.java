@@ -22,8 +22,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.util.convert.ConversionException;
-
 /**
  * Converts to {@link Timestamp}.
  * 
@@ -33,14 +31,45 @@ public class SqlTimestampConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
-	public Timestamp convertToObject(String value, Locale locale)
+	private final int dateFormat;
+
+	/**
+	 * Construct.
+	 */
+	public SqlTimestampConverter()
+	{
+		dateFormat = DateFormat.SHORT;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param dateFormat
+	 *            See java.text.DateFormat for details. Defaults to DateFormat.SHORT
+	 */
+	public SqlTimestampConverter(int dateFormat)
+	{
+		this.dateFormat = dateFormat;
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
+	 */
+	public Timestamp convertToObject(final String value, Locale locale)
 	{
 		if (value == null)
+		{
 			return null;
+		}
+
 		if (locale == null)
+		{
 			locale = Locale.getDefault();
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		}
+
+		DateFormat format = DateFormat.getTimeInstance(dateFormat, locale);
 		try
 		{
 			Date date = format.parse(value);
@@ -48,26 +77,38 @@ public class SqlTimestampConverter extends AbstractConverter
 		}
 		catch (ParseException e)
 		{
-			throw new ConversionException("Cannot parse '" + value + "' using format " + format).setSourceValue(
-				value)
-				.setTargetType(getTargetType())
-				.setConverter(this)
-				.setLocale(locale);
+			throw newConversionException("Cannot parse '" + value + "' using format " + format,
+				value, locale);
 		}
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#convertToString(java.lang.Object,
+	 *      java.util.Locale)
+	 */
 	@Override
 	public String convertToString(final Object value, Locale locale)
 	{
 		if (value == null)
+		{
 			return null;
+		}
+
 		if (locale == null)
+		{
 			locale = Locale.getDefault();
+		}
+
 		Timestamp timestamp = (Timestamp)value;
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		DateFormat format = DateFormat.getTimeInstance(dateFormat, locale);
 		return format.format(timestamp);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
 	@Override
 	protected Class<Timestamp> getTargetType()
 	{

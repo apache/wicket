@@ -32,9 +32,7 @@ import org.apache.wicket.util.convert.IConverter;
  */
 public abstract class AbstractConverter implements IConverter
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -91,7 +89,7 @@ public abstract class AbstractConverter implements IConverter
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(Object value, Locale locale)
+	public String convertToString(final Object value, final Locale locale)
 	{
 		if (value == null)
 		{
@@ -99,5 +97,4 @@ public abstract class AbstractConverter implements IConverter
 		}
 		return value.toString();
 	}
-
 }
