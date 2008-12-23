@@ -357,6 +357,12 @@ public abstract class MarkupContainer extends Component
 			// required.
 			throw ex;
 		}
+		catch (MarkupNotFoundException ex)
+		{
+			// re-throw it. The exception contains already all the information
+			// required.
+			throw ex;
+		}
 		catch (WicketRuntimeException ex)
 		{
 			// throw exception since there is no associated markup
@@ -1636,13 +1642,7 @@ public abstract class MarkupContainer extends Component
 				Component component = (Component)child;
 				component.detach();
 
-				if (child instanceof IComponentSourceProvider)
-				{
-					ComponentSourceEntry entry = new ComponentSourceEntry(this, component,
-						((IComponentSourceProvider)child).getComponentSource());
-					children_set(i, entry, false);
-				}
-				else if (component.isAuto())
+				if (component.isAuto())
 				{
 					children_remove(i);
 				}

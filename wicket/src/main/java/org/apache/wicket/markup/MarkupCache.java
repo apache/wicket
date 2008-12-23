@@ -223,9 +223,14 @@ public class MarkupCache implements IMarkupCache
 		if (throwException == true)
 		{
 			// throw exception since there is no associated markup
-			throw new MarkupNotFoundException("Markup not found. Component class: " +
-				container.getClass().getName() +
-				" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried");
+			throw new MarkupNotFoundException(
+				"Markup of type '" +
+					container.getMarkupType() +
+					"' for component '" +
+					getClass().getName() +
+					"' not found." +
+					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: " +
+					container.toString());
 		}
 
 		return null;
