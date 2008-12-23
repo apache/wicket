@@ -93,6 +93,7 @@ public class ReloadingClassLoader extends URLClassLoader
 				{
 					continue;
 				}
+				// FIXME it seems that only "includes" are handled. "Excludes" are ignored
 				boolean isInclude = rawpattern.substring(0, 1).equals("+");
 				String pattern = rawpattern.substring(1);
 				if (WildcardMatcherHelper.match(pattern, name) != null)
@@ -210,10 +211,11 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * Gets a resource from this <code>ClassLoader</class>.  If the
 	 * resource does not exist in this one, we check the parent.
 	 * Please note that this is the exact opposite of the
-	 * <code>ClassLoader</code> spec.  We use it to work around
-	 * inconsistent class loaders from third party vendors.
-	 *
-	 * @param name of resource
+	 * <code>ClassLoader</code> spec. We use it to work around inconsistent class loaders from third
+	 * party vendors.
+	 * 
+	 * @param name
+	 *            of resource
 	 */
 	@Override
 	public final URL getResource(final String name)
@@ -232,20 +234,22 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * Loads the class from this <code>ClassLoader</class>.  If the
 	 * class does not exist in this one, we check the parent.  Please
 	 * note that this is the exact opposite of the
-	 * <code>ClassLoader</code> spec.  We use it to load the class
-	 * from the same classloader as WicketFilter or WicketServlet.
-	 * When found, the class file is watched for modifications.
-	 *
-	 * @param     name the name of the class
-	 * @param     resolve if <code>true</code> then resolve the class
-	 * @return    the resulting <code>Class</code> object
-	 * @exception ClassNotFoundException if the class could not be found
+	 * <code>ClassLoader</code> spec. We use it to load the class from the same classloader as
+	 * WicketFilter or WicketServlet. When found, the class file is watched for modifications.
+	 * 
+	 * @param name
+	 *            the name of the class
+	 * @param resolve
+	 *            if <code>true</code> then resolve the class
+	 * @return the resulting <code>Class</code> object
+	 * @exception ClassNotFoundException
+	 *                if the class could not be found
 	 */
 	@Override
-	public final Class< ? > loadClass(String name, boolean resolve) throws ClassNotFoundException
+	public final Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
 	{
 		// First check if it's already loaded
-		Class< ? > clazz = findLoadedClass(name);
+		Class<?> clazz = findLoadedClass(name);
 
 		if (clazz == null)
 		{
@@ -308,7 +312,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param clz
 	 *            the class to watch
 	 */
-	private void watchForModifications(Class< ? > clz)
+	private void watchForModifications(Class<?> clz)
 	{
 		// Watch class in the future
 		Iterator<URL> locationsIterator = urls.iterator();

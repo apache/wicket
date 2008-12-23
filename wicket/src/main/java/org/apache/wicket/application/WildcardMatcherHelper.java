@@ -30,29 +30,28 @@ public class WildcardMatcherHelper
 	// ~ Static fields/initializers
 	// -----------------------------------------------------------------
 
-	/** Default path separator: "/" */
+	/** Escape character */
 	public static final char ESC = '\\';
 
-	/** Default path separator: "/" */
-	public static final char PATHSEP = '/';
+	/** Default path separator: "." */
+	public static final char PATHSEP = '.';
 
-	/** Default path separator: "/" */
+	/** any char */
 	public static final char STAR = '*';
 
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
 
 	/**
-	 * Match a pattern against a string and isolates wildcard replacement into a <code>Map</code>.
-	 * <br>
+	 * Match a pattern against a string and isolates wildcard replacement into a <code>Map</code>. <br>
 	 * Here is how the matching algorithm works:
 	 * 
 	 * <ul>
-	 * <li> The '*' character, meaning that zero or more characters (excluding the path separator
-	 * '/') are to be matched. </li>
-	 * <li> The '**' sequence, meaning that zero or more characters (including the path separator
-	 * '/') are to be matched. </li>
-	 * <li> The '\*' sequence is honored as a literal '*' character, not a wildcard </li>
+	 * <li>The '*' character, meaning that zero or more characters (excluding the path separator
+	 * '/') are to be matched.</li>
+	 * <li>The '**' sequence, meaning that zero or more characters (including the path separator
+	 * '/') are to be matched.</li>
+	 * <li>The '\*' sequence is honored as a literal '*' character, not a wildcard</li>
 	 * </ul>
 	 * <br>
 	 * When more than two '*' characters, not separated by another character, are found their value
@@ -76,9 +75,9 @@ public class WildcardMatcherHelper
 	 *            The string to math against the pattern
 	 * 
 	 * @return a <code>Map</code> containing the representation of the extracted pattern. The
-	 *         extracted patterns are keys in the <code>Map</code> from left to right beginning
-	 *         with "1" for the left most, "2" for the next, a.s.o. The key "0" is the string
-	 *         itself. If the return value is null, string does not match to the pattern .
+	 *         extracted patterns are keys in the <code>Map</code> from left to right beginning with
+	 *         "1" for the left most, "2" for the next, a.s.o. The key "0" is the string itself. If
+	 *         the return value is null, string does not match to the pattern .
 	 */
 	public static Map<String, String> match(final String pat, final String str)
 	{
