@@ -45,10 +45,10 @@ import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a field
- * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
- * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
- * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
+ * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a
+ * field for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours
+ * field depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the
+ * visibility of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -321,8 +321,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 				TimeZone zone = getClientTimeZone();
 				if (zone != null)
 				{
-					date.setMillis(DateTimeZone.getDefault().getMillisKeepLocal(
-							DateTimeZone.forTimeZone(zone), date.getMillis()));
+					date.setMillis(getMillis(zone, TimeZone.getDefault(), date.getMillis()));
 				}
 
 				// the date will be in the server's timezone
@@ -338,6 +337,12 @@ public class DateTimeField extends FormComponentPanel<Date>
 		{
 			setConvertedInput(null);
 		}
+	}
+
+	private long getMillis(TimeZone to, TimeZone from, long instant)
+	{
+		return DateTimeZone.forTimeZone(from).getMillisKeepLocal(DateTimeZone.forTimeZone(to),
+				instant);
 	}
 
 	/**
@@ -400,7 +405,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 			// instantiate with the previously set date
 			if (zone != null)
 			{
-				date.setZone(DateTimeZone.forTimeZone(zone));
+				date.setMillis(getMillis(TimeZone.getDefault(), zone, date.getMillis()));
 			}
 
 			if (use12HourFormat)
