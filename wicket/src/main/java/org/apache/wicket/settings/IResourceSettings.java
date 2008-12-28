@@ -303,17 +303,29 @@ public interface IResourceSettings
 	 */
 	public boolean getAddLastModifiedTimeToResourceReferenceUrl();
 
-
 	/**
-	 * placeholder string for '..' within resource urls (which will be crippled by the browser and
-	 * not work anymore)
+	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
+	 * not work anymore). Note that by default the placeholder string is empty '' and thus will not
+	 * allow to access parent folders. That is by purpose and for security reasons (see
+	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
+	 * Resources additionally are protected by a
+	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
+	 * implementation such as {@link org.apache.wicket.resource.resourceGuard.PackageResourceGuard
+	 * PackageResourceGuard} which you may use or extend based on your needs.
 	 * 
 	 * @return placeholder
 	 */
 	CharSequence getParentFolderPlaceholder();
 
 	/**
-	 * set placeholder for '..' inside resource urls
+	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
+	 * not work anymore). Note that by default the placeholder string is empty '' and thus will not
+	 * allow to access parent folders. That is by purpose and for security reasons (see
+	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
+	 * Resources additionally are protected by a
+	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
+	 * implementation such as {@link org.apache.wicket.resource.resourceGuard.PackageResourceGuard
+	 * PackageResourceGuard} which you may use or extend based on your needs.
 	 * 
 	 * @see #getParentFolderPlaceholder()
 	 * 

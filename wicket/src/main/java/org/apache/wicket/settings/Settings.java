@@ -318,7 +318,7 @@ public final class Settings
 	/**
 	 * escape string for '..' within resource keys
 	 */
-	private CharSequence parentFolderPlaceholder = "$up$";
+	private CharSequence parentFolderPlaceholder = null;
 
 	/**
 	 * Create the application settings, carrying out any necessary initializations.

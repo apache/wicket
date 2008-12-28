@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +72,21 @@ public class SharedResources
 			.getParentFolderPlaceholder();
 
 		final String extension = Files.extension(path);
+		String basePath = Files.basePath(path, extension);
+
+		if (Strings.isEmpty(parentEscape) &&
+			(Application.get().getConfigurationType() == Application.DEVELOPMENT) &&
+			basePath.contains("../"))
+		{
+			log.error("----------------------------------------------------------------------------------------");
+			log.error("Your path looks like: " + path);
+			log.error("For security reasons moving up '../' is disabled by default. Please see");
+			log.error("IResourceSettings.getParentFolderPlaceholder() and PackageResourceGuard for more details");
+			log.error("----------------------------------------------------------------------------------------");
+		}
+
 		// get relative path to resource, replace '..' with escape sequence
-		final String basePath = Files.basePath(path, extension).replace("../", parentEscape + "/");
+		basePath = basePath.replace("../", parentEscape + "/");
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 
@@ -113,7 +128,7 @@ public class SharedResources
 	private final Map<String, WeakReference<Class<?>>> aliasClassMap = new HashMap<String, WeakReference<Class<?>>>();
 
 	/** Map of shared resources states */
-	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
+	private final ConcurrentHashMap<String, Resource> resourceMap = new ConcurrentHashMap<String, Resource>();
 
 	/**
 	 * Construct.
@@ -144,16 +159,11 @@ public class SharedResources
 	{
 		// Store resource
 		final String key = resourceKey(scope, name, locale, style);
-		synchronized (resourceMap)
+		if (resourceMap.putIfAbsent(key, resource) == null)
 		{
-			Resource value = resourceMap.get(key);
-			if (value == null)
+			if (log.isDebugEnabled())
 			{
-				resourceMap.put(key, resource);
-				if (log.isDebugEnabled())
-				{
-					log.debug("added shared resource " + key);
-				}
+				log.debug("added shared resource " + key);
 			}
 		}
 	}
@@ -204,6 +214,12 @@ public class SharedResources
 	public final Resource get(final Class<?> scope, final String name, final Locale locale,
 		final String style, boolean exact)
 	{
+		if (exact)
+		{
+			final String resourceKey = resourceKey(scope, name, locale, style);
+			return get(resourceKey);
+		}
+
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
@@ -212,10 +228,6 @@ public class SharedResources
 			if (resource != null)
 			{
 				return resource;
-			}
-			if (exact)
-			{
-				return null;
 			}
 		}
 
@@ -228,10 +240,6 @@ public class SharedResources
 			{
 				return resource;
 			}
-			if (exact)
-			{
-				return null;
-			}
 		}
 
 		// 3. Look for entry without locale
@@ -242,10 +250,6 @@ public class SharedResources
 			if (resource != null)
 			{
 				return resource;
-			}
-			if (exact)
-			{
-				return null;
 			}
 		}
 
@@ -263,10 +267,7 @@ public class SharedResources
 	 */
 	public final Resource get(final String key)
 	{
-		synchronized (resourceMap)
-		{
-			return resourceMap.get(key);
-		}
+		return resourceMap.get(key);
 	}
 
 	/**
@@ -309,10 +310,7 @@ public class SharedResources
 	 */
 	public final void remove(final String key)
 	{
-		synchronized (resourceMap)
-		{
-			resourceMap.remove(key);
-		}
+		resourceMap.remove(key);
 	}
 
 	/**

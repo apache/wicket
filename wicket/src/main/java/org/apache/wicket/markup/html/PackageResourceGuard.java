@@ -19,19 +19,32 @@ package org.apache.wicket.markup.html;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation of {@link IPackageResourceGuard}. By default, the extensions
- * 'properties', 'class' and 'java' are blocked.
+ * Default implementation of {@link IPackageResourceGuard}. By default, the extensions 'properties',
+ * 'class' and 'java' are blocked and files like 'log4j.xml' and 'applicationContext.xml'
+ * 
+ * A more secure implementation which by default denies access to any resource is
+ * {@link SecurePackageResourceGuard}
  * 
  * @author eelcohillenius
  */
 public class PackageResourceGuard implements IPackageResourceGuard
 {
-	/** Set of extensions that are not allowed access. */
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(PackageResourceGuard.class);
+
+	/** Set of extensions that are denied access. */
 	private Set<String> blockedExtensions = new HashSet<String>(4);
+
+	/** Set of filenames that are denied access. */
+	private Set<String> blockedFiles = new HashSet<String>(4);
 
 	/**
 	 * Construct.
@@ -41,13 +54,16 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		blockedExtensions.add("properties");
 		blockedExtensions.add("class");
 		blockedExtensions.add("java");
+
+		blockedFiles.add("applicationContext.xml");
+		blockedFiles.add("log4j.xml");
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public boolean accept(Class< ? > scope, String path)
+	public boolean accept(Class<?> scope, String path)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		return acceptAbsolutePath(absolutePath);
@@ -74,12 +90,41 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		{
 			ext = path.substring(ixExtension + 1).toLowerCase();
 		}
+
 		if ("html".equals(ext) &&
-			getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
+			getClass().getClassLoader().getResource(path.replaceAll("\\.html", ".class")) != null)
 		{
+			log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
+				path);
 			return false;
 		}
-		return acceptExtension(ext);
+
+		if (acceptExtension(ext) == false)
+		{
+			log.warn("Access denied to shared (static) resource because of the file extension: " +
+				path);
+			return false;
+		}
+
+		String filename = Strings.lastPathComponent(path, '/');
+		if (acceptFile(filename) == false)
+		{
+			log.warn("Access denied to shared (static) resource because of the file name: " + path);
+			return false;
+		}
+
+		// Only if a placeholder, e.g. $up$ is defined, access to parent directories is allowed
+		if (Strings.isEmpty(Application.get().getResourceSettings().getParentFolderPlaceholder()))
+		{
+			if (path.contains(".."))
+			{
+				log.warn("Access to parent directories via '..' is by default disabled for shared resources: " +
+					path);
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -96,9 +141,21 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	}
 
 	/**
-	 * Gets the set of extensions that are not allowed access.
+	 * Whether the provided filename is accepted.
 	 * 
-	 * @return The set of extensions that are not allowed access
+	 * @param file
+	 *            filename
+	 * @return True if accepted, false otherwise.
+	 */
+	protected boolean acceptFile(String file)
+	{
+		return (!blockedFiles.contains(file));
+	}
+
+	/**
+	 * Gets the set of extensions that are denied access.
+	 * 
+	 * @return The set of extensions that are denied access
 	 */
 	protected final Set<String> getBlockedExtensions()
 	{
@@ -106,13 +163,34 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	}
 
 	/**
-	 * Sets the set of extensions that are not allowed access.
+	 * Gets the set of extensions that are denied access.
+	 * 
+	 * @return The set of extensions that are denied access
+	 */
+	protected final Set<String> getBlockedFiles()
+	{
+		return blockedFiles;
+	}
+
+	/**
+	 * Sets the set of extensions that are denied access.
 	 * 
 	 * @param blockedExtensions
-	 *            Set of extensions that are not allowed access
+	 *            Set of extensions that are denied access
 	 */
 	protected final void setBlockedExtensions(Set<String> blockedExtensions)
 	{
 		this.blockedExtensions = blockedExtensions;
+	}
+
+	/**
+	 * Sets the set of filenames that are denied access.
+	 * 
+	 * @param blockedFiles
+	 *            Set of extensions that are denied access
+	 */
+	protected final void setBlockedFiles(Set<String> blockedFiles)
+	{
+		this.blockedFiles = blockedFiles;
 	}
 }

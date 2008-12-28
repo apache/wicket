@@ -40,7 +40,7 @@ public final class Packages
 	 */
 	public static String absolutePath(final Class<?> p, final String relativePath)
 	{
-		String packName = extractPackageName(p);
+		String packName = (p != null ? extractPackageName(p) : "");
 		return absolutePath(packName, relativePath);
 	}
 

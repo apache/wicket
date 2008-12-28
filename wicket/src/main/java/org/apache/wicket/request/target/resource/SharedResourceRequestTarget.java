@@ -28,6 +28,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,20 +148,21 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					{
 						scope = resolver.resolveClass(className);
 					}
-					final CharSequence escapeString = application.getResourceSettings()
-						.getParentFolderPlaceholder();
+
 					// get path component of resource key, replace '..' with escape sequence to
 					// prevent crippled urls in browser
-					String path = resourceKey.substring(ix + 1).replace(escapeString, "..");
+					final CharSequence escapeString = application.getResourceSettings()
+						.getParentFolderPlaceholder();
+
+					String path = resourceKey.substring(ix + 1);
+					if (Strings.isEmpty(escapeString) == false)
+					{
+						path = path.replace(escapeString, "..");
+					}
 
 					if (PackageResource.exists(scope, path, null, null))
 					{
-						PackageResource packageResource = PackageResource.get(scope, path);
-						if (sharedResources.get(resourceKey) == null)
-						{
-							sharedResources.add(scope, path, null, null, packageResource);
-						}
-						resource = packageResource;
+						resource = PackageResource.get(scope, path);
 					}
 				}
 				catch (Exception e)
@@ -175,17 +177,18 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		// if resource is still null, it doesn't exist
 		if (resource == null)
 		{
+			String msg = "shared resource " + resourceKey + " not found or not allowed access";
 			Response response = requestCycle.getResponse();
 			if (response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
 					HttpServletResponse.SC_NOT_FOUND);
-				log.error("shared resource " + resourceKey + " not found");
+				log.error(msg);
 				return;
 			}
 			else
 			{
-				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+				throw new WicketRuntimeException(msg);
 			}
 		}
 

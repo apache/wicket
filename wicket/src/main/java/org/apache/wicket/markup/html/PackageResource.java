@@ -40,6 +40,7 @@ import org.apache.wicket.SharedResources;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
@@ -64,10 +65,14 @@ import org.slf4j.LoggerFactory;
  * is in to get a package resource.
  * </p>
  * 
+ * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
+ * {@link IResourceSettings#getPackageResourceGuard()} as well.
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Juergen Donnerstag
  */
-public class PackageResource extends WebResource implements IModifiable
+public class PackageResource extends WebResource implements IModifiable, IPackageResourceGuard
 {
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
@@ -121,10 +126,9 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
 	 *            &quot;js&quot; from that package).
 	 * 
-	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
-	 *             {@link PackageResource package resources} are automatically tried and bound as
-	 *             shared resources so that they don't have to be pre-registered anymore. Will be
-	 *             removed in 2.0
+	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op. {@link PackageResource
+	 *             package resources} are automatically tried and bound as shared resources so that
+	 *             they don't have to be pre-registered anymore. Will be removed in 2.0
 	 */
 	@Deprecated
 	public static void bind(Application application, Class<?> scope, Pattern pattern)
@@ -148,10 +152,9 @@ public class PackageResource extends WebResource implements IModifiable
 	 * @param recurse
 	 *            Whether this method should recurse into sub packages
 	 * 
-	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
-	 *             {@link PackageResource package resources} are automatically tried and bound as
-	 *             shared resources so that they don't have to be pre-registered anymore. Will be
-	 *             removed in 2.0
+	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op. {@link PackageResource
+	 *             package resources} are automatically tried and bound as shared resources so that
+	 *             they don't have to be pre-registered anymore. Will be removed in 2.0
 	 */
 	@Deprecated
 	public static void bind(Application application, Class<?> scope, Pattern pattern,
@@ -416,9 +419,31 @@ public class PackageResource extends WebResource implements IModifiable
 			true);
 		if (resource == null)
 		{
-			resource = new PackageResource(scope, path, locale, style);
+			resource = newPackageResource(scope, path, locale, style);
+			Application.get().getSharedResources().add(scope, path, locale, style, resource);
 		}
 		return resource;
+	}
+
+	/**
+	 * Create a new PackageResource
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @return The resource
+	 */
+	protected static PackageResource newPackageResource(final Class<?> scope, final String path,
+		final Locale locale, final String style)
+	{
+		return new PackageResource(scope, path, locale, style);
 	}
 
 	/* removed in 2.0 */
@@ -476,13 +501,11 @@ public class PackageResource extends WebResource implements IModifiable
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, path);
 
-		IPackageResourceGuard guard = Application.get()
-			.getResourceSettings()
-			.getPackageResourceGuard();
-		if (!guard.accept(scope, path))
+		if (!accept(scope, path))
 		{
-			throw new PackageResourceBlockedException("package resource " + absolutePath +
-				" may not be accessed");
+			throw new PackageResourceBlockedException(
+				"Access denied to (static) package resource " + absolutePath +
+					". See IPackageResourceGuard");
 		}
 
 		scopeName = scope.getName();
@@ -626,5 +649,18 @@ public class PackageResource extends WebResource implements IModifiable
 		}
 		return lastModifiedTime;
 
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
+	 *      java.lang.String)
+	 */
+	public boolean accept(Class<?> scope, String path)
+	{
+		IPackageResourceGuard guard = Application.get()
+			.getResourceSettings()
+			.getPackageResourceGuard();
+
+		return guard.accept(scope, path);
 	}
 }

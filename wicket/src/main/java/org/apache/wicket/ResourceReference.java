@@ -80,7 +80,7 @@ public class ResourceReference implements IClusterable
 	 * @param name
 	 *            The name of the resource
 	 */
-	public ResourceReference(final Class< ? > scope, final String name)
+	public ResourceReference(final Class<?> scope, final String name)
 	{
 		this(scope, name, null, null);
 	}
@@ -100,7 +100,7 @@ public class ResourceReference implements IClusterable
 	 * @param style
 	 *            The Style of the PackageResource
 	 */
-	public ResourceReference(final Class< ? > scope, final String name, Locale locale, String style)
+	public ResourceReference(final Class<?> scope, final String name, Locale locale, String style)
 	{
 		scopeName = scope.getName();
 		this.name = name;
@@ -211,7 +211,7 @@ public class ResourceReference implements IClusterable
 	/**
 	 * @return Scope
 	 */
-	public final Class< ? > getScope()
+	public final Class<?> getScope()
 	{
 		return Classes.resolveClass(scopeName);
 	}

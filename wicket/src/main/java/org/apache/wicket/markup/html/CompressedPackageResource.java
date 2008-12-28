@@ -26,7 +26,6 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.SharedResources;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -176,8 +175,7 @@ public class CompressedPackageResource extends PackageResource
 	}
 
 	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
-	 * criteria.
+	 * Create a new PackageResource
 	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
@@ -190,23 +188,11 @@ public class CompressedPackageResource extends PackageResource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return The resource
-	 * @throws PackageResourceBlockedException
-	 *             when the target resource is not accepted by {@link IPackageResourceGuard the
-	 *             package resource guard}.
 	 */
-	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
-		final String style)
+	protected static PackageResource newPackageResource(final Class<?> scope, final String path,
+		final Locale locale, final String style)
 	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
-
-		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-			true);
-		if (resource == null)
-		{
-			resource = new CompressedPackageResource(scope, path, locale, style);
-			sharedResources.add(scope, path, locale, style, resource);
-		}
-		return resource;
+		return new CompressedPackageResource(scope, path, locale, style);
 	}
 
 	/**
