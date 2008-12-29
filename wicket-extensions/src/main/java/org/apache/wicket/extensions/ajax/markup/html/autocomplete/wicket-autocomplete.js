@@ -259,12 +259,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
 
     function updateChoices(showAll){
-        if(cfg.preselect==true){
-        	selected = 0;
-        }
-        else{
-        	selected=-1;
-        }
+       	selected=-1;
         if (showAll) {
             localThrottler.throttle(getMenuId(), throttleDelay, actualUpdateChoicesShowAll);
         } else {
@@ -380,7 +375,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         if(elementCount>0){
-            showAutoComplete();
+        	 if(cfg.preselect==true){
+        		 selected = 0;
+        	 }            
+        	 showAutoComplete();
         } else {
             hideAutoComplete();
         }
