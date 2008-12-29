@@ -700,14 +700,19 @@ public final class AutoLinkResolver implements IComponentResolver
 		tagNameToTagReferenceResolvers.put("link", hrefTagReferenceResolver);
 		tagNameToTagReferenceResolvers.put("script", srcTagReferenceResolver);
 		tagNameToTagReferenceResolvers.put("img", srcTagReferenceResolver);
+		tagNameToTagReferenceResolvers.put("input", srcTagReferenceResolver);
+		tagNameToTagReferenceResolvers.put("embed", srcTagReferenceResolver);
 
 		// register autolink resolver delegates
 		tagNameToAutolinkResolverDelegates.put("a", new AnchorResolverDelegate());
 		tagNameToAutolinkResolverDelegates.put("link",
 			new ResourceReferenceResolverDelegate("href"));
-		tagNameToAutolinkResolverDelegates.put("script", new ResourceReferenceResolverDelegate(
-			"src"));
-		tagNameToAutolinkResolverDelegates.put("img", new ResourceReferenceResolverDelegate("src"));
+		ResourceReferenceResolverDelegate srcResRefResolver = new ResourceReferenceResolverDelegate(
+			"src");
+		tagNameToAutolinkResolverDelegates.put("script", srcResRefResolver);
+		tagNameToAutolinkResolverDelegates.put("img", srcResRefResolver);
+		tagNameToAutolinkResolverDelegates.put("input", srcResRefResolver);
+		tagNameToAutolinkResolverDelegates.put("embed", srcResRefResolver);
 	}
 
 	/**
