@@ -227,7 +227,7 @@ public class MarkupCache implements IMarkupCache
 				"Markup of type '" +
 					container.getMarkupType() +
 					"' for component '" +
-					getClass().getName() +
+					container.getClass().getName() +
 					"' not found." +
 					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: " +
 					container.toString());
