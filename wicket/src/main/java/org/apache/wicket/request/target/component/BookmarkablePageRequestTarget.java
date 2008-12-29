@@ -248,7 +248,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 				String redirectUrl = processor.getRequestCodingStrategy()
 					.encode(requestCycle, this)
 					.toString();
-				if (redirectUrl.startsWith("./"))
+				// WICKET-1916 - if we are redirecting to homepage, then redirectUrl equals "./",
+				// and if we strip it to blank, no redirect occurs
+				if (redirectUrl.startsWith("./") && redirectUrl.length() > 2)
 				{
 					redirectUrl = redirectUrl.substring(2);
 				}
