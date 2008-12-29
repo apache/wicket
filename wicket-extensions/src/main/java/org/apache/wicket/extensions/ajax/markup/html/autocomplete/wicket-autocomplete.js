@@ -278,8 +278,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     {
     	showIndicator();
         var value = wicketGet(elementId).value;
-       	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
-       	request.get();
+       	var request = new Wicket.Ajax.Request(callbackUrl+(callbackUrl.indexOf("?")>-1 ? "&" : "?") + "q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");       	request.get();
     }
     
     function showIndicator() {
