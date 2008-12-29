@@ -29,6 +29,7 @@ import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
@@ -37,6 +38,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -890,15 +892,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public Component(final String id)
 	{
-		setId(id);
-		getApplication().notifyComponentInstantiationListeners(this);
-
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
-		{
-			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
-				"constructed")));
-		}
+		this(id, null);
 	}
 
 	/**
@@ -915,8 +909,38 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		this(id);
-		setModelImpl(wrap(model));
+		setId(id);
+		getApplication().notifyComponentInstantiationListeners(this);
+
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
+		{
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
+				"constructed")));
+		}
+
+		if (model != null)
+		{
+			setModelImpl(wrap(model));
+		}
+
+		// Any component is allowed to have associated *.js or *.css file which are automatically
+		// added to the header section of the page.
+		// ignore anonymous classes and internal components
+		String name = this.getClass().getSimpleName();
+		if ((name != null) &&
+			((this instanceof Page) || ((id != null) && (id.length() > 0) && (id.charAt(0) != '_'))))
+		{
+			if (PackageResource.exists(this.getClass(), name + ".css", getLocale(), getStyle()))
+			{
+				add(HeaderContributor.forCss(this.getClass(), name + ".css"));
+			}
+
+			if (PackageResource.exists(this.getClass(), name + ".js", getLocale(), getStyle()))
+			{
+				add(HeaderContributor.forJavaScript(this.getClass(), name + ".js"));
+			}
+		}
 	}
 
 	/**
@@ -3634,9 +3658,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
-     * <p>
+	 * <p>
 	 * Called when a request begins.
-     * </p>
+	 * </p>
 	 * 
 	 * @Deprecated use {@link #onBeforeRender()} instead
 	 */
@@ -3647,9 +3671,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
-     * <p>
+	 * <p>
 	 * Called when a request ends.
-     * </p>
+	 * </p>
 	 * 
 	 * @Deprecated use {@link #onBeforeRender()} instead
 	 * 
@@ -3661,9 +3685,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
-     * <p>
+	 * <p>
 	 * Called anytime a model is changed via setModel or setModelObject.
-     * </p>
+	 * </p>
 	 */
 	protected void internalOnModelChanged()
 	{
@@ -4222,7 +4246,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	final void setId(final String id)
 	{
-		if (id == null && !(this instanceof Page))
+		if ((id == null) && !(this instanceof Page))
 		{
 			throw new WicketRuntimeException("Null component id is not allowed.");
 		}

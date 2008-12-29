@@ -37,7 +37,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 */
 	public WebMarkupContainer(final String id)
 	{
-		super(id);
+		this(id, null);
 	}
 
 	/**

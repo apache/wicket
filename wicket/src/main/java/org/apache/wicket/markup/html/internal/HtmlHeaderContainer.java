@@ -62,7 +62,6 @@ import org.apache.wicket.response.StringResponse;
  * </ul>
  * 
  * @author Juergen Donnerstag
- * 
  */
 public class HtmlHeaderContainer extends WebMarkupContainer
 {
@@ -171,12 +170,16 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			if (output.length() > 0)
 			{
 				if (renderOpenAndCloseTags())
+				{
 					webResponse.write("<head>");
+				}
 
 				webResponse.write(output);
 
 				if (renderOpenAndCloseTags())
+				{
 					webResponse.write("</head>");
+				}
 			}
 		}
 		finally
@@ -186,6 +189,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		}
 	}
 
+	/**
+	 * 
+	 * @return True if open and close tag are to be rendered.
+	 */
 	protected boolean renderOpenAndCloseTags()
 	{
 		return true;
@@ -209,6 +216,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		final HtmlHeaderContainer container)
 	{
 		page.renderHead(container);
+
 		// Make sure all Components interested in contributing to the header
 		// and there attached behaviors are asked.
 		page.visitChildren(new IVisitor<Component>()
@@ -223,10 +231,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 					component.renderHead(container);
 					return IVisitor.CONTINUE_TRAVERSAL;
 				}
-				else
-				{
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-				}
+				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
 		});
 	}
@@ -320,5 +325,4 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		}
 		return headerResponse;
 	}
-
 }

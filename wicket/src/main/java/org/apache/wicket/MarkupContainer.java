@@ -102,7 +102,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public MarkupContainer(final String id)
 	{
-		super(id);
+		this(id, null);
 	}
 
 	/**

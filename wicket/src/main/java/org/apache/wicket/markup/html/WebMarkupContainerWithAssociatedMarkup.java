@@ -40,7 +40,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	 */
 	public WebMarkupContainerWithAssociatedMarkup(final String id)
 	{
-		super(id);
+		this(id, null);
 	}
 
 	/**

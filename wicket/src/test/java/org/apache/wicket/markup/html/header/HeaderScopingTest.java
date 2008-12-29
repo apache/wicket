@@ -20,7 +20,6 @@ import org.apache.wicket.WicketTestCase;
 
 /**
  * 
- * @author Matheus
  */
 public class HeaderScopingTest extends WicketTestCase
 {
@@ -41,5 +40,14 @@ public class HeaderScopingTest extends WicketTestCase
 	public void test_1() throws Exception
 	{
 		executeTest(MyPage.class, "MyPageExpectedResult.html");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void test_2() throws Exception
+	{
+		executeTest(MyPage2.class, "MyPage2_ExpectedResult.html");
 	}
 }
