@@ -178,12 +178,13 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		if (resource == null)
 		{
 			String msg = "shared resource " + resourceKey + " not found or not allowed access";
+			log.info(msg);
+
 			Response response = requestCycle.getResponse();
 			if (response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
 					HttpServletResponse.SC_NOT_FOUND);
-				log.error(msg);
 				return;
 			}
 			else
