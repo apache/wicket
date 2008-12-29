@@ -339,6 +339,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     	var input=wicketGet(elementId);
    		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
+   			Wicket.Ajax.invokePostCallHandlers();
    			return;
    		}
     
