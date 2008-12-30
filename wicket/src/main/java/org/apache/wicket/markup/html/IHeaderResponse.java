@@ -143,10 +143,10 @@ public interface IHeaderResponse
 	/**
 	 * Returns whether the given object has been marked as rendered.
 	 * <ul>
-	 * <li>Methods <code>renderJavascriptReference</code> and <code>renderCSSReference</code>
-	 * mark the specified {@link ResourceReference} as rendered.
-	 * <li>Method <code>renderJavascript</code> marks List of two elements (first is javascript
-	 * body CharSequence and second is id) as rendered.
+	 * <li>Methods <code>renderJavascriptReference</code> and <code>renderCSSReference</code> mark
+	 * the specified {@link ResourceReference} as rendered.
+	 * <li>Method <code>renderJavascript</code> marks List of two elements (first is javascript body
+	 * CharSequence and second is id) as rendered.
 	 * <li>Method <code>renderString</code> marks the whole string as rendered.
 	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary object as rendered
 	 * </ul>
@@ -189,7 +189,7 @@ public interface IHeaderResponse
 	 * @param event
 	 * @param javascript
 	 */
-	public void renderOnEventJavacript(String target, String event, String javascript);
+	public void renderOnEventJavascript(String target, String event, String javascript);
 
 	/**
 	 * Mark Header rendering is completed and subsequent usage will be ignored. If some kind of

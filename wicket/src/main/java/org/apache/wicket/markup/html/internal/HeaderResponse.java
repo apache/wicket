@@ -279,7 +279,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			renderOnEventJavacript("window", "domready", javascript);
+			renderOnEventJavascript("window", "domready", javascript);
 		}
 	}
 
@@ -294,16 +294,16 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			renderOnEventJavacript("window", "load", javascript);
+			renderOnEventJavascript("window", "load", javascript);
 		}
 	}
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavacript(java.lang.String,
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavascript(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
-	public void renderOnEventJavacript(String target, String event, String javascript)
+	public void renderOnEventJavascript(String target, String event, String javascript)
 	{
 		if (!closed)
 		{
