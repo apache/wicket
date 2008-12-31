@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -28,6 +23,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -123,7 +124,14 @@ public class MockWebApplication
 	private final ServletContext context;
 
 	private final WicketFilter filter;
-	private Set<Cookie> cookiesOfThisSession = new HashSet<Cookie>();
+
+	private final Set<Cookie> cookiesOfThisSession = new HashSet<Cookie>();
+
+	/**
+	 * Must be true to create add a wicket-ajax header to the next request. Will be immediately
+	 * reset to false
+	 */
+	private boolean createAjaxRequest = false;
 
 	/**
 	 * Create the mock http tester that can be used for testing.
@@ -393,8 +401,7 @@ public class MockWebApplication
 	@SuppressWarnings("deprecation")
 	public <C extends Page> void processRequestCycle(final Class<C> pageClass, PageParameters params)
 	{
-		setupRequestAndResponse();
-		final WebRequestCycle cycle = createRequestCycle();
+		final WebRequestCycle cycle = setupRequestAndResponse();
 		try
 		{
 			BaseWicketTester.callOnBeginRequest(cycle);
@@ -465,7 +472,9 @@ public class MockWebApplication
 				getServletRequest().setURL(path + url);
 			}
 			else
+			{
 				log.warn("The application does not have a HomePage, this might cause problems or unexpected behavior");
+			}
 			cycle.request(requestTarget);
 		}
 		finally
@@ -642,8 +651,11 @@ public class MockWebApplication
 		wicketResponse = application.newWebResponse(servletResponse);
 		WebRequestCycle requestCycle = createRequestCycle();
 		if (!initializeHttpSessionAsTemporary())
+		{
 			application.getSessionStore().bind(wicketRequest, wicketSession);
+		}
 		wicketResponse.setAjax(wicketRequest.isAjax());
+		createAjaxRequest = false;
 		return requestCycle;
 	}
 
@@ -656,7 +668,7 @@ public class MockWebApplication
 	 */
 	public WebRequestCycle setupRequestAndResponse()
 	{
-		return setupRequestAndResponse(false);
+		return setupRequestAndResponse(isCreateAjaxRequest());
 	}
 
 	/**
@@ -713,5 +725,29 @@ public class MockWebApplication
 			}
 			dir.delete();
 		}
+	}
+
+	/**
+	 * Gets createAjaxRequest.
+	 * 
+	 * @return createAjaxRequest
+	 */
+	public boolean isCreateAjaxRequest()
+	{
+		return createAjaxRequest;
+	}
+
+	/**
+	 * Sets createAjaxRequest.
+	 * 
+	 * Must be true to create add a wicket-ajax header to the next request. Will be immediately
+	 * reset to false
+	 * 
+	 * @param createAjaxRequest
+	 *            createAjaxRequest
+	 */
+	public void setCreateAjaxRequest(boolean createAjaxRequest)
+	{
+		this.createAjaxRequest = createAjaxRequest;
 	}
 }

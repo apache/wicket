@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.util.tester;
 
-import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
+
 import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
@@ -470,7 +472,8 @@ public class WicketTesterTest extends TestCase
 
 	public void testTesterCanBeOverridenToNotReuseExistingRequestCycleInExecuteAjaxEvent()
 	{
-		tester = new WicketTester(new MyMockApplication()) {
+		tester = new WicketTester(new MyMockApplication())
+		{
 			@Override
 			protected WebRequestCycle resolveRequestCycle()
 			{
@@ -594,16 +597,16 @@ public class WicketTesterTest extends TestCase
 		assertFalse(submit.isEnabled());
 		FormTester form = tester.newFormTester("form");
 
-		tester.setupRequestAndResponse();
+		tester.setupRequestAndResponse(true);
 		form.setValue("text", "XX");
 		setTextFieldAndAssertSubmit(false);
 		Session.get().cleanupFeedbackMessages();
 
-		tester.setupRequestAndResponse();
+		tester.setupRequestAndResponse(true);
 		form.setValue("text", "XXXYYYXXX");
 		setTextFieldAndAssertSubmit(true);
 
-		tester.setupRequestAndResponse();
+		tester.setupRequestAndResponse(true);
 		form.setValue("text", "");
 		setTextFieldAndAssertSubmit(false);
 	}

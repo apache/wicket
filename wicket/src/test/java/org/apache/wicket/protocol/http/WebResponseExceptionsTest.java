@@ -58,15 +58,24 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testExpirePage()
 	{
 		tester.startPage(TestExpirePage.class);
+		String document = tester.getServletResponse().getDocument();
+		assertTrue(document.contains("Click me to get an error"));
+
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
-		// Cannot use executeAjaxEvent or onClick because WicketTester creates
-		// an AjaxRequestTarget from scratch
+		// Clear the session to remove the pages
+		// tester.getWicketSession().invalidateNow();
+		//
+		// tester.setCreateAjaxRequest(true);
 		// tester.executeAjaxEvent(link, "onclick");
 		// tester.clickLink("link");
+		//
+		// document = tester.getServletResponse().getDocument();
+		// assertTrue(document.contains("-"));
+		// tester.assertAjaxLocation();
 
-		// FIXME should not be needed
-		tester.createRequestCycle();
+		WebRequestCycle cycle = tester.setupRequestAndResponse(true);
+		tester.getWicketSession().invalidateNow();
 
 		// Clear the session to remove the pages
 		tester.getWicketSession().invalidateNow();
@@ -74,20 +83,14 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		// Invoke the call back URL of the ajax event behavior
 		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
 			.toString();
-		tester.setupRequestAndResponse();
-
-		// Fake an Ajax request
-		(tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
-		// Set ajax mode again, as it is done in setupRequestAndResponse() only
-		tester.getWicketResponse().setAjax(tester.getWicketRequest().isAjax());
-
 		tester.getServletRequest().setURL(callbackUrl);
 
-		// Do not call tester.processRequestCycle() because it throws an
+		// Do not call processRequestCycle() because it throws an
 		// exception when getting an error page
-		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 
+		document = tester.getServletResponse().getDocument();
+		assertTrue(document.equals("-"));
 		tester.assertAjaxLocation();
 	}
 
@@ -99,31 +102,29 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.startPage(TestErrorPage.class);
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
-		// Cannot use executeAjaxEvent or onClick because WicketTester creates
-		// an AjaxRequestTarget from scratch
-		// tester.executeAjaxEvent(link, "onclick");
-		// tester.clickLink("link");
+		try
+		{
+			tester.executeAjaxEvent(link, "onclick");
+			assertTrue("Excepted an error message to be thrown", false);
+		}
+		catch (IllegalStateException ex)
+		{
+			// expected exception
+			tester.assertAjaxLocation();
+		}
 
-		// FIXME should not be needed
-		tester.createRequestCycle();
+		tester.startPage(TestErrorPage.class);
+		link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
-		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
-			.toString()
-			.replaceAll("&amp;", "&");
-		tester.setupRequestAndResponse();
-		// Fake an Ajax request
-		(tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
-		// Set ajax mode again, as it is done in setupRequestAndResponse() only
-		tester.getWicketResponse().setAjax(tester.getWicketRequest().isAjax());
-
-		tester.getServletRequest().setURL(callbackUrl);
-
-		// Do not call tester.processRequestCycle() because it throws an
-		// exception when getting an error page
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.request();
-
-		tester.assertAjaxLocation();
+		try
+		{
+			tester.clickLink("link");
+			assertTrue("Excepted an error message to be thrown", false);
+		}
+		catch (IllegalStateException ex)
+		{
+			// expected exception
+			tester.assertAjaxLocation();
+		}
 	}
 }

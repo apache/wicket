@@ -60,6 +60,11 @@ public class ServletWebRequest extends WebRequest
 
 	private int previousUrlDepth;
 
+	/** Marks this request as an ajax request. */
+	private boolean ajax;
+
+	private boolean forceNewVersion = false;
+
 	/**
 	 * Protected constructor.
 	 * 
@@ -69,6 +74,21 @@ public class ServletWebRequest extends WebRequest
 	public ServletWebRequest(final HttpServletRequest httpServletRequest)
 	{
 		this.httpServletRequest = httpServletRequest;
+
+		ajax = false;
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
+		{
+			try
+			{
+				ajax = Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+			}
+		}
 	}
 
 	/**
@@ -151,6 +171,9 @@ public class ServletWebRequest extends WebRequest
 			httpServletRequest);
 	}
 
+	/**
+	 * @see org.apache.wicket.Request#getRelativePathPrefixToContextRoot()
+	 */
 	@Override
 	public String getRelativePathPrefixToContextRoot()
 	{
@@ -228,6 +251,9 @@ public class ServletWebRequest extends WebRequest
 		return depthRelativeToWicketHandler;
 	}
 
+	/**
+	 * @see org.apache.wicket.Request#getRelativePathPrefixToWicketHandler()
+	 */
 	@Override
 	public String getRelativePathPrefixToWicketHandler()
 	{
@@ -408,25 +434,21 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @see org.apache.wicket.protocol.http.WebRequest#isAjax()
 	 */
-	// TODO matej? should we have a simple way of supporting other ajax things?
-	// or should they just set that same header??
 	@Override
-	public boolean isAjax()
+	public final boolean isAjax()
 	{
-		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
-		if (Strings.isEmpty(ajaxHeader) == false)
-		{
-			try
-			{
-				return Strings.isTrue(ajaxHeader);
-			}
-			catch (StringValueConversionException e)
-			{
-				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
-			}
-		}
-		return false;
+		return ajax;
+	}
+
+	/**
+	 * THIS IS FOR WICKET INTERNAL USE ONLY. DO NOT USE IT IN YOUR APPLICATION.
+	 * 
+	 * @param ajax
+	 *            ajax
+	 */
+	public final void setAjax(boolean ajax)
+	{
+		this.ajax = ajax;
 	}
 
 	/**
@@ -463,8 +485,6 @@ public class ServletWebRequest extends WebRequest
 		this.forceNewVersion = forceNewVersion;
 	}
 
-	private boolean forceNewVersion = false;
-
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
@@ -479,24 +499,6 @@ public class ServletWebRequest extends WebRequest
 		{
 			throw new WicketRuntimeException(e);
 		}
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = " +
-			httpServletRequest.getProtocol() + ", requestURL = " +
-			httpServletRequest.getRequestURL() + ", contentType = " +
-			httpServletRequest.getContentType() + ", contentLength = " +
-			httpServletRequest.getContentLength() + ", contextPath = " +
-			httpServletRequest.getContextPath() + ", pathInfo = " +
-			httpServletRequest.getPathInfo() + ", requestURI = " +
-			httpServletRequest.getRequestURI() + ", servletPath = " +
-			httpServletRequest.getServletPath() + ", pathTranslated = " +
-			httpServletRequest.getPathTranslated() + "]";
 	}
 
 	/**
@@ -525,9 +527,30 @@ public class ServletWebRequest extends WebRequest
 
 	}
 
+	/**
+	 * @see org.apache.wicket.Request#getQueryString()
+	 */
 	@Override
 	public String getQueryString()
 	{
 		return httpServletRequest.getQueryString();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = " +
+			httpServletRequest.getProtocol() + ", requestURL = " +
+			httpServletRequest.getRequestURL() + ", contentType = " +
+			httpServletRequest.getContentType() + ", contentLength = " +
+			httpServletRequest.getContentLength() + ", contextPath = " +
+			httpServletRequest.getContextPath() + ", pathInfo = " +
+			httpServletRequest.getPathInfo() + ", requestURI = " +
+			httpServletRequest.getRequestURI() + ", servletPath = " +
+			httpServletRequest.getServletPath() + ", pathTranslated = " +
+			httpServletRequest.getPathTranslated() + "]";
 	}
 }

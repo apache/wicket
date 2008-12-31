@@ -18,7 +18,6 @@ package org.apache.wicket.ajax.markup.html.componentMap;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.diff.DiffUtil;
 
 
@@ -46,7 +45,6 @@ public class SimpleTestPanelTest extends WicketTestCase
 	{
 		tester.setupRequestAndResponse(true);
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
-		WebRequestCycle cycle = tester.createRequestCycle();
 
 		Page page = tester.getLastRenderedPage();
 		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());

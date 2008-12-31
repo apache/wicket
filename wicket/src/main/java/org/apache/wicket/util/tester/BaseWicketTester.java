@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.tester;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -56,7 +55,6 @@ import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.http.HttpSessionStore;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -263,11 +261,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
-		// setupRequestAndResponse();
-		WebRequestCycle cycle = createRequestCycle();
 		CharSequence url = behavior.getCallbackUrl(false);
-		setupRequestAndResponse(true);
-		cycle = createRequestCycle();
+		WebRequestCycle cycle = setupRequestAndResponse(true);
 		getServletRequest().setRequestToRedirectString(url.toString());
 		processRequestCycle(cycle);
 	}
@@ -985,8 +980,7 @@ public class BaseWicketTester extends MockWebApplication
 	public void debugComponentTrees(String filter)
 	{
 		log.info("debugging ----------------------------------------------");
-		for (WicketTesterHelper.ComponentData obj : WicketTesterHelper.getComponentData(
-				getLastRenderedPage()))
+		for (WicketTesterHelper.ComponentData obj : WicketTesterHelper.getComponentData(getLastRenderedPage()))
 		{
 			if (obj.path.matches(".*" + filter + ".*"))
 			{
@@ -1115,6 +1109,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeAjaxEvent(Component component, String event)
 	{
+		setCreateAjaxRequest(true);
+
 		String failMessage = "Can't execute event on a component which is null.";
 		notNull(failMessage, component);
 
@@ -1150,11 +1146,8 @@ public class BaseWicketTester extends MockWebApplication
 		// that the request is not an ajax request -> we have to set the header manually
 		if (!requestCycle.getWebRequest().isAjax())
 		{
-			HttpServletRequest req = requestCycle.getWebRequest().getHttpServletRequest();
-			if (req instanceof MockHttpServletRequest)
-			{
-				((MockHttpServletRequest)req).addHeader("Wicket-Ajax", "Yes");
-			}
+			throw new IllegalStateException(
+				"The ServletWebRequest was created without wicket-ajax header. Please use tester.setCreateAjaxRequest(true)");
 		}
 
 		// If the event is an FormSubmitBehavior then also "submit" the form
@@ -1170,19 +1163,29 @@ public class BaseWicketTester extends MockWebApplication
 		processRequestCycle(requestCycle);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected WebRequestCycle resolveRequestCycle()
 	{
 		// initialize the request only if needed to allow the user to pass
-		// request parameters, see
-		// WICKET-254
+		// request parameters, see WICKET-254
 		WebRequestCycle requestCycle;
 		if (RequestCycle.get() == null)
 		{
-			requestCycle = setupRequestAndResponse(true);
+			requestCycle = setupRequestAndResponse();
 		}
 		else
 		{
 			requestCycle = (WebRequestCycle)RequestCycle.get();
+
+			// If a ajax request is requested but the existing is not, than we still need to create
+			// a new one
+			if ((requestCycle.getWebRequest().isAjax() == false) && (isCreateAjaxRequest() == true))
+			{
+				requestCycle = setupRequestAndResponse();
+			}
 		}
 		return requestCycle;
 	}
