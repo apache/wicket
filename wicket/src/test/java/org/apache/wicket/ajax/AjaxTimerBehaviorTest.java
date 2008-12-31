@@ -154,7 +154,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		if (inBodyOnLoad)
 		{
-			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " +
+			String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function(event) { " +
 				updateScript + ";});";
 			validateTimerScript(document, bodyOnLoadUpdateScript);
 		}
@@ -181,9 +181,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * Checks that the timer javascript is in the document once and only once
 	 * 
 	 * @param document
-	 * 		the response from the Application
+	 *            the response from the Application
 	 * @param updateScript
-	 * 		the timer script
+	 *            the timer script
 	 */
 	private void validateTimerScript(String document, String updateScript)
 	{

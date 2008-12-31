@@ -4,22 +4,22 @@
 <script type="text/javascript" src="javascripturl"></script>
 <script type="text/javascript" src="resources/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
-Wicket.Event.add(window, "domready", function() { domReady();;});
+Wicket.Event.add(window, "domready", function(event) { domReady();;});
 /*-->]]>*/</script>
 
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
-Wicket.Event.add(window, "load", function() { onLoad();;});
+Wicket.Event.add(window, "load", function(event) { onLoad();;});
 /*-->]]>*/</script>
 
 
 <link href="../test2"/>
 <script type="text/javascript" src="javascripturlB"></script>
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
-Wicket.Event.add(window, "domready", function() { domReadyB();;});
+Wicket.Event.add(window, "domready", function(event) { domReadyB();;});
 /*-->]]>*/</script>
 
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
-Wicket.Event.add(window, "load", function() { onLoadB();;});
+Wicket.Event.add(window, "load", function(event) { onLoadB();;});
 /*-->]]>*/</script>
 
 <script type="text/javascript" src="resources/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
@@ -47,6 +47,6 @@ test
 <span wicket:id="btest3" id="btest36"><wicket:panel>
 test
 </wicket:panel></span>
-<a href="?wicket:interface=:0:link::ILinkListener::" wicket:id="link" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:link::IBehaviorListener:0:',null,null, function() {return Wicket.$('link7') != null;}.bind(this));return !wcall;" id="link7">Test</a>
+<a href="?wicket:interface=:0:link::ILinkListener::" wicket:id="link" id="link7" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:link::IBehaviorListener:0:',null,null, function() {return Wicket.$('link7') != null;}.bind(this));return !wcall;">Test</a>
 </body>
 </html>

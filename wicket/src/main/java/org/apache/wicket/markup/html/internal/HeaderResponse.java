@@ -313,7 +313,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);
 				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
-					", \"" + event + "\", function() { " + javascript + ";});");
+					", \"" + event + "\", function(event) { " + javascript + ";});");
 				markRendered(token);
 			}
 		}
