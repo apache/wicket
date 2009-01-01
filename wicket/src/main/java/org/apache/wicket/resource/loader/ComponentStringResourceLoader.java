@@ -118,11 +118,14 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			return null;
 		}
 
-		// Load the properties associated with the path
-		IPropertiesFactory propertiesFactory = Application.get()
-			.getResourceSettings()
-			.getPropertiesFactory();
+		if (log.isDebugEnabled())
+		{
+			log.debug("key: '" + key + "'; class: '" + clazz.getName() + "'; locale: '" + locale +
+				"'; Style: '" + style + "'");
+		}
 
+		// Load the properties associated with the path
+		IPropertiesFactory propertiesFactory = getPropertiesFactory();
 		while (true)
 		{
 			// Create the base path
@@ -143,10 +146,26 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 					{
 						if (log.isDebugEnabled())
 						{
-							log.debug("Found resource from: " + props + "; key: " + key);
+							log.debug("Found property '" + key + "' in: '" + props + "'" +
+								"; value: '" + value + "'");
 						}
 
 						return value;
+					}
+					else
+					{
+						if (log.isDebugEnabled())
+						{
+							log.debug("Found properties file: '" + newPath +
+								"' but it doesn't contain the property");
+						}
+					}
+				}
+				else
+				{
+					if (log.isDebugEnabled())
+					{
+						// log.debug("Properties file not found: '" + newPath + "'");
 					}
 				}
 			}
@@ -172,6 +191,17 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
+	 * Get the properties file factory which loads the properties based on locale and style from
+	 * *.properties and *.xml files
+	 * 
+	 * @return properties factory
+	 */
+	protected IPropertiesFactory getPropertiesFactory()
+	{
+		return Application.get().getResourceSettings().getPropertiesFactory();
+	}
+
+	/**
 	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
@@ -181,6 +211,11 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		if (component == null)
 		{
 			return null;
+		}
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("component: '" + component.toString(false) + "'; key: '" + key + "'");
 		}
 
 		// The return value
@@ -195,6 +230,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
 		List<Class<?>> searchStack = getComponentStack(component);
+
+		// TODO Should be changed to false in 1.5
+		final boolean old = true;
 
 		// Walk the component hierarchy down from page to the component
 		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
@@ -215,8 +253,20 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 			// If not found, than check if a property with the 'key' provided by
 			// the user can be found.
-			if (string == null)
+			if ((string == null) && old)
 			{
+				string = loadStringResource(clazz, key, locale, style);
+			}
+		}
+
+		// If not found, than check if a property with the 'key' provided by
+		// the user can be found.
+		if ((string == null) && !old)
+		{
+			// Walk the component hierarchy down from page to the component
+			for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
+			{
+				Class<?> clazz = searchStack.get(i);
 				string = loadStringResource(clazz, key, locale, style);
 			}
 		}

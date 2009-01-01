@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Localizer
 {
-	private static final Logger logger = LoggerFactory.getLogger(Localizer.class);
+	private static final Logger log = LoggerFactory.getLogger(Localizer.class);
 
 	/** ConcurrentHashMap does not allow null values */
 	private static final String NULL_VALUE = "<null-value>";
@@ -193,7 +193,7 @@ public class Localizer
 
 			if (!addedToPage)
 			{
-				logger.warn(
+				log.warn(
 					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
 						+ "This can sometimes lead to an invalid or no localized resource returned. "
 						+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
@@ -215,16 +215,24 @@ public class Localizer
 		if ((cacheKey != null) && cache.containsKey(cacheKey))
 		{
 			value = getFromCache(cacheKey);
+			if (log.isDebugEnabled())
+			{
+				log.debug("Property found in cache: '" + key + "'; Component: '" +
+					(component != null ? component.toString(false) : null) + "'; value: '" + value +
+					"'");
+			}
 		}
 		else
 		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Locate property: key: '" + key + "'; Component: '" +
+					(component != null ? component.toString(false) : null) + "'");
+			}
+
 			// Iterate over all registered string resource loaders until the
 			// property has been found
-			Iterator<IStringResourceLoader> iter = Application.get()
-				.getResourceSettings()
-				.getStringResourceLoaders()
-				.iterator();
-
+			Iterator<IStringResourceLoader> iter = getStringResourceLoaders();
 			while (iter.hasNext())
 			{
 				IStringResourceLoader loader = iter.next();
@@ -239,6 +247,12 @@ public class Localizer
 			if (cacheKey != null)
 			{
 				putIntoCache(cacheKey, value);
+			}
+
+			if ((value == null) && log.isDebugEnabled())
+			{
+				log.debug("Property not found; key: '" + key + "'; Component: '" +
+					(component != null ? component.toString(false) : null) + "'");
 			}
 		}
 
@@ -255,6 +269,20 @@ public class Localizer
 		}
 
 		return null;
+	}
+
+	/**
+	 * In case you want to provide your own list of string resource loaders
+	 * 
+	 * @return Iterator
+	 */
+	protected Iterator<IStringResourceLoader> getStringResourceLoaders()
+	{
+		Iterator<IStringResourceLoader> iter = Application.get()
+			.getResourceSettings()
+			.getStringResourceLoaders()
+			.iterator();
+		return iter;
 	}
 
 	/**
@@ -351,7 +379,9 @@ public class Localizer
 	protected String getFromCache(final String cacheKey)
 	{
 		if (cache == null)
+		{
 			return null;
+		}
 
 		final String value = cache.get(cacheKey);
 
@@ -360,10 +390,7 @@ public class Localizer
 		{
 			return null;
 		}
-		else
-		{
-			return value;
-		}
+		return value;
 	}
 
 	/**

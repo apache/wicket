@@ -61,6 +61,24 @@ public class TestPage extends WebPage
 		panel2.add(new MyTextField("text10", "input-10"));
 		panel2.add(new MyTextField("text11", "input-11"));
 		panel2.add(new MyTextField("text12", "input-12"));
+
+		Form form3 = new TestForm("form3")
+		{
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see org.apache.wicket.markup.html.form.Form#getValidatorKeyPrefix()
+			 */
+			@Override
+			public String getValidatorKeyPrefix()
+			{
+				return "myValidator";
+			}
+		};
+
+		add(form3);
+		form3.add(new MyTextField("text13", "input-13"));
+		form3.add(new MyTextField("text14", "input-14"));
 	}
 
 	/**
@@ -173,6 +191,24 @@ public class TestPage extends WebPage
 
 	/**
 	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText13()
+	{
+		return (MyTextField)get("form3:text13");
+	}
+
+	/**
+	 * 
+	 * @return xxx
+	 */
+	public MyTextField getText14()
+	{
+		return (MyTextField)get("form3:text14");
+	}
+
+	/**
+	 * 
 	 */
 	public static class MyTextField extends TextField
 	{
@@ -197,6 +233,7 @@ public class TestPage extends WebPage
 		/**
 		 * @see org.apache.wicket.markup.html.form.FormComponent#getInput()
 		 */
+		@Override
 		public String getInput()
 		{
 			return input;

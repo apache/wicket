@@ -148,51 +148,27 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			final FormComponent<T> formComponent = FormComponent.this;
 
-			// retrieve prefix that will be used to construct message keys
-			String prefix = formComponent.getValidatorKeyPrefix();
-			if (Strings.isEmpty(prefix))
-			{
-				prefix = "";
-			}
+			// Use the following log4j config for detailed logging on the property resolution
+			// process
+			// log4j.logger.org.apache.wicket.resource.loader=DEBUG
+			// log4j.logger.org.apache.wicket.Localizer=DEBUG
 
 			final Localizer localizer = formComponent.getLocalizer();
 
-			String resource = prefix + getId() + "." + key;
-
-			// First use the parent for resolving so that
-			// form1.textfield1.Required can be used.
-
-			String message = getString(localizer, resource, formComponent.getParent());
+			// retrieve prefix that will be used to construct message keys
+			String prefix = formComponent.getValidatorKeyPrefix();
+			String message = null;
+			if (!Strings.isEmpty(prefix))
+			{
+				String resource = prefix + "." + key;
+				message = getString(localizer, resource, formComponent);
+			}
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
 			{
 				// Try a variation of the resource key
-				resource = prefix + key;
-
-				message = getString(localizer, resource, formComponent.getParent());
-			}
-
-			if (Strings.isEmpty(message))
-			{
-				// If still empty then use default
-
-				resource = prefix + getId() + "." + key;
-
-				// Note: It is important that the default value of "" is
-				// provided
-				// to getString() not to throw a MissingResourceException or to
-				// return a default string like "[Warning: String ..."
-				message = getString(localizer, resource, formComponent);
-
-				// If not found, than ...
-				if (Strings.isEmpty(message))
-				{
-					// Try a variation of the resource key
-
-					resource = prefix + key;
-					message = getString(localizer, resource, formComponent);
-				}
+				message = getString(localizer, key, formComponent);
 			}
 
 			// convert empty string to null in case our default value of "" was
@@ -214,6 +190,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		private String getString(Localizer localizer, String key, Component component)
 		{
 			triedKeys.add(key);
+
+			// Note: It is important that the default value of "" is
+			// provided to getString() not to throw a MissingResourceException or to
+			// return a default string like "[Warning: String ..."
 			return localizer.getString(key, component, "");
 		}
 
@@ -271,7 +251,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			return fullParams;
 		}
 
-
 		/**
 		 * @return value of label param for this form component
 		 */
@@ -324,7 +303,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	private class ValidatableAdapter implements IValidatable<T>
 	{
-
 		/**
 		 * @see org.apache.wicket.validation.IValidatable#error(org.apache.wicket.validation.IValidationError)
 		 */
@@ -341,11 +319,13 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			return getConvertedInput();
 		}
 
+		/**
+		 * @see org.apache.wicket.validation.IValidatable#isValid()
+		 */
 		public boolean isValid()
 		{
 			return FormComponent.this.isValid();
 		}
-
 	}
 
 	/**
@@ -363,7 +343,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	/** Whether or not this component's value is required (non-empty) */
 	private static final short FLAG_REQUIRED = FLAG_RESERVED3;
-
 
 	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
 
@@ -395,7 +374,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		visitFormComponentsPostOrderHelper(component, visitor);
 	}
 
-
+	/**
+	 * 
+	 * @param component
+	 * @param visitor
+	 * @return Object
+	 */
 	private static final Object visitFormComponentsPostOrderHelper(Component component,
 		final FormComponent.IVisitor visitor)
 	{
@@ -455,7 +439,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		visitComponentsPostOrderHelper(component, visitor);
 	}
 
-
+	/**
+	 * 
+	 * @param component
+	 * @param visitor
+	 * @return Object
+	 */
 	private static final Object visitComponentsPostOrderHelper(Component component,
 		final Component.IVisitor<Component> visitor)
 	{
@@ -974,7 +963,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		return getFlag(FLAG_REQUIRED);
 	}
 
-
 	/**
 	 * Gets whether this component is 'valid'. Valid in this context means that no validation errors
 	 * were reported the last time the form component was processed. This variable not only is
@@ -1323,6 +1311,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 	}
 
+	/**
+	 * 
+	 * @param e
+	 * @param error
+	 */
 	private void reportValidationError(ConversionException e, ValidationError error)
 	{
 		final Locale locale = e.getLocale();
@@ -1484,7 +1477,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		super.onDetach();
 		convertedInput = null;
 	}
-
 
 	/**
 	 * Called by {@link #onComponentTag(ComponentTag)} when the component is disabled. By default,
@@ -1659,6 +1651,4 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		setDefaultModelObject(object);
 	}
-
-
 }
