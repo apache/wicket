@@ -42,7 +42,6 @@ public class CheckGroupPage extends WicketExamplePage
 	 */
 	public CheckGroupPage()
 	{
-
 		final CheckGroup<Person> group = new CheckGroup<Person>("group", new ArrayList<Person>());
 		Form<?> form = new Form("form")
 		{
@@ -59,7 +58,9 @@ public class CheckGroupPage extends WicketExamplePage
 		ListView<Person> persons = new ListView<Person>("persons",
 			ComponentReferenceApplication.getPersons())
 		{
-
+			/**
+			 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+			 */
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{
@@ -72,11 +73,15 @@ public class CheckGroupPage extends WicketExamplePage
 
 		};
 
+		persons.setReuseItems(true);
 		group.add(persons);
 
 		add(new FeedbackPanel("feedback"));
 	}
 
+	/**
+	 * @see org.apache.wicket.examples.WicketExamplePage#explain()
+	 */
 	@Override
 	protected void explain()
 	{
@@ -98,6 +103,7 @@ public class CheckGroupPage extends WicketExamplePage
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"name\", new PropertyModel(item.getModel(), \"name\")));<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;persons.setReuseItems(true);<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
 		add(new ExplainPanel(html, code));
 	}
