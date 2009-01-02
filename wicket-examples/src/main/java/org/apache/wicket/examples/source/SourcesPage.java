@@ -33,27 +33,30 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.PopupCloseLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 
 /**
@@ -86,19 +89,21 @@ public class SourcesPage extends WebPage
 		public String getObject()
 		{
 			// name contains the name of the selected file
-			if (Strings.isEmpty(name))
+			if (Strings.isEmpty(name) &&
+				Strings.isEmpty(getPage().getRequest().getParameter(SOURCE)))
 			{
 				return "";
 			}
 			BufferedReader br = null;
+			String source = null;
 			try
 			{
 				StringBuffer sb = new StringBuffer();
-
-				InputStream resourceAsStream = page.getResourceAsStream(name);
+				source = (name != null) ? name : getPage().getRequest().getParameter(SOURCE);
+				InputStream resourceAsStream = getPageTargetClass().getResourceAsStream(source);
 				if (resourceAsStream == null)
 				{
-					return "Unable to read the source for " + name;
+					return "Unable to read the source for " + source;
 				}
 				br = new BufferedReader(new InputStreamReader(resourceAsStream));
 
@@ -107,14 +112,14 @@ public class SourcesPage extends WebPage
 					sb.append(br.readLine());
 					sb.append("\n");
 				}
-				int lastDot = name.lastIndexOf('.');
+				int lastDot = source.lastIndexOf('.');
 				if (lastDot != -1)
 				{
-					String type = name.substring(lastDot + 1);
+					String type = source.substring(lastDot + 1);
 					Renderer renderer = XhtmlRendererFactory.getRenderer(type);
 					if (renderer != null)
 					{
-						return renderer.highlight(name, sb.toString(), "UTF-8", true);
+						return renderer.highlight(source, sb.toString(), "UTF-8", true);
 					}
 				}
 				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n",
@@ -122,7 +127,7 @@ public class SourcesPage extends WebPage
 			}
 			catch (IOException e)
 			{
-				log.error("Unable to read resource stream for: " + name + "; Page=" +
+				log.error("Unable to read resource stream for: " + source + "; Page=" +
 					page.toString(), e);
 				return "";
 			}
@@ -165,7 +170,7 @@ public class SourcesPage extends WebPage
 		{
 			if (resources.isEmpty())
 			{
-				get(page);
+				get(getPageTargetClass());
 // PackageName name = PackageName.forClass(page);
 // ClassLoader loader = page.getClassLoader();
 // String path = Strings.replaceAll(name.getName(), ".", "/").toString();
@@ -373,9 +378,10 @@ public class SourcesPage extends WebPage
 			ListView<String> lv = new ListView<String>("file", new PackagedResourcesModel())
 			{
 				@Override
-				protected void populateItem(ListItem<String> item)
+				protected void populateItem(final ListItem<String> item)
 				{
-					AjaxFallbackLink<String> link = new AjaxFallbackLink<String>("link", item.getModel())
+					AjaxFallbackLink<String> link = new AjaxFallbackLink<String>("link",
+						item.getModel())
 					{
 						@Override
 						public void onClick(AjaxRequestTarget target)
@@ -387,6 +393,53 @@ public class SourcesPage extends WebPage
 								target.addComponent(codePanel);
 								target.addComponent(filename);
 							}
+						}
+
+						@Override
+						protected CharSequence getURL()
+						{
+							CharSequence url = urlFor(SourcesPage.class,
+								SourcesPage.generatePageParameters(getPageTargetClass(),
+									item.getModel().getObject()));
+							return url;
+						}
+
+						@Override
+						protected IAjaxCallDecorator getAjaxCallDecorator()
+						{
+							return new IAjaxCallDecorator()
+							{
+
+								public CharSequence decorateOnFailureScript(CharSequence script)
+								{
+									return "window.location=this.href;";
+									// return "alert('It\\'s ok!')";
+								}
+
+								public CharSequence decorateOnSuccessScript(CharSequence script)
+								{
+									if (script == null)
+									{
+										return "";
+									}
+									return script;
+								}
+
+								public CharSequence decorateScript(CharSequence script)
+								{
+									int index = script.toString().indexOf('?');
+									if (index >= 0)
+									{
+										String test = script.subSequence(0, index + 1) +
+											PAGE_CLASS + "=1" + "&" +
+											script.subSequence(index + 1, script.length());
+										return test;
+
+									}
+									return script;
+								}
+
+							};
 						}
 					};
 					link.add(new Label("name", item.getDefaultModelObjectAsString()));
@@ -420,14 +473,21 @@ public class SourcesPage extends WebPage
 	}
 
 	/**
+	 * Parameter key for identifying the page class. UUID generated.
+	 */
+	public static final String PAGE_CLASS = SourcesPage.class.getSimpleName() + "_class";
+
+	/**
+	 * Parameter key for identify the name of the source file in the package.
+	 */
+	public static final String SOURCE = "source";
+
+	/**
 	 * The selected name of the packaged resource to display.
 	 */
 	private String name;
 
-	/**
-	 * The class of the page of which the sources need to be displayed.
-	 */
-	private final Class<? extends Page> page;
+	private transient Class<? extends Page> page;
 
 	/**
 	 * The panel for setting the ajax calls.
@@ -462,27 +522,98 @@ public class SourcesPage extends WebPage
 	 */
 	public SourcesPage()
 	{
-		this(SourcesPage.class);
+		this(new PageParameters(PAGE_CLASS + "=" + SourcesPage.class.getName()));
 	}
 
 	/**
-	 * Constructor.
+	 * 
+	 * Construct.
 	 * 
 	 * @param <C>
-	 * 
-	 * @param page
-	 *            the page where the sources need to be shown from.
+	 * @param params
 	 */
-	public <C extends Page> SourcesPage(Class<C> page)
+	public <C extends Page> SourcesPage(final PageParameters params)
 	{
-		this.page = page;
+		filename = new Label("filename", new AbstractReadOnlyModel<String>()
+		{
 
-		filename = new Label("filename", new PropertyModel<String>(this, "name"));
+			@Override
+			public String getObject()
+			{
+				return name != null ? name : getPage().getRequest().getParameter(SOURCE);
+			}
+
+		});
 		filename.setOutputMarkupId(true);
 		add(filename);
 		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
 		add(codePanel);
 		add(new FilesBrowser("filespanel"));
-		add(new PopupCloseLink("close"));
+	}
+
+	/**
+	 * 
+	 * @param page
+	 * @return PageParamets for reconstructing the bookmarkable page.
+	 */
+	public static PageParameters generatePageParameters(Page page)
+	{
+		return generatePageParameters(page.getClass(), null);
+	}
+
+	/**
+	 * 
+	 * @param clazz
+	 * @param fileName
+	 * @return PageParameters for reconstructing the bookmarkable page.
+	 */
+	public static PageParameters generatePageParameters(Class<? extends Page> clazz, String fileName)
+	{
+		PageParameters p = new PageParameters();
+		p.put(PAGE_CLASS, clazz.getName());
+		if (fileName != null)
+			p.put(SOURCE, fileName);
+		return p;
+	}
+
+	private String getPageParam()
+	{
+		return getPage().getRequest().getParameter(PAGE_CLASS);
+	}
+
+	private Class<? extends Page> getPageTargetClass()
+	{
+		if (page == null)
+		{
+			try
+			{
+				String pageParam = getPageParam();
+				if (pageParam == null)
+				{
+					if (log.isErrorEnabled())
+					{
+						log.error("key: " + PAGE_CLASS + " is null.");
+					}
+					throw new AbortWithWebErrorCodeException(404,
+						"Could not find sources for the page you requested");
+				}
+				if (!pageParam.startsWith("org.apache.wicket.examples"))
+				{
+					if (log.isErrorEnabled())
+					{
+						log.error("user is trying to access class: " + pageParam +
+							" which is not in the scope of org.apache.wicket.examples");
+					}
+					throw new UnauthorizedInstantiationException(getClass());
+				}
+				page = (Class<? extends Page>)Class.forName(getPageParam());
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new AbortWithWebErrorCodeException(404,
+					"Could not find sources for the page you requested");
+			}
+		}
+		return page;
 	}
 }

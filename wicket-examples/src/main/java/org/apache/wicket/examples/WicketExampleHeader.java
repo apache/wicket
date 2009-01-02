@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.examples.debug.InspectorBug;
@@ -24,7 +23,7 @@ import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -62,15 +61,8 @@ public final class WicketExampleHeader extends Panel
 		add(hideInPortlet);
 		hideInPortlet.add(new InspectorBug("inspector", page));
 		add(new Label("exampleTitle", exampleTitle));
-		Link link = new Link("sources")
-		{
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onClick()
-			{
-				setResponsePage(new SourcesPage((Class<? extends Page>)getPage().getClass()));
-			}
-		};
+		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
+			SourcesPage.class, SourcesPage.generatePageParameters(page));
 		add(link);
 
 		PopupSettings settings = new PopupSettings(PageMap.forName("sources"),

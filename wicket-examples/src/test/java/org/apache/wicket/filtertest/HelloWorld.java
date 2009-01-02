@@ -30,6 +30,8 @@ public class HelloWorld extends WicketExamplePage
 {
 	/**
 	 * Constructor
+	 * 
+	 * @param params
 	 */
 	public HelloWorld(PageParameters params)
 	{

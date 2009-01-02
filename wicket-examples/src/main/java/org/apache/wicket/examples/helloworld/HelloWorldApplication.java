@@ -17,12 +17,7 @@
 package org.apache.wicket.examples.helloworld;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * Application class for hello world example.
@@ -36,37 +31,13 @@ public class HelloWorldApplication extends WicketExampleApplication
 	 */
 	public HelloWorldApplication()
 	{
-
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycle(org.apache.wicket.Request,
-	 *      org.apache.wicket.Response)
-	 */
-	@Override
-	public RequestCycle newRequestCycle(Request request, Response response)
-	{
-		return new WebRequestCycle(this, (WebRequest)request, response)
-		{
-			@Override
-			protected void onBeginRequest()
-			{
-				// open session
-			}
-
-			@Override
-			protected void onEndRequest()
-			{
-				// close session
-			}
-		};
 	}
 
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return HelloWorld.class;
 	}

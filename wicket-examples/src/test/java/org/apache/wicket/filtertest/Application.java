@@ -29,12 +29,9 @@ public class Application extends WicketExampleApplication
 	 */
 	public Application()
 	{
-
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
 	 */
 	@Override
