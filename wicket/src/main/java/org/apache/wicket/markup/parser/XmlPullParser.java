@@ -61,8 +61,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	public static final int SPECIAL_TAG = 6;
 
 	/**
-	 * Reads the xml data from an input stream and converts the chars according to its encoding (<?xml
-	 * ... encoding="..." ?>)
+	 * Reads the xml data from an input stream and converts the chars according to its encoding
+	 * (<?xml ... encoding="..." ?>)
 	 */
 	private XmlReader xmlReader;
 
@@ -149,8 +149,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= input.size()))
 			{
 				throw new ParseException(skipUntilText + " tag not closed (line " +
-						input.getLineNumber() + ", column " + input.getColumnNumber() + ")",
-						startIndex);
+					input.getLineNumber() + ", column " + input.getColumnNumber() + ")", startIndex);
 			}
 
 			lastPos = pos + 2;
@@ -166,7 +165,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		if (lastPos == -1)
 		{
 			throw new ParseException("Script tag not closed (line " + input.getLineNumber() +
-					", column " + input.getColumnNumber() + ")", startIndex);
+				", column " + input.getColumnNumber() + ")", startIndex);
 		}
 
 		// Reset the state variable
@@ -222,7 +221,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		if (closeBracketIndex == -1)
 		{
 			throw new ParseException("No matching close bracket at position " + openBracketIndex,
-					input.getPosition());
+				input.getPosition());
 		}
 
 		// Get the complete tag text
@@ -232,8 +231,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		String tagText = lastText.subSequence(1, lastText.length() - 1).toString();
 		if (tagText.length() == 0)
 		{
-			throw new ParseException("Found empty tag: '<>' at position " + openBracketIndex, input
-					.getPosition());
+			throw new ParseException("Found empty tag: '<>' at position " + openBracketIndex,
+				input.getPosition());
 		}
 
 		// Handle special tags like <!-- and <![CDATA ...
@@ -267,7 +266,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// If open tag and starts with "s" like "script" or "style", than
 			// ...
 			if ((tagText.length() > 5) &&
-					((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
+				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
 			{
 				final String lowerCase = tagText.substring(0, 6).toLowerCase();
 				if (lowerCase.startsWith("script"))
@@ -304,7 +303,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		else
 		{
 			throw new ParseException("Malformed tag (line " + input.getLineNumber() + ", column " +
-					input.getColumnNumber() + ")", openBracketIndex);
+				input.getColumnNumber() + ")", openBracketIndex);
 		}
 	}
 
@@ -317,7 +316,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * @throws ParseException
 	 */
 	private void specialTagHandling(String tagText, final int openBracketIndex,
-			int closeBracketIndex) throws ParseException
+		int closeBracketIndex) throws ParseException
 	{
 		// Handle comments
 		if (tagText.startsWith("!--"))
@@ -330,8 +329,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			if (pos == -1)
 			{
 				throw new ParseException("Unclosed comment beginning at line:" +
-						input.getLineNumber() + " column:" + input.getColumnNumber(),
-						openBracketIndex);
+					input.getLineNumber() + " column:" + input.getColumnNumber(), openBracketIndex);
 			}
 
 			pos += 3;
@@ -340,7 +338,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 			// Conditional comment? <!--[if ...]>..<![endif]-->
 			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") &&
-					lastText.toString().endsWith("<![endif]-->"))
+				lastText.toString().endsWith("<![endif]-->"))
 			{
 				// Actually it is no longer a comment. It is now
 				// up to the browser to select the section appropriate.
@@ -377,13 +375,13 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 					if (closeBracketIndex == -1)
 					{
 						throw new ParseException("No matching close bracket at line:" +
-								input.getLineNumber() + " column:" + input.getColumnNumber(), input
-								.getPosition());
+							input.getLineNumber() + " column:" + input.getColumnNumber(),
+							input.getPosition());
 					}
 
 					// Get the tagtext between open and close brackets
 					tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-							.toString();
+						.toString();
 
 					pos1 = closeBracketIndex + 1;
 				}
@@ -497,7 +495,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 *             Resource not found
 	 */
 	public void parse(final CharSequence string) throws IOException,
-			ResourceStreamNotFoundException
+		ResourceStreamNotFoundException
 	{
 		parse(new ByteArrayInputStream(string.toString().getBytes()), null);
 	}
@@ -528,7 +526,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * @throws ResourceStreamNotFoundException
 	 */
 	public void parse(final InputStream inputStream, final String encoding) throws IOException,
-			ResourceStreamNotFoundException
+		ResourceStreamNotFoundException
 	{
 		try
 		{
@@ -567,6 +565,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return input.toString();
@@ -632,10 +631,10 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				final String key = attributeParser.getKey();
 
 				// Put the attribute in the attributes hash
-				if (null != tag.put(key, value))
+				if (null != ((TagAttributes)tag.getAttributes()).putInternal(key, value))
 				{
-					throw new ParseException("Same attribute found twice: " + key, input
-							.getPosition());
+					throw new ParseException("Same attribute found twice: " + key,
+						input.getPosition());
 				}
 
 				// The input has to match exactly (no left over junk after

@@ -27,6 +27,8 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,6 +39,9 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class XmlTag extends MarkupElement
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(XmlTag.class);
+
 	/** A close tag, like &lt;/TAG&gt;. */
 	public static final Type CLOSE = new Type("CLOSE");
 
@@ -161,11 +166,11 @@ public class XmlTag extends MarkupElement
 		{
 			if ((copyOf == this) || (copyOf == null) || (copyOf.attributes == null))
 			{
-				attributes = new ValueMap();
+				attributes = new TagAttributes();
 			}
 			else
 			{
-				attributes = new ValueMap(copyOf.attributes);
+				attributes = new TagAttributes(copyOf.attributes);
 			}
 		}
 		return attributes;
@@ -383,8 +388,8 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Copies all internal properties from this tag to <code>dest</code>. This is basically
-	 * cloning without instance creation.
+	 * Copies all internal properties from this tag to <code>dest</code>. This is basically cloning
+	 * without instance creation.
 	 * 
 	 * @param dest
 	 *            tag whose properties will be set

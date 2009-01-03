@@ -213,6 +213,17 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * A convenient method. The same as getAttributes().getString(name)
+	 * 
+	 * @param name
+	 * @return The attributes value
+	 */
+	public final String getAttribute(String name)
+	{
+		return xmlTag.getAttributes().getString(name);
+	}
+
+	/**
 	 * Get the tag's component id
 	 * 
 	 * @return The component id attribute of this tag
@@ -400,8 +411,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Copies all internal properties from this tag to <code>dest</code>. This is basically
-	 * cloning without instance creation.
+	 * Copies all internal properties from this tag to <code>dest</code>. This is basically cloning
+	 * without instance creation.
 	 * 
 	 * @param dest
 	 *            tag whose properties will be set
@@ -433,6 +444,7 @@ public class ComponentTag extends MarkupElement
 	public final void put(final String key, final boolean value)
 	{
 		xmlTag.put(key, value);
+		setModified(true);
 	}
 
 	/**
@@ -445,6 +457,7 @@ public class ComponentTag extends MarkupElement
 	public final void put(final String key, final int value)
 	{
 		xmlTag.put(key, value);
+		setModified(true);
 	}
 
 	/**
@@ -457,6 +470,7 @@ public class ComponentTag extends MarkupElement
 	public final void put(String key, CharSequence value)
 	{
 		xmlTag.put(key, value);
+		setModified(true);
 	}
 
 	/**
@@ -469,6 +483,7 @@ public class ComponentTag extends MarkupElement
 	public final void put(String key, StringValue value)
 	{
 		xmlTag.put(key, value);
+		setModified(true);
 	}
 
 	/**
@@ -479,6 +494,7 @@ public class ComponentTag extends MarkupElement
 	public final void putAll(final Map<String, Object> map)
 	{
 		xmlTag.putAll(map);
+		setModified(true);
 	}
 
 	/**
@@ -489,6 +505,7 @@ public class ComponentTag extends MarkupElement
 	public final void remove(String key)
 	{
 		xmlTag.remove(key);
+		setModified(true);
 	}
 
 	/**

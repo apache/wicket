@@ -22,14 +22,16 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.markup.parser.TagAttributes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
  * Handler that sets unique tag id for every inline script and style element in &lt;wicket:head&gt;,
- * unless the element already has one. <br/> This is needed to be able to detect multiple ajax
- * header contribution. Tags that are not inline (stript with src attribute set and link with href
- * attribute set) do not require id, because the detection is done by comparing URLs.
+ * unless the element already has one. <br/>
+ * This is needed to be able to detect multiple ajax header contribution. Tags that are not inline
+ * (stript with src attribute set and link with href attribute set) do not require id, because the
+ * detection is done by comparing URLs.
  * <p>
  * Tags with wicket:id are <strong>not processed</strong>. To setOutputWicketId(true) on attached
  * component is developer's responsibility. FIXME: Really? And if so, document properly
@@ -53,7 +55,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * @param markupFileClass
 	 *            Used to generated the a common prefix for the id
 	 */
-	public HeadForceTagIdHandler(final Class< ? > markupFileClass)
+	public HeadForceTagIdHandler(final Class<?> markupFileClass)
 	{
 		// generate the prefix from class name
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(markupFileClass.getName());
@@ -92,7 +94,8 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 				{
 					if (tag.getAttributes().get("id") == null)
 					{
-						tag.getAttributes().put("id", headElementIdPrefix + nextValue());
+						((TagAttributes)tag.getAttributes()).putInternal("id", headElementIdPrefix +
+							nextValue());
 						tag.setModified(true);
 					}
 				}
