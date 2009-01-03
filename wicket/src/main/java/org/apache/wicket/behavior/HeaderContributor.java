@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.resources.CompressedResourceReference;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.markup.html.JavascriptPackageResource;
 
 /**
  * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is specialized on
@@ -51,18 +49,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final Class<?> scope, final String path)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(new CompressedResourceReference(scope, path));
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(scope, path);
 	}
 
 	/**
@@ -77,19 +69,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final Class<?> scope, final String path,
 		final String media)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(new CompressedResourceReference(scope, path), media);
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(scope, path, media);
 	}
 
 	/**
@@ -99,18 +85,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param reference
 	 * 
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final ResourceReference reference)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(reference);
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(reference);
 	}
 
 	/**
@@ -121,19 +101,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final ResourceReference reference,
 		final String media)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(reference, media);
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(reference, media);
 	}
 
 	/**
@@ -149,18 +123,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param location
 	 *            The location of the css file.
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final String location)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(returnRelativePath(location));
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(location);
 	}
 
 	/**
@@ -178,18 +146,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
+	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forCss(final String location, final String media)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(returnRelativePath(location), media);
-			}
-		});
+		return CSSPackageResource.getHeaderContribution(location, media);
 	}
 
 	/**
@@ -202,18 +164,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
+	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forJavaScript(final Class<?> scope, final String path)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
-			}
-		});
+		return JavascriptPackageResource.getHeaderContribution(scope, path);
 	}
 
 	/**
@@ -223,18 +179,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param reference
 	 * 
 	 * @return the new header contributor instance
+	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forJavaScript(final ResourceReference reference)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderJavascriptReference(reference);
-			}
-		});
+		return JavascriptPackageResource.getHeaderContribution(reference);
 	}
 
 	/**
@@ -250,37 +200,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param location
 	 *            The location of the java script file.
 	 * @return the new header contributor instance
+	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
+	@Deprecated
 	public static final HeaderContributor forJavaScript(final String location)
 	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderJavascriptReference(returnRelativePath(location));
-			}
-		});
-	}
-
-	// Adds ../ links to make the location relative to the root of the webapp,
-	// provided it's not a fully-qualified URL.
-	private static final String returnRelativePath(String location)
-	{
-		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
-		if (location.startsWith("http://") || location.startsWith("https://") ||
-			location.startsWith("/"))
-		{
-			return location;
-		}
-		else
-		{
-			return RequestCycle.get()
-				.getProcessor()
-				.getRequestCodingStrategy()
-				.rewriteStaticRelativeUrl(location);
-		}
+		return JavascriptPackageResource.getHeaderContribution(location);
 	}
 
 	/**

@@ -24,6 +24,10 @@ import java.lang.ref.SoftReference;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -44,6 +48,100 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	private static final long serialVersionUID = 1L;;
 
 	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a java script file that lives in a package.
+	 * 
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the caller, or a class
+	 *            that lives in the package where the resource lives).
+	 * @param path
+	 *            The path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor getHeaderContribution(final Class<?> scope, final String path)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a java script file that lives in a package.
+	 * 
+	 * @param reference
+	 * 
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor getHeaderContribution(final ResourceReference reference)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(reference);
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor referencing a
+	 * java script file using one of the following schemes:
+	 * <ul>
+	 * <li>Starts with http:// or https:// for an external reference.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend to make relative to
+	 * the context root of your web-app.</li>
+	 * </ul>
+	 * 
+	 * @param location
+	 *            The location of the java script file.
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor getHeaderContribution(final String location)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(returnRelativePath(location));
+			}
+		});
+	}
+
+	/**
+	 * 
+	 * @param location
+	 * @return relative path
+	 */
+	private static final String returnRelativePath(String location)
+	{
+		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
+		if (location.startsWith("http://") || location.startsWith("https://") ||
+			location.startsWith("/"))
+		{
+			return location;
+		}
+		else
+		{
+			return RequestCycle.get()
+				.getProcessor()
+				.getRequestCodingStrategy()
+				.rewriteStaticRelativeUrl(location);
+		}
+	}
 
 	/**
 	 * Resource Stream that caches the stripped content.

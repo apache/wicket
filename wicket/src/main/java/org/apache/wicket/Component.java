@@ -29,7 +29,6 @@ import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
@@ -37,7 +36,9 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
@@ -933,12 +934,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			if (PackageResource.exists(this.getClass(), name + ".css", getLocale(), getStyle()))
 			{
-				add(HeaderContributor.forCss(this.getClass(), name + ".css"));
+				add(CSSPackageResource.getHeaderContribution(this.getClass(), name + ".css"));
 			}
 
 			if (PackageResource.exists(this.getClass(), name + ".js", getLocale(), getStyle()))
 			{
-				add(HeaderContributor.forJavaScript(this.getClass(), name + ".js"));
+				add(JavascriptPackageResource.getHeaderContribution(this.getClass(), name + ".js"));
 			}
 		}
 	}
