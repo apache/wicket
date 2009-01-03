@@ -30,12 +30,37 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is a resource guard which by default denies access to all resources and thus is more secure.
- * 
+ * <p/>
  * All pattern are executed in the order they were provided. All pattern are executed to determine
  * if access can be granted or not.
- * 
+ * <p/>
  * Note that access to the config data such as get/setPattern() and acceptXXX() is not synchronized.
  * It is assumed that configuration has finished before the first request gets executed.
+ * <p/>
+ * The rules are fairly simple. Each pattern must start with either "+" (include) or "-" (exclude).
+ * "*" is a placeholder for zero, one or more characters within a file or directory name. "**" is a
+ * placeholder for zero, one or more sub-directories.
+ * <p/>
+ * Examples:
+ * <table border="0">
+ * <tr>
+ * <td>+*.gif</td>
+ * <td>All gif files in all directories</td>
+ * </tr>
+ * <tr>
+ * <td>+test*.*</td>
+ * <td>All files in all directories starting with "test"</td>
+ * </tr>
+ * <tr>
+ * <td>+mydir&#47;*&#47;*.gif</td>
+ * <td>All gif files two levels below the mydir directory. E.g. mydir&#47;dir2&#47;test.gif</td>
+ * </tr>
+ * <tr>
+ * <td>+mydir&#47;**&#47;*.gif</td>
+ * <td>All gif files in all directories below mydir. E.g. mydir&#47;test.gif or
+ * mydir&#47;dir2&#47;dir3&#47;test.gif</td>
+ * </tr>
+ * </table>
  * 
  * @see IPackageResourceGuard
  * @see IResourceSettings#getPackageResourceGuard
