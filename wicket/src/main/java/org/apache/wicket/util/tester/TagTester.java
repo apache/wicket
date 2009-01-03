@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -441,5 +443,139 @@ public class TagTester
 		}
 
 		return tester;
+	}
+
+	/**
+	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
+	 * attribute with a specific value. Please note that it will return the first tag which matches
+	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * "wicket:id" is unique in the specified markup.
+	 * 
+	 * @param markup
+	 *            the markup to look for the tag to create the <code>TagTester</code> from
+	 * @param attribute
+	 *            the attribute which should be on the tag in the markup
+	 * @param value
+	 *            the value which the attribute must have
+	 * @param stopAfterFirst
+	 *            if true search will stop after the first match
+	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
+	 *         value on the given attribute
+	 */
+	public static TagTester createTagsByAttribute(String markup, String attribute, String value)
+	{
+		List<TagTester> tester = createTagsByAttribute(markup, attribute, value, true);
+		if ((tester == null) || (tester.size() == 0))
+		{
+			return null;
+		}
+		return tester.get(0);
+	}
+
+	/**
+	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
+	 * attribute with a specific value. Please note that it will return the first tag which matches
+	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * "wicket:id" is unique in the specified markup.
+	 * 
+	 * @param markup
+	 *            the markup to look for the tag to create the <code>TagTester</code> from
+	 * @param attribute
+	 *            the attribute which should be on the tag in the markup
+	 * @param value
+	 *            the value which the attribute must have
+	 * @param stopAfterFirst
+	 *            if true search will stop after the first match
+	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
+	 *         value on the given attribute
+	 */
+	public static List<TagTester> createTagsByAttribute(String markup, String attribute,
+		String value, boolean stopAfterFirst)
+	{
+		List<TagTester> testers = new ArrayList<TagTester>();
+
+		if ((Strings.isEmpty(markup) == false) && (Strings.isEmpty(attribute) == false) &&
+			(Strings.isEmpty(value) == false))
+		{
+			try
+			{
+				XmlPullParser parser = new XmlPullParser();
+				parser.parse(markup);
+
+				MarkupElement elm = null;
+				XmlTag openTag = null;
+				XmlTag closeTag = null;
+				int level = 0;
+				while ((elm = parser.nextTag()) != null)
+				{
+					if (elm instanceof XmlTag)
+					{
+						XmlTag xmlTag = (XmlTag)elm;
+						if (openTag == null)
+						{
+							IValueMap attributeMap = xmlTag.getAttributes();
+							for (String attr : attributeMap.keySet())
+							{
+								if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
+								{
+									if (xmlTag.isOpen())
+									{
+										openTag = xmlTag;
+									}
+									else if (xmlTag.isOpenClose())
+									{
+										openTag = xmlTag;
+										closeTag = xmlTag;
+									}
+								}
+							}
+						}
+						else
+						{
+							if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
+							{
+								level++;
+							}
+
+							if (xmlTag.isClose())
+							{
+								if (xmlTag.getName().equals(openTag.getName()))
+								{
+									if (level == 0)
+									{
+										closeTag = xmlTag;
+										closeTag.setOpenTag(openTag);
+									}
+									else
+									{
+										level--;
+									}
+								}
+							}
+						}
+					}
+
+					if ((openTag != null) && (closeTag != null) && (level == 0))
+					{
+						TagTester tester = new TagTester(parser, openTag, closeTag);
+						testers.add(tester);
+						openTag = null;
+						closeTag = null;
+					}
+
+					if (stopAfterFirst && (closeTag != null))
+					{
+						break;
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
+				throw new WicketRuntimeException(e);
+			}
+		}
+
+		return testers;
 	}
 }

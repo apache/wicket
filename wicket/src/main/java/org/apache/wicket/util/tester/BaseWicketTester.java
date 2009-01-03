@@ -1206,6 +1206,18 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Modified version of BaseWicketTester#getTagByWicketId(String) that returns all matching tags
+	 * instead of just the first.
+	 * 
+	 * @see BaseWicketTester#getTagByWicketId(String)
+	 */
+	public static List<TagTester> getTagsByWicketId(WicketTester tester, String wicketId)
+	{
+		return TagTester.createTagsByAttribute(tester.getServletResponse().getDocument(),
+			"wicket:id", wicketId, false);
+	}
+
+	/**
 	 * Retrieves a <code>TagTester</code> based on an DOM id. If more <code>Component</code>s exist
 	 * with the same id in the markup, only the first one is returned.
 	 * 
