@@ -27,6 +27,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -60,7 +61,8 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor getHeaderContribution(final Class<?> scope, final String path)
+	public static final HeaderContributor getHeaderContribution(final Class<?> scope,
+		final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -303,6 +305,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			{
 				try
 				{
+					// @TODO remove in 1.5
 					if (Application.get()
 						.getResourceSettings()
 						.getStripJavascriptCommentsAndWhitespace())
@@ -310,11 +313,18 @@ public class JavascriptPackageResource extends CompressedPackageResource
 						String s = new String(input, "UTF-8");
 						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("UTF-8");
 					}
-					else
+
+					IJavascriptCompressor compressor = Application.get()
+						.getResourceSettings()
+						.getJavascriptCompressor();
+					if (compressor != null)
 					{
-						// don't strip the comments, just return original input
-						return input;
+						String s = new String(input, "UTF-8");
+						return compressor.compress(s).getBytes("UTF-8");
 					}
+
+					// don't strip the comments, just return original input
+					return input;
 				}
 				catch (Exception e)
 				{

@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.javascript.DefaultJavascriptCompressor;
 import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -283,7 +284,7 @@ public abstract class Application
 			 */
 			public void onInstantiation(final Component component)
 			{
-				final Class<? extends Component> cl = (Class<? extends Component>)component.getClass();
+				final Class<? extends Component> cl = component.getClass();
 				// If component instantiation is not authorized
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(cl))
 				{
@@ -346,7 +347,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(true);
-			getResourceSettings().setStripJavascriptCommentsAndWhitespace(false);
+			getResourceSettings().setJavascriptCompressor(null);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
@@ -356,7 +357,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 				IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(false);
-			getResourceSettings().setStripJavascriptCommentsAndWhitespace(true);
+			getResourceSettings().setJavascriptCompressor(new DefaultJavascriptCompressor());
 		}
 		else
 		{
@@ -1021,8 +1022,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be
-	 * called during application startup; it is not thread safe.
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be called
+	 * during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 */
@@ -1076,8 +1077,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be
-	 * called during application startup; it is not thread safe.
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be called
+	 * during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 */

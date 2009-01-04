@@ -35,6 +35,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.IMarkupParserFactory;
 import org.apache.wicket.markup.MarkupCache;
@@ -301,9 +302,14 @@ public final class Settings
 	private boolean requestLoggerEnabled;
 
 	/**
-	 * Whether the comments and whitespace will be stripped from javascript resources
+	 * Whether the comments and whitespace will be stripped from javascript resources.
+	 * 
+	 * @TODO Remove in 1.5
 	 */
-	private boolean stripJavascriptCommentsAndWhitespace;
+	private boolean stripJavascriptCommentsAndWhitespace = false;
+
+	/** The Javascript compressor */
+	private IJavascriptCompressor javascriptCompressor;
 
 	/**
 	 * Whether the container's class name should be printed to response (in a html comment).
@@ -1251,16 +1257,32 @@ public final class Settings
 	}
 
 	/**
+	 * For backwards compatibility reasons, if the return value is true, wicket's default javascript
+	 * compressor will be used no matter which one was configured via
+	 * {@link #setJavascriptCompressor(IJavascriptCompressor)}.
+	 * 
 	 * @see org.apache.wicket.settings.IResourceSettings#getStripJavascriptCommentsAndWhitespace()
+	 * 
+	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
+	 *             be removed in 1.5
 	 */
+	@Deprecated
 	public boolean getStripJavascriptCommentsAndWhitespace()
 	{
 		return stripJavascriptCommentsAndWhitespace;
 	}
 
 	/**
+	 * For backwards compatibility reasons, if the return value is true, wicket's default javascript
+	 * compressor will be used no matter which one was configured via
+	 * {@link #setJavascriptCompressor(IJavascriptCompressor)}.
+	 * 
 	 * @see org.apache.wicket.settings.IResourceSettings#setStripJavascriptCommentsAndWhitespace(boolean)
+	 * 
+	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
+	 *             be removed in 1.5
 	 */
+	@Deprecated
 	public void setStripJavascriptCommentsAndWhitespace(boolean value)
 	{
 		stripJavascriptCommentsAndWhitespace = value;
@@ -1439,5 +1461,21 @@ public final class Settings
 		this.outputComponentPath = outputComponentPath;
 	}
 
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#getJavascriptCompressor()
+	 */
+	public IJavascriptCompressor getJavascriptCompressor()
+	{
+		return javascriptCompressor;
+	}
 
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setJavascriptCompressor(org.apache.wicket.javascript.IJavascriptCompressor)
+	 */
+	public IJavascriptCompressor setJavascriptCompressor(IJavascriptCompressor compressor)
+	{
+		IJavascriptCompressor old = javascriptCompressor;
+		javascriptCompressor = compressor;
+		return old;
+	}
 }

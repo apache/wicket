@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -279,14 +280,38 @@ public interface IResourceSettings
 	 * through {@link JavascriptPackageResource}
 	 * 
 	 * @param value
+	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
+	 *             be removed in 1.5
 	 */
+	@Deprecated
 	void setStripJavascriptCommentsAndWhitespace(boolean value);
 
 	/**
 	 * @return whether the comments and whitespace characters will be stripped from resources served
 	 *         through {@link JavascriptPackageResource}
+	 * @deprecated please use {@link #getJavascriptCompressor()} instead. Will be removed in 1.5
 	 */
+	@Deprecated
 	boolean getStripJavascriptCommentsAndWhitespace();
+
+	/**
+	 * Set the javascript compressor implemententation use e.g. by {@link JavascriptPackageResource}
+	 * . A typical implementation will remove comments and whitespace. But a no-op implementation is
+	 * available as well.
+	 * 
+	 * @param compressor
+	 *            The implementation to be used
+	 * @return The old value
+	 */
+	IJavascriptCompressor setJavascriptCompressor(IJavascriptCompressor compressor);
+
+	/**
+	 * Get the javascript compressor to remove comments and whitespace characters from javascripts
+	 * 
+	 * @return whether the comments and whitespace characters will be stripped from resources served
+	 *         through {@link JavascriptPackageResource}. Null is a valid value.
+	 */
+	IJavascriptCompressor getJavascriptCompressor();
 
 	/**
 	 * Sets whether Wicket should add last modified time as a parameter to resource reference URL
