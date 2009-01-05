@@ -120,7 +120,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		super.onComponentTag(tag);
 		IValueMap attrs = tag.getAttributes();
 
-		attrs.put("multiple", null);
+		attrs.put("multiple", "multiple");
 		attrs.put("size", getPalette().getRows());
 
 		if (!palette.isPaletteEnabled())
