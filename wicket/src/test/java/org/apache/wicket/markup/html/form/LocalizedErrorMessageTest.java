@@ -88,7 +88,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		page.form.onFormSubmitted();
 
-		tester.assertErrorMessages(new String[] { "'foo' ist kein gültiger Wert für 'Integer'." });
+		tester.assertErrorMessages(new String[] { "'foo' ist kein g\u00FCltiger Wert f\u00FCr 'Integer'." });
 		tester.getWicketSession().setLocale(new Locale("pl"));
 
 		tester.getWicketSession().cleanupFeedbackMessages();
