@@ -53,7 +53,7 @@ public class Selection<T> extends AbstractOptions<T>
 		String onFocus = getPalette().getSelectionOnFocusJS();
 		if (onFocus != null)
 		{
-			attrs.put("onFocus", onFocus);
+			attrs.put("onfocus", onFocus);
 		}
 
 		tag.getAttributes().put("ondblclick", getPalette().getRemoveOnClickJS());
