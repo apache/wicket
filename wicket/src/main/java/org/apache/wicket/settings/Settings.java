@@ -262,7 +262,7 @@ public final class Settings
 	 * Whether the generated page id must be unique per session, or it's enough if it is unique per
 	 * page map;
 	 */
-	private boolean pageIdUniquePerSession = false;
+	private boolean pageIdUniquePerSession = true;
 
 	/**
 	 * The time that a request will by default be waiting for the previous request to be handled
