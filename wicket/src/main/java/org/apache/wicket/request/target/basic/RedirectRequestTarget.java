@@ -89,7 +89,7 @@ public class RedirectRequestTarget implements IRequestTarget
 					.getProcessor()
 					.getRequestCodingStrategy()
 					.rewriteStaticRelativeUrl(redirectUrl.substring(1));
-				if (location.startsWith("./"))
+				if (location.startsWith("./") && location.length() > 2)
 				{
 					location = location.substring(2);
 				}
