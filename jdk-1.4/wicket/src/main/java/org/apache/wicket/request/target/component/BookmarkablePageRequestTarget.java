@@ -25,8 +25,8 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.request.IRequestCycleProcessor;
 
 /**
- * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page
- * that is to be created from the provided page class. This is typically used for redirects to
+ * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page that
+ * is to be created from the provided page class. This is typically used for redirects to
  * bookmarkable pages or mounted pages.
  * 
  * @author Eelco Hillenius
@@ -107,7 +107,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			throw new IllegalArgumentException("Argument pageClass must be an instance of " +
 				Page.class.getName());
 		}
-		this.pageClassRef = new WeakReference(pageClass);
+		pageClassRef = new WeakReference(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
@@ -222,7 +222,16 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
 				String redirectUrl = processor.getRequestCodingStrategy()
-					.encode(requestCycle, this).toString();
+					.encode(requestCycle, this)
+					.toString();
+
+				// WICKET-1916 - if we are redirecting to homepage, then redirectUrl equals "./",
+				// and if we strip it to blank, no redirect occurs
+				if (redirectUrl.startsWith("./") && redirectUrl.length() > 2)
+				{
+					redirectUrl = redirectUrl.substring(2);
+				}
+
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -254,7 +263,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	protected Page newPage(final Class pageClass, final RequestCycle requestCycle)
 	{
 		// Construct a new instance using the default page factory
-		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
+		IPageFactory pageFactory = requestCycle.getApplication()
+			.getSessionSettings()
 			.getPageFactory();
 
 		if (pageParameters == null || pageParameters.size() == 0)
