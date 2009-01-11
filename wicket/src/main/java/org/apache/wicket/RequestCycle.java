@@ -1054,7 +1054,7 @@ public abstract class RequestCycle
 	 * 
 	 * <p>
 	 * Clean up the request cycle.
-     * </p>
+	 * </p>
 	 */
 	public void detach()
 	{
@@ -1378,6 +1378,13 @@ public abstract class RequestCycle
 					// stack
 					response.reset();
 					currentStep = RESPOND;
+
+					// wicket-2013: create a new session if invalidated
+					if (getSession().isSessionInvalidated())
+					{
+						session = null;
+						Session.unset();
+					}
 				}
 			}
 		}
@@ -1412,6 +1419,8 @@ public abstract class RequestCycle
 			{
 				log.error("there was an error detaching the session", re);
 			}
+
+			session = null;
 		}
 
 		if (isRedirect())

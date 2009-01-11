@@ -400,7 +400,9 @@ public abstract class Session implements IClusterable
 		// If there is no request cycle then this is not a normal request but for example a last
 		// modified call.
 		if (RequestCycle.get() == null)
+		{
 			return;
+		}
 
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
