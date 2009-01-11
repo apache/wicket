@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.version.undo.Change;
@@ -101,24 +100,6 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	@Override
 	protected IModel<String> initModel()
 	{
-		return null;
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
-	 */
-	@Override
-	public Form<?> getForm()
-	{
-		try
-		{
-			return super.getForm();
-		}
-		catch (WicketRuntimeException wre)
-		{
-			// ignore this and return null. (Form.findSubmittingComponent expects this)
-		}
 		return null;
 	}
 

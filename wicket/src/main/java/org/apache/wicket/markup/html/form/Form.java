@@ -592,20 +592,23 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				{
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
+					Form<?> form = Form.findForm((Component)submittingComponent);
 
 					// Check for component-name or component-name.x request string
-					if (submittingComponent.getForm() != null &&
-						submittingComponent.getForm().getRootForm() == Form.this &&
-						(getRequest().getParameter(submittingComponent.getInputName()) != null || getRequest().getParameter(
-							submittingComponent.getInputName() + ".x") != null))
+					if ((form != null) && (form.getRootForm() == Form.this))
 					{
-						if (!component.isVisible())
+						String name = submittingComponent.getInputName();
+						if ((getRequest().getParameter(name) != null) ||
+							(getRequest().getParameter(name + ".x") != null))
 						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not visible");
+							if (!component.isVisible())
+							{
+								throw new WicketRuntimeException("Submit Button " +
+									submittingComponent.getInputName() + " (path=" +
+									component.getPageRelativePath() + ") is not visible");
+							}
+							return submittingComponent;
 						}
-						return submittingComponent;
 					}
 					return CONTINUE_TRAVERSAL;
 				}
