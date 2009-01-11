@@ -1261,20 +1261,23 @@ public class BaseWicketTester extends MockWebApplication
 			@Override
 			public void onFormComponent(FormComponent<?> formComponent)
 			{
-				// !(formComponent instanceof Button) &&
-				if (!(formComponent instanceof RadioGroup) &&
-					!(formComponent instanceof CheckGroup))
+				if (formComponent.isVisible())
 				{
-					String name = formComponent.getInputName();
-					String value = formComponent.getValue();
-
-					// Set request parameter with the field value, but do not
-					// modify an existing
-					// request parameter explicitly set using
-					// FormTester.setValue()
-					if (getServletRequest().getParameterMap().get(name) == null)
+					// !(formComponent instanceof Button) &&
+					if (!(formComponent instanceof RadioGroup) &&
+						!(formComponent instanceof CheckGroup))
 					{
-						getServletRequest().setParameter(name, value);
+						String name = formComponent.getInputName();
+						String value = formComponent.getValue();
+
+						// Set request parameter with the field value, but do not
+						// modify an existing
+						// request parameter explicitly set using
+						// FormTester.setValue()
+						if (getServletRequest().getParameterMap().get(name) == null)
+						{
+							getServletRequest().setParameter(name, value);
+						}
 					}
 				}
 			}
