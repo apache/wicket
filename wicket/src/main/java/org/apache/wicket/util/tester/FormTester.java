@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -491,11 +491,11 @@ public class FormTester
 
 	/**
 	 * Simulates selecting an option of a <code>FormComponent</code>. Supports
-	 * <code>RadioGroup</code>, <code>CheckGroup</code>, and <code>AbstractChoice</code>
-	 * family currently. The behavior is similar to interacting on the browser: For a single choice,
-	 * such as <code>Radio</code> or <code>DropDownList</code>, the selection will toggle each
-	 * other. For multiple choice, such as <code>Checkbox</code> or
-	 * <code>ListMultipleChoice</code>, the selection will accumulate.
+	 * <code>RadioGroup</code>, <code>CheckGroup</code>, and <code>AbstractChoice</code> family
+	 * currently. The behavior is similar to interacting on the browser: For a single choice, such
+	 * as <code>Radio</code> or <code>DropDownList</code>, the selection will toggle each other. For
+	 * multiple choice, such as <code>Checkbox</code> or <code>ListMultipleChoice</code>, the
+	 * selection will accumulate.
 	 * 
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
@@ -514,11 +514,9 @@ public class FormTester
 		{
 			try
 			{
-				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod(
-					"wantOnSelectionChangedNotifications");
+				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod("wantOnSelectionChangedNotifications");
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
-				boolean wantOnSelectionChangedNotifications = (Boolean) wantOnSelectionChangedNotificationsMethod.invoke(
-						component);
+				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
 				if (wantOnSelectionChangedNotifications)
 				{
 					((DropDownChoice<?>)component).onSelectionChanged();
@@ -621,6 +619,8 @@ public class FormTester
 		checkClosed();
 		try
 		{
+			baseWicketTester.getWicketSession().cleanupFeedbackMessages();
+
 			MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
 
 			WebRequestCycle requestCycle = baseWicketTester.createRequestCycle();
@@ -678,8 +678,8 @@ public class FormTester
 	}
 
 	/**
-	 * Adds an additional <code>FormComponent</code>'s value into request parameter -- this
-	 * method retains existing parameters but removes any duplicate parameters.
+	 * Adds an additional <code>FormComponent</code>'s value into request parameter -- this method
+	 * retains existing parameters but removes any duplicate parameters.
 	 * 
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
