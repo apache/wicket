@@ -34,8 +34,8 @@ import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.Request;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
@@ -104,7 +104,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * to be present to enable the behavior
 	 */
 	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE +
-			"ignoreIfNotActive";
+		"ignoreIfNotActive";
 
 	/**
 	 * Various settings used to configure this strategy
@@ -153,7 +153,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * <p>
 	 * mountsOnPath is sorted by longest paths first to improve resolution of possible path
 	 * conflicts. <br />
-	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
+	 * For example: <br/>
+	 * we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
 	 * now suppose we want to access Page1 with a single parameter param="test". we have a url
 	 * collision since both pages can be access with /page/test <br />
@@ -222,15 +223,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode the given request target. If a mount is found, that mounted url will be returned.
 	 * Otherwise, one of the delegation methods will be called. In case you are using custom targets
 	 * that are not part of the default target hierarchy, you need to override
-	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults
-	 * have been tried. When that doesn't provide a url either, an exception will be thrown saying
-	 * that encoding could not be done.
+	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults have
+	 * been tried. When that doesn't provide a url either, an exception will be thrown saying that
+	 * encoding could not be done.
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
 	 */
 	public final CharSequence encode(final RequestCycle requestCycle,
-			final IRequestTarget requestTarget)
+		final IRequestTarget requestTarget)
 	{
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
@@ -246,12 +247,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			url = requestContext.encodeRenderURL(url == null ? encode(requestCycle,
-					(IBookmarkablePageRequestTarget)requestTarget) : url);
+				(IBookmarkablePageRequestTarget)requestTarget) : url);
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
 			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle,
-					(ISharedResourceRequestTarget)requestTarget) : url);
+				(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
@@ -265,13 +266,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				IListenerInterfaceRequestTarget iliRequestTarget = (IListenerInterfaceRequestTarget)requestTarget;
 				RequestListenerInterface rli = iliRequestTarget.getRequestListenerInterface();
 				if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()) ||
-						IBehaviorListener.class.isAssignableFrom(rli.getMethod()
-								.getDeclaringClass()))
+					IBehaviorListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 				{
 					url = requestContext.encodeResourceURL(url);
 				}
 				else if (IRedirectListener.class.isAssignableFrom(rli.getMethod()
-						.getDeclaringClass()))
+					.getDeclaringClass()))
 				{
 					if (((WebRequestCycle)requestCycle).getWebRequest().isAjax())
 					{
@@ -296,7 +296,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 						for (int i = 0, size = behaviors.size(); i < size; i++)
 						{
 							if (AbstractAjaxBehavior.class.isAssignableFrom(behaviors.get(i)
-									.getClass()))
+								.getClass()))
 							{
 								forceActionURL = false;
 								break;
@@ -379,7 +379,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		synchronized (mountsOnPath)
 		{
 			return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
-					new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
+				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
 		}
 	}
 
@@ -407,8 +407,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
@@ -426,7 +425,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (path.equals("/") || path.equals(""))
 		{
 			throw new IllegalArgumentException(
-					"The mount path '/' is reserved for the application home page");
+				"The mount path '/' is reserved for the application home page");
 		}
 
 		// Sanity check in case someone doesn't read the javadoc while
@@ -441,7 +440,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (mountsOnPath.strategyForMount(path) != null)
 			{
 				throw new WicketRuntimeException(path + " is already mounted for " +
-						mountsOnPath.strategyForMount(path));
+					mountsOnPath.strategyForMount(path));
 			}
 			mountsOnPath.mount(path, encoder);
 		}
@@ -466,8 +465,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
 	{
-		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters
-				.getPath());
+		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters.getPath());
 		if (encoder == null)
 		{
 			return null;
@@ -512,24 +510,22 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *            the parameters object to set the found values on
 	 */
 	protected void addBookmarkablePageParameters(final Request request,
-			final RequestParameters parameters)
+		final RequestParameters parameters)
 	{
-		final String requestString = request
-				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		final String requestString = request.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
 			if (components.length != 2)
 			{
 				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " +
-						requestString + ", expected: 'pageMapName:pageClassName'");
+					requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
 			// Extract any pagemap name
 			final String pageMapName = components[0];
-			parameters.setPageMapName(pageMapName.length() == 0
-					? PageMap.DEFAULT_NAME
-					: pageMapName);
+			parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME
+				: pageMapName);
 
 			// Extract bookmarkable page class name
 			final String pageClassName = components[1];
@@ -566,7 +562,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *            parameters object to set the found parts in
 	 */
 	public static void addInterfaceParameters(final String interfaceParameter,
-			final RequestParameters parameters)
+		final RequestParameters parameters)
 	{
 		if (interfaceParameter == null)
 		{
@@ -581,7 +577,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (pathComponents.length < 6)
 		{
 			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
-					" = " + interfaceParameter);
+				" = " + interfaceParameter);
 		}
 
 		// Extract version
@@ -589,16 +585,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		try
 		{
 			versionNumberString = pathComponents[pathComponents.length - 4];
-			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
-					.parseInt(versionNumberString);
+			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0
+				: Integer.parseInt(versionNumberString);
 			parameters.setVersionNumber(versionNumber);
 		}
 		catch (NumberFormatException e)
 		{
 			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
-					" = " + interfaceParameter +
-					"; wrong format for page version argument. Expected a number but was '" +
-					versionNumberString + "'", e);
+				" = " + interfaceParameter +
+				"; wrong format for page version argument. Expected a number but was '" +
+				versionNumberString + "'", e);
 		}
 
 		// Set pagemap name
@@ -615,9 +611,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		catch (NumberFormatException e)
 		{
 			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
-					" = " + interfaceParameter +
-					"; wrong format for url depth argument. Expected a number but was '" +
-					urlDepthString + "'", e);
+				" = " + interfaceParameter +
+				"; wrong format for url depth argument. Expected a number but was '" +
+				urlDepthString + "'", e);
 		}
 		parameters.setUrlDepth(urlDepth);
 
@@ -627,14 +623,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		// Extract interface name after second-to-last colon
 		final String interfaceName = pathComponents[pathComponents.length - 3];
-		parameters.setInterfaceName(interfaceName.length() != 0
-				? interfaceName
-				: IRedirectListener.INTERFACE.getName());
+		parameters.setInterfaceName(interfaceName.length() != 0 ? interfaceName
+			: IRedirectListener.INTERFACE.getName());
 
 		// Component path is everything after pageMapName and before version
 		final int start = pageMapName.length() + 1;
 		final int end = interfaceParameter.length() - behaviourId.length() -
-				interfaceName.length() - versionNumberString.length() - urlDepthString.length() - 4;
+			interfaceName.length() - versionNumberString.length() - urlDepthString.length() - 4;
 		final String componentPath = interfaceParameter.substring(start, end);
 		parameters.setComponentPath(componentPath);
 	}
@@ -709,7 +704,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @return the encoded url
 	 */
 	protected CharSequence encode(RequestCycle requestCycle,
-			IBookmarkablePageRequestTarget requestTarget)
+		IBookmarkablePageRequestTarget requestTarget)
 	{
 		// Begin encoding URL
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
@@ -744,8 +739,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		WebRequestEncoder encoder = new WebRequestEncoder(url);
 		if (!application.getHomePage().equals(pageClass) ||
-				!"".equals(pageMapName) ||
-				(application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget))
+			!"".equals(pageMapName) ||
+			(application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget))
 		{
 			/*
 			 * Add <page-map-name>:<bookmarkable-page-class>
@@ -758,7 +753,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			 * unencoded url correctly.
 			 */
 			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+				pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
 		}
 
 		// Get page parameters
@@ -804,7 +799,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @return the encoded url
 	 */
 	protected CharSequence encode(RequestCycle requestCycle,
-			ISharedResourceRequestTarget requestTarget)
+		ISharedResourceRequestTarget requestTarget)
 	{
 		final String sharedResourceKey = requestTarget.getResourceKey();
 		if ((sharedResourceKey == null) || (sharedResourceKey.trim().length() == 0))
@@ -813,8 +808,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else
 		{
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
-					.length());
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(
+				sharedResourceKey.length());
 			buffer.append(RESOURCES_PATH_PREFIX);
 			buffer.append(sharedResourceKey);
 			Map map = requestTarget.getRequestParameters().getParameters();
@@ -852,7 +847,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @return the encoded url
 	 */
 	protected CharSequence encode(RequestCycle requestCycle,
-			IListenerInterfaceRequestTarget requestTarget)
+		IListenerInterfaceRequestTarget requestTarget)
 	{
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
@@ -914,8 +909,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
 		{
-			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
-					IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			url.append(url.indexOf("?") > -1 ? "&" : "?").append(
+				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return url;
 	}
@@ -1036,8 +1031,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				final String key = (String)entry.getKey();
 				if (path.startsWith(key))
 				{
-					IRequestTargetUrlCodingStrategy strategy = (IRequestTargetUrlCodingStrategy)entry
-							.getValue();
+					IRequestTargetUrlCodingStrategy strategy = (IRequestTargetUrlCodingStrategy)entry.getValue();
 					if (strategy.matches(path))
 					{
 						return strategy;
@@ -1106,7 +1100,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		 * @return previous coding strategy associated with the mount, or null if none
 		 */
 		public IRequestTargetUrlCodingStrategy mount(String mount,
-				IRequestTargetUrlCodingStrategy encoder)
+			IRequestTargetUrlCodingStrategy encoder)
 		{
 			if (caseSensitiveMounts == false && mount != null)
 			{
@@ -1148,8 +1142,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Makes page map name url safe.
 	 * 
 	 * Since the default page map name in wicket is null and null does not encode well into urls
-	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed
-	 * in is not null it is returned without modification.
+	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed in
+	 * is not null it is returned without modification.
 	 * 
 	 * @param pageMapName
 	 *            page map name

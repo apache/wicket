@@ -133,7 +133,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		}
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(rli.getName()))
 		{
-			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
+			url.append(url.indexOf("?") > -1 ? "&" : "?").append(
 				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
