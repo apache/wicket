@@ -29,9 +29,11 @@ import org.apache.wicket.model.PropertyModel;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  *            The column's model object type
+ * @param <F>
+ *            Filter's model object type
  * 
  */
-public class TextFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
+public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,7 +63,7 @@ public class TextFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 */
 	public Component getFilter(String componentId, FilterForm form)
 	{
-		return new TextFilter<T>(componentId, getFilterModel(form), form);
+		return new TextFilter<F>(componentId, getFilterModel(form), form);
 	}
 
 	/**
@@ -72,9 +74,9 @@ public class TextFilteredPropertyColumn<T> extends FilteredPropertyColumn<T>
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<T> getFilterModel(FilterForm form)
+	protected IModel<F> getFilterModel(FilterForm form)
 	{
-		return new PropertyModel<T>(form.getDefaultModel(), getPropertyExpression());
+		return new PropertyModel<F>(form.getDefaultModel(), getPropertyExpression());
 	}
 
 
