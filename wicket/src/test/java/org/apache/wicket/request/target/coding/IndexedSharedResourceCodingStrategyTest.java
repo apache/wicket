@@ -96,7 +96,7 @@ public class IndexedSharedResourceCodingStrategyTest extends WicketTestCase
 		params.put("test", new String[] { "testval1", "testval2" });
 		params.add("foo", "fooval");
 		final String url = cycle.urlFor(new ResourceReference(RESOURCE_NAME), params).toString();
-		assertEquals("test/param0/param1?test=testval1&test=testval2&foo=fooval", url);
+		assertEquals("test/param0/param1?foo=fooval&test=testval1&test=testval2", url);
 		tester.getServletRequest().setURL(URL_PREFIX + url);
 		tester.processRequestCycle(cycle);
 		assertEquals(4, resource.params.size());
