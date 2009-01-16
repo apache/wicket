@@ -166,7 +166,7 @@ class SerializedPagesCache
 		// this is used for lookup on pagemap serialization. We don't have the
 		// session id at that point, because it can happen outside the request
 		// thread. We only have the page instance and we need to use it as a key
-		final transient WeakReference<Page> page;
+		final transient WeakReference<Object> page;
 
 		// list of serialized pages
 		final List<SerializedPage> pages;
@@ -187,14 +187,14 @@ class SerializedPagesCache
 			versionNumber = page.getCurrentVersionNumber();
 			ajaxVersionNumber = page.getAjaxVersionNumber();
 			this.pages = new ArrayList<SerializedPage>(pages);
-			this.page = new WeakReference<Page>(page);
+			this.page = new WeakReference<Object>(page);
 		}
 
 		SerializedPageWithSession(String sessionId, int pageId, String pageMapName,
 			int versionNumber, int ajaxVersionNumber, List<SerializedPage> pages)
 		{
 			this.sessionId = sessionId;
-			page = new WeakReference<Page>(NO_PAGE);
+			page = new WeakReference<Object>(NO_PAGE);
 			this.pageId = pageId;
 			this.pageMapName = pageMapName;
 			this.versionNumber = versionNumber;
@@ -202,7 +202,7 @@ class SerializedPagesCache
 			this.pages = pages;
 		}
 
-		static final Page NO_PAGE = new Page()
+		static final Object NO_PAGE = new Object()
 		{
 		};
 
