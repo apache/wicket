@@ -3948,8 +3948,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 					if (behavior.isEnabled(this))
 					{
 						behavior.onComponentTag(this, tag);
-						behavior.detach(this);
 					}
+					behavior.detach(this);
 				}
 			}
 
