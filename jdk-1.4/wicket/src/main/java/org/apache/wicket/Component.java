@@ -3836,7 +3836,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 				while (tagBehaviors.hasNext())
 				{
 					final IBehavior behavior = (IBehavior)tagBehaviors.next();
-					behavior.onComponentTag(this, tag);
+					if (behavior.isEnabled(this))
+					{
+						behavior.onComponentTag(this, tag);
+					}
+					behavior.detach(this);
 				}
 			}
 
