@@ -22,6 +22,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +50,6 @@ public class CookieValuePersister implements IValuePersister
 		if (cookie != null)
 		{
 			clear(cookie);
-			if (log.isDebugEnabled())
-			{
-				log.debug("Cookie for " + component + " removed");
-			}
 		}
 	}
 
@@ -69,6 +66,11 @@ public class CookieValuePersister implements IValuePersister
 			{
 				// Assign the retrieved/persisted value to the component
 				component.setModelValue(value.split(FormComponent.VALUE_SEPARATOR));
+
+				if (log.isDebugEnabled())
+				{
+					log.debug("Cookie value successfully transferred into Component: " + component);
+				}
 			}
 		}
 	}
@@ -127,6 +129,11 @@ public class CookieValuePersister implements IValuePersister
 			cookie.setValue(null);
 
 			save(cookie);
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("Removed Cookie: " + cookie.getName());
+			}
 		}
 	}
 
@@ -169,7 +176,8 @@ public class CookieValuePersister implements IValuePersister
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Got cookie: " + cookieToDebugString(cookie));
+					log.debug("Found cookie: " + cookieToDebugString(cookie) + "; request URI=" +
+						getWebRequest().getHttpServletRequest().getRequestURI());
 				}
 				return cookie;
 			}
@@ -177,7 +185,7 @@ public class CookieValuePersister implements IValuePersister
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Got cookie " + name + ", but it had no value; returning null");
+					log.debug("Found cookie " + name + ", but it had no value; returning null");
 				}
 			}
 		}
@@ -196,7 +204,22 @@ public class CookieValuePersister implements IValuePersister
 	{
 		try
 		{
-			return getWebRequest().getCookie(name);
+			Cookie cookie = getWebRequest().getCookie(name);
+			if (log.isDebugEnabled())
+			{
+				if (cookie != null)
+				{
+					log.debug("Found Cookie with name=" + name + " and request URI=" +
+						getWebRequest().getHttpServletRequest().getRequestURI());
+				}
+				else
+				{
+					log.debug("Unable to find Cookie with name=" + name + " and request URI=" +
+						getWebRequest().getHttpServletRequest().getRequestURI());
+				}
+			}
+
+			return cookie;
 		}
 		catch (NullPointerException ex)
 		{
@@ -266,10 +289,12 @@ public class CookieValuePersister implements IValuePersister
 				cookie.setDomain(domain);
 			}
 
-			cookie.setPath(getWebRequest().getHttpServletRequest().getContextPath());
-			// cookie.setPath("/");
-			// cookie.setPath(getWebRequest().getContextPath());
-
+			String path = getWebRequest().getHttpServletRequest().getContextPath();
+			if (Strings.isEmpty(path))
+			{
+				path = "/";
+			}
+			cookie.setPath(path);
 			cookie.setVersion(getSettings().getVersion());
 			cookie.setSecure(getSettings().getSecure());
 
@@ -277,7 +302,8 @@ public class CookieValuePersister implements IValuePersister
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("saved: " + cookieToDebugString(cookie));
+				log.debug("Cookie saved: " + cookieToDebugString(cookie) + "; request URI=" +
+					getWebRequest().getHttpServletRequest().getRequestURI());
 			}
 
 			return cookie;
