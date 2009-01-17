@@ -95,7 +95,6 @@ public class RequestParameters implements IClusterable
 	 */
 	public RequestParameters()
 	{
-
 	}
 
 	/**
@@ -318,9 +317,8 @@ public class RequestParameters implements IClusterable
 	 */
 	public void setPath(String pathInfo)
 	{
-		this.path = pathInfo;
+		path = pathInfo;
 	}
-
 
 	/**
 	 * Sets any resource key.
@@ -451,5 +449,4 @@ public class RequestParameters implements IClusterable
 	{
 		this.queryString = queryString;
 	}
-
 }

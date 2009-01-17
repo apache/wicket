@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.string.IStringIterator;
@@ -37,12 +36,9 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-@SuppressWarnings("unused")
 public final class PageParameters extends ValueMap
 {
-	/**
-	 * Null value for page parameters
-	 */
+	/** Null value for page parameters */
 	public static final PageParameters NULL = new PageParameters();
 
 	private static final long serialVersionUID = 1L;
@@ -139,20 +135,22 @@ public final class PageParameters extends ValueMap
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.util.value.ValueMap#put(java.lang.String, java.lang.Object)
+	 */
 	@Override
 	public Object put(String key, Object value)
 	{
-		return super.put(key, value);
-/*
- * BRING BACK IN 1.4
- * 
- * if (!(key instanceof String)) { throw new IllegalArgumentException( "PageParameter keys must be
- * of type String, but you supplied a " + key.getClass().getName()); } if (value instanceof String
- * || value instanceof String[]) { return super.put(key, value); } else { throw new
- * IllegalArgumentException("You tried to add an object of type " + value.getClass().getName() + "
- * to your PageParameters for key " + key + ", but you are only allowed to use String or
- * String[]."); }
- */
+		if ((value == null) || (value instanceof String) || (value instanceof String[]))
+		{
+			return super.put(key, value);
+		}
+		else
+		{
+			throw new IllegalArgumentException("You tried to add an object of type " +
+				value.getClass().getName() + "to your PageParameters for key " + key +
+				", but you are only allowed to use String or String[].");
+		}
 	}
 
 	/**
@@ -178,7 +176,7 @@ public final class PageParameters extends ValueMap
 	public Map<String, String[]> toRequestParameters()
 	{
 		Map<String, String[]> params = new HashMap<String, String[]>(size());
-		for (Entry<String, Object> entry : entrySet())
+		for (Map.Entry<String, Object> entry : entrySet())
 		{
 			if (entry.getValue() == null)
 			{

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -130,7 +130,7 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 
 		if (params != null)
 		{
-			params = new HashMap<String, Object>(params);
+			params = new LinkedHashMap<String, Object>(params);
 
 			int index = 0;
 
