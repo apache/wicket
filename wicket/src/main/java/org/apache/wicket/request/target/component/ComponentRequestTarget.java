@@ -22,8 +22,8 @@ import org.apache.wicket.RequestCycle;
 
 /**
  * Default implementation of
- * {@link org.apache.wicket.request.target.component.IComponentRequestTarget}. Target that denotes
- * a single component instance.
+ * {@link org.apache.wicket.request.target.component.IComponentRequestTarget}. Target that denotes a
+ * single component instance.
  * 
  * @author Eelco Hillenius
  */
@@ -60,29 +60,34 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			page.startComponentRender(component);
 		}
 
-		// Let component render itself
-		if (component instanceof Page)
+		// Render the component
+		try
 		{
-			// Use the default Page request target, if component is a Page
-			new PageRequestTarget((Page)component).respond(requestCycle);
-		}
-		else
-		{
-			// Render the component
-			try
+			// Let pages render itself
+			if (component instanceof Page)
+			{
+				// Use the default Page request target, if component is a Page
+				new PageRequestTarget((Page)component).respond(requestCycle);
+			}
+			else
 			{
 				// Render the component
 				component.renderComponent();
 			}
-			finally
-			{
-				component.getPage().detach();
-			}
 		}
-
-		if (page != null)
+		finally
 		{
-			page.endComponentRender(component);
+			if (page != null)
+			{
+				try
+				{
+					page.endComponentRender(component);
+				}
+				finally
+				{
+					page.detach();
+				}
+			}
 		}
 	}
 
@@ -104,6 +109,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if (obj instanceof ComponentRequestTarget)
@@ -117,6 +123,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "ComponentRequestTarget".hashCode();
@@ -127,6 +134,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[ComponentRequestTarget@" + hashCode() + " " + component + "]";
