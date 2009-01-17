@@ -28,8 +28,8 @@ import org.apache.wicket.version.undo.Change;
 /**
  * An abstract repeater view that provides paging functionality to its subclasses.
  * <p>
- * The view is populated by overriding the <code>getItemModels(int offset, int count)</code>
- * method and providing an iterator that returns models for items in the current page. The
+ * The view is populated by overriding the <code>getItemModels(int offset, int count)</code> method
+ * and providing an iterator that returns models for items in the current page. The
  * AbstractPageableView builds the items that will be rendered by looping over the models and
  * calling the <code>newItem(String id, int index, IModel model)</code> to generate the child item
  * container followed by <code>populateItem(Component item)</code> to let the user populate the
@@ -45,11 +45,8 @@ import org.apache.wicket.version.undo.Change;
  *            Model object type
  */
 public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageable
-
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -64,15 +61,15 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	private int currentPage;
 
 	/**
-	 * <code>cachedItemCount</code> is used to cache the call to
-	 * <code>internalGetItemCount()</code> for the duration of the request because that call can
-	 * potentially be expensive ( a select count query ) and so we do not want to execute it
-	 * multiple times.
+	 * <code>cachedItemCount</code> is used to cache the call to <code>internalGetItemCount()</code>
+	 * for the duration of the request because that call can potentially be expensive ( a select
+	 * count query ) and so we do not want to execute it multiple times.
 	 */
 	private transient int cachedItemCount;
 
-
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
@@ -83,14 +80,12 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		clearCachedItemCount();
 	}
 
-
 	/** @see org.apache.wicket.Component#Component(String) */
 	public AbstractPageableView(String id)
 	{
 		super(id);
 		clearCachedItemCount();
 	}
-
 
 	/**
 	 * This method retrieves the subset of models for items in the current page and allows
@@ -111,6 +106,9 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		return models;
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -129,11 +127,9 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 */
 	protected abstract Iterator<IModel<T>> getItemModels(int offset, int size);
 
-
 	// /////////////////////////////////////////////////////////////////////////
 	// ITEM COUNT CACHE
 	// /////////////////////////////////////////////////////////////////////////
-
 
 	private void clearCachedItemCount()
 	{
@@ -222,7 +218,11 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	protected abstract int internalGetItemCount();
 
 	/**
-	 * @return total item count
+	 * Get the row count.
+	 * 
+	 * @see #getItemCount()
+	 * 
+	 * @return total item count, but 0 if not visible in the hierarchy
 	 */
 	public final int getRowCount()
 	{
@@ -231,6 +231,19 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 			return 0;
 		}
 
+		return getItemCount();
+	}
+
+	/**
+	 * Get the item count. Since dataprovider.size() could potentially be expensive, the item count
+	 * is cached.
+	 * 
+	 * @see #getRowCount()
+	 * 
+	 * @return the item count
+	 */
+	public final int getItemCount()
+	{
 		if (isItemCountCached())
 		{
 			return getCachedItemCount();
@@ -239,7 +252,6 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		int count = internalGetItemCount();
 
 		setCachedItemCount(count);
-
 		return count;
 	}
 
@@ -405,6 +417,9 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 
 	};
 
+	/**
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
 	@Override
 	protected void onDetach()
 	{
