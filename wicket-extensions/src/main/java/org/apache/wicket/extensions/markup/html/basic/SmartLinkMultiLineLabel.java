@@ -36,24 +36,29 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class SmartLinkMultiLineLabel extends MultiLineLabel
+public class SmartLinkMultiLineLabel extends MultiLineLabel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
-	public SmartLinkMultiLineLabel(String name, String label)
+	public SmartLinkMultiLineLabel(String id, String label)
 	{
-		this(name, new Model<String>(label));
+		this(id, new Model<String>(label));
 	}
 
 	/**
-	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
+	 * Construct.
+	 * 
+	 * @param id
+	 *            The non-null id of this component
+	 * @param model
+	 *            The component's model
 	 */
-	public SmartLinkMultiLineLabel(String name, IModel<String> model)
+	public SmartLinkMultiLineLabel(String id, IModel<String> model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**
@@ -67,11 +72,22 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 		replaceComponentTagBody(markupStream, openTag, getSmartLink(body));
 	}
 
+	/**
+	 * Get the link parser. You may subclass that methods to provide your own LinkParser.
+	 * 
+	 * @return ILinkParser
+	 */
 	protected ILinkParser getLinkParser()
 	{
 		return new DefaultLinkParser();
 	}
 
+	/**
+	 * Get the text after parsing by the link parser.
+	 * 
+	 * @param text
+	 * @return smart link
+	 */
 	protected CharSequence getSmartLink(final CharSequence text)
 	{
 		return getLinkParser().parse(text.toString());
