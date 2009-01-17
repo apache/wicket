@@ -188,6 +188,9 @@ public abstract class RequestCycle
 	/** MetaDataEntry array. */
 	private MetaDataEntry<?>[] metaData;
 
+	/** true if wicket handled this request, false otherwise */
+	private boolean handled = true;
+
 	/**
 	 * Gets request cycle for calling thread.
 	 * 
@@ -1050,11 +1053,10 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS WICKET PRIVATE API. DO NOT CALL UNLESS YOU KNOW WHAT YOU ARE DOING.
-	 * 
-	 * <p>
-	 * Clean up the request cycle.
-	 * </p>
+	 * Clean up the request cycle. Please note that you (the user of Wicket) will probably never
+	 * have a need to call detach() yourself. It is used Wicket internally only. But you may
+	 * subclass RequestCycle in order to execute additional code during detach. Do not forget to
+	 * call super.detach() in or subclass.
 	 */
 	public void detach()
 	{
@@ -1161,7 +1163,6 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during threadDetach", re);
 		}
-
 	}
 
 	/**
@@ -1330,7 +1331,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * INTERNAL. This method is not part of public Wicket Api. Do not call it. Returns whether
+	 * INTERNAL. THIS METHOD IS NOT PART OF PUBLIC WICKET API. Do not call it. Returns whether
 	 * wicket handled this request or not (i.e. when no request target was found).
 	 * 
 	 * @return true if wicket handled this request, false otherwise
@@ -1339,8 +1340,6 @@ public abstract class RequestCycle
 	{
 		return handled;
 	}
-
-	private boolean handled = true;
 
 	/**
 	 * Loop through the processing steps starting from the current one.
