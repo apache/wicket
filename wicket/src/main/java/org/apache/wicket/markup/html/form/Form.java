@@ -1194,21 +1194,38 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private boolean anyFormComponentError()
 	{
-		final Object value = visitChildren(new IVisitor<Component>()
+		final boolean[] error = new boolean[] { false };
+
+		final FormComponent.IVisitor visitor = new FormComponent.IVisitor()
 		{
-			public Object component(final Component component)
+			public Object formComponent(IFormVisitorParticipant formComponent)
 			{
-				if (component.hasErrorMessage())
+				if (formComponent instanceof Component &&
+					((Component)formComponent).hasErrorMessage())
 				{
-					return STOP_TRAVERSAL;
+					error[0] = true;
+					return Component.IVisitor.STOP_TRAVERSAL;
 				}
 
 				// Traverse all children
-				return CONTINUE_TRAVERSAL;
+				return Component.IVisitor.CONTINUE_TRAVERSAL;
+			}
+		};
+
+		visitChildren(FormComponent.class, new IVisitor<Component>()
+		{
+			public Object component(final Component component)
+			{
+				return visitor.formComponent((FormComponent<?>)component);
 			}
 		});
 
-		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+		if (!error[0])
+		{
+			visitChildrenInContainingBorder(visitor);
+		}
+
+		return error[0];
 	}
 
 	/**
