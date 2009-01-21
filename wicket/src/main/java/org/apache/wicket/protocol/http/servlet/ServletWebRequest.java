@@ -60,9 +60,6 @@ public class ServletWebRequest extends WebRequest
 
 	private int previousUrlDepth;
 
-	/** Marks this request as an ajax request. */
-	private boolean ajax;
-
 	private boolean forceNewVersion = false;
 
 	/**
@@ -74,21 +71,6 @@ public class ServletWebRequest extends WebRequest
 	public ServletWebRequest(final HttpServletRequest httpServletRequest)
 	{
 		this.httpServletRequest = httpServletRequest;
-
-		ajax = false;
-		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
-		if (Strings.isEmpty(ajaxHeader) == false)
-		{
-			try
-			{
-				ajax = Strings.isTrue(ajaxHeader);
-			}
-			catch (StringValueConversionException e)
-			{
-				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
-			}
-		}
 	}
 
 	/**
@@ -430,28 +412,6 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * This will return true if the header "Wicket-Ajax" is set.
-	 * 
-	 * @see org.apache.wicket.protocol.http.WebRequest#isAjax()
-	 */
-	@Override
-	public final boolean isAjax()
-	{
-		return ajax;
-	}
-
-	/**
-	 * THIS IS FOR WICKET INTERNAL USE ONLY. DO NOT USE IT IN YOUR APPLICATION.
-	 * 
-	 * @param ajax
-	 *            ajax
-	 */
-	public final void setAjax(boolean ajax)
-	{
-		this.ajax = ajax;
-	}
-
-	/**
 	 * This method by default calls isAjax(), wicket ajax request do have an header set. And for all
 	 * the ajax request the versioning should be merged with the previous one. And when it sees that
 	 * the current request is a redirect to page request the version will also be merged with the
@@ -534,6 +494,30 @@ public class ServletWebRequest extends WebRequest
 	public String getQueryString()
 	{
 		return httpServletRequest.getQueryString();
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.WebRequest#isAjax()
+	 * 
+	 * @FIXME in 1.5 see wicket-1910 and revision 730362
+	 */
+	@Override
+	public boolean isAjax()
+	{
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
+		{
+			try
+			{
+				return Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+			}
+		}
+		return false;
 	}
 
 	/**
