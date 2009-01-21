@@ -36,10 +36,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
-import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -923,24 +920,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (model != null)
 		{
 			setModelImpl(wrap(model));
-		}
-
-		// Any component is allowed to have associated *.js or *.css file which are automatically
-		// added to the header section of the page.
-		// ignore anonymous classes and internal components
-		String name = this.getClass().getSimpleName();
-		if ((name != null) &&
-			((this instanceof Page) || ((id != null) && (id.length() > 0) && (id.charAt(0) != '_'))))
-		{
-			if (PackageResource.exists(this.getClass(), name + ".css", getLocale(), getStyle()))
-			{
-				add(CSSPackageResource.getHeaderContribution(this.getClass(), name + ".css"));
-			}
-
-			if (PackageResource.exists(this.getClass(), name + ".js", getLocale(), getStyle()))
-			{
-				add(JavascriptPackageResource.getHeaderContribution(this.getClass(), name + ".js"));
-			}
 		}
 	}
 
