@@ -16,13 +16,11 @@
  */
 package org.apache.wicket.util.tester;
 
+import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
-
 import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
@@ -519,6 +517,19 @@ public class WicketTesterTest extends TestCase
 		// wouldn't be any data to update it with.
 		assertNotNull("executeAjaxEvent() did not properly submit the form", pojo.getName());
 		assertEquals("Mock name", pojo.getName());
+	}
+
+	public void DISABLED_testSubmittingFormWithAjaxEventSubmitsFormValues()
+	{
+		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
+		FormTester form = tester.newFormTester("form");
+		form.setValue("name", "New name");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
+			"onclick");
+
+		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
+		Pojo pojo = page.getPojo();
+		assertEquals("New name", pojo.getName());
 	}
 
 	/**
