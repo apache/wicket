@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.util.tester;
 
-import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
+
 import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
@@ -519,7 +521,7 @@ public class WicketTesterTest extends TestCase
 		assertEquals("Mock name", pojo.getName());
 	}
 
-	public void DISABLED_testSubmittingFormWithAjaxEventSubmitsFormValues()
+	public void testSubmittingFormWithAjaxEventSubmitsFormValues()
 	{
 		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
 		FormTester form = tester.newFormTester("form");

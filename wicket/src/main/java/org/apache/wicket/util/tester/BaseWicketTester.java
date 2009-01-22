@@ -1184,6 +1184,7 @@ public class BaseWicketTester extends MockWebApplication
 			// a new one
 			if ((requestCycle.getWebRequest().isAjax() == false) && (isCreateAjaxRequest() == true))
 			{
+				setParametersForNextRequest(requestCycle.getWebRequest().getParameterMap());
 				requestCycle = setupRequestAndResponse();
 			}
 		}
