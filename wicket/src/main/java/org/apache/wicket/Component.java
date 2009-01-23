@@ -2782,8 +2782,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param markupId
 	 *            markup id value or null to clear any previous user defined value
+	 * @return this for chaining
 	 */
-	public void setMarkupId(String markupId)
+	public Component setMarkupId(String markupId)
 	{
 		if (markupId != null && Strings.isEmpty(markupId))
 		{
@@ -2795,6 +2796,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// on previous id
 
 		setMarkupIdImpl(markupId);
+
+		return this;
 	}
 
 	/**
