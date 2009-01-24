@@ -340,6 +340,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
    		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			Wicket.Ajax.invokePostCallHandlers();
+   			hideIndicator();
    			return;
    		}
     
