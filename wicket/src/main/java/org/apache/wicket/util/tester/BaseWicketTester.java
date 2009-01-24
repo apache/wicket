@@ -519,16 +519,25 @@ public class BaseWicketTester extends MockWebApplication
 		PageLink<?> pageLink = (PageLink<?>)getComponentFromLastRenderedPage(path);
 		try
 		{
-			Field iPageLinkField = pageLink.getClass().getDeclaredField("pageLink");
-			iPageLinkField.setAccessible(true);
-			IPageLink iPageLink = (IPageLink)iPageLinkField.get(pageLink);
-			return isEqual(expectedPageClass, iPageLink.getPageIdentity());
+			for (Class<?> type = pageLink.getClass(); type != PageLink.class.getSuperclass(); type = type.getSuperclass())
+			{
+				try
+				{
+					Field iPageLinkField = type.getDeclaredField("pageLink");
+					iPageLinkField.setAccessible(true);
+					IPageLink iPageLink = (IPageLink)iPageLinkField.get(pageLink);
+					return isEqual(expectedPageClass, iPageLink.getPageIdentity());
+				}
+
+				catch (NoSuchFieldException e)
+				{
+					continue;
+				}
+			}
+			throw new WicketRuntimeException(
+				"Is this realy a PageLink? Cannot find 'pageLink' field");
 		}
 		catch (SecurityException e)
-		{
-			throw convertoUnexpect(e);
-		}
-		catch (NoSuchFieldException e)
 		{
 			throw convertoUnexpect(e);
 		}
