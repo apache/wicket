@@ -1176,7 +1176,7 @@ public abstract class RequestCycle
 		}
 		catch (RuntimeException e)
 		{
-			log.error("Exception occurred during onEndRequest of the SessionStore", e);
+			log.error("Exception occurred during onBeginRequest of the SessionStore", e);
 		}
 		// Event callback
 		onBeginRequest();
