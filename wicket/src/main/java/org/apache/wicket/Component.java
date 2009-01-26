@@ -2413,30 +2413,41 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			if (getFlag(FLAG_PLACEHOLDER))
 			{
-				// write out a placeholder tag into the markup
 				final ComponentTag tag = markupStream.getTag();
-
-				String namespacePrefix = Strings.isEmpty(tag.getNamespace()) ? null
-					: tag.getNamespace() + ":";
-
-				getResponse().write("<");
-				if (namespacePrefix != null)
-				{
-					getResponse().write(namespacePrefix);
-				}
-				getResponse().write(tag.getName());
-				getResponse().write(" id=\"");
-				getResponse().write(getMarkupId());
-				getResponse().write("\" style=\"display:none\"></");
-				if (namespacePrefix != null)
-				{
-					getResponse().write(namespacePrefix);
-				}
-				getResponse().write(tag.getName());
-				getResponse().write(">");
+				renderPlaceholderTag(tag, getResponse());
 			}
 			markupStream.skipComponent();
 		}
+	}
+
+	/**
+	 * Renders a placeholder tag for the component when it is invisible and
+	 * {@link #setOutputMarkupPlaceholderTag(boolean)} has been called with <code>true</code>.
+	 * 
+	 * @param tag
+	 *            component tag
+	 * @param response
+	 *            response
+	 */
+	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
+	{
+		String ns = Strings.isEmpty(tag.getNamespace()) ? null : tag.getNamespace() + ":";
+
+		response.write("<");
+		if (ns != null)
+		{
+			response.write(ns);
+		}
+		response.write(tag.getName());
+		response.write(" id=\"");
+		response.write(getMarkupId());
+		response.write("\" style=\"display:none\"></");
+		if (ns != null)
+		{
+			response.write(ns);
+		}
+		response.write(tag.getName());
+		response.write(">");
 	}
 
 	/**
