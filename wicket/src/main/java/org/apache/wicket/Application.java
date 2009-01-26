@@ -928,6 +928,13 @@ public abstract class Application
 	 */
 	protected void internalDestroy()
 	{
+		// destroy detach listener
+		final IDetachListener detachListener = getFrameworkSettings().getDetachListener();
+		if (detachListener != null)
+		{
+			detachListener.onDestroyListener();
+		}
+
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);

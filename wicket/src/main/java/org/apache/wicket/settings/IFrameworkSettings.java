@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.IDetachListener;
+
 /**
  * Framework settings for retrieving and configuring framework settings.
  * 
@@ -37,4 +39,17 @@ public interface IFrameworkSettings
 	 * @return the Wicket version
 	 */
 	public String getVersion();
+
+	/**
+	 * @return detach listener or <code>null</code> if none
+	 */
+	public IDetachListener getDetachListener();
+
+	/**
+	 * Sets detach listener
+	 * 
+	 * @param listener
+	 *            listener or <code>null</code> to remove
+	 */
+	public void setDetachListener(IDetachListener listener);
 }

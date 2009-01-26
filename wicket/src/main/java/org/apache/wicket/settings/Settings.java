@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IDetachListener;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResponseFilter;
@@ -94,6 +95,8 @@ public final class Settings
 		IFrameworkSettings,
 		IRequestLoggerSettings
 {
+	private IDetachListener detachListener;
+
 	private boolean outputComponentPath = false;
 
 	/** Class of access denied page. */
@@ -1478,4 +1481,22 @@ public final class Settings
 		javascriptCompressor = compressor;
 		return old;
 	}
+
+	/**
+	 * @see org.apache.wicket.settings.IFrameworkSettings#getDetachListener()
+	 */
+	public IDetachListener getDetachListener()
+	{
+		return detachListener;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IFrameworkSettings#setDetachListener(org.apache.wicket.IDetachListener)
+	 */
+	public void setDetachListener(IDetachListener detachListener)
+	{
+		this.detachListener = detachListener;
+	}
+
+
 }

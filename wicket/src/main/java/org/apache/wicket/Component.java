@@ -1137,6 +1137,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// children component's getmodelobject is called
 		detachModels();
 
+		// detach any behaviors
+		detachBehaviors();
+
 		// always detach children because components can be attached
 		// independently of their parents
 		detachChildren();
@@ -1152,6 +1155,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		// clear out enabled state metadata
 		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+
+		// notify any detach listener
+		IDetachListener detachListener = getApplication().getFrameworkSettings()
+			.getDetachListener();
+		if (detachListener != null)
+		{
+			detachListener.onDetach(this);
+		}
 	}
 
 	/**
@@ -1193,9 +1204,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		// Detach any detachable model from this component
 		detachModel();
-
-		// detach any behaviors
-		detachBehaviors();
 	}
 
 	/**
