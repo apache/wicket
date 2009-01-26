@@ -27,7 +27,12 @@ package org.apache.wicket;
 public interface IDetachListener
 {
 	/**
-	 * Called when component is being detached via a call to {@link Component#detach()}
+	 * Called when component is being detached via a call to {@link Component#detach()}.
+	 * 
+	 * NOTICE: The componet is in a fully detached state when this method is invoked; It is the
+	 * listener's responsibility to maintain the detached state after this method is finished -
+	 * which means if the listener causes any part of the component (eg model) to become reattached
+	 * it is the listener's responsibility to detach it before this method exits.
 	 * 
 	 * @param component
 	 *            component being detached
