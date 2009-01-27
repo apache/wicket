@@ -199,8 +199,10 @@ public class KittenCaptchaPanel extends Panel
 					// attribute, this reduces the flicker
 					final StringBuilder javascript = new StringBuilder();
 					javascript.append("Wicket.$('" + image.getMarkupId() + "').src = '");
-					javascript.append(image.urlFor(IResourceListener.INTERFACE));
-					javascript.append("&rand=" + Math.random());
+					CharSequence url = image.urlFor(IResourceListener.INTERFACE);
+					javascript.append(url);
+					javascript.append((url.toString().indexOf('?') > -1 ? "&amp;" : "?") + "rand=" +
+						Math.random());
 					javascript.append("'");
 					target.appendJavascript(javascript.toString());
 				}
