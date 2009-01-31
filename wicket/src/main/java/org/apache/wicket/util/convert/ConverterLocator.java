@@ -124,7 +124,25 @@ public class ConverterLocator implements IConverterLocator
 				return "";
 			}
 
-			return (String)Objects.convertValue(value, String.class);
+			final Object converted = Objects.convertValue(value, String.class);
+			if (converted == null)
+			{
+				// object was converted to null
+				return "";
+			}
+			else if (converted instanceof String)
+			{
+				// object was successfully converted to a string
+				return (String)converted;
+			}
+			else
+			{
+				// object could not be converted to a string, hardcast to string
+				throw new ConversionException("Could not convert object of type: " +
+					value.getClass() + " to string. Possible its #toString() returned null. " +
+					"Either install a custom converter (see IConverterLocator) or " +
+					"override #toString() to return a non-null value.");
+			}
 		}
 	}
 
