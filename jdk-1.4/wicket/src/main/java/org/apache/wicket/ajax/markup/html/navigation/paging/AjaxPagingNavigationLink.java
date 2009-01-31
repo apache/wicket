@@ -58,12 +58,6 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	public void onClick()
 	{
 		onClick(null);
-
-		// We do not need to redirect
-		setRedirect(false);
-
-		// Return the the current page.
-		setResponsePage(getPage());
 	}
 
 	/**
@@ -71,8 +65,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	 * no AjaxRequestTarget available.
 	 * 
 	 * @param target
-	 *            the request target, when <code>null</code>, a full page refresh will be
-	 *            generated
+	 *            the request target, when <code>null</code>, a full page refresh will be generated
 	 */
 	public void onClick(AjaxRequestTarget target)
 	{

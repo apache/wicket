@@ -26,9 +26,9 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrement
  * looks like
  * 
  * <pre>
- *               
+ * 
  *              	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *              	
+ * 
  * </pre>
  * 
  * <p>
@@ -43,8 +43,8 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrement
  * @author Martijn Dashorst
  */
 public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrementLink
-		implements
-			IAjaxLink
+	implements
+		IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	 *            increment by
 	 */
 	public AjaxPagingNavigationIncrementLink(final String id, final IPageable pageable,
-			final int increment)
+		final int increment)
 	{
 		super(id, pageable, increment);
 		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
@@ -93,12 +93,6 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	public void onClick()
 	{
 		onClick(null);
-
-		// We do not need to redirect
-		setRedirect(false);
-
-		// Return the the current page.
-		setResponsePage(getPage());
 	}
 
 	/**
@@ -106,8 +100,7 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	 * no AjaxRequestTarget available.
 	 * 
 	 * @param target
-	 *            the request target, when <code>null</code>, a full page refresh will be
-	 *            generated
+	 *            the request target, when <code>null</code>, a full page refresh will be generated
 	 */
 	public void onClick(AjaxRequestTarget target)
 	{
