@@ -332,6 +332,14 @@
 		</init-param>
 	</filter>
 
+    <filter>
+        <filter-name>KittenCaptcha</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>org.apache.wicket.examples.kittenCaptcha.WicketApplication</param-value>
+        </init-param>
+    </filter>
 	<filter>
 		<filter-name>BreadCrumbApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -647,6 +655,13 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+    <filter-mapping>
+        <filter-name>KittenCaptcha</filter-name>
+        <url-pattern>/kitten-captcha/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+  
 	<filter-mapping>
 		<filter-name>BreadCrumbApplication</filter-name>
 		<url-pattern>/breadcrumb/*</url-pattern>

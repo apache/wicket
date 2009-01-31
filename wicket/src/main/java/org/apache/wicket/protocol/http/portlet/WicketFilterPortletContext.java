@@ -19,14 +19,13 @@ package org.apache.wicket.protocol.http.portlet;
 import java.io.IOException;
 
 import javax.portlet.PortletConfig;
-import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.portals.bridges.util.ServletPortletSessionProxy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -64,6 +63,10 @@ public class WicketFilterPortletContext
 	 * The unique, reserved string used to prefix the portlet's "window id" in the URL.
 	 */
 	private static final String SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX = "/ps:";
+
+	private static final char[] slashReplacers = { '!', '@', '$', '-', '_', '|', ',', '.', '9',
+			'8', '7', '6', '5', '4', '3', '2', '1', 'z', 'y', 'x', 'w', 'v', 'u', 't', 's', 'r',
+			'q', 'p', 'o', 'm', 'n', 'l', 'k', 'j', 'i', 'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a' };
 
 	/**
 	 * Overrides render strategy and adds the {@link PortletInvalidMarkupFilter} filter.
@@ -110,25 +113,16 @@ public class WicketFilterPortletContext
 		if (portletConfig != null)
 		{
 			inPortletContext = true;
+			PortletRequest portletRequest = (PortletRequest)filterRequestContext.getRequest()
+				.getAttribute("javax.portlet.request");
 			WicketResponseState responseState = (WicketResponseState)filterRequestContext.getRequest()
 				.getAttribute(WicketPortlet.RESPONSE_STATE_ATTR);
 			filterRequestContext.setRequest(new PortletServletRequestWrapper(
 				config.getServletContext(), filterRequestContext.getRequest(),
-				ServletPortletSessionProxy.createProxy(filterRequestContext.getRequest()),
-				filterPath));
-			if (WicketPortlet.ACTION_REQUEST.equals(filterRequestContext.getRequest().getAttribute(
-				WicketPortlet.REQUEST_TYPE_ATTR)))
-			{
-				filterRequestContext.setResponse(new PortletActionServletResponseWrapper(
-					filterRequestContext.getResponse(), responseState));
-			}
-			else
-			{
-				filterRequestContext.setResponse(new PortletRenderServletResponseWrapper(
-					filterRequestContext.getResponse(),
-					(RenderResponse)filterRequestContext.getRequest().getAttribute(
-						"javax.portlet.response"), responseState));
-			}
+				ServletPortletSessionProxy.createProxy(filterRequestContext.getRequest(),
+					portletRequest.getWindowID()), filterPath));
+			filterRequestContext.setResponse(new PortletServletResponseWrapper(
+				filterRequestContext.getResponse(), responseState));
 		}
 		else
 		{
@@ -202,6 +196,19 @@ public class WicketFilterPortletContext
 			{
 				portletWindowId = pathInfo.substring(getServletResourceUrlPortletWindowIdPrefix().length());
 			}
+
+			if (portletWindowId.length() > 2 && portletWindowId.charAt(0) == ':')
+			{
+				// Support for JBoss Portal which provides portletWindowIds containing a '/'
+				// character which cannot be used within a path parameter.
+				// slash encoder is provided as prefix of the real portletWindowId
+				char slashEncoder = portletWindowId.charAt(2);
+				portletWindowId = portletWindowId.substring(2);
+				if (slashEncoder != ':')
+				{
+					portletWindowId = portletWindowId.replace(slashEncoder, '/');
+				}
+			}
 		}
 		else
 		// pathInfo was empty or didn't start with the window id prefix
@@ -240,6 +247,36 @@ public class WicketFilterPortletContext
 	 */
 	public String encodeWindowIdInPath(String windowId, CharSequence path)
 	{
+		if (windowId != null && windowId.length() > 0)
+		{
+			if (windowId.indexOf('/') > -1)
+			{
+				// Support for JBoss Portal which provides portletWindowIds containing a '/'
+				// character which cannot be used within a path parameter.
+				// Trying to find a replacer and encoding it as a prefix before the thereby
+				// "encoded" windowId
+				boolean replaced = false;
+				for (char replacer : slashReplacers)
+				{
+					if (windowId.indexOf(replacer) == -1)
+					{
+						windowId = ":" + replacer + windowId.replace('/', replacer);
+						replaced = true;
+						break;
+					}
+				}
+				if (!replaced)
+				{
+					throw new RuntimeException(
+						"PortletRequest.getWindowId() contains a '/' character for which no valid and unique replacer could be determined: " +
+							windowId);
+				}
+			}
+			else if (windowId.charAt(0) == ':')
+			{
+				windowId = "::" + windowId;
+			}
+		}
 		return (getServletResourceUrlPortletWindowIdPrefix().substring(1) + windowId + "/" + path);
 	}
 

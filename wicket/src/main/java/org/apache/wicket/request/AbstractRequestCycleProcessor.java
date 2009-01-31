@@ -24,6 +24,7 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -145,7 +146,11 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			// we do not want to redirect - we want to inline the error output
 			// and preserve the url so when the refresh button is pressed we
 			// rerun the code that caused the error
-			requestCycle.setRedirect(false);
+			// However we don't what to do this in a situation where we are in portlet mode
+			if (!RequestContext.get().isPortletRequest())
+			{
+				requestCycle.setRedirect(false);
+			}
 
 			// figure out which error page to show
 			Class<? extends Page> internalErrorPageClass = application.getApplicationSettings()

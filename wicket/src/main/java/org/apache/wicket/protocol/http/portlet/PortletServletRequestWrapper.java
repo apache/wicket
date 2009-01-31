@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.portlet;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -167,6 +169,26 @@ public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 		this.pathInfo = pathInfo;
 		// override requestURI which is setup in the protected constructor
 		requestURI = contextPath + servletPath + (pathInfo != null ? pathInfo : "");
+	}
+
+	/**
+	 * @see javax.servlet.ServletRequestWrapper#setCharacterEncoding(java.lang.String)
+	 */
+	@Override
+	public void setCharacterEncoding(String enc) throws UnsupportedEncodingException
+	{
+		try
+		{
+			super.setCharacterEncoding(enc);
+		}
+		catch (UnsupportedEncodingException uex)
+		{
+			// TODO
+			// SUN OpenPortal Portlet Container 2.0_01 BUG which only allows setting an encoding as
+			// provided by underlying request (then: what's the use?)
+			// and throws UnsupportedEncodingException even when that one == null :(
+			// ... so, ignoring for now
+		}
 	}
 
 	@Override

@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.portlet;
 
 import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.RequestContext;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -86,6 +87,14 @@ public class PortletInvalidMarkupFilter implements IResponseFilter
 			if ((endIndex = responseBuffer.indexOf(">", startIndex)) > -1)
 			{
 				responseBuffer.delete(startIndex, endIndex + 1);
+			}
+			else
+			{
+				// FIXME if the closing brace of the element cannot be found - doesn't that mean
+				// that the entire response fragment is invalid and we should throw exception here?
+				// or are we just not making that our problem? wait - doesn't that mean that the
+				// fragment is also effectively empty if there are no further '>' chars?
+				throw new MarkupException("Cannot find end of element tag named: " + tagName);
 			}
 			// remove closing tag, if it exists
 			if ((startIndex = responseBuffer.indexOf("</" + tagName + ">")) > -1)

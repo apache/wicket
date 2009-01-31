@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
   <portlet>
     <description>Menu to the available Wicket portlet examples</description>
     <portlet-name>WicketExamplesMenuApplication</portlet-name>
@@ -502,6 +502,24 @@
     </supports>
     <portlet-info>
       <title>Wicket Captcha Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Another Image-based "captcha" to distinguish humans from spammers.</description>
+    <portlet-name>KittenCaptcha</portlet-name>
+    <display-name>kitten-captcha</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/kitten-captcha</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Kitten Captcha Example</title>
       <keywords>Wicket</keywords>
     </portlet-info>
   </portlet>
