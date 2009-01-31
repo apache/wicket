@@ -19,7 +19,7 @@ package org.apache.wicket.util.string;
 
 /**
  * Strips comments and whitespace from javascript
- *
+ * 
  * @author Matej Knopp
  */
 public class JavascriptStripper
@@ -68,7 +68,7 @@ public class JavascriptStripper
 
 	/**
 	 * Removes javascript comments and whitespace from specified string.
-	 *
+	 * 
 	 * @param original
 	 *            Source string
 	 * @return String with removed comments and whitespace
@@ -78,6 +78,7 @@ public class JavascriptStripper
 		// let's be optimistic
 		AppendingStringBuffer result = new AppendingStringBuffer(original.length() / 2);
 		int state = REGULAR_TEXT;
+		boolean wasNewLineInWhitespace = false;
 
 		for (int i = 0; i < original.length(); ++i)
 		{
@@ -87,6 +88,12 @@ public class JavascriptStripper
 
 			if (state == WHITE_SPACE)
 			{
+				// WICKET 2060
+				if (c == '\n' && !wasNewLineInWhitespace)
+				{
+					result.append("\n");
+					wasNewLineInWhitespace = true;
+				}
 				if (Character.isWhitespace(next) == false)
 				{
 					state = REGULAR_TEXT;
@@ -123,7 +130,7 @@ public class JavascriptStripper
 							continue;
 						}
 						if (tmp == '=' || tmp == '(' || tmp == '{' || tmp == ':' || tmp == ',' ||
-							tmp == '[')
+							tmp == '[' || tmp == ';')
 						{
 							state = REG_EXP;
 							break;
@@ -133,9 +140,18 @@ public class JavascriptStripper
 				}
 				else if (Character.isWhitespace(c) && Character.isWhitespace(next))
 				{
+					// WICKET-2060
+					if (c == '\n' || next == '\n')
+					{
+						c = '\n';
+						wasNewLineInWhitespace = true;
+					}
+					else
+					{
+						c = ' ';
+					}
 					// ignore all whitespace characters after this one
 					state = WHITE_SPACE;
-					c = '\n';
 				}
 				else if (c == '\'')
 				{

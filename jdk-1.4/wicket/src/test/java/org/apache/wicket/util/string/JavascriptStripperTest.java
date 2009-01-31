@@ -28,25 +28,25 @@ public class JavascriptStripperTest extends TestCase
 	public void testUNIXWICKET501()
 	{
 		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
-		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
+		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testDOSWICKET501()
 	{
 		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
-		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
+		assertEquals(" \nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testMACWICKET501()
 	{
 		String s = JavascriptStripper.stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
-		assertEquals("\n\nif ( !t.indexOf(\"//\") ) {", s);
+		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	public void testRegexp()
 	{
 		String s = JavascriptStripper.stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
-		assertEquals("\nt = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
+		assertEquals(" t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
 
 	public void testRegexp2()
@@ -66,7 +66,7 @@ public class JavascriptStripperTest extends TestCase
 	{
 		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
 		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
-		String expected = " attr:   /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/\nafter\nregex";
+		String expected = " attr:   /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/ after regex";
 		assertEquals(expected, after);
 		System.out.println(after);
 	}
@@ -75,8 +75,32 @@ public class JavascriptStripperTest extends TestCase
 	{
 		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
 		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
-		String expected = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];\nb()";
-		
+		String expected = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ]; b()";
+
+		assertEquals(expected, after);
+	}
+
+	public void testWICKET2060_1()
+	{
+		String before = "   a   b   c";
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		String expected = " a b c";
+		assertEquals(expected, after);
+	}
+
+	public void testWICKET2060_2()
+	{
+		String before = "   a \n  b   c\n\n";
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		String expected = " a\nb c\n";
+		assertEquals(expected, after);
+	}
+
+	public void testWICKET2060_3()
+	{
+		String before = "return  this.__unbind__(type, fn);";
+		String after = JavascriptStripper.stripCommentsAndWhitespace(before);
+		String expected = "return this.__unbind__(type, fn);";
 		assertEquals(expected, after);
 	}
 }
