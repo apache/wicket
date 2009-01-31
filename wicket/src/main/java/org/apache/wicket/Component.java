@@ -1040,6 +1040,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
 			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
+
+			// clear the enabled in hierarchy cache as it may change as a result of form processing
+			// or other logic executed in onbeforerender (WICKET-2063)
+			setMetaData(Component.ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+
 			onBeforeRender();
 			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
 
