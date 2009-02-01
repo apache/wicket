@@ -83,25 +83,27 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * @param parameters
 	 *            Map object to be encoded
 	 */
-	protected void appendParameters(AppendingStringBuffer url, Map<?,?> parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map<?, ?> parameters)
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
 			for (Entry<?, ?> entry1 : parameters.entrySet())
 			{
-				Object value = ((Entry<?, ?>) entry1).getValue();
+				Object value = ((Entry<?, ?>)entry1).getValue();
 				if (value != null)
 				{
 					if (value instanceof String[])
 					{
-						String[] values = (String[]) value;
+						String[] values = (String[])value;
 						for (String value1 : values)
 						{
-							appendValue(url, ((Entry<?, ?>) entry1).getKey().toString(), value1);
+							appendValue(url, ((Entry<?, ?>)entry1).getKey().toString(), value1);
 						}
-					} else
+					}
+					else
 					{
-						appendValue(url, ((Entry<?, ?>) entry1).getKey().toString(), value.toString());
+						appendValue(url, ((Entry<?, ?>)entry1).getKey().toString(),
+							value.toString());
 					}
 				}
 			}
@@ -117,7 +119,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(key).append("/").append(escapedValue).append("/");
+			url.append(key).append("/").append(escapedValue);
 		}
 	}
 
@@ -130,7 +132,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment, Map<String,Object> urlParameters)
+	protected ValueMap decodeParameters(String urlFragment, Map<String, Object> urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))

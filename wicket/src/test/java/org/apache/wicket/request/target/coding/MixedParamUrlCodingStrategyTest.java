@@ -48,7 +48,8 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap1()
 	{
@@ -59,17 +60,18 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1/?d=4&e=5".equals(urlStr) || "/1/?e=5&d=4".equals(urlStr));
+		assertTrue("/1?d=4&e=5".equals(urlStr) || "/1?e=5&d=4".equals(urlStr));
 	}
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap2()
 	{
@@ -82,17 +84,18 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1/2/3/?d=4&e=5".equals(urlStr) || "/1/2/3/?e=5&d=4".equals(urlStr));
+		assertTrue("/1/2/3?d=4&e=5".equals(urlStr) || "/1/2/3?e=5&d=4".equals(urlStr));
 	}
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap3()
 	{
@@ -105,7 +108,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] {};
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
@@ -121,7 +124,8 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap4()
 	{
@@ -129,7 +133,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] { "a", "b" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
@@ -138,7 +142,8 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap5()
 	{
@@ -149,16 +154,17 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
-		assertEquals("/1/2/3/", url.toString());
+		assertEquals("/1/2/3", url.toString());
 	}
 
 	/**
 	 * Test method for
-	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}.
+	 * {@link MixedParamUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * .
 	 */
 	public void testAppendParametersAppendingStringBufferMap6()
 	{
@@ -170,12 +176,12 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1//3/?d=4&e=5".equals(urlStr) || "/1//3/?e=5&d=4".equals(urlStr));
+		assertTrue("/1/3?d=4&e=5".equals(urlStr) || "/1//3?e=5&d=4".equals(urlStr));
 	}
 
 	/**
@@ -186,7 +192,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		Map urlMap = new HashMap();
 		urlMap.put("d", "4");
@@ -207,7 +213,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		Map urlMap = new HashMap();
 		urlMap.put("d", "4");
@@ -230,7 +236,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] {};
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		Map urlMap = new HashMap();
 		urlMap.put("a", "1");
@@ -256,7 +262,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] { "a", "b" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		Map urlMap = new HashMap();
 
@@ -272,7 +278,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		Map urlMap = new HashMap();
 
@@ -291,7 +297,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	{
 		String[] parameterNames = new String[] { "a", "b", "c" };
 		MixedParamUrlCodingStrategy npucs = new MixedParamUrlCodingStrategy("mnt", TestPage.class,
-				parameterNames);
+			parameterNames);
 
 		// Note nasty, but ignored c parameter
 		Map urlMap = new HashMap();

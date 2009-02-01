@@ -45,6 +45,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 		super(mountPath, pageClass);
 	}
 
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		int i = 0;
@@ -55,7 +56,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(urlEncodePathComponent(value)).append("/");
+			url.append(urlEncodePathComponent(value));
 			i++;
 		}
 
@@ -68,18 +69,19 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncodePathComponent(pageMap))
-					.append("/");
+			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
+				urlEncodePathComponent(pageMap));
 		}
 
 		if (i != parameters.size())
 		{
 			throw new WicketRuntimeException(
-					"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: " +
-							parameters.keySet().toString());
+				"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: " +
+					parameters.keySet().toString());
 		}
 	}
 
+	@Override
 	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{
 		PageParameters params = new PageParameters();
@@ -102,8 +104,8 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-						.decodePageMapName(urlDecodePathComponent(parts[i])));
+				params.put(WebRequestCodingStrategy.PAGEMAP,
+					WebRequestCodingStrategy.decodePageMapName(urlDecodePathComponent(parts[i])));
 			}
 			else
 			{
