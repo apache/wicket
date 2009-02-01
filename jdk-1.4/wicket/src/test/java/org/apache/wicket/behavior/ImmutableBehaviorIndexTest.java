@@ -38,7 +38,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().add(new SimpleAttributeModifier("class", "border"));
 		tester.startPage(page);
 
-		assertTrue(tester.getServletResponse().getDocument().contains("class=\"border\""));
+		assertTrue(tester.getServletResponse().getDocument().indexOf("class=\"border\"") > 0);
 	}
 
 	/**
@@ -65,12 +65,12 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 
 		String output = tester.getServletResponse().getDocument();
 		System.out.println(output);
-		assertTrue(output.contains("class=\"border\""));
-		assertTrue(output.contains("autocomplete=\"off\""));
-		assertTrue(output.contains("class2=\"border\""));
-		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains("IBehaviorListener:2"));
-		assertTrue(output.contains("IBehaviorListener:4"));
+		assertTrue(output.indexOf("class=\"border\"") > 0);
+		assertTrue(output.indexOf("autocomplete=\"off\"") > 0);
+		assertTrue(output.indexOf("class2=\"border\"") > 0);
+		assertTrue(output.indexOf("autocomplete2=\"off\"") > 0);
+		assertTrue(output.indexOf("IBehaviorListener:2") > 0);
+		assertTrue(output.indexOf("IBehaviorListener:4") > 0);
 
 		// if we remove a behavior that is before the ibehaviorlistener its url index should not
 		// change
@@ -81,8 +81,8 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
 		output = tester.getServletResponse().getDocument();
-		assertTrue(output.contains("IBehaviorListener:2"));
-		assertTrue(output.contains("IBehaviorListener:4"));
+		assertTrue(output.indexOf("IBehaviorListener:2") > 0);
+		assertTrue(output.indexOf("IBehaviorListener:4") > 0);
 	}
 
 	/**
