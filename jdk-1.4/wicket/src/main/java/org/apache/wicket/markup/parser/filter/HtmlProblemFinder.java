@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
  *      	MarkupParser newMarkupParser(final MarkupResourceStream resource) {
  *        	  MarkupParser parser=super.newMarkupParser(resource);
  *            parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
+ *            return parser;
  *          }
  *       }
  *    }
