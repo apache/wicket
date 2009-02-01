@@ -29,6 +29,17 @@ import org.apache.wicket.util.lang.Objects;
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
+ * <p>
+ * STATELESS NOTES: By default this component cannot be used inside a stateless form. If it is
+ * desirable to use this inside a stateless form then
+ * <ul>
+ * <li>
+ * override #getValue() and return some stateless value to uniquely identify this radio (eg relative
+ * component path from group to this radio)</li>
+ * <li>
+ * override {@link #getStatelessHint()} and return <code>true</code></li>
+ * </ul>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.RadioGroup
  * 
@@ -70,7 +81,7 @@ public class Radio extends LabeledWebMarkupContainer
 	 * 
 	 * @return form submission value
 	 */
-	public final String getValue()
+	public String getValue()
 	{
 		if (uuid < 0)
 		{
@@ -79,6 +90,11 @@ public class Radio extends LabeledWebMarkupContainer
 		return "radio" + uuid;
 	}
 
+	protected boolean getStatelessHint()
+	{
+		// because we use uuid field this cannot be stateless
+		return false;
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)

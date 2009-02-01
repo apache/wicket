@@ -32,6 +32,17 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * org.apache.wicket.markup.html.form.CheckGroup.
  * 
  * Must be attached to an &lt;input type=&quot;checkbox&quot; ... &gt; markup.
+ * <p>
+ * STATELESS NOTES: By default this component cannot be used inside a stateless form. If it is
+ * desirable to use this inside a stateless form then
+ * <ul>
+ * <li>
+ * override #getValue() and return some stateless value to uniquely identify this radio (eg relative
+ * component path from group to this radio)</li>
+ * <li>
+ * override {@link #getStatelessHint()} and return <code>true</code></li>
+ * </ul>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * 
@@ -73,7 +84,7 @@ public class Check extends LabeledWebMarkupContainer
 	 * 
 	 * @return form submission value
 	 */
-	public final String getValue()
+	public String getValue()
 	{
 		if (uuid < 0)
 		{
@@ -82,6 +93,12 @@ public class Check extends LabeledWebMarkupContainer
 		return "check" + uuid;
 	}
 
+	/** {@inheritDoc} */
+	protected boolean getStatelessHint()
+	{
+		// because we use uuid field this cannot be stateless
+		return false;
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -101,7 +118,7 @@ public class Check extends LabeledWebMarkupContainer
 		if (group == null)
 		{
 			throw new WicketRuntimeException("Check component [" + getPath() +
-					"] cannot find its parent CheckGroup");
+				"] cannot find its parent CheckGroup");
 		}
 
 		final String uuid = getValue();
@@ -118,7 +135,7 @@ public class Check extends LabeledWebMarkupContainer
 		if (collection == null)
 		{
 			throw new WicketRuntimeException("CheckGroup [" + group.getPath() +
-					"] contains a null model object, must be an object of type java.util.Collection");
+				"] contains a null model object, must be an object of type java.util.Collection");
 		}
 
 		if (group.hasRawInput())
@@ -166,8 +183,8 @@ public class Check extends LabeledWebMarkupContainer
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
-						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
-						"=' + this.value;");
+					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+					"=' + this.value;");
 			}
 		}
 
