@@ -94,6 +94,7 @@ public class Check<T> extends LabeledWebMarkupContainer
 	{
 		super(id, model);
 		this.group = group;
+		setOutputMarkupId(true);
 	}
 
 
@@ -112,6 +113,32 @@ public class Check<T> extends LabeledWebMarkupContainer
 		return "check" + uuid;
 	}
 
+	@SuppressWarnings("unchecked")
+	private CheckGroup<T> getGroup()
+	{
+		CheckGroup<T> group = this.group;
+		if (group == null)
+		{
+			group = findParent(CheckGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException("Check component [" + getPath() +
+					"] cannot find its parent CheckGroup");
+			}
+		}
+		return group;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeRender()
+	{
+		// prefix markup id of this radio with its group's id
+		// this will make it easier to identify all radios that belong to a specific group
+		setMarkupId(getGroup().getMarkupId() + "-" + getMarkupId());
+		super.onBeforeRender();
+	}
+
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -128,16 +155,7 @@ public class Check<T> extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<?> group = this.group;
-		if (group == null)
-		{
-			group = findParent(CheckGroup.class);
-			if (group == null)
-			{
-				throw new WicketRuntimeException("Check component [" + getPath() +
-					"] cannot find its parent CheckGroup");
-			}
-		}
+		CheckGroup<?> group = getGroup();
 
 		final String uuid = getValue();
 

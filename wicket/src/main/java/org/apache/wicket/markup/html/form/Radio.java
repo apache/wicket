@@ -91,6 +91,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	{
 		super(id, model);
 		this.group = group;
+		setOutputMarkupId(true);
 	}
 
 
@@ -109,6 +110,34 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		return "radio" + uuid;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeRender()
+	{
+		// prefix markup id of this radio with its group's id
+		// this will make it easier to identify all radios that belong to a specific group
+		setMarkupId(getGroup().getMarkupId() + "-" + getMarkupId());
+		super.onBeforeRender();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private RadioGroup<T> getGroup()
+	{
+		RadioGroup<T> group = this.group;
+		if (group == null)
+		{
+			group = findParent(RadioGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException(
+					"Radio component [" +
+						getPath() +
+						"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+			}
+		}
+		return group;
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -127,19 +156,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 
 		final String value = getValue();
 
-		RadioGroup<?> group = this.group;
-		if (group == null)
-		{
-			group = findParent(RadioGroup.class);
-			if (group == null)
-			{
-				throw new WicketRuntimeException(
-					"Radio component [" +
-						getPath() +
-						"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
-			}
-		}
-
+		RadioGroup<?> group = getGroup();
 
 		// assign name and value
 		tag.put("name", group.getInputName());
