@@ -1339,7 +1339,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		// We need to absolutize the redirect URL as we are not as smart as a web-browser
 		// (WICKET-702)
-		url = getContextPath() + getServletPath() + "/" + redirect;
+		url = redirect;
+		if (url.charAt(0) != '/')
+		{
+			url = getContextPath() + getServletPath() + "/" + redirect;
+		}
 
 		// Remove occurrences of ".." from the path
 		url = RequestUtils.removeDoubleDots(url);
