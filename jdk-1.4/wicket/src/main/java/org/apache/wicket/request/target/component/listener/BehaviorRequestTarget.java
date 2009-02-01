@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.target.component.listener;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
@@ -42,7 +44,7 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 *            the listener method
 	 */
 	public BehaviorRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 		this(page, component, listener, null);
 	}
@@ -60,7 +62,7 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 *            the request parameters
 	 */
 	public BehaviorRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		super(page, component, listener, requestParameters);
 	}
@@ -80,20 +82,22 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		if (id == null)
 		{
 			throw new IllegalStateException(
-					"Parameter behaviorId was not provided: unable to locate listener. Component: " +
-							component.toString());
+				"Parameter behaviorId was not provided: unable to locate listener. Component: " +
+					component.toString());
 		}
 
 		final int idAsInt = Integer.parseInt(id);
+		final List behaviors = component.getBehaviorsRawList();
 		IBehaviorListener behaviorListener = null;
-		if (component.getBehaviors().size() > idAsInt)
+
+		if (behaviors.size() > idAsInt)
 		{
-			behaviorListener = (IBehaviorListener)component.getBehaviors().get(idAsInt);
+			behaviorListener = (IBehaviorListener)behaviors.get(idAsInt);
 		}
 		if (behaviorListener == null)
 		{
 			throw new IllegalStateException("No behavior listener found with behaviorId " + id +
-					"; Component: " + component.toString());
+				"; Component: " + component.toString());
 		}
 
 		// Invoke the interface method

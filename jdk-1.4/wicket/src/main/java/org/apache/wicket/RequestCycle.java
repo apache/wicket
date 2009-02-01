@@ -783,7 +783,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
-		int index = component.getBehaviors().indexOf(behaviour);
+		int index = component.getBehaviorsRawList().indexOf(behaviour);
 		if (index == -1)
 		{
 			throw new IllegalArgumentException("Behavior " + this +
