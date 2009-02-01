@@ -21,8 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
@@ -31,8 +32,8 @@ import org.apache.wicket.util.convert.converters.DateConverter;
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object.
  * 
- * If you provide a <code>SimpleDateFormat</code> pattern, it will both parse and validate the
- * text field according to it.
+ * If you provide a <code>SimpleDateFormat</code> pattern, it will both parse and validate the text
+ * field according to it.
  * 
  * If you don't, it is the same as creating a <code>TextField</code> with
  * <code>java.util.Date</code> as it's type (it will get the pattern from the user's locale)
@@ -71,7 +72,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 */
 	public DateTextField(String id)
 	{
-		this(id, null, DEFAULT_PATTERN);
+		this(id, null, defaultDatePattern());
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 */
 	public DateTextField(String id, IModel<Date> model)
 	{
-		this(id, model, DEFAULT_PATTERN);
+		this(id, model, defaultDatePattern());
 	}
 
 	/**
@@ -169,4 +170,26 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	{
 		return datePattern;
 	}
+
+	/**
+	 * Try to get datePattern from user session locale. If it is not possible, it will return
+	 * {@link #DEFAULT_PATTERN}
+	 * 
+	 * @return date pattern
+	 */
+	private static String defaultDatePattern()
+	{
+		// It is possible to retrieve from session?
+		Locale locale = Session.get().getLocale();
+		if (locale != null)
+		{
+			DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			if (format instanceof SimpleDateFormat)
+			{
+				return ((SimpleDateFormat)format).toPattern();
+			}
+		}
+		return DEFAULT_PATTERN;
+	}
+
 }
