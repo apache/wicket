@@ -764,6 +764,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			return false;
 		}
 
+		if (stateless == null)
+		{
+			if (isStateless() == false)
+			{
+				stateless = Boolean.FALSE;
+			}
+		}
 
 		if (stateless == null)
 		{
@@ -858,7 +865,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
-		
+
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
 			Class<?> klass = getClass();
@@ -870,7 +877,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			getResponse().write(klass.getName());
 			getResponse().write(" -->\n");
 		}
-		
+
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
