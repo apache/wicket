@@ -86,7 +86,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			final MarkupContainer container, final String autoId, final PathInfo pathInfo,
 			final String attribute)
 		{
-			if (!pathInfo.absolute)
+			if (!pathInfo.absolute && (pathInfo.path != null) && (pathInfo.path.length() > 0))
 			{
 				// Href is relative. Create a resource reference pointing at
 				// this file
@@ -98,10 +98,8 @@ public final class AutoLinkResolver implements IComponentResolver
 				// contributed it.
 				Class clazz = container.getMarkupStream().getContainerClass();
 
-				// However if the markup stream is a merged markup stream
-				// (inheritance),
-				// than we need the class of the markup file which contained the
-				// tag.
+				// However if the markup stream is a merged markup stream (inheritance), than we
+				// need the class of the markup file which contained the tag.
 				if (container.getMarkupStream().getTag().getMarkupClass() != null)
 				{
 					clazz = container.getMarkupStream().getTag().getMarkupClass();
@@ -279,6 +277,17 @@ public final class AutoLinkResolver implements IComponentResolver
 				{
 					anchor = extension.substring(pos);
 					extension = extension.substring(0, pos);
+				}
+			}
+
+			// Anchors without path, e.g. "#link"
+			if (anchor == null)
+			{
+				pos = infoPath.indexOf("#");
+				if (pos != -1)
+				{
+					anchor = infoPath.substring(pos);
+					infoPath = infoPath.substring(0, pos);
 				}
 			}
 
