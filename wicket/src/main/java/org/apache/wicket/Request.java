@@ -120,7 +120,7 @@ public abstract class Request
 	 * Gets a prefix to make this relative to the Wicket Servlet/Filter.
 	 * <p>
 	 * For example, if your context root is http://server.com/myApp/ and the request is for
-	 * /myApp/mountedPage/, then the prefix returned might be "../../".
+	 * /myApp/mountedPage/, then the prefix returned might be "../".
 	 * <p>
 	 * For a particular technology, this might return either an absolute prefix or a relative one.
 	 * 
