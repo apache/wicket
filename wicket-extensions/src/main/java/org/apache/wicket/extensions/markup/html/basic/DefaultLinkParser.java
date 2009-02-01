@@ -32,10 +32,11 @@ public class DefaultLinkParser extends LinkParser
 	private static final String emailPattern = "[\\w\\.-]+@[\\w\\.-]+";
 
 	/** URL pattern */
-	private static final String urlPattern = "([a-zA-Z]+://[\\w\\.\\-\\:\\/]+)[\\w\\.:\\-/?&=%]*";
+	private static final String urlPattern = "([a-zA-Z]+://[\\w\\.\\-\\:\\/~]+)[\\w\\.:\\-/?&=%]*";
 
 	/**
-	 * Email address render strategy.<br/> Renders &lt;a href="mailto:{EMAIL}"&gt;{EMAIL}&lt;/a&gt;
+	 * Email address render strategy.<br/>
+	 * Renders &lt;a href="mailto:{EMAIL}"&gt;{EMAIL}&lt;/a&gt;
 	 */
 	public static final ILinkRenderStrategy EMAIL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
@@ -73,17 +74,18 @@ public class DefaultLinkParser extends LinkParser
 	};
 
 	/**
-	 * Url render strategy.<br/> Renders &lt;a href="{URL}"&gt;{URL}&lt;/a&gt;
+	 * Url render strategy.<br/>
+	 * Renders &lt;a href="{URL}"&gt;{URL}&lt;/a&gt;
 	 */
 	public static final ILinkRenderStrategy URL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
 		public String buildLink(String linkTarget)
 		{
 			return "<a href=\"" +
-					linkTarget +
-					"\">" +
-					(linkTarget.indexOf('?') == -1 ? linkTarget : linkTarget.substring(0,
-							linkTarget.indexOf('?'))) + "</a>";
+				linkTarget +
+				"\">" +
+				(linkTarget.indexOf('?') == -1 ? linkTarget : linkTarget.substring(0,
+					linkTarget.indexOf('?'))) + "</a>";
 		}
 	};
 
