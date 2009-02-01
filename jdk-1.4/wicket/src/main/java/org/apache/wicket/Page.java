@@ -433,7 +433,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code> then the rendering for that container is checked.
+	 * MarkupContainer</code>
+	 * then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -764,6 +765,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			return false;
 		}
 
+		if (stateless == null)
+		{
+			if (isStateless() == false)
+			{
+				stateless = Boolean.FALSE;
+			}
+		}
 
 		if (stateless == null)
 		{
