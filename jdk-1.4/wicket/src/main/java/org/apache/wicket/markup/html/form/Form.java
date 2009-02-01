@@ -1302,7 +1302,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&&typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer.append("'); if (b!=null&&b.onclick!=null&&typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
