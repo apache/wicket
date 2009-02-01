@@ -218,7 +218,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		for (Iterator it = cookies.iterator(); it.hasNext();)
 		{
-			Cookie cookie = (Cookie) it.next();
+			Cookie cookie = (Cookie)it.next();
 			addCookie(cookie);
 		}
 	}
@@ -1339,7 +1339,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		// We need to absolutize the redirect URL as we are not as smart as a web-browser
 		// (WICKET-702)
-		url = getContextPath() + getServletPath() + "/" + redirect;
+		if (url.charAt(0) != '/')
+		{
+			url = getContextPath() + getServletPath() + "/" + redirect;
+		}
 
 		// Remove occurrences of ".." from the path
 		url = RequestUtils.removeDoubleDots(url);
