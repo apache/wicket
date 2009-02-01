@@ -30,7 +30,6 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
@@ -2319,17 +2318,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 				// Instead we check if there are any behaviors downstream that will be affected by
 				// this, and if there are we set this behavior's slot to null instead of removing it
 				// to preserve indexes of behaviors downstream.
-				boolean listenersAfter = false;
+				boolean anyListenersAfter = false;
 				for (int j = i + 1; j < len; j++)
 				{
-					if (data_get(j) instanceof IBehaviorListener)
+					if (data_get(j) instanceof IRequestListener)
 					{
-						listenersAfter = true;
+						anyListenersAfter = true;
 						break;
 					}
 				}
 
-				if (listenersAfter)
+				if (anyListenersAfter)
 				{
 					data_set(i, null);
 				}
@@ -2337,7 +2336,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				{
 					data_remove(i);
 
-					if (o instanceof IBehaviorListener)
+					if (o instanceof IRequestListener)
 					{
 						// this was a listener which mightve caused holes in the array, see if we
 						// can clean them up. notice: at this point we already know there are no
