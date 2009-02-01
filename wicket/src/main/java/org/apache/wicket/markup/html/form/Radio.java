@@ -29,6 +29,17 @@ import org.apache.wicket.util.lang.Objects;
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
+ * <p>
+ * STATELESS NOTES: By default this component cannot be used inside a stateless form. If it is
+ * desirable to use this inside a stateless form then
+ * <ul>
+ * <li>
+ * override #getValue() and return some stateless value to uniquely identify this radio (eg relative
+ * component path from group to this radio)</li>
+ * <li>
+ * override {@link #getStatelessHint()} and return <code>true</code></li>
+ * </ul>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.RadioGroup
  * 
@@ -71,6 +82,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * @param id
 	 * @param group
 	 *            parent {@link RadioGroup}
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
@@ -101,7 +113,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return form submission value
 	 */
-	public final String getValue()
+	public String getValue()
 	{
 		if (uuid < 0)
 		{
@@ -122,7 +134,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 
 
 	@SuppressWarnings("unchecked")
-	private RadioGroup<T> getGroup()
+	protected RadioGroup<T> getGroup()
 	{
 		RadioGroup<T> group = this.group;
 		if (group == null)
@@ -270,5 +282,12 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		setDefaultModelObject(object);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	protected boolean getStatelessHint()
+	{
+		// because we keep uuid this component cannot be stateless
+		return false;
+	}
 
 }
