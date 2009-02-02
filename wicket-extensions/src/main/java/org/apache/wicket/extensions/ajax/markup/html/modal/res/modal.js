@@ -1521,7 +1521,7 @@ Wicket.Cookie = {
 	 */
 	get: function(name) {
 		if (document.cookie.length > 0) {
-			start = document.cookie.indexOf (name + "=");
+			var start = document.cookie.indexOf (name + "=");
   			if (start != -1) { 
 				start = start + name.length + 1;
 				end = document.cookie.indexOf(";", start);
