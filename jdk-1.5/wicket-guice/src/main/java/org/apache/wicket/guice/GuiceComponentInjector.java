@@ -94,7 +94,6 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	public GuiceComponentInjector(Application app, Injector injector)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
-		app.setMetaData(GuiceTypeStore.TYPESTORE_KEY, new GuiceTypeStore());
 	}
 
 	public void inject(Object object)
@@ -112,8 +111,7 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 					{
 						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
-								new GuiceProxyTargetLocator(field.getGenericType(),
-										bindingAnnotation));
+								new GuiceProxyTargetLocator(field, bindingAnnotation));
 
 						if (!field.isAccessible())
 						{
@@ -160,8 +158,7 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 						{
 							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
 							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
-									new GuiceProxyTargetLocator(genericParamTypes[i],
-											bindingAnnotation));
+									new GuiceProxyTargetLocator(method, i, bindingAnnotation));
 						}
 						catch (MoreThanOneBindingException e)
 						{
