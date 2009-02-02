@@ -17,9 +17,12 @@
 package org.apache.wicket.guice;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 
 import com.google.inject.Key;
@@ -29,28 +32,66 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String typeName;
 	private final Annotation bindingAnnotation;
 
-	GuiceProxyTargetLocator(Type type, Annotation bindingAnnotation)
-	{
-		// I'm not too happy about
-		typeName = type.toString();
-		this.bindingAnnotation = bindingAnnotation;
+	private final String[] data;
 
-		GuiceTypeStore typeStore = (GuiceTypeStore)Application.get().getMetaData(
-				GuiceTypeStore.TYPESTORE_KEY);
-		typeStore.setType(typeName, type);
+	/** index of argument in the method being injected, or -1 for field */
+	private final int argIndex;
+
+	GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation)
+	{
+		this.bindingAnnotation = bindingAnnotation;
+		data = new String[2];
+		data[0] = field.getDeclaringClass().getName();
+		data[1] = field.getName();
+		argIndex = -1;
+	}
+
+	GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation)
+	{
+		this.bindingAnnotation = bindingAnnotation;
+		data = new String[2 + method.getParameterTypes().length];
+		data[0] = method.getDeclaringClass().getName();
+		data[1] = method.getName();
+		for (int i = 0; i < method.getParameterTypes().length; i++)
+		{
+			data[2 + i] = method.getParameterTypes()[i].getName();
+		}
+		this.argIndex = argIndex;
 	}
 
 	public Object locateProxyTarget()
 	{
-		final GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(
+		final GuiceInjectorHolder holder = Application.get().getMetaData(
 				GuiceInjectorHolder.INJECTOR_KEY);
 
-		final GuiceTypeStore typeStore = (GuiceTypeStore)Application.get().getMetaData(
-				GuiceTypeStore.TYPESTORE_KEY);
-		final Type type = typeStore.getType(typeName);
+		final Type type;
+		try
+		{
+
+			Class< ? > clazz = Class.forName(data[0]);
+			if (argIndex < 0)
+			{
+				final Field field = clazz.getDeclaredField(data[1]);
+				type = field.getGenericType();
+			}
+			else
+			{
+				Class< ? >[] paramTypes = new Class[data.length - 2];
+				for (int i = 2; i < data.length; i++)
+				{
+					paramTypes[2 - i] = Class.forName(data[i]);
+				}
+				final Method method = clazz.getDeclaredMethod(data[1], paramTypes);
+				type = method.getGenericParameterTypes()[argIndex];
+			}
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Error accessing member: " + data[1] + " of class: " +
+					data[0], e);
+		}
 
 		// using TypeLiteral to retrieve the key gives us automatic support for
 		// Providers and other injectable TypeLiterals
