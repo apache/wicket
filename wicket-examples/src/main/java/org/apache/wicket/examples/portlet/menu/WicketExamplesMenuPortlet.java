@@ -131,8 +131,8 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 	 *      PortletResponse, String, String)
 	 */
 	@Override
-	protected void processRequest(PortletRequest request, PortletResponse response,
-		String requestType, String pageType) throws PortletException, IOException
+	protected void processRequest(PortletRequest request, PortletResponse response, String pageType)
+		throws PortletException, IOException
 	{
 		PortletSession session = request.getPortletSession();
 		ExampleApplication ea = (ExampleApplication)session.getAttribute(EXAMPLE_APPLICATION_ATTR);
@@ -163,23 +163,24 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 		{
 			request.setAttribute(PROCESS_MENU_APPLICATION, Boolean.TRUE);
 			request.setAttribute(EXAMPLE_APPLICATION_ATTR, examples.get(0));
-			super.processRequest(request, response, requestType, pageType);
+			super.processRequest(request, response, pageType);
 		}
 		else
 		{
-			if (WicketPortlet.ACTION_REQUEST.equals(requestType) ||
-				request.getParameter(PORTLET_RESOURCE_URL_PARAMETER) != null)
+			String lifecyclePhase = (String)request.getAttribute(PortletRequest.LIFECYCLE_PHASE);
+			if (PortletRequest.ACTION_PHASE.equals(lifecyclePhase) ||
+				PortletRequest.RESOURCE_PHASE.equals(lifecyclePhase))
 			{
 				if (request.getParameter(MENU_APPLICATION_URL_PORTLET_PARAMETER) != null)
 				{
 					request.setAttribute(PROCESS_MENU_APPLICATION, Boolean.TRUE);
 					request.setAttribute(EXAMPLE_APPLICATION_ATTR, examples.get(0));
-					super.processRequest(request, response, requestType, pageType);
+					super.processRequest(request, response, pageType);
 				}
 				else
 				{
 					request.setAttribute(EXAMPLE_APPLICATION_ATTR, ea);
-					super.processRequest(request, response, requestType, pageType);
+					super.processRequest(request, response, pageType);
 				}
 			}
 			else
@@ -187,11 +188,11 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 				request.setAttribute(PROCESS_MENU_APPLICATION, Boolean.TRUE);
 				request.setAttribute(PROCESS_HEADER_PAGE, Boolean.TRUE);
 				request.setAttribute(EXAMPLE_APPLICATION_ATTR, examples.get(0));
-				super.processRequest(request, response, requestType, pageType);
+				super.processRequest(request, response, pageType);
 				request.removeAttribute(PROCESS_MENU_APPLICATION);
 				request.removeAttribute(PROCESS_HEADER_PAGE);
 				request.setAttribute(EXAMPLE_APPLICATION_ATTR, ea);
-				super.processRequest(request, response, requestType, pageType);
+				super.processRequest(request, response, pageType);
 			}
 		}
 	}

@@ -411,7 +411,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
-				final String idAttr = getInputName() + "_" + id;
+				final String idAttr = getMarkupId() + "-" + getInputName() + "_" + id;
 
 				// Add checkbox element
 				buffer.append("<input name=\"")

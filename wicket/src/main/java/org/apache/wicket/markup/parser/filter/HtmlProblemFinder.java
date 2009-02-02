@@ -31,13 +31,17 @@ import org.slf4j.LoggerFactory;
  * be added by means of subclassing Application.newMarkupParser() like
  * 
  * <pre>
- *     public class MyApplication extends Application
- *     {
- *         ...
- *         public IMarkupFilter[] getAdditionalMarkupHandler()
- *         {
- *             return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
- *         }
+ * Application#init() {
+ *   getMarkupSettings().setMarkupParserFactory() {
+ *      new MarkupParserFactory() {
+ *      	MarkupParser newMarkupParser(final MarkupResourceStream resource) {
+ *        	  MarkupParser parser=super.newMarkupParser(resource);
+ *            parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
+ *            return parser;
+ *          }
+ *       }
+ *    }
+ * }
  * </pre>
  * 
  * The purpose of the filter is to find possible HTML issues and to log a warning.

@@ -36,7 +36,6 @@ public class IndexParamWithStatelessIFrameTest extends WicketTestCase
 		tester.startPage(test);
 		tester.assertRenderedPage(TestPageWithIFrame.class);
 		tester.assertNoErrorMessage();
-		tester
-			.assertContains("src=\"test/wicket:interface/:0:frame::IResourceListener::/\"");
+		tester.assertContains("src=\"test/wicket:interface/:0:frame::IResourceListener::\"");
 	}
 }

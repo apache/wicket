@@ -36,10 +36,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
-import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -924,24 +921,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			setModelImpl(wrap(model));
 		}
-
-		// Any component is allowed to have associated *.js or *.css file which are automatically
-		// added to the header section of the page.
-		// ignore anonymous classes and internal components
-		String name = this.getClass().getSimpleName();
-		if ((name != null) &&
-			((this instanceof Page) || ((id != null) && (id.length() > 0) && (id.charAt(0) != '_'))))
-		{
-			if (PackageResource.exists(this.getClass(), name + ".css", getLocale(), getStyle()))
-			{
-				add(CSSPackageResource.getHeaderContribution(this.getClass(), name + ".css"));
-			}
-
-			if (PackageResource.exists(this.getClass(), name + ".js", getLocale(), getStyle()))
-			{
-				add(JavascriptPackageResource.getHeaderContribution(this.getClass(), name + ".js"));
-			}
-		}
 	}
 
 	/**
@@ -994,10 +973,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * FOR INTERNAL USE ONLY
 	 * 
-	 * @return list of behaviors
+	 * @return unmodified list of behaviors which may contain null entries
 	 */
-	private List<IBehavior> getBehaviorsImpl()
+	public final List<IBehavior> getBehaviorsRawList()
 	{
 		if (data != null)
 		{
@@ -1011,7 +991,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				for (int i = startIndex; i < length; ++i)
 				{
 					Object o = data_get(i);
-					if (o instanceof IBehavior)
+					if (o == null || o instanceof IBehavior)
 					{
 						result.add((IBehavior)o);
 					}
@@ -1061,6 +1041,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
 			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
+
+			// clear the enabled in hierarchy cache as it may change as a result of form processing
+			// or other logic executed in onbeforerender (WICKET-2063)
+			setMetaData(Component.ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+
 			onBeforeRender();
 			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
 
@@ -1158,6 +1143,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// children component's getmodelobject is called
 		detachModels();
 
+		// detach any behaviors
+		detachBehaviors();
+
 		// always detach children because components can be attached
 		// independently of their parents
 		detachChildren();
@@ -1173,6 +1161,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		// clear out enabled state metadata
 		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+
+		// notify any detach listener
+		IDetachListener detachListener = getApplication().getFrameworkSettings()
+			.getDetachListener();
+		if (detachListener != null)
+		{
+			detachListener.onDetach(this);
+		}
 	}
 
 	/**
@@ -1185,7 +1181,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void detachBehaviors()
 	{
-		List<IBehavior> behaviors = getBehaviorsImpl();
+		List<IBehavior> behaviors = getBehaviors();
 		if (behaviors != null)
 		{
 			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
@@ -1214,9 +1210,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		// Detach any detachable model from this component
 		detachModel();
-
-		// detach any behaviors
-		detachBehaviors();
 	}
 
 	/**
@@ -2314,12 +2307,50 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private boolean removeBehavior(final IBehavior behavior)
 	{
 		final int start = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-		for (int i = start; i < data_length(); ++i)
+		final int len = data_length();
+		for (int i = start; i < len; ++i)
 		{
 			Object o = data_get(i);
-			if (o.equals(behavior))
+			if (o != null && o.equals(behavior))
 			{
-				data_remove(i);
+				// behaviors that produce urls depend on their index in the behaviors list,
+				// therefore we cannot blindly shrink the array by removing this behavior's slot.
+				// Instead we check if there are any behaviors downstream that will be affected by
+				// this, and if there are we set this behavior's slot to null instead of removing it
+				// to preserve indexes of behaviors downstream.
+				boolean anyListenersAfter = false;
+				for (int j = i + 1; j < len; j++)
+				{
+					if (data_get(j) instanceof IRequestListener)
+					{
+						anyListenersAfter = true;
+						break;
+					}
+				}
+
+				if (anyListenersAfter)
+				{
+					data_set(i, null);
+				}
+				else
+				{
+					data_remove(i);
+
+					if (o instanceof IRequestListener)
+					{
+						// this was a listener which mightve caused holes in the array, see if we
+						// can clean them up. notice: at this point we already know there are no
+						// listeners that can be affected by index change downstream because this is
+						// the last one in the array
+						for (int j = i - 1; j >= start; j--)
+						{
+							if (data_get(j) == null)
+							{
+								data_remove(j);
+							}
+						}
+					}
+				}
 				return true;
 			}
 		}
@@ -2400,7 +2431,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				// Call each behaviors onException() to allow the
 				// behavior to clean up
-				List<IBehavior> behaviors = getBehaviorsImpl();
+				List<IBehavior> behaviors = getBehaviors();
 				if (behaviors != null)
 				{
 					for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
@@ -2434,30 +2465,41 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			if (getFlag(FLAG_PLACEHOLDER))
 			{
-				// write out a placeholder tag into the markup
 				final ComponentTag tag = markupStream.getTag();
-
-				String namespacePrefix = Strings.isEmpty(tag.getNamespace()) ? null
-					: tag.getNamespace() + ":";
-
-				getResponse().write("<");
-				if (namespacePrefix != null)
-				{
-					getResponse().write(namespacePrefix);
-				}
-				getResponse().write(tag.getName());
-				getResponse().write(" id=\"");
-				getResponse().write(getMarkupId());
-				getResponse().write("\" style=\"display:none\"></");
-				if (namespacePrefix != null)
-				{
-					getResponse().write(namespacePrefix);
-				}
-				getResponse().write(tag.getName());
-				getResponse().write(">");
+				renderPlaceholderTag(tag, getResponse());
 			}
 			markupStream.skipComponent();
 		}
+	}
+
+	/**
+	 * Renders a placeholder tag for the component when it is invisible and
+	 * {@link #setOutputMarkupPlaceholderTag(boolean)} has been called with <code>true</code>.
+	 * 
+	 * @param tag
+	 *            component tag
+	 * @param response
+	 *            response
+	 */
+	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
+	{
+		String ns = Strings.isEmpty(tag.getNamespace()) ? null : tag.getNamespace() + ":";
+
+		response.write("<");
+		if (ns != null)
+		{
+			response.write(ns);
+		}
+		response.write(tag.getName());
+		response.write(" id=\"");
+		response.write(getMarkupId());
+		response.write("\" style=\"display:none\"></");
+		if (ns != null)
+		{
+			response.write(ns);
+		}
+		response.write(tag.getName());
+		response.write(">");
 	}
 
 	/**
@@ -2629,7 +2671,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
-			List<IBehavior> behaviors = getBehaviorsImpl();
+			List<IBehavior> behaviors = getBehaviors();
 			if (behaviors != null)
 			{
 				final Iterator<IBehavior> iter = behaviors.iterator();
@@ -2803,8 +2845,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param markupId
 	 *            markup id value or null to clear any previous user defined value
+	 * @return this for chaining
 	 */
-	public void setMarkupId(String markupId)
+	public Component setMarkupId(String markupId)
 	{
 		if (markupId != null && Strings.isEmpty(markupId))
 		{
@@ -2816,6 +2859,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// on previous id
 
 		setMarkupIdImpl(markupId);
+
+		return this;
 	}
 
 	/**
@@ -3342,7 +3387,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private void notifyBehaviorsComponentBeforeRender()
 	{
-		List<IBehavior> behaviors = getBehaviorsImpl();
+		List<IBehavior> behaviors = getBehaviors();
 		if (behaviors != null)
 		{
 			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
@@ -3363,7 +3408,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private void notifyBehaviorsComponentRendered()
 	{
 		// notify the behaviors that component has been rendered
-		List<IBehavior> behaviors = getBehaviorsImpl();
+		List<IBehavior> behaviors = getBehaviors();
 		if (behaviors != null)
 		{
 			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
@@ -3529,7 +3574,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected List<IBehavior> getBehaviors(Class<? extends IBehavior> type)
 	{
-		List<IBehavior> behaviors = getBehaviorsImpl();
+		List<IBehavior> behaviors = getBehaviorsRawList();
 		if (behaviors == null)
 		{
 			return Collections.emptyList();
@@ -3539,7 +3584,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 		{
 			Object behavior = i.next();
-			if (type == null || type.isAssignableFrom(behavior.getClass()))
+			if (behavior != null && (type == null || type.isAssignableFrom(behavior.getClass())))
 			{
 				subset.add((IBehavior)behavior);
 			}
@@ -3920,7 +3965,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
-			List<IBehavior> behaviors = getBehaviorsImpl();
+			List<IBehavior> behaviors = getBehaviors();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
 				(isIgnoreAttributeModifier() == false))
 			{

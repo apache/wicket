@@ -521,6 +521,19 @@ public class WicketTesterTest extends TestCase
 		assertEquals("Mock name", pojo.getName());
 	}
 
+	public void testSubmittingFormWithAjaxEventSubmitsFormValues()
+	{
+		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
+		FormTester form = tester.newFormTester("form");
+		form.setValue("name", "New name");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
+			"onclick");
+
+		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
+		Pojo pojo = page.getPojo();
+		assertEquals("New name", pojo.getName());
+	}
+
 	/**
 	 * 
 	 */

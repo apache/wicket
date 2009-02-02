@@ -1157,7 +1157,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		FormComponent.visitFormComponentsPostOrder(this, visitor);
 
-		visitChildrenInContainingBorder(visitor);
+		if (getParent() instanceof Border)
+		{
+			FormComponent.visitFormComponentsPostOrder(getParent(), visitor);
+		}
 	}
 
 	/**
@@ -1419,7 +1422,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&&typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer.append("'); if (b!=null&&b.onclick!=null&&typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1969,16 +1972,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		MarkupContainer border = findParent(Border.class);
 		if (border != null)
 		{
-			Iterator<? extends Component> iter = border.iterator();
-			Component.IVisitor<Component> visitor = new FormModelUpdateVisitor(null);
-			while (iter.hasNext())
-			{
-				Component child = iter.next();
-				if (child instanceof IFormModelUpdateListener)
-				{
-					visitor.component(child);
-				}
-			}
+			FormComponent.visitComponentsPostOrder(border, new FormModelUpdateVisitor(null));
 		}
 	}
 

@@ -252,8 +252,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			url = requestContext.encodeRenderURL(url == null ? encode(requestCycle,
-				(IBookmarkablePageRequestTarget)requestTarget) : url);
+			if (portletRequest)
+			{
+				url = ((PortletRequestContext)requestContext).encodeRenderURL((url == null
+					? encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget) : url),
+					true);
+			}
+			else
+			{
+				url = requestContext.encodeRenderURL(url == null ? encode(requestCycle,
+					(IBookmarkablePageRequestTarget)requestTarget) : url);
+			}
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{

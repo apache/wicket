@@ -41,7 +41,16 @@ public class MockHomePage extends WebPage
 	{
 		super();
 		add(new Label("label", "this page is secured"));
-		add(new PageLink("link", PageA.class));
+		add(new PageLink<PageA>("link", PageA.class)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				super.onClick();
+			}
+		});
 	}
 
 	/**

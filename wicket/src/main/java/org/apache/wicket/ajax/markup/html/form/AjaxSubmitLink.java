@@ -28,8 +28,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * A link that submits a form via ajax. Since this link takes the form as a constructor argument it
  * does not need to be inside form's component hierarchy.
  * 
- * <p/> It works by splitting the javascript/Ajax calls from the normal non-ajax requests by
- * generating:
+ * <p/>
+ * It works by splitting the javascript/Ajax calls from the normal non-ajax requests by generating:
  * 
  * <pre>
  * &lt;a href=&quot;normal action url&quot; onclick=&quot;ajax javascript script; return
@@ -83,7 +83,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 */
 	public AjaxSubmitLink(String id, final Form<?> form)
 	{
-		super(id);
+		super(id, form);
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{

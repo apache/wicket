@@ -33,6 +33,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <p>
  * Use the normal {@link AjaxFormChoiceComponentUpdatingBehavior} for the normal single component
  * fields
+ * <p>
+ * In order to be supported by this behavior the group components must output children with markup
+ * id in format of 'groupId-childId'
  * 
  * @author jcompagner
  * 
@@ -67,6 +70,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" for (var i = 0 ; i < inputNodes.length ; i ++) {\n");
 		asb.append(" var inputNode = inputNodes[i];\n");
 		asb.append(" if (!inputNode.type) continue;\n");
+		asb.append(" if (!(inputNode.id.indexOf(markupId+'-')===0)) continue;\n");
 		asb.append(" var inputType = inputNode.type.toLowerCase();\n");
 		asb.append(" if (inputType == 'checkbox' || inputType == 'radio') {\n");
 		asb.append(" Wicket.Event.add(inputNode, 'click', callbackScript);\n");

@@ -32,6 +32,17 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * org.apache.wicket.markup.html.form.CheckGroup.
  * 
  * Must be attached to an &lt;input type=&quot;checkbox&quot; ... &gt; markup.
+ * <p>
+ * STATELESS NOTES: By default this component cannot be used inside a stateless form. If it is
+ * desirable to use this inside a stateless form then
+ * <ul>
+ * <li>
+ * override #getValue() and return some stateless value to uniquely identify this radio (eg relative
+ * component path from group to this radio)</li>
+ * <li>
+ * override {@link #getStatelessHint()} and return <code>true</code></li>
+ * </ul>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * 
@@ -94,6 +105,7 @@ public class Check<T> extends LabeledWebMarkupContainer
 	{
 		super(id, model);
 		this.group = group;
+		setOutputMarkupId(true);
 	}
 
 
@@ -103,13 +115,39 @@ public class Check<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return form submission value
 	 */
-	public final String getValue()
+	public String getValue()
 	{
 		if (uuid < 0)
 		{
 			uuid = getPage().getAutoIndex();
 		}
 		return "check" + uuid;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected CheckGroup<T> getGroup()
+	{
+		CheckGroup<T> group = this.group;
+		if (group == null)
+		{
+			group = findParent(CheckGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException("Check component [" + getPath() +
+					"] cannot find its parent CheckGroup");
+			}
+		}
+		return group;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeRender()
+	{
+		// prefix markup id of this radio with its group's id
+		// this will make it easier to identify all radios that belong to a specific group
+		setMarkupId(getGroup().getMarkupId() + "-" + getMarkupId());
+		super.onBeforeRender();
 	}
 
 
@@ -128,16 +166,7 @@ public class Check<T> extends LabeledWebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<?> group = this.group;
-		if (group == null)
-		{
-			group = findParent(CheckGroup.class);
-			if (group == null)
-			{
-				throw new WicketRuntimeException("Check component [" + getPath() +
-					"] cannot find its parent CheckGroup");
-			}
-		}
+		CheckGroup<?> group = getGroup();
 
 		final String uuid = getValue();
 
@@ -270,5 +299,12 @@ public class Check<T> extends LabeledWebMarkupContainer
 		setDefaultModelObject(object);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	protected boolean getStatelessHint()
+	{
+		// because this component uses uuid field it cannot be stateless
+		return false;
+	}
 
 }

@@ -67,6 +67,14 @@ import org.slf4j.LoggerFactory;
  * <b>Note:</b> When trying to hack urls in the browser an exception might be caught while decoding
  * the URL. By default, for safety reasons a very simple WicketRuntimeException is thrown. The
  * original stack trace is only logged.
+ * <p/>
+ * <b>Note:</b> by default Wicket uses
+ * {@link org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory} to encrypt the query-string.
+ * KeyInSessionSunJceCryptFactory creates a unique encryption key per session and and uses the
+ * session as persistence store. Hence stateless pages will create a session as well and are no
+ * longer stateless. You may avoid that by implementing your own ICryptFactory which e.g. uses an
+ * application wide encryption key and thus doesn't need a session. You can register your own
+ * ICryptFactory via Application.getSecuritySettings().setCryptFactory().
  * 
  * @author Juergen Donnerstag
  */
@@ -139,6 +147,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		defaultStrategy.unmount(path);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.request.IRequestTargetMounter#addIgnoreMountPath(java.lang.String)
+	 */
 	public void addIgnoreMountPath(String path)
 	{
 		defaultStrategy.addIgnoreMountPath(path);
@@ -272,7 +284,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	/**
 	 * @param ex
 	 * 
-	 * @return decoded URL
+	 * @return xxx
 	 * @deprecated Use {@link #onError(Exception, String)}
 	 */
 	@Deprecated
@@ -281,6 +293,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		throw new PageExpiredException("Invalid URL");
 	}
 
+	/**
+	 * 
+	 * @param ex
+	 * @param url
+	 * @return error text
+	 */
 	protected String onError(final Exception ex, String url)
 	{
 		log.info("Invalid URL: " + url + ", message:" + ex.getMessage());
@@ -356,6 +374,14 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
 
 		return queryString.toString();
+	}
+
+	/**
+	 * @see org.apache.wicket.request.IRequestCodingStrategy#rewriteStaticRelativeUrl(java.lang.String)
+	 */
+	public String rewriteStaticRelativeUrl(String string)
+	{
+		return UrlUtils.rewriteToContextRelative(string, RequestCycle.get().getRequest());
 	}
 
 	/**
@@ -517,12 +543,18 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			return request.getPath();
 		}
 
+		/**
+		 * @see org.apache.wicket.Request#getRelativePathPrefixToContextRoot()
+		 */
 		@Override
 		public String getRelativePathPrefixToContextRoot()
 		{
 			return request.getRelativePathPrefixToContextRoot();
 		}
 
+		/**
+		 * @see org.apache.wicket.Request#getRelativePathPrefixToWicketHandler()
+		 */
 		@Override
 		public String getRelativePathPrefixToWicketHandler()
 		{
@@ -538,6 +570,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			return url;
 		}
 
+		/**
+		 * @see org.apache.wicket.Request#getQueryString()
+		 */
 		@Override
 		public String getQueryString()
 		{
@@ -583,11 +618,5 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		{
 			return getMessage();
 		}
-	}
-
-	/** {@inheritDoc} */
-	public String rewriteStaticRelativeUrl(String string)
-	{
-		return UrlUtils.rewriteToContextRelative(string, RequestCycle.get().getRequest());
 	}
 }

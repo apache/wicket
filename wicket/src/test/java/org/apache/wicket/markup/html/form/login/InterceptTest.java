@@ -100,6 +100,8 @@ public class InterceptTest extends TestCase
 		form.submit();
 		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
 			.getClass());
+
+		application.assertPageLink("link", PageA.class);
 	}
 
 	/**
@@ -166,7 +168,7 @@ public class InterceptTest extends TestCase
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Class< ? extends Page> getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
 			return MockHomePage.class;
 		}
@@ -181,7 +183,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @return Class
 		 */
-		public Class< ? extends Page> getLoginPage()
+		public Class<? extends Page> getLoginPage()
 		{
 			return MockLoginPage.class;
 		}

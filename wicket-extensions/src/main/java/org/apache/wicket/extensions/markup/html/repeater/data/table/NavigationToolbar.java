@@ -85,14 +85,12 @@ public class NavigationToolbar extends AbstractToolbar
 		return new NavigatorLabel(navigatorId, table);
 	}
 
-	/**
-	 * Hides this toolbar when there is only one page in the table
-	 * 
-	 * @see org.apache.wicket.Component#isVisible()
-	 */
+
+	/** {@inheritDoc} */
 	@Override
-	public boolean isVisible()
+	protected void onBeforeRender()
 	{
-		return table.getPageCount() > 1;
+		setVisible(table.getPageCount() > 1);
+		super.onBeforeRender();
 	}
 }

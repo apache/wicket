@@ -349,9 +349,18 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		// if self doesn't have markup stream try the parent's
-		if ((stream == null) && (getParent() != null))
+		if (stream == null)
 		{
-			stream = getParent().getAssociatedMarkupStream(false);
+			MarkupContainer container = getParent();
+			while (container != null)
+			{
+				if (container.hasAssociatedMarkup())
+				{
+					stream = container.getAssociatedMarkupStream(false);
+					break;
+				}
+				container = container.getParent();
+			}
 		}
 
 		// if we cant find any markup stream

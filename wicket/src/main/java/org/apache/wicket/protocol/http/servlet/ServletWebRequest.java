@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
@@ -431,7 +430,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * This will return true if the header "Wicket-Ajax" is set.
-	 * 
+	 *
 	 * @see org.apache.wicket.protocol.http.WebRequest#isAjax()
 	 */
 	@Override
@@ -442,7 +441,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * THIS IS FOR WICKET INTERNAL USE ONLY. DO NOT USE IT IN YOUR APPLICATION.
-	 * 
+	 *
 	 * @param ajax
 	 *            ajax
 	 */

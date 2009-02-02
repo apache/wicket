@@ -90,7 +90,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			{
 				url.append("/");
 			}
-			url.append(urlEncodePathComponent(value)).append("/");
+			url.append(urlEncodePathComponent(value));
 			i++;
 		}
 
@@ -104,7 +104,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				url.append("/");
 			}
 			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
-				urlEncodePathComponent(pageMap)).append("/");
+				urlEncodePathComponent(pageMap));
 		}
 
 		String intface = (String)parameters.get(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
@@ -116,7 +116,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				url.append("/");
 			}
 			url.append(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME).append("/").append(
-				urlEncodePathComponent(intface)).append("/");
+				urlEncodePathComponent(intface));
 		}
 		if (i != parameters.size())
 		{

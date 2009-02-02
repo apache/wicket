@@ -802,7 +802,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
-		int index = component.getBehaviors().indexOf(behaviour);
+		int index = component.getBehaviorsRawList().indexOf(behaviour);
 		if (index == -1)
 		{
 			throw new IllegalArgumentException("Behavior " + this +
@@ -1176,7 +1176,7 @@ public abstract class RequestCycle
 		}
 		catch (RuntimeException e)
 		{
-			log.error("Exception occurred during onEndRequest of the SessionStore", e);
+			log.error("Exception occurred during onBeginRequest of the SessionStore", e);
 		}
 		// Event callback
 		onBeginRequest();

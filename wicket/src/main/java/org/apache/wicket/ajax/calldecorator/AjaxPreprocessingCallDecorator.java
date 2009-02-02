@@ -49,8 +49,9 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 */
 	public CharSequence decorateScript(CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateScript(script);
-		return preDecorateScript(s);
+		CharSequence s = preDecorateScript(script);
+		return (delegate == null) ? s : delegate.decorateScript(s);
+
 	}
 
 	/**
@@ -58,8 +59,8 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 */
 	public CharSequence decorateOnSuccessScript(CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateOnSuccessScript(script);
-		return preDecorateOnSuccessScript(s);
+		CharSequence s = preDecorateOnSuccessScript(script);
+		return (delegate == null) ? s : delegate.decorateOnSuccessScript(s);
 	}
 
 	/**
@@ -67,8 +68,9 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	 */
 	public CharSequence decorateOnFailureScript(CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateOnFailureScript(script);
-		return preDecorateOnFailureScript(s);
+		CharSequence s = preDecorateOnFailureScript(script);
+
+		return (delegate == null) ? s : delegate.decorateOnFailureScript(s);
 	}
 
 

@@ -129,7 +129,11 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				{
 					value = "";
 				}
-				url.append(urlEncodePathComponent(value)).append("/");
+				if (!url.endsWith("/"))
+				{
+					url.append("/");
+				}
+				url.append(urlEncodePathComponent(value));
 				parameterNamesToAdd.remove(parameterName);
 			}
 		}

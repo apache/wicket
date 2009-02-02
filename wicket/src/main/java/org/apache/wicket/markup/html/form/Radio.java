@@ -29,6 +29,17 @@ import org.apache.wicket.util.lang.Objects;
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
+ * <p>
+ * STATELESS NOTES: By default this component cannot be used inside a stateless form. If it is
+ * desirable to use this inside a stateless form then
+ * <ul>
+ * <li>
+ * override #getValue() and return some stateless value to uniquely identify this radio (eg relative
+ * component path from group to this radio)</li>
+ * <li>
+ * override {@link #getStatelessHint()} and return <code>true</code></li>
+ * </ul>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.RadioGroup
  * 
@@ -71,6 +82,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
+	 * @param id
 	 * @param group
 	 *            parent {@link RadioGroup}
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
@@ -91,6 +103,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	{
 		super(id, model);
 		this.group = group;
+		setOutputMarkupId(true);
 	}
 
 
@@ -100,7 +113,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return form submission value
 	 */
-	public final String getValue()
+	public String getValue()
 	{
 		if (uuid < 0)
 		{
@@ -109,6 +122,34 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		return "radio" + uuid;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeRender()
+	{
+		// prefix markup id of this radio with its group's id
+		// this will make it easier to identify all radios that belong to a specific group
+		setMarkupId(getGroup().getMarkupId() + "-" + getMarkupId());
+		super.onBeforeRender();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	protected RadioGroup<T> getGroup()
+	{
+		RadioGroup<T> group = this.group;
+		if (group == null)
+		{
+			group = findParent(RadioGroup.class);
+			if (group == null)
+			{
+				throw new WicketRuntimeException(
+					"Radio component [" +
+						getPath() +
+						"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+			}
+		}
+		return group;
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -127,19 +168,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 
 		final String value = getValue();
 
-		RadioGroup<?> group = this.group;
-		if (group == null)
-		{
-			group = findParent(RadioGroup.class);
-			if (group == null)
-			{
-				throw new WicketRuntimeException(
-					"Radio component [" +
-						getPath() +
-						"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
-			}
-		}
-
+		RadioGroup<?> group = getGroup();
 
 		// assign name and value
 		tag.put("name", group.getInputName());
@@ -253,5 +282,12 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		setDefaultModelObject(object);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	protected boolean getStatelessHint()
+	{
+		// because we keep uuid this component cannot be stateless
+		return false;
+	}
 
 }

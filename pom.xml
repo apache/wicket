@@ -438,14 +438,7 @@
 			<dependency>
 				<groupId>javax.portlet</groupId>
 				<artifactId>portlet-api</artifactId>
-				<version>1.0</version>
-				<scope>provided</scope>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.portals.bridges</groupId>
-				<artifactId>portals-bridges-common</artifactId>
-				<version>1.0.3</version>
+				<version>2.0</version>
 				<scope>provided</scope>
 				<optional>true</optional>
 			</dependency>

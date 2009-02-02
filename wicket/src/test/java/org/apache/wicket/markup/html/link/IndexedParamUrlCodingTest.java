@@ -48,11 +48,10 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 	public void testIndexedLink() throws Exception
 	{
 		tester.getApplication().mount(
-				new IndexedParamUrlCodingStrategy("/test1", BookmarkableHomePageLinksPage.class,
-						null));
+			new IndexedParamUrlCodingStrategy("/test1", BookmarkableHomePageLinksPage.class, null));
 		tester.getApplication().mount(
-				new IndexedParamUrlCodingStrategy("/test2", BookmarkableHomePageLinksPage.class,
-						"mypagemap"));
+			new IndexedParamUrlCodingStrategy("/test2", BookmarkableHomePageLinksPage.class,
+				"mypagemap"));
 
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
@@ -63,17 +62,17 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		parameters.add("2", "a:b");
 
 		String url1 = cycle.urlFor(
-				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
-				.toString();
+			new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
+			.toString();
 		String url2 = cycle.urlFor(
-				new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
-						parameters)).toString();
-		assertEquals("test1/Integer0/Integer1/a:b/", url1);
-		assertEquals("test2/Integer0/Integer1/a:b/wicket:pageMapName/mypagemap/", url2);
+			new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
+				parameters)).toString();
+		assertEquals("test1/Integer0/Integer1/a:b", url1);
+		assertEquals("test2/Integer0/Integer1/a:b/wicket:pageMapName/mypagemap", url2);
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url1);
+			"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url1);
 		cycle = tester.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
 
@@ -95,7 +94,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
+			"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
 		cycle = tester.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
 

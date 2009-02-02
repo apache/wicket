@@ -90,6 +90,18 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	@Override
+	public void updateModel()
+	{
+		if (getModel() != null)
+		{
+			super.updateModel();
+		}
+	}
+
+	/**
 	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
@@ -112,6 +124,10 @@ public class FileUploadField extends FormComponent<FileUpload>
 		return null;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
+	 */
 	@Override
 	protected FileUpload convertValue(String[] value) throws ConversionException
 	{
@@ -168,11 +184,15 @@ public class FileUploadField extends FormComponent<FileUpload>
 	@Override
 	protected void onDetach()
 	{
-		if (fileUpload != null && forceCloseStreamsOnDetach())
+		if ((fileUpload != null) && forceCloseStreamsOnDetach())
 		{
 			fileUpload.closeStreams();
 			fileUpload = null;
-			setModelObject(null);
+
+			if (getModel() != null)
+			{
+				setModelObject(null);
+			}
 		}
 		super.onDetach();
 	}
