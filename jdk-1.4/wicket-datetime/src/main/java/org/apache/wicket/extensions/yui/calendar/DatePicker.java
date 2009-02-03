@@ -267,6 +267,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				}
 				calendarInit.append("]");
 			}
+			else if (value instanceof Map)
+			{
+				calendarInit.append(":");
+				Map map = (Map)value;
+				appendMapping(map, calendarInit);
+			}
 			else
 			{
 				calendarInit.append(":");
@@ -629,7 +635,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * selection of month and year.
 	 * 
 	 * @return <code>true</code> if select boxes should be rendered to allow month and year
-	 *         selection.<br/> <code>false</code> to render just plain text.
+	 *         selection.<br/>
+	 *         <code>false</code> to render just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
 	{
@@ -639,9 +646,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Indicates whether the calendar should be hidden after a date was selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden after the date
-	 *         selection <br/> <code>false</code> if the calendar should remain visible after the
-	 *         date selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden after the date selection <br/>
+	 *         <code>false</code> if the calendar should remain visible after the date selection.
 	 */
 	protected boolean hideOnSelect()
 	{
@@ -659,12 +665,50 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		return false;
 	}
 
+
+	private void appendMapping(Map map, StringBuffer calendarInit)
+	{
+		boolean first = true;
+		calendarInit.append("{");
+		Iterator keys = map.keySet().iterator();
+		while (keys.hasNext())
+		{
+			final Object key = keys.next();
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				calendarInit.append(",");
+			}
+			calendarInit.append(Strings.toEscapedUnicode(key.toString()));
+			calendarInit.append(":");
+			if (map.get(key) instanceof Map)
+			{
+
+				Map value = (Map)map.get(key);
+				appendMapping(value, calendarInit);
+			}
+			else
+			{
+				// calendarInit.append(map.get(key).toString());
+				calendarInit.append("\"");
+				calendarInit.append(Strings.toEscapedUnicode(map.get(key).toString()));
+				calendarInit.append("\"");
+			}
+		}
+		calendarInit.append("}");
+	}
+
 	/**
 	 * Override this method to further customize the YUI Calendar with additional Javascript code.
 	 * The code returned by this method is executed right after the Calendar has been constructed
-	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code>
-	 * in your code.<br/> See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
+	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code> in
+	 * your code.<br/>
+	 * See <a href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for
+	 * more information about the YUI Calendar.<br/>
+	 * Example:
 	 * 
 	 * <pre>
 	 * protected String getAdditionalJavascript()
