@@ -107,7 +107,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 		final Page page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink("ajaxLink")
+		page.add(new AjaxFallbackLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -147,7 +147,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 		final Page page = new MockPageWithLink();
 
 		// Create a link, which we test is actually invoked
-		page.add(new AjaxFallbackLink("ajaxLink")
+		page.add(new AjaxFallbackLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
