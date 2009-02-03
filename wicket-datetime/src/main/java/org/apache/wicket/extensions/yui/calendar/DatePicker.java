@@ -271,6 +271,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				}
 				calendarInit.append("]");
 			}
+			else if (value instanceof Map)
+			{
+				calendarInit.append(":");
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>)value;
+				appendMapping(map, calendarInit);
+			}
 			else
 			{
 				calendarInit.append(":");
@@ -674,5 +681,39 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	public boolean isEnabled(Component component)
 	{
 		return component.isEnabledInHierarchy();
+	}
+
+
+	private void appendMapping(Map<String, ? > map, StringBuffer calendarInit)
+	{
+		boolean first = true;
+		calendarInit.append("{");
+		for (String key : map.keySet())
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				calendarInit.append(",");
+			}
+			calendarInit.append(Strings.toEscapedUnicode(key));
+			calendarInit.append(":");
+			if (map.get(key) instanceof Map)
+			{
+				@SuppressWarnings("unchecked")
+				Map<String, ? > value = (Map<String, ? >)map.get(key);
+				appendMapping(value, calendarInit);
+			}
+			else
+			{
+				// calendarInit.append(map.get(key).toString());
+				calendarInit.append("\"");
+				calendarInit.append(Strings.toEscapedUnicode(map.get(key).toString()));
+				calendarInit.append("\"");
+			}
+		}
+		calendarInit.append("}");
 	}
 }
