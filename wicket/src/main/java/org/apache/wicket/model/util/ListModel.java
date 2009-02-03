@@ -53,6 +53,13 @@ public class ListModel<T> extends GenericBaseModel<List<T>>
 	@Override
 	protected List<T> createSerializableVersionOf(List<T> object)
 	{
-		return new ArrayList<T>(object);
+		if (object == null)
+		{
+			return null;
+		}
+		else
+		{
+			return new ArrayList<T>(object);
+		}
 	}
 }
