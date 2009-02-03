@@ -59,6 +59,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * 
 		 * @param id
 		 *            Component id
+		 * @param separatorMarkup
+		 *            markup used as a separator between breadcrumbs
 		 * @param index
 		 *            The index of the bread crumb
 		 * @param breadCrumbModel
@@ -68,11 +70,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(String id, int index, IBreadCrumbModel breadCrumbModel,
-			final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
+		public BreadCrumbComponent(String id, String separatorMarkup, int index,
+			IBreadCrumbModel breadCrumbModel, final IBreadCrumbParticipant breadCrumbParticipant,
+			boolean enableLink)
 		{
 			super(id);
-			add(new Label("sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
+			add(new Label("sep", (index > 0) ? separatorMarkup : "").setEscapeModelStrings(false)
 				.setRenderBodyOnly(true));
 			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
 			{
@@ -257,6 +260,16 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 	/**
+	 * @return markup used as a separator between breadcrumbs. By default <code>/</code> is used,
+	 *         but <code>&gt;&gt;</code> is also a popular choice.
+	 */
+	protected String getSeparatorMarkup()
+	{
+		return "/";
+	}
+
+
+	/**
 	 * Creates a new bread crumb component. That component will be rendered as part of the bread
 	 * crumbs list (which is a &lt;ul&gt; &lt;li&gt; structure).
 	 * 
@@ -274,7 +287,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
-		return new BreadCrumbComponent(id, index, this, breadCrumbParticipant, enableLink);
+		return new BreadCrumbComponent(id, getSeparatorMarkup(), index, this,
+			breadCrumbParticipant, enableLink);
 	}
 
 	/**
