@@ -67,11 +67,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(String id, int index, IBreadCrumbModel breadCrumbModel,
-			final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
+		public BreadCrumbComponent(String id, String separator, int index,
+			IBreadCrumbModel breadCrumbModel, final IBreadCrumbParticipant breadCrumbParticipant,
+			boolean enableLink)
 		{
 			super(id);
-			add(new Label("sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
+			add(new Label("sep", (index > 0) ? separator : "").setEscapeModelStrings(false)
 				.setRenderBodyOnly(true));
 			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
 			{
@@ -92,7 +93,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * List view for rendering the bread crumbs.
 	 */
-	protected class BreadCrumbsListView extends ListView<IBreadCrumbParticipant> implements IBreadCrumbModelListener
+	protected class BreadCrumbsListView extends ListView<IBreadCrumbParticipant>
+		implements
+			IBreadCrumbModelListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -118,7 +121,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				protected Object load()
 				{
 					// save a copy
-					List<IBreadCrumbParticipant> l = new ArrayList<IBreadCrumbParticipant>(allBreadCrumbParticipants());
+					List<IBreadCrumbParticipant> l = new ArrayList<IBreadCrumbParticipant>(
+						allBreadCrumbParticipants());
 					size = l.size();
 					return l;
 				}
@@ -260,6 +264,15 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 	/**
+	 * @return markup used as a separator between breadcrumbs. By default <code>/</code> is used,
+	 *         but <code>&gt;&gt;</code> is also a popular choice.
+	 */
+	protected String getSeparatorMarkup()
+	{
+		return "/";
+	}
+
+	/**
 	 * Creates a new bread crumb component. That component will be rendered as part of the bread
 	 * crumbs list (which is a &lt;ul&gt; &lt;li&gt; structure).
 	 * 
@@ -277,7 +290,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
-		return new BreadCrumbComponent(id, index, this, breadCrumbParticipant, enableLink);
+		return new BreadCrumbComponent(id, getSeparatorMarkup(), index, this,
+			breadCrumbParticipant, enableLink);
 	}
 
 	/**
@@ -291,10 +305,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		{
 			if (crumb instanceof Component)
 			{
-				((Component) crumb).detach();
-			} else if (crumb instanceof IDetachable)
+				((Component)crumb).detach();
+			}
+			else if (crumb instanceof IDetachable)
 			{
-				((IDetachable) crumb).detach();
+				((IDetachable)crumb).detach();
 			}
 		}
 	}
