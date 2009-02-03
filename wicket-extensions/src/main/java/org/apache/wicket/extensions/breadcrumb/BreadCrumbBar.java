@@ -58,6 +58,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * 
 		 * @param id
 		 *            Component id
+		 * @param separatorMarkup
+		 *            markup used as a separator between breadcrumbs
 		 * @param index
 		 *            The index of the bread crumb
 		 * @param breadCrumbModel
@@ -67,12 +69,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(String id, String separator, int index,
+		public BreadCrumbComponent(String id, String separatorMarkup, int index,
 			IBreadCrumbModel breadCrumbModel, final IBreadCrumbParticipant breadCrumbParticipant,
 			boolean enableLink)
 		{
 			super(id);
-			add(new Label("sep", (index > 0) ? separator : "").setEscapeModelStrings(false)
+			add(new Label("sep", (index > 0) ? separatorMarkup : "").setEscapeModelStrings(false)
 				.setRenderBodyOnly(true));
 			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
 			{
@@ -113,12 +115,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		{
 			super(id);
 			setReuseItems(false);
-			setDefaultModel(new LoadableDetachableModel()
+			setDefaultModel(new LoadableDetachableModel<List<IBreadCrumbParticipant>>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected Object load()
+				protected List<IBreadCrumbParticipant> load()
 				{
 					// save a copy
 					List<IBreadCrumbParticipant> l = new ArrayList<IBreadCrumbParticipant>(
