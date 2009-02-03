@@ -22,7 +22,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * Selects and deselects all Check components under the same CheckGroup as itself. Selection
- * toggling is accomplished by generating an onclick javascript event handler.
+ * toggling is accomplished by generating an onclick javascript event handler. This component must
+ * be attached to markup of type &lt;input type="checkbox"/&gt;. Additionally, if
+ * {@link #CheckGroupSelector(String)} constuctor is used the selector must be a descendant of the
+ * CheckGroup it is meant to affect.
  * 
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * @see org.apache.wicket.markup.html.form.Check
