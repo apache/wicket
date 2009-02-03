@@ -381,9 +381,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 *            Name of link
 	 * @return Link to home page for this application
 	 */
-	protected final BookmarkablePageLink homePageLink(final String id)
+	protected final BookmarkablePageLink<?> homePageLink(final String id)
 	{
-		return new BookmarkablePageLink(id, getApplication().getHomePage());
+		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
 	}
 
 	/**
