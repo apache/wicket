@@ -37,7 +37,14 @@ public class HideableBorder extends Border
 	public HideableBorder(String name)
 	{
 		super(name);
-		final WebMarkupContainer containerWrapper = new WebMarkupContainer("wrapper");
+		final WebMarkupContainer containerWrapper = new WebMarkupContainer("wrapper")
+		{
+			@Override
+			public boolean isVisible()
+			{
+				return !hidden;
+			}
+		};
 		add(containerWrapper);
 		containerWrapper.add(getBodyContainer());
 		add(new AjaxLink("hideLink")
@@ -48,10 +55,27 @@ public class HideableBorder extends Border
 			public void onClick(AjaxRequestTarget target)
 			{
 				hidden = !hidden;
-				containerWrapper.setVisible(!hidden);
 				target.addComponent(containerWrapper);
 			}
 		});
 		containerWrapper.setOutputMarkupPlaceholderTag(true);
 	}
+
+	/**
+	 * @return true if body of this border is hidden
+	 */
+	public boolean isHidden()
+	{
+		return hidden;
+	}
+
+	/**
+	 * @param hidden
+	 */
+	public void setHidden(boolean hidden)
+	{
+		this.hidden = hidden;
+	}
+
+
 }

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * 
@@ -25,11 +26,23 @@ public class HideableBorderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	private final HideableBorder border;
+
 	/**
 	 * Construct.
 	 */
 	public HideableBorderPage()
 	{
-		add(new HideableBorder("hideable"));
+		border = new HideableBorder("hideable");
+		add(border);
+		border.add(new Label("content", "label"));
 	}
+
+	/** @return hideable border */
+	public HideableBorder getBorder()
+	{
+		return border;
+	}
+
+
 }
