@@ -47,6 +47,34 @@ public class ComponentBorderTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests component use check does not fail when border starts out hidden
+	 * 
+	 * @throws Exception
+	 */
+	public void testComponentUseCheck() throws Exception
+	{
+		/*
+		 * Suppose:
+		 * 
+		 * <div wicket:id="border"><div wicket:id="label"></div> suppose border->label and border's
+		 * body is hidden.
+		 * 
+		 * The label is added to border not to its hidden body so as far as wicket is concerned
+		 * label is visible in hierarchy, but when rendering label wont be rendered because in the
+		 * markup it is inside the border's hidden body. Thus component use check will fail even
+		 * though it shouldnt - make sure it doesnt.
+		 */
+		tester.getApplication().getDebugSettings().setComponentUseCheck(true);
+
+		HideableBorderPage page = new HideableBorderPage();
+		// start with border body hidden
+		page.getBorder().setHidden(true);
+
+		tester.startPage(page);
+		tester.assertRenderedPage(HideableBorderPage.class);
+	}
+
+	/**
 	 * 
 	 * @throws Exception
 	 */
