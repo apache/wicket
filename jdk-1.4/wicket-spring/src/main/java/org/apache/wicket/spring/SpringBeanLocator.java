@@ -39,7 +39,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	// Weak reference so we don't hold up WebApp classloader garbage collection.
 	private transient WeakReference/* <Class> */beanTypeCache;
 
-	private String beanTypeName;
+	private final String beanTypeName;
 
 	private String beanName;
 
@@ -81,16 +81,16 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			throw new IllegalArgumentException("[beanType] argument cannot be null");
 		}
 
-		this.beanTypeCache = new WeakReference(beanType);
-		this.beanTypeName = beanType.getName();
-		this.springContextLocator = locator;
+		beanTypeCache = new WeakReference(beanType);
+		beanTypeName = beanType.getName();
+		springContextLocator = locator;
 		this.beanName = beanName;
-		this.springContextLocator = locator;
+		springContextLocator = locator;
 	}
 
 	/**
 	 * Returns the name of the Bean as registered to Spring. Throws IllegalState exception if none
-	 * or more then one beans are found.
+	 * or more than one beans are found.
 	 * 
 	 * @param ctx
 	 *            spring application context
