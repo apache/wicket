@@ -53,9 +53,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Constructor
 	 * 
 	 * @param beanType
-	 * 		bean class
+	 *            bean class
 	 * @param locator
-	 * 		spring context locator
+	 *            spring context locator
 	 */
 	public SpringBeanLocator(Class< ? > beanType, ISpringContextLocator locator)
 	{
@@ -66,11 +66,11 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Constructor
 	 * 
 	 * @param beanName
-	 * 		bean name
+	 *            bean name
 	 * @param beanType
-	 * 		bean class
+	 *            bean class
 	 * @param locator
-	 * 		spring context locator
+	 *            spring context locator
 	 */
 	public SpringBeanLocator(String beanName, Class< ? > beanType, ISpringContextLocator locator)
 	{
@@ -92,12 +92,12 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	/**
 	 * Returns the name of the Bean as registered to Spring. Throws IllegalState exception if none
-	 * or more then one beans are found.
+	 * or more than one beans are found.
 	 * 
 	 * @param ctx
-	 * 		spring application context
+	 *            spring application context
 	 * @param clazz
-	 * 		bean class
+	 *            bean class
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
@@ -126,7 +126,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	/**
 	 * @return returns whether the bean (the locator is supposed to istantiate) is a singleton or
-	 * 	not
+	 *         not
 	 */
 	public boolean isSingletonBean()
 	{
@@ -211,10 +211,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * are found.
 	 * 
 	 * @param ctx
-	 * 		spring application context
+	 *            spring application context
 	 * 
 	 * @param clazz
-	 * 		bean class
+	 *            bean class
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
@@ -227,12 +227,12 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * Looks up a bean by its name and class. Throws IllegalState exception if bean not found.
 	 * 
 	 * @param ctx
-	 * 		spring application context
+	 *            spring application context
 	 * 
 	 * @param name
-	 * 		bean name
+	 *            bean name
 	 * @param clazz
-	 * 		bean class
+	 *            bean class
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
