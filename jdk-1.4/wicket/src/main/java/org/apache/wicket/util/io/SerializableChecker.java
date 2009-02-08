@@ -62,6 +62,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class SerializableChecker extends ObjectOutputStream
 {
+	private static final Logger logger = LoggerFactory.getLogger(SerializableChecker.class);
+
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
 	 */
@@ -205,19 +207,19 @@ public final class SerializableChecker extends ObjectOutputStream
 	// introspection fu, we'll find out soon enough and clients on this class
 	// can fall back on Java's default exception for serialization errors (which
 	// sucks and is the main reason for this attempt).
-	private static final Method LOOKUP_METHOD;
+	private static Method LOOKUP_METHOD;
 
-	private static final Method GET_CLASS_DATA_LAYOUT_METHOD;
+	private static Method GET_CLASS_DATA_LAYOUT_METHOD;
 
-	private static final Method GET_NUM_OBJ_FIELDS_METHOD;
+	private static Method GET_NUM_OBJ_FIELDS_METHOD;
 
-	private static final Method GET_OBJ_FIELD_VALUES_METHOD;
+	private static Method GET_OBJ_FIELD_VALUES_METHOD;
 
-	private static final Method GET_FIELD_METHOD;
+	private static Method GET_FIELD_METHOD;
 
-	private static final Method HAS_WRITE_REPLACE_METHOD_METHOD;
+	private static Method HAS_WRITE_REPLACE_METHOD_METHOD;
 
-	private static final Method INVOKE_WRITE_REPLACE_METHOD;
+	private static Method INVOKE_WRITE_REPLACE_METHOD;
 
 	static
 	{
@@ -250,15 +252,10 @@ public final class SerializableChecker extends ObjectOutputStream
 					"invokeWriteReplace", new Class[] { Object.class });
 			INVOKE_WRITE_REPLACE_METHOD.setAccessible(true);
 		}
-		catch (SecurityException e)
+		catch (Exception e)
 		{
+			logger.warn("SerializableChecker not available", e);
 			available = false;
-			throw new RuntimeException(e);
-		}
-		catch (NoSuchMethodException e)
-		{
-			available = false;
-			throw new RuntimeException(e);
 		}
 	}
 
