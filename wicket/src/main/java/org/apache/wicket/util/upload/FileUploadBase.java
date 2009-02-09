@@ -59,8 +59,8 @@ public abstract class FileUploadBase
 	 * </p>
 	 * 
 	 * <p>
-	 * <strong>NOTE:</strong>This method will be moved to the <code>ServletFileUpload</code>
-	 * class after the FileUpload 1.1 release. Unfortunately, since this method is static, it is not
+	 * <strong>NOTE:</strong>This method will be moved to the <code>ServletFileUpload</code> class
+	 * after the FileUpload 1.1 release. Unfortunately, since this method is static, it is not
 	 * possible to provide its replacement until this method is removed.
 	 * </p>
 	 * 
@@ -232,8 +232,8 @@ public abstract class FileUploadBase
 	 * @param ctx
 	 *            The context for the request to be parsed.
 	 * 
-	 * @return A list of <code>FileItem</code> instances parsed from the request, in the order
-	 *         that they were transmitted.
+	 * @return A list of <code>FileItem</code> instances parsed from the request, in the order that
+	 *         they were transmitted.
 	 * 
 	 * @exception FileUploadException
 	 *                if there are problems reading/parsing the request or storing files.
@@ -256,7 +256,7 @@ public abstract class FileUploadBase
 		}
 		int requestSize = ctx.getContentLength();
 
-		if (requestSize == -1)
+		if (requestSize == -1 && getSizeMax() != Long.MAX_VALUE)
 		{
 			throw new UnknownSizeException("the request was rejected because its size is unknown");
 		}
@@ -596,8 +596,7 @@ public abstract class FileUploadBase
 		}
 
 		/**
-		 * Constructs an <code>InvalidContentTypeException</code> with the specified detail
-		 * message.
+		 * Constructs an <code>InvalidContentTypeException</code> with the specified detail message.
 		 * 
 		 * @param message
 		 *            The detail message.
