@@ -71,8 +71,8 @@ public class JavascriptResourceReference extends ResourceReference
 	@Override
 	protected Resource newResource()
 	{
-		PackageResource packageResource = JavascriptPackageResource.get(getScope(), getName(),
-			getLocale(), getStyle());
+		PackageResource packageResource = JavascriptPackageResource.newPackageResource(getScope(),
+			getName(), getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();

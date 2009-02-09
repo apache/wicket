@@ -271,7 +271,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
 	 * @return The resource
 	 */
-	protected static PackageResource newPackageResource(final Class<?> scope, final String path,
+	public static PackageResource newPackageResource(final Class<?> scope, final String path,
 		final Locale locale, final String style)
 	{
 		return new JavascriptPackageResource(scope, path, locale, style);
