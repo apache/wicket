@@ -149,6 +149,7 @@ public class JavascriptStripper
 					else
 					{
 						c = ' ';
+						wasNewLineInWhitespace = false;
 					}
 					// ignore all whitespace characters after this one
 					state = WHITE_SPACE;
