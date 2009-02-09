@@ -1015,11 +1015,11 @@ public abstract class Session implements IClusterable
 	 * @param locale
 	 *            New locale
 	 */
-	public final void setLocale(final Locale locale)
+	public void setLocale(final Locale locale)
 	{
 		if (locale == null)
 		{
-			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+			throw new IllegalArgumentException("Argument 'locale' must not be null");
 		}
 		this.locale = locale;
 		dirty();
