@@ -50,5 +50,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				"src/main/java/org/apache/wicket/extensions/yui/dom/dom.js",
 				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js",
 				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar-min.js" };
+
+		xmlIgnore = new String[] { ".settings" };
 	}
 }

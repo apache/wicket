@@ -41,5 +41,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * Low level configuration files for logging. No license needed.
 		 */
 		propertiesIgnore = new String[] { "src/test/java" };
+
+		xmlIgnore = new String[] { ".settings" };
 	}
 }

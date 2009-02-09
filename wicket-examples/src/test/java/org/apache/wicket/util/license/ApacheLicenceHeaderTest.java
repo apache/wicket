@@ -66,7 +66,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		/*
 		 * Part of an example
 		 */
-		"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml" };
+		"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml", ".settings" };
 
 		propertiesIgnore = new String[] {
 		/*
