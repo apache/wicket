@@ -83,6 +83,10 @@
 					<url>file:/home/wicket/tomcat/webapps/maven/repository/</url>
 					<uniqueVersion>false</uniqueVersion>
 				</snapshotRepository>
+				<repository>
+					<id>local</id>
+					<url>file:target/m2-repo</url>
+				</repository>
 			</distributionManagement>
 		</profile>
 		<profile>
