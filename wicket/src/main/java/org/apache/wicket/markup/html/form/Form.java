@@ -2215,6 +2215,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public static Form<?> findForm(Component component)
 	{
+		if (component instanceof IFormSubmittingComponent)
+		{
+			return ((IFormSubmittingComponent)component).getForm();
+		}
 		class FindFormVisitor implements Component.IVisitor<Form<?>>
 		{
 			Form<?> form = null;
