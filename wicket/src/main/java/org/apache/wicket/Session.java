@@ -358,7 +358,8 @@ public abstract class Session implements IClusterable
 		locale = request.getLocale();
 		if (locale == null)
 		{
-			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+			throw new IllegalStateException(
+				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
 	}
 
