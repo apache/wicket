@@ -1021,8 +1021,11 @@ public abstract class Session implements IClusterable
 		{
 			throw new IllegalArgumentException("Argument 'locale' must not be null");
 		}
+		if (!Objects.equal(this.locale, locale))
+		{
+			dirty();
+		}
 		this.locale = locale;
-		dirty();
 	}
 
 	/**
