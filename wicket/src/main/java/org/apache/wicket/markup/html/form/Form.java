@@ -592,15 +592,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				{
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
-					final Form<?> form;
-					if (component instanceof IFormSubmittingComponent)
-					{
-						form = ((IFormSubmittingComponent)component).getForm();
-					}
-					else
-					{
-						form = Form.findForm((Component)submittingComponent);
-					}
+					final Form<?> form = submittingComponent.getForm();
 
 					// Check for component-name or component-name.x request string
 					if ((form != null) && (form.getRootForm() == Form.this))
