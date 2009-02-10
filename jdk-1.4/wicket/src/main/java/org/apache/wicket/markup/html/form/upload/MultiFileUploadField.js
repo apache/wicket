@@ -62,7 +62,7 @@ function MultiSelector( eprefix, list_target,max, del_label ){
 	this.addElement = function( element ){
 
 		// Make sure it's a file input element
-		if( element.tagName == 'INPUT' && element.type == 'file' ){
+		if( element.tagName.toLowerCase() == 'input' && element.type.toLowerCase() == 'file' ){
 
 			// Element name -- what number am I?
 			element.name = this.element_name_prefix + "_mf_"+this.id++;
