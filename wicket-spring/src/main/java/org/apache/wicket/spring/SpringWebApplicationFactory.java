@@ -46,8 +46,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *    &lt;/servlet&gt;
  * </pre>
  * 
- * beanName init parameter can be used if there are multiple WebApplications defined on the spring
- * application context.
+ * <code>applicationBean</code> init parameter can be used if there are multiple WebApplications
+ * defined on the spring application context.
  * 
  * Example:
  * 
@@ -60,7 +60,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *    &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
  *    &lt;/init-param&gt;
  *    &lt;init-param&gt;
- *    &lt;param-name&gt;beanName&lt;/param-name&gt;
+ *    &lt;param-name&gt;applicationBean&lt;/param-name&gt;
  *    &lt;param-value&gt;phonebookApplication&lt;/param-value&gt;
  *    &lt;/init-param&gt;
  *    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
