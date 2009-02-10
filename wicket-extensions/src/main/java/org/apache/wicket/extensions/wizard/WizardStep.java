@@ -373,8 +373,8 @@ public class WizardStep extends Panel implements IWizardStep
 	 * that is used.
 	 * 
 	 * The {@link WizardModel static wizard model} knows all the steps upfront and initializes themm
-	 * when starting up. This method will be called when the wizard is
-	 * {@link #init(IWizardModel) initializing}.
+	 * when starting up. This method will be called when the wizard is {@link #init(IWizardModel)
+	 * initializing}.
 	 * 
 	 * The {@link DynamicWizardModel dynamic wizard model} initializes steps every time they are
 	 * encountered.
@@ -481,4 +481,14 @@ public class WizardStep extends Panel implements IWizardStep
 	protected void onInit(IWizardModel wizardModel)
 	{
 	}
+
+	/**
+	 * @return wizard model
+	 */
+	public IWizardModel getWizardModel()
+	{
+		return wizardModel;
+	}
+
+
 }
