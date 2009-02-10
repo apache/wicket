@@ -779,7 +779,7 @@ Wicket.Window.prototype = {
 		this.window.style.display = "none";		
 		
 		// if the window has a div content, the div is reparented to it's old parent 
-		if (typeof(this.oldParent != "undefined")) {		
+		if (typeof(this.oldParent) != "undefined") {		
 			try {	
 				this.content.removeChild(this.settings.element);
 				this.oldParent.appendChild(this.settings.element);
