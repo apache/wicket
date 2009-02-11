@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.feedback;
+package org.apache.wicket;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.TestPage_1;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author oli
  */
-public class FeedbackMessagesTest2 extends TestCase
+public class FeedbackMessagesTest extends TestCase
 {
 
 	WicketTester tester;
