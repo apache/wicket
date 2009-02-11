@@ -189,8 +189,14 @@ public final class FeedbackMessages implements IClusterable
 	 */
 	public final boolean hasMessageFor(Component component, int level)
 	{
-		final FeedbackMessage message = messageForComponent(component);
-		return message != null && message.isLevel(level);
+		for (FeedbackMessage message : messages)
+		{
+			if (message.getReporter() == component && message.isLevel(level))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -228,6 +234,8 @@ public final class FeedbackMessages implements IClusterable
 
 	/**
 	 * Looks up a message for the given component.
+	 * 
+	 * TODO: 1.5 This should be deprecated and return a Collection.
 	 * 
 	 * @param component
 	 *            the component to look up the message for
