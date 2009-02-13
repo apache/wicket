@@ -75,8 +75,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
-			final WebMarkupContainer header = new HtmlHeaderContainer(
-				HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
+			final WebMarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
+				container.getPage().getAutoIndex());
 			container.autoAdd(header, markupStream);
 
 			// Yes, we handled the tag
@@ -91,8 +91,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 			{
 				// Create a special header component which will gather
 				// additional input the <head> from 'contributors'.
-				final MarkupContainer header = new HtmlHeaderContainer(
-					HtmlHeaderSectionHandler.HEADER_ID + container.getPage().getAutoIndex());
+				final MarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
+					container.getPage().getAutoIndex());
 
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality they are merely a means of surrounding relevant
@@ -157,7 +157,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 				throw new MarkupException(
 					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>. Error occured while rendering page: " +
 						pageClassName + " using markup stream: " + streamName);
-
 			}
 
 			// Yes, we handled the tag
@@ -166,5 +165,16 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 		// We were not able to handle the tag
 		return false;
+	}
+
+	/**
+	 * Return a new HtmlHeaderContainer
+	 * 
+	 * @param id
+	 * @return HtmlHeaderContainer
+	 */
+	protected HtmlHeaderContainer newHtmlHeaderContainer(String id)
+	{
+		return new HtmlHeaderContainer(id);
 	}
 }

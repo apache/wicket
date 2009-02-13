@@ -254,7 +254,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 *            The component's id
 	 * @return true, if the component ok to render
 	 */
-	public final boolean okToRenderComponent(final String scope, final String id)
+	public boolean okToRenderComponent(final String scope, final String id)
 	{
 		if (renderedComponentsPerScope == null)
 		{

@@ -151,7 +151,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
 				final String headerId = "_" + Classes.simpleName(markupClass) +
-					container.getVariation() + "Header" + index;
+					(container.getVariation() == null ? "" : container.getVariation()) + "Header" +
+					index;
 
 				// Create the header container and associate the markup with
 				// it
