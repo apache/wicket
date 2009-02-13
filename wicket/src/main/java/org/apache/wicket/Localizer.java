@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * You may register additional IStringResourceLoader to extend or replace Wickets default search
  * strategy for the properties. E.g. string resource loaders which load the properties from a
- * database. There should be no need to extend Localizer.
+ * database. There should be hardly any need to extend Localizer.
  * 
  * @see org.apache.wicket.settings.Settings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
@@ -186,7 +186,7 @@ public class Localizer
 		boolean addedToPage = false;
 		if (component != null)
 		{
-			if ((component instanceof Page) || null != component.findParent(Page.class))
+			if ((component instanceof Page) || (null != component.findParent(Page.class)))
 			{
 				addedToPage = true;
 			}
@@ -206,7 +206,7 @@ public class Localizer
 
 		// If this component is not yet added to page we do not want to check
 		// cache as we can generate an invalid cache key
-		if ((cache != null) && addedToPage)
+		if ((cache != null) && ((component == null) || addedToPage))
 		{
 			cacheKey = getCacheKey(key, component);
 		}
