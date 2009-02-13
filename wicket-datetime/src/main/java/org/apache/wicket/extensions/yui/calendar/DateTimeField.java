@@ -228,7 +228,15 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 */
 	public void setDate(Date date)
 	{
-		this.date = (date != null) ? new MutableDateTime(date) : null;
+		if (date == null) {
+			this.date = null;
+			setDefaultModelObject(null);
+			setHours(null);
+			setMinutes(null);
+			return;
+		}
+		
+		this.date = new MutableDateTime(date);
 		setDefaultModelObject(date);
 
 		Integer hours = getHours();
