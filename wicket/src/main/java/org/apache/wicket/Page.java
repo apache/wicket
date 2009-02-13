@@ -866,19 +866,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
-
-		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
-		{
-			Class<?> klass = getClass();
-			while (klass.isAnonymousClass())
-			{
-				klass = klass.getSuperclass();
-			}
-			getResponse().write("<!-- Page Class ");
-			getResponse().write(klass.getName());
-			getResponse().write(" -->\n");
-		}
-
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -954,6 +941,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 			// Add/touch the response page in the session (its pagemap).
 			getSession().touch(this);
+		}
+
+		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+		{
+			Class<?> klass = getClass();
+			while (klass.isAnonymousClass())
+			{
+				klass = klass.getSuperclass();
+			}
+			getResponse().write("<!-- Page Class ");
+			getResponse().write(klass.getName());
+			getResponse().write(" -->\n");
 		}
 	}
 
