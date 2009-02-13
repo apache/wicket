@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.authentication.panel;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -235,8 +234,7 @@ public class SignInPanel extends Panel
 		if (!continueToOriginalDestination())
 		{
 			setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
-				getApplication().getHomePage(), (PageParameters)null));
+				getApplication().getHomePage()));
 		}
 	}
-
 }
