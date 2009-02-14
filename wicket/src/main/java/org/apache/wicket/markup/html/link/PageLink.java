@@ -29,7 +29,10 @@ import org.apache.wicket.Page;
  * @author Jonathan Locke
  * @param <T>
  *            type of model object
+ * 
+ * @deprecated use BookmarkabpePageLink or Link instead
  */
+@Deprecated
 public class PageLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
@@ -73,6 +76,16 @@ public class PageLink<T> extends Link<T>
 				return c;
 			}
 		};
+	}
+
+	/**
+	 * Retrieves the class of page this link links to.
+	 * 
+	 * @return page of class
+	 */
+	public Class<? extends Page> getPageClass()
+	{
+		return pageLink.getPageIdentity();
 	}
 
 	/**
