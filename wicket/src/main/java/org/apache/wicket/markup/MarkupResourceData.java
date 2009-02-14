@@ -49,7 +49,10 @@ public class MarkupResourceData
 	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
 	private String encoding;
 
-	/** Wicket namespace: <html xmlns:wicket="http://wicket.apache.org"> */
+	/**
+	 * Wicket namespace: <html
+	 * xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd>
+	 */
 	private String wicketNamespace;
 
 	/** == wicket namespace name + ":id" */
@@ -66,6 +69,7 @@ public class MarkupResourceData
 	/**
 	 * @return String representation of markup list
 	 */
+	@Override
 	public String toString()
 	{
 		if (resource != null)

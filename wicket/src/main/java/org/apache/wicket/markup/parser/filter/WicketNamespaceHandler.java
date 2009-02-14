@@ -29,8 +29,9 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * This is a markup inline filter. It determines the Wicket namespace name from the markup Examples
- * are xmlns:wicket or xmlns:wicket="http://wicket.apache.org".
+ * This is a markup inline filter. It determines the Wicket namespace name from the markup. Examples
+ * are xmlns:wicket or xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd"
+ * though every URI that starts with "http://wicket.apache.org" will work as well.
  * 
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
