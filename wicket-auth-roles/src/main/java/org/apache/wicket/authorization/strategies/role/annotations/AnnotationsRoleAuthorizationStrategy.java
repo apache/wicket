@@ -82,6 +82,11 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		// Get component's class
 		final Class<?> componentClass = component.getClass();
 
+		return isActionAuthorized(componentClass, action);
+	}
+
+	protected boolean isActionAuthorized(final Class<?> componentClass, final Action action)
+	{
 		// Check for a single action
 		if (!check(action, componentClass.getAnnotation(AuthorizeAction.class)))
 		{
