@@ -25,12 +25,15 @@ import org.apache.wicket.Page;
  * class when the link is clicked. A default no-args constructor must be available in this case or a
  * WicketRuntimeException will be thrown when Wicket fails to instantiate the class.
  * 
+ * TODO 1.5: remove
+ * 
  * @see IPageLink
  * @author Jonathan Locke
  * @param <T>
  *            type of model object
  * 
  * @deprecated use BookmarkabpePageLink or Link instead
+ * 
  */
 @Deprecated
 public class PageLink<T> extends Link<T>
