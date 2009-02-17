@@ -26,37 +26,21 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 
-
 /**
- * 
- * Url coding strategy for bookmarkable pages that encodes a set of given parameters
- * 
- * in the url's path path and the rest in the querystring.
- * 
- * <p>
- * Strategy looks for path-parameters whose name is read from an array of
- * 
- * names e.g. ["param0", "param1"]. Found parameters will be appended to the url in
- * 
- * the form <code>/mount-path/paramvalue0/paramvalue1</code>.
- * </p>
- * 
- * <p>
+ * Url coding strategy for bookmarkable pages that encodes a set of given parameters in the url's
+ * path and the rest in the query-string.
+ * <p/>
+ * Strategy looks for path-parameters whose name is read from an array of names e.g. ["param0",
+ * "param1"]. Found parameters will be appended to the url in the form
+ * <code>/mount-path/paramvalue0/paramvalue1</code>.
+ * <p/>
  * All other parameters are added as parameter in the form:
- * 
  * <code>/mount-path/paramvalue0?otherparam0=otherparamvalue0&otherparam1=otherparamvalue1</code>.
- * </p>
- * 
- * <p>
+ * <p/>
  * Decode is symmetric except for when a path parameter that is not at the end has no value during
- * encode.
- * 
- * For example, the names for the path parameters are: "a", "b" and "c". When "b" is
- * 
- * not specified upon encoding, but "c" is, upon a decode "b" will get the empty string
- * 
- * as value. When both "b" and "c" are missing on encode, the will not get a value during decode.
- * </p>
+ * encode. For example, the names for the path parameters are: "a", "b" and "c". When "b" is not
+ * specified upon encoding, but "c" is, upon a decode "b" will get the empty string as value. When
+ * both "b" and "c" are missing on encode, the will not get a value during decode.
  * 
  * @author erik.van.oosten
  */
