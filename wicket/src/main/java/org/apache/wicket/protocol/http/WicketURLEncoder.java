@@ -30,9 +30,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Adapted from java.net.URLEncoder, but defines instances for query string encoding versus URL path
- * component encoding. <p/> The difference is important because a space is encoded as a + in a query
- * string, but this is a valid value in a path component (and is therefore not decode back to a
- * space).
+ * component encoding.
+ * <p/>
+ * The difference is important because a space is encoded as a + in a query string, but this is a
+ * valid value in a path component (and is therefore not decode back to a space).
  * 
  * @author Doug Donohoe
  * @see java.net.URLEncoder
@@ -49,40 +50,63 @@ public class WicketURLEncoder
 		/**
 		 * query type
 		 */
-		QUERY, /**
+		QUERY,
+		/**
 		 * path type
 		 */
-		PATH;
+		PATH,
+		/**
+		 * full path type
+		 */
+		FULL_PATH;
 	}
 
 	// list of what not to decode
 	protected BitSet dontNeedEncoding;
 
+	// E.g. "?" for FULL_PATH encoding when querystring has already been encoded.
+	private final char stopChar;
+
 	// used in decoding
 	protected static final int caseDiff = ('a' - 'A');
 
 	/**
-	 * Encoder used to encode name or value components of a query string.<br/><br/>
+	 * Encoder used to encode name or value components of a query string.<br/>
+	 * <br/>
 	 * 
 	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
-	public static final WicketURLEncoder QUERY_INSTANCE = new WicketURLEncoder(Type.QUERY);
+	public static final WicketURLEncoder QUERY_INSTANCE = new WicketURLEncoder(Type.QUERY, '\0');
 
 	/**
-	 * Encoder used to encode components of a path.<br/><br/>
+	 * Encoder used to encode components of a path.<br/>
+	 * <br/>
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLEncoder PATH_INSTANCE = new WicketURLEncoder(Type.PATH);
+	public static final WicketURLEncoder PATH_INSTANCE = new WicketURLEncoder(Type.PATH, '\0');
+
+	/**
+	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
+	 * <br/>
+	 * 
+	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
+	 */
+	public static final WicketURLEncoder FULL_PATH_INSTANCE = new WicketURLEncoder(Type.FULL_PATH,
+		'?');
 
 	/**
 	 * Allow subclass to call constructor.
 	 * 
 	 * @param type
 	 *            encoder type
+	 * @param stopChar
+	 *            stop encoding when stopChar found
 	 */
-	protected WicketURLEncoder(Type type)
+	protected WicketURLEncoder(Type type, char stopChar)
 	{
+		this.stopChar = stopChar;
+
 		/*
 		 * This note from java.net.URLEncoder ==================================
 		 * 
@@ -125,10 +149,10 @@ public class WicketURLEncoder
 		 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=" // -- PATH
 		 * COMPONENT -- //
 		 * 
-		 * path = (see RFC for all variations) path-abempty = *( "/" segment ) segment = *pchar
-		 * pchar = unreserved / pct-encoded / sub-delims / ":" / "@" // -- QUERY COMPONENT -- //
+		 * path = (see RFC for all variations) path-abempty =( "/" segment ) segment =pchar pchar =
+		 * unreserved / pct-encoded / sub-delims / ":" / "@" // -- QUERY COMPONENT -- //
 		 * 
-		 * query = *( pchar / "/" / "?" )
+		 * query =( pchar / "/" / "?" )
 		 */
 
 		// unreserved
@@ -174,9 +198,9 @@ public class WicketURLEncoder
 			// this code consistent with java.net.URLEncoder version
 			case QUERY :
 				dontNeedEncoding.set(' '); /*
-				 * encoding a space to a + is done in the encode()
-				 * method
-				 */
+											 * encoding a space to a + is done in the encode()
+											 * method
+											 */
 				dontNeedEncoding.set('/'); // to allow direct passing of URL in query
 				dontNeedEncoding.set('?'); // to allow direct passing of URL in query
 				break;
@@ -189,6 +213,18 @@ public class WicketURLEncoder
 				dontNeedEncoding.set('&');
 				dontNeedEncoding.set('=');
 				dontNeedEncoding.set('+');
+				break;
+
+			// same as path, but '/' will not be encoded
+			case FULL_PATH :
+				// encode ' ' with a % instead of + in path portion
+
+				// path component sub-delim values we do not need to escape
+				dontNeedEncoding.set('&');
+				dontNeedEncoding.set('=');
+				dontNeedEncoding.set('+');
+
+				dontNeedEncoding.set('/');
 				break;
 		}
 	}
@@ -233,7 +269,9 @@ public class WicketURLEncoder
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 
 		if (enc == null)
+		{
 			throw new NullPointerException("charsetName");
+		}
 
 		try
 		{
@@ -248,11 +286,18 @@ public class WicketURLEncoder
 			throw new WicketRuntimeException(new UnsupportedEncodingException(enc));
 		}
 
+		boolean stopEncoding = false;
 		for (int i = 0; i < s.length();)
 		{
 			int c = s.charAt(i);
+
+			if ((stopEncoding == false) && (c == stopChar))
+			{
+				stopEncoding = true;
+			}
+
 			// System.out.println("Examining character: " + c);
-			if (dontNeedEncoding.get(c))
+			if ((stopEncoding == true) || dontNeedEncoding.get(c))
 			{
 				if (c == ' ')
 				{

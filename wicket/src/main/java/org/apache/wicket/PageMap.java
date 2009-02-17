@@ -22,9 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.lang.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FIXME javadoc
@@ -34,6 +37,9 @@ import org.apache.wicket.util.lang.Objects;
  */
 public abstract class PageMap implements IClusterable, IPageMap
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(PageMap.class);
+
 	/**
 	 * Visitor interface for visiting entries in this map
 	 * 
@@ -269,7 +275,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 		}
 		else
 		{
+			// wicket-2061: getURL() returns a properly <b>decoded</b> URL. But we need is a
+			// properly <b>encoded</b> URL.
 			interceptContinuationURL = "/" + cycle.getRequest().getURL();
+			interceptContinuationURL = WicketURLEncoder.FULL_PATH_INSTANCE.encode(interceptContinuationURL);
 		}
 
 		// Page map is dirty

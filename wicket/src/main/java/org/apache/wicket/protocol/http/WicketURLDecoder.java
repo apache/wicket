@@ -25,9 +25,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
- * component decoding. <p/> The difference is important because a space is encoded as a + in a query
- * string, but this is a valid value in a path component (and is therefore not decode back to a
- * space).
+ * component decoding.
+ * <p/>
+ * The difference is important because a space is encoded as a + in a query string, but this is a
+ * valid value in a path component (and is therefore not decode back to a space).
  * 
  * @author Doug Donohoe
  * @see java.net.URLDecoder
@@ -40,14 +41,16 @@ public class WicketURLDecoder
 	private final boolean decodePlus;
 
 	/**
-	 * Encoder used to decode name or value components of a query string.<br/><br/>
+	 * Encoder used to decode name or value components of a query string.<br/>
+	 * <br/>
 	 * 
 	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
 	public static final WicketURLDecoder QUERY_INSTANCE = new WicketURLDecoder(true);
 
 	/**
-	 * Encoder used to decode components of a path.<br/><br/>
+	 * Encoder used to decode components of a path.<br/>
+	 * <br/>
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
@@ -56,8 +59,8 @@ public class WicketURLDecoder
 	/**
 	 * Create decoder
 	 * 
-	 * @param decodePlus -
-	 *            whether to decode + to space
+	 * @param decodePlus
+	 *            - whether to decode + to space
 	 */
 	private WicketURLDecoder(boolean decodePlus)
 	{
@@ -98,6 +101,11 @@ public class WicketURLDecoder
 	 */
 	public String decode(String s, String enc)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
 		boolean needToChange = false;
 		int numChars = s.length();
 		StringBuffer sb = new StringBuffer(numChars > 500 ? numChars / 2 : numChars);

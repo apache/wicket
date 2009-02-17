@@ -1117,7 +1117,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setPath(final String path)
 	{
-		this.path = path;
+		this.path = WicketURLDecoder.PATH_INSTANCE.decode(path);
 	}
 
 	/**
@@ -1145,11 +1145,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 		int index = url.indexOf("?");
 		if (index == -1)
 		{
-			path = url;
+			setPath(url);
 		}
 		else
 		{
-			path = url.substring(0, index);
+			setPath(url.substring(0, index));
 
 			String queryString = url.substring(index + 1);
 			Map<String, String[]> params = new HashMap<String, String[]>();
@@ -1340,7 +1340,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		// We need to absolutize the redirect URL as we are not as smart as a web-browser
 		// (WICKET-702)
 		url = redirect;
-		if (url.charAt(0) != '/')
+		if ((url.length() == 0) || (url.charAt(0) != '/'))
 		{
 			url = getContextPath() + getServletPath() + "/" + redirect;
 		}
