@@ -76,7 +76,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		else if (requestParameters.getComponentPath() != null)
 		{
 			// marks whether or not we will be processing this request
-			boolean processRequest = true;
+			int processRequest = 0; // 0 == process, 1 == page expired, 2 == not active page anymore
 			synchronized (requestCycle.getSession())
 			{
 				// we need to check if this request has been flagged as
@@ -94,7 +94,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 					{
 						// requested pagemap no longer exists - ignore this
 						// request
-						processRequest = false;
+						processRequest = 1;
 					}
 					else if (pageMap instanceof AccessStackPageMap)
 					{
@@ -111,7 +111,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 							{
 								// the page is no longer the active page
 								// - ignore this request
-								processRequest = false;
+								processRequest = 2;
 							}
 							else
 							{
@@ -121,7 +121,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 								{
 									// version is no longer the active version -
 									// ignore this request
-									processRequest = false;
+									processRequest = 2;
 								}
 							}
 						}
@@ -132,7 +132,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 					}
 				}
 			}
-			if (processRequest)
+			if (processRequest == 0)
 			{
 				try
 				{
@@ -146,7 +146,8 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			else
 			{
 				Request request = requestCycle.getRequest();
-				if (request instanceof WebRequest && ((WebRequest)request).isAjax())
+				if (request instanceof WebRequest && ((WebRequest)request).isAjax() &&
+					processRequest == 2)
 				{
 					// if processRequest is false in an ajax request just have an empty ajax target
 					target = EmptyAjaxRequestTarget.getInstance();
