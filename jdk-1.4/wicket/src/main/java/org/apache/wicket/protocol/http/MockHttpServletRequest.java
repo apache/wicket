@@ -804,6 +804,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return getContextPath() + getServletPath();
 		}
+		else
+		{
+			int index = url.indexOf("?");
+			if (index != -1)
+			{
+				return url.substring(0, index);
+			}
+		}
 		return url;
 	}
 
@@ -1129,6 +1137,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			int index = url.indexOf("/", 7);
 			url = url.substring(index);
+		}
+		if (!url.startsWith("/"))
+		{
+			url = getContextPath() + getServletPath() + "/" + url;
 		}
 		this.url = url;
 		if (url.startsWith(getContextPath()))
