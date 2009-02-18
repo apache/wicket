@@ -28,6 +28,7 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
 import org.slf4j.Logger;
@@ -440,6 +441,11 @@ public class Localizer
 			// buffer.append("-").append(component.getVariation());
 			cacheKey = buffer.toString();
 		}
+		else
+		{
+			cacheKey += "-" + Session.get().getLocale().toString();
+		}
+
 		return cacheKey;
 	}
 
@@ -503,7 +509,7 @@ public class Localizer
 	 */
 	private static class ClassMetaDatabase
 	{
-		private final ConcurrentMap<String, Long> nameToId = new ConcurrentHashMap<String, Long>();
+		private final ConcurrentMap<String, Long> nameToId = Generics.newConcurrentHashMap();
 		private final AtomicLong nameCounter = new AtomicLong();
 
 		/**
@@ -529,6 +535,4 @@ public class Localizer
 			return id;
 		}
 	}
-
-
 }
