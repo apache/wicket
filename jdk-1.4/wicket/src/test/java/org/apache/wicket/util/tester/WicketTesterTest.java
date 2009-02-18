@@ -22,6 +22,7 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 
 import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
@@ -447,6 +448,8 @@ public class WicketTesterTest extends TestCase
 			}
 		});
 
+		tester.setupRequestAndResponse();
+
 		// Execute the event
 		tester.executeAjaxEvent(label, "ondblclick");
 
@@ -466,7 +469,8 @@ public class WicketTesterTest extends TestCase
 
 	public void testTesterCanBeOverridenToNotReuseExistingRequestCycleInExecuteAjaxEvent()
 	{
-		tester = new WicketTester(new MyMockApplication()) {
+		tester = new WicketTester(new MyMockApplication())
+		{
 			protected WebRequestCycle resolveRequestCycle()
 			{
 				return setupRequestAndResponse(true);
@@ -485,26 +489,25 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
 
 		// Get the page
-		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester
-				.getLastRenderedPage();
+		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
 
 		Pojo pojo = page.getPojo();
 
 		assertEquals("Mock name", pojo.getName());
 		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" +
-				Component.PATH_SEPARATOR + "name")).getValue());
+			Component.PATH_SEPARATOR + "name")).getValue());
 
 		assertFalse(page.isExecuted());
 
 		// Execute the ajax event
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-				"onclick");
+			"onclick");
 
 		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in " +
-				MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
+			MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
 
 		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" +
-				Component.PATH_SEPARATOR + "name")).getValue());
+			Component.PATH_SEPARATOR + "name")).getValue());
 
 		// The name of the pojo should still be the same. If the
 		// executeAjaxEvent weren't submitting the form the name would have been
@@ -545,7 +548,7 @@ public class WicketTesterTest extends TestCase
 		{
 			tester.startPage(BlockedResourceLinkPage.class);
 			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
-					PackageResourceBlockedException.class);
+				PackageResourceBlockedException.class);
 		}
 		catch (PackageResourceBlockedException e)
 		{
@@ -560,9 +563,11 @@ public class WicketTesterTest extends TestCase
 	IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
 	{
 		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
-				tester.getServletRequest());
-		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
-				.urlCodingStrategyForPath(relativePath);
+			tester.getServletRequest());
+		return tester.getApplication()
+			.getRequestCycleProcessor()
+			.getRequestCodingStrategy()
+			.urlCodingStrategyForPath(relativePath);
 	}
 
 	/**
@@ -612,7 +617,7 @@ public class WicketTesterTest extends TestCase
 	{
 		tester.getServletResponse().addCookie(new Cookie("name", "value"));
 		Collection cookies = tester.getServletResponse().getCookies();
-		assertEquals(((Cookie) cookies.iterator().next()).getValue(), "value");
+		assertEquals(((Cookie)cookies.iterator().next()).getValue(), "value");
 	}
 
 	public void testCookieIsFoundOnNextRequestWhenAddedToWicketResponse()
