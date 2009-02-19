@@ -347,6 +347,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(true);
+			// getDebugSettings().setOutputMarkupContainerClassName(true);
 			getResourceSettings().setJavascriptCompressor(null);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
