@@ -51,7 +51,7 @@ public class RequestEncodingTest extends WicketTestCase
 	 */
 	public void testDefault()
 	{
-		tester.startPage(A.class, new PageParameters("file=umlaut-ä-ö-ü"));
+		tester.startPage(A.class, new PageParameters("file=umlaut-\u00E4-\u00F6-\u00FC"));
 		tester.assertRenderedPage(B.class);
 
 		String url2 = ((B)tester.getLastRenderedPage()).getInterceptContinuationURL();
@@ -61,10 +61,10 @@ public class RequestEncodingTest extends WicketTestCase
 		tester.assertRenderedPage(A.class);
 
 		String file = ((A)tester.getLastRenderedPage()).getFileParameter();
-		assertEquals("umlaut-ä-ö-ü", file);
+		assertEquals("umlaut-\u00E4-\u00F6-\u00FC", file);
 
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(document.contains("ä-ö-ü"));
+		assertTrue(document.contains("\u00E4-\u00F6-\u00FC"));
 	}
 
 	/**
