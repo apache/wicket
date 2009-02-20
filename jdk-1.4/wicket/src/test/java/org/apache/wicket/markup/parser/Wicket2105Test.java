@@ -28,7 +28,6 @@ public class Wicket2105Test extends TestCase
 {
 	private WicketTester tester;
 
-	@Override
 	public void setUp()
 	{
 		tester = new WicketTester(new WicketApplication());
@@ -48,7 +47,6 @@ public class Wicket2105Test extends TestCase
 
 	private class WicketApplication extends WebApplication
 	{
-		@Override
 		protected void init()
 		{
 			super.init();
@@ -56,7 +54,6 @@ public class Wicket2105Test extends TestCase
 			getMarkupSettings().setStripComments(true);
 		}
 
-		@Override
 		public Class getHomePage()
 		{
 			return Wicket2105Page.class;

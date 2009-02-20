@@ -195,7 +195,6 @@ public class MarkupParser
 	 * @see #appendMarkupFilter(IMarkupFilter)
 	 * @deprecated since 1.3
 	 */
-	@Deprecated
 	protected void initFilterChain()
 	{
 		throw new WicketRuntimeException("This method is no longer suppoert: since 1.3");
