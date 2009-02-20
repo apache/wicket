@@ -68,7 +68,7 @@ public class MarkupParser
 	private static final Logger log = LoggerFactory.getLogger(MarkupParser.class);
 
 	/** Conditional comment section, which is NOT treated as a comment section */
-	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
+	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>((?s).*)<!\\[endif\\]");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -195,6 +195,7 @@ public class MarkupParser
 	 * @see #appendMarkupFilter(IMarkupFilter)
 	 * @deprecated since 1.3
 	 */
+	@Deprecated
 	protected void initFilterChain()
 	{
 		throw new WicketRuntimeException("This method is no longer suppoert: since 1.3");
@@ -476,15 +477,17 @@ public class MarkupParser
 	}
 
 	/**
-	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For reasons I don't
-	 * understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
-	 * causes a stack overflow in some circumstances (jdk 1.5)
-	 *
+	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup.
+	 * 
 	 * @param rawMarkup
 	 * @return raw markup
 	 */
 	private String removeComment(String rawMarkup)
 	{
+		// For reasons I don't understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
+		// causes a stack overflow in some circumstances (jdk 1.5)
+		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
+		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
 		int pos1 = rawMarkup.indexOf("<!--");
 		while (pos1 != -1)
 		{
@@ -493,6 +496,11 @@ public class MarkupParser
 			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
 			if (pos2 != -1)
 			{
+
+				// See wicket-2105 for an example where this rather simple regex throws an exception
+				// CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
+				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
+				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
 				final String comment = rawMarkup.substring(pos1 + 4, pos2);
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
