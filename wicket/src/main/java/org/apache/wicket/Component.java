@@ -1434,7 +1434,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return attrs;
 	}
 
-	final Object getMarkupIdImpl()
+	/**
+	 * Get the markupId
+	 * 
+	 * @return MarkupId
+	 */
+	public final Object getMarkupIdImpl()
 	{
 		if (generatedMarkupId != -1)
 		{
@@ -1444,6 +1449,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return getMetaData(MARKUP_ID_KEY);
 	}
 
+	/**
+	 * Find the Page and get net value from an auto-index
+	 * 
+	 * @return autoIndex
+	 */
 	private final int nextAutoIndex()
 	{
 		Page page = findPage();
@@ -1464,8 +1474,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * the markup, or an automatically generated id - in that order.
 	 * <p>
 	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return null.
-	 * Otherwise it will generate an id value that will be unique in the page. This is the preferred
-	 * way as there is no chance of id collision.
+	 * Otherwise it will generate an id value which by default will be unique in the page. This is
+	 * the preferred way as there is no chance of id collision.
+	 * <p>
+	 * 
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
@@ -1476,7 +1488,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return markup id of the component
 	 */
-
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		Object storedMarkupId = getMarkupIdImpl();
@@ -2813,7 +2824,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this;
 	}
 
-	final void setMarkupIdImpl(Object markupId)
+	/**
+	 * Set markup ID, which must be String or Integer
+	 * 
+	 * @param markupId
+	 */
+	public final void setMarkupIdImpl(Object markupId)
 	{
 		if (markupId != null && !(markupId instanceof String) && !(markupId instanceof Integer))
 		{
