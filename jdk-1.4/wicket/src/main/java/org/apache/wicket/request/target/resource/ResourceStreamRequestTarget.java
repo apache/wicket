@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.request.target.resource;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -78,6 +81,14 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
+		try
+		{
+			resourceStream.close();
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Could not close resource stream", e);
+		}
 	}
 
 	/**
