@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
@@ -109,6 +110,12 @@ public class WebSession extends Session
 	{
 		WebRequest lockedRequest = (WebRequest)lockedRequestCycle.getRequest();
 
+		// if the request thats holding the lock is a resource request we allow this request
+		if (IResourceListener.INTERFACE.equals(lockedRequest.getRequestParameters().getInterface()))
+		{
+			return true;
+		}
+
 		// if the request that's holding the lock is ajax, we allow this request
 		if (lockedRequest.isAjax() == true)
 		{
@@ -125,9 +132,10 @@ public class WebSession extends Session
 		}
 
 		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters()
-				.getComponentPath(), Component.PATH_SEPARATOR);
+			.getComponentPath(), Component.PATH_SEPARATOR);
 		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
-				.getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR);
+			.getRequestParameters()
+			.getComponentPath(), Component.PATH_SEPARATOR);
 
 		int lockedVersion = lockedRequest.getRequestParameters().getVersionNumber();
 		int currentVersion = currentRequest.getRequestParameters().getVersionNumber();
@@ -152,8 +160,8 @@ public class WebSession extends Session
 		// used, when we're doing the render request (isRedirect should return
 		// false in that case)
 		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER ||
-				((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
-				(!RequestCycle.get().isRedirect()))
+			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
+			(!RequestCycle.get().isRedirect()))
 		{
 			// If session scoped, rendered messages got indeed cleaned up, mark
 			// the session as dirty
