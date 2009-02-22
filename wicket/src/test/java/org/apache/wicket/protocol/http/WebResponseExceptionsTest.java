@@ -114,7 +114,6 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		}
 
 		tester.startPage(TestErrorPage.class);
-		link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
 		try
 		{

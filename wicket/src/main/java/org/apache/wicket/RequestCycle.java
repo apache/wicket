@@ -538,7 +538,10 @@ public abstract class RequestCycle
 		checkReuse();
 
 		// set it as the current target, on the top of the stack
-		requestTargets.push(target);
+		if (target != null)
+		{
+			requestTargets.push(target);
+		}
 
 		// set start step
 		currentStep = PROCESS_EVENTS;

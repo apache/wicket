@@ -34,8 +34,7 @@ public class TestErrorPage extends WebPage
 	 */
 	public TestErrorPage()
 	{
-
-		add(new AjaxLink("link")
+		add(new AjaxLink<String>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -57,5 +56,4 @@ public class TestErrorPage extends WebPage
 			}
 		});
 	}
-
 }

@@ -42,6 +42,7 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -738,8 +739,7 @@ public class BaseWicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
-			setupRequestAndResponse(true);
-			WebRequestCycle requestCycle = createRequestCycle();
+			WebRequestCycle requestCycle = setupRequestAndResponse(true);
 
 			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 
@@ -1136,7 +1136,6 @@ public class BaseWicketTester extends MockWebApplication
 			if (behavior instanceof AjaxEventBehavior)
 			{
 				AjaxEventBehavior tmp = (AjaxEventBehavior)behavior;
-
 				if (event.equals(tmp.getEvent()))
 				{
 					ajaxEventBehavior = tmp;
@@ -1149,10 +1148,10 @@ public class BaseWicketTester extends MockWebApplication
 		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
 			" which matches the event: " + event;
 		notNull(failMessage, ajaxEventBehavior);
-		WebRequestCycle requestCycle = resolveRequestCycle();
 
-		// when the requestcycle is not created via setupRequestAndResponse(true), it can happen
-		// that the request is not an ajax request -> we have to set the header manually
+		// when the requestcycle is not created via setupRequestAndResponse(true), than create a new
+		// one
+		WebRequestCycle requestCycle = resolveRequestCycle();
 		if (!requestCycle.getWebRequest().isAjax())
 		{
 			throw new IllegalStateException(
@@ -1166,6 +1165,7 @@ public class BaseWicketTester extends MockWebApplication
 			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 		}
 
+		// process the event
 		ajaxEventBehavior.onRequest();
 
 		// process the request target
@@ -1174,7 +1174,7 @@ public class BaseWicketTester extends MockWebApplication
 
 	/**
 	 * 
-	 * @return
+	 * @return WebRequestCycle
 	 */
 	protected WebRequestCycle resolveRequestCycle()
 	{
@@ -1273,17 +1273,15 @@ public class BaseWicketTester extends MockWebApplication
 			{
 				if (formComponent.isVisible())
 				{
-					// !(formComponent instanceof Button) &&
 					if (!(formComponent instanceof RadioGroup) &&
-						!(formComponent instanceof CheckGroup))
+						!(formComponent instanceof CheckGroup) &&
+						!(formComponent.getClass().isAssignableFrom(Button.class)))
 					{
 						String name = formComponent.getInputName();
 						String value = formComponent.getValue();
 
-						// Set request parameter with the field value, but do not
-						// modify an existing
-						// request parameter explicitly set using
-						// FormTester.setValue()
+						// Set request parameter with the field value, but do not modify an existing
+						// request parameter explicitly set using FormTester.setValue()
 						if (getServletRequest().getParameterMap().get(name) == null)
 						{
 							getServletRequest().setParameter(name, value);
