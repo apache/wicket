@@ -275,15 +275,6 @@ public abstract class Application
 		// Create shared resources repository
 		sharedResources = new SharedResources(this);
 
-		// TODO why not move to internalInit??
-		initializeComponentInstantiationListener();
-	}
-
-	/**
-	 * Initialize the ComponentInstantiationListener. Subclasses may enhance or replace it
-	 */
-	protected void initializeComponentInstantiationListener()
-	{
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
 		addComponentInstantiationListener(new IComponentInstantiationListener()
@@ -294,7 +285,6 @@ public abstract class Application
 			public void onInstantiation(final Component component)
 			{
 				final Class<? extends Component> cl = component.getClass();
-
 				// If component instantiation is not authorized
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(cl))
 				{
