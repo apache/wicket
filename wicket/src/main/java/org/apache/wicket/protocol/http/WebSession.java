@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
@@ -121,6 +122,11 @@ public class WebSession extends Session
 
 		// if the request that's holding the lock is ajax, we allow this request
 		if (lockedRequest.isAjax() == true)
+		{
+			return true;
+		}
+
+		if (IResourceListener.INTERFACE.equals(lockedRequest.getRequestParameters().getInterface()))
 		{
 			return true;
 		}
