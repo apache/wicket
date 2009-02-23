@@ -24,6 +24,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.RequestParameters;
 
 /**
@@ -82,7 +83,8 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		final String id = getRequestParameters().getBehaviorId();
 		if (id == null)
 		{
-			throw new IllegalStateException(
+			// wicket-2107
+			throw new PageExpiredException(
 				"Parameter behaviorId was not provided: unable to locate listener. Component: " +
 					component.toString());
 		}
@@ -93,16 +95,21 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 
 		if (behaviors.size() > idAsInt)
 		{
-			behaviorListener = (IBehaviorListener)behaviors.get(idAsInt);
+			IBehavior behavior = behaviors.get(idAsInt);
+			if (behavior instanceof IBehaviorListener)
+			{
+				behaviorListener = (IBehaviorListener)behavior;
+			}
 		}
+
 		if (behaviorListener == null)
 		{
-			throw new IllegalStateException("No behavior listener found with behaviorId " + id +
+			// wicket-2107
+			throw new PageExpiredException("No behavior listener found with behaviorId " + id +
 				"; Component: " + component.toString());
 		}
 
 		// Invoke the interface method
 		behaviorListener.onRequest();
-
 	}
 }
