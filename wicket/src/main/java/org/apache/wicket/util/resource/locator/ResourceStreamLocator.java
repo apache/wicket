@@ -84,7 +84,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public IResourceStream locate(final Class< ? > clazz, final String path)
+	public IResourceStream locate(final Class<?> clazz, final String path)
 	{
 		// First try with the resource finder registered with the application
 		// (allows for markup reloading)
@@ -109,7 +109,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public IResourceStream locate(final Class< ? > clazz, String path, final String style,
+	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final Locale locale, final String extension)
 	{
 		// Try the various combinations of style, locale and extension to find
@@ -117,7 +117,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
 		while (iter.hasNext())
 		{
-			String newPath = (String)iter.next();
+			String newPath = iter.next();
 
 			IResourceStream stream = locate(clazz, newPath);
 			if (stream != null)
@@ -137,28 +137,50 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param path
 	 * @return resource stream
 	 */
-	protected IResourceStream locateByClassLoader(final Class< ? > clazz, final String path)
+	protected IResourceStream locateByClassLoader(final Class<?> clazz, final String path)
 	{
-		ClassLoader classLoader = null;
+		IResourceStream resourceStream = null;
+
 		if (clazz != null)
 		{
-			classLoader = clazz.getClassLoader();
+			resourceStream = getResourceStream(clazz.getClassLoader(), path);
+			if (resourceStream != null)
+			{
+				return resourceStream;
+			}
 		}
 
+		// use context classloader when no specific classloader is set
+		// (package resources for instance)
+		resourceStream = getResourceStream(Thread.currentThread().getContextClassLoader(), path);
+		if (resourceStream != null)
+		{
+			return resourceStream;
+		}
+
+		// use Wicket classloader when no specific classloader is set
+		resourceStream = getResourceStream(getClass().getClassLoader(), path);
+		if (resourceStream != null)
+		{
+			return resourceStream;
+		}
+		return null;
+	}
+
+	/**
+	 * Get the resource
+	 * 
+	 * @param classLoader
+	 * @param path
+	 * @return resource stream
+	 */
+	private IResourceStream getResourceStream(final ClassLoader classLoader, final String path)
+	{
 		if (classLoader == null)
 		{
-			// use context classloader when no specific classloader is set
-			// (package resources for instance)
-			classLoader = Thread.currentThread().getContextClassLoader();
+			return null;
 		}
 
-		if (classLoader == null)
-		{
-			// use Wicket classloader when no specific classloader is set
-			classLoader = getClass().getClassLoader();
-		}
-
-		// Log attempt
 		if (log.isDebugEnabled())
 		{
 			log.debug("Attempting to locate resource '" + path + "' using classloader " +
@@ -181,7 +203,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @param path
 	 * @return resource stream
 	 */
-	protected IResourceStream locateByResourceFinder(final Class< ? > clazz, final String path)
+	protected IResourceStream locateByResourceFinder(final Class<?> clazz, final String path)
 	{
 		if (finder == null)
 		{
