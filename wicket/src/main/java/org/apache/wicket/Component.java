@@ -181,10 +181,6 @@ import org.slf4j.LoggerFactory;
  * directly since Wicket validators automatically register feedback messages on Components. Any
  * feedback message for a given Component can be retrieved with {@link Component#getFeedbackMessage}.
  * 
- * <li><b>Page Factory </b>- It is possible to change the way that Pages are constructed by
- * overriding the {@link Component#getPageFactory()} method, returning your own implementation of
- * {@link org.apache.wicket.IPageFactory}.
- * 
  * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but fine-grained control of
  * which Components should participate in versioning is possible via the
  * {@link Component#setVersioned(boolean)} method. The versioning participation of a given Component
