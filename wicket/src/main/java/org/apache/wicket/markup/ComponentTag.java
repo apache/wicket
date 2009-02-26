@@ -133,6 +133,18 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param tag
+	 *            The ComponentTag tag which this wicket tag is based upon.
+	 */
+	public ComponentTag(final ComponentTag tag)
+	{
+		this(tag.getXmlTag());
+		tag.copyPropertiesTo(this);
+	}
+
+	/**
 	 * Adds a behavior to this component tag.
 	 * 
 	 * @param behavior
@@ -885,5 +897,19 @@ public class ComponentTag extends MarkupElement
 			userData = new HashMap<String, Object>();
 		}
 		userData.put(key, value);
+	}
+
+	/**
+	 * For subclasses to override. Gets called just before a Component gets rendered. It is
+	 * guaranteed that the markupStream is set on the Component and determineVisibility is not yet
+	 * called.
+	 * 
+	 * @param component
+	 *            The component that is about to be rendered
+	 * @param markupStream
+	 *            The current amrkup stream
+	 */
+	public void onBeforeRender(final Component component, final MarkupStream markupStream)
+	{
 	}
 }

@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * <li><b>Identity </b>- All Components must have a non-null id which is retrieved by calling
  * getId(). The id must be unique within the MarkupContainer that holds the Component, but does not
  * have to be globally unique or unique within a Page's component hierarchy.
- *
+ * 
  * <li><b>Hierarchy </b>- A component has a parent which can be retrieved with {@link #getParent()}.
  * If a component is an instance of MarkupContainer, it may have children. In this way it has a
  * place in the hierarchy of components contained on a given page.
@@ -1621,8 +1621,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets the backing model object. Unlike getDefaultModel().getObject(), this method returns
-	 * null for a null model.
+	 * Gets the backing model object. Unlike getDefaultModel().getObject(), this method returns null
+	 * for a null model.
 	 * 
 	 * @return The backing model object
 	 */
@@ -2405,6 +2405,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		setMarkupStream(markupStream);
 
+		if (markupStream != null)
+		{
+			// Guarantee that the markupStream is set and determineVisibility not yet tested
+			// See WICKET-2049
+			markupStream.getTag().onBeforeRender(this, markupStream);
+		}
+
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
 		if (determineVisibility())
@@ -3003,9 +3010,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Sets the backing model object. Unlike <code>getDefaultModel().setObject(object)</code>,
-	 * this method checks authorisation and model comparator, and invokes <code>modelChanging</code>
-	 * and <code>modelChanged</code> if the value really changes.
+	 * Sets the backing model object. Unlike <code>getDefaultModel().setObject(object)</code>, this
+	 * method checks authorisation and model comparator, and invokes <code>modelChanging</code> and
+	 * <code>modelChanged</code> if the value really changes.
 	 * 
 	 * @param object
 	 *            The object to set
