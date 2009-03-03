@@ -28,7 +28,7 @@ import java.util.EmptyStackException;
  * @author Jonathan Locke
  * @param <T>
  */
-public final class ArrayListStack<T> extends ArrayList<T>
+public class ArrayListStack<T> extends ArrayList<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -119,8 +119,8 @@ public final class ArrayListStack<T> extends ArrayList<T>
 	 * Returns the 1-based position where an object is on this stack. If the object <tt>o</tt>
 	 * occurs as an item in this stack, this method returns the distance from the top of the stack
 	 * of the occurrence nearest the top of the stack; the topmost item on the stack is considered
-	 * to be at distance <tt>1</tt>. The <tt>equals</tt> method is used to compare <tt>o</tt>
-	 * to the items in this stack.
+	 * to be at distance <tt>1</tt>. The <tt>equals</tt> method is used to compare <tt>o</tt> to the
+	 * items in this stack.
 	 * 
 	 * @param o
 	 *            the desired object.
