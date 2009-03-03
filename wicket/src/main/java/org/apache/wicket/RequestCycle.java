@@ -242,7 +242,6 @@ public abstract class RequestCycle
 	private transient final ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
 		3)
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		@Override
