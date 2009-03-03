@@ -472,6 +472,7 @@ public class RequestLogger implements IRequestLogger
 			IBookmarkablePageRequestTarget pageRequestTarget = (IBookmarkablePageRequestTarget)target;
 			sb.append("BookmarkablePage[");
 			sb.append(pageRequestTarget.getPageClass().getName());
+			sb.append("(").append(pageRequestTarget.getPageParameters()).append(")");
 			sb.append("]");
 		}
 		else if (target instanceof ISharedResourceRequestTarget)
