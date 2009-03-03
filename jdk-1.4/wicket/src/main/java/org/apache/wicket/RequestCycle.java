@@ -1291,7 +1291,6 @@ public abstract class RequestCycle
 					// on the stack before this. If that is the case, they
 					// should be handled before this
 					requestTargets.add(0, target);
-					onRequestTargetResolved(target);
 					break;
 				}
 				case PROCESS_EVENTS : {
@@ -1357,14 +1356,6 @@ public abstract class RequestCycle
 		}
 	}
 
-	/**
-	 * Called after request target is resolved by the request cycle processor
-	 * 
-	 * @param target
-	 */
-	protected void onRequestTargetResolved(IRequestTarget target)
-	{
-	}
 
 	/**
 	 * INTERNAL. This method is not part of public Wicket Api. Do not call it. Returns whether
