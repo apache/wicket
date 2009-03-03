@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -232,7 +233,42 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
+	private transient final ArrayListStack requestTargets = new ArrayListStack(3)
+	{
+		private static final long serialVersionUID = 1L;
+
+		public void add(int arg0, Object arg1)
+		{
+			onRequestTargetSet((IRequestTarget)arg1);
+			super.add(arg0, arg1);
+		}
+
+		public boolean add(Object arg0)
+		{
+			onRequestTargetSet((IRequestTarget)arg0);
+			return super.add(arg0);
+		}
+
+		public boolean addAll(Collection arg0)
+		{
+			Iterator it = arg0.iterator();
+			while (it.hasNext())
+			{
+				onRequestTargetSet((IRequestTarget)it.next());
+			}
+			return super.addAll(arg0);
+		}
+
+		public boolean addAll(int arg0, Collection arg1)
+		{
+			Iterator it = arg1.iterator();
+			while (it.hasNext())
+			{
+				onRequestTargetSet((IRequestTarget)it.next());
+			}
+			return super.addAll(arg0, arg1);
+		}
+	};
 
 	/**
 	 * Any page parameters. Only set when the request is resolving and the parameters are passed
@@ -615,6 +651,15 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Called when a request target is set on the request cycle
+	 * 
+	 * @param requestTarget
+	 */
+	protected void onRequestTargetSet(IRequestTarget requestTarget)
+	{
+	}
+
+	/**
 	 * Sets response.
 	 * 
 	 * @param response
@@ -631,7 +676,7 @@ public abstract class RequestCycle
 	/**
 	 * Attempts to return name of current page map
 	 * 
-	 * @return
+	 * @return name of current page map
 	 */
 	private String getCurrentPageMap()
 	{
@@ -1246,6 +1291,7 @@ public abstract class RequestCycle
 					// on the stack before this. If that is the case, they
 					// should be handled before this
 					requestTargets.add(0, target);
+					onRequestTargetResolved(target);
 					break;
 				}
 				case PROCESS_EVENTS : {
@@ -1309,6 +1355,15 @@ public abstract class RequestCycle
 					"unexpected exception when handling another exception: " + e.getMessage(), e);
 			}
 		}
+	}
+
+	/**
+	 * Called after request target is resolved by the request cycle processor
+	 * 
+	 * @param target
+	 */
+	protected void onRequestTargetResolved(IRequestTarget target)
+	{
 	}
 
 	/**
