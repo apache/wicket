@@ -198,6 +198,10 @@ public abstract class FormComponentPanel extends FormComponent
 			tag.setType(XmlTag.OPEN);
 		}
 		super.onComponentTag(tag);
+
+		// remove unapplicable attributes that might have been set by the call to super
+		tag.remove("name");
+		tag.remove("disabled");
 	}
 
 	/**
