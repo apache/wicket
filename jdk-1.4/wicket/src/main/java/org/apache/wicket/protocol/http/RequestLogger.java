@@ -158,8 +158,9 @@ public class RequestLogger implements IRequestLogger
 
 	public SessionData[] getLiveSessions()
 	{
-		SessionData[] sessions = (SessionData[])liveSessions.values().toArray(
-			new SessionData[liveSessions.size()]);
+		ArrayList lst = new ArrayList(liveSessions.size());
+
+		SessionData[] sessions = (SessionData[])liveSessions.values().toArray(new SessionData[0]);
 		Arrays.sort(sessions);
 		return sessions;
 	}

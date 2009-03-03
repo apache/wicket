@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -44,15 +45,15 @@ import org.apache.wicket.IClusterable;
  * A version of Hashtable supporting concurrency for both retrievals and updates:
  * 
  * <dl>
- * <dt> Retrievals
+ * <dt>Retrievals
  * 
- * <dd> Retrievals may overlap updates. (This is the same policy as ConcurrentReaderHashMap.)
+ * <dd>Retrievals may overlap updates. (This is the same policy as ConcurrentReaderHashMap.)
  * Successful retrievals using get(key) and containsKey(key) usually run without locking.
  * Unsuccessful retrievals (i.e., when the key is not present) do involve brief synchronization
  * (locking). Because retrieval operations can ordinarily overlap with update operations (i.e., put,
  * remove, and their derivatives), retrievals can only be guaranteed to return the results of the
- * most recently <em>completed</em> operations holding upon their onset. Retrieval operations may
- * or may not return results reflecting in-progress writing operations. However, the retrieval
+ * most recently <em>completed</em> operations holding upon their onset. Retrieval operations may or
+ * may not return results reflecting in-progress writing operations. However, the retrieval
  * operations do always return consistent results -- either those holding before any single
  * modification or after it, but never a nonsense result. For aggregate operations such as putAll
  * and clear, concurrent reads may reflect insertion or removal of only some entries.
@@ -69,20 +70,19 @@ import org.apache.wicket.IClusterable;
  * <p>
  * 
  * 
- * <dt> Updates
+ * <dt>Updates
  * 
- * <dd> This class supports a hard-wired preset <em>concurrency
- * level</em> of 32. This allows a
- * maximum of 32 put and/or remove operations to proceed concurrently. This level is an upper bound
- * on concurrency, not a guarantee, since it interacts with how well-strewn elements are across bins
- * of the table. (The preset value in part reflects the fact that even on large multiprocessors,
- * factors other than synchronization tend to be bottlenecks when more than 32 threads concurrently
- * attempt updates.) Additionally, operations triggering internal resizing and clearing do not
- * execute concurrently with any operation.
+ * <dd>This class supports a hard-wired preset <em>concurrency
+ * level</em> of 32. This allows a maximum of 32 put and/or remove operations to proceed
+ * concurrently. This level is an upper bound on concurrency, not a guarantee, since it interacts
+ * with how well-strewn elements are across bins of the table. (The preset value in part reflects
+ * the fact that even on large multiprocessors, factors other than synchronization tend to be
+ * bottlenecks when more than 32 threads concurrently attempt updates.) Additionally, operations
+ * triggering internal resizing and clearing do not execute concurrently with any operation.
  * <p>
  * 
- * There is <em>NOT</em> any support for locking the entire table to prevent updates. This makes
- * it impossible, for example, to add an element only if it is not already present, since another
+ * There is <em>NOT</em> any support for locking the entire table to prevent updates. This makes it
+ * impossible, for example, to add an element only if it is not already present, since another
  * thread may be in the process of doing the same thing. If you need such capabilities, consider
  * instead using the ConcurrentReaderHashMap class.
  * 
@@ -102,7 +102,8 @@ import org.apache.wicket.IClusterable;
  * Implementation note: A slightly faster implementation of this class will be possible once planned
  * Java Memory Model revisions are in place.
  * 
- * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
+ * <p>
+ * [<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
  * Introduction to this package. </a>]
  * 
  */
@@ -137,7 +138,6 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * segment controls the same slots before and after resizing, which is necessary for supporting
 	 * concurrent retrievals. This comes at the price of a mismatch of logical vs physical locality,
 	 * but this seems not to be a performance problem in practice.
-	 * 
 	 */
 
 	/**
@@ -393,7 +393,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	public ConcurrentHashMap(Map t)
 	{
 		this(Math.max((int)(t.size() / DEFAULT_LOAD_FACTOR) + 1, MINIMUM_CAPACITY),
-				DEFAULT_LOAD_FACTOR);
+			DEFAULT_LOAD_FACTOR);
 		putAll(t);
 	}
 
@@ -505,20 +505,20 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Maps the specified <code>key</code> to the specified <code>value</code> in this table.
-	 * Neither the key nor the value can be <code>null</code>. (Note that this policy is the same
-	 * as for java.util.Hashtable, but unlike java.util.HashMap, which does accept nulls as valid
-	 * keys and values.)
+	 * Neither the key nor the value can be <code>null</code>. (Note that this policy is the same as
+	 * for java.util.Hashtable, but unlike java.util.HashMap, which does accept nulls as valid keys
+	 * and values.)
 	 * <p>
 	 * 
-	 * The value can be retrieved by calling the <code>get</code> method with a key that is equal
-	 * to the original key.
+	 * The value can be retrieved by calling the <code>get</code> method with a key that is equal to
+	 * the original key.
 	 * 
 	 * @param key
 	 *            the table key.
 	 * @param value
 	 *            the value.
-	 * @return the previous value of the specified key in this table, or <code>null</code> if it
-	 *         did not have one.
+	 * @return the previous value of the specified key in this table, or <code>null</code> if it did
+	 *         not have one.
 	 * @exception NullPointerException
 	 *                if the key or value is <code>null</code>.
 	 * @see Object#equals(Object)
@@ -691,8 +691,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @param key
 	 *            the key that needs to be removed.
-	 * @return the value to which the key had been mapped in this table, or <code>null</code> if
-	 *         the key did not have a mapping.
+	 * @return the value to which the key had been mapped in this table, or <code>null</code> if the
+	 *         key did not have a mapping.
 	 * @exception NullPointerException
 	 *                if the key is <code>null</code>.
 	 */
@@ -710,8 +710,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 *            the key that needs to be removed.
 	 * @param value
 	 *            the associated value. If the value is null, it means "any value".
-	 * @return the value to which the key had been mapped in this table, or <code>null</code> if
-	 *         the key did not have a mapping.
+	 * @return the value to which the key had been mapped in this table, or <code>null</code> if the
+	 *         key did not have a mapping.
 	 * @exception NullPointerException
 	 *                if the key is <code>null</code>.
 	 */
@@ -815,9 +815,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * 
 	 * @param value
 	 *            a value to search for.
-	 * @return <code>true</code> if and only if some key maps to the <code>value</code> argument
-	 *         in this table as determined by the <tt>equals</tt> method; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if and only if some key maps to the <code>value</code> argument in
+	 *         this table as determined by the <tt>equals</tt> method; <code>false</code> otherwise.
 	 * @exception NullPointerException
 	 *                if the value is <code>null</code>.
 	 * @see #containsKey(Object)
@@ -922,9 +921,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Returns a set view of the keys contained in this map. The set is backed by the map, so
 	 * changes to the map are reflected in the set, and vice-versa. The set supports element
 	 * removal, which removes the corresponding mapping from this map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt>
-	 * or <tt>addAll</tt> operations.
+	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
+	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * operations.
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 */
@@ -975,6 +974,23 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		{
 			ConcurrentHashMap.this.clear();
 		}
+
+		public Object[] toArray()
+		{
+			Collection c = new ArrayList();
+			for (Iterator i = iterator(); i.hasNext();)
+				c.add(i.next());
+			return c.toArray();
+		}
+
+		public Object[] toArray(Object[] a)
+		{
+			Collection c = new ArrayList();
+			for (Iterator i = iterator(); i.hasNext();)
+				c.add(i.next());
+			return c.toArray(a);
+		}
+
 	}
 
 	/**
@@ -982,8 +998,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * the map, so changes to the map are reflected in the collection, and vice-versa. The
 	 * collection supports element removal, which removes the corresponding mapping from this map,
 	 * via the <tt>Iterator.remove</tt>, <tt>Collection.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt>
-	 * or <tt>addAll</tt> operations.
+	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt> or
+	 * <tt>addAll</tt> operations.
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
@@ -1026,6 +1042,22 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		{
 			ConcurrentHashMap.this.clear();
 		}
+
+		public Object[] toArray()
+		{
+			Collection c = new ArrayList();
+			for (Iterator i = iterator(); i.hasNext();)
+				c.add(i.next());
+			return c.toArray();
+		}
+
+		public Object[] toArray(Object[] a)
+		{
+			Collection c = new ArrayList();
+			for (Iterator i = iterator(); i.hasNext();)
+				c.add(i.next());
+			return c.toArray(a);
+		}
 	}
 
 	/**
@@ -1033,9 +1065,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * collection is a <tt>Map.Entry</tt>. The collection is backed by the map, so changes to the
 	 * map are reflected in the collection, and vice-versa. The collection supports element removal,
 	 * which removes the corresponding mapping from the map, via the <tt>Iterator.remove</tt>,
-	 * <tt>Collection.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
-	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
+	 * <tt>Collection.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
+	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt> operations.
 	 * 
 	 * @return a collection view of the mappings contained in this map.
 	 */
@@ -1097,6 +1128,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		{
 			ConcurrentHashMap.this.clear();
 		}
+
+
 	}
 
 	/**
@@ -1163,9 +1196,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 		/**
 		 * Get the value. Note: In an entrySet or entrySet.iterator, unless you can guarantee lack
-		 * of concurrent modification, <tt>getValue</tt> <em>might</em> return null, reflecting
-		 * the fact that the entry has been concurrently removed. However, there are no assurances
-		 * that concurrent removals will be reflected using this method.
+		 * of concurrent modification, <tt>getValue</tt> <em>might</em> return null, reflecting the
+		 * fact that the entry has been concurrently removed. However, there are no assurances that
+		 * concurrent removals will be reflected using this method.
 		 * 
 		 * @return the current value, or null if the entry has been detectably removed.
 		 */
