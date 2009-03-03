@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -239,7 +240,48 @@ public abstract class RequestCycle
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient final ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
-		3);
+		3)
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void add(int arg0, IRequestTarget arg1)
+		{
+			onRequestTargetSet(arg1);
+			super.add(arg0, arg1);
+		}
+
+		@Override
+		public boolean add(IRequestTarget arg0)
+		{
+			onRequestTargetSet(arg0);
+			return super.add(arg0);
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends IRequestTarget> c)
+		{
+			Iterator<? extends IRequestTarget> it = c.iterator();
+			while (it.hasNext())
+			{
+				onRequestTargetSet(it.next());
+			}
+			return super.addAll(c);
+		}
+
+		@Override
+		public boolean addAll(int index, Collection<? extends IRequestTarget> c)
+		{
+			Iterator<? extends IRequestTarget> it = c.iterator();
+			while (it.hasNext())
+			{
+				onRequestTargetSet(it.next());
+			}
+			return super.addAll(index, c);
+		}
+
+	};
 
 	/**
 	 * Any page parameters. Only set when the request is resolving and the parameters are passed
@@ -1489,6 +1531,16 @@ public abstract class RequestCycle
 	protected void onEndRequest()
 	{
 	}
+
+	/**
+	 * Called when a request target is set on the request cycle
+	 * 
+	 * @param requestTarget
+	 */
+	protected void onRequestTargetSet(IRequestTarget requestTarget)
+	{
+	}
+
 
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
