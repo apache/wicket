@@ -379,12 +379,8 @@ Wicket.decode1 = function(text) {
 }
 
 Wicket.replaceAll = function(str, from, to) {
-    var idx = str.indexOf(from);
-    while (idx > -1) {
-        str = str.replace(from, to);
-        idx = str.indexOf(from);
-    }
-    return str;
+	eval('var regex = /' + from.replace( /\W/g ,'\\$&' ) + '/g ;');
+	return str.replace(regex,to);
 }
 
 /**
