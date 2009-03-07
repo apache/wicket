@@ -153,14 +153,13 @@ public class PackagedTextTemplate extends TextTemplate
 		// TODO implement cache
 
 		// first try default class loading locator to find the resource
-		IResourceStream stream = new ResourceStreamLocator().locate(clazz, path);
+		IResourceStream stream = app.getResourceSettings().getResourceStreamLocator().locate(clazz,
+			path);
 
 		if (stream == null)
 		{
-			// if default locator couldnt find the resource allow the application specific one to
-			// try
-			stream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-				clazz, path);
+			// if default locator couldnt find the resource, than some fallback
+			stream = new ResourceStreamLocator().locate(clazz, path);
 		}
 
 		if (stream == null)
