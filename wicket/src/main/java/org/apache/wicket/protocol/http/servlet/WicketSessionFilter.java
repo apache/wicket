@@ -27,7 +27,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +138,8 @@ public class WicketSessionFilter implements Filter
 			log.debug("filterName/ application key set to " + filterName);
 		}
 
-		sessionKey = "wicket:" + filterName + ":" + Session.SESSION_ATTRIBUTE_NAME;
+		WebApplication application = (WebApplication)Application.get(filterName);
+		sessionKey = application.getSessionAttributePrefix(null) + Session.SESSION_ATTRIBUTE_NAME;
 
 		if (log.isDebugEnabled())
 		{
