@@ -839,7 +839,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				{
 					synchronized (pages)
 					{
-						pages.clear();						
+						pages.clear();
 					}
 					entry.unbind();
 				}
@@ -942,6 +942,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		{
 			while (stop == Boolean.FALSE)
 			{
+				// TODO: At some point change to wait/notify
 				// wait until we have something to save
 				while (pagesToSaveActive.isEmpty() && stop == false)
 				{
