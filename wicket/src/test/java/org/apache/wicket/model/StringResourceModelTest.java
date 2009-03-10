@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -170,13 +171,11 @@ public class StringResourceModelTest extends TestCase
 			new Object[] { cal.getTime(), "${currentStatus}",
 					new PropertyModel<Double>(wsModel, "currentTemperature"),
 					new PropertyModel<String>(wsModel, "units") });
-		String expected = format.format(new Object[] { cal.getTime(), "sunny", 25.7,
-				"\u00B0C" });
+		String expected = format.format(new Object[] { cal.getTime(), "sunny", 25.7, "\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 		ws.setCurrentStatus("raining");
 		ws.setCurrentTemperature(11.568);
-		expected = format.format(new Object[] { cal.getTime(), "raining", 11.568,
-				"\u00B0C" });
+		expected = format.format(new Object[] { cal.getTime(), "raining", 11.568, "\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
@@ -185,28 +184,11 @@ public class StringResourceModelTest extends TestCase
 	{
 		tester.getWicketSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("with.quote", page, null, new Object[] {
-				10, 20});
+				10, 20 });
 		assertEquals("2010.00", model.getString());
 
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testUninitialisedLocalizer()
-	{
-		StringResourceModel model = new StringResourceModel("simple.text", null);
-		try
-		{
-			model.getString();
-			Assert.fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException e)
-		{
-			// Expected result
-		}
-	}
 
 	/**
 	 * 
@@ -229,19 +211,6 @@ public class StringResourceModelTest extends TestCase
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public void testDetachAttachNormalModel() throws Exception
-	{
-		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
-		tester.setupRequestAndResponse();
-		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester.getWicketResponse());
-		model.getObject();
-		Assert.assertNotNull(model.getLocalizer());
-		model.detach();
-		Assert.assertNull(model.getLocalizer());
-	}
 
 	/**
 	 * @throws Exception
@@ -262,12 +231,12 @@ public class StringResourceModelTest extends TestCase
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		tester.setupRequestAndResponse();
-		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester.getWicketResponse());
+		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(),
+			tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
-		// Removed this because getObject() will reattach now...
-		Assert.assertNull(model.getLocalizer());
+
 	}
 
 	/**
