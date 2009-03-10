@@ -448,7 +448,18 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 */
 	public Localizer getLocalizer()
 	{
-		return localizer;
+		if (localizer != null)
+		{
+			return localizer;
+		}
+		else if (component != null)
+		{
+			return component.getLocalizer();
+		}
+		else
+		{
+			return Application.get().getResourceSettings().getLocalizer();
+		}
 	}
 
 	/**
@@ -460,6 +471,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 */
 	public final String getString()
 	{
+		final Localizer localizer = getLocalizer();
+
 		// Make sure we have a localizer before commencing
 		if (getLocalizer() == null)
 		{
@@ -554,7 +567,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * @param localizer
 	 *            The localizer to use
 	 */
-	public void setLocalizer(final Localizer localizer)
+	public final void setLocalizer(final Localizer localizer)
 	{
 		this.localizer = localizer;
 	}
@@ -623,7 +636,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		final Session session = Session.get();
 		if (session != null)
 		{
-			localizer = Application.get().getResourceSettings().getLocalizer();
 			locale = session.getLocale();
 		}
 		else
