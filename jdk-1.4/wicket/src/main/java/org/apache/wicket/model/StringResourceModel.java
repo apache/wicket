@@ -437,7 +437,18 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 	 */
 	public Localizer getLocalizer()
 	{
-		return localizer;
+		if (localizer != null)
+		{
+			return localizer;
+		}
+		else if (component != null)
+		{
+			return component.getLocalizer();
+		}
+		else
+		{
+			return Application.get().getResourceSettings().getLocalizer();
+		}
 	}
 
 	/**
@@ -449,6 +460,8 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 	 */
 	public final String getString()
 	{
+		final Localizer localizer = getLocalizer();
+
 		// Make sure we have a localizer before commencing
 		if (getLocalizer() == null)
 		{
@@ -610,7 +623,6 @@ public class StringResourceModel extends LoadableDetachableModel implements ICom
 		final Session session = Session.get();
 		if (session != null)
 		{
-			localizer = Application.get().getResourceSettings().getLocalizer();
 			locale = session.getLocale();
 		}
 		else

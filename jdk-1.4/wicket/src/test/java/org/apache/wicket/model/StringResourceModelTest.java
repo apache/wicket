@@ -190,23 +190,6 @@ public class StringResourceModelTest extends TestCase
 
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testUninitialisedLocalizer()
-	{
-		StringResourceModel model = new StringResourceModel("simple.text", null);
-		try
-		{
-			model.getString();
-			Assert.fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException e)
-		{
-			// Expected result
-		}
-	}
 
 	/**
 	 * 
@@ -232,21 +215,6 @@ public class StringResourceModelTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDetachAttachNormalModel() throws Exception
-	{
-		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
-		tester.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(tester.getApplication(),
-			tester.getWicketRequest(), tester.getWicketResponse());
-		model.getObject();
-		Assert.assertNotNull(model.getLocalizer());
-		model.detach();
-		Assert.assertNull(model.getLocalizer());
-	}
-
-	/**
-	 * @throws Exception
-	 */
 	public void testDetachAttachDetachableModel() throws Exception
 	{
 		IModel wsDetachModel = new LoadableDetachableModel()
@@ -267,8 +235,6 @@ public class StringResourceModelTest extends TestCase
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
-		// Removed this because getObject() will reattach now...
-		Assert.assertNull(model.getLocalizer());
 	}
 
 	/**
