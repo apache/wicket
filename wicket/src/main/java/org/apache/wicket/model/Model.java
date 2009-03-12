@@ -124,13 +124,33 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            value type in map
 	 * @param map
 	 *            The Map, which may or may not be Serializable
+	 * 
+	 * @deprecated use {@link #ofMap(Map)}
+	 * 
 	 * @return A Model object wrapping the Map
 	 */
+	@Deprecated
 	public static <K, V> IModel<Map<K, V>> of(final Map<K, V> map)
 	{
 		return new MapModel<K, V>(map);
 	}
 
+	/**
+	 * Factory method for models that contain maps. This factory method will automatically rebuild a
+	 * nonserializable <code>map</code> into a serializable one.
+	 * 
+	 * @param <K>
+	 *            key type in map
+	 * @param <V>
+	 *            value type in map
+	 * @param map
+	 *            The Map, which may or may not be Serializable
+	 * @return A Model object wrapping the Map
+	 */
+	public static <K, V> IModel<Map<K, V>> ofMap(final Map<K, V> map)
+	{
+		return new MapModel<K, V>(map);
+	}
 
 	/**
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
