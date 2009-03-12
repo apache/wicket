@@ -141,16 +141,17 @@ public final class PageParameters extends ValueMap
 	@Override
 	public Object put(String key, Object value)
 	{
-		if ((value == null) || (value instanceof String) || (value instanceof String[]))
-		{
-			return super.put(key, value);
-		}
-		else
-		{
-			throw new IllegalArgumentException("You tried to add an object of type " +
-				value.getClass().getName() + "to your PageParameters for key " + key +
-				", but you are only allowed to use String or String[].");
-		}
+		return super.put(key, value);
+		/*
+		 * see WICKET-2162 as well. BRING BACK IN 1.4
+		 * 
+		 * if (!(key instanceof String)) { throw new IllegalArgumentException( "PageParameter keys
+		 * must be of type String, but you supplied a " + key.getClass().getName()); } if (value
+		 * instanceof String || value instanceof String[]) { return super.put(key, value); } else {
+		 * throw new IllegalArgumentException("You tried to add an object of type " +
+		 * value.getClass().getName() + " to your PageParameters for key " + key + ", but you are
+		 * only allowed to use String or String[]."); }
+		 */
 	}
 
 	/**
