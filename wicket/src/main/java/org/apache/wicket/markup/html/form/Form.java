@@ -31,6 +31,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -1781,6 +1782,27 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
+		}
+	}
+
+	@Override
+	protected void renderPlaceholderTag(ComponentTag tag, Response response)
+	{
+		if (isRootForm())
+		{
+			super.renderPlaceholderTag(tag, response);
+		}
+		else
+		{
+			// rewrite inner form tag as div
+			response.write("<div style=\"display:none\"");
+			if (getOutputMarkupId())
+			{
+				response.write(" id=\"");
+				response.write(getMarkupId());
+				response.write("\"");
+			}
+			response.write("></div>");
 		}
 	}
 
