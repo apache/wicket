@@ -1087,7 +1087,7 @@ Wicket.Ajax.Call.prototype = {
 			// iinitialize the array for steps (closures that execute each action)
 		    var steps = new Array();
 
-		   // start it a bit later so that the browser does handle the next event 
+		   	// start it a bit later so that the browser does handle the next event 
 		   // before the component is or can be replaced. We could do (if (!posponed))
 		   // because if there is already something in the queue then we could execute that immedietly 
 			steps.push(function(notify) {
@@ -1106,11 +1106,16 @@ Wicket.Ajax.Call.prototype = {
 			
 			// go through the ajax response and for every action (component, js evaluation, header contribution)
 			// ad the proper closure to steps
+			var stepIndexOfLastReplacedComponent = -1;
 		    for (var i = 0; i < root.childNodes.length; ++i) {
 		    	var node = root.childNodes[i];				
 
 		        if (node.tagName == "component") {
-		           this.processComponent(steps, node);
+					if (stepIndexOfLastReplacedComponent == -1) {
+						this.processFocusedComponentMark(steps);
+					}
+					stepIndexOfLastReplacedComponent = steps.length;
+					this.processComponent(steps, node);
 		        } else if (node.tagName == "evaluate") {
 		           this.processEvaluation(steps, node);
 		        } else if (node.tagName == "header-contribution") {
@@ -1118,6 +1123,9 @@ Wicket.Ajax.Call.prototype = {
 		        }
 		        
 		    }
+			if (stepIndexOfLastReplacedComponent != -1) {
+				this.processFocusedComponentReplaceCheck(steps, stepIndexOfLastReplacedComponent);
+			}
 
 			// add the last step, which should trigger the success call the done method on request
 			this.success(steps);
@@ -1233,6 +1241,27 @@ Wicket.Ajax.Call.prototype = {
 	processHeaderContribution: function(steps, node) {
 		var c = new Wicket.Head.Contributor();
 		c.processContribution(steps, node);
+	},
+
+	// mark the focused component so that we know if it has been replaced by response
+	processFocusedComponentMark: function(steps) {
+		steps.push(function(notify) {
+			Wicket.Focus.markFocusedComponent();
+
+			// continue to next step
+			notify();
+		});
+	},
+
+	// detect if the focused component was replaced
+	processFocusedComponentReplaceCheck: function(steps, lastReplaceComponentStep) {
+		// add this step imediately after all components have been replaced
+		steps.splice(lastReplaceComponentStep + 1, 0, function(notify) {
+			Wicket.Focus.checkFocusedComponentReplaced();
+
+			// continue to next step
+			notify();
+		});
 	}
 };
 
@@ -1990,6 +2019,8 @@ Wicket.Ajax.registerFailureHandler(function() {
 
 Wicket.Focus = {
 	lastFocusId : "",
+	refocusLastFocusedComponentAfterResponse : false,
+	focusSetFromServer : false,
 
 	setFocus: function(event)
 	{ 
@@ -1999,6 +2030,7 @@ Wicket.Focus = {
 	    // Use "srcElement" instead.
 	    var target = event.target ? event.target : event.srcElement;
 	    if (target) {
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
 			Wicket.Focus.lastFocusId=target.id;
 			Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId);
 		}
@@ -2012,15 +2044,14 @@ Wicket.Focus = {
 	    // Use "srcElement" instead.
 	    var target = event.target ? event.target : event.srcElement;
 	    if (target && Wicket.Focus.lastFocusId==target.id) {
-			Wicket.Focus.lastFocusId=null;
-			Wicket.Log.info("focus removed from " + target.id);
+			if (Wicket.Focus.refocusLastFocusedComponentAfterResponse) {
+				// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
+				Wicket.Log.info("focus removed from " + target.id + " but ignored because of component replacement");
+			} else {
+				Wicket.Focus.lastFocusId=null;
+				Wicket.Log.info("focus removed from " + target.id);
+			}
 		}
-	},
-	
-	setFocusOnId: function(id)
-	{
-		Wicket.Focus.lastFocusId=id;
-		Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId + " from serverside");
 	},
 	
 	getFocusedElement: function()
@@ -2033,17 +2064,72 @@ Wicket.Focus = {
 		return;
 	},
 
+	setFocusOnId: function(id)
+	{
+		if (typeof(id) != "undefined" && id != "" && id != null) {
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
+			Wicket.Focus.focusSetFromServer = true;
+			Wicket.Focus.lastFocusId=id;
+			Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId + " from serverside");
+		} else {
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+			Wicket.Log.info("refocus focused component after request stopped from serverside");
+		}
+	},
+	
+	// mark the focused component so that we know if it has been replaced or not by response
+	markFocusedComponent: function()
+	{
+		var focusedElement = Wicket.Focus.getFocusedElement();
+		if (typeof(focusedElement) != "undefined" && focusedElement != null) {
+			focusedElement.wasFocusedBeforeComponentReplacements = true; // create a property of the focused element that would not remain there if component is replaced
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
+			Wicket.Focus.focusSetFromServer = false;
+		} else {
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+		}
+	},
+
+	// detect if the focused component was replaced
+	checkFocusedComponentReplaced: function()
+	{
+		var focusedElement = Wicket.Focus.getFocusedElement();
+		if (Wicket.Focus.refocusLastFocusedComponentAfterResponse == true)
+		{
+			if (typeof(focusedElement) != "undefined" && focusedElement != null) {
+				if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) != "undefined")
+				{
+					// focus component was not replaced - no need to refocus it
+					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+				}
+			} else {
+				// focused component dissapeared completely - no use to try to refocus it
+				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+				Wicket.Focus.lastFocusId = "";
+			}
+		}
+	},
 	
 	requestFocus: function()
 	{
-		if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
+		// if the focused component is replaced by the ajax response, a re-focus might be needed (if focus was not changed from server)
+		// but if not, and the focus component should remain the same, do not re-focus - fixes problem on IE6 for combos that have the popup open (refocusing closes popup)
+		if (Wicket.Focus.refocusLastFocusedComponentAfterResponse && typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 		{ 
 			var toFocus = Wicket.$(Wicket.Focus.lastFocusId);
 			
 			if (toFocus != null && typeof(toFocus) != "undefined") {
 				Wicket.Log.info("Calling focus on " + Wicket.Focus.lastFocusId);
 				try {
-					toFocus.focus();
+					if (Wicket.Focus.focusSetFromServer) {
+						toFocus.focus();
+					} else {
+						// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
+						var temp = toFocus.onfocus;
+						toFocus.onfocus = null;
+						toFocus.focus();
+						setTimeout(function() { toFocus.onfocus = temp; }, 0);	// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
+					}
 				} catch (ignore) {
 				}
 			}
@@ -2053,10 +2139,15 @@ Wicket.Focus = {
 				Wicket.Log.info("Couldn't set focus on " + Wicket.Focus.lastFocusId + " not on the page anymore");
 			}
 		}
-		else
+		else if (Wicket.Focus.refocusLastFocusedComponentAfterResponse)
 		{
 			Wicket.Log.info("last focus id was not set");
 		}
+		else
+		{
+			Wicket.Log.info("refocus last focused component not needed/allowed");
+		}
+		Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
 	},
 	
 	setFocusOnElements: function (elements)
