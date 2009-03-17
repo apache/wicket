@@ -453,6 +453,8 @@ public class WicketTesterTest extends TestCase
 			}
 		});
 
+		tester.setupRequestAndResponse();
+
 		// Execute the event
 		tester.executeAjaxEvent(label, "ondblclick");
 
