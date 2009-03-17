@@ -109,7 +109,7 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
-					<optimise>true</optimise>
+					<optimize>true</optimize>
 					<debug>true</debug>
 				</configuration>
 			</plugin>
