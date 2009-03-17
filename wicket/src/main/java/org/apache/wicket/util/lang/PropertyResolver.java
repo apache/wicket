@@ -1077,9 +1077,16 @@ public final class PropertyResolver
 		public final void setValue(final Object object, final Object value,
 			PropertyResolverConverter converter)
 		{
+			Class type = null;
 			if (setMethod != null)
+				type = getMethod.getReturnType();
+			else if (field != null)
+				type = field.getType();
+
+			Object converted = null;
+			if (type != null)
 			{
-				Object converted = converter.convert(value, getMethod.getReturnType());
+				converted = converter.convert(value, getMethod.getReturnType());
 				if (converted == null)
 				{
 					if (value != null)
@@ -1095,6 +1102,10 @@ public final class PropertyResolver
 								getMethod.getReturnType() + " for setting it on " + object);
 					}
 				}
+			}
+
+			if (setMethod != null)
+			{
 				try
 				{
 					setMethod.invoke(object, new Object[] { converted });
@@ -1107,6 +1118,18 @@ public final class PropertyResolver
 				catch (Exception ex)
 				{
 					throw new WicketRuntimeException("Error calling method: " + setMethod +
+						" on object: " + object, ex);
+				}
+			}
+			else if (field != null)
+			{
+				try
+				{
+					field.set(object, converted);
+				}
+				catch (Exception ex)
+				{
+					throw new WicketRuntimeException("Error setting field: " + field +
 						" on object: " + object, ex);
 				}
 			}

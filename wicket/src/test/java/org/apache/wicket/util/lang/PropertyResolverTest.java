@@ -462,6 +462,34 @@ public class PropertyResolverTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testOnlyPrimitiveGetter() throws Exception
+	{
+		Person person = new Person();
+
+		PropertyResolver.setValue("onlyGetterPrimitive", person, new Integer(1), CONVERTER);
+
+		assertEquals(person.getOnlyGetterPrimitive(), 1);
+		assertEquals(PropertyResolver.getValue("onlyGetterPrimitive", person), new Integer(1));
+
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testOnlyStringGetter() throws Exception
+	{
+		Person person = new Person();
+
+		PropertyResolver.setValue("onlyGetterString", person, "onlygetter", CONVERTER);
+
+		assertEquals(person.getOnlyGetterString(), "onlygetter");
+		assertEquals(PropertyResolver.getValue("onlyGetterString", person), "onlygetter");
+
+	}
+
+	/**
 	 * 
 	 */
 	public void testGetTargetSetter()
