@@ -49,6 +49,7 @@ import org.apache.wicket.protocol.http.portlet.PortletServletRequestWrapper;
 import org.apache.wicket.protocol.http.portlet.PortletServletResponseWrapper;
 import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
+import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -1110,6 +1111,7 @@ public class WicketFilter implements Filter
 			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
 
 			Resource resource = null;
+			WebRequestCycle requestCycle = null;
 
 			boolean externalCall = !Application.exists();
 			try
@@ -1131,12 +1133,25 @@ public class WicketFilter implements Filter
 					checkCharacterEncoding(servletRequest);
 
 					final WebRequest request = webApplication.newWebRequest(servletRequest);
+					WebResponse response = new WebResponse();
+					// create a request cycle if not already there.
+					if (RequestCycle.get() == null)
+					{
+						requestCycle = (WebRequestCycle)webApplication.newRequestCycle(request,
+							response);
+					}
 					// make the session available.
-					Session.findOrCreate(request, new WebResponse());
+					Session.findOrCreate(request, response);
 
 
+					// decode the parameters so that shared resource params are also decoded
+					// a request cycle is then needed. (see above)
+					RequestParameters rp = RequestCycle.get()
+						.getProcessor()
+						.getRequestCodingStrategy()
+						.decode(request);
 					// Set parameters from servlet request
-					resource.setParameters(request.getParameterMap());
+					resource.setParameters(rp.getParameters());
 
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();
@@ -1176,6 +1191,14 @@ public class WicketFilter implements Filter
 				if (Session.exists())
 				{
 					Session.unset();
+				}
+
+				if (requestCycle != null)
+				{
+					// TODO should this really be called... only unset it for now. detach does a lot
+					// external things (for example session)
+					// requestCycle.detach();
+					requestCycle.unset();
 				}
 			}
 		}
