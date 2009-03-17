@@ -972,7 +972,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
 		{
-			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
+			url.append(url.indexOf("?") > -1 ? "&" : "?").append(
 				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return url;
