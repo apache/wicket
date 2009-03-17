@@ -45,6 +45,27 @@ public class Person
 
 	private int age;
 
+
+	private int onlyGetterPrimitive;
+
+	private String onlyGetterString;
+
+	/**
+	 * @return test
+	 */
+	public int getOnlyGetterPrimitive()
+	{
+		return onlyGetterPrimitive;
+	}
+
+	/**
+	 * @return test
+	 */
+	public String getOnlyGetterString()
+	{
+		return onlyGetterString;
+	}
+
 	/**
 	 * @return The name
 	 */
