@@ -688,7 +688,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -1666,14 +1666,28 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Gets page instance's unique identifier
+	 * This method will be removed before the final of 1.4
 	 * 
 	 * @return instance unique identifier
+	 * 
+	 * @depricated This method will be removed before the final of 1.4
 	 */
+	@Deprecated
 	public PageId getPageId()
 	{
 		setStatelessHint(false);
 		return new PageId(pageMapName, numericId, getCurrentVersionNumber());
+	}
+
+	/**
+	 * Gets page instance's unique identifier
+	 * 
+	 * @return instance unique identifier
+	 */
+	public PageReference getPageReference()
+	{
+		setStatelessHint(false);
+		return new PageReference(pageMapName, numericId, getCurrentVersionNumber());
 
 	}
 

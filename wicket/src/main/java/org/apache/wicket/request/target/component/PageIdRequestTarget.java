@@ -16,86 +16,31 @@
  */
 package org.apache.wicket.request.target.component;
 
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageId;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.PageReference;
 
 /**
  * Target that navigates to a page pointed to by its id. The great benefit of this target over the
  * PageRequestTarget is that no reference to the actual page is needed, which greatly facilitates
  * navigational usecases where a list or a stack of page references is needed (ie breadcrumbs).
  * 
- * @see PageId
+ * @see PageReference
  * 
  * @author igor.vaynberg
+ * @depricated will be removed before 1.5
  */
-public class PageIdRequestTarget implements IRequestTarget
+@Deprecated
+public class PageIdRequestTarget extends PageReferenceRequestTarget
 {
-	private final PageId id;
-
-	/**
-	 * Constructor
-	 * 
-	 * Even though a page is passed in, only a reference to its {@link PageId} is kept
-	 * 
-	 * @param page
-	 */
+	@Deprecated
 	public PageIdRequestTarget(Page page)
 	{
-		if (page == null)
-		{
-			throw new IllegalArgumentException("Argument `page` cannot be null");
-		}
-		id = page.getPageId();
+		super(page);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param pageId
-	 */
-	public PageIdRequestTarget(PageId pageId)
+	@Deprecated
+	public PageIdRequestTarget(PageReference reference)
 	{
-		if (pageId == null)
-		{
-			throw new IllegalArgumentException("Argument `pageId` cannot be null");
-		}
-
-		id = pageId;
+		super(reference);
 	}
-
-
-	/**
-	 * @return id page id
-	 */
-	public final PageId getPageId()
-	{
-		return id;
-	}
-
-	/** {@inheritDoc} */
-	public void respond(RequestCycle requestCycle)
-	{
-		Page page = requestCycle.getSession().getPage(id.getPageMapName(), "" + id.getPageNumber(),
-			id.getPageVersion());
-
-		// Should page be redirected to?
-		if (requestCycle.isRedirect())
-		{
-			// Redirect to the page
-			requestCycle.redirectTo(page);
-		}
-		else
-		{
-			// Let page render itself
-			page.renderPage();
-		}
-	}
-
-	/** {@inheritDoc} */
-	public void detach(RequestCycle requestCycle)
-	{
-	}
-
 }

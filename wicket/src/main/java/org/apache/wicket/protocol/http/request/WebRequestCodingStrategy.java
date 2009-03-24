@@ -31,9 +31,9 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageId;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.PageReference;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
@@ -56,6 +56,7 @@ import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceR
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.request.target.component.PageIdRequestTarget;
+import org.apache.wicket.request.target.component.PageReferenceRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.util.lang.Objects;
@@ -272,7 +273,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else if (requestTarget instanceof PageIdRequestTarget)
 		{
-			url = encode(requestCycle, (PageIdRequestTarget)requestTarget);
+			url = encode(requestCycle, requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -862,9 +863,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *            the target to encode
 	 * @return the encoded url
 	 */
-	protected CharSequence encode(RequestCycle requestCycle, PageIdRequestTarget requestTarget)
+	protected CharSequence encode(RequestCycle requestCycle,
+		PageReferenceRequestTarget requestTarget)
 	{
-		final PageId id = requestTarget.getPageId();
+		final PageReference id = requestTarget.getPageReference();
 
 		// Start string buffer for url
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);

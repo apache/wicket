@@ -1033,7 +1033,7 @@ public abstract class RequestCycle
 	 *            page id
 	 * @return url pointing to the page
 	 */
-	public final CharSequence urlFor(final PageId id)
+	public final CharSequence urlFor(final PageReference id)
 	{
 		return urlFor(new PageIdRequestTarget(id));
 	}
