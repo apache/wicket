@@ -226,7 +226,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		@Override
 		public String toString()
 		{
-			return "ComponentModelChange[component: " + getPath() + "]";
+			return getClass().getSimpleName() + "[component: " + getPath() + ",model:" + model +
+				"]";
 		}
 
 		/**
@@ -297,6 +298,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 			this.behavior = behavior;
 		}
 
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -328,6 +333,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setComponentBorder(old);
 		}
 
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "[component: " + getPath() + ",border:" + old + "]";
+		}
+
 	}
 
 	/**
@@ -352,6 +366,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			this.behavior = behavior;
 		}
 
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -397,7 +414,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		@Override
 		public String toString()
 		{
-			return "EnabledChange[component: " + component.getPath() + ",enabled: " + enabled + "]";
+			return getClass().getSimpleName() + "[component: " + component.getPath() +
+				",enabled: " + enabled + "]";
 		}
 
 		/**
@@ -440,8 +458,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		@Override
 		public String toString()
 		{
-			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible +
-				"]";
+			return getClass().getSimpleName() + "[component: " + component.getPath() +
+				",visible: " + visible + "]";
 		}
 
 		/**
