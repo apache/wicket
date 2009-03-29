@@ -64,10 +64,11 @@ public class AjaxFallbackDefaultDataTable<T> extends DataTable<T>
 	 *            number of rows per page
 	 */
 	@SuppressWarnings("unchecked")
-	public AjaxFallbackDefaultDataTable(String id, final List<IColumn<?>> columns,
+	public AjaxFallbackDefaultDataTable(String id, final List<IColumn<T>> columns,
 		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
-		this(id, columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
+		this(id, columns.toArray((IColumn<T>[])new IColumn[columns.size()]), dataProvider,
+			rowsPerPage);
 	}
 
 	/**
