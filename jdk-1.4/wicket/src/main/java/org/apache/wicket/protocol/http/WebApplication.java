@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -45,6 +45,7 @@ import org.apache.wicket.request.target.coding.PackageRequestTargetUrlCodingStra
 import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
+import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
@@ -110,7 +111,7 @@ public abstract class WebApplication extends Application
 	 * Map of buffered responses that are in progress per session. Buffered responses are
 	 * temporarily stored
 	 */
-	private final Map bufferedResponses = new HashMap();
+	private final Map bufferedResponses = new ConcurrentHashMap();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -458,9 +459,9 @@ public abstract class WebApplication extends Application
 	 * -Dwicket.configuration. If it does not exist check the servlet init parameter (
 	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
 	 * found check the servlet context init parameter
-	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). If
-	 * the parameter is "development" (which is default), settings appropriate for development are
-	 * set. If it's "deployment" , deployment settings are used. If development is specified and a
+	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). If the
+	 * parameter is "development" (which is default), settings appropriate for development are set.
+	 * If it's "deployment" , deployment settings are used. If development is specified and a
 	 * "sourceFolder" init parameter is also set, then resources in that folder will be polled for
 	 * changes.
 	 */
@@ -635,7 +636,7 @@ public abstract class WebApplication extends Application
 		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
 		if (responsesPerSession == null)
 		{
-			responsesPerSession = new MostRecentlyUsedMap(4);
+			responsesPerSession = Collections.synchronizedMap(new MostRecentlyUsedMap(4));
 			bufferedResponses.put(sessionId, responsesPerSession);
 		}
 		responsesPerSession.put(bufferId, renderedResponse);
