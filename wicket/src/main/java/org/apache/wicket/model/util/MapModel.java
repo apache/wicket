@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 /**
- * Based on <code>Model</code> but for mapss of serializable objects.
+ * Based on <code>Model</code> but for maps of serializable objects.
  * 
  * @author Timo Rantalaiho
  * @param <K>
