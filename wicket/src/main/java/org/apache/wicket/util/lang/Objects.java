@@ -392,13 +392,28 @@ public final class Objects
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
 			ObjectInputStream ois = null;
+			boolean unsetApplication = false;
 			try
 			{
 				ois = objectStreamFactory.newObjectInputStream(in);
+				String applicationName = (String)ois.readObject();
+				if (applicationName != null && !Application.exists())
+				{
+					Application app = Application.get(applicationName);
+					if (app != null)
+					{
+						Application.set(app);
+						unsetApplication = true;
+					}
+				}
 				return ois.readObject();
 			}
 			finally
 			{
+				if (unsetApplication)
+				{
+					Application.unset();
+				}
 				if (ois != null)
 				{
 					ois.close();
@@ -1094,6 +1109,14 @@ public final class Objects
 			try
 			{
 				oos = objectStreamFactory.newObjectOutputStream(out);
+				if (Application.exists())
+				{
+					oos.writeObject(Application.get().getApplicationKey());
+				}
+				else
+				{
+					oos.writeObject(null);
+				}
 				oos.writeObject(object);
 			}
 			finally

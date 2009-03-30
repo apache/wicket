@@ -81,6 +81,8 @@ public interface IObjectStreamFactory
 					try
 					{
 						// Can the application always be taken??
+						// Should be if serialization happened in thread with application set
+						// (WICKET-2195)
 						Application application = Application.get();
 						IApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
