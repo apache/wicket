@@ -188,9 +188,7 @@ public abstract class Application
 	 * @param applicationKey
 	 *            The unique key of the application within a certain context (e.g. a web
 	 *            application)
-	 * @return The application
-	 * @throws IllegalArgumentException
-	 *             When no application was found with the provided key
+	 * @return The application or <code>null</code> if application has not been found
 	 */
 	public static Application get(String applicationKey)
 	{
