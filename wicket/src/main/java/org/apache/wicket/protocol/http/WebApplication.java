@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -130,7 +131,7 @@ public abstract class WebApplication extends Application
 	 * Map of buffered responses that are in progress per session. Buffered responses are
 	 * temporarily stored
 	 */
-	private final Map<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = Generics.newConcurrentHashMap();
+	private final ConcurrentHashMap<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = Generics.newConcurrentHashMap();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -692,7 +693,12 @@ public abstract class WebApplication extends Application
 		{
 			responsesPerSession = Collections.synchronizedMap(new MostRecentlyUsedMap<String, BufferedHttpServletResponse>(
 				4));
-			bufferedResponses.put(sessionId, responsesPerSession);
+			Map<String, BufferedHttpServletResponse> previousValue = bufferedResponses.putIfAbsent(
+				sessionId, responsesPerSession);
+			if (previousValue != null)
+			{
+				responsesPerSession = previousValue;
+			}
 		}
 		responsesPerSession.put(bufferId, renderedResponse);
 	}
