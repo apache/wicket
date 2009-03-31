@@ -637,7 +637,11 @@ public abstract class WebApplication extends Application
 		if (responsesPerSession == null)
 		{
 			responsesPerSession = Collections.synchronizedMap(new MostRecentlyUsedMap(4));
-			bufferedResponses.put(sessionId, responsesPerSession);
+			Object removed = bufferedResponses.put(sessionId, responsesPerSession);
+			if (removed != null)
+			{
+				responsesPerSession.putAll((Map)removed);
+			}
 		}
 		responsesPerSession.put(bufferId, renderedResponse);
 	}
