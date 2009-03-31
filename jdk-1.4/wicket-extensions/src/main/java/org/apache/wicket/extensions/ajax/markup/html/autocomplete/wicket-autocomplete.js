@@ -324,17 +324,20 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
     }
 
-    function getPosition(obj) {
+	 function getPosition(obj) {
         var leftPosition=0;
         var topPosition=0;
         do {
             topPosition += obj.offsetTop || 0;
+     		topPosition -= obj.scrollTop || 0;
             leftPosition += obj.offsetLeft || 0;
+     		leftPosition -= obj.scrollLeft || 0;
             obj = obj.offsetParent;
         } while (obj);
+ 
         return [leftPosition,topPosition];
     }
-
+    
     function doUpdateChoices(resp){
     
     	// check if the input hasn't been cleared in the meanwhile
