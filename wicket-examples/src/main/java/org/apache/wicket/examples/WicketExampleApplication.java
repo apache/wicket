@@ -63,6 +63,8 @@ public abstract class WicketExampleApplication extends WebApplication
 		// box.
 		getSecuritySettings().setCryptFactory(
 			new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
+
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 	}
 
 	/**

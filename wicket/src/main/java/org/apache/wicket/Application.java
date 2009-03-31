@@ -345,6 +345,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(true);
+			getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 			// getDebugSettings().setOutputMarkupContainerClassName(true);
 			getResourceSettings().setJavascriptCompressor(null);
 		}
@@ -356,6 +357,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 				IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(false);
+			getDebugSettings().setDevelopmentUtilitiesEnabled(false);
 			getResourceSettings().setJavascriptCompressor(new DefaultJavascriptCompressor());
 		}
 		else

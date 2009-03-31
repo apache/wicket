@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
@@ -34,15 +34,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
-import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.util.lang.Bytes;
 
 
 /**
  * @author jcompagner
  */
-public class LiveSessionsPage extends WebPage
+public class LiveSessionsPage extends DevUtilsPage
 {
 	private static final long serialVersionUID = 1L;
 

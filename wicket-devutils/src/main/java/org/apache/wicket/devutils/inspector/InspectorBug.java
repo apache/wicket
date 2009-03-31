@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.Session;
+import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.session.pagemap.IPageMapEntry;
-import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.markup.html.link.Link;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including the current session
@@ -33,41 +29,25 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * 
  * @author Jonathan Locke
  */
-public final class InspectorPage extends WebPage
+public final class InspectorBug extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 * 
-	 * @param parameters
-	 *            The page id of any page to be analyzed
+	 * @param id
+	 *            Component id
+	 * @param page
+	 *            Page to inspect
 	 */
-	public InspectorPage(final PageParameters parameters)
+	public InspectorBug(final String id, final WebPage page)
 	{
-		add(new ApplicationView("application", Application.get()));
-		add(new SessionView("session", Session.get()));
-		IPageMapEntry entry = null;
-		try
-		{
-			entry = getPageMap().getEntry(parameters.getInt("pageId"));
-		}
-		catch (StringValueConversionException e)
-		{
-			// Ignore
-		}
-		add(new PageView("page", entry == null ? null : entry.getPage()));
-		add(new Image("bug"));
-		add(new BookmarkablePageLink("allsessions", LiveSessionsPage.class));
-		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
-	@Override
-	public boolean isVersioned()
-	{
-		return false;
+		super(id);
+		PageParameters parameters = new PageParameters();
+		parameters.put("pageId", page.getId());
+		Link<?> link = new BookmarkablePageLink<Void>("link", InspectorPage.class, parameters);
+		link.add(new Image("bug"));
+		add(link);
 	}
 }

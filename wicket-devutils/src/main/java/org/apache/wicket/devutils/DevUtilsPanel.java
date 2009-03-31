@@ -14,40 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 /**
- * A page that shows interesting attributes of the Wicket environment, including the current session
- * and the component tree for the current page.
+ * All panels in the wicket-devutils package should extend this panel so that
+ * they automatically get checked to make sure that the utilities are enabled in
+ * the application debug settings.
  * 
- * @author Jonathan Locke
+ * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public final class InspectorBug extends Panel
-{
+public class DevUtilsPanel extends Panel {
+
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            Component id
-	 * @param page
-	 *            Page to inspect
-	 */
-	public InspectorBug(final String id, final WebPage page)
-	{
-		super(id);
-		PageParameters parameters = new PageParameters();
-		parameters.put("pageId", page.getId());
-		Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
-		link.add(new Image("bug"));
-		add(link);
+	public DevUtilsPanel(String id, IModel<?> model) {
+		super(id, model);
 	}
+
+	public DevUtilsPanel(String id) {
+		super(id);
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		DevelopmentUtilitiesNotEnabledException.check();
+	}
+
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -43,7 +43,7 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * @author jcompagner
  */
-public class RequestsPage extends WebPage
+public class RequestsPage extends DevUtilsPage
 {
 	private static final long serialVersionUID = 1L;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");

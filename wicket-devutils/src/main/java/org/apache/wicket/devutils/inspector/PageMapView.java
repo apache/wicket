@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,12 +25,12 @@ import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.AccessStackPageMap.Access;
+import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.lang.Bytes;
@@ -42,7 +42,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Jonathan Locke
  */
-public final class PageMapView extends Panel
+public final class PageMapView extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -92,7 +92,7 @@ public final class PageMapView extends Panel
 				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
-				Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
+				Link<?> link = new BookmarkablePageLink<Void>("link", InspectorPage.class, parameters);
 				link.add(new Label("id", "" + entry.getNumericId()));
 				listItem.add(link);
 				listItem.add(new Label("class", "" + entry.getClass().getName()));

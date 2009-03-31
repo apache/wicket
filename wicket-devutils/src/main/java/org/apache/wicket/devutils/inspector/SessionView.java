@@ -14,20 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
 import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Session;
+import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Objects;
 
 
 /**
@@ -35,7 +32,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Jonathan Locke
  */
-public final class SessionView extends Panel
+public final class SessionView extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,26 +52,8 @@ public final class SessionView extends Panel
 		add(new Label("id", session.getId()));
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label("size", new Model<Bytes>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Bytes getObject()
-			{
-				return Bytes.bytes(Objects.sizeof(session));
-			}
-		}));
-		add(new Label("totalSize", new Model<Bytes>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Bytes getObject()
-			{
-				return Bytes.bytes(session.getSizeInBytes());
-			}
-		}));
+		add(new Label("size", new SessionSizeModel(session)));
+		add(new Label("totalSize", new SessionTotalSizeModel(session)));
 
 		// Get pagemaps
 		final List<IPageMap> pagemaps = session.getPageMaps();
@@ -95,4 +74,5 @@ public final class SessionView extends Panel
 			}
 		});
 	}
+	
 }

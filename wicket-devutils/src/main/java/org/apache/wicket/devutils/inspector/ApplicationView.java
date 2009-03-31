@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.debug;
+package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * A Wicket panel that shows interesting information about a given Wicket session.
  * 
  * @author Jonathan Locke
  */
-public final class ApplicationView extends Panel
+public final class ApplicationView extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 

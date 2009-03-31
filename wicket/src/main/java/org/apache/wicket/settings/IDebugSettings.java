@@ -128,4 +128,18 @@ public interface IDebugSettings
 	 * @param enable
 	 */
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable);
+
+	/**
+	 * Enables all of the panels and pages, etc, from wicket-devutils package.
+	 * 
+	 * @param enable
+	 */
+	public void setDevelopmentUtilitiesEnabled(boolean enable);
+
+	/**
+	 * Are all of the panels and pages, etc, from wicket-devutils package enabled?
+	 * 
+	 * @return true if all of the panels and pages, etc, from wicket-devutils package are enabled
+	 */
+	public boolean isDevelopmentUtilitiesEnabled();
 }

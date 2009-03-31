@@ -176,6 +176,11 @@ public final class Settings
 	private boolean linePreciseReportingOnAddComponentEnabled = false;
 
 	/**
+	 * @see IDebugSettings#setDevelopmentUtilitiesEnabled(boolean)
+	 */
+	private boolean developmentUtilitiesEnabled = false;
+
+	/**
 	 * whether wicket should track line precise instantiations of components for error reporting.
 	 */
 	private boolean linePreciseReportingOnNewComponentEnabled = false;
@@ -1498,5 +1503,20 @@ public final class Settings
 		this.detachListener = detachListener;
 	}
 
+	/**
+	 * @see org.apache.wicket.settings.IDebugSettings#setDevelopmentUtilitiesEnabled(boolean)
+	 */
+	public void setDevelopmentUtilitiesEnabled(boolean enable)
+	{
+		developmentUtilitiesEnabled = enable;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IDebugSettings#isDevelopmentUtilitiesEnabled()
+	 */
+	public boolean isDevelopmentUtilitiesEnabled()
+	{
+		return developmentUtilitiesEnabled;
+	}
 
 }
