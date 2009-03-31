@@ -44,6 +44,7 @@ public class RepeaterApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
@@ -59,7 +60,7 @@ public class RepeaterApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Index.class;
 	}
