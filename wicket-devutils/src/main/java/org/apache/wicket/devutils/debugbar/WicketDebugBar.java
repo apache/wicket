@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * 
@@ -55,6 +56,11 @@ public class WicketDebugBar extends DevUtilsPanel {
 						WicketDebugBar.this));
 			}
 		});
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
 	}
 
 	/**
