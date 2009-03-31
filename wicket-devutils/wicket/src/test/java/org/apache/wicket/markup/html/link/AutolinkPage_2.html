@@ -1,0 +1,32 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<title>Mock Page</title>
+</head>
+<body>
+<a href="Page1.html">Home</a>
+<wicket:link>
+  <a href="Page1.html">Home</a>
+</wicket:link>
+<wicket:link autolink=false>
+  <a href="Page1.html">Home</a>
+</wicket:link>
+<wicket:link autolink=true>
+  <a href="Page1.html"><span wicket:id="myLabel">Home</span></a>
+</wicket:link>
+<wicket:link autolink=false>
+  <a href="Page1.html">Home</a>
+  <wicket:link autolink=true>
+    <a href="Page1.html?id=123&name=test">Home</a>
+  </wicket:link>
+</wicket:link>
+<!-- valid till the end of the document or the next link tag -->
+<wicket:link autolink=false/>
+<a href="Page1.html">Home</a>
+<wicket:link autolink=true/>
+<a href="subdir/Page1.html">Home</a>
+<link href="test.css"/>
+<a href="/root/test.html">Home</a>
+<a href="org/apache/wicket/markup/html/link/Page1.html">Home</a>
+  <a href="http://www.google.com">Google</a>
+</body>
+</html>

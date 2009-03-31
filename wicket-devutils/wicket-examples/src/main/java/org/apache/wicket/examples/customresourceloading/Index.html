@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - custom resource loading</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    <ul>
+    <wicket:link>
+    	<li>
+    		<a href="PageFromWebContext.html">Go to a page which template is loaded from the 
+    		web context (WEB-INF/templates).</a>
+		</li>
+		<li>
+	    	<a href="AlternativePageFromWebContext.html">Go to a page which template is loaded
+	    	from the web context much as above, but disregarding any info like the package, locale, etc.</a>
+		</li>
+    </wicket:link>
+		<li>
+	    	<a href="#" wicket:id="customLoadingPageLink">Go to a page that which template is loaded by itself.</a>
+		</li>
+    </ul>
+</body>
+</html>

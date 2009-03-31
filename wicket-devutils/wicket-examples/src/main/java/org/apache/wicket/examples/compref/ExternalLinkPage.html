@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.link.ExternalLink</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	External links take you outside the scope of Wicket. They can come in handy when you keep your
+	links e.g. in a database.
+	</p>
+
+	<p>
+	<a href="#" target="_new" wicket:id="externalLink1">this body will be replaced</a> <br/ >
+	<a href="#" target="_new" wicket:id="externalLink2">this body will be replaced</a>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

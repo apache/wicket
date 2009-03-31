@@ -1,0 +1,36 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+<style>
+	table.palette { border:0; }
+	table.palette td.header { font-weight: bold; font-size: 12pt; background-color: #eef7ff; padding: 2px; border-top: 1px solid #729ac2; border-bottom: 1px solid #729ac2;}
+	table.palette td.pane { width: 100px; text-align: center; }
+	table.palette td.pane select { width: 200px;  }
+	table.palette td.buttons { text-align: center; padding-left: 10px; padding-right: 10px; }
+   	table.palette td.buttons button { width: 40px; height: 40px; }
+</style>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.extensions.markup.html.form.palette.Palette</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	The Palette component.
+	</p>
+	<p>
+	 <form wicket:id="form">
+		<span wicket:id="palette">
+		</span>
+		<br/>
+	   <input type="submit" value="submit" />
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

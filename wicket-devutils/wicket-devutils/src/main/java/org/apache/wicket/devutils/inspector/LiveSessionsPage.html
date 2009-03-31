@@ -1,0 +1,49 @@
+<html xmlns:wicket>
+<head>
+<style type="text/css">
+body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
+h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;font-size : -1;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+h2 {font-size : 1.2em;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+pre { border : 1px solid #ddd; margin-left : 2em; }
+.resource { color : blue; }
+.tablestyle { margin-left : 2em; border : 1px solid #bbb; }
+</style>
+<title>Live Sessions Page</title>
+</head>
+<body>
+  <p>
+  <h1><img valign="center" border=0 wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
+	<a href="javascript:history.go(-1)">Go Back</a>
+
+    <span wicket:id="application">Application view here</span>
+  
+  	<h2>Session Information  <a wicket:id="togglelink" href="#"><span wicket:id="toggletext"></span></a></h2>
+	<table>
+		<tr><td>Total created sessions</td><td><span wicket:id="totalSessions"></span></td></tr>
+		<tr><td>Live session count</td><td><span wicket:id="liveSessions"></span></td></tr>
+		<tr><td>Peak session count</td><td><span wicket:id="peakSessions"></span></td></tr>
+	</table>	
+	
+	<p>Live Sessions</p>
+	<table border="1">
+		<tr>
+			<th>Session Id</th>
+			<th>Last Request Time</th>
+			<th>Request Count</th>
+			<th>Total Request Time (s)</th>
+			<th>Session size (B)</th>
+		</tr>
+		<tr wicket:id="sessions">
+			<td><a wicket:id="id" href="#"><span wicket:id="id"></span></a></td>
+			<td wicket:id="lastRequestTime" align="right"></td>
+			<td wicket:id="requestCount" align="right"></td>
+			<td wicket:id="requestsTime" align="right"></td>
+			<td wicket:id="sessionSize" align="right"></td>
+		</tr>
+	</table>
+	<span wicket:id="navigator"/>
+  <br/>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.border.Border</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	You can view Borders as kind of the opposite of Panels. You use Borders to
+	<i>decorate other components/ markup</i>. This allows you to combine loosely coupled
+	components into larger blocks. An example of this is the FormComponentFeedbackBorder
+	components that you can put <i>around</i> e.g. input fields (TextField) so that
+	when there was a validation error for that field on a form submit, the border
+	displays its' red star marker as a hint to the user.
+	<p>You can also use Borders for templating techniques much the same as you can
+	use markup inheritance. See the library example for an example of that usage.
+	Like Panels, you can nest arbitrairy components in a Border, including other
+	panels and borders.
+	</p>
+	<p>
+
+	<span wicket:id="border" class="mark">
+		<span wicket:id="label" class="mark">label contents here</span>
+	</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

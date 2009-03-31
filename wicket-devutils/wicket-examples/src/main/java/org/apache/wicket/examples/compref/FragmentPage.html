@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.panel.Fragment</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	Use fragments for inline panels..<br />
+
+	<span wicket:id="fragment">fragments contents come here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+
+</body>
+</html>
+
+<wicket:fragment wicket:id="fragmentid" >
+
+ 	<p style="border: 2px dotted #fc0; padding: 5px;">
+ 	 A fragment is like a panel, but can be 'inlined',
+ 	 meaning it does not need it's own markup file, but
+ 	 can be defined in the markup file of another. For this
+ 	 example, we use the parent's markup file as the host,
+ 	 and we do not explicitly tell the fragment which host
+ 	 to use.<br />
+ 	 Like panels, fragments can contain arbitrairy components,
+ 	 like this label: <span wicket:id="label" class="mark">to be replaced</span>, or<br />
+ 	 even another panel: <span wicket:id="otherPanel"  class="mark">also to be replaced</span>.
+ 	</p>
+ 
+</wicket:fragment>

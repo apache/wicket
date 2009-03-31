@@ -1,0 +1,13 @@
+<html xmlns:wicket>
+<body>
+<wicket:link autolink=true>
+  <!-- File/page does not exist => Do not change href at all -->
+  <a href="PageDoesNotExist.html">Home</a>
+  <!-- Reference an internal target => Do not change href at all -->
+  <a href="#link1">Link 1</a>
+  <a href="">Link 1</a>
+  <!-- Supported since 1.2 -->
+  <a href="Page1.html#link1">Link 1</a>
+</wicket:link>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.IConverter">'${input}' не является корректным URL</entry>
+	<entry key="inputForm.phoneNumberUS.IConverter">'${input}' не является корректным телефонным номером США</entry>
+	<entry key="use.locale">Локаль:</entry>
+	<entry key="default">по-умолчанию</entry>
+	<entry key="input">Ввод</entry>
+	<entry key="string">String</entry>
+	<entry key="integer">Integer</entry>
+	<entry key="double">Double</entry>
+	<entry key="date">Дата</entry>
+	<entry key="boolean">Boolean</entry>
+	<entry key="value.between.0.and.100">Число между 0 и 100</entry>
+	<entry key="valid.url">URL (должен быть корректным URL)</entry>
+	<entry key="us.phone.number.mask">Телефонный номер США (маска: '(###) ###-####')</entry>
+	<entry key="select.a.number">Выберите число</entry>
+	<entry key="select.one.or.more.numbers">Выберите одно или несколько чисел</entry>
+	<entry key="your.favorite.sites">Любимые сайты</entry>
+	<entry key="save">Сохранить</entry>
+	<entry key="reset">Сброс</entry>
+</properties>

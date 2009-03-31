@@ -1,0 +1,85 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+html {
+	height: 100%;
+}
+
+body {
+	background: #787878 url(images/background.gif) repeat scroll 0%;
+	color: #4A4A4A;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial,
+		Helvetica, sans-serif;
+	font-size: 76%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+table {
+	margin-left: 60px;
+}
+
+a,a:visited {
+	color: #EB5A0A;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+#container {
+	background: transparent url(images/bg_container.png) repeat scroll 0%;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 100%;
+	padding-left: 28px;
+	width: 927px;
+	width *: 955px;
+	text-align: left;
+	margin-left: auto;
+}
+
+#header {
+	background: #E8590A url(images/logo_graduated.png) repeat scroll 0%;
+	height: 108px;
+	width: 899px;
+}
+
+#content {
+	height: auto;
+	width: 899px;
+}
+
+#contentbody {
+	background: #FFFFFF none repeat scroll 0%;
+	float: left;
+	height: auto;
+	padding-top: 20px;
+	width: 668px;
+}
+
+h1 {
+	color: #EB5A0A;
+	font-size: 1.4em;
+	font-weight: bold;
+	text-decoration: none;
+	background-image: url(images/wicket.png);
+	background-repeat: no-repeat;
+	margin-left: 30px;
+}

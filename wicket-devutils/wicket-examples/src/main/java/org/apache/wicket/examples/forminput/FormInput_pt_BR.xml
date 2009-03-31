@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.IConverter">'${input}' não é uma URL válida</entry>
+	<entry key="inputForm.phoneNumberUS.IConverter">'${input}' não é um telefone válido</entry>
+	<entry key="use.locale">Usar localização:</entry>
+	<entry key="default">padrão</entry>
+	<entry key="input">Formulário</entry>
+	<entry key="string">Texto</entry>
+	<entry key="integer">Inteiro</entry>
+	<entry key="double">Double</entry>
+	<entry key="date">Data</entry>
+	<entry key="boolean">Booleano</entry>
+	<entry key="value.between.0.and.100">Valor entre 0 e 100</entry>
+	<entry key="valid.url">URL (deve ser uma url válida)</entry>
+	<entry key="us.phone.number.mask">Número Telefônico EUA (máscara: '(###) ###-####')</entry>
+	<entry key="select.a.number">Selecione um número</entry>
+	<entry key="select.one.or.more.numbers">Selecione hum ou mais números</entry>
+	<entry key="your.favorite.sites">Seus sites favoritos</entry>
+	<entry key="save">Save</entry>
+	<entry key="reset">Reset</entry>
+</properties>

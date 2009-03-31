@@ -1,0 +1,55 @@
+<html>
+<head>
+	<style>
+		form, div { 
+			border: 1px solid black;
+			padding: 20px;
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div wicket:id="feedback"></div>
+	<!-- <a wicket:id="ajaxToggleOuter">ajax enable/disable outerForm</a><br/>
+	<a wicket:id="toggleOuter">enable/disable outerForm</a>
+	<form wicket:id="outerForm">
+		<a wicket:id="ajaxToggleInner">ajax enable/disable innerForm</a><br/>
+		<a wicket:id="toggleInner">enable/disable innerForm</a>
+		<a wicket:id="ajaxSubmit">submit outerForm</a><br/>
+		<input type="submit" wicket:id="submit"/>
+		<p>
+			<form wicket:id="innerForm">
+				<input type="text" wicket:id="first"/>
+				<input type="text" wicket:id="second"/>
+				<a wicket:id="ajaxSubmit">submit innerForm</a><br/>
+				<input type="submit" wicket:id="submit"/>
+			</form>
+		</p>
+	</form>
+	-->
+	
+	<form wicket:id="outerForm">
+		<input type="text" wicket:id="first"/>
+		<input type="text" wicket:id="second"/><br/>
+		<a wicket:id="ajaxSubmit">submit via ajax</a><br/>
+		<a wicket:id="toggle">[toggle]</a><br/>
+		<input type="button" wicket:id="submit"/>
+		
+		<form wicket:id="middleForm">
+			<input type="text" wicket:id="first"/>
+			<input type="text" wicket:id="second"/><br/>
+			<a wicket:id="ajaxSubmit">submit via ajax</a><br/>
+			<a wicket:id="toggle">[toggle]</a><br/>
+			<input type="button" wicket:id="submit"/>
+		
+			<form wicket:id="innerForm">
+				<input type="text" wicket:id="first"/>
+				<input type="text" wicket:id="second"/><br/>
+				<a wicket:id="ajaxSubmit">submit via ajax</a><br/>
+				<a wicket:id="toggle">[toggle]</a><br/>
+				<input type="button" wicket:id="submit"/>
+			</form>
+		</form>
+	</form>
+</body>
+</html>

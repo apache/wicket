@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.RadioChoice</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A RadioChoice component lets users select a single value from a group of radio buttons.
+	</p>
+	<p>
+	 <form wicket:id="form">
+
+		<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
+		 <tr>
+		  <td valign="top">Select your favorite site</td>
+		  <td>
+			  <span valign="top" wicket:id="site">
+	    		<input type="radio">site 1</input>
+				<input type="radio">site 2</input>
+			  </span>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td colspan="2" align="center">
+		   <input type="submit" value="submit" />
+		  </td>
+		 </tr>
+		</table>
+
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

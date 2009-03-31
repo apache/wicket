@@ -1,0 +1,18 @@
+<html xmlns:wicket="http://wicket.apache.org/wicket">
+<head>
+	<title>Wicket Examples - hangman</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+	<span wicket:id="mainNavigation"></span>
+	<p><span wicket:id="guessesRemaining" id="guessesRemaining">3</span> guesses remaining</p>
+	<p>Word: <span wicket:id="word">WICK_T</span></p>
+	<p>
+		<div style="width:250px">
+			<span wicket:id="letters">
+				<a wicket:id="letter" href="#"><img type="image" wicket:id="image" /></a>
+			</span>
+		</div>
+	</p>
+</body>
+</html>
