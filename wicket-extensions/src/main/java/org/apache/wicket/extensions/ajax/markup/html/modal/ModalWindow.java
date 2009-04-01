@@ -60,19 +60,19 @@ import org.apache.wicket.util.string.Strings;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(AjaxRequestTarget)})</code>. In case the content is another page, you can
- * set the desired pagemap name using <code>{@link #setPageMapName(String)}</code>. Setting
- * pagemap is only needed when wicket multiwindow support is on.
+ * <code>{@link #show(AjaxRequestTarget)})</code>. In case the content is another page, you can set
+ * the desired pagemap name using <code>{@link #setPageMapName(String)}</code>. Setting pagemap is
+ * only needed when wicket multiwindow support is on.
  * <p>
  * The window can be made visible from an ajax handler using
  * <code>{@link #show(AjaxRequestTarget)}</code>.
  * <p>
  * To close the window there are multiple options. Static method
- * <code>{@link #close(AjaxRequestTarget)}</code> can be used to close the window from a handler
- * of ajax link inside the window. By default the close button in the upper right corner of the
- * window closes it. This behavior can be altered using
- * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to
- * be notified when the window is closed (either using the close button or calling
+ * <code>{@link #close(AjaxRequestTarget)}</code> can be used to close the window from a handler of
+ * ajax link inside the window. By default the close button in the upper right corner of the window
+ * closes it. This behavior can be altered using
+ * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to be
+ * notified when the window is closed (either using the close button or calling
  * <code>{@link #close(AjaxRequestTarget)})</code>, you can use
  * <code>{@link #setWindowClosedCallback(ModalWindow.WindowClosedCallback)}</code>.
  * <p>
@@ -88,26 +88,28 @@ import org.apache.wicket.util.string.Strings;
  * <li><code>{@link #setInitialWidth(int)}</code> and <code>{@link #setInitialHeight(int)}</code>
  * specify the initial width and height of window. If the window is resizable, the unit of these
  * dimensions is always "px". If the window is not resizable, the unit can be specified using
- * <code>{@link #setWidthUnit(String)}</code> and <code>{@link #setHeightUnit(String)}</code>.
- * If the window is not resizable and the content is a component (not a page), the initial height
- * value can be ignored and the actual height can be determined from the height of the content. To
- * enable this behavior use <code>{@link #setUseInitialHeight(boolean)}</code>.
+ * <code>{@link #setWidthUnit(String)}</code> and <code>{@link #setHeightUnit(String)}</code>. If
+ * the window is not resizable and the content is a component (not a page), the initial height value
+ * can be ignored and the actual height can be determined from the height of the content. To enable
+ * this behavior use <code>{@link #setUseInitialHeight(boolean)}</code>.
  * <li>The window position (and size if the window is resizable) can be stored in a cookie, so that
  * it is preserved when window is close. The name of the cookie is specified via
- * <code>{@link #setCookieName(String)}</code>. If the name is <code>null</code>, position is
- * not stored (initial width and height are always used). Default cookie name is null (position is
- * not stored).
+ * <code>{@link #setCookieName(String)}</code>. If the name is <code>null</code>, position is not
+ * stored (initial width and height are always used). Default cookie name is null (position is not
+ * stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and <code>{@link #setMinimalHeight(int)}</code>
  * set the minimal dimensions of resizable window.
  * <li>Modal window can chose between two colors of frame.
  * <code>{@link #setCssClassName(String)}</code> sets the dialog css class, possible values are
- * <code>{@link #CSS_CLASS_BLUE}</code> for blue frame and <code>{@link #CSS_CLASS_GRAY}</code>
- * for gray frame.
+ * <code>{@link #CSS_CLASS_BLUE}</code> for blue frame and <code>{@link #CSS_CLASS_GRAY}</code> for
+ * gray frame.
  * <li>Mask (element that prevents user from interacting the rest of the page) can be either
  * transparent or semitransparent. <code>{@link #setMaskType(ModalWindow.MaskType)}</code> alters
  * this.
  * </ul>
- *
+ * Also it is recommended to put the modal window component in markup before any component (i.e.
+ * AjaxLink or AjaxButton) that shows it.
+ * 
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
  */
@@ -123,7 +125,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Creates a new modal window component.
-	 *
+	 * 
 	 * @param id
 	 *            Id of component
 	 */
@@ -135,7 +137,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Creates a new modal window component.
-	 *
+	 * 
 	 * @param id
 	 *            Id of component
 	 * @param model
@@ -161,17 +163,17 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Interface for lazy page creation. The advantage of creating page using this interface over
-	 * just passing a page instance is that page created in <code>{@link #createPage()}</code>
-	 * will have the pagemap automatically set to the pagemap specified for
+	 * just passing a page instance is that page created in <code>{@link #createPage()}</code> will
+	 * have the pagemap automatically set to the pagemap specified for
 	 * <code>{@link ModalWindow}</code>.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static interface PageCreator extends IClusterable
 	{
 		/**
 		 * Creates a new instance of content page.
-		 *
+		 * 
 		 * @return new page instance
 		 */
 		public Page createPage();
@@ -180,9 +182,9 @@ public class ModalWindow extends Panel
 	/**
 	 * Callback for close button that contains a method that is invoked after the button has been
 	 * clicked. If no callback instance is specified using
-	 * <code>{@link ModalWindow#setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>,
-	 * no ajax request will be fired. Clicking the button will just close the window.
-	 *
+	 * <code>{@link ModalWindow#setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>, no
+	 * ajax request will be fired. Clicking the button will just close the window.
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static interface CloseButtonCallback extends IClusterable
@@ -190,10 +192,10 @@ public class ModalWindow extends Panel
 		/**
 		 * Methods invoked after the button has been clicked. The invocation is done using an ajax
 		 * call, so <code>{@link AjaxRequestTarget}</code> instance is available.
-		 *
+		 * 
 		 * @param target
 		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax request.
-		 *
+		 * 
 		 * @return True if the window can be closed (will close the window), false otherwise
 		 */
 		public boolean onCloseButtonClicked(AjaxRequestTarget target);
@@ -203,14 +205,14 @@ public class ModalWindow extends Panel
 	 * Callback called after the window has been closed. If no callback instance is specified using
 	 * {@link ModalWindow#setWindowClosedCallback(ModalWindow.WindowClosedCallback)}, no ajax
 	 * request will be fired.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static interface WindowClosedCallback extends IClusterable
 	{
 		/**
 		 * Called after the window has been closed.
-		 *
+		 * 
 		 * @param target
 		 *            <code>{@link AjaxRequestTarget}</code> instance bound with the ajax request.
 		 */
@@ -219,7 +221,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Is this window currently showing.
-	 *
+	 * 
 	 * @return the shown
 	 */
 	public boolean isShown()
@@ -230,7 +232,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the name of the page ma for the content page. This makes only sense when the content is
 	 * a page, not a component and if wicket multiwindow support is turned on.
-	 *
+	 * 
 	 * @param pageMapName
 	 *            Name of the page map
 	 */
@@ -241,7 +243,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the page map name.
-	 *
+	 * 
 	 * @return The page map name.
 	 */
 	public String getPageMapName()
@@ -250,9 +252,9 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Sets the <code>{@link PageCreator}</code> instance. The instance is only used when no
-	 * custom component has been added to the dialog.
-	 *
+	 * Sets the <code>{@link PageCreator}</code> instance. The instance is only used when no custom
+	 * component has been added to the dialog.
+	 * 
 	 * @param creator
 	 *            <code>{@link PageCreator}</code> instance
 	 */
@@ -264,7 +266,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets the <code>{@link CloseButtonCallback}</code> instance.
-	 *
+	 * 
 	 * @param callback
 	 *            Callback instance
 	 */
@@ -275,7 +277,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets the <code>@{link {@link WindowClosedCallback}</code> instance.
-	 *
+	 * 
 	 * @param callback
 	 *            Callback instance
 	 */
@@ -286,7 +288,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Shows the modal window.
-	 *
+	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
@@ -305,7 +307,7 @@ public class ModalWindow extends Panel
 	 * Hides the modal window. This can be called from within the modal window, however, the modal
 	 * window must have configured WindowClosedCallback. Otherwise use the
 	 * {@link #close(AjaxRequestTarget)} method.
-	 *
+	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
@@ -316,7 +318,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Closes the modal window.
-	 *
+	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
@@ -352,12 +354,12 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the id of content component.
-	 *
+	 * 
 	 * <pre>
 	 * ModalWindow window = new ModalWindow(parent, &quot;window&quot;);
 	 * new MyPanel(window, window.getContentId());
 	 * </pre>
-	 *
+	 * 
 	 * @return Id of content component.
 	 */
 	public String getContentId()
@@ -368,7 +370,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the minimal width of window. This value is only used if the window is resizable. The
 	 * width is specified in pixels and it is the width of entire window (including frame).
-	 *
+	 * 
 	 * @param minimalWidth
 	 *            Minimal window width.
 	 */
@@ -379,7 +381,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the minimal width of window (in pixels).
-	 *
+	 * 
 	 * @return Minimal width of window
 	 */
 	public int getMinimalWidth()
@@ -390,7 +392,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the minimal height of window. This value is only used if window is resizable. The height
 	 * is specified in pixels and it is the height of window content (without frame).
-	 *
+	 * 
 	 * @param minimalHeight
 	 *            Minimal height
 	 */
@@ -401,7 +403,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the minimal height of window (in pixels).
-	 *
+	 * 
 	 * @return Minimal height of window
 	 */
 	public int getMinimalHeight()
@@ -423,7 +425,7 @@ public class ModalWindow extends Panel
 	 * Sets the CSS class name for this window. This class affects the look of window frame.
 	 * Possible values (if you don't make your style sheet) are <code>{@link #CSS_CLASS_BLUE}</code>
 	 * and <code>{@link #CSS_CLASS_GRAY}</code>.
-	 *
+	 * 
 	 * @param cssClassName
 	 */
 	public void setCssClassName(String cssClassName)
@@ -433,7 +435,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the CSS class name for this window.
-	 *
+	 * 
 	 * @return CSS class name
 	 */
 	public String getCssClassName()
@@ -447,7 +449,7 @@ public class ModalWindow extends Panel
 	 * is not resizable, the unit can be specified using {@link #setWidthUnit(String)}. If cookie
 	 * name is set and window is resizable, the initial width may be ignored in favor of width
 	 * stored in cookie.
-	 *
+	 * 
 	 * @param initialWidth
 	 *            Initial width of the window
 	 */
@@ -458,7 +460,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the initial width of the window.
-	 *
+	 * 
 	 * @return Initial height of the window
 	 */
 	public int getInitialWidth()
@@ -469,10 +471,10 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the initial height of the window. The height refers to the height of window content
 	 * (without frame). If the window is resizable, the height unit is always "px". If the window is
-	 * not resizable, the unit can be specified using {@link #setHeightUnit(String)}. If cookie
-	 * name is set and window is resizable, the initial height may be ignored in favor of height
-	 * stored in cookie.
-	 *
+	 * not resizable, the unit can be specified using {@link #setHeightUnit(String)}. If cookie name
+	 * is set and window is resizable, the initial height may be ignored in favor of height stored
+	 * in cookie.
+	 * 
 	 * @param initialHeight
 	 *            Initial height of the window
 	 */
@@ -483,7 +485,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the initial height of the window.
-	 *
+	 * 
 	 * @return Initial height of the window
 	 */
 	public int getInitialHeight()
@@ -494,7 +496,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets whether to use initial height or preserve the real content height. This can only be used
 	 * if the content is a component (not a page) and the window is not resizable.
-	 *
+	 * 
 	 * @param useInitialHeight
 	 *            Whether to use initial height instead of preserving content height instead of
 	 *            using initial height
@@ -507,7 +509,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Returns true if the initial height should be used (in favor of preserving real content
 	 * height).
-	 *
+	 * 
 	 * @return True if initial height should be used, false is real content height should be
 	 *         preserved (valid only if the window is not resizable and the content is a component
 	 *         (not a page)
@@ -519,7 +521,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets whether the user will be able to resize the window.
-	 *
+	 * 
 	 * @param resizable
 	 *            Whether the window is resizable
 	 */
@@ -530,7 +532,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns whether the window is resizable.
-	 *
+	 * 
 	 * @return True if the window is resizable, false otherwise
 	 */
 	public boolean isResizable()
@@ -541,7 +543,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the CSS unit used for initial window width. This is only applicable when the window is
 	 * not resizable.
-	 *
+	 * 
 	 * @param widthUnit
 	 *            CSS unit for initial window width.
 	 */
@@ -552,7 +554,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the CSS unit for initial window width.
-	 *
+	 * 
 	 * @return CSS unit for initial window width.
 	 */
 	public String getWidthUnit()
@@ -563,7 +565,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the CSS unit used for initial window height. This is only applicable when the window is
 	 * not resizable.
-	 *
+	 * 
 	 * @param heightUnit
 	 *            CSS unit for initial window height.
 	 */
@@ -574,7 +576,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Retrns the CSS unit for initial window height.
-	 *
+	 * 
 	 * @return CSS unit for initial window height.
 	 */
 	public String getHeightUnit()
@@ -585,7 +587,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the name of the cookie that is used to remember window position (and size if the window
 	 * is resizable).
-	 *
+	 * 
 	 * @param cookieName
 	 *            Name of the cookie
 	 */
@@ -601,7 +603,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Returns the name of cookie that is used to remember window position (and size if the window
 	 * is resizable).
-	 *
+	 * 
 	 * @return Name of the cookie
 	 */
 	public String getCookieName()
@@ -612,7 +614,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the title of window. If the window is a page, title can be <code>null</code>. In that
 	 * case it will display the title document inside the window.
-	 *
+	 * 
 	 * @param title
 	 *            Title of the window
 	 */
@@ -624,7 +626,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Sets the title of window. If the window is a page, title can be <code>null</code>. In that
 	 * case it will display the title document inside the window.
-	 *
+	 * 
 	 * @param title
 	 *            Title of the window
 	 */
@@ -636,7 +638,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the title of the window.
-	 *
+	 * 
 	 * @return Title of the window
 	 */
 	public IModel<String> getTitle()
@@ -651,7 +653,7 @@ public class ModalWindow extends Panel
 	 * <li><code>{@link #TRANSPARENT}</code> - the mask is invisible
 	 * <li><code>{@link #SEMI_TRANSPARENT}</code> - the mask is black with small opacity (10%)
 	 * </ul>
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static final class MaskType extends EnumeratedType
@@ -671,7 +673,7 @@ public class ModalWindow extends Panel
 
 		/**
 		 * Constructor.
-		 *
+		 * 
 		 * @param name
 		 */
 		public MaskType(String name)
@@ -682,7 +684,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets the mask type of the window.
-	 *
+	 * 
 	 * @param mask
 	 *            The mask type
 	 */
@@ -693,7 +695,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the mask type of the window
-	 *
+	 * 
 	 * @return The mask type
 	 */
 	public MaskType getMaskType()
@@ -703,7 +705,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Creates the page.
-	 *
+	 * 
 	 * @return Page instance or null if page couldn't be created.
 	 */
 	private Page createPage()
@@ -772,7 +774,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Returns a content component. In case user haven't specified any content component, it returns
 	 * an empty WebMarkupContainer.
-	 *
+	 * 
 	 * @return Content component
 	 */
 	private Component getContent()
@@ -782,7 +784,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns true if user has added own component to the window.
-	 *
+	 * 
 	 * @return True if user has added own component to the window, false otherwise.
 	 */
 	private boolean isCustomComponent()
@@ -805,7 +807,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets the content of the modal window.
-	 *
+	 * 
 	 * @param component
 	 */
 	public void setContent(Component component)
@@ -899,7 +901,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the markup id of the component.
-	 *
+	 * 
 	 * @return component id
 	 */
 	private String getContentMarkupId()
@@ -909,10 +911,10 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Replaces all occurrences of " in string with \".
-	 *
+	 * 
 	 * @param string
 	 *            String to be escaped.
-	 *
+	 * 
 	 * @return escaped string
 	 */
 	private String escapeQuotes(String string)
@@ -926,7 +928,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the javascript used to open the window.
-	 *
+	 * 
 	 * @return javascript that opens the window
 	 */
 	private String getWindowOpenJavascript()
@@ -1034,7 +1036,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Method that allows tweaking the settings
-	 *
+	 * 
 	 * @param settings
 	 * @return settings javascript
 	 */
