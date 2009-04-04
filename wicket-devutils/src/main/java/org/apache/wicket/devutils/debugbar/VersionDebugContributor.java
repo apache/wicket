@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.devutils.inspector;
+package org.apache.wicket.devutils.debugbar;
 
-import org.apache.wicket.Session;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
-public class SessionTotalSizeModel extends LoadableDetachableModel<Bytes> {
+public class VersionDebugContributor implements IDebugBarContributor {
 
 	private static final long serialVersionUID = 1L;
 
-	private Session session;
+	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new VersionDebugContributor();
 
-	public SessionTotalSizeModel(Session session) {
-		this.session = session;
+	public Component createComponent(String id, WicketDebugBar debugBar) {
+		Label label = new Label(id, new AbstractReadOnlyModel<String>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getObject() {
+				return Application.get().getFrameworkSettings().getVersion();
+			}
+		});
+		label.add(new SimpleAttributeModifier("class", "wicketversioncontrib"));
+		return label;
 	}
 
-	@Override
-	protected Bytes load() {
-		return Bytes.bytes(session.getSizeInBytes());
-	}
-
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-		this.session = null;
-	}
 }

@@ -14,34 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#wicketDebugBar {
-	display: block;
-	height: 24px;
-	position: absolute;
-	right: 0;
-	top: 0;
-	background-color: #DDDDDD;
-	opacity: 0.8;
-	padding: 0px 10px 0px 5px;
-}
-#wicketDebugBar img {
-	margin: 4px 10px -3px 0px;
-	height: 16px;
-	width: 16px;
-	border: none;
-}
-#wicketDebugBarRemove img {
-	margin-left: 10px;
-	margin-right: 0px;
-}
-#wicketDebugBar .contributor a {
-	margin-right: 10px;
-	font-family: Verdana;
-	font-size: 9pt;
-	color: black;
-}
-.wicketversioncontrib {
-	padding: 0em 0.5em;
-	background-color: #AAA;
-	opacity: 0.8;
+package org.apache.wicket.util.license;
+
+
+/**
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * 
+ * @author Frank Bille Jensen (frankbille)
+ */
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
+
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
+	{
+		// addHeaders = true;
+	}
 }
