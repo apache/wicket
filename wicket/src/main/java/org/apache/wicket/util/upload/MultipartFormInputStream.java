@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * Low level API for processing file uploads.
@@ -75,8 +78,6 @@ import java.io.UnsupportedEncodingException;
  *      } catch(IOException) {
  *            // a read or write error occurred
  *      }
- * 
- * 
  * </pre>
  * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
@@ -87,27 +88,25 @@ import java.io.UnsupportedEncodingException;
  */
 public class MultipartFormInputStream
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(MultipartFormInputStream.class);
 
 	// ----------------------------------------------------- Manifest constants
-
 
 	/**
 	 * The Carriage Return ASCII character value.
 	 */
 	public static final byte CR = 0x0D;
 
-
 	/**
 	 * The Line Feed ASCII character value.
 	 */
 	public static final byte LF = 0x0A;
 
-
 	/**
 	 * The dash (-) ASCII character value.
 	 */
 	public static final byte DASH = 0x2D;
-
 
 	/**
 	 * The maximum length of <code>header-part</code> that will be processed (10 kilobytes = 10240
@@ -115,45 +114,39 @@ public class MultipartFormInputStream
 	 */
 	public static final int HEADER_PART_SIZE_MAX = 10240;
 
-
 	/**
 	 * The default length of the buffer used for processing a request.
 	 */
 	protected static final int DEFAULT_BUFSIZE = 4096;
-
 
 	/**
 	 * A byte sequence that marks the end of <code>header-part</code> (<code>CRLFCRLF</code>).
 	 */
 	protected static final byte[] HEADER_SEPARATOR = { CR, LF, CR, LF };
 
-
 	/**
-	 * A byte sequence that that follows a delimiter that will be followed by an encapsulation (<code>CRLF</code>).
+	 * A byte sequence that that follows a delimiter that will be followed by an encapsulation (
+	 * <code>CRLF</code>).
 	 */
 	protected static final byte[] FIELD_SEPARATOR = { CR, LF };
 
-
 	/**
-	 * A byte sequence that that follows a delimiter of the last encapsulation in the stream (<code>--</code>).
+	 * A byte sequence that that follows a delimiter of the last encapsulation in the stream (
+	 * <code>--</code>).
 	 */
 	protected static final byte[] STREAM_TERMINATOR = { DASH, DASH };
 
-
 	// ----------------------------------------------------------- Data members
-
 
 	/**
 	 * The input stream from which data is read.
 	 */
 	private InputStream input;
 
-
 	/**
 	 * The length of the boundary token plus the leading <code>CRLF--</code>.
 	 */
 	private int boundaryLength;
-
 
 	/**
 	 * The amount of data, in bytes, that must be kept in the buffer in order to detect delimiters
@@ -161,24 +154,20 @@ public class MultipartFormInputStream
 	 */
 	private int keepRegion;
 
-
 	/**
 	 * The byte sequence that partitions the stream.
 	 */
 	private byte[] boundary;
-
 
 	/**
 	 * The length of the buffer used for processing the request.
 	 */
 	private int bufSize;
 
-
 	/**
 	 * The buffer used for processing the request.
 	 */
 	private byte[] buffer;
-
 
 	/**
 	 * The index of first valid character in the buffer. <br>
@@ -186,22 +175,18 @@ public class MultipartFormInputStream
 	 */
 	private int head;
 
-
 	/**
 	 * The index of last valid character in the buffer + 1. <br>
 	 * 0 <= tail <= bufSize
 	 */
 	private int tail;
 
-
 	/**
 	 * The content encoding to use when reading headers.
 	 */
 	private String headerEncoding;
 
-
 	// ----------------------------------------------------------- Constructors
-
 
 	/**
 	 * Default constructor.
@@ -213,7 +198,6 @@ public class MultipartFormInputStream
 	public MultipartFormInputStream()
 	{
 	}
-
 
 	/**
 	 * <p>
@@ -333,11 +317,11 @@ public class MultipartFormInputStream
 
 
 	/**
-	 * Skips a <code>boundary</code> token, and checks whether more <code>encapsulations</code>
-	 * are contained in the stream.
+	 * Skips a <code>boundary</code> token, and checks whether more <code>encapsulations</code> are
+	 * contained in the stream.
 	 * 
-	 * @return <code>true</code> if there are more encapsulations in this stream;
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if there are more encapsulations in this stream; <code>false</code>
+	 *         otherwise.
 	 * 
 	 * @exception MalformedStreamException
 	 *                if the stream ends unexpectedly or fails to follow required syntax.
@@ -392,8 +376,8 @@ public class MultipartFormInputStream
 	 * This method allows single pass processing of nested multipart streams.
 	 * 
 	 * <p>
-	 * The boundary token of the nested stream is <code>required</code> to be of the same length
-	 * as the boundary token in parent stream.
+	 * The boundary token of the nested stream is <code>required</code> to be of the same length as
+	 * the boundary token in parent stream.
 	 * 
 	 * <p>
 	 * Restoring the parent stream boundary token after processing of a nested stream is left to the
@@ -452,7 +436,7 @@ public class MultipartFormInputStream
 			if (size > maxSize)
 			{
 				throw new MalformedStreamException("Stream exceeded maximum of " + maxSize +
-						" bytes");
+					" bytes");
 			}
 			if (b[0] == HEADER_SEPARATOR[i])
 			{
@@ -645,7 +629,6 @@ public class MultipartFormInputStream
 		return total;
 	}
 
-
 	/**
 	 * Finds the beginning of the first <code>encapsulation</code>.
 	 * 
@@ -670,6 +653,8 @@ public class MultipartFormInputStream
 		}
 		catch (MalformedStreamException e)
 		{
+			log.error("Error while reading servlet request multi-part data: " + e.getMessage() +
+				". " + toString());
 			return false;
 		}
 		finally
@@ -693,8 +678,8 @@ public class MultipartFormInputStream
 	 * @param count
 	 *            How many bytes should be compared.
 	 * 
-	 * @return <code>true</code> if <code>count</code> first bytes in arrays <code>a</code>
-	 *         and <code>b</code> are equal.
+	 * @return <code>true</code> if <code>count</code> first bytes in arrays <code>a</code> and
+	 *         <code>b</code> are equal.
 	 */
 	public static boolean arrayequals(byte[] a, byte[] b, int count)
 	{
@@ -710,8 +695,8 @@ public class MultipartFormInputStream
 
 
 	/**
-	 * Searches for a byte of specified value in the <code>buffer</code>, starting at the
-	 * specified <code>position</code>.
+	 * Searches for a byte of specified value in the <code>buffer</code>, starting at the specified
+	 * <code>position</code>.
 	 * 
 	 * @param value
 	 *            The value to find.
@@ -774,12 +759,25 @@ public class MultipartFormInputStream
 	 * 
 	 * @return The string representation of this object.
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sbTemp = new StringBuffer();
 		sbTemp.append("boundary='");
-		sbTemp.append(String.valueOf(boundary));
-		sbTemp.append("'\nbufSize=");
+		for (byte b : boundary)
+		{
+			if (Character.isDefined(b))
+			{
+				sbTemp.append((char)b);
+			}
+			else
+			{
+				sbTemp.append("#");
+				sbTemp.append(b);
+				sbTemp.append(";");
+			}
+		}
+		sbTemp.append("'; bufSize=");
 		sbTemp.append(bufSize);
 		return sbTemp.toString();
 	}
@@ -848,15 +846,16 @@ public class MultipartFormInputStream
 	// These are the methods that were used to debug this stuff.
 	/*
 	 * // Dump data. protected void dump() { System.out.println("01234567890"); byte[] temp = new
-	 * byte[buffer.length]; for(int i=0; i<buffer.length; i++) { if (buffer[i] == 0x0D || buffer[i] ==
-	 * 0x0A) { temp[i] = 0x21; } else { temp[i] = buffer[i]; } } System.out.println(new
+	 * byte[buffer.length]; for(int i=0; i<buffer.length; i++) { if (buffer[i] == 0x0D || buffer[i]
+	 * == 0x0A) { temp[i] = 0x21; } else { temp[i] = buffer[i]; } } System.out.println(new
 	 * String(temp)); int i; for (i=0; i<head; i++) System.out.print(" "); System.out.println("h");
-	 * for (i=0; i<tail; i++) System.out.print(" "); System.out.println("t"); System.out.flush(); } //
-	 * Main routine, for testing purposes only. // // @param args A String[] with the command line
-	 * arguments. // @exception Exception, a generic exception. public static void main( String[]
-	 * args ) throws Exception { File boundaryFile = new File("boundary.dat"); int boundarySize =
-	 * (int)boundaryFile.length(); byte[] boundary = new byte[boundarySize]; FileInputStream input =
-	 * new FileInputStream(boundaryFile); input.read(boundary,0,boundarySize);
+	 * for (i=0; i<tail; i++) System.out.print(" "); System.out.println("t"); System.out.flush(); }
+	 * // Main routine, for testing purposes only. // // @param args A String[] with the command
+	 * line arguments. // @exception Exception, a generic exception. public static void main(
+	 * String[] args ) throws Exception { File boundaryFile = new File("boundary.dat"); int
+	 * boundarySize = (int)boundaryFile.length(); byte[] boundary = new byte[boundarySize];
+	 * FileInputStream input = new FileInputStream(boundaryFile);
+	 * input.read(boundary,0,boundarySize);
 	 * 
 	 * input = new FileInputStream("multipart.dat"); MultipartStream chunks = new
 	 * MultipartStream(input, boundary);
@@ -866,6 +865,5 @@ public class MultipartFormInputStream
 	 * System.out.println("wrote part"+i+".dat"); output = new
 	 * FileOutputStream("part"+(i++)+".dat"); chunks.readBodyData(output); nextChunk =
 	 * chunks.readBoundary(); } }
-	 * 
 	 */
 }
