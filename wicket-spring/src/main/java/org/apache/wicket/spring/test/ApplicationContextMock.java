@@ -66,7 +66,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		if (beans.containsKey(name))
 		{
 			throw new IllegalArgumentException("a bean with name [" + name +
-					"] has alredy been added to the context");
+					"] has already been added to the context");
 		}
 		beans.put(name, bean);
 	}
