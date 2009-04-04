@@ -2009,7 +2009,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		MarkupContainer border = findParent(Border.class);
 		if (border != null)
 		{
-			FormComponent.visitComponentsPostOrder(border, new FormModelUpdateVisitor(null));
+			FormComponent.visitComponentsPostOrder(border, new FormModelUpdateVisitor(this));
 		}
 	}
 
