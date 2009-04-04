@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
@@ -39,6 +40,15 @@ public class HomePage extends WebPage
 	/** */
 	public String textfield1, textfield2;
 
+	/** */
+	public int formSubmitted = 0;
+
+	public static int AJAX = 2;
+	public static int NORMAL = 4;
+
+	boolean hitOnSubmit = false;
+	boolean hitOnError = false;
+
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
 	 * 
@@ -47,7 +57,6 @@ public class HomePage extends WebPage
 	 */
 	public HomePage(final PageParameters parameters)
 	{
-
 		// Add the simplest type of label
 		add(new Label("message",
 			"If you see this message wicket is properly configured and running"));
@@ -74,6 +83,7 @@ public class HomePage extends WebPage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				info("onSubmit");
+				hitOnSubmit = true;
 				target.addComponent(form);
 			}
 
@@ -81,6 +91,7 @@ public class HomePage extends WebPage
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
 				error("onError");
+				hitOnError = true;
 				target.addComponent(form);
 			}
 		});
@@ -97,5 +108,50 @@ public class HomePage extends WebPage
 		border.add(new TextField<String>("textfield2",
 			new PropertyModel<String>(this, "textfield2")));
 		border.add(new Label("lbltextfield2", new PropertyModel<String>(this, "textfield2")));
+
+		// --------------------
+
+		Form<Void> form3 = new Form<Void>("form3");
+		MyPanel panel = new MyPanel("panel");
+		form3.add(panel);
+		form3.add(new AjaxSubmitLink("submit")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form form)
+			{
+				formSubmitted = formSubmitted | AJAX;
+				target.addComponent(form);
+			}
+		});
+		form3.add(new SubmitLink("submit2")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit()
+			{
+				formSubmitted = formSubmitted | NORMAL;
+			}
+		});
+		add(form3);
+	}
+
+	public int getFormSubmitted()
+	{
+		return formSubmitted;
+	}
+
+	/**
+	 * @see org.apache.wicket.Page#onBeforeRender()
+	 */
+	@Override
+	protected void onBeforeRender()
+	{
+		hitOnSubmit = false;
+		hitOnError = false;
+
+		super.onBeforeRender();
 	}
 }

@@ -16,67 +16,54 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.PropertyModel;
 
-/**
- * 
- */
-public class MyBorder extends Border
+public class MyPanel extends Panel
 {
-	private static final long serialVersionUID = 1L;
-	Form<Void> form;
 
-	boolean hitOnSubmit = false;
-	boolean hitOnError = false;
+	private static final long serialVersionUID = 1L;
+
+	public String textfield1;
+
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
 	 */
-	public MyBorder(String id)
+	public MyPanel(String id)
 	{
 		super(id);
 
-		form = new Form<Void>("form2");
+		Form<Void> form = new Form<Void>("form3");
 		form.setOutputMarkupId(true);
 		add(form);
 
 		form.add(new FeedbackPanel("feedback"));
+		form.add(new TextField<String>("textfield1", new PropertyModel<String>(this, "textfield1")));
+		form.add(new Label("lbltextfield1", new PropertyModel<String>(this, "textfield1")));
 
-		form.add(new AjaxSubmitLink("submit")
+		form.add(new AbstractFormValidator()
 		{
-			private static final long serialVersionUID = 1L;
 
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public FormComponent<?>[] getDependentFormComponents()
 			{
-				info("onSubmit");
-				hitOnSubmit = true;
-				target.addComponent(form);
+				return null;
 			}
 
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			public void validate(Form<?> form)
 			{
-				error("onError");
-				hitOnError = true;
-				target.addComponent(form);
+				form.error("form validation error");
 			}
+
 		});
+
 	}
 
-	@Override
-	protected void onBeforeRender()
-	{
-		hitOnSubmit = false;
-		hitOnError = false;
-
-		super.onBeforeRender();
-		form.add(getBodyContainer());
-	}
 }

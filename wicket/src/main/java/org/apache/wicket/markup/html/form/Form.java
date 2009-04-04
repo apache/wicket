@@ -1200,12 +1200,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		final boolean[] error = new boolean[] { false };
 
-		final FormComponent.IVisitor visitor = new FormComponent.IVisitor()
+		final IVisitor<Component> visitor = new IVisitor<Component>()
 		{
-			public Object formComponent(IFormVisitorParticipant formComponent)
+			public Object component(final Component component)
 			{
-				if (formComponent instanceof Component &&
-					((Component)formComponent).hasErrorMessage())
+				if (component.hasErrorMessage())
 				{
 					error[0] = true;
 					return Component.IVisitor.STOP_TRAVERSAL;
@@ -1220,13 +1219,29 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public Object component(final Component component)
 			{
-				return visitor.formComponent((FormComponent<?>)component);
+				return visitor.component(component);
 			}
 		});
 
 		if (!error[0])
 		{
-			visitChildrenInContainingBorder(visitor);
+			if (getParent() instanceof Border)
+			{
+				MarkupContainer border = getParent();
+				Iterator<? extends Component> iter = border.iterator();
+				while (iter.hasNext())
+				{
+					Component child = iter.next();
+					if ((child != this) && (child instanceof FormComponent))
+					{
+						visitor.component(child);
+						if (error[0])
+						{
+							break;
+						}
+					}
+				}
+			}
 		}
 
 		return error[0];
@@ -1620,7 +1635,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					// override default message
 					final String defaultValue = "Upload must be less than " + getMaxSize();
 					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-						Model.of(model), defaultValue);
+						Model.ofMap(model), defaultValue);
 					error(msg);
 				}
 				else
@@ -1629,7 +1644,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					// default message
 					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
 					String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY,
-						Model.of(model), defaultValue);
+						Model.ofMap(model), defaultValue);
 					error(msg);
 
 					log.warn(msg, e);

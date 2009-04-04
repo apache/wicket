@@ -26,18 +26,14 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends TestCase
+public class HomePageTest extends TestCase
 {
 	private WicketTester tester;
-
-	private FormTester formTester;
 
 	@Override
 	public void setUp()
 	{
 		tester = new WicketTester();
-
-		// Start and render the test page
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 	}
@@ -47,10 +43,11 @@ public class TestHomePage extends TestCase
 	 */
 	public void testWithoutBorder()
 	{
-		formTester = tester.newFormTester("form");
-		formTester.submit();
+		tester.executeAjaxEvent("form:submit", "onclick");
 		assertEquals("Expected one error message",
-			tester.getMessages(FeedbackMessage.ERROR).size(), 1);
+			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
+		assertTrue(((HomePage)tester.getLastRenderedPage()).hitOnError);
+		assertFalse(((HomePage)tester.getLastRenderedPage()).hitOnSubmit);
 	}
 
 	/**
@@ -58,10 +55,12 @@ public class TestHomePage extends TestCase
 	 */
 	public void testWithoutBorder2()
 	{
-		formTester = tester.newFormTester("form");
+		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("textfield1", "testxxx");
-		formTester.submit();
+		tester.executeAjaxEvent("form:submit", "onclick");
 		tester.assertNoErrorMessage();
+		assertFalse(((HomePage)tester.getLastRenderedPage()).hitOnError);
+		assertTrue(((HomePage)tester.getLastRenderedPage()).hitOnSubmit);
 	}
 
 	/**
@@ -69,10 +68,11 @@ public class TestHomePage extends TestCase
 	 */
 	public void testWithBorder()
 	{
-		formTester = tester.newFormTester("border:form2");
-		formTester.submit();
+		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		assertEquals("Expected one error message",
-			tester.getMessages(FeedbackMessage.ERROR).size(), 1);
+			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
+		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
+		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnSubmit);
 	}
 
 	/**
@@ -80,12 +80,29 @@ public class TestHomePage extends TestCase
 	 */
 	public void testWithBorder2()
 	{
-		formTester = tester.newFormTester("border:form2");
-		// formTester.setValue("..:textfield1", "testxxx");
-		TextField<String> textfield = (TextField<String>)tester.getLastRenderedPage().get(
-			"border:textfield1");
+		TextField textfield = (TextField)tester.getLastRenderedPage().get("border:textfield1");
 		tester.getServletRequest().setParameter(textfield.getInputName(), "abcde");
-		formTester.submit();
+		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		tester.assertNoErrorMessage();
+		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
+		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnSubmit);
+	}
+
+	public void testWithPanelAjax()
+	{
+		tester.executeAjaxEvent("form3:submit", "onclick");
+
+		HomePage page = (HomePage)tester.getLastRenderedPage();
+		assertTrue((page.getFormSubmitted() & HomePage.AJAX) == HomePage.AJAX);
+	}
+
+	/**
+	   * 
+	   */
+	public void testWithPanelForm()
+	{
+		tester.clickLink("form3:submit2");
+		HomePage page = (HomePage)tester.getLastRenderedPage();
+		assertTrue((page.getFormSubmitted() & HomePage.NORMAL) == HomePage.NORMAL);
 	}
 }
