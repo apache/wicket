@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.devutils.DevUtilsPanel;
@@ -104,8 +105,15 @@ public class DebugBar extends DevUtilsPanel {
 
 			@Override
 			protected void populateItem(ListItem<IDebugBarContributor> item) {
-				item.add(item.getModelObject().createComponent("contrib",
-						DebugBar.this));
+				IDebugBarContributor contrib = item.getModelObject();
+				Component comp = contrib.createComponent("contrib", DebugBar.this);
+				if (comp == null) {
+					// some contributors only add information to the debug bar
+					//	and don't actually create a contributed component
+					item.setVisibilityAllowed(false);
+				} else {
+					item.add(comp);
+				}
 			}
 		});
 	}
