@@ -30,6 +30,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -46,6 +47,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IFormVisitorParticipant;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -249,9 +251,9 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeListener(Component component)
 	{
-		setupRequestAndResponse();
+		WebRequestCycle cycle = setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
-		processRequestCycle();
+		processRequestCycle(cycle);
 	}
 
 	/**
@@ -758,6 +760,23 @@ public class BaseWicketTester extends MockWebApplication
 
 			String pageRelativePath = submitLink.getInputName();
 			getParametersForNextRequest().put(pageRelativePath, new String[] { "x" });
+
+			Form<?> form = submitLink.getForm();
+			form.visitFormComponents(new FormComponent.IVisitor()
+			{
+				public Object formComponent(IFormVisitorParticipant formComponent)
+				{
+					FormComponent<?> component = (FormComponent<?>)formComponent;
+					if (getParametersForNextRequest().containsKey(component.getInputName()) == false)
+					{
+						getParametersForNextRequest().put(component.getInputName(),
+							new String[] { component.getDefaultModelObjectAsString() });
+					}
+
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
 		// if the link is a normal link (or ResourceLink)

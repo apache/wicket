@@ -678,6 +678,30 @@ public class FormTester
 	}
 
 	/**
+	 * A convenience method to submit the Form via a SubmitLink which may inside or outside of the
+	 * Form.
+	 * 
+	 * @param path
+	 *            The path to the SubmitLink
+	 * @param pageRelative
+	 *            if true, than the 'path' to the SubmitLink is relative to the page. Thus the link
+	 *            can be outside the form. If false, the path is relative to the form and thus the
+	 *            link is inside the form.
+	 */
+	public void submitLink(String path, final boolean pageRelative)
+	{
+		if (pageRelative)
+		{
+			baseWicketTester.clickLink(path, false);
+		}
+		else
+		{
+			path = this.path + ":" + path;
+			baseWicketTester.clickLink(path, false);
+		}
+	}
+
+	/**
 	 * Adds an additional <code>FormComponent</code>'s value into request parameter -- this method
 	 * retains existing parameters but removes any duplicate parameters.
 	 * 
