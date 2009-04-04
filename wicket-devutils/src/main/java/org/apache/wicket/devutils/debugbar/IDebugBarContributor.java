@@ -22,6 +22,6 @@ import org.apache.wicket.Component;
 
 public interface IDebugBarContributor extends Serializable {
 
-	Component createComponent(String id, WicketDebugBar debugBar);
+	Component createComponent(String id, DebugBar debugBar);
 
 }

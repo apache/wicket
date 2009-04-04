@@ -28,7 +28,7 @@ public class VersionDebugContributor implements IDebugBarContributor {
 
 	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new VersionDebugContributor();
 
-	public Component createComponent(String id, WicketDebugBar debugBar) {
+	public Component createComponent(String id, DebugBar debugBar) {
 		Label label = new Label(id, new AbstractReadOnlyModel<String>() {
 			private static final long serialVersionUID = 1L;
 

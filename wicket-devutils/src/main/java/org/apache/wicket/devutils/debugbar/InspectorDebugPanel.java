@@ -34,7 +34,7 @@ public class InspectorDebugPanel extends StandardDebugPanel {
 	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new IDebugBarContributor() {
 		private static final long serialVersionUID = 1L;
 
-		public Component createComponent(String id, WicketDebugBar debugBar) {
+		public Component createComponent(String id, DebugBar debugBar) {
 			return new InspectorDebugPanel(id);
 		}
 

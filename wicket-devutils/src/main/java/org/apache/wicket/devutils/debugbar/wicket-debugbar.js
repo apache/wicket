@@ -27,3 +27,4 @@ function wicketDebugBarToggleVisibility(elemID) {
 	var vis  = elem.style.display != 'none';
 	elem.style.display = (vis ? 'none' : '');
 }
+
