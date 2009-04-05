@@ -109,7 +109,7 @@ public class MetaPattern implements IClusterable
 	public static final MetaPattern AMPERSAND = new MetaPattern("&");
 
 	/** Constant for percent. */
-	public static final MetaPattern PERCENT = new MetaPattern("");
+	public static final MetaPattern PERCENT = new MetaPattern("%");
 
 	/** Constant for dollar. */
 	public static final MetaPattern DOLLAR_SIGN = new MetaPattern("$");
