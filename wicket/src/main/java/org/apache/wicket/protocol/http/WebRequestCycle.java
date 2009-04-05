@@ -209,9 +209,19 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// re-assign the original response
 				setResponse(currentResponse);
-				if (ex instanceof AbortException)
+
+				/*
+				 * check if the raised exception wraps an abort exception. if so, it is probably
+				 * wise to unwrap and rethrow the abort exception
+				 */
+				Throwable cause = ex;
+				while (cause != null)
 				{
-					throw ex;
+					if (cause instanceof AbortException)
+					{
+						throw ((AbortException)cause);
+					}
+					cause = cause.getCause();
 				}
 
 				if (!(ex instanceof PageExpiredException))
