@@ -95,9 +95,10 @@ public interface IResourceSettings
 	void addResourceFolder(final String resourceFolder);
 
 	/**
-	 * Add a string resource loader to the chain of loaders. If this is the first call to this
-	 * method since the creation of the application settings then the existing chain is cleared
-	 * before the new loader is added.
+	 * Add a string resource loader to the chain of loaders.
+	 * 
+	 * @see #addStringResourceLoader(int, IStringResourceLoader)
+	 * @see #getStringResourceLoaders()
 	 * 
 	 * @param loader
 	 *            The loader to be added
@@ -105,9 +106,10 @@ public interface IResourceSettings
 	void addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
-	 * Add a string resource loader to the chain of loaders. If this is the first call to this
-	 * method since the creation of the application settings then the existing chain is cleared
-	 * before the new loader is added.
+	 * Add a string resource loader to the chain of loaders.
+	 * 
+	 * @see #addStringResourceLoader(IStringResourceLoader)
+	 * @see #getStringResourceLoaders()
 	 * 
 	 * @param index
 	 *            The position within the array to insert the loader
@@ -185,6 +187,9 @@ public interface IResourceSettings
 	ModificationWatcher getResourceWatcher(boolean start);
 
 	/**
+	 * @see #addStringResourceLoader(IStringResourceLoader)
+	 * @see #addStringResourceLoader(int, IStringResourceLoader)
+	 * 
 	 * @return an unmodifiable list of all available string resource loaders
 	 */
 	List<IStringResourceLoader> getStringResourceLoaders();
