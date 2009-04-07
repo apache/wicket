@@ -128,7 +128,11 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	{
 		// prefix markup id of this radio with its group's id
 		// this will make it easier to identify all radios that belong to a specific group
-		setMarkupId(getGroup().getMarkupId() + "-" + getMarkupId());
+		final String prefix = getGroup().getMarkupId() + "-";
+		if (!getMarkupId().startsWith(prefix))
+		{
+			setMarkupId(prefix + getMarkupId());
+		}
 		super.onBeforeRender();
 	}
 
