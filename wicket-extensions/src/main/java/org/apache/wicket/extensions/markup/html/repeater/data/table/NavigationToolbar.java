@@ -27,7 +27,6 @@ import org.apache.wicket.model.Model;
  * about which rows are being displayed and their total number in the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class NavigationToolbar extends AbstractToolbar
 {
@@ -54,7 +53,6 @@ public class NavigationToolbar extends AbstractToolbar
 		span.add(newPagingNavigator("navigator", table));
 		span.add(newNavigatorLabel("navigatorLabel", table));
 	}
-
 
 	/**
 	 * Factory method used to create the paging navigator that will be used by the datatable
@@ -85,12 +83,19 @@ public class NavigationToolbar extends AbstractToolbar
 		return new NavigatorLabel(navigatorId, table);
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#isVisible()
+	 */
+	@Override
+	public boolean isVisible()
+	{
+		return table.getPageCount() > 1;
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void onBeforeRender()
 	{
-		setVisible(table.getPageCount() > 1);
 		super.onBeforeRender();
 	}
 }
