@@ -694,7 +694,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
-	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.root.getJavascriptId()
+	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
 	 * @return the maximum size
 	 */
@@ -1624,37 +1624,54 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				}
 
 				FileUploadException e = (FileUploadException)wre.getCause();
+
 				// Create model with exception and maximum size values
 				final Map<String, Object> model = new HashMap<String, Object>();
 				model.put("exception", e);
 				model.put("maxSize", getMaxSize());
 
-				if (e instanceof SizeLimitExceededException)
-				{
-					// Resource key should be <form-id>.uploadTooLarge to
-					// override default message
-					final String defaultValue = "Upload must be less than " + getMaxSize();
-					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-						Model.ofMap(model), defaultValue);
-					error(msg);
-				}
-				else
-				{
-					// Resource key should be <form-id>.uploadFailed to override
-					// default message
-					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY,
-						Model.ofMap(model), defaultValue);
-					error(msg);
-
-					log.warn(msg, e);
-				}
+				onFileUploadException((FileUploadException)wre.getCause(), model);
 
 				// don't process the form if there is a FileUploadException
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * The default message may look like ".. may not exceed 10240 Bytes..". Which is ok, but
+	 * sometimes you may want something like "10KB". By subclassing this method you may replace
+	 * maxSize in the model or add you own property and use that in your error message.
+	 * <p>
+	 * Don't forget to call super.onFileUploadException(e, model) at the end of your method.
+	 * 
+	 * @param e
+	 * @param model
+	 */
+	protected void onFileUploadException(final FileUploadException e,
+		final Map<String, Object> model)
+	{
+		if (e instanceof SizeLimitExceededException)
+		{
+			// Resource key should be <form-id>.uploadTooLarge to
+			// override default message
+			final String defaultValue = "Upload must be less than " + getMaxSize();
+			String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY,
+				Model.ofMap(model), defaultValue);
+			error(msg);
+		}
+		else
+		{
+			// Resource key should be <form-id>.uploadFailed to override
+			// default message
+			final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
+			String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model),
+				defaultValue);
+			error(msg);
+
+			log.warn(msg, e);
+		}
 	}
 
 	/**
