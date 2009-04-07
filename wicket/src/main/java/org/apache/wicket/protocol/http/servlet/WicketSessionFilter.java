@@ -139,7 +139,8 @@ public class WicketSessionFilter implements Filter
 		}
 
 		WebApplication application = (WebApplication)Application.get(filterName);
-		sessionKey = application.getSessionAttributePrefix(null) + Session.SESSION_ATTRIBUTE_NAME;
+		sessionKey = application.getSessionAttributePrefix(null, filterName) +
+			Session.SESSION_ATTRIBUTE_NAME;
 
 		if (log.isDebugEnabled())
 		{

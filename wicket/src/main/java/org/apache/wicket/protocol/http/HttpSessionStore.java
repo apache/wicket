@@ -170,7 +170,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 */
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
-		return application.getSessionAttributePrefix(request);
+		return application.getSessionAttributePrefix(request, null);
 	}
 
 	/**

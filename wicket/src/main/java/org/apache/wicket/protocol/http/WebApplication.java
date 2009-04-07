@@ -228,14 +228,42 @@ public abstract class WebApplication extends Application
 	 *            the request
 	 * 
 	 * @return the prefix for storing variables in the actual session
+	 * @deprecated since 1.4RC3 please use {@link #getSessionAttributePrefix(WebRequest, String)}
+	 *             instead
 	 */
+	@Deprecated
 	public String getSessionAttributePrefix(final WebRequest request)
+	{
+		return getSessionAttributePrefix(request, null);
+	}
+
+	/**
+	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
+	 * for this application instance.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param filterName
+	 *            If null, than it defaults to the WicketFilter filter name. However according to
+	 *            the ServletSpec the Filter is not guaranteed to be initialized e.g. when
+	 *            WicketSessionFilter gets initialized. Thus, though you (and WicketSessionFilter)
+	 *            can provide a filter name, you must make sure it is the same as WicketFilter will
+	 *            provide once initialized.
+	 * 
+	 * @return the prefix for storing variables in the actual session
+	 */
+	public String getSessionAttributePrefix(final WebRequest request, String filterName)
 	{
 		if (sessionAttributePrefix == null)
 		{
-			sessionAttributePrefix = "wicket:" +
-				getWicketFilter().getFilterConfig().getFilterName() + ":";
+			if (filterName == null)
+			{
+				// According to the ServletSpec, the filter might not yet been initialized
+				filterName = getWicketFilter().getFilterConfig().getFilterName();
+			}
+			sessionAttributePrefix = "wicket:" + filterName + ":";
 		}
+
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
 		return sessionAttributePrefix;
