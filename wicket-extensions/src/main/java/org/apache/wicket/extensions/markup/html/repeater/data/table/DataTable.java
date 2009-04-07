@@ -43,24 +43,22 @@ import org.apache.wicket.util.string.Strings;
  * Example
  * 
  * <pre>
- *             &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ * &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its sort property is
  * specified, the second column will not )
  * 
  * <pre>
- * 
  * IColumn[] columns = new IColumn[2];
  * 
  * columns[0] = new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;);
  * columns[1] = new PropertyColumn(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;name.last&quot;);
  * 
  * DataTable table = new DataTable(&quot;datatable&quot;, columns, new UserProvider(), 10);
- * table.add(new NavigationToolbar(table));
- * table.add(new HeadersToolbar(table));
+ * table.addBottomToolbar(new NavigationToolbar(table));
+ * table.addTopToolbar(new HeadersToolbar(table, null));
  * add(table);
- * 
  * </pre>
  * 
  * @see DefaultDataTable
