@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -1049,14 +1050,16 @@ public class BaseWicketTester extends MockWebApplication
 			}
 		}
 
-
 		// Get the AJAX response
 		String ajaxResponse = getServletResponse().getDocument();
 
 		// Test that the previous response was actually a AJAX response
 		failMessage = "The Previous response was not an AJAX response. "
 			+ "You need to execute an AJAX event, using clickLink, before using this assert";
-		boolean isAjaxResponse = ajaxResponse.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
+		boolean isAjaxResponse = Pattern.compile(
+			"^<\\?xml version=\"1.0\" encoding=\".*?\"\\?><ajax-response>")
+			.matcher(ajaxResponse)
+			.find();
 		result = isTrue(failMessage, isAjaxResponse);
 		if (result.wasFailed())
 		{
