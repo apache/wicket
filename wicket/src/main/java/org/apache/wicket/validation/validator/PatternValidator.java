@@ -51,11 +51,13 @@ import org.apache.wicket.validation.IValidatable;
  * </li>
  * </ul>
  * 
- * @author Jonathan Locke
- * @author Igor Vaynberg (ivaynberg)
- * @since 1.2.6
  * @see java.util.regex.Pattern
  * @see org.apache.wicket.util.parse.metapattern.MetaPattern
+ * 
+ * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @since 1.2.6
  */
 public class PatternValidator extends StringValidator
 {
@@ -63,6 +65,9 @@ public class PatternValidator extends StringValidator
 
 	/** the <code>java.util.regex.Pattern</code> */
 	private final Pattern pattern;
+
+	/** whether to exclude matching input **/
+	private boolean reverse = false;
 
 	/**
 	 * Constructor that accepts a <code>String</code> regular expression pattern.
@@ -111,7 +116,6 @@ public class PatternValidator extends StringValidator
 		this(pattern.pattern());
 	}
 
-
 	/**
 	 * Gets the regexp pattern.
 	 * 
@@ -120,6 +124,18 @@ public class PatternValidator extends StringValidator
 	public final Pattern getPattern()
 	{
 		return pattern;
+	}
+
+	/**
+	 * If set to true then input that matches the pattern is considered invalid.
+	 * 
+	 * @param reverse
+	 * @return itself
+	 */
+	public PatternValidator setReverse(boolean reverse)
+	{
+		this.reverse = reverse;
+		return this;
 	}
 
 	/**
@@ -155,11 +171,9 @@ public class PatternValidator extends StringValidator
 	protected void onValidate(IValidatable<String> validatable)
 	{
 		// Check value against pattern
-		if (!pattern.matcher(validatable.getValue()).matches())
+		if (pattern.matcher(validatable.getValue()).matches() == reverse)
 		{
 			error(validatable);
 		}
-
 	}
-
 }
