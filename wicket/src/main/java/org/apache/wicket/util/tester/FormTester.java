@@ -567,6 +567,11 @@ public class FormTester
 		checkClosed();
 
 		Component component = workingForm.get(formComponentId);
+		if (component == null)
+		{
+			throw new IllegalArgumentException(
+				"Unable to set value. Couldn't find component with name: " + formComponentId);
+		}
 		if (component instanceof IFormSubmittingComponent)
 		{
 			setFormSubmittingComponentValue((IFormSubmittingComponent)component, value);
