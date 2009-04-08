@@ -543,7 +543,33 @@ public class FormTester
 	 */
 	public void selectMultiple(String formComponentId, int[] indexes)
 	{
+		selectMultiple(formComponentId, indexes, false);
+	}
+
+	/**
+	 * A convenience method to select multiple options for the <code>FormComponent</code>. The
+	 * method only support multiple selectable <code>FormComponent</code>s.
+	 * 
+	 * @see #select(String, int)
+	 * 
+	 * @param formComponentId
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code>
+	 * @param indexes
+	 *            index of the selectable option, starting from 0
+	 * @param replace
+	 *            If true, than all previous selects are first reset, thus existing selects are
+	 *            replaced. If false, than the new indexes will be added.
+	 */
+	public void selectMultiple(String formComponentId, int[] indexes, final boolean replace)
+	{
 		checkClosed();
+
+		if (replace == true)
+		{
+			// Reset first
+			setValue(formComponentId, "");
+		}
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent<?>)workingForm.get(formComponentId));
 
