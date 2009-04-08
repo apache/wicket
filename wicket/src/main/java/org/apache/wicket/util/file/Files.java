@@ -122,10 +122,28 @@ public class Files
 	public static final int writeTo(final java.io.File file, final InputStream input)
 		throws IOException
 	{
+		return writeTo(file, input, 4096);
+	}
+
+	/**
+	 * Writes the given input stream to the given file
+	 * 
+	 * @param file
+	 *            The file to write to
+	 * @param input
+	 *            The input
+	 * @param bufSize
+	 *            The memory buffer size. 4096 is a good value.
+	 * @return Number of bytes written
+	 * @throws IOException
+	 */
+	public static final int writeTo(final java.io.File file, final InputStream input,
+		final int bufSize) throws IOException
+	{
 		final FileOutputStream out = new FileOutputStream(file);
 		try
 		{
-			return Streams.copy(input, out);
+			return Streams.copy(input, out, bufSize);
 		}
 		finally
 		{

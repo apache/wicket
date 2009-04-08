@@ -48,10 +48,11 @@ import org.xml.sax.SAXParseException;
 public final class Streams
 {
 	private static final String XML_PROPERTIES_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<!-- DTD for properties -->" + "<!ELEMENT properties ( comment?, entry* ) >"
-			+ "<!ATTLIST properties" + " version CDATA #FIXED \"1.0\">"
-			+ "<!ELEMENT comment (#PCDATA) >" + "<!ELEMENT entry (#PCDATA) >" + "<!ATTLIST entry "
-			+ " key CDATA #REQUIRED>";
+		+ "<!-- DTD for properties -->" + "<!ELEMENT properties ( comment?, entry* ) >"
+		+ "<!ATTLIST properties" + " version CDATA #FIXED \"1.0\">"
+		+ "<!ELEMENT comment (#PCDATA) >" + "<!ELEMENT entry (#PCDATA) >" + "<!ATTLIST entry "
+		+ " key CDATA #REQUIRED>";
+
 
 	/**
 	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
@@ -66,7 +67,31 @@ public final class Streams
 	 */
 	public static int copy(final InputStream in, final OutputStream out) throws IOException
 	{
-		final byte[] buffer = new byte[4096];
+		return copy(in, out, 4096);
+	}
+
+	/**
+	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
+	 * that the input is copied in its raw form.
+	 * 
+	 * @param in
+	 *            The input stream
+	 * @param out
+	 *            The output stream
+	 * @param bufSize
+	 *            The buffer size. A good value is 4096.
+	 * @return Number of bytes copied from one stream to the other
+	 * @throws IOException
+	 */
+	public static int copy(final InputStream in, final OutputStream out, final int bufSize)
+		throws IOException
+	{
+		if (bufSize <= 0)
+		{
+			throw new IllegalArgumentException("The parameter 'bufSize' must not be <= 0");
+		}
+
+		final byte[] buffer = new byte[bufSize];
 		int bytesCopied = 0;
 		while (true)
 		{
@@ -91,7 +116,7 @@ public final class Streams
 	 *             When the input stream could not be read from
 	 */
 	public static void loadFromXml(Properties properties, InputStream inputStream)
-			throws IOException
+		throws IOException
 	{
 		if (properties == null)
 		{
@@ -117,7 +142,7 @@ public final class Streams
 			db.setEntityResolver(new EntityResolver()
 			{
 				public InputSource resolveEntity(String publicId, String systemId)
-						throws SAXException
+					throws SAXException
 				{
 					if (systemId.equals("http://java.sun.com/dtd/properties.dtd"))
 					{
@@ -198,7 +223,7 @@ public final class Streams
 	 * @throws IOException
 	 */
 	public static String readString(final InputStream in, final CharSequence encoding)
-			throws IOException
+		throws IOException
 	{
 		return readString(new BufferedReader(new InputStreamReader(in, encoding.toString())));
 	}

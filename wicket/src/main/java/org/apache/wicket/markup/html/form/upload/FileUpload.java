@@ -161,10 +161,24 @@ public class FileUpload implements IClusterable
 	 */
 	public void writeTo(final File file) throws IOException
 	{
+		writeTo(file, 4096);
+	}
+
+	/**
+	 * Saves this file upload to a given file on the server side.
+	 * 
+	 * @param file
+	 *            The file
+	 * @param bufSize
+	 *            The memory buffer size
+	 * @throws IOException
+	 */
+	public void writeTo(final File file, final int bufSize) throws IOException
+	{
 		InputStream is = getInputStream();
 		try
 		{
-			Files.writeTo(file, is);
+			Files.writeTo(file, is, bufSize);
 		}
 		finally
 		{
