@@ -35,49 +35,34 @@ import org.apache.wicket.model.Model;
 /**
  * TabbedPanel component represets a panel with tabs that are used to switch between different
  * content panels inside the TabbedPanel panel.
- * 
  * <p>
- * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of
- * tabs, the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
+ * <b>Note:</b> When the currently selected tab is replaced by changing the underlying list of tabs,
+ * the change is not picked up unless a call is made to {@link #setSelectedTab(int)}.
  * <p>
- * 
  * Example:
  * 
  * <pre>
- * 
  * List tabs=new ArrayList();
- * 
  * tabs.add(new AbstractTab(new Model&lt;String&gt;(&quot;first tab&quot;)) {
- * 
  *   public Panel getPanel(String panelId)
  *   {
  *     return new TabPanel1(panelId);
  *   }
- * 
  * });
  * 
  * tabs.add(new AbstractTab(new Model&lt;String&gt;(&quot;second tab&quot;)) {
- * 
  *   public Panel getPanel(String panelId)
  *   {
  *     return new TabPanel2(panelId);
  *   }
- * 
  * });
  * 
  * add(new TabbedPanel(&quot;tabs&quot;, tabs));
  * 
- * 
  * &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- * 
- * 
  * </pre>
- * 
- * </p>
- * 
  * <p>
  * For a complete example see the component references in wicket-examples project
- * </p>
  * 
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
  * 
@@ -88,13 +73,10 @@ public class TabbedPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * id used for child panels
-	 */
+	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
-
-	private final List<ITab> tabs;
+	private final List<? extends ITab> tabs;
 
 	private transient Boolean[] tabsVisibilityCache;
 
@@ -106,7 +88,7 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List<ITab> tabs)
+	public TabbedPanel(String id, List<? extends ITab> tabs)
 	{
 		super(id, new Model<Integer>(new Integer(-1)));
 
@@ -163,10 +145,8 @@ public class TabbedPanel extends Panel
 			{
 				return newTabContainer(iteration);
 			}
-
 		});
 	}
-
 
 	/**
 	 * Generates a loop item used to represent a specific tab's <code>li</code> element.
@@ -207,12 +187,12 @@ public class TabbedPanel extends Panel
 			{
 				return getTabs().get(tabIndex).isVisible();
 			}
-
 		};
 	}
 
-
-	// @see org.apache.wicket.Component#onAttach()
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -258,7 +238,7 @@ public class TabbedPanel extends Panel
 	/**
 	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
-	public final List<ITab> getTabs()
+	public final List<? extends ITab> getTabs()
 	{
 		return tabs;
 	}
@@ -279,7 +259,6 @@ public class TabbedPanel extends Panel
 	{
 		return new Label(titleId, titleModel);
 	}
-
 
 	/**
 	 * Factory method for links used to switch between tabs.
@@ -347,7 +326,6 @@ public class TabbedPanel extends Panel
 
 		final Component component;
 
-
 		if (tabs.size() == 0 || !isTabVisible(index))
 		{
 			// no tabs or the currently selected tab is not visible
@@ -365,7 +343,6 @@ public class TabbedPanel extends Panel
 
 			}
 		}
-
 
 		if (!component.getId().equals(TAB_PANEL_ID))
 		{
@@ -409,5 +386,4 @@ public class TabbedPanel extends Panel
 		tabsVisibilityCache = null;
 		super.onDetach();
 	}
-
 }
