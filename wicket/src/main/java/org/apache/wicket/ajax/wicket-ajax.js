@@ -200,7 +200,7 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 		try {
 			eval(script);
 		} catch (e) {
-			Wicket.Log.error(e);
+			Wicket.Log.error("Wicket.replaceOuterHtmlIE: " + e + ": eval -> " + script);
 		}
 		return;
 	}  
@@ -311,7 +311,7 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 		try {
 			eval(script);
 		} catch (e) {
-			Wicket.Log.error(e);
+			Wicket.Log.error("Wicket.replaceOuterHtmlSafari: " + e + ": eval -> " + script);
 		}
 		return;
 	}
@@ -670,7 +670,7 @@ Wicket.channelManager = new Wicket.ChannelManager();
 	    } 
 	    
 	    if (transport == null) {
-	        Wicket.Log.error("Could not locate ajax transport. Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
+	        Wicket.Log.error("Wicket.Ajax.createTransport: Could not locate ajax transport. Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
 	    }    
 	    return transport;
 	},
@@ -911,7 +911,7 @@ Wicket.Ajax.Request.prototype = {
 				status = t.status;
 			}
 			catch (e) {
-				Wicket.Log.error("Exception evaluating AJAX status: " + e);
+				Wicket.Log.error("Wicket.Ajax.Request.stateChangeCallback: Exception evaluating AJAX status: " + e);
 				status = "unavailable";
 			}
 			if (status == 200 || status == "") { // as stupid as it seems, IE7 sets status to "" on ok
@@ -1029,7 +1029,7 @@ Wicket.Ajax.Call.prototype = {
 	// On ajax request failure
 	failure: function(message) {
 		if (message != null)
-			Wicket.Log.error("Error while parsing response: " + message);
+			Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + message);
 		this.request.done();
 		this.failureHandler();
    		Wicket.Ajax.invokePostCallHandlers();
@@ -1063,7 +1063,7 @@ Wicket.Ajax.Call.prototype = {
 	submitFormById: function(formId, submitButton) {
 		var form = Wicket.$(formId);
 		if (form == null || typeof (form) == "undefined")
-			Wicket.Log.error("Trying to submit form with id '"+formId+"' that is not in document.");
+			Wicket.Log.error("Wicket.Ajax.Call.submitFormById: Trying to submit form with id '"+formId+"' that is not in document.");
 		return this.submitForm(form, submitButton);
 	},
 	
@@ -1184,7 +1184,7 @@ Wicket.Ajax.Call.prototype = {
 			var element = Wicket.$(compId);
 
 			if (element == null || typeof(element) == "undefined") {			
-				Wicket.Log.error("Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
+				Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 			} else {
 				// replace the component
 				Wicket.replaceOuterHtml(element, text);
@@ -1220,7 +1220,7 @@ Wicket.Ajax.Call.prototype = {
 			    	eval(text);
 			    	f(notify);
 			    } catch (exception) {
-			    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+			    	Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception);
 			    }
 		    	
 		    } else {
@@ -1229,7 +1229,7 @@ Wicket.Ajax.Call.prototype = {
 			   		// do the evaluation
 			    	eval(text);
 			    } catch (exception) {
-			    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+			    	Wicket.Log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception);
 			    }
 			    // continue to next step
 				notify();
@@ -1411,7 +1411,7 @@ Wicket.Head.Contributor.prototype = {
 							document.createStyleSheet().cssText = content;
 						}
 						catch(e) {
-							Wicket.Log.error(e);
+							Wicket.Log.error("Wicket.Head.Contributor.processStyle: " + e);
 						}
 					}
 					window.setTimeout(run, 1);
@@ -1480,7 +1480,7 @@ Wicket.Head.Contributor.prototype = {
 					try {
 						eval(text);
 					} catch (e) {
-						Wicket.Log.error(e);
+						Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 					}
 				}
 				
