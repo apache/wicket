@@ -19,12 +19,15 @@ package org.apache.wicket.markup.html.form.upload;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.upload.FileItem;
 
@@ -99,6 +102,63 @@ public class FileUpload implements IClusterable
 	public byte[] getBytes()
 	{
 		return item.get();
+	}
+
+	/**
+	 * Get the MD5 checksum.
+	 * 
+	 * @return The MD5 checksum of the file
+	 */
+	public byte[] getMD5()
+	{
+		MessageDigest digest;
+		try
+		{
+			digest = java.security.MessageDigest.getInstance("MD5");
+		}
+		catch (NoSuchAlgorithmException ex)
+		{
+			throw new WicketRuntimeException(
+				"Your java runtime does not support MD5 digests. Please see java.security.MessageDigest.getInstance(\"MD5\"",
+				ex);
+		}
+
+		if (item.isInMemory())
+		{
+			digest.update(getBytes());
+			return digest.digest();
+		}
+
+		InputStream in = null;
+		try
+		{
+			in = item.getInputStream();
+			byte[] buf = new byte[Math.min((int)item.getSize(), 4096 * 10)];
+			int len;
+			while (-1 != (len = in.read(buf)))
+			{
+				digest.update(buf, 0, len);
+			}
+			return digest.digest();
+		}
+		catch (IOException ex)
+		{
+			throw new WicketRuntimeException("Error while reading input data for MD5 checksum", ex);
+		}
+		finally
+		{
+			if (in != null)
+			{
+				try
+				{
+					in.close();
+				}
+				catch (IOException ex)
+				{
+					// ignore
+				}
+			}
+		}
 	}
 
 	/**
