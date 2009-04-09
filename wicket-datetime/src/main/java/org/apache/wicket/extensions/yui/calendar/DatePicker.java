@@ -548,23 +548,30 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			dfSymbols = new DateFormatSymbols(getLocale());
 		}
 
-		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()))
-		{
-			dfSymbols.setShortWeekdays(new String[] { "", "\u65E5", "\u4E00", "\u4E8C", "\u4E09",
-					"\u56DB", "\u4E94", "\u516D" });
-		}
 		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
-				.getShortWeekdays(), 1)));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
-				.getShortWeekdays(), 2)));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM", filterEmpty(dfSymbols
 				.getShortWeekdays()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
 		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(getLocale())
 				.getFirstDayOfWeek() - 1));
+
+		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
+				Locale.TRADITIONAL_CHINESE.equals(getLocale()))
+		{
+			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
+					.getShortWeekdays(), 2, 1)));
+			widgetProperties.put("WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
+					.getShortWeekdays(), 2, 1)));
+		}
+		else
+		{
+			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
+					.getShortWeekdays(), 0, 1)));
+			setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
+					.getShortWeekdays(), 0, 2)));
+		}
 	}
 
 	/**
@@ -590,7 +597,24 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 *            size of substring for each element to copy
 	 * @return copy of the array filled with substrings.
 	 */
-	protected final String[] substring(String[] array, int len)
+	protected final String[] substring(final String[] array, final int len)
+	{
+		return substring(array, 0, len);
+	}
+
+	/**
+	 * Makes a copy of the provided array and for each element copy the substring 0..len to the new
+	 * array
+	 * 
+	 * @param array
+	 *            array to copy from
+	 * @param start
+	 *            start position of the substring
+	 * @param len
+	 *            size of substring for each element to copy
+	 * @return copy of the array filled with substrings.
+	 */
+	protected final String[] substring(final String[] array, final int start, final int len)
 	{
 		if (array != null)
 		{
@@ -600,9 +624,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				String el = array[i];
 				if (el != null)
 				{
-					if (el.length() > len)
+					if (el.length() > (start + len))
 					{
-						copy[i] = el.substring(0, len);
+						copy[i] = el.substring(start, start + len);
 					}
 					else
 					{
