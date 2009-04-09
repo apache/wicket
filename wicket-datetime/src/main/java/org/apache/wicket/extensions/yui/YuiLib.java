@@ -51,7 +51,7 @@ public final class YuiLib implements IClusterable
 		if (YUILOADER == null)
 		{
 			StringBuffer sb = new StringBuffer();
-			sb.append("yuiloader-beta");
+			sb.append("yuiloader");
 			if (Application.DEPLOYMENT.equals(Application.get().getConfigurationType()))
 			{
 				sb.append("-min");

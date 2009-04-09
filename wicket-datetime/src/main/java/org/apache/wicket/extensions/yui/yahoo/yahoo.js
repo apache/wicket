@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2007, Yahoo! Inc. All rights reserved.
+Copyright (c) 2009, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.4.1
+version: 2.7.0
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -88,6 +88,10 @@ if (typeof YAHOO == "undefined" || !YAHOO) {
  * </pre>
  * This fails because "long" is a future reserved word in ECMAScript
  *
+ * For implementation code that uses YUI, do not create your components
+ * in the namespaces created by the library.  defined by YUI -- create 
+ * your own (YAHOO.util, YAHOO.widget, YAHOO.lang, YAHOO.env)
+ *
  * @method namespace
  * @static
  * @param  {String*} arguments 1-n namespaces to create 
@@ -96,7 +100,7 @@ if (typeof YAHOO == "undefined" || !YAHOO) {
 YAHOO.namespace = function() {
     var a=arguments, o=null, i, j, d;
     for (i=0; i<a.length; i=i+1) {
-        d=a[i].split(".");
+        d=(""+a[i]).split(".");
         o=YAHOO;
 
         // YAHOO is implied, so it is ignored if it is included
@@ -146,19 +150,29 @@ YAHOO.log = function(msg, cat, src) {
  *                             and a "build" property at minimum.
  */
 YAHOO.register = function(name, mainClass, data) {
-    var mods = YAHOO.env.modules;
+    var mods = YAHOO.env.modules, m, v, b, ls, i;
+
     if (!mods[name]) {
-        mods[name] = { versions:[], builds:[] };
+        mods[name] = { 
+            versions:[], 
+            builds:[] 
+        };
     }
-    var m=mods[name],v=data.version,b=data.build,ls=YAHOO.env.listeners;
+
+    m  = mods[name];
+    v  = data.version;
+    b  = data.build;
+    ls = YAHOO.env.listeners;
+
     m.name = name;
     m.version = v;
     m.build = b;
     m.versions.push(v);
     m.builds.push(b);
     m.mainClass = mainClass;
+
     // fire the module load listeners
-    for (var i=0;i<ls.length;i=i+1) {
+    for (i=0;i<ls.length;i=i+1) {
         ls[i](m);
     }
     // label the main class
@@ -272,16 +286,25 @@ YAHOO.env.ua = function() {
          * Safari 2.0.4:         418     <-- preventDefault fixed
          * Safari 2.0.4 (419.3): 418.9.1 <-- One version of Safari may run
          *                                   different versions of webkit
-         * Safari 2.0.4 (419.3): 419     <-- Current Safari release
-         * Webkit 212 nightly:   522+    <-- Safari 3.0 (with native SVG) should
-         *                                   be higher than this
+         * Safari 2.0.4 (419.3): 419     <-- Tiger installations that have been
+         *                                   updated, but not updated
+         *                                   to the latest patch.
+         * Webkit 212 nightly:   522+    <-- Safari 3.0 precursor (with native SVG
+         *                                   and many major issues fixed).  
+         * 3.x yahoo.com, flickr:422     <-- Safari 3.x hacks the user agent
+         *                                   string when hitting yahoo.com and 
+         *                                   flickr.com.
+         * Safari 3.0.4 (523.12):523.12  <-- First Tiger release - automatic update
+         *                                   from 2.x via the 10.4.11 OS patch
+         * Webkit nightly 1/2008:525+    <-- Supports DOMContentLoaded event.
+         *                                   yahoo.com user agent hack removed.
          *                                   
          * </pre>
          * http://developer.apple.com/internet/safari/uamatrix.html
          * @property webkit
          * @type float
          */
-        webkit:0,
+        webkit: 0,
 
         /**
          * The mobile property will be set to a string containing any relevant
@@ -291,10 +314,28 @@ YAHOO.env.ua = function() {
          * @property mobile 
          * @type string
          */
-        mobile: null 
-    };
+        mobile: null,
 
-    var ua=navigator.userAgent, m;
+        /**
+         * Adobe AIR version number or 0.  Only populated if webkit is detected.
+         * Example: 1.0
+         * @property air
+         * @type float
+         */
+        air: 0,
+
+        /**
+         * Google Caja version number or 0.
+         * @property caja
+         * @type float
+         */
+        caja: 0
+
+    },
+
+    ua = navigator.userAgent, 
+    
+    m;
 
     // Modern KHTML browsers should qualify as Safari X-Grade
     if ((/KHTML/).test(ua)) {
@@ -313,6 +354,11 @@ YAHOO.env.ua = function() {
             if (m) {
                 o.mobile = m[0]; // Nokia N-series, ex: NokiaN95
             }
+        }
+
+        m=ua.match(/AdobeAIR\/([^\s]*)/);
+        if (m) {
+            o.air = m[0]; // Adobe AIR 1.0 or better
         }
 
     }
@@ -342,6 +388,11 @@ YAHOO.env.ua = function() {
             }
         }
     }
+
+    m=ua.match(/Caja\/([^\s]*)/);
+    if (m&&m[1]) {
+        o.caja=parseFloat(m[1]);
+    }
     
     return o;
 }();
@@ -356,6 +407,7 @@ YAHOO.env.ua = function() {
  */
 (function() {
     YAHOO.namespace("util", "widget", "example");
+    /*global YAHOO_config*/
     if ("undefined" !== typeof YAHOO_config) {
         var l=YAHOO_config.listener,ls=YAHOO.env.listeners,unique=true,i;
         if (l) {
@@ -378,52 +430,68 @@ YAHOO.env.ua = function() {
  * Provides the language utilites and extensions used by the library
  * @class YAHOO.lang
  */
-YAHOO.lang = YAHOO.lang || {
+YAHOO.lang = YAHOO.lang || {};
+
+(function() {
+
+
+var L = YAHOO.lang,
+
+    ARRAY_TOSTRING = '[object Array]',
+    FUNCTION_TOSTRING = '[object Function]',
+    OP = Object.prototype,
+
+    // ADD = ["toString", "valueOf", "hasOwnProperty"],
+    ADD = ["toString", "valueOf"],
+
+    OB = {
+
     /**
-     * Determines whether or not the provided object is an array.
-     * Testing typeof/instanceof/constructor of arrays across frame 
-     * boundaries isn't possible in Safari unless you have a reference
-     * to the other frame to test against its Array prototype.  To
-     * handle this case, we test well-known array properties instead.
-     * properties.
+     * Determines wheather or not the provided object is an array.
      * @method isArray
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isArray: function(o) { 
-
-        if (o) {
-           var l = YAHOO.lang;
-           return l.isNumber(o.length) && l.isFunction(o.splice);
-        }
-        return false;
+        return OP.toString.apply(o) === ARRAY_TOSTRING;
     },
 
     /**
      * Determines whether or not the provided object is a boolean
      * @method isBoolean
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isBoolean: function(o) {
         return typeof o === 'boolean';
     },
     
     /**
-     * Determines whether or not the provided object is a function
+     * Determines whether or not the provided object is a function.
+     * Note: Internet Explorer thinks certain functions are objects:
+     *
+     * var obj = document.createElement("object");
+     * YAHOO.lang.isFunction(obj.getAttribute) // reports false in IE
+     *
+     * var input = document.createElement("input"); // append to body
+     * YAHOO.lang.isFunction(input.focus) // reports false in IE
+     *
+     * You will have to implement additional tests if these functions
+     * matter to you.
+     *
      * @method isFunction
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isFunction: function(o) {
-        return typeof o === 'function';
+        return OP.toString.apply(o) === FUNCTION_TOSTRING;
     },
         
     /**
      * Determines whether or not the provided object is null
      * @method isNull
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isNull: function(o) {
         return o === null;
@@ -433,7 +501,7 @@ YAHOO.lang = YAHOO.lang || {
      * Determines whether or not the provided object is a legal number
      * @method isNumber
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isNumber: function(o) {
         return typeof o === 'number' && isFinite(o);
@@ -444,17 +512,17 @@ YAHOO.lang = YAHOO.lang || {
      * or function
      * @method isObject
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */  
     isObject: function(o) {
-return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
+return (o && (typeof o === 'object' || L.isFunction(o))) || false;
     },
         
     /**
      * Determines whether or not the provided object is a string
      * @method isString
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isString: function(o) {
         return typeof o === 'string';
@@ -464,40 +532,12 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * Determines whether or not the provided object is undefined
      * @method isUndefined
      * @param {any} o The object being testing
-     * @return Boolean
+     * @return {boolean} the result
      */
     isUndefined: function(o) {
         return typeof o === 'undefined';
     },
     
-    /**
-     * Determines whether or not the property was added
-     * to the object instance.  Returns false if the property is not present
-     * in the object, or was inherited from the prototype.
-     * This abstraction is provided to enable hasOwnProperty for Safari 1.3.x.
-     * There is a discrepancy between YAHOO.lang.hasOwnProperty and
-     * Object.prototype.hasOwnProperty when the property is a primitive added to
-     * both the instance AND prototype with the same value:
-     * <pre>
-     * var A = function() {};
-     * A.prototype.foo = 'foo';
-     * var a = new A();
-     * a.foo = 'foo';
-     * alert(a.hasOwnProperty('foo')); // true
-     * alert(YAHOO.lang.hasOwnProperty(a, 'foo')); // false when using fallback
-     * </pre>
-     * @method hasOwnProperty
-     * @param {any} o The object being testing
-     * @return Boolean
-     */
-    hasOwnProperty: function(o, prop) {
-        if (Object.prototype.hasOwnProperty) {
-            return o.hasOwnProperty(prop);
-        }
-        
-        return !YAHOO.lang.isUndefined(o[prop]) && 
-                o.constructor.prototype[prop] !== o[prop];
-    },
  
     /**
      * IE will not enumerate native functions in a derived object even if the
@@ -509,17 +549,18 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * @static
      * @private
      */
-    _IEEnumFix: function(r, s) {
-        if (YAHOO.env.ua.ie) {
-            var add=["toString", "valueOf"], i;
-            for (i=0;i<add.length;i=i+1) {
-                var fname=add[i],f=s[fname];
-                if (YAHOO.lang.isFunction(f) && f!=Object.prototype[fname]) {
+    _IEEnumFix: (YAHOO.env.ua.ie) ? function(r, s) {
+            var i, fname, f;
+            for (i=0;i<ADD.length;i=i+1) {
+
+                fname = ADD[i];
+                f = s[fname];
+
+                if (L.isFunction(f) && f!=OP[fname]) {
                     r[fname]=f;
                 }
             }
-        }
-    },
+    } : function(){},
        
     /**
      * Utility to set up the prototype, constructor and superclass properties to
@@ -537,24 +578,26 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      */
     extend: function(subc, superc, overrides) {
         if (!superc||!subc) {
-            throw new Error("YAHOO.lang.extend failed, please check that " +
+            throw new Error("extend failed, please check that " +
                             "all dependencies are included.");
         }
-        var F = function() {};
+        var F = function() {}, i;
         F.prototype=superc.prototype;
         subc.prototype=new F();
         subc.prototype.constructor=subc;
         subc.superclass=superc.prototype;
-        if (superc.prototype.constructor == Object.prototype.constructor) {
+        if (superc.prototype.constructor == OP.constructor) {
             superc.prototype.constructor=superc;
         }
     
         if (overrides) {
-            for (var i in overrides) {
-                subc.prototype[i]=overrides[i];
+            for (i in overrides) {
+                if (L.hasOwnProperty(overrides, i)) {
+                    subc.prototype[i]=overrides[i];
+                }
             }
 
-            YAHOO.lang._IEEnumFix(subc.prototype, overrides);
+            L._IEEnumFix(subc.prototype, overrides);
         }
     },
    
@@ -584,19 +627,19 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
         if (!s||!r) {
             throw new Error("Absorb failed, verify dependencies.");
         }
-        var a=arguments, i, p, override=a[2];
-        if (override && override!==true) { // only absorb the specified properties
+        var a=arguments, i, p, overrideList=a[2];
+        if (overrideList && overrideList!==true) { // only absorb the specified properties
             for (i=2; i<a.length; i=i+1) {
                 r[a[i]] = s[a[i]];
             }
         } else { // take everything, overwriting only if the third parameter is true
             for (p in s) { 
-                if (override || !r[p]) {
+                if (overrideList || !(p in r)) {
                     r[p] = s[p];
                 }
             }
             
-            YAHOO.lang._IEEnumFix(r, s);
+            L._IEEnumFix(r, s);
         }
     },
  
@@ -619,11 +662,11 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
             throw new Error("Augment failed, verify dependencies.");
         }
         //var a=[].concat(arguments);
-        var a=[r.prototype,s.prototype];
-        for (var i=2;i<arguments.length;i=i+1) {
+        var a=[r.prototype,s.prototype], i;
+        for (i=2;i<arguments.length;i=i+1) {
             a.push(arguments[i]);
         }
-        YAHOO.lang.augmentObject.apply(this, a);
+        L.augmentObject.apply(this, a);
     },
 
       
@@ -639,30 +682,30 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * @return {String} the dump result
      */
     dump: function(o, d) {
-        var l=YAHOO.lang,i,len,s=[],OBJ="{...}",FUN="f(){...}",
+        var i,len,s=[],OBJ="{...}",FUN="f(){...}",
             COMMA=', ', ARROW=' => ';
 
         // Cast non-objects to string
         // Skip dates because the std toString is what we want
         // Skip HTMLElement-like objects because trying to dump 
         // an element will cause an unhandled exception in FF 2.x
-        if (!l.isObject(o)) {
+        if (!L.isObject(o)) {
             return o + "";
         } else if (o instanceof Date || ("nodeType" in o && "tagName" in o)) {
             return o;
-        } else if  (l.isFunction(o)) {
+        } else if  (L.isFunction(o)) {
             return FUN;
         }
 
         // dig into child objects the depth specifed. Default 3
-        d = (l.isNumber(d)) ? d : 3;
+        d = (L.isNumber(d)) ? d : 3;
 
         // arrays [1, 2, 3]
-        if (l.isArray(o)) {
+        if (L.isArray(o)) {
             s.push("[");
             for (i=0,len=o.length;i<len;i=i+1) {
-                if (l.isObject(o[i])) {
-                    s.push((d > 0) ? l.dump(o[i], d-1) : OBJ);
+                if (L.isObject(o[i])) {
+                    s.push((d > 0) ? L.dump(o[i], d-1) : OBJ);
                 } else {
                     s.push(o[i]);
                 }
@@ -676,10 +719,10 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
         } else {
             s.push("{");
             for (i in o) {
-                if (l.hasOwnProperty(o, i)) {
+                if (L.hasOwnProperty(o, i)) {
                     s.push(i + ARROW);
-                    if (l.isObject(o[i])) {
-                        s.push((d > 0) ? l.dump(o[i], d-1) : OBJ);
+                    if (L.isObject(o[i])) {
+                        s.push((d > 0) ? L.dump(o[i], d-1) : OBJ);
                     } else {
                         s.push(o[i]);
                     }
@@ -719,8 +762,9 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * @return {String} the substituted string
      */
     substitute: function (s, o, f) {
-        var i, j, k, key, v, meta, l=YAHOO.lang, saved=[], token, 
-            DUMP='dump', SPACE=' ', LBRACE='{', RBRACE='}';
+        var i, j, k, key, v, meta, saved=[], token, 
+            DUMP='dump', SPACE=' ', LBRACE='{', RBRACE='}',
+            dump;
 
 
         for (;;) {
@@ -751,27 +795,27 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
                 v = f(key, v, meta);
             }
 
-            if (l.isObject(v)) {
-                if (l.isArray(v)) {
-                    v = l.dump(v, parseInt(meta, 10));
+            if (L.isObject(v)) {
+                if (L.isArray(v)) {
+                    v = L.dump(v, parseInt(meta, 10));
                 } else {
                     meta = meta || "";
 
                     // look for the keyword 'dump', if found force obj dump
-                    var dump = meta.indexOf(DUMP);
+                    dump = meta.indexOf(DUMP);
                     if (dump > -1) {
                         meta = meta.substring(4);
                     }
 
                     // use the toString if it is not the Object toString 
                     // and the 'dump' meta info was not found
-                    if (v.toString===Object.prototype.toString||dump>-1) {
-                        v = l.dump(v, parseInt(meta, 10));
+                    if (v.toString===OP.toString || dump>-1) {
+                        v = L.dump(v, parseInt(meta, 10));
                     } else {
                         v = v.toString();
                     }
                 }
-            } else if (!l.isString(v) && !l.isNumber(v)) {
+            } else if (!L.isString(v) && !L.isNumber(v)) {
                 // This {block} has no replace string. Save it for later.
                 v = "~-" + saved.length + "-~";
                 saved[saved.length] = token;
@@ -819,22 +863,22 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      * @return the new merged object
      */
     merge: function() {
-        var o={}, a=arguments;
-        for (var i=0, l=a.length; i<l; i=i+1) {
-            YAHOO.lang.augmentObject(o, a[i], true);
+        var o={}, a=arguments, l=a.length, i;
+        for (i=0; i<l; i=i+1) {
+            L.augmentObject(o, a[i], true);
         }
         return o;
     },
 
     /**
-     * Executes the supplied function in the scope of the supplied 
+     * Executes the supplied function in the context of the supplied 
      * object 'when' milliseconds later.  Executes the function a 
      * single time unless periodic is set to true.
      * @method later
      * @since 2.4.0
      * @param when {int} the number of milliseconds to wait until the fn 
      * is executed
-     * @param o the scope object
+     * @param o the context object
      * @param fn {Function|String} the function to execute or the name of 
      * the method in the 'o' object to execute
      * @param data [Array] data that is provided to the function.  This accepts
@@ -852,7 +896,7 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
         o = o || {};
         var m=fn, d=data, f, r;
 
-        if (YAHOO.lang.isString(fn)) {
+        if (L.isString(fn)) {
             m = o[fn];
         }
 
@@ -860,7 +904,7 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
             throw new TypeError("method undefined");
         }
 
-        if (!YAHOO.lang.isArray(d)) {
+        if (!L.isArray(d)) {
             d = [data];
         }
 
@@ -881,7 +925,7 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
             }
         };
     },
-
+    
     /**
      * A convenience method for detecting a legitimate non-null value.
      * Returns false for null/undefined/NaN, true for other values, 
@@ -893,17 +937,48 @@ return (o && (typeof o === 'object' || YAHOO.lang.isFunction(o))) || false;
      */
     isValue: function(o) {
         // return (o || o === false || o === 0 || o === ''); // Infinity fails
-        var l = YAHOO.lang;
-return (l.isObject(o) || l.isString(o) || l.isNumber(o) || l.isBoolean(o));
+return (L.isObject(o) || L.isString(o) || L.isNumber(o) || L.isBoolean(o));
     }
 
 };
+
+/**
+ * Determines whether or not the property was added
+ * to the object instance.  Returns false if the property is not present
+ * in the object, or was inherited from the prototype.
+ * This abstraction is provided to enable hasOwnProperty for Safari 1.3.x.
+ * There is a discrepancy between YAHOO.lang.hasOwnProperty and
+ * Object.prototype.hasOwnProperty when the property is a primitive added to
+ * both the instance AND prototype with the same value:
+ * <pre>
+ * var A = function() {};
+ * A.prototype.foo = 'foo';
+ * var a = new A();
+ * a.foo = 'foo';
+ * alert(a.hasOwnProperty('foo')); // true
+ * alert(YAHOO.lang.hasOwnProperty(a, 'foo')); // false when using fallback
+ * </pre>
+ * @method hasOwnProperty
+ * @param {any} o The object being testing
+ * @param prop {string} the name of the property to test
+ * @return {boolean} the result
+ */
+L.hasOwnProperty = (OP.hasOwnProperty) ?
+    function(o, prop) {
+        return o && o.hasOwnProperty(prop);
+    } : function(o, prop) {
+        return !L.isUndefined(o[prop]) && 
+                o.constructor.prototype[prop] !== o[prop];
+    };
+
+// new lang wins
+OB.augmentObject(L, OB, true);
 
 /*
  * An alias for <a href="YAHOO.lang.html">YAHOO.lang</a>
  * @class YAHOO.util.Lang
  */
-YAHOO.util.Lang = YAHOO.lang;
+YAHOO.util.Lang = L;
  
 /**
  * Same as YAHOO.lang.augmentObject, except it only applies prototype 
@@ -921,7 +996,7 @@ YAHOO.util.Lang = YAHOO.lang;
  *        be applied and will overwrite an existing property in
  *        the receiver
  */
-YAHOO.lang.augment = YAHOO.lang.augmentProto;
+L.augment = L.augmentProto;
 
 /**
  * An alias for <a href="YAHOO.lang.html#augment">YAHOO.lang.augment</a>
@@ -935,7 +1010,7 @@ YAHOO.lang.augment = YAHOO.lang.augmentProto;
  *        in the supplier will be used unless it would
  *        overwrite an existing property in the receiver
  */
-YAHOO.augment = YAHOO.lang.augmentProto;
+YAHOO.augment = L.augmentProto;
        
 /**
  * An alias for <a href="YAHOO.lang.html#extend">YAHOO.lang.extend</a>
@@ -947,6 +1022,7 @@ YAHOO.augment = YAHOO.lang.augmentProto;
  *        subclass prototype.  These will override the
  *        matching items obtained from the superclass if present.
  */
-YAHOO.extend = YAHOO.lang.extend;
+YAHOO.extend = L.extend;
 
-YAHOO.register("yahoo", YAHOO, {version: "2.4.1", build: "742"});
+})();
+YAHOO.register("yahoo", YAHOO, {version: "2.7.0", build: "1799"});
