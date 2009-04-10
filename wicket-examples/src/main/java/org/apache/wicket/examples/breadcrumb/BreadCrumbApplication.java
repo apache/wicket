@@ -30,8 +30,19 @@ public class BreadCrumbApplication extends WebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Index.class;
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		super.init();
+
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 	}
 }

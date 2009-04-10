@@ -44,6 +44,8 @@ public class ExampleApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+
 		// THIS LINE IS IMPORTANT - IT INSTALLS THE COMPONENT INJECTOR THAT WILL
 		// INJECT NEWLY CREATED COMPONENTS WITH THEIR SPRING DEPENDENCIES
 		addComponentInstantiationListener(new SpringComponentInjector(this));

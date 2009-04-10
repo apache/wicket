@@ -44,6 +44,8 @@ public class AjaxApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 		getDebugSettings().setAjaxDebugModeEnabled(true);
@@ -73,7 +75,7 @@ public class AjaxApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

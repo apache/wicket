@@ -73,6 +73,10 @@ public class RolesApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+
 		getSecuritySettings().setAuthorizationStrategy(
 			new RoleAuthorizationStrategy(new UserRolesAuthorizer()));
 		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");

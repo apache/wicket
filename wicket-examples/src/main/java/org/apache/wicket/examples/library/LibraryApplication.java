@@ -64,6 +64,8 @@ public final class LibraryApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
 

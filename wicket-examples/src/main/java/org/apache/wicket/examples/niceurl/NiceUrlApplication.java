@@ -51,8 +51,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		return Home.class;
 	}
 
-	private <C extends Page> void mountBookmarkablePageWithUrlCoding(String path,
-		Class<C> pageClass)
+	private <C extends Page> void mountBookmarkablePageWithUrlCoding(String path, Class<C> pageClass)
 	{
 		mount(new QueryStringUrlCodingStrategy(path, pageClass));
 	}
@@ -63,6 +62,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		// Disable creation of javascript which jWebUnit (test only)
 		// doesn't handle properly
 		getPageSettings().setAutomaticMultiWindowSupport(false);

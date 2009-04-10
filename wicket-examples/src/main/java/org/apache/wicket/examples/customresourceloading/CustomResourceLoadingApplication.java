@@ -119,7 +119,8 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		// instruct the application to use our custom resource stream locator
+		super.init();
+
 		getResourceSettings().setResourceStreamLocator(new CustomResourceStreamLocator());
 	}
 }

@@ -65,6 +65,8 @@ public final class SignInApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
 			public boolean isActionAuthorized(Component component, Action action)
@@ -72,8 +74,7 @@ public final class SignInApplication extends WicketExampleApplication
 				return true;
 			}
 
-			public <T extends Component> boolean isInstantiationAuthorized(
-				Class<T> componentClass)
+			public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
 			{
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))
 				{

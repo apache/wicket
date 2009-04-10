@@ -55,7 +55,7 @@ public class FormInputApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return FormInput.class;
 	}
@@ -82,6 +82,8 @@ public class FormInputApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
 		// Chinese buttons

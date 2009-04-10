@@ -47,6 +47,10 @@ public class Application extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+
 		// Hello World as a Static Page
 		mount(new URIRequestTargetUrlCodingStrategy("/docs")
 		{

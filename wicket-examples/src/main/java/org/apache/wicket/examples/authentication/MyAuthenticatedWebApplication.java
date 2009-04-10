@@ -30,13 +30,13 @@ import org.apache.wicket.markup.html.WebPage;
 public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 {
 	@Override
-	protected Class< ? extends AuthenticatedWebSession> getWebSessionClass()
+	protected Class<? extends AuthenticatedWebSession> getWebSessionClass()
 	{
 		return MyAuthenticatedWebSession.class;
 	}
 
 	@Override
-	protected Class< ? extends WebPage> getSignInPageClass()
+	protected Class<? extends WebPage> getSignInPageClass()
 	{
 		return MySignInPage.class;
 	}
@@ -45,8 +45,18 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return HomePage.class;
+	}
+
+	/**
+	 * @see org.apache.wicket.authentication.AuthenticatedWebApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		super.init();
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 	}
 }

@@ -37,6 +37,8 @@ public class Application extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		mountBookmarkablePage("/hello", HelloWorld.class);
 	}
 

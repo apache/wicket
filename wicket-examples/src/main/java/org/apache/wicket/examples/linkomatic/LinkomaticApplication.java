@@ -44,6 +44,8 @@ public class LinkomaticApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 		// log host name and server time in the browser's status bar
 		getRequestCycleSettings().addResponseFilter(new ServerHostNameAndTimeFilter());

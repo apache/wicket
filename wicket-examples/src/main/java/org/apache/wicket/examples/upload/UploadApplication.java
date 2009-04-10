@@ -65,6 +65,8 @@ public class UploadApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
 		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");

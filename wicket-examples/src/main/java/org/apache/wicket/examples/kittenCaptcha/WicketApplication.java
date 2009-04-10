@@ -43,4 +43,14 @@ public class WicketApplication extends WebApplication
 		return HomePage.class;
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		super.init();
+
+		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+	}
 }

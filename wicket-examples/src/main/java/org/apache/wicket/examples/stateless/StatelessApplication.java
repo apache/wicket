@@ -51,6 +51,8 @@ public class StatelessApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		mount(new QueryStringUrlCodingStrategy("/statefull", StatefulPage.class));
 		mount(new QueryStringUrlCodingStrategy("/query", StatelessPage1.class));
 		mount(new MixedParamUrlCodingStrategy("/mixed", StatelessPage2.class, new String[] {

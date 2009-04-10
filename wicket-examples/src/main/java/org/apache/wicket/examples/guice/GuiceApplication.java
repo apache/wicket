@@ -33,6 +33,8 @@ public class GuiceApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		addComponentInstantiationListener(new GuiceComponentInjector(this));
 	}
 
@@ -40,7 +42,7 @@ public class GuiceApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return HomePage.class;
 	}
