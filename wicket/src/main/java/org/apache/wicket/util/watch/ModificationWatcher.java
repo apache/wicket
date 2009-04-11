@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Monitors one or more <code>IModifiable</code> objects, calling a
- * {@link IChangeListener IChangeListener} when a given object's modification time changes.
+ * Monitors one or more <code>IModifiable</code> objects, calling a {@link IChangeListener
+ * IChangeListener} when a given object's modification time changes.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -84,14 +84,14 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Adds an <code>IModifiable</code> object and an <code>IChangeListener</code> object to
-	 * call when the modifiable object is modified.
+	 * Adds an <code>IModifiable</code> object and an <code>IChangeListener</code> object to call
+	 * when the modifiable object is modified.
 	 * 
 	 * @param modifiable
 	 *            an <code>IModifiable</code> object to monitor
 	 * @param listener
-	 *            an <code>IChangeListener</code> to call if the <code>IModifiable</code> object
-	 *            is modified
+	 *            an <code>IChangeListener</code> to call if the <code>IModifiable</code> object is
+	 *            modified
 	 * @return <code>true</code> if the set did not already contain the specified element
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
@@ -102,13 +102,14 @@ public final class ModificationWatcher
 		// Found it?
 		if (entry == null)
 		{
-			if (modifiable.lastModifiedTime() != null)
+			Time lastModifiedTime = modifiable.lastModifiedTime();
+			if (lastModifiedTime != null)
 			{
 				// Construct new entry
 				final Entry newEntry = new Entry();
 
 				newEntry.modifiable = modifiable;
-				newEntry.lastModifiedTime = modifiable.lastModifiedTime();
+				newEntry.lastModifiedTime = lastModifiedTime;
 				newEntry.listeners.add(listener);
 
 				// Put in map
@@ -161,20 +162,19 @@ public final class ModificationWatcher
 		{
 			public void run(final Logger log)
 			{
-				// Iterate over a copy of the list of entries to avoid
-				// concurrent
-				// modification problems without the associated liveness issues
-				// of holding a lock while potentially polling file times!
-				for (final Iterator<Entry> iterator = new ArrayList<Entry>(modifiableToEntry.values()).iterator(); iterator.hasNext();)
+				// Iterate over a copy of the list of entries to avoid concurrent modification
+				// problems without the associated liveness issues of holding a lock while
+				// potentially polling file times!
+				Iterator<Entry> iter = new ArrayList<Entry>(modifiableToEntry.values()).iterator();
+				while (iter.hasNext())
 				{
-					// Get next entry
-					final Entry entry = iterator.next();
+					final Entry entry = iter.next();
 
 					// If the modifiable has been modified after the last known
 					// modification time
 					final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
-
-					if (modifiableLastModified.after(entry.lastModifiedTime))
+					if ((modifiableLastModified != null) &&
+						modifiableLastModified.after(entry.lastModifiedTime))
 					{
 						// Notify all listeners that the modifiable was modified
 						entry.listeners.notifyListeners();

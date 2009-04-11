@@ -40,8 +40,8 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  */
 public class UrlResourceStream extends AbstractResourceStream
-		implements
-			IFixedLocationResourceStream
+	implements
+		IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -54,9 +54,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	/** The URL to this resource. */
 	private final URL url;
 
-	/**
-	 * the handle to the file if it is a file resource
-	 */
+	/** the handle to the file if it is a file resource */
 	private File file;
 
 	/** Length of stream. */
@@ -92,7 +90,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			catch (Exception ex)
 			{
 				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
-						"), falling back to the inputstream for polling");
+					"), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
 			{
@@ -105,7 +103,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			// couldn't have been constructed. But we re-throw with details
 			// anyway.
 			final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
-					"Invalid URL parameter " + url);
+				"Invalid URL parameter " + url);
 			illegalArgumentException.initCause(ex);
 			throw illegalArgumentException;
 		}
@@ -150,6 +148,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	/**
 	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
 	 */
+	@Override
 	public String getContentType()
 	{
 		testContentType();
@@ -170,7 +169,7 @@ public class UrlResourceStream extends AbstractResourceStream
 				// TODO Post 1.2: General: For non webapplication another method
 				// should be implemented (getMimeType on application?)
 				contentType = ((WebApplication)application).getServletContext().getMimeType(
-						url.getFile());
+					url.getFile());
 				if (contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
@@ -198,7 +197,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			catch (IOException e)
 			{
 				throw new ResourceStreamNotFoundException("Resource " + url +
-						" could not be opened", e);
+					" could not be opened", e);
 			}
 		}
 
@@ -217,10 +216,17 @@ public class UrlResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 * @return The last time this resource was modified
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		if (file != null)
 		{
+			// In case the file has been removed by now
+			if (file.exists() == false)
+			{
+				return null;
+			}
+
 			long lastModified = file.lastModified();
 			if (lastModified != this.lastModified)
 			{
@@ -255,6 +261,7 @@ public class UrlResourceStream extends AbstractResourceStream
 					close = true;
 					lastModified = urlConnection.getLastModified();
 				}
+
 				// update the last modified time.
 				if (lastModified != this.lastModified)
 				{
@@ -274,8 +281,11 @@ public class UrlResourceStream extends AbstractResourceStream
 				}
 				else
 				{
-					log.error("getLastModified for " + url + " failed: " + e.getMessage());
+					log.warn("getLastModified for " + url + " failed: " + e.getMessage());
 				}
+
+				// Allow modification watcher to detect the problem
+				return null;
 			}
 			finally
 			{
@@ -306,6 +316,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return url.toString();
@@ -314,6 +325,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
 		return contentLength;
