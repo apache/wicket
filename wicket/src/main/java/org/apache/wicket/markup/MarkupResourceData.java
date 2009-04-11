@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * 
+ * @TODO 1.5 It is confusing to have MarkupResourceStream and MarkupResourceData. MRA should be
+ *       moved into MRS
  */
 public class MarkupResourceData
 {

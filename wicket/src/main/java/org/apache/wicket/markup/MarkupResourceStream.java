@@ -79,7 +79,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * @param markupClass
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream,
-		final ContainerInfo containerInfo, final Class< ? > markupClass)
+		final ContainerInfo containerInfo, final Class<?> markupClass)
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
@@ -91,6 +91,9 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.util.resource.IFixedLocationResourceStream#locationAsString()
+	 */
 	public String locationAsString()
 	{
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -169,7 +172,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * 
 	 * @return The directly associated class
 	 */
-	public Class< ? extends Component> getMarkupClass()
+	public Class<? extends Component> getMarkupClass()
 	{
 		return Classes.resolveClass(markupClassName);
 	}

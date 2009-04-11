@@ -33,7 +33,6 @@ import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
-import org.apache.wicket.markup.parser.filter.TagTypeHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
@@ -159,7 +158,6 @@ public class MarkupParser
 		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
 
 		appendMarkupFilter(new WicketTagIdentifier(markupResourceData));
-		appendMarkupFilter(new TagTypeHandler());
 		appendMarkupFilter(new HtmlHandler());
 		appendMarkupFilter(new WicketRemoveTagHandler());
 		appendMarkupFilter(new WicketLinkTagHandler());

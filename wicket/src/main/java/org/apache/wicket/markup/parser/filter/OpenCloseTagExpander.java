@@ -30,12 +30,15 @@ import org.apache.wicket.markup.parser.XmlTag;
  * it gets text/xml mime type, treats these open-close tags as open tags which results in corrupted
  * DOM. This happens even with xhtml doctype.
  * 
+ * In addition, some tags are required open-body-close for Wicket to work properly.
+ * 
+ * @author Juergen Donnerstag
  * @author Matej Knopp
  */
 public class OpenCloseTagExpander extends AbstractMarkupFilter
 {
 	private static final List<String> replaceForTags = Arrays.asList(new String[] { "div", "span",
-			"p", "strong", "b", "e" });
+			"p", "strong", "b", "e", "select" });
 
 	private ComponentTag next = null;
 
@@ -51,26 +54,30 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 			next = null;
 			return tmp;
 		}
-		else
-		{
-			ComponentTag tag = nextComponentTag();
 
-			if (tag != null && tag.isOpenClose() &&
-				replaceForTags.contains(tag.getName().toLowerCase()))
+		ComponentTag tag = nextComponentTag();
+		if (tag == null)
+		{
+			return tag;
+		}
+
+		if (tag.isOpenClose())
+		{
+			String name = tag.getName();
+			if (tag.getNamespace() != null)
+			{
+				name = tag.getNamespace() + ":" + tag.getName();
+			}
+
+			if (replaceForTags.contains(name.toLowerCase()))
 			{
 				tag.setType(XmlTag.OPEN);
-
-				if (tag.getId() == null)
-				{
-					tag.setId(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID);
-					tag.setAutoComponentTag(true);
-				}
 
 				next = new ComponentTag(tag.getName(), XmlTag.CLOSE);
 				next.setNamespace(tag.getNamespace());
 				next.setOpenTag(tag);
 			}
-			return tag;
 		}
+		return tag;
 	}
 }
