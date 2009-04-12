@@ -61,8 +61,9 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 * @param parameterNames
 	 *            the parameter names (not null)
 	 */
-	public <C extends Page> MixedParamUrlCodingStrategy(String mountPath,
-		Class<C> bookmarkablePageClass, String pageMapName, String[] parameterNames)
+	public <C extends Page> MixedParamUrlCodingStrategy(final String mountPath,
+		final Class<C> bookmarkablePageClass, final String pageMapName,
+		final String... parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 		this.parameterNames = parameterNames;
@@ -79,8 +80,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 * @param parameterNames
 	 *            the parameter names (not null)
 	 */
-	public <C extends Page> MixedParamUrlCodingStrategy(String mountPath,
-		Class<C> bookmarkablePageClass, String[] parameterNames)
+	public <C extends Page> MixedParamUrlCodingStrategy(final String mountPath,
+		final Class<C> bookmarkablePageClass, final String... parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 		this.parameterNames = parameterNames;
@@ -91,7 +92,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *      java.util.Map)
 	 */
 	@Override
-	protected void appendParameters(AppendingStringBuffer url, Map<String, ?> parameters)
+	protected void appendParameters(final AppendingStringBuffer url, final Map<String, ?> parameters)
 	{
 		if (!url.endsWith("/"))
 		{
@@ -148,7 +149,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 *      java.util.Map)
 	 */
 	@Override
-	protected ValueMap decodeParameters(String urlFragment, Map<String, ?> urlParameters)
+	protected ValueMap decodeParameters(final String urlFragment, final Map<String, ?> urlParameters)
 	{
 		PageParameters params = new PageParameters();
 		// Add all url parameters
