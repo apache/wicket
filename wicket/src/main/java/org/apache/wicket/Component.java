@@ -4336,10 +4336,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	final void setId(final String id)
 	{
-		if ((id == null) && !(this instanceof Page))
+		if (!(this instanceof Page))
 		{
-			throw new WicketRuntimeException("Null component id is not allowed.");
+			if (Strings.isEmpty(id))
+			{
+				throw new WicketRuntimeException("Null or empty component ID's are not allowed.");
+			}
 		}
+
+		if ((id != null) && (id.indexOf(':') != -1))
+		{
+			throw new WicketRuntimeException("The component ID must not contain ':' chars.");
+		}
+
 		this.id = id;
 	}
 
