@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -136,7 +135,6 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	@SuppressWarnings("unchecked")
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices)
 	{
 		this(id, model, Model.of(choices));
@@ -154,7 +152,6 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param renderer
 	 *            The rendering engine
 	 */
-	@SuppressWarnings("unchecked")
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices,
 		IChoiceRenderer<T> renderer)
 	{
@@ -181,6 +178,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			}
 
 		};
+
 		DropDownChoice<T> editor = new DropDownChoice<T>(componentId, model, choiceModel, renderer)
 		{
 			private static final long serialVersionUID = 1L;
@@ -198,6 +196,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			}
 
 		};
+
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior()
@@ -220,6 +219,10 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		return editor;
 	}
 
+	/**
+	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
+	 *      java.lang.String, org.apache.wicket.model.IModel)
+	 */
 	@Override
 	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
@@ -244,14 +247,14 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 					Object displayObject = renderer.getDisplayValue((T)getDefaultModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
-
-					if (objectClass != null && objectClass != String.class)
+					if ((objectClass != null) && (objectClass != String.class))
 					{
-						final IConverter converter = Application.get()
-							.getConverterLocator()
-							.getConverter(objectClass);
-
+						final IConverter converter = getConverter(objectClass);
 						displayValue = converter.convertToString(displayObject, getLocale());
+					}
+					else if (displayObject != null)
+					{
+						displayValue = displayObject.toString();
 					}
 				}
 
@@ -270,12 +273,18 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		return label;
 	}
 
+	/**
+	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#onModelChanged()
+	 */
 	@Override
 	protected void onModelChanged()
 	{
 		super.onModelChanged();
 	}
 
+	/**
+	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#onModelChanging()
+	 */
 	@Override
 	protected void onModelChanging()
 	{
