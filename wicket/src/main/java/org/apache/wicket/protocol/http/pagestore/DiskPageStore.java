@@ -1243,7 +1243,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		else
 		{
 			String type = page != null ? page.getClass().getName() : null;
-			throw new IllegalArgumentException("Unknown object type + type");
+			throw new IllegalArgumentException("Unknown object type" + type);
 		}
 	}
 
