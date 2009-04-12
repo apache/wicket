@@ -34,9 +34,6 @@ import org.apache.wicket.version.undo.Change;
  */
 public abstract class PageableListView<T> extends ListView<T> implements IPageable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** The page to show. */
@@ -87,7 +84,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	public final int getCurrentPage()
 	{
 		// If first cell is out of range, bring page back into range
-		while ((currentPage * rowsPerPage) > getList().size())
+		while ((currentPage * rowsPerPage) >= getList().size())
 		{
 			currentPage--;
 		}
