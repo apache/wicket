@@ -83,7 +83,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * @param parameters
 	 *            Map object to be encoded
 	 */
-	protected void appendParameters(AppendingStringBuffer url, Map<?, ?> parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map<String, ?> parameters)
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
@@ -132,7 +132,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment, Map<String, Object> urlParameters)
+	protected ValueMap decodeParameters(String urlFragment, Map<String, ?> urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
@@ -227,6 +227,9 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
+	 * @param value
+	 * @return decoded value
+	 * 
 	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
 	 */
 	@Deprecated
@@ -236,6 +239,9 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
+	 * @param string
+	 * @return encoded value
+	 * 
 	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
 	 */
 	@Deprecated

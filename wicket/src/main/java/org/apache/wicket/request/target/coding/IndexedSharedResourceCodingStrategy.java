@@ -125,8 +125,7 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 
 		final RequestParameters requestParameters = target.getRequestParameters();
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> params = requestParameters.getParameters();
+		Map<String, ?> params = requestParameters.getParameters();
 
 		if (params != null)
 		{
@@ -167,7 +166,7 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 				boolean first = true;
 
 				// go through remaining parameters
-				for (Map.Entry<String, Object> arg : params.entrySet())
+				for (Map.Entry<String, ?> arg : params.entrySet())
 				{
 					final String key = urlEncodeQueryComponent(arg.getKey());
 					final Object obj = arg.getValue();
@@ -245,7 +244,7 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 	 *      java.util.Map)
 	 */
 	@Override
-	protected ValueMap decodeParameters(String path, Map<String, Object> queryParameters)
+	protected ValueMap decodeParameters(String path, Map<String, ?> queryParameters)
 	{
 		final ValueMap parameters = new ValueMap(queryParameters);
 

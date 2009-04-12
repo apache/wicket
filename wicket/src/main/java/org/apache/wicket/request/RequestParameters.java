@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.request;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.RequestListenerInterface;
@@ -76,7 +74,7 @@ public class RequestParameters implements IClusterable
 	private String bookmarkablePageClass;
 
 	/** free-to-use map of non-reserved parameters. */
-	private Map parameters;
+	private Map<String, ?> parameters;
 
 	/** any resource key. */
 	private String resourceKey;
@@ -170,7 +168,7 @@ public class RequestParameters implements IClusterable
 	 * 
 	 * @return free-to-use map of non-reserved parameters
 	 */
-	public Map getParameters()
+	public Map<String, ?> getParameters()
 	{
 		return parameters;
 	}
@@ -304,7 +302,7 @@ public class RequestParameters implements IClusterable
 	 * @param parameters
 	 *            free-to-use map of non-reserved parameters
 	 */
-	public void setParameters(Map parameters)
+	public void setParameters(Map<String, ?> parameters)
 	{
 		this.parameters = parameters;
 	}
@@ -387,9 +385,15 @@ public class RequestParameters implements IClusterable
 		if (getParameters() != null)
 		{
 			b.append(" parameters={");
-			for (Iterator i = getParameters().entrySet().iterator(); i.hasNext();)
+			boolean first = true;
+			for (Map.Entry<String, ?> entry : getParameters().entrySet())
 			{
-				Entry entry = (Entry)i.next();
+				if (first == false)
+				{
+					b.append(",");
+				}
+				first = false;
+
 				Object value = entry.getValue();
 				b.append(entry.getKey()).append("=");
 				if (value != null && value instanceof Object[])
@@ -416,10 +420,6 @@ public class RequestParameters implements IClusterable
 				else
 				{
 					b.append(value);
-				}
-				if (i.hasNext())
-				{
-					b.append(",");
 				}
 			}
 			b.append("}");

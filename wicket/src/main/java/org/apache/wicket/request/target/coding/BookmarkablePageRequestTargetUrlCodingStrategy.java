@@ -55,8 +55,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	 * @param pageMapName
 	 *            the page map name if any
 	 */
-	public <C extends Page> BookmarkablePageRequestTargetUrlCodingStrategy(
-		final String mountPath, final Class<C> bookmarkablePageClass, String pageMapName)
+	public <C extends Page> BookmarkablePageRequestTargetUrlCodingStrategy(final String mountPath,
+		final Class<C> bookmarkablePageClass, final String pageMapName)
 	{
 		super(mountPath);
 
@@ -65,8 +65,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
-		bookmarkablePageClassRef = new WeakReference<Class<? extends Page>>(
-			bookmarkablePageClass);
+		bookmarkablePageClassRef = new WeakReference<Class<? extends Page>>(bookmarkablePageClass);
 		this.pageMapName = pageMapName;
 	}
 
@@ -77,6 +76,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
 			getMountPath().length());
+
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 			requestParameters.getParameters()));
 

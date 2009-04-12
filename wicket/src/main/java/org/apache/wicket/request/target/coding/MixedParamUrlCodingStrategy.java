@@ -17,10 +17,10 @@
 package org.apache.wicket.request.target.coding;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -51,6 +51,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
 	 * @param mountPath
 	 *            mount path
 	 * @param bookmarkablePageClass
@@ -60,8 +61,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 * @param parameterNames
 	 *            the parameter names (not null)
 	 */
-	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-		String pageMapName, String[] parameterNames)
+	public <C extends Page> MixedParamUrlCodingStrategy(String mountPath,
+		Class<C> bookmarkablePageClass, String pageMapName, String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 		this.parameterNames = parameterNames;
@@ -70,6 +71,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	/**
 	 * Construct.
 	 * 
+	 * @param <C>
 	 * @param mountPath
 	 *            mount path (not empty)
 	 * @param bookmarkablePageClass
@@ -77,23 +79,27 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	 * @param parameterNames
 	 *            the parameter names (not null)
 	 */
-	public MixedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
-		String[] parameterNames)
+	public <C extends Page> MixedParamUrlCodingStrategy(String mountPath,
+		Class<C> bookmarkablePageClass, String[] parameterNames)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 		this.parameterNames = parameterNames;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer,
+	 *      java.util.Map)
+	 */
 	@Override
-	protected void appendParameters(AppendingStringBuffer url, Map parameters)
+	protected void appendParameters(AppendingStringBuffer url, Map<String, ?> parameters)
 	{
 		if (!url.endsWith("/"))
 		{
 			url.append("/");
 		}
 
-		Set parameterNamesToAdd = new HashSet(parameters.keySet());
+		Set<String> parameterNamesToAdd = new HashSet<String>(parameters.keySet());
+
 		// Find index of last specified parameter
 		boolean foundParameter = false;
 		int lastSpecifiedParameter = parameterNames.length;
@@ -125,11 +131,9 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 		if (!parameterNamesToAdd.isEmpty())
 		{
 			boolean first = true;
-			final Iterator iterator = parameterNamesToAdd.iterator();
-			while (iterator.hasNext())
+			for (String parameterName : parameterNamesToAdd)
 			{
 				url.append(first ? '?' : '&');
-				String parameterName = (String)iterator.next();
 				final Object param = parameters.get(parameterName);
 				String value = param instanceof String[] ? ((String[])param)[0] : (String)param;
 				url.append(urlEncodeQueryComponent(parameterName)).append("=").append(
@@ -139,9 +143,12 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#decodeParameters(java.lang.String,
+	 *      java.util.Map)
+	 */
 	@Override
-	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
+	protected ValueMap decodeParameters(String urlFragment, Map<String, ?> urlParameters)
 	{
 		PageParameters params = new PageParameters();
 		// Add all url parameters
