@@ -113,4 +113,14 @@ public class PageParametersTest extends TestCase
 		PageParameters parameters = new PageParameters("a=-1");
 		assertEquals("-1", parameters.get("a"));
 	}
+
+	/**
+	 * 
+	 */
+	public void testAddInteger()
+	{
+		PageParameters params = new PageParameters();
+		params.put("myint", 12345);
+		assertEquals(params.getAsInteger("myint").intValue(), 12345);
+	}
 }
