@@ -84,7 +84,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	public final int getCurrentPage()
 	{
 		// If first cell is out of range, bring page back into range
-		while ((currentPage * rowsPerPage) >= getList().size())
+		while ((currentPage > 0) && ((currentPage * rowsPerPage) >= getList().size()))
 		{
 			currentPage--;
 		}
