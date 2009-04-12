@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,18 +166,20 @@ public class WicketServlet extends HttpServlet
 	private void fallback(HttpServletRequest request, HttpServletResponse response)
 		throws IOException
 	{
-
-		// The ServletWebRequest is created here to avoid code duplication. The getURL
-		// call doesn't depend on anything wicket specific
+		// The ServletWebRequest is created here to avoid code duplication. The getURL call doesn't
+		// depend on anything wicket specific
 		ServletWebRequest req = new ServletWebRequest(request);
 		String url = req.getURL();
 
-		// Get the relative URL we need for loading the resource from
-		// the servlet context
-		// NOTE: we NEED to put the '/' in front as otherwise some versions
-		// of application servers (e.g. Jetty 5.1.x) will fail for requests
-		// like '/mysubdir/myfile.css'
+		// WICKET-2185: strip of query string
+		if (url.indexOf('?') != -1)
+		{
+			url = Strings.beforeFirst(url, '?');
+		}
 
+		// Get the relative URL we need for loading the resource from the servlet context
+		// NOTE: we NEED to put the '/' in front as otherwise some versions of application servers
+		// (e.g. Jetty 5.1.x) will fail for requests like '/mysubdir/myfile.css'
 		if ((url.length() > 0 && url.charAt(0) != '/') || url.length() == 0)
 		{
 			url = '/' + url;
@@ -185,7 +188,6 @@ public class WicketServlet extends HttpServlet
 		InputStream stream = getServletContext().getResourceAsStream(url);
 		String mimeType = getServletContext().getMimeType(url);
 
-
 		if (stream == null)
 		{
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -193,7 +195,9 @@ public class WicketServlet extends HttpServlet
 		else
 		{
 			if (mimeType != null)
+			{
 				response.setContentType(mimeType);
+			}
 
 			Streams.copy(stream, response.getOutputStream());
 		}
