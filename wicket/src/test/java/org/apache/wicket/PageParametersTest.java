@@ -94,6 +94,16 @@ public class PageParametersTest extends TestCase
 		assertEquals("3", a[2]);
 	}
 
+	public void testArray2()
+	{
+		PageParameters parameters = new PageParameters("a=1,a=2,a=3");
+		String[] a = parameters.getStringArray("a");
+		assertEquals(3, a.length);
+		assertEquals("1", a[0]);
+		assertEquals("2", a[1]);
+		assertEquals("3", a[2]);
+	}
+
 	/**
 	 * Parsing of negative numbers on the right side of the assignment didn't work, as the minus
 	 * character was not part of the word pattern.

@@ -20,7 +20,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -91,7 +90,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @param map
 	 *            the <code>ValueMap</code> to copy
 	 */
-	public ValueMap(final Map map)
+	public ValueMap(final Map<? extends String, ? extends Object> map)
 	{
 		super();
 
@@ -152,7 +151,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 			}
 			String key = keyValuePairs.substring(start, equalsIndex);
 			String value = keyValuePairs.substring(equalsIndex + 1, delimiterIndex);
-			put(key, value);
+			add(key, value);
 			if (delimiterIndex < keyValuePairs.length())
 			{
 				start = delimiterIndex + 1;
@@ -490,7 +489,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
-	public void putAll(final Map map)
+	public void putAll(final Map<? extends String, ? extends Object> map)
 	{
 		checkMutability();
 		super.putAll(map);
@@ -535,9 +534,15 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public String toString()
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (final Iterator iterator = entrySet().iterator(); iterator.hasNext();)
+		boolean first = true;
+		for (Map.Entry<String, Object> entry : entrySet())
 		{
-			final Map.Entry entry = (Map.Entry)iterator.next();
+			if (first == false)
+			{
+				buffer.append(' ');
+			}
+			first = false;
+
 			buffer.append(entry.getKey());
 			buffer.append(" = \"");
 			final Object value = entry.getValue();
@@ -555,10 +560,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 			}
 
 			buffer.append('\"');
-			if (iterator.hasNext())
-			{
-				buffer.append(' ');
-			}
 		}
 		return buffer.toString();
 	}
@@ -585,7 +586,9 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public Boolean getAsBoolean(String key)
 	{
 		if (!containsKey(key))
+		{
 			return null;
+		}
 
 		try
 		{
@@ -619,7 +622,9 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public Integer getAsInteger(String key)
 	{
 		if (!containsKey(key))
+		{
 			return null;
+		}
 
 		try
 		{
@@ -652,7 +657,9 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public Long getAsLong(String key)
 	{
 		if (!containsKey(key))
+		{
 			return null;
+		}
 
 		try
 		{
@@ -685,7 +692,9 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public Double getAsDouble(String key)
 	{
 		if (!containsKey(key))
+		{
 			return null;
+		}
 
 		try
 		{
@@ -700,7 +709,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDouble(String, double)
 	 */
-	public double getAsDouble(String key, double defaultValue)
+	public double getAsDouble(final String key, final double defaultValue)
 	{
 		try
 		{
@@ -715,7 +724,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDuration(String)
 	 */
-	public Duration getAsDuration(String key)
+	public Duration getAsDuration(final String key)
 	{
 		return getAsDuration(key, null);
 	}
@@ -723,10 +732,12 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsDuration(String, Duration)
 	 */
-	public Duration getAsDuration(String key, Duration defaultValue)
+	public Duration getAsDuration(final String key, final Duration defaultValue)
 	{
 		if (!containsKey(key))
+		{
 			return defaultValue;
+		}
 
 		try
 		{
@@ -741,7 +752,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsTime(String)
 	 */
-	public Time getAsTime(String key)
+	public Time getAsTime(final String key)
 	{
 		return getAsTime(key, null);
 	}
@@ -749,10 +760,12 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/**
 	 * @see IValueMap#getAsTime(String, Time)
 	 */
-	public Time getAsTime(String key, Time defaultValue)
+	public Time getAsTime(final String key, final Time defaultValue)
 	{
 		if (!containsKey(key))
+		{
 			return defaultValue;
+		}
 
 		try
 		{
@@ -765,43 +778,59 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see IValueMap#getAsEnum(String, Class<T>)
+	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Class)
 	 */
-	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass)
+	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass)
 	{
 		return getEnumImpl(key, eClass, null);
 	}
 
 	/**
-	 * @see IValueMap#getAsEnum
+	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Enum)
 	 */
-	public <T extends Enum<T>> T getAsEnum(String key, T defaultValue)
+	public <T extends Enum<T>> T getAsEnum(final String key, final T defaultValue)
 	{
 		if (defaultValue == null)
+		{
 			throw new IllegalArgumentException("Default value cannot be null");
+		}
+
 		return getEnumImpl(key, defaultValue.getClass(), defaultValue);
 	}
 
 	/**
-	 * @see IValueMap#getAsEnum(String, Class<T>, T)
+	 * @see org.apache.wicket.util.value.IValueMap#getAsEnum(java.lang.String, java.lang.Class,
+	 *      java.lang.Enum)
 	 */
-	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue)
+	public <T extends Enum<T>> T getAsEnum(final String key, final Class<T> eClass,
+		final T defaultValue)
 	{
 		return getEnumImpl(key, eClass, defaultValue);
 	}
 
 	/**
 	 * get enum implementation
+	 * 
+	 * @param key
+	 * @param eClass
+	 * @param defaultValue
+	 * @param <T>
+	 * @return Enum
 	 */
 	@SuppressWarnings( { "unchecked" })
-	private <T extends Enum<T>> T getEnumImpl(String key, Class<?> eClass, T defaultValue)
+	private <T extends Enum<T>> T getEnumImpl(final String key, final Class<?> eClass,
+		final T defaultValue)
 	{
 		if (eClass == null)
+		{
 			throw new IllegalArgumentException("eClass value cannot be null");
+		}
 
 		String value = getString(key);
 		if (value == null)
+		{
 			return defaultValue;
+		}
 
 		Method valueOf = null;
 		try

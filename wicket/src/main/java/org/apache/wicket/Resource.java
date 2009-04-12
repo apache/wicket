@@ -149,7 +149,7 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that parameterize this resource
 	 */
-	public final void setParameters(final Map<?, ?> parameters)
+	public final void setParameters(final Map<String, ?> parameters)
 	{
 		if (parameters == null)
 		{
