@@ -35,13 +35,12 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
-	/**  */
 	private static final long serialVersionUID = 1L;
 
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
 
-	protected static final String NO_SELECTION_VALUE = "-1";
+	protected static final Object NO_SELECTION_VALUE = "-1";
 
 	private static final String EMPTY_STRING = "";
 
@@ -135,6 +134,24 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
+	 * In case "-1" is not a suitable "no selection value", you may provide your own implementation
+	 * of getNoSelectionValue(). The return Object's toString() will be used as the
+	 * "no selection value". Object.equals() must return true when equal. Thus besides special
+	 * object, simply returning a String (e.g. "999") would be ok as well.
+	 * 
+	 * By default NO_SELECTION_VALUE will be returned.
+	 * 
+	 * By purpose there is no setter for the "no selection object". You should add the variable to
+	 * your subclass.
+	 * 
+	 * @return The "no selection object"
+	 */
+	protected Object getNoSelectionValue()
+	{
+		return NO_SELECTION_VALUE;
+	}
+
+	/**
 	 * @see FormComponent#getModelValue()
 	 */
 	@Override
@@ -146,7 +163,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
-		return NO_SELECTION_VALUE;
+		return getNoSelectionValue().toString();
 	}
 
 	/**
@@ -184,7 +201,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	@Override
 	protected final T convertValue(final String[] value)
 	{
-		String tmp = value != null && value.length > 0 ? value[0] : null;
+		String tmp = ((value != null) && (value.length > 0)) ? value[0] : null;
 		return convertChoiceIdToChoice(tmp);
 	}
 
@@ -240,7 +257,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			}
 
 			// The <option> tag buffer
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(64 + option.length());
 
 			// Add option tag
 			buffer.append("\n<option");
@@ -258,24 +275,23 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if (selected == null || selected.equals(NO_SELECTION_VALUE) ||
+			if ((selected == null) || getNoSelectionValue().equals(selected) ||
 				selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
 				String option = getLocalizer().getStringIgnoreSettings(getId() + ".null", this,
 					null, null);
+
 				if (Strings.isEmpty(option))
 				{
 					option = getLocalizer().getString("null", this, CHOOSE_ONE);
 				}
-				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(
-					option)
-					.append("</option>");
+
+				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
 			}
 		}
 		return "";
 	}
-
 
 	/**
 	 * Gets whether the given value represents the current selection.
@@ -292,6 +308,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	@Override
 	protected boolean isSelected(final T object, int index, String selected)
 	{
-		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));
+		return (selected != null) && selected.equals(getChoiceRenderer().getIdValue(object, index));
 	}
 }
