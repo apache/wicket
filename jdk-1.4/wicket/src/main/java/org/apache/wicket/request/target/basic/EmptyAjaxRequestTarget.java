@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.request.target.basic;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 
 /**
  * The empty AJAX request target does output an empty AJAX response.
@@ -54,7 +56,23 @@ public final class EmptyAjaxRequestTarget implements IRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		requestCycle.getResponse().write("<ajax-response></ajax-response>");
+		WebResponse response = (WebResponse)requestCycle.getResponse();
+		final String encoding = Application.get()
+			.getRequestCycleSettings()
+			.getResponseRequestEncoding();
+
+		// Set content type based on markup type for page
+		response.setCharacterEncoding(encoding);
+		response.setContentType("text/xml; charset=" + encoding);
+
+		// Make sure it is not cached by a client
+		response.setDateHeader("Expires", System.currentTimeMillis());
+		response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+
+		response.write("<?xml version=\"1.0\" encoding=\"");
+		response.write(encoding);
+		response.write("\"?><ajax-response></ajax-response>");
 	}
 
 	/**
