@@ -164,6 +164,7 @@ public abstract class DynamicImageResource extends DynamicWebResource
 	/**
 	 * @see DynamicWebResource#getResourceState()
 	 */
+	@Override
 	protected synchronized ResourceState getResourceState()
 	{
 		return new ResourceState()
@@ -171,6 +172,7 @@ public abstract class DynamicImageResource extends DynamicWebResource
 			private byte[] imageData;
 			private final String contentType = "image/" + format;
 
+			@Override
 			public Time lastModifiedTime()
 			{
 				if (lastModifiedTime == null)
@@ -184,6 +186,7 @@ public abstract class DynamicImageResource extends DynamicWebResource
 				return lastModifiedTime;
 			}
 
+			@Override
 			public byte[] getData()
 			{
 				if (imageData == null)
@@ -193,6 +196,7 @@ public abstract class DynamicImageResource extends DynamicWebResource
 				return imageData;
 			}
 
+			@Override
 			public String getContentType()
 			{
 				return contentType;

@@ -36,7 +36,8 @@ public class FeedbackIndicatorFormPage extends WebPage
 	 */
 	public FeedbackIndicatorFormPage()
 	{
-		final TextField<Serializable> tf = new TextField<Serializable>("input", new Model<Serializable>());
+		final TextField<Serializable> tf = new TextField<Serializable>("input",
+			new Model<Serializable>());
 		final FormComponentFeedbackIndicator feedback = new FormComponentFeedbackIndicator(
 			"feedback");
 
@@ -45,7 +46,7 @@ public class FeedbackIndicatorFormPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void onSubmit()
+			protected void onSubmit()
 			{
 				tf.error("an error");
 			}

@@ -43,7 +43,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 		super(name);
 
 		Label ajaxLabel = new Label("linja1", new PropertyModel(this, "count"));
-		this.timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
+		timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
 
 		ajaxLabel.add(timer);
 		baseSpan.add(ajaxLabel);
@@ -55,7 +55,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	 */
 	public AbstractAjaxBehavior getTimeBehavior()
 	{
-		return this.timer;
+		return timer;
 	}
 
 	/**

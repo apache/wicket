@@ -212,7 +212,7 @@ public class WebResponse extends Response
 					if (httpServletResponse.isCommitted())
 					{
 						log.error("Unable to redirect to: " + url +
-								", HTTP Response has already been committed.");
+							", HTTP Response has already been committed.");
 					}
 
 					if (log.isDebugEnabled())
@@ -410,7 +410,7 @@ public class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment" +
-				((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
 
 	/**

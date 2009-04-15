@@ -44,6 +44,7 @@ public class SimpleTablePage_1 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getDefaultModelObject();

@@ -48,12 +48,13 @@ public class ContextRelativeResource extends WebResource
 		{
 			pathRelativeToContextRoot = "/" + pathRelativeToContextRoot;
 		}
-		this.path = pathRelativeToContextRoot;
+		path = pathRelativeToContextRoot;
 	}
 
 	/**
 	 * @see org.apache.wicket.Resource#getResourceStream()
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new WebExternalResourceStream(path);

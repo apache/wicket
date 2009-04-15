@@ -58,7 +58,7 @@ public class LabelTree extends BaseTree
 	 * @param id
 	 * @param model
 	 *            Tree model
-	 */	
+	 */
 	public LabelTree(String id, TreeModel model)
 	{
 		super(id, new WicketTreeModel());

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class ClassCryptFactory implements ICryptFactory
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
-	private final WeakReference<Class< ? >> cryptClass;
+	private final WeakReference<Class<?>> cryptClass;
 	private final String encryptionKey;
 
 	/**
@@ -42,7 +42,7 @@ public class ClassCryptFactory implements ICryptFactory
 	 * @param encryptionKey
 	 *            encryption key
 	 */
-	public ClassCryptFactory(Class< ? > cryptClass, String encryptionKey)
+	public ClassCryptFactory(Class<?> cryptClass, String encryptionKey)
 	{
 		if (cryptClass == null)
 		{
@@ -54,7 +54,7 @@ public class ClassCryptFactory implements ICryptFactory
 			throw new IllegalArgumentException("cryptClass must implement ICrypt interface");
 		}
 
-		this.cryptClass = new WeakReference<Class< ? >>(cryptClass);
+		this.cryptClass = new WeakReference<Class<?>>(cryptClass);
 		this.encryptionKey = encryptionKey;
 	}
 

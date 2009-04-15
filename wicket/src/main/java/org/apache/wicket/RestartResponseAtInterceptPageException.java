@@ -55,7 +55,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	/**
 	 * Redirects to the specified intercept page, this will result in a bookmarkable redirect.
 	 * 
-	 * @param <C> The page type
+	 * @param <C>
+	 *            The page type
 	 * 
 	 * @param interceptPageClass
 	 *            Class of intercept page to instantiate
@@ -101,7 +102,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	/**
 	 * Redirects to intercept page using the page map for the current request
 	 * 
-	 * @param <C> The page type
+	 * @param <C>
+	 *            The page type
 	 * 
 	 * @param interceptPageClass
 	 *            The intercept page class to redirect to

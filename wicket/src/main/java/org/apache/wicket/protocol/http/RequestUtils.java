@@ -123,13 +123,17 @@ public final class RequestUtils
 					newcomponents.remove(i);
 					i = i - 2;
 					if (i < -1)
+					{
 						i = -1;
+					}
 				}
 			}
 		}
 		String newpath = Strings.join("/", newcomponents.toArray(new String[0]));
 		if (path.endsWith("/"))
+		{
 			return newpath + "/";
+		}
 		return newpath;
 	}
 

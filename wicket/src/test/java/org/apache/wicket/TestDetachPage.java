@@ -81,18 +81,21 @@ public class TestDetachPage extends WebPage
 			/** For serialization */
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onDetach()
 			{
 				nrComponentOnDetachCalls++;
 				super.onDetach();
 			}
 
+			@Override
 			protected void detachModel()
 			{
 				nrComponentDetachModelCalls++;
 				super.detachModel();
 			}
 
+			@Override
 			public void detachModels()
 			{
 				nrComponentDetachModelsCalls++;
@@ -105,12 +108,14 @@ public class TestDetachPage extends WebPage
 			/** for serialization. */
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void detach(Component component)
 			{
 				nrAjaxBehaviorDetachModelCalls++;
 				super.detach(component);
 			}
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				target.addComponent(label);
@@ -120,18 +125,21 @@ public class TestDetachPage extends WebPage
 		add(label);
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		nrPageOnDetachCalls++;
 		super.onDetach();
 	}
 
+	@Override
 	protected void detachModel()
 	{
 		nrPageDetachModelCalls++;
 		super.detachModel();
 	}
 
+	@Override
 	public void detachModels()
 	{
 		nrPageDetachModelsCalls++;

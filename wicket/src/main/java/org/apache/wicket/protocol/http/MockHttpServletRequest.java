@@ -698,10 +698,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 				final String name = iterator.next();
 				final String value = parameters.getString(name);
 				if (name != null)
+				{
 					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
+				}
 				buf.append('=');
 				if (value != null)
+				{
 					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
+				}
 				if (iterator.hasNext())
 				{
 					buf.append('&');
@@ -789,7 +793,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public String getRequestedSessionId()
 	{
 		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
+		{
 			return null;
+		}
 		return session.getId();
 	}
 
@@ -890,7 +896,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public HttpSession getSession()
 	{
 		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
+		{
 			return null;
+		}
 		return session;
 	}
 
@@ -904,7 +912,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public HttpSession getSession(boolean b)
 	{
 		if (b && session instanceof MockHttpSession)
+		{
 			((MockHttpSession)session).setTemporary(false);
+		}
 		return getSession();
 	}
 

@@ -75,7 +75,8 @@ public class AuthorizationTest extends WicketTestCase
 			new DummyAuthorizationStrategy()
 			{
 				@Override
-				public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
+				public <T extends Component> boolean isInstantiationAuthorized(
+					Class<T> componentClass)
 				{
 					return false;
 				}
@@ -212,8 +213,8 @@ public class AuthorizationTest extends WicketTestCase
 		}
 
 		/**
-		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(
-		 *      org.apache.wicket.Component, org.apache.wicket.authorization.Action)
+		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
+		 *      org.apache.wicket.authorization.Action)
 		 */
 		public boolean isActionAuthorized(Component c, Action action)
 		{

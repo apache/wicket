@@ -36,8 +36,7 @@ public class AjaxLinkPage extends WebPage
 	 */
 	public AjaxLinkPage()
 	{
-		final Label label = new Label("ajaxLabel", new PropertyModel<String>(this,
-			"labelText"));
+		final Label label = new Label("ajaxLabel", new PropertyModel<String>(this, "labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
 		add(new AjaxLink("ajaxLink")

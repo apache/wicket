@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.protocol.http;
 
-import junit.framework.TestCase;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
+
+import junit.framework.TestCase;
+
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * @author Timo Rantalaiho
@@ -32,6 +34,7 @@ public class WebSessionTest extends TestCase
 		final Locale locale = Locale.TRADITIONAL_CHINESE;
 		HttpServletRequest request = new MockHttpServletRequest(null, null, null)
 		{
+			@Override
 			public Locale getLocale()
 			{
 				return locale;

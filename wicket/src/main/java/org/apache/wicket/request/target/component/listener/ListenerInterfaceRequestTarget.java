@@ -41,7 +41,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the request listener interface
 	 */
 	public ListenerInterfaceRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 		this(page, component, listener, null);
 	}
@@ -59,7 +59,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the request parameters
 	 */
 	public ListenerInterfaceRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		super(page, component, listener, requestParameters);
 	}

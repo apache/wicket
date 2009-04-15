@@ -48,8 +48,8 @@ import java.io.Writer;
  * production.
  * <p>
  * All the methods in this class that read a stream are buffered internally. This means that there
- * is no cause to use a <code>BufferedInputStream</code> or <code>BufferedReader</code>. The
- * default buffer size of 4K has been show to be efficient in tests.
+ * is no cause to use a <code>BufferedInputStream</code> or <code>BufferedReader</code>. The default
+ * buffer size of 4K has been show to be efficient in tests.
  * <p>
  * Wherever possible, the methods in this class do <em>not</em> flush or close the stream. This is
  * to avoid making non-portable assumptions about the streams' origin and further use. Thus the
@@ -420,8 +420,8 @@ public final class IOUtils
 	}
 
 	/**
-	 * Writes bytes from a <code>byte[]</code> to chars on a <code>Writer</code> using the
-	 * default character encoding of the platform.
+	 * Writes bytes from a <code>byte[]</code> to chars on a <code>Writer</code> using the default
+	 * character encoding of the platform.
 	 * <p>
 	 * This method uses {@link String#String(byte[])}.
 	 * 
@@ -444,8 +444,8 @@ public final class IOUtils
 	}
 
 	/**
-	 * Writes bytes from a <code>byte[]</code> to chars on a <code>Writer</code> using the
-	 * specified character encoding.
+	 * Writes bytes from a <code>byte[]</code> to chars on a <code>Writer</code> using the specified
+	 * character encoding.
 	 * <p>
 	 * Character encoding names can be found at <a
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
@@ -482,8 +482,8 @@ public final class IOUtils
 	// write char[]
 	// -----------------------------------------------------------------------
 	/**
-	 * Writes chars from a <code>char[]</code> to a <code>Writer</code> using the default
-	 * character encoding of the platform.
+	 * Writes chars from a <code>char[]</code> to a <code>Writer</code> using the default character
+	 * encoding of the platform.
 	 * 
 	 * @param data
 	 *            the char array to write, do not modify during output, null ignored
@@ -527,8 +527,8 @@ public final class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>char[]</code> to bytes on an <code>OutputStream</code> using
-	 * the specified character encoding.
+	 * Writes chars from a <code>char[]</code> to bytes on an <code>OutputStream</code> using the
+	 * specified character encoding.
 	 * <p>
 	 * Character encoding names can be found at <a
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
@@ -586,8 +586,8 @@ public final class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>String</code> to bytes on an <code>OutputStream</code> using
-	 * the default character encoding of the platform.
+	 * Writes chars from a <code>String</code> to bytes on an <code>OutputStream</code> using the
+	 * default character encoding of the platform.
 	 * <p>
 	 * This method uses {@link String#getBytes()}.
 	 * 
@@ -610,8 +610,8 @@ public final class IOUtils
 	}
 
 	/**
-	 * Writes chars from a <code>String</code> to bytes on an <code>OutputStream</code> using
-	 * the specified character encoding.
+	 * Writes chars from a <code>String</code> to bytes on an <code>OutputStream</code> using the
+	 * specified character encoding.
 	 * <p>
 	 * Character encoding names can be found at <a
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
@@ -714,7 +714,7 @@ public final class IOUtils
 	 * @since 1.1
 	 */
 	public static void write(StringBuffer data, OutputStream output, String encoding)
-			throws IOException
+		throws IOException
 	{
 		if (data != null)
 		{

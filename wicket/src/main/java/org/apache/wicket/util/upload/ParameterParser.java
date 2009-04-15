@@ -126,8 +126,8 @@ public class ParameterParser
 	 * @param charray
 	 *            the array of characters to test against
 	 * 
-	 * @return <tt>true</tt> if the character is present in the array of characters,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the character is present in the array of characters, <tt>false</tt>
+	 *         otherwise.
 	 */
 	private boolean isOneOf(char ch, final char[] charray)
 	{
@@ -223,8 +223,8 @@ public class ParameterParser
 	 * parsed.
 	 * 
 	 * @param b
-	 *            <tt>true</tt> if parameter names are to be converted to lower case when
-	 *            name/value pairs are parsed. <tt>false</tt> otherwise.
+	 *            <tt>true</tt> if parameter names are to be converted to lower case when name/value
+	 *            pairs are parsed. <tt>false</tt> otherwise.
 	 */
 	public void setLowerCaseNames(boolean b)
 	{
@@ -276,10 +276,10 @@ public class ParameterParser
 	 * 
 	 * @param chars
 	 *            the array of characters that contains a sequence of name/value pairs
-	 * @param offset -
-	 *            the initial offset.
-	 * @param length -
-	 *            the length.
+	 * @param offset
+	 *            - the initial offset.
+	 * @param length
+	 *            - the length.
 	 * @param separator
 	 *            the name/value pairs separator
 	 * 

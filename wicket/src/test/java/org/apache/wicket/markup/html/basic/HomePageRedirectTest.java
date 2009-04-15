@@ -28,11 +28,13 @@ public class HomePageRedirectTest extends TestCase
 {
 	WicketTester application;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		application.destroy();

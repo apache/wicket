@@ -61,7 +61,7 @@ public class TableTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void populateItem(final ListItem<Integer> listItem)
+			protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}
@@ -119,7 +119,7 @@ public class TableTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void populateItem(final ListItem<Void> listItem)
+			protected void populateItem(final ListItem<Void> listItem)
 			{
 				// do nothing
 			}

@@ -58,8 +58,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * @param template
 		 *            the <code>TextTemplate</code> to work on
 		 * @param variablesModel
-		 *            the <code>IModel</code> that holds any variables for interpolation. It
-		 *            should return a {@link Map} or <code>null</code>.
+		 *            the <code>IModel</code> that holds any variables for interpolation. It should
+		 *            return a {@link Map} or <code>null</code>.
 		 */
 		protected TemplateModel(TextTemplate template, IModel<Map<String, Object>> variablesModel)
 		{
@@ -101,9 +101,9 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Retrieves a CSS header contributor based on the given <code>TextTemplate</code>. The
-	 * template will be interpolated with the given variables. The content will be written as the
-	 * body of a script/tag pair.
+	 * Retrieves a CSS header contributor based on the given <code>TextTemplate</code>. The template
+	 * will be interpolated with the given variables. The content will be written as the body of a
+	 * script/tag pair.
 	 * 
 	 * @param template
 	 *            the <code>TextTemplate</code> that is the base for the contribution
@@ -139,9 +139,9 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Retrieves a JavaScript header contributor based on the given <code>TextTemplate</code>.
-	 * The template will be interpolated with the given variables. The content will be written as
-	 * the body of a script/tag pair.
+	 * Retrieves a JavaScript header contributor based on the given <code>TextTemplate</code>. The
+	 * template will be interpolated with the given variables. The content will be written as the
+	 * body of a script/tag pair.
 	 * 
 	 * @param template
 	 *            the <code>TextTemplate</code> that is the base for the contribution

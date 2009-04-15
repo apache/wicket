@@ -91,7 +91,7 @@ public final class Bytes extends LongValue
 
 	/** Pattern for string parsing. */
 	private static final Pattern valuePattern = Pattern.compile(
-			"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
+		"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
 
 	/** Maximum bytes value */
 	public static final Bytes MAX = bytes(Long.MAX_VALUE);
@@ -290,7 +290,7 @@ public final class Bytes extends LongValue
 	 * @throws StringValueConversionException
 	 */
 	public static Bytes valueOf(final String string, final Locale locale)
-			throws StringValueConversionException
+		throws StringValueConversionException
 	{
 		final Matcher matcher = valuePattern.matcher(string);
 
@@ -300,8 +300,9 @@ public final class Bytes extends LongValue
 			try
 			{
 				// Get double precision value
-				final double value = NumberFormat.getNumberInstance(locale).parse(matcher.group(1))
-						.doubleValue();
+				final double value = NumberFormat.getNumberInstance(locale)
+					.parse(matcher.group(1))
+					.doubleValue();
 
 				// Get units specified
 				final String units = matcher.group(3);
@@ -334,7 +335,7 @@ public final class Bytes extends LongValue
 			catch (ParseException e)
 			{
 				throw new StringValueConversionException("Unable to parse numeric part: " + string,
-						e);
+					e);
 			}
 		}
 		else
@@ -363,6 +364,7 @@ public final class Bytes extends LongValue
 	 * 
 	 * @return The string for this byte count
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(Locale.getDefault());

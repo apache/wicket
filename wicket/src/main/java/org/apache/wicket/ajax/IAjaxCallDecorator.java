@@ -37,8 +37,8 @@ import org.apache.wicket.IClusterable;
  * return &quot;alert('It\\'s ok!')&quot;;
  * </pre>
  * 
- * Also note that <tt>decorateScript(CharSequence script)</tt> should generally append to the
- * script rather than replace it:
+ * Also note that <tt>decorateScript(CharSequence script)</tt> should generally append to the script
+ * rather than replace it:
  * 
  * <pre>
  * return &quot;alert('Before ajax call');&quot; + script;

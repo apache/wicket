@@ -120,8 +120,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	/**
 	 * Determines whether or not the data for this output stream has been retained in memory.
 	 * 
-	 * @return <code>true</code> if the data is available in memory; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the data is available in memory; <code>false</code> otherwise.
 	 */
 	public boolean isInMemory()
 	{
@@ -137,6 +136,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	protected OutputStream getStream() throws IOException
 	{
 		return currentOutputStream;
@@ -151,6 +151,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	protected void thresholdReached() throws IOException
 	{
 		byte[] data = memoryOutputStream.toByteArray();

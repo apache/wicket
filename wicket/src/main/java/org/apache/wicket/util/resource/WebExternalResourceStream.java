@@ -69,6 +69,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
 		return -1;
@@ -78,14 +79,18 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	{
 		// getInputStream() is not always called (WICKET-790)
 		if (in != null)
+		{
 			in.close();
+		}
 	}
 
+	@Override
 	public Time lastModifiedTime()
 	{
 		return null;
 	}
 
+	@Override
 	public String getContentType()
 	{
 		return null;
@@ -93,14 +98,13 @@ public class WebExternalResourceStream extends AbstractResourceStream
 
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
-		final ServletContext context = ((WebApplication)RequestCycle.get().getApplication())
-				.getServletContext();
+		final ServletContext context = ((WebApplication)RequestCycle.get().getApplication()).getServletContext();
 
 		in = context.getResourceAsStream(url);
 		if (in == null)
 		{
 			throw new ResourceStreamNotFoundException("The requested resource was not found: " +
-					url);
+				url);
 		}
 		return in;
 	}

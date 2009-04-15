@@ -125,6 +125,7 @@ public final class FullyBufferedReader
 	/**
 	 * @return The markup to be parsed
 	 */
+	@Override
 	public String toString()
 	{
 		return input;

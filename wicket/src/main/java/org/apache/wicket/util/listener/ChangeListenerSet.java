@@ -26,6 +26,7 @@ public final class ChangeListenerSet extends ListenerSet
 	/**
 	 * @see org.apache.wicket.util.listener.ListenerSet#notifyListener(org.apache.wicket.util.listener.IListener)
 	 */
+	@Override
 	protected void notifyListener(IListener listener)
 	{
 		((IChangeListener)listener).onChange();

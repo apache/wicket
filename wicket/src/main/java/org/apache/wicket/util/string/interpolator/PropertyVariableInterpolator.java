@@ -22,13 +22,13 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * Interpolates values into <code>String</code>s that are produced by interpreting property
  * expressions against a beans model.
  * <p>
- * The <code>interpolate(String string, Object model)</code> method takes a string such as "<code>My name is ${name}</code>"
- * and a beans model such as a <code>Person</code>, and reflects on the object using any property
- * expressions found inside <code>${}</code> markers in the <code>String</code>. In this case,
- * if the <code>Person</code> model has a <code>getName()</code> method. The results of calling
- * that method would be substituted for <code>${name}</code>. If <code>getName()</code>
- * returned <code>"Jonathan"</code>, then <code>interpolate()</code> would return
- * <code>"My name is Jonathan"</code>.
+ * The <code>interpolate(String string, Object model)</code> method takes a string such as "
+ * <code>My name is ${name}</code>" and a beans model such as a <code>Person</code>, and reflects on
+ * the object using any property expressions found inside <code>${}</code> markers in the
+ * <code>String</code>. In this case, if the <code>Person</code> model has a <code>getName()</code>
+ * method. The results of calling that method would be substituted for <code>${name}</code>. If
+ * <code>getName()</code> returned <code>"Jonathan"</code>, then <code>interpolate()</code> would
+ * return <code>"My name is Jonathan"</code>.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -81,6 +81,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	 *            the variable name
 	 * @return the value
 	 */
+	@Override
 	protected String getValue(final String variableName)
 	{
 		Object value = PropertyResolver.getValue(variableName, model);

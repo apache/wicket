@@ -21,8 +21,8 @@ import org.apache.wicket.util.parse.metapattern.MetaPattern;
 
 /**
  * Matches a 'word' surrounded by whitespace. See <a
- * href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html">java.util.regex.Pattern
- * </a> for more details on what 'word' means.
+ * href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html"
+ * >java.util.regex.Pattern </a> for more details on what 'word' means.
  * 
  * @author Jonathan Locke
  */

@@ -59,7 +59,7 @@ public class AbortWithHttpStatusException extends AbstractRestartResponseExcepti
 			if (!statusCodeOptional)
 			{
 				throw new IllegalStateException(
-						"This exception can only be thrown from within request processing cycle");
+					"This exception can only be thrown from within request processing cycle");
 			}
 		}
 		else
@@ -68,7 +68,7 @@ public class AbortWithHttpStatusException extends AbstractRestartResponseExcepti
 			if (!(r instanceof WebResponse))
 			{
 				throw new IllegalStateException(
-						"This exception can only be thrown when wicket is processing an http request");
+					"This exception can only be thrown when wicket is processing an http request");
 			}
 
 			WebResponse wr = (WebResponse)r;

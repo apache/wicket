@@ -47,6 +47,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 * 
 	 * @return The loader instance to test
 	 */
+	@Override
 	protected IStringResourceLoader createLoader()
 	{
 		return new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources");
@@ -55,6 +56,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	/**
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderValidKeyStyleNoLocale()
 	 */
+	@Override
 	public void testLoaderValidKeyStyleNoLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt");
@@ -64,11 +66,12 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	/**
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
 	 */
+	@Override
 	public void testLoaderUnknownResources()
 	{
 		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
-				component.getClass(), "test.string", Locale.getDefault(), null));
+			component.getClass(), "test.string", Locale.getDefault(), null));
 	}
 
 }

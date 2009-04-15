@@ -94,11 +94,12 @@ public class FeedbackMessage implements IClusterable
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component reporter, final Serializable message,
-		final int level)
+	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
 	{
-		if(message == null)
+		if (message == null)
+		{
 			throw new IllegalArgumentException("Parameter message can't be null");
+		}
 		this.reporter = reporter;
 		this.message = message;
 		this.level = level;

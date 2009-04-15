@@ -188,7 +188,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		final Locale locale = session.getLocale();
 
 		MarkupResourceStream markupResourceStream = null;
-		Class< ? > containerClass = getClass();
+		Class<?> containerClass = getClass();
 
 		while (!(containerClass.equals(MarkupComponentBorder.class)))
 		{

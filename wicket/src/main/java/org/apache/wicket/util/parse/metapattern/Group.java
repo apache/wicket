@@ -64,6 +64,7 @@ public class Group extends MetaPattern
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "(" + super.toString() + ")";
@@ -79,9 +80,9 @@ public class Group extends MetaPattern
 	 */
 	final void bind(final int bindTo)
 	{
-		if (this.group == -1)
+		if (group == -1)
 		{
-			this.group = bindTo;
+			group = bindTo;
 		}
 		else
 		{

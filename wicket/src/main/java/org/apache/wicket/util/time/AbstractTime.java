@@ -55,8 +55,8 @@ abstract class AbstractTime extends AbstractTimeValue
 	 * 
 	 * @param that
 	 *            the <code>AbstractTimeValue</code> to compare with
-	 * @return <code>true</code> if this <code>Time</code> value is after
-	 *         <code>that</code> <code>Time</code> value
+	 * @return <code>true</code> if this <code>Time</code> value is after <code>that</code>
+	 *         <code>Time</code> value
 	 */
 	public final boolean after(final AbstractTimeValue that)
 	{
@@ -69,8 +69,8 @@ abstract class AbstractTime extends AbstractTimeValue
 	 * 
 	 * @param that
 	 *            the <code>AbstractTimeValue</code> to compare with
-	 * @return <code>true</code> if this <code>Time</code> value is before
-	 *         <code>that</code> <code>Time</code> value
+	 * @return <code>true</code> if this <code>Time</code> value is before <code>that</code>
+	 *         <code>Time</code> value
 	 */
 	public final boolean before(final AbstractTimeValue that)
 	{
@@ -78,8 +78,7 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts this <code>Time</code> to a time <code>String</code> using the formatter
-	 * 'h.mma'.
+	 * Converts this <code>Time</code> to a time <code>String</code> using the formatter 'h.mma'.
 	 * 
 	 * @return the <code>Time</code> <code>String</code>
 	 */
@@ -109,11 +108,12 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts this <code>Time</code> to a <code>String</code> suitable for use in a file
-	 * system name.
+	 * Converts this <code>Time</code> to a <code>String</code> suitable for use in a file system
+	 * name.
 	 * 
 	 * @return this <code>Time</code> as a formatted <code>String</code>
 	 */
+	@Override
 	public String toString()
 	{
 		return toTimeString();

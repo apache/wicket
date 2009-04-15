@@ -149,8 +149,7 @@ public class PackagedTextTemplate extends TextTemplate
 		String path = Packages.absolutePath(clazz, fileName);
 
 		Application app = Application.get();
-		TextTemplateCache cache = app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
-		// TODO implement cache
+		app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
 
 		// first try default class loading locator to find the resource
 		IResourceStream stream = app.getResourceSettings().getResourceStreamLocator().locate(clazz,

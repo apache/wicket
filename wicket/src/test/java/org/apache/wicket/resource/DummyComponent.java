@@ -46,6 +46,7 @@ public class DummyComponent extends Component
 	 * 
 	 * @see org.apache.wicket.Component#onRender(org.apache.wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 	}

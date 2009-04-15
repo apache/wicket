@@ -58,6 +58,7 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 		 * 
 		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
 		 */
+		@Override
 		protected void onValidate(IValidatable v)
 		{
 			error(v);

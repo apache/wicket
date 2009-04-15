@@ -35,6 +35,7 @@ import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
  */
 public class WebExternalResourceTest extends WicketTestCase
 {
+	@Override
 	protected void setUp() throws Exception
 	{
 		File tempDir = new File("target/webapp");

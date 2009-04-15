@@ -42,6 +42,7 @@ public class OnChangeAjaxBehaviorTestPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 			}
@@ -54,6 +55,7 @@ public class OnChangeAjaxBehaviorTestPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 			}

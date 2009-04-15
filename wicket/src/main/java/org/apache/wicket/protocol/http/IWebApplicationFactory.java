@@ -25,7 +25,7 @@ package org.apache.wicket.protocol.http;
  *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *         &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
  *     &lt;/init-param&gt;
- *   
+ * 
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)

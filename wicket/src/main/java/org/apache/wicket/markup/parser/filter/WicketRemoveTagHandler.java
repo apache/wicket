@@ -73,7 +73,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		if (openTag.isOpenClose())
 		{
 			throw new ParseException("Wicket remove tag must not be an open-close tag: " +
-					openTag.toUserDebugString(), openTag.getPos());
+				openTag.toUserDebugString(), openTag.getPos());
 		}
 
 		// Find the corresponding close tag and remove all tags in between
@@ -98,11 +98,11 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 			}
 
 			throw new ParseException(
-					"Markup remove regions must not contain Wicket component tags. tag: " +
-							closeTag.toUserDebugString(), closeTag.getPos());
+				"Markup remove regions must not contain Wicket component tags. tag: " +
+					closeTag.toUserDebugString(), closeTag.getPos());
 		}
 
 		throw new ParseException("Did not find close tag for markup remove region. Open tag: " +
-				openTag.toUserDebugString(), openTag.getPos());
+			openTag.toUserDebugString(), openTag.getPos());
 	}
 }

@@ -64,8 +64,10 @@ public class AjaxFormSubmitTest extends WicketTestCase
 		AjaxFormSubmitTestPage page = (AjaxFormSubmitTestPage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM) == AjaxFormSubmitTestPage.FORM);
 		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON) == AjaxFormSubmitTestPage.BUTTON);
-		assertEquals("foo", tester.getComponentFromLastRenderedPage("form:txt1").getDefaultModelObject());
-		assertEquals("bar", tester.getComponentFromLastRenderedPage("form:txt2").getDefaultModelObject());
+		assertEquals("foo", tester.getComponentFromLastRenderedPage("form:txt1")
+			.getDefaultModelObject());
+		assertEquals("bar", tester.getComponentFromLastRenderedPage("form:txt2")
+			.getDefaultModelObject());
 	}
 
 }

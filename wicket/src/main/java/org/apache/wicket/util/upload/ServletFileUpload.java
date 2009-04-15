@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * This class handles multiple files per single HTML widget, sent using <code>multipart/mixed</code>
  * encoding type, as specified by <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>. Use
- * {@link #parseRequest(HttpServletRequest)} to acquire a list of {@link
- * org.apache.wicket.util.upload.FileItem}s associated with a given HTML widget.
+ * {@link #parseRequest(HttpServletRequest)} to acquire a list of
+ * {@link org.apache.wicket.util.upload.FileItem}s associated with a given HTML widget.
  * </p>
  * 
  * <p>
@@ -104,8 +104,8 @@ public class ServletFileUpload extends FileUpload
 	 * @param request
 	 *            The servlet request to be parsed.
 	 * 
-	 * @return A list of <code>FileItem</code> instances parsed from the request, in the order
-	 *         that they were transmitted.
+	 * @return A list of <code>FileItem</code> instances parsed from the request, in the order that
+	 *         they were transmitted.
 	 * 
 	 * @exception FileUploadException
 	 *                if there are problems reading/parsing the request or storing files.

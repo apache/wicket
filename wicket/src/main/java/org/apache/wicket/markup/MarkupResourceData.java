@@ -193,7 +193,9 @@ public class MarkupResourceData
 	public MarkupResourceData getBaseMarkupResourceData()
 	{
 		if (baseMarkup == null)
+		{
 			return null;
+		}
 		return baseMarkup.getMarkupResourceData();
 	}
 

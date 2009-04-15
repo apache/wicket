@@ -28,6 +28,7 @@ class HtmlLicenseHeaderHandler extends XmlLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	public String[] getSuffixes()
 	{
 		return new String[] { "html" };

@@ -33,7 +33,7 @@ public class ExternalLinkPage_2 extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            public boolean isVisible()
+			public boolean isVisible()
 			{
 				return getDefaultModelObject() != null;
 			}

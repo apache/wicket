@@ -35,7 +35,7 @@ import org.apache.wicket.markup.parser.XmlTag;
  * <p>
  * <ul>
  * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
- * <li>All tags with an attribute like wicket:id="myLabel" </li>
+ * <li>All tags with an attribute like wicket:id="myLabel"</li>
  * </ul>
  * 
  * @author Juergen Donnerstag

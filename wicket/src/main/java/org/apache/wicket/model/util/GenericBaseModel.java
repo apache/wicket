@@ -24,9 +24,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Base class for models that contain instances that do not appear to be serializable
- * and cannot thus use <code>Model</code> directly. Makes sure that the object set into the
- * model can be serialized.
+ * Base class for models that contain instances that do not appear to be serializable and cannot
+ * thus use <code>Model</code> directly. Makes sure that the object set into the model can be
+ * serialized.
  * 
  * @author Timo Rantalaiho
  * @param <T>

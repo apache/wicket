@@ -41,7 +41,9 @@ public class AbortExceptionPage extends WebPage
 		final boolean triggerError = parameters.getBoolean("trigger");
 
 		if (!triggerError)
+		{
 			throw new AbortWithWebErrorCodeException(1234, "this error will be rendered");
+		}
 
 		IModel<List<Object>> model = new LoadableDetachableModel<List<Object>>()
 		{
@@ -51,10 +53,14 @@ public class AbortExceptionPage extends WebPage
 			protected List<Object> load()
 			{
 				if (triggerError)
+				{
 					throw new AbortWithWebErrorCodeException(1234,
 						"this error will NOT be rendered");
+				}
 				else
+				{
 					return Collections.emptyList();
+				}
 			}
 		};
 

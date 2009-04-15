@@ -51,7 +51,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 * @param listener
 	 */
 	public ComponentResourceRequestTarget(Page page, Component component,
-			RequestListenerInterface listener)
+		RequestListenerInterface listener)
 	{
 		this.page = page;
 		this.component = component;
@@ -74,17 +74,17 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 			if (response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
-						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				log.error("error handling resource request for component " + component +
-						", on page " + page + ", listener " + listener.getName() + " - " +
-						e.getMessage(), e);
+					", on page " + page + ", listener " + listener.getName() + " - " +
+					e.getMessage(), e);
 				return;
 			}
 			else
 			{
 				throw new WicketRuntimeException("method " + listener.getName() + " of " +
-						listener.getMethod().getDeclaringClass() + " targetted at component " +
-						component + " threw an exception", e);
+					listener.getMethod().getDeclaringClass() + " targetted at component " +
+					component + " threw an exception", e);
 			}
 		}
 	}
@@ -100,6 +100,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof ComponentResourceRequestTarget)
@@ -113,6 +114,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = getClass().hashCode();
@@ -124,10 +126,15 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
-				.append(page).append("->").append(component.getId()).append("->IResourceListener");
+		StringBuffer b = new StringBuffer(getClass().getName()).append("@")
+			.append(hashCode())
+			.append(page)
+			.append("->")
+			.append(component.getId())
+			.append("->IResourceListener");
 		return b.toString();
 	}
 }

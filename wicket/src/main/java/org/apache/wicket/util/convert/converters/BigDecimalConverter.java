@@ -38,7 +38,9 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 	public BigDecimal convertToObject(String value, Locale locale)
 	{
 		if (value == null || value.trim().equals(""))
+		{
 			return null;
+		}
 
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
 		if (number instanceof BigDecimal)

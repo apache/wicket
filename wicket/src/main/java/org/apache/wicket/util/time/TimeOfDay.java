@@ -29,16 +29,14 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * <ul>
  * <li><code>valueOf(long)</code> where <code>long</code> is milliseconds since midnight
  * <li><code>valueOf(String)</code> where the <code>String</code> is in 'h.mma' format
- * <li><code>valueOf(Calendar, String)</code> where the <code>String</code> is in 'h.mma'
- * format
+ * <li><code>valueOf(Calendar, String)</code> where the <code>String</code> is in 'h.mma' format
  * <li><code>valueOf(Duration)</code> where <code>Duration</code> is time since midnight
  * <li><code>valueOf(Time)</code> where <code>Time</code> is some point in time today
  * <li><code>valueOf(Calendar, Time)</code> where <code>Time</code> is some point in time today
  * <li><code>militaryTime(int hour, int minute, int second)</code> for 24-hour time
- * <li><code>time(int hour, int minute, Meridian)</code> where <code>Meridian</code> is AM or
- * PM
- * <li><code>time(int hour, int minute, int second, Meridian)</code> where <code>Meridian</code>
- * is AM or PM
+ * <li><code>time(int hour, int minute, Meridian)</code> where <code>Meridian</code> is AM or PM
+ * <li><code>time(int hour, int minute, int second, Meridian)</code> where <code>Meridian</code> is
+ * AM or PM
  * <li><code>now()</code> to construct the current time of day
  * <li><code>now(Calendar)</code> to construct the current time of day using a given
  * <code>Calendar</code>
@@ -118,7 +116,7 @@ public final class TimeOfDay extends AbstractTime
 		}
 
 		return valueOf(Duration.hours(hour).add(Duration.minutes(minute)).add(
-				Duration.seconds(second)));
+			Duration.seconds(second)));
 	}
 
 	/**
@@ -157,7 +155,7 @@ public final class TimeOfDay extends AbstractTime
 	 * @return the <code>TimeOfDay</code> value
 	 */
 	public static TimeOfDay time(final int hour, final int minute, final int second,
-			final Meridian meridian)
+		final Meridian meridian)
 	{
 		if (meridian == PM)
 		{
@@ -211,7 +209,7 @@ public final class TimeOfDay extends AbstractTime
 	 * @throws ParseException
 	 */
 	public static TimeOfDay valueOf(final Calendar calendar, final String time)
-			throws ParseException
+		throws ParseException
 	{
 		synchronized (timeFormat)
 		{
@@ -224,8 +222,8 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts a <code>Time</code> instance and <code>Calendar</code> to a
-	 * <code>TimeOfDay</code> instance.
+	 * Converts a <code>Time</code> instance and <code>Calendar</code> to a <code>TimeOfDay</code>
+	 * instance.
 	 * 
 	 * @param calendar
 	 *            the <code>Calendar</code> to use
@@ -235,8 +233,8 @@ public final class TimeOfDay extends AbstractTime
 	 */
 	public static TimeOfDay valueOf(final Calendar calendar, final Time time)
 	{
-		return militaryTime(time.getHour(calendar), time.getMinute(calendar), time
-				.getSecond(calendar));
+		return militaryTime(time.getHour(calendar), time.getMinute(calendar),
+			time.getSecond(calendar));
 	}
 
 	/**
@@ -341,8 +339,7 @@ public final class TimeOfDay extends AbstractTime
 	 * 
 	 * @param calendar
 	 *            the <code>Calendar</code> to use
-	 * @return the next occurrence of this <code>TimeOfDay</code> on the given
-	 *         <code>Calendar</code>
+	 * @return the next occurrence of this <code>TimeOfDay</code> on the given <code>Calendar</code>
 	 */
 	public Time next(final Calendar calendar)
 	{
@@ -375,6 +372,7 @@ public final class TimeOfDay extends AbstractTime
 	/**
 	 * @see Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		final int second = second();

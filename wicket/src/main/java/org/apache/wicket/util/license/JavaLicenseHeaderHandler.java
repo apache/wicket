@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
 	private final Pattern javaHeaderPattern = Pattern.compile("^(.*?)package.*$",
-			Pattern.MULTILINE | Pattern.DOTALL);
+		Pattern.MULTILINE | Pattern.DOTALL);
 
 	/**
 	 * Construct.
@@ -39,6 +39,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		boolean added = false;
@@ -86,11 +87,13 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "java" };
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "javaLicense.txt";
 	}
 
+	@Override
 	public String getLicenseType(File file)
 	{
 		String licenseType = null;

@@ -36,9 +36,9 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * @author Johan Compagner
  */
 public abstract class AbstractListenerInterfaceRequestTarget extends PageRequestTarget
-		implements
-			IListenerInterfaceRequestTarget,
-			IEventProcessor
+	implements
+		IListenerInterfaceRequestTarget,
+		IEventProcessor
 {
 	/** The request parameters. */
 	private final RequestParameters requestParameters;
@@ -60,7 +60,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the listener interface
 	 */
 	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
-			RequestListenerInterface listener)
+		RequestListenerInterface listener)
 	{
 		this(page, component, listener, null);
 	}
@@ -79,7 +79,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the request parameter
 	 */
 	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
-			final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final RequestParameters requestParameters)
 	{
 		super(page);
 
@@ -102,6 +102,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
@@ -136,7 +137,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 */
 	public final RequestParameters getRequestParameters()
 	{
-		return this.requestParameters;
+		return requestParameters;
 	}
 
 	/**
@@ -150,6 +151,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = getClass().hashCode();
@@ -162,12 +164,18 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer(getClass().getName()).append("@").append(hashCode())
-				.append(getPage().toString()).append("->").append(getTarget().getId()).append("->")
-				.append(getRequestListenerInterface().getMethod().getDeclaringClass()).append(".")
-				.append(getRequestListenerInterface().getName());
+		StringBuffer buf = new StringBuffer(getClass().getName()).append("@")
+			.append(hashCode())
+			.append(getPage().toString())
+			.append("->")
+			.append(getTarget().getId())
+			.append("->")
+			.append(getRequestListenerInterface().getMethod().getDeclaringClass())
+			.append(".")
+			.append(getRequestListenerInterface().getName());
 
 		if (requestParameters != null)
 		{
@@ -189,7 +197,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		final Application application = requestCycle.getApplication();
 		// and see if we have to redirect the render part by default
 		IRequestCycleSettings.RenderStrategy strategy = application.getRequestCycleSettings()
-				.getRenderStrategy();
+			.getRenderStrategy();
 		boolean issueRedirect = (strategy == IRequestCycleSettings.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.REDIRECT_TO_BUFFER);
 
 		requestCycle.setRedirect(issueRedirect);

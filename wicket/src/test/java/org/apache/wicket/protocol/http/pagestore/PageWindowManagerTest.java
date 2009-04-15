@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.protocol.http.pagestore;
 
-import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 
 /**
  * @author Matej Knopp
@@ -177,20 +177,20 @@ public class PageWindowManagerTest extends TestCase
 	}
 
 	private void assertWindow(PageWindow window, int pageId, int versionNumber,
-			int ajaxVersionNumber, int filePartOffset, int filePartSize)
+		int ajaxVersionNumber, int filePartOffset, int filePartSize)
 	{
 		assertTrue(window.getPageId() == pageId && window.getVersionNumber() == versionNumber &&
-				window.getAjaxVersionNumber() == ajaxVersionNumber &&
-				window.getFilePartOffset() == filePartOffset &&
-				window.getFilePartSize() == filePartSize);
+			window.getAjaxVersionNumber() == ajaxVersionNumber &&
+			window.getFilePartOffset() == filePartOffset &&
+			window.getFilePartSize() == filePartSize);
 	}
 
 
 	private void assertWindow(PageWindow window, int pageId, int versionNumber,
-			int ajaxVersionNumber)
+		int ajaxVersionNumber)
 	{
 		assertTrue(window.getPageId() == pageId && window.getVersionNumber() == versionNumber &&
-				window.getAjaxVersionNumber() == ajaxVersionNumber);
+			window.getAjaxVersionNumber() == ajaxVersionNumber);
 
 	}
 

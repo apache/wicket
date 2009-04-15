@@ -51,6 +51,7 @@ public class IncrementalTableNavigationPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getDefaultModelObject();
@@ -62,7 +63,7 @@ public class IncrementalTableNavigationPage extends WebPage
 		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink("prev", table, -1);
 		add(prev);
 		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink("nextNext",
-				table, +2);
+			table, +2);
 		add(nextNext);
 	}
 }

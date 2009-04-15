@@ -67,8 +67,8 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and
-	 * an interface type. This should end in an exception because Wicket can't decide what to
+	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and an
+	 * interface type. This should end in an exception because Wicket can't decide what to
 	 * instantiate on behalf of the program.
 	 */
 	public void testSetWithNullPathInterface()
@@ -87,8 +87,8 @@ public class PropertyModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and
-	 * an abstract class type. This should end in an exception because Wicket can't decide what to
+	 * Tests setting a value on a {@link PropertyModel} when a property is <code>null</code> and an
+	 * abstract class type. This should end in an exception because Wicket can't decide what to
 	 * instantiate on behalf of the program.
 	 */
 	public void testSetWithNullPathAbstract()

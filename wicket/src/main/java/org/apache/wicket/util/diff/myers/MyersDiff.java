@@ -109,7 +109,7 @@ public class MyersDiff implements DiffAlgorithm
 	 *             if a diff path could not be found.
 	 */
 	public static PathNode buildPath(Object[] orig, Object[] rev)
-			throws DifferentiationFailedException
+		throws DifferentiationFailedException
 	{
 		if (orig == null)
 		{
@@ -231,7 +231,7 @@ public class MyersDiff implements DiffAlgorithm
 			int janchor = path.j;
 
 			Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor), new Chunk(rev,
-					janchor, j - janchor));
+				janchor, j - janchor));
 			revision.insertDelta(delta);
 			if (path.isSnake())
 			{

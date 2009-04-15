@@ -36,9 +36,13 @@ public class SqlTimeConverter extends AbstractConverter
 	public Time convertToObject(String value, Locale locale)
 	{
 		if (value == null)
+		{
 			return null;
+		}
 		if (locale == null)
+		{
 			locale = Locale.getDefault();
+		}
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		try
 		{
@@ -59,9 +63,13 @@ public class SqlTimeConverter extends AbstractConverter
 	public String convertToString(final Object value, Locale locale)
 	{
 		if (value == null)
+		{
 			return null;
+		}
 		if (locale == null)
+		{
 			locale = Locale.getDefault();
+		}
 		Time time = (Time)value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(time);

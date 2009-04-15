@@ -106,5 +106,5 @@ public interface ISecuritySettings
 	 * @see IUnauthorizedComponentInstantiationListener
 	 */
 	void setUnauthorizedComponentInstantiationListener(
-			IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
+		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
 }

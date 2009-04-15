@@ -18,12 +18,18 @@ package org.apache.wicket.util.crypt;
 
 /**
  * Provides Base64 encoding and decoding with URL and filename safe alphabet as defined by RFC 3548,
- * section 4. <p/> This Base64 encoder is modified to meet URL requirements. The changes are: '+' =>
- * '*', '/' => '-', and no padding. <p/> This class is taken from the Apache commons-codec, and
- * adjusted to fit the Wicket framework's needs, especially external dependencies have been removed.
+ * section 4.
+ * <p/>
+ * This Base64 encoder is modified to meet URL requirements. The changes are: '+' => '*', '/' =>
+ * '-', and no padding.
+ * <p/>
+ * This class is taken from the Apache commons-codec, and adjusted to fit the Wicket framework's
+ * needs, especially external dependencies have been removed.
  * </p>
- * <p/> This class implements section <cite>4. Base 64 Encoding with URL and Filename Safe Alphabet</cite>
- * from RFC 3548 <cite>The Base16, Base32, and Base64 Data Encodings</cite> by Simon Josefsson.
+ * <p/>
+ * This class implements section <cite>4. Base 64 Encoding with URL and Filename Safe
+ * Alphabet</cite> from RFC 3548 <cite>The Base16, Base32, and Base64 Data Encodings</cite> by Simon
+ * Josefsson.
  * </p>
  * 
  * @author Apache Software Foundation
@@ -69,23 +75,28 @@ public class Base64UrlSafe
 	static final int SIGN = -128;
 
 	/**
-	 * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using
-	 * character encodings as indices. <p/> For example, <code>base64Alphabet['+']</code> returns
-	 * <code>62</code>.
+	 * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using character
+	 * encodings as indices.
+	 * <p/>
+	 * For example, <code>base64Alphabet['+']</code> returns <code>62</code>.
 	 * </p>
-	 * <p/> The value of undefined encodings is <code>-1</code>.
+	 * <p/>
+	 * The value of undefined encodings is <code>-1</code>.
 	 * </p>
 	 */
 	private static byte[] base64Alphabet = new byte[BASELENGTH];
 
 	/**
-	 * <p/> Contains the Base64 encodings <code>A</code> through <code>Z</code>, followed by
-	 * <code>a</code> through <code>z</code>, followed by <code>0</code> through
-	 * <code>9</code>, followed by <code>+</code>, and <code>/</code>.
+	 * <p/>
+	 * Contains the Base64 encodings <code>A</code> through <code>Z</code>, followed by
+	 * <code>a</code> through <code>z</code>, followed by <code>0</code> through <code>9</code>,
+	 * followed by <code>+</code>, and <code>/</code>.
 	 * </p>
-	 * <p/> This array is accessed by using character values as indices.
+	 * <p/>
+	 * This array is accessed by using character values as indices.
 	 * </p>
-	 * <p/> For example, <code>lookUpBase64Alphabet[62] </code> returns <code>'+'</code>.
+	 * <p/>
+	 * For example, <code>lookUpBase64Alphabet[62] </code> returns <code>'+'</code>.
 	 * </p>
 	 */
 	private static byte[] lookUpBase64Alphabet = new byte[LOOKUPLENGTH];
@@ -158,8 +169,8 @@ public class Base64UrlSafe
 	 * 
 	 * @param arrayOctect
 	 *            byte array to test
-	 * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if
-	 *         the byte array is empty; false, otherwise
+	 * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if the
+	 *         byte array is empty; false, otherwise
 	 */
 	public static boolean isArrayByteBase64(byte[] arrayOctect)
 	{
@@ -199,7 +210,7 @@ public class Base64UrlSafe
 		if (!(pObject instanceof byte[]))
 		{
 			throw new IllegalArgumentException(
-					"Parameter supplied to Base64 decode is not a byte[]");
+				"Parameter supplied to Base64 decode is not a byte[]");
 		}
 		return decode((byte[])pObject);
 	}
@@ -460,7 +471,7 @@ public class Base64UrlSafe
 		if (!(pObject instanceof byte[]))
 		{
 			throw new IllegalArgumentException(
-					"Parameter supplied to Base64 encode is not a byte[]");
+				"Parameter supplied to Base64 encode is not a byte[]");
 		}
 		return encode((byte[])pObject);
 	}

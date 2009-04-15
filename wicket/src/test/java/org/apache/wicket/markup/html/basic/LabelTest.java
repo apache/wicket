@@ -54,6 +54,6 @@ public class LabelTest extends WicketTestCase
 	public void testLabelWithoutEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithoutEscapeMarkupPage.class,
-				"LabelWithoutEscapeMarkupPageExpectedResult.html");
+			"LabelWithoutEscapeMarkupPageExpectedResult.html");
 	}
 }

@@ -31,6 +31,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "javaScriptLicense.txt";
@@ -48,6 +49,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "js" };
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);

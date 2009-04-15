@@ -35,8 +35,7 @@ public class SimpleResponsePageClassTest extends TestCase
 	{
 		WicketTester mockWebApp = new WicketTester();
 		mockWebApp.startPage(SimpleResponsePageClass.class);
-		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)mockWebApp
-				.getLastRenderedPage();
+		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)mockWebApp.getLastRenderedPage();
 
 		Form form = (Form)manageBook.get("form");
 		mockWebApp.setupRequestAndResponse();

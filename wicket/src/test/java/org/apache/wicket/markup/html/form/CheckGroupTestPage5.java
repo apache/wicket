@@ -40,7 +40,8 @@ public class CheckGroupTestPage5 extends WebPage
 	{
 		List<String> list = new ArrayList<String>();
 		Form<Void> form = new Form<Void>("form");
-		CheckGroup<String> group = new CheckGroup<String>("group", new CollectionModel<String>(list));
+		CheckGroup<String> group = new CheckGroup<String>("group",
+			new CollectionModel<String>(list));
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));
 		Check<String> check2 = new Check<String>("check2", new Model<String>("check2"));

@@ -31,15 +31,15 @@ import org.apache.wicket.IClusterable;
  * <code>multipart/form-data</code> POST request.
  * 
  * <p>
- * After retrieving an instance of this class from a {@link org.apache.wicket.util.upload.FileUpload
- * FileUpload} instance, you may either request all contents of the file at once using
- * {@link #get()} or request an {@link java.io.InputStream InputStream} with
- * {@link #getInputStream()} and process the file without attempting to load it into memory, which
- * may come handy with large files.
+ * After retrieving an instance of this class from a
+ * {@link org.apache.wicket.util.upload.FileUpload FileUpload} instance, you may either request all
+ * contents of the file at once using {@link #get()} or request an {@link java.io.InputStream
+ * InputStream} with {@link #getInputStream()} and process the file without attempting to load it
+ * into memory, which may come handy with large files.
  * 
  * <p>
- * While this interface does not extend <code>javax.activation.DataSource</code> per se (to avoid
- * a seldom used dependency), several of the defined methods are specifically defined with the same
+ * While this interface does not extend <code>javax.activation.DataSource</code> per se (to avoid a
+ * seldom used dependency), several of the defined methods are specifically defined with the same
  * signatures as methods in that interface. This allows an implementation of this interface to also
  * implement <code>javax.activation.DataSource</code> with minimal additional work.
  * 
@@ -185,8 +185,8 @@ public interface FileItem extends IClusterable
 	/**
 	 * Determines whether or not a <code>FileItem</code> instance represents a simple form field.
 	 * 
-	 * @return <code>true</code> if the instance represents a simple form field;
-	 *         <code>false</code> if it represents an uploaded file.
+	 * @return <code>true</code> if the instance represents a simple form field; <code>false</code>
+	 *         if it represents an uploaded file.
 	 */
 	boolean isFormField();
 

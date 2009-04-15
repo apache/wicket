@@ -57,6 +57,7 @@ public class BufferedWebResponse extends WebResponse
 	 * Flushes the response buffer by doing a redirect or writing out the buffer. NOTE: The servlet
 	 * container will close the response output stream.
 	 */
+	@Override
 	public void close()
 	{
 		// If a redirection was specified
@@ -78,6 +79,7 @@ public class BufferedWebResponse extends WebResponse
 	/**
 	 * @see org.apache.wicket.Response#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		redirectURL = null;
@@ -91,15 +93,16 @@ public class BufferedWebResponse extends WebResponse
 	 * @param url
 	 *            The URL to redirect to
 	 */
+	@Override
 	public final void redirect(final String url)
 	{
 		if (redirectURL != null)
 		{
 			throw new WicketRuntimeException("Already redirecting to '" + redirectURL +
-					"'. Cannot redirect more than once");
+				"'. Cannot redirect more than once");
 		}
 		// encode to make sure no caller forgot this
-		this.redirectURL = encodeURL(url).toString();
+		redirectURL = encodeURL(url).toString();
 	}
 
 	/**
@@ -108,6 +111,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param string
 	 *            The string to write
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		buffer.append(string);
@@ -120,7 +124,7 @@ public class BufferedWebResponse extends WebResponse
 	{
 		if (redirectURL == null && buffer.length() != 0)
 		{
-			this.buffer = filter(buffer);
+			buffer = filter(buffer);
 		}
 	}
 
@@ -128,6 +132,7 @@ public class BufferedWebResponse extends WebResponse
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return buffer.toString();

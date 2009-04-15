@@ -17,7 +17,6 @@
 package org.apache.wicket.util.resource;
 
 
-
 /**
  * A StringResourceStream is an IResource implementation for strings.
  * 

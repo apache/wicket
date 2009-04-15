@@ -29,8 +29,8 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * An implementation of <code>IValueMap</code> that makes a copy when a caller tries to change an
- * immutable <code>Map</code>. That is, the <code>Map</code> may or may not be immutable, but
- * if it is, a copy is made.
+ * immutable <code>Map</code>. That is, the <code>Map</code> may or may not be immutable, but if it
+ * is, a copy is made.
  * 
  * @author Johan Compagner
  * @author Doug Donohoe
@@ -65,8 +65,8 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 
 	/**
 	 * Checks if this <code>IValueMap</code> is immutable. If it is, this method makes a new
-	 * <code>IValueMap</code> using the <code>ValueMap</code> copy constructor, and sets it to
-	 * be this <code>CopyOnWriteValueMap</code>.
+	 * <code>IValueMap</code> using the <code>ValueMap</code> copy constructor, and sets it to be
+	 * this <code>CopyOnWriteValueMap</code>.
 	 */
 	private void checkAndCopy()
 	{

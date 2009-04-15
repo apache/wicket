@@ -65,8 +65,8 @@ public class ByteArrayResource extends WebResource
 	{
 		this.contentType = contentType;
 		this.array = array;
-		this.locale = null;
-		this.filename = null;
+		locale = null;
+		filename = null;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ByteArrayResource extends WebResource
 		this.contentType = contentType;
 		this.array = array;
 		this.filename = filename;
-		this.locale = null;
+		locale = null;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ByteArrayResource extends WebResource
 		this.contentType = contentType;
 		this.array = array;
 		this.locale = locale;
-		this.filename = null;
+		filename = null;
 	}
 
 	/**
@@ -130,6 +130,7 @@ public class ByteArrayResource extends WebResource
 	/**
 	 * @see org.apache.wicket.markup.html.WebResource#setHeaders(org.apache.wicket.protocol.http.WebResponse)
 	 */
+	@Override
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
@@ -142,6 +143,7 @@ public class ByteArrayResource extends WebResource
 	/**
 	 * @see org.apache.wicket.Resource#getResourceStream()
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

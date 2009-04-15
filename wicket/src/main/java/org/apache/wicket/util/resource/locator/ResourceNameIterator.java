@@ -143,18 +143,6 @@ public class ResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 * 
-	 * @param language
-	 * @param country
-	 * @param variant
-	 * @return Locale
-	 */
-	private Locale newLocale(String language, String country, String variant)
-	{
-		return new Locale(language, country != null ? country : "", variant != null ? variant : "");
-	}
-
-	/**
 	 * Get the exact Locale which has been used for the latest resource path.
 	 * 
 	 * @return current Locale

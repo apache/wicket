@@ -70,8 +70,8 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
-	 * expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
 	 * 
 	 * @param <T>
 	 * 
@@ -90,8 +90,8 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
-	 * expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
 	 * 
 	 * @param <T>
 	 * 
@@ -148,8 +148,8 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property,
-	 * or null if not set
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
+	 * null if not set
 	 * 
 	 * @return path with a trailing slash
 	 */
@@ -157,9 +157,13 @@ public abstract class WicketTestCase extends TestCase
 	{
 		String basedir = System.getProperty("basedir");
 		if (basedir != null)
+		{
 			basedir = basedir + "/";
+		}
 		else
+		{
 			basedir = "";
+		}
 		return basedir;
 	}
 }

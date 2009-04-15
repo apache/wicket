@@ -147,10 +147,14 @@ public abstract class AbstractPageStore implements IPageStore
 		public boolean equals(Object obj)
 		{
 			if (this == obj)
+			{
 				return true;
+			}
 
 			if (obj instanceof SerializedPage == false)
+			{
 				return false;
+			}
 
 			SerializedPage rhs = (SerializedPage)obj;
 

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.list;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
+
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -32,8 +33,8 @@ public class ListViewTest extends TestCase
 	/**
 	 * Create a predefined ListView
 	 * 
-	 * @param modelListSize #
-	 *            of elements to go into the list
+	 * @param modelListSize
+	 *            # of elements to go into the list
 	 * @return list view
 	 */
 	private ListView<Integer> createListView(final int modelListSize)
@@ -49,7 +50,7 @@ public class ListViewTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void populateItem(final ListItem<Integer> listItem)
+			protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}
@@ -61,7 +62,7 @@ public class ListViewTest extends TestCase
 	 */
 	public void testListView()
 	{
-		WicketTester tester = new WicketTester();
+		new WicketTester();
 
 		ListView<Integer> lv = createListView(4);
 		assertEquals(4, lv.getList().size());
@@ -99,7 +100,7 @@ public class ListViewTest extends TestCase
 	 */
 	public void testEmptyListView()
 	{
-		WicketTester tester = new WicketTester();
+		new WicketTester();
 
 		// Empty tables
 		ListView<?> lv = createListView(0);
@@ -114,7 +115,7 @@ public class ListViewTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void populateItem(final ListItem<Void> listItem)
+			protected void populateItem(final ListItem<Void> listItem)
 			{
 				// do nothing
 			}

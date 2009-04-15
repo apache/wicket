@@ -29,6 +29,7 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	private Component test2;
 	private Component test3;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

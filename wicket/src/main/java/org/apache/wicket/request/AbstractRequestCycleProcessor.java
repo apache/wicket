@@ -191,7 +191,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 */
 	private boolean isPageMounted(Class<? extends Page> pageClass)
 	{
-		RequestCycle cycle = RequestCycle.get();
+		RequestCycle.get();
 		CharSequence path = getRequestCodingStrategy().pathForTarget(
 			new BookmarkablePageRequestTarget(pageClass));
 		return path != null;

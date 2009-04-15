@@ -40,8 +40,7 @@ public final class XmlReader extends Reader
 	private static final Pattern xmlDecl = Pattern.compile("[\\s\\n\\r]*<\\?xml(\\s+.*)?\\?>");
 
 	/** Regex to find <?xml encoding ... ?> */
-	private static final Pattern encodingPattern = Pattern
-			.compile("\\s+encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S*)).*\\?>");
+	private static final Pattern encodingPattern = Pattern.compile("\\s+encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S*)).*\\?>");
 
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
@@ -67,7 +66,7 @@ public final class XmlReader extends Reader
 	 *             In case something went wrong while reading the data
 	 */
 	public XmlReader(final InputStream inputStream, final String defaultEncoding)
-			throws IOException
+		throws IOException
 	{
 		// The xml parser does not have a parent filter
 		super();
@@ -190,7 +189,7 @@ public final class XmlReader extends Reader
 	 * @throws IOException
 	 */
 	private final boolean getXmlDeclaration(final InputStream in, final int readAheadSize)
-			throws IOException
+		throws IOException
 	{
 		// Max one line
 		final AppendingStringBuffer pushBack = new AppendingStringBuffer(readAheadSize);
@@ -204,7 +203,7 @@ public final class XmlReader extends Reader
 			// Stop at the end of the first tag or end of line. If it is HTML
 			// without newlines, stop after X bytes (= characters)
 			if ((value == '>') || (value == '\n') || (value == '\r') ||
-					(pushBack.length() >= (readAheadSize - 1)))
+				(pushBack.length() >= (readAheadSize - 1)))
 			{
 				break;
 			}
@@ -226,6 +225,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @see java.io.Reader#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		reader.close();
@@ -235,6 +235,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @see java.io.Reader#read(char[], int, int)
 	 */
+	@Override
 	public int read(char[] buf, int from, int to) throws IOException
 	{
 		return reader.read(buf, from, to);
@@ -243,6 +244,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @return The markup to be parsed
 	 */
+	@Override
 	public String toString()
 	{
 		return inputStream.toString() + " (" + encoding + ")";

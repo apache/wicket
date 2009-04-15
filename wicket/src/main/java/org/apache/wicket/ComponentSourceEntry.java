@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents a "dehydrated" component state keeping only the minimum information needed to
  * reconstruct the component. That includes component id, {@link IComponentSource} and componentInfo
- * string. The string contains generated <code>markupID</code>s and <code>markupIndex</code>es
- * of the component and all it's children. Those are wicket internal variables and it's up to wicket
+ * string. The string contains generated <code>markupID</code>s and <code>markupIndex</code>es of
+ * the component and all it's children. Those are wicket internal variables and it's up to wicket
  * (not {@link IComponentSource} implementation to reconstruct that transparently for the user.
  * These information are encoded as one string to minimize object overhead.
  */
@@ -273,8 +273,7 @@ abstract class ComponentSourceEntry implements IClusterable
 	 * @param info
 	 * @return length of component info
 	 */
-	private static int parseComponentInfo(MarkupContainer parent, String info,
-		Component component)
+	private static int parseComponentInfo(MarkupContainer parent, String info, Component component)
 	{
 		// find the first part for the component
 		final String substring = getComponentSubString(info);

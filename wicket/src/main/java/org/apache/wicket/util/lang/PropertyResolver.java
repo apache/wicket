@@ -1079,9 +1079,13 @@ public final class PropertyResolver
 		{
 			Class type = null;
 			if (setMethod != null)
+			{
 				type = getMethod.getReturnType();
+			}
 			else if (field != null)
+			{
 				type = field.getType();
+			}
 
 			Object converted = null;
 			if (type != null)

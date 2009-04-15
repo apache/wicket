@@ -36,6 +36,7 @@ public class XmlPage extends WebPage
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#getMarkupType()
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xml";

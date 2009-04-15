@@ -35,11 +35,11 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param referer
-	 * 		the class that is referring; is used as the relative root for getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 * 		reference as a string
+	 *            reference as a string
 	 */
 	public JavaScriptReference(String id, Class<?> referer, String file)
 	{
@@ -50,11 +50,11 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param referer
-	 * 		the class that is referring; is used as the relative root for getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 * 		reference as a string. The model must provide an instance of {@link String}
+	 *            reference as a string. The model must provide an instance of {@link String}
 	 */
 	public JavaScriptReference(String id, Class<?> referer, IModel<String> file)
 	{
@@ -65,9 +65,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param resourceReference
-	 * 		resource reference
+	 *            resource reference
 	 */
 	public JavaScriptReference(String id, ResourceReference resourceReference)
 	{
@@ -78,9 +78,10 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * Construct.
 	 * 
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param resourceReference
-	 * 		resource reference. The model must provide an instance of {@link ResourceReference}
+	 *            resource reference. The model must provide an instance of
+	 *            {@link ResourceReference}
 	 */
 	public JavaScriptReference(String id, IModel<ResourceReference> resourceReference)
 	{
@@ -101,8 +102,8 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * @see org.apache.wicket.markup.html.resources.PackagedResourceReference#
-	 * 	createPackageResourceReference(org.apache.wicket.Application, java.lang.Class,
-	 * 	java.lang.String)
+	 *      createPackageResourceReference(org.apache.wicket.Application, java.lang.Class,
+	 *      java.lang.String)
 	 */
 	@Override
 	protected ResourceReference createPackageResourceReference(Application app, Class<?> scope,

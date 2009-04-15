@@ -46,7 +46,7 @@ public class RestartWithMountedPageTest extends WicketTestCase
 	public void testWithMountedPackage()
 	{
 		tester.getApplication().mount("/test",
-				PackageName.forPackage(ProtectedPage.class.getPackage()));
+			PackageName.forPackage(ProtectedPage.class.getPackage()));
 		tester.startPage(ProtectedPage.class);
 		tester.assertRenderedPage(LoginPage.class);
 	}

@@ -145,9 +145,9 @@ public class CookieValuePersisterSettings implements IClusterable
 
 	/**
 	 * Sets the version of the cookie protocol this cookie complies with. Version 0 complies with
-	 * the original Netscape cookie specification. Version 1 complies with RFC 2109. <br/>Since RFC
-	 * 2109 is still somewhat new, consider version 1 as experimental; do not use it yet on
-	 * production sites.
+	 * the original Netscape cookie specification. Version 1 complies with RFC 2109. <br/>
+	 * Since RFC 2109 is still somewhat new, consider version 1 as experimental; do not use it yet
+	 * on production sites.
 	 * 
 	 * @param version
 	 *            0 if the cookie should comply with the original Netscape specification; 1 if the

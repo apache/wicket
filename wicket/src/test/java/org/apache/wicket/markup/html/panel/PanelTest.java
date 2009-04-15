@@ -146,7 +146,7 @@ public class PanelTest extends WicketTestCase
 	public void testPanelWithAttributeModifier() throws Exception
 	{
 		executeTest(PanelWithAttributeModifierPage.class,
-				"PanelWithAttributeModifierPageExpectedResult_1.html");
+			"PanelWithAttributeModifierPageExpectedResult_1.html");
 	}
 
 	/**

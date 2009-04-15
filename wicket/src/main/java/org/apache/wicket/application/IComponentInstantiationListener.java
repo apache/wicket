@@ -30,9 +30,9 @@ import org.apache.wicket.Component;
 public interface IComponentInstantiationListener
 {
 	/**
-	 * Called for every component that is instantiated. This method is called <strong>during</strong>
-	 * construction, so do not depend on the construction being completed yet. The id is guaranteed
-	 * to be set before this call.
+	 * Called for every component that is instantiated. This method is called
+	 * <strong>during</strong> construction, so do not depend on the construction being completed
+	 * yet. The id is guaranteed to be set before this call.
 	 * 
 	 * @param component
 	 *            the component that is being instantiated.

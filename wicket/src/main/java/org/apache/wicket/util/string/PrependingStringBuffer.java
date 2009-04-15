@@ -133,11 +133,13 @@ public class PrependingStringBuffer
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return new String(buffer, position, size);
 	}
 
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj == this)
@@ -154,6 +156,7 @@ public class PrependingStringBuffer
 		}
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return toString().hashCode();

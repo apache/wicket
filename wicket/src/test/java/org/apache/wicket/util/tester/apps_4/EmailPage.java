@@ -52,7 +52,7 @@ public class EmailPage extends WebPage
 	 */
 	public String getEmail()
 	{
-		return this.email;
+		return email;
 	}
 
 	/**

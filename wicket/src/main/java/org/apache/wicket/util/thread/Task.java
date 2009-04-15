@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Runs a block of code periodically. A <code>Task</code> can be started at a given time in the
- * future and can be a daemon. The block of code will be passed a <code>Log</code> object each
- * time it is run through its <code>ICode</code> interface.
+ * future and can be a daemon. The block of code will be passed a <code>Log</code> object each time
+ * it is run through its <code>ICode</code> interface.
  * <p>
  * If the code block takes longer than the period to run, the next task invocation will occur
  * immediately. In this case, tasks will not occur at precise multiples of the period. For example,
@@ -74,8 +74,8 @@ public final class Task
 	}
 
 	/**
-	 * Runs this <code>Task</code> at the given frequency. You may only call this method if the
-	 * task has not yet been started. If the task is already running, an
+	 * Runs this <code>Task</code> at the given frequency. You may only call this method if the task
+	 * has not yet been started. If the task is already running, an
 	 * <code>IllegalStateException</code> will be thrown.
 	 * 
 	 * @param frequency
@@ -161,8 +161,8 @@ public final class Task
 	 * <code>IllegalStateException</code> will be thrown.
 	 * 
 	 * @param daemon
-	 *            <code>true</code> if this <code>Task</code>'s <code>Thread</code> should be
-	 *            a daemon
+	 *            <code>true</code> if this <code>Task</code>'s <code>Thread</code> should be a
+	 *            daemon
 	 * @throws IllegalStateException
 	 *             thrown if task is already running
 	 */

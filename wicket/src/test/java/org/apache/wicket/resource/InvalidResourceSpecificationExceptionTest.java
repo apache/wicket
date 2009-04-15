@@ -44,6 +44,7 @@ public class InvalidResourceSpecificationExceptionTest extends ExceptionTestBase
 	 * 
 	 * @return The name of the exception class
 	 */
+	@Override
 	protected String getExceptionClassName()
 	{
 		return WicketRuntimeException.class.getName();

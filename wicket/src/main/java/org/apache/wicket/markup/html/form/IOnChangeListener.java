@@ -31,7 +31,7 @@ public interface IOnChangeListener extends IRequestListener
 {
 	/** Listener interface */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			IOnChangeListener.class);
+		IOnChangeListener.class);
 
 	/**
 	 * Called when a new option is selected.

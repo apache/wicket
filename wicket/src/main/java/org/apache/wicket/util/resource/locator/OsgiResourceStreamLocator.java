@@ -48,7 +48,8 @@ public class OsgiResourceStreamLocator extends ResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public IResourceStream locate(final Class< ? > clazz, final String path)
+	@Override
+	public IResourceStream locate(final Class<?> clazz, final String path)
 	{
 		return super.locate(clazz, "/" + path);
 	}

@@ -45,8 +45,8 @@ public class StringRequestTarget implements IRequestTarget
 
 
 	/**
-	 * Creates a string request target with content type <code>text/plain</code> and default
-	 * charset (usually UTF-8)
+	 * Creates a string request target with content type <code>text/plain</code> and default charset
+	 * (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response

@@ -82,6 +82,7 @@ public class MockAjaxFormPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				text.validate();

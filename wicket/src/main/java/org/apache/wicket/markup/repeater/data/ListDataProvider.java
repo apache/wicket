@@ -57,7 +57,7 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
-	public Iterator< ? extends T> iterator(final int first, final int count)
+	public Iterator<? extends T> iterator(final int first, final int count)
 	{
 		int toIndex = first + count;
 		if (toIndex > list.size())

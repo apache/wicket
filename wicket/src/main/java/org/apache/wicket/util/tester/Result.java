@@ -31,7 +31,7 @@ public class Result
 	private Result(boolean failed)
 	{
 		this.failed = failed;
-		this.message = "";
+		message = "";
 	}
 
 	private Result(boolean failed, String message)

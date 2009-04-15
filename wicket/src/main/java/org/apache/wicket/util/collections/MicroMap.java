@@ -175,11 +175,11 @@ public final class MicroMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map< ? extends K, ? extends V> map)
+	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		if (map.size() <= MAX_ENTRIES)
 		{
-			final Entry< ? extends K, ? extends V> e = map.entrySet().iterator().next();
+			final Entry<? extends K, ? extends V> e = map.entrySet().iterator().next();
 
 			put(e.getKey(), e.getValue());
 		}

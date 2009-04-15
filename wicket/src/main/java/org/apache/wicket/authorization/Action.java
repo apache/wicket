@@ -89,7 +89,7 @@ public class Action extends EnumeratedType
 		if (Strings.isEmpty(name))
 		{
 			throw new IllegalArgumentException(
-					"Name argument may not be null, whitespace or the empty string");
+				"Name argument may not be null, whitespace or the empty string");
 		}
 
 		this.name = name;

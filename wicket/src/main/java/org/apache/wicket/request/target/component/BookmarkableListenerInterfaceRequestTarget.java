@@ -38,7 +38,6 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 {
 	private final String componentPath;
 	private final String interfaceName;
-	private final int versionNumber;
 
 	/**
 	 * This constructor is called when a stateless link is clicked on but the page wasn't found in
@@ -59,7 +58,6 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
 		this.interfaceName = interfaceName;
-		this.versionNumber = versionNumber;
 	}
 
 	/**

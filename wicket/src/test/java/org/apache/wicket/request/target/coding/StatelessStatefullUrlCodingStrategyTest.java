@@ -38,8 +38,7 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/?wicket:interface=%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A");
 		tester.processRequestCycle();
@@ -57,16 +56,14 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 		executeTest(StatefulPage.class, "StatefulPage_QueryString_Result.html");
 
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/?wicket:interface=:0:actionLink::ILinkListener::");
 		tester.processRequestCycle();
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/statefull/?wicket:interface=%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A");
 		tester.processRequestCycle();
@@ -86,8 +83,7 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
@@ -104,16 +100,14 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 		executeTest(StatefulPage.class, "StatefulPage_Default_Result.html");
 
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/statefull/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
@@ -134,8 +128,7 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
@@ -153,16 +146,14 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 		executeTest(StatefulPage.class, "StatefulPage_Indexed_Result.html");
 
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/?wicket:interface=:0:actionLink::ILinkListener::");
 		tester.processRequestCycle();
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/statefull/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
@@ -183,8 +174,7 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();
@@ -202,16 +192,14 @@ public class StatelessStatefullUrlCodingStrategyTest extends WicketTestCase
 		executeTest(StatefulPage.class, "StatefulPage_Hybrid_Result.html");
 
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/?wicket:interface=:0:actionLink::ILinkListener::");
 		tester.processRequestCycle();
 
 		tester.setParameterForNextRequest("statelessform:textfield", "test");
 		tester.setupRequestAndResponse();
-		tester
-			.getServletRequest()
+		tester.getServletRequest()
 			.setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/statefull/wicket:interface/%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A/");
 		tester.processRequestCycle();

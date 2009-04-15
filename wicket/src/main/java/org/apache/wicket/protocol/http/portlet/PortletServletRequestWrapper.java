@@ -60,16 +60,6 @@ public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 	private HttpSession session;
 
 	/**
-	 * FIXME Remove! This should be removed - it no longer appears to be used?
-	 */
-	private static String decodePathInfo(HttpServletRequest request, String filterPath)
-	{
-		String pathInfo = request.getRequestURI().substring(
-			request.getContextPath().length() + filterPath.length());
-		return pathInfo == null || pathInfo.length() < 2 ? null : pathInfo;
-	}
-
-	/**
 	 * Converts from a filterPath (path with a trailing slash), to a servletPath (path with a
 	 * leading slash).
 	 * 

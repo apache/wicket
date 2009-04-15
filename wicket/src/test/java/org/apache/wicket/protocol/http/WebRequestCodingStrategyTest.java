@@ -42,12 +42,11 @@ public class WebRequestCodingStrategyTest extends TestCase
 		params.add("a", "1");
 		params.add("a", "2");
 		BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(
-				MockPage.class, params);
+			MockPage.class, params);
 		app.setupRequestAndResponse();
 		CharSequence cs = wrcs.encode(app.createRequestCycle(), requestTarget);
-		assertEquals(
-				"?wicket:bookmarkablePage=:org.apache.wicket.protocol.http.MockPage&a=1&a=2", cs
-						.toString());
+		assertEquals("?wicket:bookmarkablePage=:org.apache.wicket.protocol.http.MockPage&a=1&a=2",
+			cs.toString());
 		app.destroy();
 	}
 }

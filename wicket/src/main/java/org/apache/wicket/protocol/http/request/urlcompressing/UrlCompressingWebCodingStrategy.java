@@ -59,6 +59,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 	 *            the target to encode
 	 * @return the encoded url
 	 */
+	@Override
 	protected CharSequence encode(RequestCycle requestCycle,
 		IListenerInterfaceRequestTarget requestTarget)
 	{

@@ -50,6 +50,7 @@ public class FileCleaner
 		 * Run the reaper thread that will delete files as their associated marker objects are
 		 * reclaimed by the garbage collector.
 		 */
+		@Override
 		public void run()
 		{
 			// Though q is final, it happens while hot deploying that Wicket runs into an infinite

@@ -58,6 +58,7 @@ public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDe
 	/**
 	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
 	 */
+	@Override
 	public final CharSequence postDecorateScript(CharSequence script)
 	{
 		return script + "return !" + IAjaxCallDecorator.WICKET_CALL_RESULT_VAR + ";";

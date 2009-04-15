@@ -132,8 +132,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	}
 
 	/**
-	 * Constructs an empty <tt>HashMap</tt> with the specified initial capacity and the default
-	 * load factor (0.75).
+	 * Constructs an empty <tt>HashMap</tt> with the specified initial capacity and the default load
+	 * factor (0.75).
 	 * 
 	 * @param initialCapacity
 	 *            the initial capacity.
@@ -205,9 +205,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	/**
 	 * Returns the value to which the specified key is mapped in this identity hash map, or
 	 * <tt>null</tt> if the map contains no mapping for this key. A return value of <tt>null</tt>
-	 * does not <i>necessarily</i> indicate that the map contains no mapping for the key; it is
-	 * also possible that the map explicitly maps the key to <tt>null</tt>. The
-	 * <tt>containsKey</tt> method may be used to distinguish these two cases.
+	 * does not <i>necessarily</i> indicate that the map contains no mapping for the key; it is also
+	 * possible that the map explicitly maps the key to <tt>null</tt>. The <tt>containsKey</tt>
+	 * method may be used to distinguish these two cases.
 	 * 
 	 * @param key
 	 *            the key whose associated value is to be returned.
@@ -282,8 +282,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param value
 	 *            value to be associated with the specified key.
 	 * @return previous value associated with specified key, or <tt>null</tt> if there was no
-	 *         mapping for key. A <tt>null</tt> return can also indicate that the HashMap
-	 *         previously associated <tt>null</tt> with the specified key.
+	 *         mapping for key. A <tt>null</tt> return can also indicate that the HashMap previously
+	 *         associated <tt>null</tt> with the specified key.
 	 */
 	public V put(int key, V value)
 	{
@@ -607,8 +607,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	}
 
 	/**
-	 * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and values themselves
-	 * are not cloned.
+	 * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and values themselves are
+	 * not cloned.
 	 * 
 	 * @return a shallow copy of this map.
 	 */
@@ -902,9 +902,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * Returns a set view of the keys contained in this map. The set is backed by the map, so
 	 * changes to the map are reflected in the set, and vice-versa. The set supports element
 	 * removal, which removes the corresponding mapping from this map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt>
-	 * or <tt>addAll</tt> operations.
+	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
+	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * operations.
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 */
@@ -975,8 +975,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * the map, so changes to the map are reflected in the collection, and vice-versa. The
 	 * collection supports element removal, which removes the corresponding mapping from this map,
 	 * via the <tt>Iterator.remove</tt>, <tt>Collection.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt>
-	 * or <tt>addAll</tt> operations.
+	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt> or
+	 * <tt>addAll</tt> operations.
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
@@ -1030,9 +1030,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * collection is a <tt>Map.Entry</tt>. The collection is backed by the map, so changes to the
 	 * map are reflected in the collection, and vice-versa. The collection supports element removal,
 	 * which removes the corresponding mapping from the map, via the <tt>Iterator.remove</tt>,
-	 * <tt>Collection.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
-	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
+	 * <tt>Collection.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
+	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt> operations.
 	 * 
 	 * @return a collection view of the mappings contained in this map.
 	 * @see Map.Entry

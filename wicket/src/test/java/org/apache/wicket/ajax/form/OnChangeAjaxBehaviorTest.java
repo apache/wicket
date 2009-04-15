@@ -42,6 +42,7 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
 			 *      org.apache.wicket.Response)
 			 */
+			@Override
 			public Session newSession(Request request, Response response)
 			{
 				Session session = super.newSession(request, response);
@@ -53,7 +54,7 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 		tester = new WicketTester(myApplication);
 
 		executeTest(OnChangeAjaxBehaviorTestPage.class,
-				"OnChangeAjaxBehaviorTestPage_expected.html");
+			"OnChangeAjaxBehaviorTestPage_expected.html");
 	}
 
 }

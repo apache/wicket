@@ -79,8 +79,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * @return A markup object with the the base markup elements resolved.
 	 * @TODO move into IMarkupLoader
 	 */
-	private Markup checkForMarkupInheritance(final MarkupContainer container,
-		final Markup markup, final boolean enforceReload)
+	private Markup checkForMarkupInheritance(final MarkupContainer container, final Markup markup,
+		final boolean enforceReload)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.

@@ -39,6 +39,7 @@ public class DisabledComponentPage1 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				setResponsePage(new DisabledComponentPage2());

@@ -40,7 +40,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form< ? > form;
+	private Form<?> form;
 
 	/**
 	 * Constructor. This constructor can only be used when the component this behavior is attached
@@ -62,7 +62,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param event
 	 *            javascript event this behavior is attached to, like onclick
 	 */
-	public AjaxFormSubmitBehavior(Form< ? > form, String event)
+	public AjaxFormSubmitBehavior(Form<?> form, String event)
 	{
 		super(event);
 		this.form = form;
@@ -77,7 +77,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * 
 	 * @return Form that will be submitted by this behavior
 	 */
-	protected Form< ? > getForm()
+	protected Form<?> getForm()
 	{
 		if (form == null)
 		{

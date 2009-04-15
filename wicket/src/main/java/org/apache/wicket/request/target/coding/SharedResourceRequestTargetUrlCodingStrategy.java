@@ -28,9 +28,8 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Gili Tzabari
  */
-public class SharedResourceRequestTargetUrlCodingStrategy
-		extends
-			AbstractRequestTargetUrlCodingStrategy
+public class SharedResourceRequestTargetUrlCodingStrategy extends
+	AbstractRequestTargetUrlCodingStrategy
 {
 	private final String resourceKey;
 
@@ -42,7 +41,7 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	 * @param resourceKey
 	 */
 	public SharedResourceRequestTargetUrlCodingStrategy(final String mountPath,
-			final String resourceKey)
+		final String resourceKey)
 	{
 		super(mountPath);
 		this.resourceKey = resourceKey;
@@ -54,9 +53,9 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
-				getMountPath().length());
-		final ValueMap parameters = decodeParameters(parametersFragment, requestParameters
-				.getParameters());
+			getMountPath().length());
+		final ValueMap parameters = decodeParameters(parametersFragment,
+			requestParameters.getParameters());
 
 		requestParameters.setParameters(parameters);
 		requestParameters.setResourceKey(resourceKey);
@@ -71,7 +70,7 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 		if (!(requestTarget instanceof ISharedResourceRequestTarget))
 		{
 			throw new IllegalArgumentException("This encoder can only be used with " +
-					"instances of " + ISharedResourceRequestTarget.class.getName());
+				"instances of " + ISharedResourceRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -101,6 +100,7 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "SharedResourceEncoder[key=" + resourceKey + "]";

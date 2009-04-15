@@ -75,7 +75,7 @@ public class WebRequestEncoder
 	 */
 	public void addValue(String key, String value)
 	{
-        if (!firstParameter)
+		if (!firstParameter)
 		{
 			url.append('&');
 		}

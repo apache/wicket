@@ -43,6 +43,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		super.setUp();

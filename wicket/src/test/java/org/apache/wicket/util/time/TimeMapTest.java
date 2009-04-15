@@ -39,17 +39,17 @@ public final class TimeMapTest extends TestCase
 	{
 		final TimeMap map = new TimeMap();
 		final Time start = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
-				"3.14pm"));
+			"3.14pm"));
 		final Time end = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
-				"3.20pm"));
+			"3.20pm"));
 		final String value = "test";
 
 		map.put(TimeFrame.valueOf(start, end), value);
 		Assert.assertEquals(value, map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-				Locale.ENGLISH), "3.15pm"))));
+			Locale.ENGLISH), "3.15pm"))));
 		Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-				Locale.ENGLISH), "3.21pm"))));
+			Locale.ENGLISH), "3.21pm"))));
 		Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-				Locale.ENGLISH), "3.13pm"))));
+			Locale.ENGLISH), "3.13pm"))));
 	}
 }

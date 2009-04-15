@@ -44,14 +44,14 @@ public class DefaultButtonImageResourceFactory implements IResourceFactory
 		final Parser parser = new Parser(specification);
 		if (parser.matches())
 		{
-			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser
-					.getLabel());
+			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(),
+				parser.getLabel());
 		}
 		else
 		{
 			throw new WicketRuntimeException(
-					"DefaultButtonImageResourceFactory does not recognized the specification " +
-							specification);
+				"DefaultButtonImageResourceFactory does not recognized the specification " +
+					specification);
 		}
 	}
 

@@ -33,8 +33,8 @@ import org.apache.wicket.util.time.Time;
  * @author Jonathan Locke
  */
 public class FileResourceStream extends AbstractResourceStream
-		implements
-			IFixedLocationResourceStream
+	implements
+		IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -83,6 +83,7 @@ public class FileResourceStream extends AbstractResourceStream
 	/**
 	 * @see IResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		// Let ResourceStreamRequestTarget handle content-type automatically
@@ -114,7 +115,7 @@ public class FileResourceStream extends AbstractResourceStream
 			catch (FileNotFoundException e)
 			{
 				throw new ResourceStreamNotFoundException("Resource " + file +
-						" could not be found", e);
+					" could not be found", e);
 			}
 		}
 
@@ -125,6 +126,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 * @return The last time this resource was modified
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		if (file != null)
@@ -137,6 +139,7 @@ public class FileResourceStream extends AbstractResourceStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		if (file != null)
@@ -149,6 +152,7 @@ public class FileResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
+	@Override
 	public long length()
 	{
 		if (file != null)

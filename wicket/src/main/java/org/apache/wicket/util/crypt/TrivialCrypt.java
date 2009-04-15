@@ -36,6 +36,7 @@ public class TrivialCrypt extends AbstractCrypt
 	/**
 	 * @see org.apache.wicket.util.crypt.AbstractCrypt#crypt(byte[], int)
 	 */
+	@Override
 	protected byte[] crypt(byte[] input, int mode) throws GeneralSecurityException
 	{
 		final byte[] result = new byte[input.length];

@@ -507,8 +507,8 @@ public class DiskFileItem implements FileItem
 	/**
 	 * Determines whether or not a <code>FileItem</code> instance represents a simple form field.
 	 * 
-	 * @return <code>true</code> if the instance represents a simple form field;
-	 *         <code>false</code> if it represents an uploaded file.
+	 * @return <code>true</code> if the instance represents a simple form field; <code>false</code>
+	 *         if it represents an uploaded file.
 	 * 
 	 * @see #setFormField(boolean)
 	 * 

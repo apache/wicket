@@ -39,6 +39,7 @@ public class CachingDisabledLocalizerTest extends LocalizerTest
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

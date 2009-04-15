@@ -64,7 +64,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-		final IModel< ? > replaceModel, final Component behaviorOwner)
+		final IModel<?> replaceModel, final Component behaviorOwner)
 	{
 		super(attribute, addAttributeIfNotPresent, replaceModel);
 		init(behaviorOwner);
@@ -81,7 +81,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * @param behaviorOwner
 	 *            The component which created (owns) the modifier
 	 */
-	public BodyTagAttributeModifier(final String attribute, final IModel< ? > replaceModel,
+	public BodyTagAttributeModifier(final String attribute, final IModel<?> replaceModel,
 		final Component behaviorOwner)
 	{
 		super(attribute, replaceModel);
@@ -107,7 +107,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final String pattern,
-		final boolean addAttributeIfNotPresent, final IModel< ? > replaceModel,
+		final boolean addAttributeIfNotPresent, final IModel<?> replaceModel,
 		final Component behaviorOwner)
 	{
 		super(attribute, pattern, addAttributeIfNotPresent, replaceModel);
@@ -129,7 +129,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 *            The component which created (owns) the modifier
 	 */
 	public BodyTagAttributeModifier(final String attribute, final String pattern,
-		final IModel< ? > replaceModel, final Component behaviorOwner)
+		final IModel<?> replaceModel, final Component behaviorOwner)
 	{
 		super(attribute, pattern, replaceModel);
 		init(behaviorOwner);

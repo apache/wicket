@@ -733,8 +733,7 @@ public class StringValue implements IClusterable
 	/**
 	 * Returns whether the text is null.
 	 * 
-	 * @return <code>true</code> if the text is <code>null</code>, <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the text is <code>null</code>, <code>false</code> otherwise.
 	 */
 	public boolean isNull()
 	{

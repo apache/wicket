@@ -70,14 +70,13 @@ import org.apache.wicket.util.diff.myers.MyersDiff;
  * Implements a differencing engine that works on arrays of {@link Object Object}.
  * 
  * <p>
- * Within this library, the word <i>text</i> means a unit of information subject to version
- * control.
+ * Within this library, the word <i>text</i> means a unit of information subject to version control.
  * 
  * <p>
- * Text is represented as <code>Object[]</code> because the diff engine is capable of handling
- * more than plain ascci. In fact, arrays of any type that implements
- * {@link java.lang.Object#hashCode hashCode()} and {@link java.lang.Object#equals equals()}
- * correctly can be subject to differencing using this library.
+ * Text is represented as <code>Object[]</code> because the diff engine is capable of handling more
+ * than plain ascci. In fact, arrays of any type that implements {@link java.lang.Object#hashCode
+ * hashCode()} and {@link java.lang.Object#equals equals()} correctly can be subject to differencing
+ * using this library.
  * </p>
  * 
  * <p>
@@ -88,18 +87,16 @@ import org.apache.wicket.util.diff.myers.MyersDiff;
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @see Delta
- * @see DiffAlgorithm
+ * @see DiffAlgorithm modifications:
  * 
- * modifications:
+ *      27 Apr 2003 bwm
  * 
- * 27 Apr 2003 bwm
+ *      Added some comments whilst trying to figure out the algorithm
  * 
- * Added some comments whilst trying to figure out the algorithm
+ *      03 May 2003 bwm
  * 
- * 03 May 2003 bwm
- * 
- * Factored out the algorithm implementation into a separate difference algorithm class to allow
- * pluggable algorithms.
+ *      Factored out the algorithm implementation into a separate difference algorithm class to
+ *      allow pluggable algorithms.
  */
 
 public class Diff extends ToString

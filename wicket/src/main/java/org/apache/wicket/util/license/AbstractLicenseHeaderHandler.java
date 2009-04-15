@@ -72,8 +72,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 			try
 			{
-				inputStream = ApacheLicenseHeaderTestCase.class
-						.getResourceAsStream(getLicenseHeaderFilename());
+				inputStream = ApacheLicenseHeaderTestCase.class.getResourceAsStream(getLicenseHeaderFilename());
 				inputStreamReader = new InputStreamReader(inputStream);
 				lineNumberReader = new LineNumberReader(inputStreamReader);
 

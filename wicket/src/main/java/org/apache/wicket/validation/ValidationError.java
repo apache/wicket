@@ -36,8 +36,8 @@ import org.apache.wicket.util.lang.Classes;
  * <ol>
  * <li>Try all keys added by calls to {@link #addMessageKey(String)} via the provided
  * <code>IErrorMessageSource</code>.</li>
- * <li>If none of the keys yielded a message, use the message set by {@link #setMessage(String)},
- * if any.</li>
+ * <li>If none of the keys yielded a message, use the message set by {@link #setMessage(String)}, if
+ * any.</li>
  * <li>Perform variable substitution on the message, if any.</li>
  * </ol>
  * 
@@ -69,8 +69,8 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code>
-	 * to locate the error message string.
+	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code> to
+	 * locate the error message string.
 	 * 
 	 * @param key
 	 *            a message key to be added

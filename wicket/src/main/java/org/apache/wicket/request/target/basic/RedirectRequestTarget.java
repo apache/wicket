@@ -78,7 +78,6 @@ public class RedirectRequestTarget implements IRequestTarget
 			// context-absolute url
 
 			RequestContext rc = RequestContext.get();
-			String continueTo = null;
 			if (rc.isPortletRequest() && ((PortletRequestContext)rc).isEmbedded())
 			{
 				response.redirect(redirectUrl);

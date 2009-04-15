@@ -37,6 +37,7 @@ public class SimpleResponsePageClass extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				// use Page "class"

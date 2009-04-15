@@ -40,12 +40,13 @@ public class StringResponse extends Response
 	 */
 	public StringResponse()
 	{
-		this.out = new AppendingStringBuffer(128);
+		out = new AppendingStringBuffer(128);
 	}
 
 	/**
 	 * @see org.apache.wicket.Response#write(CharSequence)
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		out.append(string);
@@ -54,6 +55,7 @@ public class StringResponse extends Response
 	/**
 	 * @see org.apache.wicket.Response#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		out.clear();
@@ -62,6 +64,7 @@ public class StringResponse extends Response
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return out.toString();
@@ -78,6 +81,7 @@ public class StringResponse extends Response
 	/**
 	 * @see org.apache.wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		throw new UnsupportedOperationException("Cannot get output stream on StringResponse");

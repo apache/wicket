@@ -16,15 +16,21 @@
  */
 package org.apache.wicket.markup.html.form.persistence;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+
 import junit.framework.TestCase;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm;
-import org.apache.wicket.protocol.http.*;
+import org.apache.wicket.protocol.http.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.MockHttpServletResponse;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -66,7 +72,7 @@ public class CookieValuePersisterTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings( { "unchecked" })
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form
@@ -102,10 +108,10 @@ public class CookieValuePersisterTest extends TestCase
 		persister.save(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
-			((Cookie)getResponseCookies(cycle).get(0)).getPath());
+			(getResponseCookies(cycle).get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
 		// (maxAge=0) to the response, provided a cookie with
@@ -114,10 +120,10 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
+		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication",
-			((Cookie)getResponseCookies(cycle).get(0)).getPath());
+			(getResponseCookies(cycle).get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name
 		// it remains unchanged
@@ -150,13 +156,13 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form.input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
-		assertEquals(0, ((Cookie)getResponseCookies(cycle).get(1)).getMaxAge());
+		assertEquals("form.input", (getResponseCookies(cycle).get(1)).getName());
+		assertEquals(0, (getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
 	{
-		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest()).addCookie((Cookie)getResponseCookies(
+		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest()).addCookie(getResponseCookies(
 			cycle).get(0));
 	}
 
@@ -167,7 +173,7 @@ public class CookieValuePersisterTest extends TestCase
 
 	private List<Cookie> getResponseCookies(final RequestCycle cycle)
 	{
-		MockHttpServletResponse response = (MockHttpServletResponse) ((WebResponse) cycle.getResponse()).getHttpServletResponse();
-		return (List<Cookie>) response.getCookies();
+		MockHttpServletResponse response = (MockHttpServletResponse)((WebResponse)cycle.getResponse()).getHttpServletResponse();
+		return (List<Cookie>)response.getCookies();
 	}
 }

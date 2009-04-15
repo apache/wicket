@@ -40,8 +40,8 @@ public class FormBorder extends Border
 	{
 		super(id);
 
-		this.form = new Form("myForm");
-		add(this.form);
+		form = new Form("myForm");
+		add(form);
 
 		// Due to BorderBodyResolver it works without the following line. But
 		// for clarity reasons it is recommended to use it.

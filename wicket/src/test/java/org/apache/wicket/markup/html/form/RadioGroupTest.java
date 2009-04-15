@@ -117,12 +117,13 @@ public class RadioGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form<MockModelObject> form = new Form<MockModelObject>("form", new CompoundPropertyModel<MockModelObject>(modelObject))
+		final Form<MockModelObject> form = new Form<MockModelObject>("form",
+			new CompoundPropertyModel<MockModelObject>(modelObject))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            public String getMarkupId()
+			public String getMarkupId()
 			{
 				// hack for the fact that this test doesn't relate to any markup
 				return "foo";
@@ -153,24 +154,24 @@ public class RadioGroupTest extends WicketTestCase
 		modelObject.setProp1(radio1);
 
 		form.onFormSubmitted();
-		assertTrue("group: running with nothing selected - model must be set to null", modelObject
-				.getProp1() == null);
-		assertTrue("group2: running with nothing selected - model must be set to null", model
-				.getObject() == null);
+		assertTrue("group: running with nothing selected - model must be set to null",
+			modelObject.getProp1() == null);
+		assertTrue("group2: running with nothing selected - model must be set to null",
+			model.getObject() == null);
 
 		tester.getServletRequest().setParameter(group.getInputName(), choice1.getValue());
 		tester.getServletRequest().setParameter(group2.getInputName(), choice3.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
-				modelObject.getProp1(), choice1.getDefaultModelObject());
+			modelObject.getProp1(), choice1.getDefaultModelObject());
 		assertEquals(
-				"group2: running with choice3 selected - model must be set to value of radio1",
-				model.getObject(), choice3.getDefaultModelObject());
+			"group2: running with choice3 selected - model must be set to value of radio1",
+			model.getObject(), choice3.getDefaultModelObject());
 
 		tester.getServletRequest().setParameter(group.getInputName(), choice2.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
-				modelObject.getProp1(), choice2.getDefaultModelObject());
+			modelObject.getProp1(), choice2.getDefaultModelObject());
 
 		tester.getServletRequest().setParameter(group2.getInputName(), choice1.getValue());
 		try
@@ -201,7 +202,7 @@ public class RadioGroupTest extends WicketTestCase
 		catch (WicketRuntimeException e)
 		{
 			if (e.getMessage().indexOf(
-					"Radio component [1:form:radio2] cannot find its parent RadioGroup") < 0)
+				"Radio component [1:form:radio2] cannot find its parent RadioGroup") < 0)
 			{
 				fail("failed with wrong exception");
 			}

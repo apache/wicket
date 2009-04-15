@@ -79,8 +79,7 @@ public class WebClientInfo extends ClientInfo
 	{
 		super();
 		this.userAgent = userAgent;
-		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-			.getHttpServletRequest();
+		requestCycle.getWebRequest().getHttpServletRequest();
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
 	}

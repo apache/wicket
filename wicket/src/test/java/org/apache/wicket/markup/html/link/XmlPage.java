@@ -40,6 +40,7 @@ public class XmlPage extends WebPage
 	 * 
 	 * @return string
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xml";

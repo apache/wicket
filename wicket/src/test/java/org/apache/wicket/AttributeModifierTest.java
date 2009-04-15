@@ -20,6 +20,7 @@ import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.Model;
@@ -94,7 +95,7 @@ public class AttributeModifierTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected String newValue(String currentValue, String replacementValue)
+			protected String newValue(String currentValue, String replacementValue)
 			{
 				return "the replacement";
 			}
@@ -104,7 +105,7 @@ public class AttributeModifierTest extends TestCase
 		tag.setId("test");
 		tag.setName("id");
 		modifier.replaceAttributeValue(null, tag);
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		assertTrue(!attributes.isEmpty());
 		String replacement = (String)attributes.get("test");
 		assertNotNull(replacement);
@@ -117,13 +118,13 @@ public class AttributeModifierTest extends TestCase
 	public void testModelReplacement()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", true, new Model<String>(
-				"Ellioth Smith Rocks"));
+			"Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
 		modifier.replaceAttributeValue(null, tag);
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		assertTrue(!attributes.isEmpty());
 		String replacement = (String)attributes.get("test");
 		assertNotNull(replacement);
@@ -136,7 +137,7 @@ public class AttributeModifierTest extends TestCase
 	public void testNoModelReplacementForNonExistingAttributeValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", false, new Model<String>(
-				"Ellioth Smith Rocks"));
+			"Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
@@ -151,12 +152,13 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testModelReplacementOverwritingExistingAttributeValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model<String>("Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", new Model<String>(
+			"Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttributeValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -169,13 +171,14 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testNoNewValueWhenNotEnabled()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model<String>("Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", new Model<String>(
+			"Ellioth Smith Rocks"));
 		modifier.setEnabled(false);
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttributeValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -193,7 +196,7 @@ public class AttributeModifierTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected String newValue(String currentValue, String replacementValue)
+			protected String newValue(String currentValue, String replacementValue)
 			{
 				return replacementValue + " together";
 			}
@@ -203,7 +206,7 @@ public class AttributeModifierTest extends TestCase
 		tag.setId("test");
 		tag.setName("id");
 		modifier.replaceAttributeValue(null, tag);
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		assertTrue(!attributes.isEmpty());
 		String replacement = (String)attributes.get("test");
 		assertNotNull(replacement);
@@ -220,7 +223,7 @@ public class AttributeModifierTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected String newValue(String currentValue, String replacementValue)
+			protected String newValue(String currentValue, String replacementValue)
 			{
 				return currentValue + " two";
 			}
@@ -229,7 +232,7 @@ public class AttributeModifierTest extends TestCase
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map<String,Object> attributes = tag.getAttributes();
+		Map<String, Object> attributes = tag.getAttributes();
 		attributes.put("test", "one");
 		modifier.replaceAttributeValue(null, tag);
 		String replacement = (String)attributes.get("test");

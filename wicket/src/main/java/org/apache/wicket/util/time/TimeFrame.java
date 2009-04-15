@@ -23,10 +23,10 @@ import org.apache.wicket.util.lang.Objects;
  * value is inclusive and the end value is exclusive. In other words, the time frame of 1pm to 2pm
  * includes 1pm, but not 2pm. 1:59:59 is the last value in the <code>TimeFrame</code>.
  * <p>
- * <code>TimeFrame</code>s can be constructed by calling the <code>valueOf</code> static
- * factory methods <code>valueOf(Time, Time)</code> (yielding a <code>TimeFrame</code> between
- * two absolute times) and <code>valueOf(Time, Duration)</code> yielding a <code>TimeFrame</code>
- * starting at an absolute time and having a given length.
+ * <code>TimeFrame</code>s can be constructed by calling the <code>valueOf</code> static factory
+ * methods <code>valueOf(Time, Time)</code> (yielding a <code>TimeFrame</code> between two absolute
+ * times) and <code>valueOf(Time, Duration)</code> yielding a <code>TimeFrame</code> starting at an
+ * absolute time and having a given length.
  * <p>
  * The start and end of a <code>TimeFrame</code> can be retrieved by calling <code>getStart</code>
  * and <code>getEnd</code>. Its duration can be retrieved by calling <code>getDuration</code>.
@@ -35,10 +35,10 @@ import org.apache.wicket.util.lang.Objects;
  * contains a given point in time. The <code>overlaps(TimeFrame)</code> method can be called to
  * determine if two <code>TimeFrames</code> overlap.
  * <p>
- * The <code>eachDay(TimeOfDay, TimeOfDay)</code> will return a <code>TimeFrameSource</code>
- * which generates a <code>TimeFrame</code> using the two times of day. In other words, if the
- * start is 3pm and the end is 4pm, the <code>TimeFrameSource</code> returned will yield 3-4pm on
- * the day it is called (each day).
+ * The <code>eachDay(TimeOfDay, TimeOfDay)</code> will return a <code>TimeFrameSource</code> which
+ * generates a <code>TimeFrame</code> using the two times of day. In other words, if the start is
+ * 3pm and the end is 4pm, the <code>TimeFrameSource</code> returned will yield 3-4pm on the day it
+ * is called (each day).
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -54,15 +54,15 @@ public final class TimeFrame implements ITimeFrameSource
 	/**
 	 * Creates an <code>ITimeFrameSource</code> source for start and end <code>TimeOfDay</code>s.
 	 * For example, called with 3pm and 5pm as parameters, the <code>TimeFrame</code> source
-	 * returned would produce <code>TimeFrame</code> objects representing 3pm-5pm on whatever day
-	 * it is when the caller calls the <code>TimeFrameSource</code> interface.
+	 * returned would produce <code>TimeFrame</code> objects representing 3pm-5pm on whatever day it
+	 * is when the caller calls the <code>TimeFrameSource</code> interface.
 	 * 
 	 * @param startTimeOfDay
 	 *            the start <code>TimeOfDay</code> for this <code>TimeFrame</code> each day
 	 * @param endTimeOfDay
 	 *            the end <code>TimeOfDay</code> for this <code>TimeFrame</code> each day
-	 * @return a <code>TimeFrameSource</code> which will return the specified
-	 *         <code>TimeFrame</code> each day
+	 * @return a <code>TimeFrameSource</code> which will return the specified <code>TimeFrame</code>
+	 *         each day
 	 */
 	public static ITimeFrameSource eachDay(final TimeOfDay startTimeOfDay,
 		final TimeOfDay endTimeOfDay)
@@ -111,8 +111,8 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Checks consistency of start and end <code>AbstractTimeValue</code> values, ensuring that
-	 * the end value is less than the start value.
+	 * Checks consistency of start and end <code>AbstractTimeValue</code> values, ensuring that the
+	 * end value is less than the start value.
 	 * 
 	 * @param start
 	 *            start <code>AbstractTimeValue</code> value

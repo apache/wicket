@@ -54,8 +54,7 @@ public class IndexedParamTest extends WicketTestCase
 		// Click the autolink
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		((MockHttpServletRequest)tester.getWicketRequest().getHttpServletRequest())
-				.setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/page2/abc");
+		((MockHttpServletRequest)tester.getWicketRequest().getHttpServletRequest()).setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/page2/abc");
 		tester.processRequestCycle(cycle);
 
 		assertEquals(Page2.class, tester.getLastRenderedPage().getClass());
@@ -63,6 +62,6 @@ public class IndexedParamTest extends WicketTestCase
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "IndexedParamTest_ExpectedResult-2.html",
-				true);
+			true);
 	}
 }

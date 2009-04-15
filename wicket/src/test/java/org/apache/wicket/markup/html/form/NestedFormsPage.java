@@ -77,7 +77,7 @@ public class NestedFormsPage extends WebPage
 		 * Construct.
 		 * 
 		 * @param id
-		 * 		the form's id
+		 *            the form's id
 		 */
 		public NestableForm(String id)
 		{

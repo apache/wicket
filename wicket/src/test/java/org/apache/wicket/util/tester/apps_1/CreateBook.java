@@ -58,8 +58,8 @@ public class CreateBook extends WebPage
 			super(id);
 
 			// label model here comes from java
-			add(new RequiredTextField<String>("id", new PropertyModel<String>(book, "id"))
-					.setLabel(new Model<String>("id")));
+			add(new RequiredTextField<String>("id", new PropertyModel<String>(book, "id")).setLabel(new Model<String>(
+				"id")));
 			// label model here comes from CreateBook.properties
 			add(new RequiredTextField<String>("name", new PropertyModel<String>(book, "name")));
 		}

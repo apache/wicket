@@ -109,8 +109,6 @@ public class UrlValidator extends AbstractValidator<String>
 	private static final String AUTHORITY_PATTERN = "^(.+(:.*)?@)?([" + AUTHORITY_CHARS +
 		"]*)(:\\d*)?(.*)?";
 
-	private static final int PARSE_AUTHORITY_USER = 1;
-	private static final int PARSE_AUTHORITY_PASSWORD = 2;
 	private static final int PARSE_AUTHORITY_HOST_IP = 3;
 	private static final int PARSE_AUTHORITY_PORT = 4;
 	private static final int PARSE_AUTHORITY_EXTRA = 5; // Should always be empty.

@@ -96,11 +96,8 @@ public class DropDownChoiceTestPage extends WebPage
 	public enum MyEnum {
 		A("a"), B("b"), C("c"), D("d"), E("e");
 
-		private String text;
-
 		MyEnum(String text)
 		{
-			this.text = text;
 		}
 	}
 

@@ -211,8 +211,10 @@ public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>
 	 * 
 	 * Gets the default variables for interpolation. These are:
 	 * <ul>
-	 * <li>${input}: the user's input</li> <li>${name}: the name of the component</li> <li>${label}:
-	 * the label of the <code>Component</code> - either comes from <code>FormComponent.labelModel
+	 * <li>${input}: the user's input</li>
+	 * <li>${name}: the name of the component</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel
 	 * </code> or resource key [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 

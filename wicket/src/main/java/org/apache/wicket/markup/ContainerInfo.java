@@ -31,7 +31,7 @@ import org.apache.wicket.MarkupContainer;
  */
 public class ContainerInfo
 {
-	private final WeakReference<Class< ? >> containerClassRef;
+	private final WeakReference<Class<?>> containerClassRef;
 	private final Locale locale;
 	private final String style;
 	private final String variation;
@@ -58,11 +58,11 @@ public class ContainerInfo
 	 * @param variation
 	 * @param fileExtension
 	 */
-	public ContainerInfo(final Class< ? > containerClass, final Locale locale, final String style,
+	public ContainerInfo(final Class<?> containerClass, final Locale locale, final String style,
 		final String variation, final String fileExtension)
 	{
 		super();
-		containerClassRef = new WeakReference<Class< ? >>(containerClass);
+		containerClassRef = new WeakReference<Class<?>>(containerClass);
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
@@ -73,7 +73,7 @@ public class ContainerInfo
 	 * 
 	 * @return The container class
 	 */
-	public Class< ? > getContainerClass()
+	public Class<?> getContainerClass()
 	{
 		return containerClassRef.get();
 	}

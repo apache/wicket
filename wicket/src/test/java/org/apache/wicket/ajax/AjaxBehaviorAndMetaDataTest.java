@@ -34,11 +34,13 @@ public class AjaxBehaviorAndMetaDataTest extends TestCase
 
 	WicketTester tester;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();

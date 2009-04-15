@@ -17,6 +17,7 @@
 package org.apache.wicket.markup;
 
 import junit.framework.TestCase;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -33,8 +34,10 @@ public class MarkupCacheTest extends TestCase
 	private MarkupCachingAssumingComponent component;
 
 	@Override
-	public void setUp() {
-		WebApplication application = new WicketTester.DummyWebApplication() {
+	public void setUp()
+	{
+		WebApplication application = new WicketTester.DummyWebApplication()
+		{
 			@Override
 			public String getConfigurationType()
 			{
@@ -48,7 +51,8 @@ public class MarkupCacheTest extends TestCase
 		tester.startComponent(component);
 	}
 
-	public void testMarkupNotFoundInformationIsCachedInDeploymentMode() {
+	public void testMarkupNotFoundInformationIsCachedInDeploymentMode()
+	{
 		Markup markup = cache.getMarkup(component, null, false);
 		assertEquals(Markup.NO_MARKUP, markup);
 
@@ -56,7 +60,10 @@ public class MarkupCacheTest extends TestCase
 		assertEquals(Markup.NO_MARKUP, markup);
 	}
 
-	private class MarkupCachingAssumingComponent extends Panel implements IMarkupResourceStreamProvider {
+	private class MarkupCachingAssumingComponent extends Panel
+		implements
+			IMarkupResourceStreamProvider
+	{
 		private static final long serialVersionUID = -6743937191677599322L;
 		private boolean firstCall = true;
 
@@ -65,9 +72,11 @@ public class MarkupCacheTest extends TestCase
 			super(id);
 		}
 
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			if (firstCall) {
+			if (firstCall)
+			{
 				firstCall = false;
 				return null;
 			}

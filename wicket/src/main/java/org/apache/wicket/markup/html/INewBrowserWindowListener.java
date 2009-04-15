@@ -30,7 +30,7 @@ public interface INewBrowserWindowListener extends IRequestListener
 {
 	/** Listener interface object */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			INewBrowserWindowListener.class);
+		INewBrowserWindowListener.class);
 
 	/**
 	 * Called when a new browser window is detected.

@@ -31,7 +31,8 @@ public class TimeFrameTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link org.apache.wicket.util.time.TimeFrame#eachDay(org.apache.wicket.util.time.TimeOfDay, org.apache.wicket.util.time.TimeOfDay)}.
+	 * {@link org.apache.wicket.util.time.TimeFrame#eachDay(org.apache.wicket.util.time.TimeOfDay, org.apache.wicket.util.time.TimeOfDay)}
+	 * .
 	 */
 	public void testEachDay()
 	{
@@ -41,7 +42,8 @@ public class TimeFrameTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link org.apache.wicket.util.time.TimeFrame#valueOf(org.apache.wicket.util.time.Time, org.apache.wicket.util.time.Duration)}.
+	 * {@link org.apache.wicket.util.time.TimeFrame#valueOf(org.apache.wicket.util.time.Time, org.apache.wicket.util.time.Duration)}
+	 * .
 	 */
 	public void testValueOfTimeDuration()
 	{
@@ -62,7 +64,8 @@ public class TimeFrameTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link org.apache.wicket.util.time.TimeFrame#overlaps(org.apache.wicket.util.time.TimeFrame)}.
+	 * {@link org.apache.wicket.util.time.TimeFrame#overlaps(org.apache.wicket.util.time.TimeFrame)}
+	 * .
 	 */
 	public void testOverlaps()
 	{

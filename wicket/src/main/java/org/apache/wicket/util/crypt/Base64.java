@@ -17,12 +17,14 @@
 package org.apache.wicket.util.crypt;
 
 /**
- * Provides Base64 encoding and decoding as defined by RFC 2045. <p/> This class is taken from the
- * Apache commons-codec, and adjusted to fit the Wicket framework's needs, especially external
- * dependencies have been removed.
+ * Provides Base64 encoding and decoding as defined by RFC 2045.
+ * <p/>
+ * This class is taken from the Apache commons-codec, and adjusted to fit the Wicket framework's
+ * needs, especially external dependencies have been removed.
  * </p>
- * <p/> This class implements section <cite>6.8. Base64 Content-Transfer-Encoding</cite> from RFC
- * 2045 <cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message
+ * <p/>
+ * This class implements section <cite>6.8. Base64 Content-Transfer-Encoding</cite> from RFC 2045
+ * <cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message
  * Bodies</cite> by Freed and Borenstein.
  * </p>
  * 
@@ -32,7 +34,8 @@ package org.apache.wicket.util.crypt;
 public class Base64
 {
 	/**
-	 * Chunk size per RFC 2045 section 6.8. <p/>
+	 * Chunk size per RFC 2045 section 6.8.
+	 * <p/>
 	 * <p>
 	 * The {@value} character limit does not count the trailing CRLF, but counts all other
 	 * characters, including any equal signs.
@@ -90,23 +93,28 @@ public class Base64
 	static final byte PAD = (byte)'=';
 
 	/**
-	 * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using
-	 * character encodings as indices. <p/> For example, <code>base64Alphabet['+']</code> returns
-	 * <code>62</code>.
+	 * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using character
+	 * encodings as indices.
+	 * <p/>
+	 * For example, <code>base64Alphabet['+']</code> returns <code>62</code>.
 	 * </p>
-	 * <p/> The value of undefined encodings is <code>-1</code>.
+	 * <p/>
+	 * The value of undefined encodings is <code>-1</code>.
 	 * </p>
 	 */
 	private static byte[] base64Alphabet = new byte[BASELENGTH];
 
 	/**
-	 * <p/> Contains the Base64 encodings <code>A</code> through <code>Z</code>, followed by
-	 * <code>a</code> through <code>z</code>, followed by <code>0</code> through
-	 * <code>9</code>, followed by <code>+</code>, and <code>/</code>.
+	 * <p/>
+	 * Contains the Base64 encodings <code>A</code> through <code>Z</code>, followed by
+	 * <code>a</code> through <code>z</code>, followed by <code>0</code> through <code>9</code>,
+	 * followed by <code>+</code>, and <code>/</code>.
 	 * </p>
-	 * <p/> This array is accessed by using character values as indices.
+	 * <p/>
+	 * This array is accessed by using character values as indices.
 	 * </p>
-	 * <p/> For example, <code>lookUpBase64Alphabet[62] </code> returns <code>'+'</code>.
+	 * <p/>
+	 * For example, <code>lookUpBase64Alphabet[62] </code> returns <code>'+'</code>.
 	 * </p>
 	 */
 	private static byte[] lookUpBase64Alphabet = new byte[LOOKUPLENGTH];
@@ -183,8 +191,8 @@ public class Base64
 	 * 
 	 * @param arrayOctect
 	 *            byte array to test
-	 * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if
-	 *         the byte array is empty; false, otherwise
+	 * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if the
+	 *         byte array is empty; false, otherwise
 	 */
 	public static boolean isArrayByteBase64(byte[] arrayOctect)
 	{
@@ -250,7 +258,7 @@ public class Base64
 		if (!(pObject instanceof byte[]))
 		{
 			throw new IllegalArgumentException(
-					"Parameter supplied to Base64 decode is not a byte[]");
+				"Parameter supplied to Base64 decode is not a byte[]");
 		}
 		return decode((byte[])pObject);
 	}
@@ -305,7 +313,7 @@ public class Base64
 		{
 
 			nbrChunks = (CHUNK_SEPARATOR.length == 0 ? 0 : (int)Math.ceil((float)encodedDataLength /
-					CHUNK_SIZE));
+				CHUNK_SIZE));
 			encodedDataLength += nbrChunks * CHUNK_SEPARATOR.length;
 		}
 
@@ -353,10 +361,10 @@ public class Base64
 				if (encodedIndex == nextSeparatorIndex)
 				{
 					System.arraycopy(CHUNK_SEPARATOR, 0, encodedData, encodedIndex,
-							CHUNK_SEPARATOR.length);
+						CHUNK_SEPARATOR.length);
 					chunksSoFar++;
 					nextSeparatorIndex = (CHUNK_SIZE * (chunksSoFar + 1)) +
-							(chunksSoFar * CHUNK_SEPARATOR.length);
+						(chunksSoFar * CHUNK_SEPARATOR.length);
 					encodedIndex += CHUNK_SEPARATOR.length;
 				}
 			}
@@ -400,7 +408,7 @@ public class Base64
 			if (chunksSoFar < nbrChunks)
 			{
 				System.arraycopy(CHUNK_SEPARATOR, 0, encodedData, encodedDataLength -
-						CHUNK_SEPARATOR.length, CHUNK_SEPARATOR.length);
+					CHUNK_SEPARATOR.length, CHUNK_SEPARATOR.length);
 			}
 		}
 
@@ -565,7 +573,7 @@ public class Base64
 		if (!(pObject instanceof byte[]))
 		{
 			throw new IllegalArgumentException(
-					"Parameter supplied to Base64 encode is not a byte[]");
+				"Parameter supplied to Base64 encode is not a byte[]");
 		}
 		return encode((byte[])pObject);
 	}

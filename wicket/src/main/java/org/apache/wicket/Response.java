@@ -154,8 +154,7 @@ public abstract class Response
 	 * <p>
 	 * Framework users who want to redirect should use a construction like <code>
 	 * RequestCycle.get().setRequestTarget(new RedirectRequestTarget(...));
-	 * </code>
-	 * or <code>
+	 * </code> or <code>
 	 * setResponsePage(new RedirectPage(...));
 	 * </code>
 	 * </p>

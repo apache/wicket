@@ -45,7 +45,7 @@ public class MyTable extends ListView<String>
 	}
 
 	@Override
-    protected void populateItem(ListItem<String> listItem)
+	protected void populateItem(ListItem<String> listItem)
 	{
 		String txt = listItem.getModelObject();
 		listItem.add(new Label("txt", txt));

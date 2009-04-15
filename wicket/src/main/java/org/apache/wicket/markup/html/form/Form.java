@@ -375,8 +375,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	/** multi-validators assigned to this form */
 	private Object formValidators = null;
 
-	private String javascriptId;
-
 	/**
 	 * Maximum size of an upload in bytes. If null, the setting
 	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.

@@ -38,11 +38,13 @@ public class FormTest extends WicketTestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		visitor = new Form.ValidationVisitor()
 		{
+			@Override
 			public void validate(FormComponent formComponent)
 			{
 			}

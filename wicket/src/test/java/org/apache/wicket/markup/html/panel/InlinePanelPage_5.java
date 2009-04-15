@@ -57,6 +57,7 @@ public class InlinePanelPage_5 extends WebPage
 			super(id, markupId);
 		}
 
+		@Override
 		protected MarkupStream chooseMarkupStream(MarkupStream markupStream)
 		{
 			return getAssociatedMarkupStream(false);

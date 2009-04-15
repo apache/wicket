@@ -45,7 +45,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		private static final long serialVersionUID = 1L;
 
 		/** The contribution as a model that returns a plain string. */
-		private final IModel< ? > contribution;
+		private final IModel<?> contribution;
 
 		/**
 		 * Construct.
@@ -69,7 +69,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		 * @param contribution
 		 *            The contribution as a model that returns a plain string
 		 */
-		public StringContributor(IModel< ? > contribution)
+		public StringContributor(IModel<?> contribution)
 		{
 			if (contribution == null)
 			{
@@ -143,7 +143,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	 * @param contribution
 	 *            header contribution as a model that returns a plain string
 	 */
-	public StringHeaderContributor(IModel< ? > contribution)
+	public StringHeaderContributor(IModel<?> contribution)
 	{
 		contributor = new StringContributor(contribution);
 	}

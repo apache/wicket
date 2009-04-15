@@ -49,6 +49,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 * 
 	 * @return The loader instance to test
 	 */
+	@Override
 	protected IStringResourceLoader createLoader()
 	{
 		return new ClassStringResourceLoader(application.getClass());
@@ -57,13 +58,14 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	/**
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
 	 */
+	@Override
 	public void testLoaderUnknownResources()
 	{
 		WicketTester tester = new WicketTester();
 		WebApplication app = tester.getApplication();
 		IStringResourceLoader loader = new ClassStringResourceLoader(app.getClass());
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
-				component.getClass(), "test.string", Locale.getDefault(), null));
+			component.getClass(), "test.string", Locale.getDefault(), null));
 		tester.destroy();
 	}
 }

@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.Strings;
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
 	private final Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^" + LINE_ENDING + "]+?)" +
-			LINE_ENDING + "(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+		LINE_ENDING + "(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
 
 	/**
 	 * Construct.
@@ -41,6 +41,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "xmlLicense.txt";
@@ -90,6 +91,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "xml", "fml" };
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		boolean added = false;

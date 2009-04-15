@@ -71,7 +71,7 @@ public class CookieValuePersisterTestPage extends WebPage
 		 * Dummy
 		 */
 		@Override
-        public final void onSubmit()
+		public final void onSubmit()
 		{
 		}
 	}

@@ -147,6 +147,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * @see org.apache.wicket.markup.html.WebResource#setHeaders(org.apache.wicket.protocol.http.WebResponse)
 	 */
+	@Override
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
@@ -170,6 +171,7 @@ public abstract class DynamicWebResource extends WebResource
 	 * @return Gets the resource to attach to the component.
 	 */
 	// this method is deliberately non-final. some users depend on it
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

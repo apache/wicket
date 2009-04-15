@@ -45,7 +45,9 @@ public class InterceptPage extends WebPage
 			public void onClick()
 			{
 				if (!continueToOriginalDestination())
+				{
 					setResponsePage(Application.get().getHomePage());
+				}
 			}
 		});
 	}

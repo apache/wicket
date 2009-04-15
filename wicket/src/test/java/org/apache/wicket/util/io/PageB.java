@@ -41,6 +41,7 @@ public class PageB extends WebPage
 
 	}
 
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PageB)

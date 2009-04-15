@@ -52,6 +52,7 @@ public class AttributeModifierComponentTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -59,6 +60,7 @@ public class AttributeModifierComponentTest extends TestCase
 		tester.startPage(AttributeModifierComponentPage.class);
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();

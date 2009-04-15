@@ -26,8 +26,8 @@ import org.apache.wicket.model.IModel;
  * Either
  * 
  * <ul>
- * <li> add a AttributeModified to set the id attribute, then use document.getElementById(id) </li>
- * <li> lookup the field name=getPath() within the form </li>
+ * <li>add a AttributeModified to set the id attribute, then use document.getElementById(id)</li>
+ * <li>lookup the field name=getPath() within the form</li>
  * </ul>
  * 
  * @author Cameron Braid

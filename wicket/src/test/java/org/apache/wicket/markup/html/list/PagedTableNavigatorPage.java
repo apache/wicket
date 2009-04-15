@@ -51,6 +51,7 @@ public class PagedTableNavigatorPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getDefaultModelObject();
@@ -65,6 +66,7 @@ public class PagedTableNavigatorPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		// for testing we set versioning off, because it gets too difficult to maintain otherwise

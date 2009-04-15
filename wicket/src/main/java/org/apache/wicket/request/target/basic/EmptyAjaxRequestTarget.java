@@ -67,6 +67,7 @@ public final class EmptyAjaxRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof EmptyAjaxRequestTarget)
@@ -79,6 +80,7 @@ public final class EmptyAjaxRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return HASH;
@@ -87,6 +89,7 @@ public final class EmptyAjaxRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "EmptyAjaxRequestTarget";

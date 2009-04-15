@@ -1033,8 +1033,10 @@ public abstract class MarkupContainer extends Component
 			if (children instanceof Object[] == false && children instanceof ChildList == false)
 			{
 				if (index != 0)
+				{
 					throw new ArrayIndexOutOfBoundsException("index " + index +
 						" is greater then 0");
+				}
 				component = postprocess(children, reconstruct, this, 0);
 				if (children != component)
 				{
@@ -1207,7 +1209,9 @@ public abstract class MarkupContainer extends Component
 	private final Component children_remove(int index)
 	{
 		if (children == null)
+		{
 			return null;
+		}
 
 		if (children instanceof Component || children instanceof ComponentSourceEntry)
 		{
@@ -1832,7 +1836,9 @@ public abstract class MarkupContainer extends Component
 		public void add(int index, Object element)
 		{
 			if (index > size || index < 0)
+			{
 				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+			}
 
 			ensureCapacity(size + 1);
 			System.arraycopy(childs, index, childs, index + 1, size - index);
@@ -1844,7 +1850,9 @@ public abstract class MarkupContainer extends Component
 		public Object set(int index, Object element)
 		{
 			if (index >= size)
+			{
 				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+			}
 
 			Object oldValue = childs[index];
 			childs[index] = element;
@@ -1855,13 +1863,17 @@ public abstract class MarkupContainer extends Component
 		public Object remove(int index)
 		{
 			if (index >= size)
+			{
 				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+			}
 
 			Object oldValue = childs[index];
 
 			int numMoved = size - index - 1;
 			if (numMoved > 0)
+			{
 				System.arraycopy(childs, index + 1, childs, index, numMoved);
+			}
 			childs[--size] = null; // Let gc do its work
 
 			return oldValue;
@@ -1878,7 +1890,9 @@ public abstract class MarkupContainer extends Component
 				Object oldData[] = childs;
 				int newCapacity = oldCapacity * 2;
 				if (newCapacity < minCapacity)
+				{
 					newCapacity = minCapacity;
+				}
 				childs = new Object[newCapacity];
 				System.arraycopy(oldData, 0, childs, 0, size);
 			}

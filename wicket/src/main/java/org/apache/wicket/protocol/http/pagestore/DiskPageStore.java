@@ -989,7 +989,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public void stop()
 		{
 			if (stop == null)
+			{
 				return;
+			}
 
 			stop = Boolean.TRUE;
 
@@ -1256,8 +1258,6 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		SessionEntry entry = getSessionEntry(sessionId, false);
 		if (entry != null)
 		{
-			byte[] data;
-
 			if (isSynchronous())
 			{
 				return entry.exists(pageMapName, pageId, pageVersion);

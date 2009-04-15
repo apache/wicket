@@ -128,19 +128,20 @@ public class CheckGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-        tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
 		// create component hierarchy
 
-		final Form<MockModelObject> form = new Form<MockModelObject>("form", new CompoundPropertyModel<MockModelObject>(modelObject))
+		final Form<MockModelObject> form = new Form<MockModelObject>("form",
+			new CompoundPropertyModel<MockModelObject>(modelObject))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            public String getMarkupId()
+			public String getMarkupId()
 			{
 				// hack for the fact that this test doesn't relate to any markup
 				return "foo";
@@ -151,7 +152,8 @@ public class CheckGroupTest extends WicketTestCase
 
 		final WebMarkupContainer container = new WebMarkupContainer("container");
 
-		final Check<Serializable> choice1 = new Check<Serializable>("check1", new Model<Serializable>(check1));
+		final Check<Serializable> choice1 = new Check<Serializable>("check1",
+			new Model<Serializable>(check1));
 		final Check<String> choice2 = new Check<String>("prop2");
 
 		page.add(form);
@@ -166,34 +168,34 @@ public class CheckGroupTest extends WicketTestCase
 
 		form.onFormSubmitted();
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
-				.size() == 0);
+			.size() == 0);
 
 		tester.getServletRequest().setParameter(group.getInputName(),
-				String.valueOf(choice1.getValue()));
+			String.valueOf(choice1.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
-				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
+			modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
 		tester.getServletRequest().setParameter(group.getInputName(),
-				String.valueOf(choice2.getValue()));
+			String.valueOf(choice2.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
-				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check2));
+			modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check2));
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
 		tester.getServletRequest().getParameterMap().put(
-				group.getInputName(),
-				new String[] { null, String.valueOf(choice1.getValue()), null,
-						String.valueOf(choice2.getValue()) });
+			group.getInputName(),
+			new String[] { null, String.valueOf(choice1.getValue()), null,
+					String.valueOf(choice2.getValue()) });
 		form.onFormSubmitted();
 		assertTrue(
-				"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
-				modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2) &&
-						modelObject.getProp1().contains(check1));
+			"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
+			modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2) &&
+				modelObject.getProp1().contains(check1));
 
 		tester.getServletRequest().getParameterMap().put(group.getInputName(),
-				new String[] { "some weird choice uuid to test error" });
+			new String[] { "some weird choice uuid to test error" });
 		try
 		{
 			form.onFormSubmitted();
@@ -226,7 +228,7 @@ public class CheckGroupTest extends WicketTestCase
 		catch (WicketRuntimeException e)
 		{
 			if (e.getMessage().indexOf(
-					"Check component [4:form:check2] cannot find its parent CheckGroup") < 0)
+				"Check component [4:form:check2] cannot find its parent CheckGroup") < 0)
 			{
 				fail("failed with wrong exception");
 			}

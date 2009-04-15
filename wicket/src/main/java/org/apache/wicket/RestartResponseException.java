@@ -29,7 +29,8 @@ public class RestartResponseException extends AbstractRestartResponseException
 	/**
 	 * Redirects to the specified bookmarkable page
 	 * 
-	 * @param <C> The page type
+	 * @param <C>
+	 *            The page type
 	 * 
 	 * @param pageClass
 	 *            class of bookmarkable page
@@ -42,7 +43,8 @@ public class RestartResponseException extends AbstractRestartResponseException
 	/**
 	 * Redirects to the specified bookmarkable page with the given page parameters
 	 * 
-	 * @param <C> The page type
+	 * @param <C>
+	 *            The page type
 	 * 
 	 * @param pageClass
 	 *            class of bookmarkable page

@@ -33,7 +33,7 @@ public class StringResponseTest extends WicketTestCase
 	{
 		tester.setupRequestAndResponse();
 		tester.getApplication().getRequestCycleSettings().setUnexpectedExceptionDisplay(
-				IExceptionSettings.SHOW_EXCEPTION_PAGE);
+			IExceptionSettings.SHOW_EXCEPTION_PAGE);
 
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.setResponse(new StringResponse());
@@ -43,7 +43,7 @@ public class StringResponseTest extends WicketTestCase
 			// exception is thrown instead
 			cycle.request(new BookmarkablePageRequestTarget(BrokenPage.class));
 			Method method = MockWebApplication.class.getDeclaredMethod("generateLastRenderedPage",
-					new Class[] { WebRequestCycle.class });
+				new Class[] { WebRequestCycle.class });
 			method.setAccessible(true);
 			Page page = (Page)method.invoke(tester, new Object[] { cycle });
 			assertTrue("Page is not an ExceptionErrorPage", page instanceof ExceptionErrorPage);

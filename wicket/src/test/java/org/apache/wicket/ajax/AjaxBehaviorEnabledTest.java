@@ -46,7 +46,9 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		public boolean isActionAuthorized(Component component, Action action)
 		{
 			if (action == Component.ENABLE && component.getId().endsWith("disabled"))
+			{
 				return false;
+			}
 			return true;
 		}
 

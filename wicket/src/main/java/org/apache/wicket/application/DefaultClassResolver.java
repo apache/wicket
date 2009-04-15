@@ -44,20 +44,20 @@ public final class DefaultClassResolver implements IClassResolver
 	 * java.lang.LinkageError: duplicate class definition:
 	 * 
 	 * <pre>
-	 *    wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
+	 *    wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method)
 	 * </pre>
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private final ConcurrentHashMap<String, WeakReference<Class< ? >>> classes = new ConcurrentHashMap<String, WeakReference<Class< ? >>>();
+	private final ConcurrentHashMap<String, WeakReference<Class<?>>> classes = new ConcurrentHashMap<String, WeakReference<Class<?>>>();
 
 	/**
 	 * @see org.apache.wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public final Class< ? > resolveClass(final String classname) throws ClassNotFoundException
+	public final Class<?> resolveClass(final String classname) throws ClassNotFoundException
 	{
-		Class< ? > clazz = null;
-		WeakReference<Class< ? >> ref = classes.get(classname);
+		Class<?> clazz = null;
+		WeakReference<Class<?>> ref = classes.get(classname);
 
 		// Might be garbage-collected between getting the WeakRef and retrieving
 		// the Class from it.
@@ -110,7 +110,7 @@ public final class DefaultClassResolver implements IClassResolver
 					}
 					clazz = loader.loadClass(classname);
 				}
-				classes.put(classname, new WeakReference<Class< ? >>(clazz));
+				classes.put(classname, new WeakReference<Class<?>>(clazz));
 			}
 		}
 		return clazz;

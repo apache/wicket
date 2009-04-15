@@ -69,7 +69,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings( { "unchecked" })
 	public void test3() throws Exception
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
@@ -78,7 +78,8 @@ public class BoxBorderTest extends WicketTestCase
 		assertNotNull(border);
 		Form<?> form = (Form<?>)tester.getLastRenderedPage().get("border:myForm");
 
-		TextField<String> input = (TextField<String>)tester.getLastRenderedPage().get("border:name");
+		TextField<String> input = (TextField<String>)tester.getLastRenderedPage()
+			.get("border:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
 		tester.setupRequestAndResponse();
@@ -116,7 +117,7 @@ public class BoxBorderTest extends WicketTestCase
 		}
 
 		assertNotNull("Markup does not match component hierarchy, but exception not thrown.",
-				markupException);
+			markupException);
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class BoxBorderTest extends WicketTestCase
 	public void testRenderWrapped() throws Exception
 	{
 		executeTest(BorderRenderWrappedTestPage_1.class,
-				"BorderRenderWrappedTestPage_ExpectedResult_1.html");
+			"BorderRenderWrappedTestPage_ExpectedResult_1.html");
 	}
 
 	/**
@@ -204,7 +205,7 @@ public class BoxBorderTest extends WicketTestCase
 			}
 		}
 		assertNotNull(
-				"Expected a WicketRuntimeException. Border tag must be open tags. Open-close tags are not allowed",
-				e);
+			"Expected a WicketRuntimeException. Border tag must be open tags. Open-close tags are not allowed",
+			e);
 	}
 }

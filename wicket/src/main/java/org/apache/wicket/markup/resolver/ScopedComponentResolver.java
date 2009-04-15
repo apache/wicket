@@ -53,6 +53,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 	cont2.add(new Label(&quot;same-id&quot;, &quot;cont2 same-id&quot;));
  * }
  * </pre>
+ * 
  * <pre>
  * HTML:
  * &lt;html&gt;

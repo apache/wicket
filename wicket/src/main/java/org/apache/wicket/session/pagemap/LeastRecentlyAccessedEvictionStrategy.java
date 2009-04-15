@@ -20,7 +20,6 @@ import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.AccessStackPageMap.Access;
 
 /**
  * A simple eviction strategy that evicts the least recently accessed page version from the given
@@ -64,7 +63,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 				if (accessPM.getVersions() > maxVersions)
 				{
 					// Remove oldest entry from access stack
-					final AccessStackPageMap.Access oldestAccess = (Access)accessPM.getAccessStack()
+					final AccessStackPageMap.Access oldestAccess = accessPM.getAccessStack()
 						.remove(0);
 					final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
 

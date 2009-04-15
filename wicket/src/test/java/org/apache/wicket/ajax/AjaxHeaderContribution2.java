@@ -33,6 +33,7 @@ class AjaxHeaderContribution2 extends Panel
 		super(id);
 	}
 
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		super.renderHead(container);

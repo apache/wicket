@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.tree;
 
 /**
  * Methods this interface are called when tree state is changing.
- *
+ * 
  * @author Matej Knopp
  */
 public interface ITreeStateListener
@@ -36,7 +36,7 @@ public interface ITreeStateListener
 
 	/**
 	 * Fired when given node is collapsed.
-	 *
+	 * 
 	 * @param node
 	 *            The node that was collapsed
 	 */
@@ -44,14 +44,14 @@ public interface ITreeStateListener
 
 	/**
 	 * Fired when given node is expanded.
-	 *
+	 * 
 	 * @param node
 	 */
 	void nodeExpanded(Object node);
 
 	/**
 	 * Fired when given node gets selected.
-	 *
+	 * 
 	 * @param node
 	 *            The node that was selected
 	 */
@@ -59,7 +59,7 @@ public interface ITreeStateListener
 
 	/**
 	 * Fired when given node gets unselected.
-	 *
+	 * 
 	 * @param node
 	 *            The node that was unselected
 	 */

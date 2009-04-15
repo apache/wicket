@@ -106,23 +106,37 @@ public class PageReference implements IClusterable
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
+		{
 			return true;
+		}
 		if (obj == null)
+		{
 			return false;
+		}
 		if (getClass() != obj.getClass())
+		{
 			return false;
+		}
 		PageReference other = (PageReference)obj;
 		if (number != other.number)
+		{
 			return false;
+		}
 		if (pageMapName == null)
 		{
 			if (other.pageMapName != null)
+			{
 				return false;
+			}
 		}
 		else if (!pageMapName.equals(other.pageMapName))
+		{
 			return false;
+		}
 		if (version != other.version)
+		{
 			return false;
+		}
 		return true;
 	}
 

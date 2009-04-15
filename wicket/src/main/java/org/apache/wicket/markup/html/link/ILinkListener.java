@@ -28,7 +28,7 @@ public interface ILinkListener extends IRequestListener
 {
 	/** Listener interface */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			ILinkListener.class);
+		ILinkListener.class);
 
 	/**
 	 * Called when a link is clicked.

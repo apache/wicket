@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -83,8 +82,6 @@ public class WicketResponseState
 	private String characterEncoding;
 	private int contentLength = -1;
 	private String contentType;
-	private int errorCode;
-	private String errorMessage;
 	private int statusCode;
 
 	/**
@@ -238,8 +235,6 @@ public class WicketResponseState
 		committed = true;
 		closed = true;
 		hasError = true;
-		this.errorCode = errorCode;
-		this.errorMessage = errorMessage;
 	}
 
 	/*
@@ -637,8 +632,6 @@ public class WicketResponseState
 		characterEncoding = null;
 		contentLength = -1;
 		contentType = null;
-		errorCode = 0;
-		errorMessage = null;
 		statusCode = 0;
 		redirectLocation = null;
 	}
@@ -662,7 +655,6 @@ public class WicketResponseState
 		if (isMimeResponse)
 		{
 			MimeResponse mimeResponse = (MimeResponse)response;
-			RenderResponse renderResponse = isRenderResponse ? (RenderResponse)response : null;
 			ResourceResponse resourceResponse = isResourceResponse ? (ResourceResponse)response
 				: null;
 

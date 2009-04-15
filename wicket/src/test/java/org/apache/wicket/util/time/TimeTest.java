@@ -36,7 +36,7 @@ public final class TimeTest extends TestCase
 	 */
 	public void test() throws ParseException
 	{
-		final Time start = Time.now();
+		Time.now();
 
 		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
 		// from time to time. I have seen this and it's very weird -- Jonathan

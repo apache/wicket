@@ -104,11 +104,11 @@ public class ObjectsTest extends WicketTestCase
 	/**
 	 * Test method for component cloning
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings( { "unchecked" })
 	public void testComponentClone()
 	{
-		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test", new Model<String>("test")),
-				"modelObject");
+		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test",
+			new Model<String>("test")), "modelObject");
 		PropertyModel<String> pm2 = (PropertyModel<String>)Objects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
@@ -141,6 +141,7 @@ public class ObjectsTest extends WicketTestCase
 		/**
 		 * @see Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object o)
 		{
 			CloneObject other = (CloneObject)o;

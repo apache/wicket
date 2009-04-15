@@ -847,10 +847,14 @@ public abstract class AbstractTree extends Panel
 					markTheLastButOneChildDirty(parentItem, item);
 
 					if (!dirtyItems.contains(item))
+					{
 						dirtyItems.add(item);
+					}
 
 					if (!dirtyItemsCreateDOM.contains(item))
+					{
 						dirtyItemsCreateDOM.add(item);
+					}
 				}
 			}
 		}
@@ -1389,7 +1393,9 @@ public abstract class AbstractTree extends Panel
 				}
 
 				if (!dirtyItems.contains(item))
+				{
 					dirtyItems.add(item);
+				}
 
 				if (createDOM && !dirtyItemsCreateDOM.contains(item))
 				{

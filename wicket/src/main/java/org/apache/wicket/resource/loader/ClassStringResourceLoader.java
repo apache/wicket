@@ -37,7 +37,7 @@ import org.apache.wicket.Session;
 public class ClassStringResourceLoader extends ComponentStringResourceLoader
 {
 	/** The application we are loading for. */
-	private final WeakReference<Class< ? >> clazzRef;
+	private final WeakReference<Class<?>> clazzRef;
 
 	/**
 	 * Create and initialize the resource loader.
@@ -45,13 +45,13 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 * @param clazz
 	 *            The class that this resource loader is associated with
 	 */
-	public ClassStringResourceLoader(final Class< ? > clazz)
+	public ClassStringResourceLoader(final Class<?> clazz)
 	{
 		if (clazz == null)
 		{
 			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
 		}
-		clazzRef = new WeakReference<Class< ? >>(clazz);
+		clazzRef = new WeakReference<Class<?>>(clazz);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
 	@Override
-	public String loadStringResource(final Class< ? > clazz, final String key, final Locale locale,
+	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
 		return super.loadStringResource(clazzRef.get(), key, locale, style);

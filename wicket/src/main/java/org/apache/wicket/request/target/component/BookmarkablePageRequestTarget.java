@@ -58,9 +58,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param <C>
-	 *
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
@@ -71,9 +71,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param <C>
-	 *
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 * @param pageParameters
@@ -87,12 +87,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param <C>
-	 *
+	 * 
 	 * @param pageMapName
 	 *            optional page map name
-	 *
+	 * 
 	 * @param pageClass
 	 *            the class of the page
 	 */
@@ -103,10 +103,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param <C>
 	 *            type of page
-	 *
+	 * 
 	 * @param pageMapName
 	 *            optional page map name
 	 * @param pageClass
@@ -114,8 +114,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName,
-		Class<C> pageClass, PageParameters pageParameters)
+	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass,
+		PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -276,10 +276,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Constructs a new instance of a page given its class name
-	 *
+	 * 
 	 * @param <C>
 	 *            type of page
-	 *
+	 * 
 	 * @param pageClass
 	 *            class name of the page to be created
 	 * @param requestCycle
@@ -309,7 +309,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 	/**
 	 * Gets a newly constructed page if we are not in a redirect.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the request cycle
 	 * @return the page

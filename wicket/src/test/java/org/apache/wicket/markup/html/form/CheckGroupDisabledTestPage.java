@@ -36,7 +36,8 @@ public class CheckGroupDisabledTestPage extends WebPage
 	public CheckGroupDisabledTestPage()
 	{
 		Form<Void> form = new Form<Void>("form");
-		CheckGroup<String> group = new CheckGroup<String>("group", new CollectionModel<String>(Arrays.asList("check1", "check2")));
+		CheckGroup<String> group = new CheckGroup<String>("group", new CollectionModel<String>(
+			Arrays.asList("check1", "check2")));
 		group.setRenderBodyOnly(false);
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		Check<String> check1 = new Check<String>("check1", new Model<String>("check1"));

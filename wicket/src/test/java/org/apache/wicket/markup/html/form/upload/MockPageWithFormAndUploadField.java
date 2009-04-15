@@ -46,7 +46,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void onSubmit()
+			protected void onSubmit()
 			{
 				fileUpload = fileUploadField.getFileUpload();
 			}

@@ -69,6 +69,7 @@ public final class EmptyRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof EmptyRequestTarget)
@@ -81,6 +82,7 @@ public final class EmptyRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return HASH;
@@ -89,6 +91,7 @@ public final class EmptyRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "EmptyRequestTarget";

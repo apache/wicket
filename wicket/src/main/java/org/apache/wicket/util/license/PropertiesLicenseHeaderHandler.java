@@ -35,6 +35,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "propertiesLicense.txt";
@@ -63,6 +64,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "properties" };
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);

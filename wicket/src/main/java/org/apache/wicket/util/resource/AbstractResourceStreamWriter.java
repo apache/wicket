@@ -83,8 +83,10 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	}
 
 	/**
-	 * this method should not be used as it is not required for resource writers <p/> resource write
-	 * generate content directly, not using an input stream, so there's nothing to close later.
+	 * this method should not be used as it is not required for resource writers
+	 * <p/>
+	 * resource write generate content directly, not using an input stream, so there's nothing to
+	 * close later.
 	 * 
 	 * @throws IOException
 	 */

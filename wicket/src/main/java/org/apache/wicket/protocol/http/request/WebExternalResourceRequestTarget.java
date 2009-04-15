@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * <b>NOTE:</b> this class is a wrapper around
- * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(org.apache.wicket.util.resource.IResourceStream)},
- * and kept for compatibility purposes.
+ * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(org.apache.wicket.util.resource.IResourceStream)}
+ * , and kept for compatibility purposes.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -39,8 +39,7 @@ import org.slf4j.LoggerFactory;
 public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarget
 {
 	/** log. */
-	private static final Logger log = LoggerFactory
-			.getLogger(WebExternalResourceRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestTarget.class);
 
 	/** the relative url of the external resource. */
 	private final String uri;
@@ -70,6 +69,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarge
 	/**
 	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
 	 */
+	@Override
 	public void detach(RequestCycle requestCycle)
 	{
 	}
@@ -77,6 +77,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarge
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof WebExternalResourceRequestTarget)
@@ -90,6 +91,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarge
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "WebExternalResourceRequestTarget".hashCode();
@@ -100,6 +102,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarge
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + uri + "]";

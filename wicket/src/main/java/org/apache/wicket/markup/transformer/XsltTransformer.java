@@ -60,10 +60,10 @@ public class XsltTransformer implements ITransformer
 	 * 
 	 * @param xslFile
 	 *            XSL input file path relative to the component's package. If the path does not end
-	 *            with <tt>.xsl</tt>, then it is considered as a basename and will be passed
-	 *            as-is to
-	 *            {@link IResourceStreamLocator#locate(Class, String, String, java.util.Locale, String)}.
-	 *            All stylesheets must have the <tt>.xsl</tt> extension.
+	 *            with <tt>.xsl</tt>, then it is considered as a basename and will be passed as-is
+	 *            to
+	 *            {@link IResourceStreamLocator#locate(Class, String, String, java.util.Locale, String)}
+	 *            . All stylesheets must have the <tt>.xsl</tt> extension.
 	 */
 	public XsltTransformer(final String xslFile)
 	{

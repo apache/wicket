@@ -73,8 +73,9 @@ public final class Properties
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public final String toString()
 	{
-		return this.key;
+		return key;
 	}
 }

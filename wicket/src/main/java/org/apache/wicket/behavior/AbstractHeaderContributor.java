@@ -26,8 +26,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Eelco Hillenius
  */
 public abstract class AbstractHeaderContributor extends AbstractBehavior
-		implements
-			IHeaderContributor
+	implements
+		IHeaderContributor
 {
 	/**
 	 * 
@@ -51,6 +51,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public final void renderHead(final IHeaderResponse response)
 	{
 		IHeaderContributor[] contributors = getHeaderContributors();

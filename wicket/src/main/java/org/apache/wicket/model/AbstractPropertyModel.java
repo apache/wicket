@@ -192,7 +192,9 @@ public abstract class AbstractPropertyModel<T>
 		{
 			Object tmp = ((IModel<?>)object).getObject();
 			if (tmp == object)
+			{
 				break;
+			}
 			object = tmp;
 		}
 		return object;

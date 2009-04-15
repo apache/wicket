@@ -810,7 +810,7 @@ public class WicketFilter implements Filter
 			// load the portlet context
 			try
 			{
-				Class<?> portletClass = Class.forName("javax.portlet.PortletContext");
+				Class.forName("javax.portlet.PortletContext");
 				return true;
 			}
 			catch (ClassNotFoundException e)

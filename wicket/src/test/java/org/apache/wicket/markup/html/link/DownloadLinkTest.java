@@ -52,7 +52,7 @@ public class DownloadLinkTest extends WicketTestCase
 	{
 		tester.startPage(DownloadPage.class);
 		((MockServletContext)tester.getApplication().getServletContext()).addMimeType("custom",
-				APPLICATION_X_CUSTOM);
+			APPLICATION_X_CUSTOM);
 		tester.clickLink(DownloadPage.CUSTOM_DOWNLOAD_LINK);
 		log.debug("Content-Type: " + tester.getContentTypeFromResponseHeader());
 		assertTrue(tester.getContentTypeFromResponseHeader().startsWith(APPLICATION_X_CUSTOM));
@@ -78,7 +78,7 @@ public class DownloadLinkTest extends WicketTestCase
 		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
 		assertTrue(tester.getContentTypeFromResponseHeader().startsWith("text/plain"));
 		assertTrue(tester.getContentDispositionFromResponseHeader().startsWith(
-				"attachment; filename="));
+			"attachment; filename="));
 		assertEquals(0, tester.getContentLengthFromResponseHeader());
 	}
 

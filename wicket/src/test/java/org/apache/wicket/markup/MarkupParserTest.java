@@ -311,16 +311,14 @@ public final class MarkupParserTest extends WicketTestCase
 		markup = new MarkupParser("<wicket:remove> <span id=\"test\"/> </wicket:remove>").parse();
 		assertEquals(0, markup.size());
 
-		markup = new MarkupParser("<div><wicket:remove> <span id=\"test\"/> </wicket:remove></div>")
-			.parse();
+		markup = new MarkupParser("<div><wicket:remove> <span id=\"test\"/> </wicket:remove></div>").parse();
 		assertEquals(2, markup.size());
 		assertEquals("<div>", ((RawMarkup)markup.get(0)).toString());
 		assertEquals("</div>", ((RawMarkup)markup.get(1)).toString());
 
 		try
 		{
-			new MarkupParser("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>")
-				.parse();
+			new MarkupParser("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>").parse();
 			assertTrue(
 				"Should have thrown an exception: remove regions must not contain wicket-components",
 				false);
@@ -331,17 +329,13 @@ public final class MarkupParserTest extends WicketTestCase
 		}
 
 		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>")
-			.parse();
+			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>").parse();
 		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>")
-			.parse();
+			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>").parse();
 		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>")
-			.parse();
+			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>").parse();
 		new MarkupParser(
-			"<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>")
-			.parse();
+			"<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>").parse();
 	}
 
 	/**
@@ -388,8 +382,8 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
 		assertEquals(true, markup.get(1) instanceof RawMarkup);
-		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", ((RawMarkup)markup
-			.get(1)).toString());
+		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>",
+			((RawMarkup)markup.get(1)).toString());
 	}
 
 	/**

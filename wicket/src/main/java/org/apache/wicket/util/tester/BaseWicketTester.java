@@ -794,7 +794,7 @@ public class BaseWicketTester extends MockWebApplication
 				BookmarkablePageLink<?> bookmarkablePageLink = (BookmarkablePageLink<?>)link;
 				try
 				{
-					Field parametersField = BookmarkablePageLink.class.getDeclaredField("parameters");
+					BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
 						"getPageParameters", (Class<?>[])null);
 					getParametersMethod.setAccessible(true);

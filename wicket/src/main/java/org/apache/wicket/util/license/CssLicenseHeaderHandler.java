@@ -36,6 +36,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "cssLicense.txt";
@@ -64,6 +65,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "css" };
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);

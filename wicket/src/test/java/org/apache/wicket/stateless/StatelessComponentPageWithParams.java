@@ -40,6 +40,7 @@ public class StatelessComponentPageWithParams extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				if (getPageParameters().size() == 2)

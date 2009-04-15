@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -36,7 +37,7 @@ import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is
  * working)
- *
+ * 
  * @author Chris Turner
  */
 public class MockWebApplicationTest extends TestCase
@@ -58,8 +59,9 @@ public class MockWebApplicationTest extends TestCase
 
 	/**
 	 * Create the test.
-	 *
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
 	public MockWebApplicationTest(String name)
 	{
@@ -90,7 +92,7 @@ public class MockWebApplicationTest extends TestCase
 		DiffUtil.validatePage(document, getClass(), "MockPage_expectedResult.html", true);
 
 		// Inspect the page & model
-		MockPage p = (MockPage) application.getLastRenderedPage();
+		MockPage p = (MockPage)application.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 0 times", 0, p.getLinkClickCount());
 	}
 
@@ -124,8 +126,8 @@ public class MockWebApplicationTest extends TestCase
 
 		// Now request that we click the link
 		application.setupRequestAndResponse();
-		MockPage p = (MockPage) application.getLastRenderedPage();
-		Link<?> link = (Link<?>) p.get("actionLink");
+		MockPage p = (MockPage)application.getLastRenderedPage();
+		Link<?> link = (Link<?>)p.get("actionLink");
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 
@@ -143,7 +145,7 @@ public class MockWebApplicationTest extends TestCase
 		DiffUtil.validatePage(document, getClass(), "MockPage_expectedResult2.html", true);
 
 		// Inspect the page & model
-		p = (MockPage) application.getLastRenderedPage();
+		p = (MockPage)application.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
 	}
 
@@ -177,7 +179,9 @@ public class MockWebApplicationTest extends TestCase
 			}
 		};
 		new MockWebApplication(wicketApplication, "foo");
-		IResourceFinder resourceFinderInApplication = Application.get().getResourceSettings().getResourceFinder();
+		IResourceFinder resourceFinderInApplication = Application.get()
+			.getResourceSettings()
+			.getResourceFinder();
 		Assert.assertSame(customResourceFinder, resourceFinderInApplication);
 	}
 }

@@ -40,7 +40,7 @@ public class MockPageWithForm extends WebPage
 		}
 
 		@Override
-        protected void onSubmit()
+		protected void onSubmit()
 		{
 			submitted = true;
 		}
@@ -60,12 +60,13 @@ public class MockPageWithForm extends WebPage
 		List<String> list = new ArrayList<String>();
 		list.add("Select me");
 		MyForm form = new MyForm("form");
-		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropdown", new Model<String>(), list)
+		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropdown",
+			new Model<String>(), list)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void onSelectionChanged(String newSelection)
+			protected void onSelectionChanged(String newSelection)
 			{
 				selected = true;
 			}
@@ -74,7 +75,7 @@ public class MockPageWithForm extends WebPage
 			 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 			 */
 			@Override
-            protected boolean wantOnSelectionChangedNotifications()
+			protected boolean wantOnSelectionChangedNotifications()
 			{
 				return true;
 			}

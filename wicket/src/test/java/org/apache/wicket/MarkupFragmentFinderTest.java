@@ -34,7 +34,7 @@ public class MarkupFragmentFinderTest extends TestCase
 	 */
 	public void testFind()
 	{
-		WicketTester tester = new WicketTester();
+		new WicketTester();
 		Page page = new SimpleTestPage();
 		Component panel = page.get("testPanel");
 		assertNotNull(panel);

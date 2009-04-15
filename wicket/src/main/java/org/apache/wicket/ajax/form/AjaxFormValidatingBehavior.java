@@ -45,7 +45,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param event
 	 *            javascript event this behavior will be invoked on, like onclick
 	 */
-	public AjaxFormValidatingBehavior(Form< ? > form, String event)
+	public AjaxFormValidatingBehavior(Form<?> form, String event)
 	{
 		super(form, event);
 	}
@@ -93,7 +93,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param form
 	 * @param event
 	 */
-	public static void addToAllFormComponents(final Form< ? > form, final String event)
+	public static void addToAllFormComponents(final Form<?> form, final String event)
 	{
 		addToAllFormComponents(form, event, null);
 	}
@@ -105,7 +105,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param event
 	 * @param throttleDelay
 	 */
-	public static void addToAllFormComponents(final Form< ? > form, final String event,
+	public static void addToAllFormComponents(final Form<?> form, final String event,
 		final Duration throttleDelay)
 	{
 		form.visitChildren(FormComponent.class, new IVisitor<Component>()

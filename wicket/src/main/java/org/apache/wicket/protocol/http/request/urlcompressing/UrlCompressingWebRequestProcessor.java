@@ -57,6 +57,7 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequestCycleProcessor#newRequestCodingStrategy()
 	 */
+	@Override
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		return new UrlCompressingWebCodingStrategy();
@@ -67,17 +68,18 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 	 *      org.apache.wicket.Page, java.lang.String, java.lang.String,
 	 *      org.apache.wicket.request.RequestParameters)
 	 */
+	@Override
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
-			final Page page, final String componentPath, String interfaceName,
-			final RequestParameters requestParameters)
+		final Page page, final String componentPath, String interfaceName,
+		final RequestParameters requestParameters)
 	{
 		String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
-				Component.PATH_SEPARATOR);
+			Component.PATH_SEPARATOR);
 		Component component = null;
 		if (page instanceof WebPage && !"IResourceListener".equals(interfaceName))
 		{
 			ComponentAndInterface cai = ((WebPage)page).getUrlCompressor()
-					.getComponentAndInterfaceForUID(pageRelativeComponentPath);
+				.getComponentAndInterfaceForUID(pageRelativeComponentPath);
 			if (cai != null)
 			{
 				interfaceName = cai.getInterfaceName();
@@ -94,17 +96,16 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 		else if (interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
 		{
 			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,
-					INewBrowserWindowListener.INTERFACE, requestParameters);
+				INewBrowserWindowListener.INTERFACE, requestParameters);
 		}
 		else
 		{
 			// Get the listener interface we need to call
-			final RequestListenerInterface listener = RequestListenerInterface
-					.forName(interfaceName);
+			final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
 			if (listener == null)
 			{
 				throw new WicketRuntimeException(
-						"Attempt to access unknown request listener interface " + interfaceName);
+					"Attempt to access unknown request listener interface " + interfaceName);
 			}
 
 			// Get component
@@ -124,7 +125,7 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 			{
 				// still null? that's not right
 				throw new WicketRuntimeException("cannot resolve component with path '" +
-						pageRelativeComponentPath + "', listener " + listener + " on page " + page);
+					pageRelativeComponentPath + "', listener " + listener + " on page " + page);
 			}
 
 			if (!component.isEnableAllowed())

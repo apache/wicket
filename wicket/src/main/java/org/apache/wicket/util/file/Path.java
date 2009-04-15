@@ -97,7 +97,7 @@ public final class Path implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final Class< ? > clazz, final String pathname)
+	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
 		for (int i = 0; i < folders.size(); i++)
 		{

@@ -75,7 +75,7 @@ public class RequestListenerInterface
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
 	 */
-	public RequestListenerInterface(final Class< ? extends IRequestListener> listenerInterfaceClass)
+	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass)
 	{
 		this(listenerInterfaceClass, true);
 	}
@@ -89,8 +89,8 @@ public class RequestListenerInterface
 	 *            Whether or not urls encoded for this interface contain the page version. If set to
 	 *            false the latest page version is always used.
 	 */
-	public RequestListenerInterface(
-		final Class< ? extends IRequestListener> listenerInterfaceClass, boolean recordsPageVersion)
+	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass,
+		boolean recordsPageVersion)
 	{
 		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))

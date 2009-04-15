@@ -60,6 +60,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getDefaultModelObject();
@@ -76,8 +77,9 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 			 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(org.apache.wicket.markup.html.navigation.paging.IPageable,
 			 *      org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider)
 			 */
+			@Override
 			protected PagingNavigation newNavigation(IPageable pageable,
-					IPagingLabelProvider labelProvider)
+				IPagingLabelProvider labelProvider)
 			{
 				PagingNavigation nav = new PagingNavigation("navigation", pageable);
 				nav.setMargin(2);
@@ -95,6 +97,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		// for testing we set versioning off, because it gets too difficult to maintain otherwise

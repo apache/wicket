@@ -23,11 +23,10 @@ import java.util.Date;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in time. The underlying
- * representation is a <code>long</code> value which holds a number of milliseconds since January
- * 1, 1970, 0:00 GMT. To represent a duration of time, such as "6 seconds", use the
+ * representation is a <code>long</code> value which holds a number of milliseconds since January 1,
+ * 1970, 0:00 GMT. To represent a duration of time, such as "6 seconds", use the
  * <code>Duration</code> class. To represent a time period with a start and end time, use the
- * <code>TimeFrame</code> class. To represent a time of day, use the <code>TimeOfDay</code>
- * class.
+ * <code>TimeFrame</code> class. To represent a time of day, use the <code>TimeOfDay</code> class.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -198,8 +197,7 @@ public final class Time extends AbstractTime
 	 *            input
 	 * @param pattern
 	 *            the pattern to parse
-	 * @return a <code>Time</code> instance that resulted from parsing the given
-	 *         <code>String</code>
+	 * @return a <code>Time</code> instance that resulted from parsing the given <code>String</code>
 	 * @throws ParseException
 	 */
 	public static Time valueOf(final String string, final String pattern) throws ParseException
@@ -233,8 +231,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Adds the given <code>Duration</code> to this <code>Time</code> object, moving the time
-	 * into the future.
+	 * Adds the given <code>Duration</code> to this <code>Time</code> object, moving the time into
+	 * the future.
 	 * 
 	 * @param duration
 	 *            the <code>Duration</code> to add
@@ -265,7 +263,8 @@ public final class Time extends AbstractTime
 	/**
 	 * Retrieves the <code>Duration</code> from now to this <code>Time</code> value. If this
 	 * <code>Time</code> value is in the past, then the <code>Duration</code> returned will be
-	 * negative. Otherwise, it will be the number of milliseconds from now to this <code>Time</code>.
+	 * negative. Otherwise, it will be the number of milliseconds from now to this <code>Time</code>
+	 * .
 	 * 
 	 * @return the <code>Duration</code> from now to this <code>Time</code> value
 	 */
@@ -438,8 +437,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Subtracts the given <code>Duration</code> from this <code>Time</code> object, moving the
-	 * time into the past.
+	 * Subtracts the given <code>Duration</code> from this <code>Time</code> object, moving the time
+	 * into the past.
 	 * 
 	 * @param duration
 	 *            the <code>Duration</code> to subtract
@@ -476,8 +475,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Converts this <code>Time</code> value to a date <code>String</code> using the date
-	 * formatter 'yyyy.MM.dd'.
+	 * Converts this <code>Time</code> value to a date <code>String</code> using the date formatter
+	 * 'yyyy.MM.dd'.
 	 * 
 	 * @return the date string
 	 */

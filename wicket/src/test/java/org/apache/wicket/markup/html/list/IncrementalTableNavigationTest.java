@@ -45,15 +45,15 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 	public void testPagedTable() throws Exception
 	{
 		executeTest(IncrementalTableNavigationPage.class,
-				"IncrementalTableNavigationPage_ExpectedResult_1.html");
+			"IncrementalTableNavigationPage_ExpectedResult_1.html");
 
 		Page page = tester.getLastRenderedPage();
 		Link link = (Link)page.get("nextNext");
 		executedListener(IncrementalTableNavigationPage.class, link,
-				"IncrementalTableNavigationPage_ExpectedResult_1-1.html");
+			"IncrementalTableNavigationPage_ExpectedResult_1-1.html");
 
 		link = (Link)page.get("prev");
 		executedListener(IncrementalTableNavigationPage.class, link,
-				"IncrementalTableNavigationPage_ExpectedResult_1-2.html");
+			"IncrementalTableNavigationPage_ExpectedResult_1-2.html");
 	}
 }

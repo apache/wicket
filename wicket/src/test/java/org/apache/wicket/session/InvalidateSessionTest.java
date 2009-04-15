@@ -98,7 +98,7 @@ public class InvalidateSessionTest extends TestCase
 		 */
 		public MyPage()
 		{
-			boolean sessionInvalid = Session.get().isSessionInvalidated();
+			Session.get().isSessionInvalidated();
 
 			MySession sess = MySession.get();
 			if (sess.getName() != null)

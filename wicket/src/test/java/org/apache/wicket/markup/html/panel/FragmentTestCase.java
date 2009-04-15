@@ -27,12 +27,14 @@ public class FragmentTestCase extends TestCase
 {
 	private WicketTester tester;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		tester = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();

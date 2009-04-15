@@ -32,10 +32,12 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class FilePageStoreTest extends WicketTestCase
 {
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication()
 		{
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				return new SecondLevelCacheSessionStore(this, new DiskPageStore());
@@ -54,7 +56,7 @@ public class FilePageStoreTest extends WicketTestCase
 
 		tester.setupRequestAndResponse();
 
-		Session session = Session.get();
+		Session.get();
 
 		a.getPageMap().put(a);
 		a.getPageMap().put(b);

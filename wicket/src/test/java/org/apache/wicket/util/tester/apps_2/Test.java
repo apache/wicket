@@ -35,8 +35,9 @@ public class Test extends TestCase
 	{
 		final WicketTester tester = new WicketTester();
 		final IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
-				RedirectPage.class, LoginPage.class)
+			RedirectPage.class, LoginPage.class)
 		{
+			@Override
 			protected boolean isAuthorized()
 			{
 				return false;
@@ -44,7 +45,7 @@ public class Test extends TestCase
 		};
 
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-				authorizationStrategy);
+			authorizationStrategy);
 
 		tester.startPage(RedirectPage.class);
 		tester.assertRenderedPage(LoginPage.class);

@@ -56,7 +56,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param defaultHeight
-	 * 		The defaultHeight to set.
+	 *            The defaultHeight to set.
 	 */
 	public static void setDefaultHeight(int defaultHeight)
 	{
@@ -65,7 +65,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param defaultWidth
-	 * 		The defaultWidth to set.
+	 *            The defaultWidth to set.
 	 */
 	public static void setDefaultWidth(int defaultWidth)
 	{
@@ -95,11 +95,11 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param label
-	 * 		The label for this button image
+	 *            The label for this button image
 	 * @param width
-	 * 		Width of image in pixels
+	 *            Width of image in pixels
 	 * @param height
-	 * 		Height of image in pixels
+	 *            Height of image in pixels
 	 */
 	public DefaultButtonImageResource(int width, int height, final String label)
 	{
@@ -111,7 +111,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param label
-	 * 		The label for this button image
+	 *            The label for this button image
 	 */
 	public DefaultButtonImageResource(final String label)
 	{
@@ -168,7 +168,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param arcHeight
-	 * 		The arcHeight to set.
+	 *            The arcHeight to set.
 	 */
 	public synchronized void setArcHeight(int arcHeight)
 	{
@@ -178,7 +178,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param arcWidth
-	 * 		The arcWidth to set.
+	 *            The arcWidth to set.
 	 */
 	public synchronized void setArcWidth(int arcWidth)
 	{
@@ -188,7 +188,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param backgroundColor
-	 * 		The backgroundColor to set.
+	 *            The backgroundColor to set.
 	 */
 	public synchronized void setBackgroundColor(Color backgroundColor)
 	{
@@ -198,7 +198,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param color
-	 * 		The color to set.
+	 *            The color to set.
 	 */
 	public synchronized void setColor(Color color)
 	{
@@ -208,7 +208,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param font
-	 * 		The font to set.
+	 *            The font to set.
 	 */
 	public synchronized void setFont(Font font)
 	{
@@ -218,7 +218,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/**
 	 * @param textColor
-	 * 		The textColor to set.
+	 *            The textColor to set.
 	 */
 	public synchronized void setTextColor(Color textColor)
 	{

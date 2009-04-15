@@ -255,7 +255,7 @@ public class ValidatorPropertiesTest extends TestCase
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		String str = tester.getApplication().getResourceSettings().getLocalizer().getString("XXX",
 			null);
@@ -269,7 +269,7 @@ public class ValidatorPropertiesTest extends TestCase
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
 		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		boolean hit = false;
 		try

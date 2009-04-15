@@ -124,7 +124,7 @@ public final class StringList extends AbstractStringList
 	 *            The collection to add as strings
 	 * @return The list
 	 */
-	public static StringList valueOf(final Collection< ? > collection)
+	public static StringList valueOf(final Collection<?> collection)
 	{
 		if (collection != null)
 		{

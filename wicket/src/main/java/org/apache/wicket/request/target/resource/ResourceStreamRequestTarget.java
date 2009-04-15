@@ -152,9 +152,13 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		try
 		{
 			if (resourceStream instanceof IResourceStreamWriter)
+			{
 				((IResourceStreamWriter)resourceStream).write(response.getOutputStream());
+			}
 			else
+			{
 				response.write(resourceStream.getInputStream());
+			}
 		}
 		catch (ResourceStreamNotFoundException e)
 		{

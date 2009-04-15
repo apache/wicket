@@ -43,7 +43,7 @@ public class FeedbackFormPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void onSubmit()
+			protected void onSubmit()
 			{
 				tf.error("an error");
 			}

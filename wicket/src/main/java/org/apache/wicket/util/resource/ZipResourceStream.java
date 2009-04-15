@@ -37,8 +37,8 @@ import org.slf4j.LoggerFactory;
  * An IResourceStream that ZIPs a directory's contents on the fly
  * 
  * <p>
- * <b>NOTE 1.</b> Nested directories are not supported yet, and a {@link FileNotFoundException}
- * will be thrown in that case.
+ * <b>NOTE 1.</b> Nested directories are not supported yet, and a {@link FileNotFoundException} will
+ * be thrown in that case.
  * </p>
  * 
  * <p>
@@ -120,6 +120,7 @@ public class ZipResourceStream extends AbstractResourceStream
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		return null;
@@ -130,11 +131,13 @@ public class ZipResourceStream extends AbstractResourceStream
 		return new ByteArrayInputStream(bytearray.toByteArray());
 	}
 
+	@Override
 	public long length()
 	{
 		return bytearray.size();
 	}
 
+	@Override
 	public Time lastModifiedTime()
 	{
 		return null;

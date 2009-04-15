@@ -40,7 +40,7 @@ public class BookmarkableHomePageLinksTest extends WicketTestCase
 	public void testTestLinks() throws Exception
 	{
 		executeTest(BookmarkableHomePageLinksPage.class,
-				"BookmarkableHomePageLinksPage_result.html");
+			"BookmarkableHomePageLinksPage_result.html");
 	}
 
 }

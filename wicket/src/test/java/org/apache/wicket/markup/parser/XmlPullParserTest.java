@@ -129,39 +129,37 @@ public class XmlPullParserTest extends TestCase
 	public final void testEncoding() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
-		parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>")
-				.getInputStream(), null);
+		parser.parse(
+			new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>").getInputStream(),
+			null);
 		assertEquals("iso-8859-1", parser.getEncoding());
 		XmlTag tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		parser.parse(new StringResourceStream(
-				"<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test").getInputStream(), null);
+			"<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test").getInputStream(), null);
 		assertEquals("iso-8859-1", parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// re-order and move close (remove whitespaces
-		parser
-				.parse(new StringResourceStream(
-						"   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test")
-						.getInputStream(), null);
+		parser.parse(new StringResourceStream(
+			"   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test").getInputStream(), null);
 		assertEquals("iso-8859-1", parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// attribute value must be enclosed by ""
-		parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test")
-				.getInputStream(), null);
+		parser.parse(
+			new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test").getInputStream(),
+			null);
 		assertEquals("iso-8859-1", parser.getEncoding());
 
 		// Invaluid encoding
 		Exception ex = null;
 		try
 		{
-			parser
-					.parse(new StringResourceStream("<?xml encoding='XXX' ?>").getInputStream(),
-							null);
+			parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>").getInputStream(), null);
 		}
 		catch (UnsupportedEncodingException e)
 		{
@@ -171,16 +169,17 @@ public class XmlPullParserTest extends TestCase
 
 		// no extra characters allowed before <?xml>
 		// TODO General: I'd certainly prefer an exception
-		parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>")
-				.getInputStream(), null);
+		parser.parse(
+			new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>").getInputStream(), null);
 		assertNull(parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// no extra characters allowed before <?xml>
 		// Are comments allowed preceding the encoding string?
-		parser.parse(new StringResourceStream("<!-- Comment --> <?xml encoding='iso-8859-1' ?>")
-				.getInputStream(), null);
+		parser.parse(
+			new StringResourceStream("<!-- Comment --> <?xml encoding='iso-8859-1' ?>").getInputStream(),
+			null);
 		assertNull(parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);

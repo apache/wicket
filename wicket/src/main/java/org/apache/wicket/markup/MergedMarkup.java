@@ -94,6 +94,7 @@ public class MergedMarkup extends Markup
 		}
 	}
 
+	@Override
 	public String locationAsString()
 	{
 		/*

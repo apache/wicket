@@ -28,7 +28,7 @@ import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
  * <li> {@link #resolve(RequestCycle, RequestParameters)} is called to get the request target. A
  * request might refer to e.g. a bookmarkable page, a listener interface call on a component on a
  * previously rendered page, a shared resource or e.g. a non-wicket resource that resides in the web
- * application folder. </li>
+ * application folder.</li>
  * <li> {@link #processEvents(RequestCycle)} is called after the target is resolved. It is meant to
  * handle/ distribute events like e.g. listener interface calls on components. During this
  * processing, the request target may be changed (e.g. by calling setResponsePage). What actually
@@ -37,11 +37,11 @@ import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
  * after the request is handled.</li>
  * <li> {@link #respond(RequestCycle)} is called to create a response to the requesting client.
  * Typically, the actual response handling is to be (or delegated) by the request target
- * implementation, but different strategies might do as they seem fit. </li>
+ * implementation, but different strategies might do as they seem fit.</li>
  * <li> {@link #respond(RuntimeException, RequestCycle)} is called whenever an uncaught exception
  * occurs during the event handling or response phase so that an appropriate exception response can
  * be generated. This method is guaranteed to be called whenever such an exception happens, but will
- * never be called otherwise. </li>
+ * never be called otherwise.</li>
  * </ul>
  * </p>
  * 

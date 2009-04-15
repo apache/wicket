@@ -107,7 +107,7 @@ public class PackageResourceTest extends TestCase
 	 */
 	public void testLenientPackageResourceMatching() throws Exception
 	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
+		Application.get().getSharedResources();
 		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt",
 			Locale.ENGLISH, null);
 		assertNotNull(

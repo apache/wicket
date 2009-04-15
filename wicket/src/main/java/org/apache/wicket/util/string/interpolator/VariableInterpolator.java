@@ -18,8 +18,8 @@ package org.apache.wicket.util.string.interpolator;
 
 /**
  * Base class for variable interpolators. An interpolator substitutes values into a
- * <code>String</code>. So, a variable interpolator substitutes the values of one or more
- * variables into a <code>String</code>.
+ * <code>String</code>. So, a variable interpolator substitutes the values of one or more variables
+ * into a <code>String</code>.
  * <p>
  * The <code>String</code> to interpolate (substitute into) is passed to the
  * <code>VariableInterpolator</code>'s constructor. Variables are denoted in this string by the
@@ -78,11 +78,17 @@ public abstract class VariableInterpolator
 	private int lowerPositive(int i1, int i2)
 	{
 		if (i2 < 0)
+		{
 			return i1;
+		}
 		else if (i1 < 0)
+		{
 			return i2;
+		}
 		else
+		{
 			return i1 < i2 ? i1 : i2;
+		}
 	}
 
 	/**
@@ -90,6 +96,7 @@ public abstract class VariableInterpolator
 	 * 
 	 * @return the interpolated <code>String</code>
 	 */
+	@Override
 	public String toString()
 	{
 		// Result buffer
@@ -134,7 +141,7 @@ public abstract class VariableInterpolator
 					if (exceptionOnNullVarValue)
 					{
 						throw new IllegalArgumentException("Value of variable [[" + variableName +
-								"]] could not be resolved while interpolating [[" + string + "]]");
+							"]] could not be resolved while interpolating [[" + string + "]]");
 					}
 					else
 					{

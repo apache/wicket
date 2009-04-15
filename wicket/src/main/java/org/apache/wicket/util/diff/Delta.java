@@ -68,13 +68,11 @@ import java.util.List;
  * @author <a href="mailto:bwm@hplb.hpl.hp.com">Brian McBride</a>
  * @see Diff
  * @see Chunk
- * @see Revision
+ * @see Revision modifications
  * 
- * modifications
+ *      27 Apr 2003 bwm
  * 
- * 27 Apr 2003 bwm
- * 
- * Added getOriginal() and getRevised() accessor methods Added visitor pattern accept() method
+ *      Added getOriginal() and getRevised() accessor methods Added visitor pattern accept() method
  */
 
 public abstract class Delta extends ToString

@@ -23,27 +23,27 @@ import junit.framework.TestCase;
  */
 public class WicketURLTest extends TestCase
 {
-    public void testPathEncoder()
-    {
-        assertEquals("+", WicketURLEncoder.PATH_INSTANCE.encode("+", "UTF-8"));
-        assertEquals("%20", WicketURLEncoder.PATH_INSTANCE.encode(" ", "UTF-8"));
-    }
+	public void testPathEncoder()
+	{
+		assertEquals("+", WicketURLEncoder.PATH_INSTANCE.encode("+", "UTF-8"));
+		assertEquals("%20", WicketURLEncoder.PATH_INSTANCE.encode(" ", "UTF-8"));
+	}
 
-    public void testQueryEncoder()
-    {
-        assertEquals("+", WicketURLEncoder.QUERY_INSTANCE.encode(" ", "UTF-8"));
-        assertEquals("%2B", WicketURLEncoder.QUERY_INSTANCE.encode("+", "UTF-8"));
-    }
+	public void testQueryEncoder()
+	{
+		assertEquals("+", WicketURLEncoder.QUERY_INSTANCE.encode(" ", "UTF-8"));
+		assertEquals("%2B", WicketURLEncoder.QUERY_INSTANCE.encode("+", "UTF-8"));
+	}
 
-    public void testPathDecoder()
-    {
-        assertEquals("+", WicketURLDecoder.PATH_INSTANCE.decode("+", "UTF-8"));
-        assertEquals(" ", WicketURLDecoder.PATH_INSTANCE.decode("%20", "UTF-8"));
-    }
+	public void testPathDecoder()
+	{
+		assertEquals("+", WicketURLDecoder.PATH_INSTANCE.decode("+", "UTF-8"));
+		assertEquals(" ", WicketURLDecoder.PATH_INSTANCE.decode("%20", "UTF-8"));
+	}
 
-    public void testQueryDecoder()
-    {
-        assertEquals(" ", WicketURLDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
-        assertEquals("+", WicketURLDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));
-    }
+	public void testQueryDecoder()
+	{
+		assertEquals(" ", WicketURLDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
+		assertEquals("+", WicketURLDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));
+	}
 }

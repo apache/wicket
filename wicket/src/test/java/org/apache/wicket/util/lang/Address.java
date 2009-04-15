@@ -30,7 +30,7 @@ public class Address
 	 */
 	public String getStreet()
 	{
-		return this.street;
+		return street;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Address
 	 */
 	public int getNumber()
 	{
-		return this.number;
+		return number;
 	}
 
 	/**

@@ -39,6 +39,7 @@ public class SimplePage_16 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setName("test");
@@ -51,6 +52,7 @@ public class SimplePage_16 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setName("test");
@@ -63,6 +65,7 @@ public class SimplePage_16 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setName("test");
@@ -75,6 +78,7 @@ public class SimplePage_16 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setName("test");

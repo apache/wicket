@@ -107,7 +107,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *             Resource not found
 	 */
 	public abstract void parse(final InputStream inputStream) throws IOException,
-			ResourceStreamNotFoundException;
+		ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from an input stream. Use nextTag() to access the tags contained, one
@@ -123,7 +123,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *             Resource not found
 	 */
 	void parse(InputStream inputStream, final String encoding) throws IOException,
-			ResourceStreamNotFoundException;
+		ResourceStreamNotFoundException;
 
 	/**
 	 * Set the position marker of the markup at the current position.

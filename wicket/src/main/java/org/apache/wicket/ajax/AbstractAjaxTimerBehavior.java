@@ -95,6 +95,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/**
 	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
@@ -120,6 +121,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 			");";
 	}
 
+	@Override
 	protected CharSequence getCallbackScript()
 	{
 		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage()) +
@@ -129,6 +131,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
 	 */
+	@Override
 	protected CharSequence getPreconditionScript()
 	{
 		String precondition = null;
@@ -150,6 +153,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);

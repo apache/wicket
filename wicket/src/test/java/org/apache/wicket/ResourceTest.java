@@ -63,6 +63,7 @@ public class ResourceTest extends WicketTestCase
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public IResourceStream getResourceStream()
 			{
 				return new FileResourceStream(new org.apache.wicket.util.file.File(testFile));
@@ -81,7 +82,6 @@ public class ResourceTest extends WicketTestCase
 	 */
 	public void testNonCacheableResource()
 	{
-		String testFileLastModified;
 		final File testFile;
 		try
 		{
@@ -94,7 +94,7 @@ public class ResourceTest extends WicketTestCase
 		{
 			throw new RuntimeException(e);
 		}
-		testFileLastModified = MockHttpServletResponse.formatDate(testFile.lastModified());
+		MockHttpServletResponse.formatDate(testFile.lastModified());
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		Resource resource = new Resource()
@@ -104,6 +104,7 @@ public class ResourceTest extends WicketTestCase
 			 */
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public IResourceStream getResourceStream()
 			{
 				return new FileResourceStream(new org.apache.wicket.util.file.File(testFile));

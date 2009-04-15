@@ -58,7 +58,8 @@ public class StatefulPage extends WebPage
 			}
 		};
 		add(actionLink);
-		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this, "linkClickCount")));
+		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
+			"linkClickCount")));
 
 		final TextField<String> field = new TextField<String>("textfield", new Model<String>());
 

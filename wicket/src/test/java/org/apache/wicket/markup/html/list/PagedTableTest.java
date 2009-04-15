@@ -93,19 +93,18 @@ public class PagedTableTest extends TestCase
 		html.addExpectedChild(body);
 
 		Tag ulTable = new Tag("ul");
-		ulTable.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new TextContent("one"))));
-		ulTable.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new TextContent("two"))));
+		ulTable.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent(
+			"one"))));
+		ulTable.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent(
+			"two"))));
 		// note that we DO NOT expect the third element as this is not on the current page
 		body.addExpectedChild(ulTable);
 
 		Tag ulNav = new Tag("ul");
-		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
-				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
-						.addExpectedChild(new TextContent("1"))))));
-		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a")
-				.addExpectedChild(new Tag("span").addExpectedChild(new TextContent("2")))));
+		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new Tag(
+			"em").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("1"))))));
+		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
+			"span").addExpectedChild(new TextContent("2")))));
 
 		body.addExpectedChild(ulNav);
 

@@ -46,7 +46,8 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 * Constructor.
 	 * 
 	 * @param contentType
-	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
+	 *            <code>text/html</code>"
 	 */
 	public TextTemplate(String contentType)
 	{

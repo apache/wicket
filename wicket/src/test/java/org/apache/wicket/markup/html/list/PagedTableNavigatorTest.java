@@ -62,7 +62,7 @@ public class PagedTableNavigatorTest extends TestCase
 		String document = application.getServletResponse().getDocument();
 		application.setupRequestAndResponse();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_1.html", true);
+			"PagedTableNavigatorExpectedResult_1.html", true);
 
 		Link link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -82,7 +82,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_2.html", true);
+			"PagedTableNavigatorExpectedResult_2.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -102,7 +102,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_3.html", true);
+			"PagedTableNavigatorExpectedResult_3.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -122,7 +122,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_4.html", true);
+			"PagedTableNavigatorExpectedResult_4.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -142,7 +142,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_5.html", true);
+			"PagedTableNavigatorExpectedResult_5.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -162,7 +162,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_6.html", true);
+			"PagedTableNavigatorExpectedResult_6.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -182,7 +182,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_7.html", true);
+			"PagedTableNavigatorExpectedResult_7.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -208,7 +208,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(),
-				"PagedTableNavigatorExpectedResult_8.html", true);
+			"PagedTableNavigatorExpectedResult_8.html", true);
 
 		application.destroy();
 	}

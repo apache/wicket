@@ -32,7 +32,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <p>
  * 
  * <pre>
- * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers, new ChoiceRenderer&lt;User&gt;(&quot;name&quot;))
+ * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers,
+ * 	new ChoiceRenderer&lt;User&gt;(&quot;name&quot;))
  * </pre>
  * 
  * creates a DropDownChoice of users and the display value will be looked up by property expression
@@ -41,7 +42,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <p>
  * 
  * <pre>
- * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers, new ChoiceRenderer&lt;User&gt;(&quot;name&quot;, &quot;id&quot;))
+ * new DropDownChoice&lt;User&gt;(&quot;users&quot;, new Model&lt;User&gt;(selectedUser), listOfUsers,
+ * 	new ChoiceRenderer&lt;User&gt;(&quot;name&quot;, &quot;id&quot;))
  * </pre>
  * 
  * creates a DropDownChoice of users and the display value will be looked up by property expression

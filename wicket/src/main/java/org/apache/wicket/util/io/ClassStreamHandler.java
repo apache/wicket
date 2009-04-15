@@ -325,7 +325,7 @@ public final class ClassStreamHandler
 			{
 				FieldAndIndex fai = null;
 				Class<?> clz = field.getType();
-				long offset = unsafe.objectFieldOffset(field);
+				unsafe.objectFieldOffset(field);
 				if (clz == boolean.class)
 				{
 					fai = new BooleanFieldAndIndex(field);

@@ -85,6 +85,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	public void write(int b) throws IOException
 	{
 		checkThreshold(1);
@@ -101,6 +102,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	public void write(byte b[]) throws IOException
 	{
 		checkThreshold(b.length);
@@ -122,6 +124,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	public void write(byte b[], int off, int len) throws IOException
 	{
 		checkThreshold(len);
@@ -136,6 +139,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	public void flush() throws IOException
 	{
 		getStream().flush();
@@ -148,6 +152,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		try
@@ -190,8 +195,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	/**
 	 * Determines whether or not the configured threshold has been exceeded for this output stream.
 	 * 
-	 * @return <code>true</code> if the threshold has been reached; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the threshold has been reached; <code>false</code> otherwise.
 	 */
 	public boolean isThresholdExceeded()
 	{

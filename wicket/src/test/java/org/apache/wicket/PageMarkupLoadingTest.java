@@ -86,11 +86,12 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		tester.startPage(Page2.class);
 		tester.assertRenderedPage(Page2.class);
 		tester.assertResultPage(getClass(),
-				"PageMarkupLoadingTest$Page2_myvar_mystyle_nl_expected.html");
+			"PageMarkupLoadingTest$Page2_myvar_mystyle_nl_expected.html");
 	}
 
 	/** simple test page */
-	public static class Page1 extends WebPage	{
+	public static class Page1 extends WebPage
+	{
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
@@ -100,7 +101,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	}
 
 	/** simple test page */
-	public static class Page2 extends WebPage	{
+	public static class Page2 extends WebPage
+	{
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
@@ -108,6 +110,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		{
 		}
 
+		@Override
 		public String getVariation()
 		{
 			return "myvar";

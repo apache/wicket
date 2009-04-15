@@ -468,27 +468,6 @@ public class BrowserInfoForm extends Panel
 			this.utcOffset = utcOffset;
 		}
 
-		/**
-		 * Sets utcDSTOffset.
-		 * 
-		 * @param utcDSTOffset
-		 *            utcDSTOffset
-		 */
-		private void setUtcDSTOffset(String utcDSTOffset)
-		{
-			this.utcDSTOffset = utcDSTOffset;
-		}
-
-		/**
-		 * Gets utcDSTOffset.
-		 * 
-		 * @return utcDSTOffset
-		 */
-		private String getUtcDSTOffset()
-		{
-			return utcDSTOffset;
-		}
-
 		private int getInt(String value)
 		{
 			int intValue = -1;

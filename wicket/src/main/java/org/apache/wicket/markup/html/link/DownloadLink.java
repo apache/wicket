@@ -161,7 +161,9 @@ public class DownloadLink extends Link<File>
 				super.respond(requestCycle);
 
 				if (deleteAfter)
+				{
 					file.delete();
+				}
 			}
 		});
 	}

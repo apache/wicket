@@ -688,7 +688,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] { }) != null)
+				if (getClass().getConstructor(new Class[] {}) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -1227,7 +1227,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private final void init(final IPageMap pageMap)
 	{
 		if (isBookmarkable())
+		{
 			setStatelessHint(true);
+		}
 
 		// Set the page map
 		if (pageMap != null)

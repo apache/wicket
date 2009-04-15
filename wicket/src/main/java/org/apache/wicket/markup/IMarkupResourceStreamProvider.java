@@ -47,6 +47,5 @@ public interface IMarkupResourceStreamProvider
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	IResourceStream getMarkupResourceStream(final MarkupContainer container,
-		Class<?> containerClass);
+	IResourceStream getMarkupResourceStream(final MarkupContainer container, Class<?> containerClass);
 }

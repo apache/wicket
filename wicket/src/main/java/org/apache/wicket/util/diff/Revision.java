@@ -75,11 +75,9 @@ import java.util.ListIterator;
  * @see Delta
  * @see Diff
  * @see Chunk
- * @see Revision
+ * @see Revision modifications 27 Apr 2003 bwm
  * 
- * modifications 27 Apr 2003 bwm
- * 
- * Added visitor pattern Visitor interface and accept() method.
+ *      Added visitor pattern Visitor interface and accept() method.
  */
 
 public class Revision extends ToString

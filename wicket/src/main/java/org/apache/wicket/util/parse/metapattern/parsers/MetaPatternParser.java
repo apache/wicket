@@ -53,7 +53,7 @@ public abstract class MetaPatternParser
 	public MetaPatternParser(final CharSequence input)
 	{
 		this.input = input;
-		this.length = input.length();
+		length = input.length();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public abstract class MetaPatternParser
 	 */
 	public void setPattern(final MetaPattern pattern)
 	{
-		this.matcher = pattern.matcher(input);
+		matcher = pattern.matcher(input);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class MetaPatternParser
 		final CharSequence s = input.subSequence(pos, length);
 
 		// does the pattern match?
-		this.matcher = pattern.matcher(s);
+		matcher = pattern.matcher(s);
 		if (matcher.lookingAt())
 		{
 			// Yes, it does. Move the cursor to the end of the

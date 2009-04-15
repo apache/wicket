@@ -51,7 +51,7 @@ public class FileUploadTest extends WicketTestCase
 	public void testGetInputStream() throws Exception
 	{
 		FileItem fileItem = new DiskFileItemFactory().createItem("dummyFieldName", "text/java",
-				false, "FileUploadTest.java");
+			false, "FileUploadTest.java");
 		// Initialize the upload
 		fileItem.getOutputStream();
 

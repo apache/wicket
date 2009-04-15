@@ -156,20 +156,20 @@ public class MyComponent extends WebMarkupContainer
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-    protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		StringBuffer str = new StringBuffer();
 
-        str.append("intParam: ").append(intParam).append("<br/>");
-        str.append("integerParam: ").append(integerParam.toString()).append("<br/>");
-        str.append("long1Param: ").append(long1Param).append("<br/>");
-        str.append("long2Param: ").append(long2Param.toString()).append("<br/>");
-        str.append("float1Param: ").append(float1Param).append("<br/>");
-        str.append("float2Param: ").append(float2Param.toString()).append("<br/>");
-        str.append("double1Param: ").append(double1Param).append("<br/>");
-        str.append("double2Param: ").append(double2Param.toString()).append("<br/>");
-        str.append("dateParam: ").append(dateParam).append("<br/>");
-        str.append("hexParam: ").append(hexParam).append("<br/>");
+		str.append("intParam: ").append(intParam).append("<br/>");
+		str.append("integerParam: ").append(integerParam.toString()).append("<br/>");
+		str.append("long1Param: ").append(long1Param).append("<br/>");
+		str.append("long2Param: ").append(long2Param.toString()).append("<br/>");
+		str.append("float1Param: ").append(float1Param).append("<br/>");
+		str.append("float2Param: ").append(float2Param.toString()).append("<br/>");
+		str.append("double1Param: ").append(double1Param).append("<br/>");
+		str.append("double2Param: ").append(double2Param.toString()).append("<br/>");
+		str.append("dateParam: ").append(dateParam).append("<br/>");
+		str.append("hexParam: ").append(hexParam).append("<br/>");
 
 		getResponse().write(str);
 

@@ -48,6 +48,7 @@ public class FormTesterTest extends WicketTestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -142,7 +143,7 @@ public class FormTesterTest extends WicketTestCase
 
 		assertBooksEquals(new Book[] { books[0], books[3] }, choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[] { books[0], books[1], books[3] },
-				choicePage.checkBoxMultipleChoice);
+			choicePage.checkBoxMultipleChoice);
 		assertBooksEquals(books, choicePage.checkGroup);
 	}
 
@@ -163,7 +164,7 @@ public class FormTesterTest extends WicketTestCase
 		formTester.submit();
 
 		assertBooksEquals(new Book[] { books[0], books[1], books[3] },
-				choicePage.listMultipleChoice);
+			choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[] { books[0], books[2], books[3] }, choicePage.checkGroup);
 	}
 
@@ -204,7 +205,7 @@ public class FormTesterTest extends WicketTestCase
 		assertEquals(true, choicePage.checkBox);
 		assertBooksEquals(new Book[] { books[2], books[1] }, choicePage.initialListMultipleChoice);
 		assertBooksEquals(new Book[] { books[3], books[0] },
-				choicePage.initialCheckBoxMultipleChoice);
+			choicePage.initialCheckBoxMultipleChoice);
 		assertBooksEquals(new Book[] { books[3], books[2] }, choicePage.initialCheckGroup);
 	}
 }

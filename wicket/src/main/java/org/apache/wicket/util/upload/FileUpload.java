@@ -78,6 +78,7 @@ public class FileUpload extends FileUploadBase
 	 * 
 	 * @return The factory class for new file items.
 	 */
+	@Override
 	public FileItemFactory getFileItemFactory()
 	{
 		return fileItemFactory;
@@ -90,6 +91,7 @@ public class FileUpload extends FileUploadBase
 	 * @param factory
 	 *            The factory class for new file items.
 	 */
+	@Override
 	public void setFileItemFactory(FileItemFactory factory)
 	{
 		fileItemFactory = factory;

@@ -69,8 +69,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * <p>
 		 * Note that the versionNumber and ajaxVersionNumber parameters may be -1.
 		 * <ul>
-		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the page store must
-		 * return the page with highest ajax version.
+		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the page store must return
+		 * the page with highest ajax version.
 		 * <li>If both versionNumber and ajaxVersioNumber are -1, the pagestore must return last
 		 * touched (saved) page version with given id.
 		 * </ul>
@@ -280,7 +280,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			// does it really make any sense that there are multiply instances
 			// of the
 			// same page are alive in one session??
-			Page page = (Page)pages.get(id);
+			Page page = pages.get(id);
 			if (page != null)
 			{
 				return page;
@@ -378,14 +378,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				{
 					if (page != null)
 					{
-						page = ((ISerializationAwarePageStore)store).prepareForSerialization(sessionId,
-							page);
-						
+						page = ((ISerializationAwarePageStore)store).prepareForSerialization(
+							sessionId, page);
+
 						if (page == null)
 						{
 							log.warn("PageStore prepared non-null page as null for serialization");
 						}
-						
+
 					}
 				}
 

@@ -103,6 +103,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
 			 *      org.apache.wicket.Response)
 			 */
+			@Override
 			public Session newSession(Request request, Response response)
 			{
 				Session session = super.newSession(request, response);

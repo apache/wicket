@@ -20,6 +20,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;

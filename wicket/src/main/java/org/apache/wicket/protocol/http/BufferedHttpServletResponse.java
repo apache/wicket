@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,6 +27,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
@@ -523,12 +524,13 @@ class BufferedHttpServletResponse implements HttpServletResponse
 				Object value = stringObjectEntry.getValue();
 				if (value instanceof List)
 				{
-					List<?> lst = (List<?>) value;
+					List<?> lst = (List<?>)value;
 					for (Object aLst : lst)
 					{
 						addHeader(name, aLst, servletResponse);
 					}
-				} else
+				}
+				else
 				{
 					setHeader(name, value, servletResponse);
 				}
@@ -572,11 +574,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (value instanceof Long)
 		{
-			servletResponse.setDateHeader(name, (Long) value);
+			servletResponse.setDateHeader(name, (Long)value);
 		}
 		else if (value instanceof Integer)
 		{
-			servletResponse.setIntHeader(name, (Integer) value);
+			servletResponse.setIntHeader(name, (Integer)value);
 		}
 	}
 
@@ -596,11 +598,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else if (value instanceof Long)
 		{
-			servletResponse.addDateHeader(name, (Long) value);
+			servletResponse.addDateHeader(name, (Long)value);
 		}
 		else if (value instanceof Integer)
 		{
-			servletResponse.addIntHeader(name, (Integer) value);
+			servletResponse.addIntHeader(name, (Integer)value);
 		}
 	}
 }

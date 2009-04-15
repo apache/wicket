@@ -36,6 +36,7 @@ public class StatelessComponentPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				throw new WicketRuntimeException("wanted exception");

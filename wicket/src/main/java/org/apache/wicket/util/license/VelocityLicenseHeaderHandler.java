@@ -35,6 +35,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 
+	@Override
 	protected String getLicenseHeaderFilename()
 	{
 		return "velocityLicense.txt";
@@ -63,6 +64,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "vm" };
 	}
 
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);

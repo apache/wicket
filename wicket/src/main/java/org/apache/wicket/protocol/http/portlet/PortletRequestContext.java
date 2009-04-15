@@ -64,10 +64,6 @@ public class PortletRequestContext extends RequestContext
 	 */
 	private final IHeaderResponse headerResponse;
 	/**
-	 * The porlet's window id.
-	 */
-	private String portletWindowId;
-	/**
 	 * Stores the parameter name by which to store the Wicket URL as a request parameter.
 	 */
 	private final String wicketUrlPortletParameter;

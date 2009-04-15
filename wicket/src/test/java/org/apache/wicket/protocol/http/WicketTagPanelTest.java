@@ -49,12 +49,14 @@ public class WicketTagPanelTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		application = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		application.destroy();

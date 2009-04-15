@@ -28,9 +28,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.time.Time;
 
 /**
- * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL
- * stylesheet itself is also an {@link IResourceStream}. Override {@link #getParameters()} to pass
- * parameters to the XSL stylesheet.
+ * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL stylesheet
+ * itself is also an {@link IResourceStream}. Override {@link #getParameters()} to pass parameters
+ * to the XSL stylesheet.
  * 
  * <p>
  * FIXME experimental feature, does not implement any kind of caching, use with care, running an XSL

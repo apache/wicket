@@ -102,11 +102,11 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Construct. If you are not using these popup settings with an external link - in which case we
-	 * don't need to know about a page map - you should use one of the constructors with a {@link
-	 * PageMap} argument. Typically, you should put any popup in a separate page map as Wicket holds
-	 * references to a limited number of pages/ versions only. If you don't put your popup in a
-	 * separate page map, the user might get page expired exceptions when getting back to the main
-	 * window again.
+	 * don't need to know about a page map - you should use one of the constructors with a
+	 * {@link PageMap} argument. Typically, you should put any popup in a separate page map as
+	 * Wicket holds references to a limited number of pages/ versions only. If you don't put your
+	 * popup in a separate page map, the user might get page expired exceptions when getting back to
+	 * the main window again.
 	 */
 	public PopupSettings()
 	{
@@ -116,7 +116,7 @@ public class PopupSettings implements IClusterable
 	 * Construct.
 	 * 
 	 * @param displayFlags
-	 * 		Display flags
+	 *            Display flags
 	 */
 	public PopupSettings(final int displayFlags)
 	{
@@ -127,10 +127,10 @@ public class PopupSettings implements IClusterable
 	 * Construct.
 	 * 
 	 * @param pagemap
-	 * 		The pagemap where this popup must be in. Typically, you should put any popup in a
-	 * 		separate page map as Wicket holds references to a limited number of pages/ versions
-	 * 		only. If you don't put your popup in a separate page map, the user might get page
-	 * 		expired exceptions when getting back to the main window again.
+	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
+	 *            separate page map as Wicket holds references to a limited number of pages/
+	 *            versions only. If you don't put your popup in a separate page map, the user might
+	 *            get page expired exceptions when getting back to the main window again.
 	 */
 	public PopupSettings(IPageMap pagemap)
 	{
@@ -141,12 +141,12 @@ public class PopupSettings implements IClusterable
 	 * Construct.
 	 * 
 	 * @param pagemap
-	 * 		The pagemap where this popup must be in. Typically, you should put any popup in a
-	 * 		separate page map as Wicket holds references to a limited number of pages/ versions
-	 * 		only. If you don't put your popup in a separate page map, the user might get page
-	 * 		expired exceptions when getting back to the main window again.
+	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
+	 *            separate page map as Wicket holds references to a limited number of pages/
+	 *            versions only. If you don't put your popup in a separate page map, the user might
+	 *            get page expired exceptions when getting back to the main window again.
 	 * @param displayFlags
-	 * 		Display flags
+	 *            Display flags
 	 */
 	public PopupSettings(IPageMap pagemap, final int displayFlags)
 	{
@@ -216,7 +216,7 @@ public class PopupSettings implements IClusterable
 	 * Sets the popup window height.
 	 * 
 	 * @param popupHeight
-	 * 		the popup window height.
+	 *            the popup window height.
 	 * @return This
 	 */
 	public PopupSettings setHeight(int popupHeight)
@@ -229,7 +229,7 @@ public class PopupSettings implements IClusterable
 	 * Sets the left position of the popup window.
 	 * 
 	 * @param popupPositionLeft
-	 * 		the left position of the popup window.
+	 *            the left position of the popup window.
 	 * @return This
 	 */
 	public PopupSettings setLeft(int popupPositionLeft)
@@ -244,7 +244,7 @@ public class PopupSettings implements IClusterable
 	 * setting the target explicitly.
 	 * 
 	 * @param target
-	 * 		the target of the link
+	 *            the target of the link
 	 */
 	public void setTarget(String target)
 	{
@@ -255,7 +255,7 @@ public class PopupSettings implements IClusterable
 	 * Sets the top position of the popup window.
 	 * 
 	 * @param popupPositionTop
-	 * 		the top position of the popup window.
+	 *            the top position of the popup window.
 	 * @return This
 	 */
 	public PopupSettings setTop(int popupPositionTop)
@@ -268,7 +268,7 @@ public class PopupSettings implements IClusterable
 	 * Sets the popup window width.
 	 * 
 	 * @param popupWidth
-	 * 		the popup window width.
+	 *            the popup window width.
 	 * @return This
 	 */
 	public PopupSettings setWidth(int popupWidth)
@@ -284,7 +284,7 @@ public class PopupSettings implements IClusterable
 	 * will be reused rather than opening a second window
 	 * 
 	 * @param popupWindowName
-	 * 		window name.
+	 *            window name.
 	 * @return This
 	 */
 	public PopupSettings setWindowName(String popupWindowName)
@@ -305,7 +305,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * @param flag
-	 * 		The flag to test
+	 *            The flag to test
 	 * @return Yes or no depending on whether the flag is set
 	 */
 	private String flagToString(final int flag)
@@ -338,7 +338,7 @@ public class PopupSettings implements IClusterable
 	 * Gets the pagemap where the popup page must be created in.
 	 * 
 	 * @param callee
-	 * 		Calling component
+	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
 	 */
 	public IPageMap getPageMap(Component callee)

@@ -609,7 +609,7 @@ public final class SerializableChecker extends ObjectOutputStream
 					throw new RuntimeException(e);
 				}
 
-				String fieldName = field.getName();
+				field.getName();
 				simpleName = field.getName();
 				fieldDescription = field.toString();
 				check(objVals[i]);

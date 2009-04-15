@@ -36,7 +36,7 @@ public interface IClassResolver
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	Class< ? > resolveClass(final String classname) throws ClassNotFoundException;
+	Class<?> resolveClass(final String classname) throws ClassNotFoundException;
 
 
 	/**

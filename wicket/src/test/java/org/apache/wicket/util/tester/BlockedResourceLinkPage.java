@@ -35,6 +35,6 @@ public class BlockedResourceLinkPage extends WebPage
 	public BlockedResourceLinkPage()
 	{
 		add(new ResourceLink<Void>("link", new ResourceReference(BlockedResourceLinkPage.class,
-				"BlockedResourceLinkPage.html")));
+			"BlockedResourceLinkPage.html")));
 	}
 }

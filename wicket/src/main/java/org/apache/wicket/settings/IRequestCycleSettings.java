@@ -144,7 +144,7 @@ public interface IRequestCycleSettings
 	 * Also, even with this strategy set, it is ignored for
 	 * {@link BookmarkableListenerInterfaceRequestTarget}s, because otherwise they wouldn't be
 	 * bookmarkable.
-     * </p>
+	 * </p>
 	 */
 	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_RENDER = new IRequestCycleSettings.RenderStrategy(
 		"CLIENT_SIDE_REDIRECT");
@@ -164,8 +164,8 @@ public interface IRequestCycleSettings
 
 	/**
 	 * Gets whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
-	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
+	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
@@ -216,8 +216,8 @@ public interface IRequestCycleSettings
 
 	/**
 	 * Sets whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
-	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
+	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * <p>
@@ -258,7 +258,7 @@ public interface IRequestCycleSettings
 	 * is issued to the render part, which does all the rendering of the page and its components.
 	 * <strong>Be aware </strong> that this may mean, depending on whether you access any models in
 	 * the action part of the request, that attachment and detachment of some models is done twice
-	 * for a request. </li>
+	 * for a request.</li>
 	 * <li>ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the
 	 * render part of the request in one physical request, but instead of streaming the result to
 	 * the browser directly, it is kept in memory, and a redirect is issue to get this buffered

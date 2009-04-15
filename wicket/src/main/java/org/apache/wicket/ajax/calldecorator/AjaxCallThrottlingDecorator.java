@@ -73,13 +73,14 @@ public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDec
 			throw new IllegalArgumentException("id cannot be an empty string");
 		}
 		this.id = id;
-		this.duration = delay;
+		duration = delay;
 	}
 
 
 	/**
 	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
 	 */
+	@Override
 	public final CharSequence postDecorateScript(CharSequence script)
 	{
 		return AbstractDefaultAjaxBehavior.throttleScript(script, id, duration);

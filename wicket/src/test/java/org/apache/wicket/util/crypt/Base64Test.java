@@ -136,8 +136,7 @@ public class Base64Test extends TestCase
 	public void test_3() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
-		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
-				.newCrypt();
+		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
 		String s = crypt.encryptUrlSafe(input);
 
 		String output = crypt.decryptUrlSafe(s);
@@ -240,8 +239,7 @@ public class Base64Test extends TestCase
 	public void test_UrlSafe_3() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
-		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
-				.newCrypt();
+		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
 		String s = crypt.encryptUrlSafe(input);
 
 		String output = crypt.decryptUrlSafe(s);

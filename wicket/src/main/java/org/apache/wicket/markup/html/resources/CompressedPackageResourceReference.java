@@ -51,7 +51,7 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 
 	/**
 	 * @see PackageResourceReference#PackageResourceReference(Application, Class, String, Locale,
-	 * 	String)
+	 *      String)
 	 */
 	public CompressedPackageResourceReference(Application application, Class<?> scope, String name,
 		Locale locale, String style)
@@ -81,8 +81,8 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	@Override
 	protected Resource newResource()
 	{
-		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
-			getLocale(), getStyle());
+		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
+			getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();

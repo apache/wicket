@@ -47,7 +47,9 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 		{
 			numberFormat = newNumberFormat(locale);
 			if (numberFormat instanceof DecimalFormat)
+			{
 				((DecimalFormat)numberFormat).setParseBigDecimal(true);
+			}
 
 			numberFormats.put(locale, numberFormat);
 		}

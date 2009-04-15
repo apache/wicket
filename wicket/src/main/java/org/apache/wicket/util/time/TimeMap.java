@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since values are stored
- * using <code>ITimeFrameSource</code> implementing objects, the value returned by the source may
- * vary over time. For example, one implementation of <code>ITimeFrameSource</code> might return
- * the start and end time of lunch on any given day.
+ * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since values are stored using
+ * <code>ITimeFrameSource</code> implementing objects, the value returned by the source may vary
+ * over time. For example, one implementation of <code>ITimeFrameSource</code> might return the
+ * start and end time of lunch on any given day.
  * <p>
  * To associate an object with a dynamic <code>TimeFrame</code> (via <code>ITimeFrameSource</code>),
  * call <code>put(ITimeFrameSource, Object)</code>. You can later retrieve the first object for a

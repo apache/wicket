@@ -53,8 +53,9 @@ public class EmailValidatorTest extends TestCase
 				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL" };
 		for (int i = 0; i < emails.length; i++)
 		{
-			assertTrue(emails[i] + " should be valid", test.getPattern().matcher(emails[i])
-					.matches());
+			assertTrue(emails[i] + " should be valid", test.getPattern()
+				.matcher(emails[i])
+				.matches());
 		}
 	}
 
@@ -68,8 +69,9 @@ public class EmailValidatorTest extends TestCase
 				"blaat@.nl" };
 		for (int i = 0; i < emails.length; i++)
 		{
-			assertFalse(emails[i] + " should not be valid", test.getPattern().matcher(emails[i])
-					.matches());
+			assertFalse(emails[i] + " should not be valid", test.getPattern()
+				.matcher(emails[i])
+				.matches());
 		}
 	}
 }

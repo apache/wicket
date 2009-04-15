@@ -36,6 +36,7 @@ import org.apache.wicket.util.time.Time;
  * 
  * @deprecated use {@link DynamicWebResource} now
  */
+@Deprecated
 public abstract class DynamicByteArrayResource extends WebResource
 {
 	/**
@@ -126,6 +127,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
+	@Override
 	public final IResourceStream getResourceStream()
 	{
 		return new IResourceStream()
@@ -227,6 +229,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 	/**
 	 * @see org.apache.wicket.Resource#invalidate()
 	 */
+	@Override
 	public void invalidate()
 	{
 		super.invalidate();

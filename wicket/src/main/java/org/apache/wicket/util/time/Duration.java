@@ -54,10 +54,10 @@ import org.slf4j.Logger;
  * In the case of <code>milliseconds(double)</code>, the value will be rounded off to the nearest
  * integral millisecond using <code>Math.round()</code>.
  * <p>
- * The precise number of milliseconds represented by a <code>Duration</code> object can be
- * retrieved by calling the <code>getMilliseconds</code> method. The value of a
- * <code>Duration</code> object in a given unit like days or hours can be retrieved by calling one
- * of the following unit methods, each of which returns a double-precision floating point number:
+ * The precise number of milliseconds represented by a <code>Duration</code> object can be retrieved
+ * by calling the <code>getMilliseconds</code> method. The value of a <code>Duration</code> object
+ * in a given unit like days or hours can be retrieved by calling one of the following unit methods,
+ * each of which returns a double-precision floating point number:
  * <p>
  * <ul>
  * <li><code>seconds()</code>
@@ -71,12 +71,12 @@ import org.slf4j.Logger;
  * <code>Duration</code> object.
  * <p>
  * <code>String</code> values can be converted to <code>Duration</code> objects using the static
- * <code>valueOf</code> factory methods. The <code>String</code> format is the opposite of the
- * one created by <code>toString()</code>, which converts a <code>Duration</code> object to a
- * readable form, such as "3.2 hours" or "32.5 minutes". Valid units are: milliseconds, seconds,
- * minutes hours and days. Correct English plural forms are used in creating <code>String</code>
- * values and are parsed as well. The <code>Locale</code> is respected and "," will be used
- * instead of "." in the Eurozone.
+ * <code>valueOf</code> factory methods. The <code>String</code> format is the opposite of the one
+ * created by <code>toString()</code>, which converts a <code>Duration</code> object to a readable
+ * form, such as "3.2 hours" or "32.5 minutes". Valid units are: milliseconds, seconds, minutes
+ * hours and days. Correct English plural forms are used in creating <code>String</code> values and
+ * are parsed as well. The <code>Locale</code> is respected and "," will be used instead of "." in
+ * the Eurozone.
  * <p>
  * The benchmark method will "benchmark" a <code>Runnable</code> or an {@link ICode} implementing
  * object, returning a <code>Duration</code> object that represents the amount of time elapsed in
@@ -114,8 +114,7 @@ public class Duration extends AbstractTimeValue
 
 	/** pattern to match strings */
 	private static final Pattern pattern = Pattern.compile(
-			"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
-			Pattern.CASE_INSENSITIVE);
+		"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Benchmark the given command.
@@ -304,8 +303,8 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts the given <code>String</code> to a new <code>Duration</code> object. The string
-	 * can take the form of a floating point number followed by a number of milliseconds, seconds,
+	 * Converts the given <code>String</code> to a new <code>Duration</code> object. The string can
+	 * take the form of a floating point number followed by a number of milliseconds, seconds,
 	 * minutes, hours or days. For example "6 hours" or "3.4 days". Parsing is case-insensitive.
 	 * 
 	 * @param string
@@ -319,8 +318,8 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts the given <code>String</code> to a new <code>Duration</code> object. The string
-	 * can take the form of a floating point number followed by a number of milliseconds, seconds,
+	 * Converts the given <code>String</code> to a new <code>Duration</code> object. The string can
+	 * take the form of a floating point number followed by a number of milliseconds, seconds,
 	 * minutes, hours or days. For example "6 hours" or "3.4 days". Parsing is case-insensitive.
 	 * 
 	 * @param string
@@ -331,7 +330,7 @@ public class Duration extends AbstractTimeValue
 	 * @throws StringValueConversionException
 	 */
 	public static Duration valueOf(final String string, final Locale locale)
-			throws StringValueConversionException
+		throws StringValueConversionException
 	{
 		final Matcher matcher = pattern.matcher(string);
 
@@ -466,10 +465,12 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>String</code> representation of this <code>Duration</code> in days,
-	 * hours, minutes, seconds or milliseconds, as appropriate. Uses the default <code>Locale</code>.
+	 * hours, minutes, seconds or milliseconds, as appropriate. Uses the default <code>Locale</code>
+	 * .
 	 * 
 	 * @return a <code>String</code> representation
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(Locale.getDefault());

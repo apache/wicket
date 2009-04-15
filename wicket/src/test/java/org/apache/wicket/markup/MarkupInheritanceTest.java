@@ -43,6 +43,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 
 	/**
 	 * TEST FOR WICKET-1507
+	 * 
 	 * @throws Exception
 	 */
 	public void testRenderChildPageWithStyleVariation() throws Exception
@@ -66,6 +67,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
 		tester.assertResultPage(getClass(), "MarkupInheritanceExpectedResult_1_style2.html");
 	}
+
 	/**
 	 * @throws Exception
 	 */

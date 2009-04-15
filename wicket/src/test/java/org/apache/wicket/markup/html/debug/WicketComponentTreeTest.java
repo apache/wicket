@@ -48,6 +48,6 @@ public class WicketComponentTreeTest extends WicketTestCase
 		tester.getApplication().getDebugSettings().setComponentUseCheck(false);
 
 		this.executeTest(WicketComponentTreeTestPage.class,
-				"WicketComponentTreeTestPage_ExpectedResult.html");
+			"WicketComponentTreeTestPage_ExpectedResult.html");
 	}
 }

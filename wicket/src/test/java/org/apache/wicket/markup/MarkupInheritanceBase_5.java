@@ -41,6 +41,7 @@ public class MarkupInheritanceBase_5 extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				counter++;

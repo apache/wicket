@@ -58,9 +58,9 @@ public class PrependingStringBufferTest extends TestCase
 	}
 
 	/**
-	 * Test <a
-	 * href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html#equals(java.lang.Object)">reflexivity<a>
-	 * of the equals implementation.
+	 * Test <a href=
+	 * "http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html#equals(java.lang.Object)"
+	 * >reflexivity<a> of the equals implementation.
 	 * 
 	 * @throws Exception
 	 */

@@ -25,7 +25,7 @@ public interface IRedirectListener extends IRequestListener
 {
 	/** Redirect listener interface */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-			IRedirectListener.class);
+		IRedirectListener.class);
 
 	/**
 	 * Called when a page redirect happens.

@@ -32,11 +32,13 @@ public class TesterTest extends TestCase
 
 	WicketTester tester;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -85,6 +87,7 @@ public class TesterTest extends TestCase
 
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public boolean isVisible()
 				{
 					return false;

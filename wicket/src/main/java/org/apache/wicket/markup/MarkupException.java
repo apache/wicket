@@ -64,7 +64,7 @@ public final class MarkupException extends WicketRuntimeException
 	 *            The causing exception
 	 */
 	public MarkupException(final IResourceStream resource, final String message,
-			final Throwable cause)
+		final Throwable cause)
 	{
 		super(resource.toString() + ": " + message, cause);
 		markupStream = null;
@@ -91,7 +91,7 @@ public final class MarkupException extends WicketRuntimeException
 	 *            The causing exception
 	 */
 	public MarkupException(final MarkupStream markupStream, final String message,
-			final Throwable cause)
+		final Throwable cause)
 	{
 		super(message + "\n" + markupStream.toString(), cause);
 		this.markupStream = markupStream;

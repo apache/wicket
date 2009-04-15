@@ -59,10 +59,10 @@ import org.apache.wicket.util.listener.IChangeListener;
  * 
  * <p>
  * <b>NOTE. </b> If you wish to reload <tt>com.company.search.Form</tt>, you have to make sure to
- * include all classes that <b>reference</b> <tt>com.company.search.Form</tt>. In particular, if
- * it is referenced in com.company.Application, you will also have to include the latter. And this
- * is viral, as for every class you include, you must check that all classes that reference it are
- * also included.
+ * include all classes that <b>reference</b> <tt>com.company.search.Form</tt>. In particular, if it
+ * is referenced in com.company.Application, you will also have to include the latter. And this is
+ * viral, as for every class you include, you must check that all classes that reference it are also
+ * included.
  * </p>
  * 
  * <p>
@@ -112,8 +112,8 @@ import org.apache.wicket.util.listener.IChangeListener;
  * class comparison, first <b>disable the reloading class loader</b> to rule out the possibility of
  * a classloader conflict. Please keep in mind that two classes are equal if and only if they have
  * the same name <b>and are loaded in the same classloader</b>. Same goes for errors like
- * <tt>LinkageError: Class FooBar violates loader constraints</tt>, better be safe and disable
- * the reloading feature.
+ * <tt>LinkageError: Class FooBar violates loader constraints</tt>, better be safe and disable the
+ * reloading feature.
  * </p>
  * 
  * @see WicketFilter
@@ -136,6 +136,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	/**
 	 * @see org.apache.wicket.protocol.http.WicketFilter#getClassLoader()
 	 */
+	@Override
 	protected ClassLoader getClassLoader()
 	{
 		return reloadingClassLoader;
@@ -144,6 +145,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	/**
 	 * @see org.apache.wicket.protocol.http.WicketFilter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException
 	{
 		reloadingClassLoader.setListener(new IChangeListener()
