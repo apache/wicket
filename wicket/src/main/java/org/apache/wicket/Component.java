@@ -1322,7 +1322,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final List<IBehavior> getBehaviors()
 	{
-		return getBehaviors(null);
+		return getBehaviors(IBehavior.class);
 	}
 
 	/**
@@ -3608,11 +3608,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param type
 	 *            The type or null for all
-	 * 
 	 * @return The subset of the currently coupled behaviors that are of the provided type as a
 	 *         unmodifiable list or null
+	 * @param <M>
+	 *            A class derived from IBehavior
 	 */
-	protected List<IBehavior> getBehaviors(Class<? extends IBehavior> type)
+	@SuppressWarnings("unchecked")
+	protected <M extends IBehavior> List<M> getBehaviors(Class<M> type)
 	{
 		List<IBehavior> behaviors = getBehaviorsRawList();
 		if (behaviors == null)
@@ -3620,13 +3622,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return Collections.emptyList();
 		}
 
-		List<IBehavior> subset = new ArrayList<IBehavior>(behaviors.size()); // avoid growing
-		for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+		List<M> subset = new ArrayList<M>(behaviors.size()); // avoid growing
+		for (IBehavior behavior : behaviors)
 		{
-			Object behavior = i.next();
-			if (behavior != null && (type == null || type.isAssignableFrom(behavior.getClass())))
+			if (behavior != null)
 			{
-				subset.add((IBehavior)behavior);
+				if (type == null)
+				{
+					subset.add((M)behavior);
+				}
+				else if (type.isAssignableFrom(behavior.getClass()))
+				{
+					subset.add(type.cast(behavior));
+				}
 			}
 		}
 		return Collections.unmodifiableList(subset);
