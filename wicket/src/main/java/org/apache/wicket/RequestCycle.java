@@ -1032,7 +1032,9 @@ public abstract class RequestCycle
 	 * @param id
 	 *            page id
 	 * @return url pointing to the page
+	 * @deprecated PageIdRequestTarget will be removed in 1.5
 	 */
+	@Deprecated
 	public final CharSequence urlFor(final PageReference id)
 	{
 		return urlFor(new PageIdRequestTarget(id));

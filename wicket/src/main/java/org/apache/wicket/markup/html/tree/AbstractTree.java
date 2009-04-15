@@ -32,10 +32,10 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -680,7 +680,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode
+	 *      )
 	 */
 	public final void nodeExpanded(Object node)
 	{
@@ -691,7 +692,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode
+	 *      )
 	 */
 	public final void nodeSelected(Object node)
 	{
@@ -1296,7 +1298,7 @@ public abstract class AbstractTree extends Panel
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(HeaderContributor.forJavaScript(JAVASCRIPT));
+		add(JavascriptPackageResource.getHeaderContribution(JAVASCRIPT));
 
 		checkModel();
 	}
@@ -1574,7 +1576,7 @@ public abstract class AbstractTree extends Panel
 		// go through dirty items
 		for (Iterator<TreeItem> i = dirtyItems.iterator(); i.hasNext();)
 		{
-			TreeItem item = (TreeItem)i.next();
+			TreeItem item = i.next();
 			// item children need to be rebuilt
 			if (item.getChildren() == null)
 			{
@@ -1657,7 +1659,7 @@ public abstract class AbstractTree extends Panel
 		{
 			for (Iterator<TreeItem> i = item.getChildren().iterator(); i.hasNext();)
 			{
-				TreeItem child = (TreeItem)i.next();
+				TreeItem child = i.next();
 				visitItemAndChildren(child, callback);
 			}
 		}

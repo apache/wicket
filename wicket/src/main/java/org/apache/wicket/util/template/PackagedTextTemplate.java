@@ -23,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
-import org.apache.wicket.util.string.JavascriptStripper;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,9 +206,13 @@ public class PackagedTextTemplate extends TextTemplate
 	@Override
 	public String getString()
 	{
-		if (Application.get().getResourceSettings().getStripJavascriptCommentsAndWhitespace())
+		IJavascriptCompressor compressor = Application.get()
+			.getResourceSettings()
+			.getJavascriptCompressor();
+
+		if (compressor != null)
 		{
-			return JavascriptStripper.stripCommentsAndWhitespace(buffer.toString());
+			return compressor.compress(buffer.toString());
 		}
 		else
 		{
