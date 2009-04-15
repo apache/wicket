@@ -58,9 +58,52 @@ import org.apache.wicket.util.string.Strings;
 public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	protected final WeakReference/* <Class> */pageClassRef;
+	protected final WeakReference<Class<? extends Page>> pageClassRef;
 
 	private final boolean redirectOnBookmarkableRequest;
+
+	/**
+	 * Meta data key to store PageParameters in page instance. This is used to save the
+	 * PageParameters that were used to create the page instance so that later they can be used when
+	 * generating page URL
+	 */
+	public static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
+
+	private static class PageParametersMetaDataKey extends MetaDataKey<PageParameters>
+	{
+		private static final long serialVersionUID = 1L;
+	}
+
+	// used to store number of trailing slashes in page url (prior the PageInfo) part. This is
+	// necessary to maintain the exact number of slashes after page redirect, so that we don't break
+	// things that rely on URL depth (other mounted URLs)
+	private static final OriginalUrlTrailingSlashesCountMetaDataKey ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY = new OriginalUrlTrailingSlashesCountMetaDataKey();
+
+	private static class OriginalUrlTrailingSlashesCountMetaDataKey extends MetaDataKey<Integer>
+	{
+		private static final long serialVersionUID = 1L;
+	}
+
+	/**
+	 * Sets the initial page parameters for page instance. Use this only if you know what you are
+	 * doing.
+	 * 
+	 * @param page
+	 * @param pageParameters
+	 */
+	public static void setInitialPageParameters(final Page page, final PageParameters pageParameters)
+	{
+		page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, pageParameters);
+	}
+
+	/**
+	 * @param page
+	 * @return initial page parameters
+	 */
+	public static PageParameters getInitialPagePageParameters(final Page page)
+	{
+		return page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
+	}
 
 	/**
 	 * Construct.
@@ -71,8 +114,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 *            whether after hitting the page with URL in bookmarkable form it should be
 	 *            redirected to hybrid URL - needed for ajax to work properly after page refresh
 	 */
-	public HybridUrlCodingStrategy(String mountPath, Class pageClass,
-		boolean redirectOnBookmarkableRequest)
+	public HybridUrlCodingStrategy(final String mountPath, final Class<? extends Page> pageClass,
+		final boolean redirectOnBookmarkableRequest)
 	{
 		super(mountPath);
 
@@ -81,7 +124,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			throw new IllegalArgumentException("mountPath can not end with a '/': " + mountPath);
 		}
 
-		pageClassRef = new WeakReference(pageClass);
+		pageClassRef = new WeakReference<Class<? extends Page>>(pageClass);
 		this.redirectOnBookmarkableRequest = redirectOnBookmarkableRequest;
 	}
 
@@ -91,18 +134,17 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * @param mountPath
 	 * @param pageClass
 	 */
-	public HybridUrlCodingStrategy(String mountPath, Class pageClass)
+	public HybridUrlCodingStrategy(final String mountPath, final Class<? extends Page> pageClass)
 	{
 		this(mountPath, pageClass, true);
 	}
 
 	/**
-	 * Returns the amount of trailing slashes in the given string
 	 * 
 	 * @param seq
-	 * @return
+	 * @return Returns the amount of trailing slashes in the given string
 	 */
-	private int getTrailingSlashesCount(CharSequence seq)
+	private int getTrailingSlashesCount(final CharSequence seq)
 	{
 		int count = 0;
 		for (int i = seq.length() - 1; i >= 0; --i)
@@ -123,7 +165,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * Returns whether after hitting bookmarkable url the request should be redirected to a hybrid
 	 * URL. This is recommended for pages with Ajax.
 	 * 
-	 * @return
+	 * @return true if redirect on bookmarkable request
 	 */
 	protected boolean isRedirectOnBookmarkableRequest()
 	{
@@ -133,7 +175,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * Returns whether to redirect when there is pageMap specified in bookmarkable URL
 	 * 
-	 * @return
+	 * @return true if always redirect when page map is specified
 	 */
 	protected boolean alwaysRedirectWhenPageMapIsSpecified()
 	{
@@ -146,7 +188,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
 	 */
-	public IRequestTarget decode(RequestParameters requestParameters)
+	public IRequestTarget decode(final RequestParameters requestParameters)
 	{
 		String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
 
@@ -181,7 +223,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction.getUrlAfterExtraction());
 
 		boolean redirect = isRedirectOnBookmarkableRequest();
-		if (Strings.isEmpty(pageMapName) != true && alwaysRedirectWhenPageMapIsSpecified())
+		if ((Strings.isEmpty(pageMapName) != true) && alwaysRedirectWhenPageMapIsSpecified())
 		{
 			redirect = true;
 		}
@@ -190,14 +232,14 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			// stateless listener interface
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
-			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-				(Class)pageClassRef.get(), parameters, requestParameters.getComponentPath(),
+			return new BookmarkableListenerInterfaceRequestTarget(pageMapName, pageClassRef.get(),
+				parameters, requestParameters.getComponentPath(),
 				requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else if (pageId == null)
 		{
 			// bookmarkable page request
-			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
+			return new HybridBookmarkablePageRequestTarget(pageMapName, pageClassRef.get(),
 				parameters, originalUrlTrailingSlashesCount, redirect);
 		}
 		else
@@ -218,7 +260,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 
 			// check if the found page match the required class
-			if (page != null && page.getClass().equals(pageClassRef.get()))
+			if ((page != null) && page.getClass().equals(pageClassRef.get()))
 			{
 				requestParameters.setInterfaceName(IRedirectListener.INTERFACE.getName());
 				RequestCycle.get().getRequest().setPage(page);
@@ -230,15 +272,13 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// create new instance, but only if there is no callback to a non-existing page
 				if (requestParameters.getInterface() != null)
 				{
-					handleExpiredPage(pageMapName, (Class)pageClassRef.get(),
+					handleExpiredPage(pageMapName, pageClassRef.get(),
 						originalUrlTrailingSlashesCount, redirect);
 				}
-				return new HybridBookmarkablePageRequestTarget(pageMapName,
-					(Class)pageClassRef.get(), parameters, originalUrlTrailingSlashesCount,
-					redirect);
+				return new HybridBookmarkablePageRequestTarget(pageMapName, pageClassRef.get(),
+					parameters, originalUrlTrailingSlashesCount, redirect);
 			}
 		}
-
 	}
 
 	/**
@@ -260,8 +300,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 *            whether or not a redirect should be issued
 	 * @return request target used to handle this situation
 	 */
-	protected IRequestTarget handleExpiredPage(String pageMapName, Class pageClass,
-		int trailingSlashesCount, boolean redirect)
+	protected IRequestTarget handleExpiredPage(final String pageMapName,
+		final Class<? extends Page> pageClass, final int trailingSlashesCount,
+		final boolean redirect)
 	{
 		throw new PageExpiredException(
 			"Request cannot be processed. The target page does not exist anymore.");
@@ -272,9 +313,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * or null if the number can't be determined.
 	 * 
 	 * @param requestTarget
-	 * @return
+	 * @return the number of trailing slashes
 	 */
-	private Integer getOriginalOriginalTrailingSlashesCount(IRequestTarget requestTarget)
+	private Integer getOriginalOriginalTrailingSlashesCount(final IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof ListenerInterfaceRequestTarget)
 		{
@@ -289,9 +330,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * Extracts the PageParameters from given request target
 	 * 
 	 * @param requestTarget
-	 * @return
+	 * @return page parameters
 	 */
-	private PageParameters getPageParameters(IRequestTarget requestTarget)
+	private PageParameters getPageParameters(final IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
 		{
@@ -314,9 +355,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * Extracts the PageInfo from given request target
 	 * 
 	 * @param requestTarget
-	 * @return
+	 * @return page info
 	 */
-	private PageInfo getPageInfo(IRequestTarget requestTarget)
+	private PageInfo getPageInfo(final IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
 		{
@@ -344,57 +385,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Sets the initial page parameters for page instance. Use this only if you know what you are
-	 * doing.
-	 * 
-	 * @param page
-	 * @param pageParameters
-	 */
-	public static void setInitialPageParameters(Page page, PageParameters pageParameters)
-	{
-		page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, pageParameters);
-	}
-
-	/**
-	 * @param page
-	 * @return
-	 */
-	public static PageParameters getInitialPagePageParameters(Page page)
-	{
-		return page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
-	}
-
-	/**
-	 * Meta data key to store PageParameters in page instance. This is used to save the
-	 * PageParameters that were used to create the page instance so that later they can be used when
-	 * generating page URL
-	 */
-	public static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
-
-	private static class PageParametersMetaDataKey extends MetaDataKey<PageParameters>
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	// used to store number of trailing slashes in page url (prior the PageInfo)
-	// part. This is necessary to maintain
-	// the exact number of slashes after page redirect, so that we don't break
-	// things that rely on URL depth
-	// (other mounted URLs)
-	private static final OriginalUrlTrailingSlashesCountMetaDataKey ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY = new OriginalUrlTrailingSlashesCountMetaDataKey();
-
-	private static class OriginalUrlTrailingSlashesCountMetaDataKey extends MetaDataKey<Integer>
-	{
-		private static final long serialVersionUID = 1L;
-	}
-
-	/**
 	 * Fix the amount of trailing slashes in the specified buffer.
 	 * 
 	 * @param buffer
 	 * @param desiredCount
 	 */
-	private void fixTrailingSlashes(AppendingStringBuffer buffer, int desiredCount)
+	private void fixTrailingSlashes(final AppendingStringBuffer buffer, final int desiredCount)
 	{
 		int current = getTrailingSlashesCount(buffer);
 		if (current > desiredCount)
@@ -415,7 +411,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(org.apache.wicket.IRequestTarget)
 	 */
-	public CharSequence encode(IRequestTarget requestTarget)
+	public CharSequence encode(final IRequestTarget requestTarget)
 	{
 		if (matches(requestTarget) == false)
 		{
@@ -447,7 +443,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(org.apache.wicket.IRequestTarget)
 	 */
-	public boolean matches(IRequestTarget requestTarget)
+	public boolean matches(final IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
 		{
@@ -464,52 +460,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Class that encapsulates {@link PageInfo} instance and the URL part prior the PageInfo part
-	 * 
-	 * @author Matej Knopp
-	 */
-	protected static class PageInfoExtraction
-	{
-		private final String urlAfterExtraction;
-
-		private final PageInfo pageInfo;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param urlAfterExtraction
-		 * @param pageInfo
-		 */
-		public PageInfoExtraction(String urlAfterExtraction, PageInfo pageInfo)
-		{
-			this.urlAfterExtraction = urlAfterExtraction;
-			this.pageInfo = pageInfo;
-		}
-
-		/**
-		 * @return
-		 */
-		public PageInfo getPageInfo()
-		{
-			return pageInfo;
-		}
-
-		/**
-		 * @return
-		 */
-		public String getUrlAfterExtraction()
-		{
-			return urlAfterExtraction;
-		}
-	}
-
-	/**
 	 * Extracts the PageInfo string.
 	 * 
 	 * @param url
-	 * @return
+	 * @return extract page info
 	 */
-	protected PageInfoExtraction extractPageInfo(String url)
+	protected PageInfoExtraction extractPageInfo(final String url)
 	{
 		int begin = url.lastIndexOf(getBeginSeparator());
 		PageInfo last = null;
@@ -517,7 +473,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		while (begin != -1)
 		{
 			String substring = url.substring(begin);
-			if (substring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
+			if ((substring.length() > getBeginSeparator().length() + getEndSeparator().length()) &&
 				substring.startsWith(getBeginSeparator()) && substring.endsWith(getEndSeparator()))
 			{
 				String pageInfoString = substring.substring(getBeginSeparator().length(), //
@@ -535,6 +491,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 			begin = url.lastIndexOf(getBeginSeparator(), begin - 1);
 		}
+
 		if (last != null)
 		{
 			return new PageInfoExtraction(url.substring(0, url.length() - lastSubstring.length()),
@@ -546,11 +503,17 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 	}
 
+	/**
+	 * @return begin separator
+	 */
 	protected String getBeginSeparator()
 	{
 		return ".";
 	}
 
+	/**
+	 * @return end separator
+	 */
 	protected String getEndSeparator()
 	{
 		return "";
@@ -561,9 +524,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * 
 	 * @param url
 	 * @param pageInfo
-	 * @return
+	 * @return URL
 	 */
-	protected String addPageInfo(String url, PageInfo pageInfo)
+	protected String addPageInfo(final String url, final PageInfo pageInfo)
 	{
 		if (pageInfo != null)
 		{
@@ -573,6 +536,61 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			return url;
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
+	 */
+	@Override
+	public boolean matches(final String path, final boolean caseSensitive)
+	{
+		RequestCycle rc = RequestCycle.get();
+
+		// the null check is necessary, as this method is first time called from WicketFilter when
+		// no RequestCycle exists yet
+		if ((rc != null) && ((WebRequest)rc.getRequest()).isAjax())
+		{
+			// HybridUrlCodingStrategy doesn't make sense for ajax request
+			return false;
+		}
+
+		if (Strings.startsWith(path, getMountPath(), caseSensitive))
+		{
+			/*
+			 * We need to match /mount/point or /mount/point/with/extra/path, but not
+			 * /mount/pointXXX
+			 */
+			String remainder = path.substring(getMountPath().length());
+			if ((remainder.length() == 0) || remainder.startsWith("/"))
+			{
+				return true;
+			}
+			/*
+			 * We also need to accept /mount/point(XXX)
+			 */
+			if ((remainder.length() > getBeginSeparator().length() + getEndSeparator().length()) &&
+				remainder.startsWith(getBeginSeparator()) && remainder.endsWith(getEndSeparator()))
+			{
+				String substring = remainder.substring(getBeginSeparator().length(), //
+					remainder.length() - getEndSeparator().length());
+				PageInfo info = PageInfo.parsePageInfo(substring);
+				if (info != null)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "HybridUrlCodingStrategy[page=" + pageClassRef.get() + "]";
 	}
 
 	/**
@@ -601,10 +619,10 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * @param versionNumber
 		 * @param pageMapName
 		 */
-		public PageInfo(Integer pageId, Integer versionNumber, String pageMapName)
+		public PageInfo(final Integer pageId, final Integer versionNumber, final String pageMapName)
 		{
-			if ((pageId == null && (versionNumber != null || pageMapName == null)) ||
-				(versionNumber == null && (pageId != null || pageMapName == null)))
+			if (((pageId == null) && ((versionNumber != null) || (pageMapName == null))) ||
+				((versionNumber == null) && ((pageId != null) || (pageMapName == null))))
 			{
 				throw new IllegalArgumentException(
 					"Either both pageId and versionNumber must be null or none of them.");
@@ -615,7 +633,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 
 		/**
-		 * @return
+		 * @return page id
 		 */
 		public Integer getPageId()
 		{
@@ -623,7 +641,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 
 		/**
-		 * @return
+		 * @return version number
 		 */
 		public Integer getVersionNumber()
 		{
@@ -631,13 +649,17 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 
 		/**
-		 * @return
+		 * @return page map name
 		 */
 		public String getPageMapName()
 		{
 			return pageMapName;
 		}
 
+		/**
+		 * 
+		 * @return page info separator
+		 */
 		private static char getPageInfoSeparator()
 		{
 			return '.';
@@ -660,7 +682,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 			// we don't need to encode the pageMapName when the pageId is unique
 			// per session
-			if (pageMapName != null && pageId != null && Application.exists() &&
+			if ((pageMapName != null) && (pageId != null) && Application.exists() &&
 				Application.get().getSessionSettings().isPageIdUniquePerSession())
 			{
 				pageMapName = null;
@@ -672,37 +694,37 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			final boolean pmContainsLetter = !pmEmpty && !isNumber(pageMapName);
 
 
-			if (pageId != null && pmEmpty && versionNumber.intValue() == 0)
+			if ((pageId != null) && pmEmpty && (versionNumber.intValue() == 0))
 			{
 				// pageId
 				buffer.append(pageId);
 			}
-			else if (pageId != null && pmEmpty && versionNumber.intValue() != 0)
+			else if ((pageId != null) && pmEmpty && (versionNumber.intValue() != 0))
 			{
 				// pageId.version
 				buffer.append(pageId);
 				buffer.append(getPageInfoSeparator());
 				buffer.append(versionNumber);
 			}
-			else if (pageId == null && pmContainsLetter)
+			else if ((pageId == null) && pmContainsLetter)
 			{
 				// pageMap (must start with letter)
 				buffer.append(pageMapName);
 			}
-			else if (pageId == null && !pmEmpty && !pmContainsLetter)
+			else if ((pageId == null) && !pmEmpty && !pmContainsLetter)
 			{
 				// .pageMap
 				buffer.append(getPageInfoSeparator());
 				buffer.append(pageMapName);
 			}
-			else if (pmContainsLetter && pageId != null && versionNumber.intValue() == 0)
+			else if (pmContainsLetter && (pageId != null) && (versionNumber.intValue() == 0))
 			{
 				// pageMap.pageId (pageMap must start with a letter)
 				buffer.append(pageMapName);
 				buffer.append(getPageInfoSeparator());
 				buffer.append(pageId);
 			}
-			else if (!pmEmpty && pageId != null)
+			else if (!pmEmpty && (pageId != null))
 			{
 				// pageMap.pageId.pageVersion
 				buffer.append(pageMapName);
@@ -719,11 +741,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * Method that rigidly checks if the string consists of digits only.
 		 * 
 		 * @param string
-		 * @return
+		 * @return true if is a number
 		 */
-		private static boolean isNumber(String string)
+		private static boolean isNumber(final String string)
 		{
-			if (string == null || string.length() == 0)
+			if ((string == null) || (string.length() == 0))
 			{
 				return false;
 			}
@@ -748,11 +770,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * </ul>
 		 * 
 		 * @param src
-		 * @return
+		 * @return page info
 		 */
-		public static PageInfo parsePageInfo(String src)
+		public static PageInfo parsePageInfo(final String src)
 		{
-			if (src == null || src.length() == 0)
+			if ((src == null) || (src.length() == 0))
 			{
 				return null;
 			}
@@ -770,42 +792,42 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				for (int j = 0; j < segments[i].length(); ++j)
 				{
 					char c = segments[i].charAt(j);
-					if (!Character.isLetterOrDigit(c) && c != '-' && c != '_')
+					if (!Character.isLetterOrDigit(c) && (c != '-') && (c != '_'))
 					{
 						return null;
 					}
 				}
 			}
 
-			if (segments.length == 1 && isNumber(segments[0]))
+			if ((segments.length == 1) && isNumber(segments[0]))
 			{
 				// pageId
 				return new PageInfo(Integer.valueOf(segments[0]), new Integer(0), null);
 			}
-			else if (segments.length == 2 && isNumber(segments[0]) && isNumber(segments[1]))
+			else if ((segments.length == 2) && isNumber(segments[0]) && isNumber(segments[1]))
 			{
 				// pageId:pageVersion
 				return new PageInfo(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]),
 					null);
 			}
-			else if (segments.length == 1 && !isNumber(segments[0]))
+			else if ((segments.length == 1) && !isNumber(segments[0]))
 			{
 				// pageMap (starts with letter)
 				return new PageInfo(null, null, segments[0]);
 			}
-			else if (segments.length == 2 && segments[0].length() == 0)
+			else if ((segments.length == 2) && (segments[0].length() == 0))
 			{
 				// .pageMap
 				return new PageInfo(null, null, segments[1]);
 			}
-			else if (segments.length == 2 && !isNumber(segments[0]) && isNumber(segments[1]))
+			else if ((segments.length == 2) && !isNumber(segments[0]) && isNumber(segments[1]))
 			{
 				// pageMap.pageId (pageMap starts with letter)
 				return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
 			}
 			else if (segments.length == 3)
 			{
-				if (segments[2].length() == 0 && isNumber(segments[1]))
+				if ((segments[2].length() == 0) && isNumber(segments[1]))
 				{
 					// we don't encode it like this, but we still should be able
 					// to parse it
@@ -845,16 +867,22 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * @param originalUrlTrailingSlashesCount
 		 * @param redirect
 		 */
-		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters, int originalUrlTrailingSlashesCount, boolean redirect)
+		public HybridBookmarkablePageRequestTarget(final String pageMapName,
+			final Class<? extends Page> pageClass, final PageParameters pageParameters,
+			final int originalUrlTrailingSlashesCount, final boolean redirect)
 		{
 			super(pageMapName, pageClass, pageParameters);
 			this.originalUrlTrailingSlashesCount = originalUrlTrailingSlashesCount;
 			this.redirect = redirect;
 		}
 
+		/**
+		 * @see org.apache.wicket.request.target.component.BookmarkablePageRequestTarget#newPage(java.lang.Class,
+		 *      org.apache.wicket.RequestCycle)
+		 */
 		@Override
-		protected Page newPage(Class pageClass, RequestCycle requestCycle)
+		protected <C extends Page> Page newPage(final Class<C> pageClass,
+			final RequestCycle requestCycle)
 		{
 			Page page = super.newPage(pageClass, requestCycle);
 			page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, new PageParameters(getPageParameters()));
@@ -863,11 +891,14 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			return page;
 		}
 
+		/**
+		 * @see org.apache.wicket.request.target.component.BookmarkablePageRequestTarget#respond(org.apache.wicket.RequestCycle)
+		 */
 		@Override
-		public void respond(RequestCycle requestCycle)
+		public void respond(final RequestCycle requestCycle)
 		{
 			Page page = getPage(requestCycle);
-			if (page.isPageStateless() == false && redirect)
+			if ((page.isPageStateless() == false) && redirect)
 			{
 				requestCycle.redirectTo(page);
 			}
@@ -876,57 +907,45 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				super.respond(requestCycle);
 			}
 		}
-	};
+	}
 
 	/**
-	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
+	 * Class that encapsulates {@link PageInfo} instance and the URL part prior the PageInfo part
+	 * 
+	 * @author Matej Knopp
 	 */
-	@Override
-	public boolean matches(String path, boolean caseSensitive)
+	protected static class PageInfoExtraction
 	{
-		RequestCycle rc = RequestCycle.get();
+		private final String urlAfterExtraction;
 
-		// the null check is necessary, as this method is first time called from WicketFilter when
-		// no RequestCycle exists yet
-		if (rc != null && ((WebRequest)rc.getRequest()).isAjax())
+		private final PageInfo pageInfo;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param urlAfterExtraction
+		 * @param pageInfo
+		 */
+		public PageInfoExtraction(final String urlAfterExtraction, final PageInfo pageInfo)
 		{
-			// HybridUrlCodingStrategy doesn't make sense for ajax request
-			return false;
+			this.urlAfterExtraction = urlAfterExtraction;
+			this.pageInfo = pageInfo;
 		}
 
-		if (Strings.startsWith(path, getMountPath(), caseSensitive))
+		/**
+		 * @return page info
+		 */
+		public PageInfo getPageInfo()
 		{
-			/*
-			 * We need to match /mount/point or /mount/point/with/extra/path, but not
-			 * /mount/pointXXX
-			 */
-			String remainder = path.substring(getMountPath().length());
-			if (remainder.length() == 0 || remainder.startsWith("/"))
-			{
-				return true;
-			}
-			/*
-			 * We also need to accept /mount/point(XXX)
-			 */
-			if (remainder.length() > getBeginSeparator().length() + getEndSeparator().length() &&
-				remainder.startsWith(getBeginSeparator()) && remainder.endsWith(getEndSeparator()))
-			{
-				String substring = remainder.substring(getBeginSeparator().length(), //
-					remainder.length() - getEndSeparator().length());
-				PageInfo info = PageInfo.parsePageInfo(substring);
-				if (info != null)
-				{
-					return true;
-				}
-			}
+			return pageInfo;
 		}
-		return false;
-	}
 
-	@Override
-	public String toString()
-	{
-		return "HybridUrlCodingStrategy[page=" + pageClassRef.get() + "]";
+		/**
+		 * @return url after extraction
+		 */
+		public String getUrlAfterExtraction()
+		{
+			return urlAfterExtraction;
+		}
 	}
-
 }
