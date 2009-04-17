@@ -17,12 +17,16 @@
 package org.apache.wicket.protocol.https;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
  * Marks a page as requiring https.
+ * 
+ * NOTES: Adding {@link Inherited} annotation to this annotation will not work because we also want
+ * it to work for interfaces
  * 
  * @see HttpsRequestCycleProcessor
  * 
