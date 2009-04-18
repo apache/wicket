@@ -2152,7 +2152,11 @@ Wicket.Focus = {
 	
 	setFocusOnElements: function (elements)
 	{
-		for (var i=0; i< elements.length; i++)
+		// we need to cache array length because IE will try to recalculate 
+		// the collection of elements every time length() is called which can be quiet expensive
+		// if the collection is a result of getElementsByTagName or a similar function.
+		var len=elements.length;
+		for (var i=0; i< len; i++)
 		{
 		    if (elements[i].wicketFocusSet != true)
 		    {
