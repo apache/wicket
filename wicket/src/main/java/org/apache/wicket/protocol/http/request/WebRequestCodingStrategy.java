@@ -273,7 +273,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else if (requestTarget instanceof PageIdRequestTarget)
 		{
-			url = encode(requestCycle, requestTarget);
+			url = encode(requestCycle, (PageReferenceRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
