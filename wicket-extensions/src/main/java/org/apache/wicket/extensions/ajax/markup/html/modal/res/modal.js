@@ -352,7 +352,7 @@ Wicket.Window.prototype = {
 					 idBottom, idCaptionText, this.isIframe());								
 		
 		var element = document.createElement("div");
-		document.body.appendChild(element);
+		document.body.appendChild(element);		
 		Wicket.replaceOuterHtml(element, markup);
 				
 		var _ = function(name) { return document.getElementById(name); }
@@ -611,8 +611,7 @@ Wicket.Window.prototype = {
 		catch(ignore)
 		{
 			this.content.src = this.settings.src;
-		}
-
+		}		
 	
 		// opera seems to have problem accessing contentWindow here
 		if (Wicket.Browser.isOpera() || Wicket.Browser.isSafari()) {
@@ -627,12 +626,13 @@ Wicket.Window.prototype = {
 	/**
 	 * Shows the window. 
 	 */
-	show: function() {
+	show: function() {					
+		
 		// create the DOM elements
-		this.createDOM();						
+		this.createDOM();								
 		
 		// set the class of window (blue or silver by default)
-		this.classElement.className = this.settings.className;					
+		this.classElement.className = this.settings.className;									
 		
 		// is it an iframe window?
 		if (this.isIframe()) {
@@ -653,8 +653,8 @@ Wicket.Window.prototype = {
 			
 			// set the overflow style so that scrollbars are shown when the element is bigger than window
 			this.content.style.overflow="auto";
-		}																						
-											
+		}																								
+		
 		// bind the events
 		this.bindInit();		
 
@@ -685,7 +685,8 @@ Wicket.Window.prototype = {
 			this.window.style.visibility="visible";
 			
 		}.bind(this);
-
+				
+		
 		// is there a window displayed already?
 		if (Wicket.Window.current != null) {
 			// save the reference to it
@@ -702,7 +703,7 @@ Wicket.Window.prototype = {
 			window.setTimeout(function() { doShow(); }, 0);
 		} else {
 			doShow();
-		}
+		}		
 
 		// if the content supports focus and blur it, which means
 		// that the already focused element will lose it's focus				
@@ -718,8 +719,8 @@ Wicket.Window.prototype = {
 			this.close(true);
 			if (this.old_onunload != null)
 				return this.old_onunload();
-		}.bind(this);
-				
+		}.bind(this);				
+		
 		// preserve old beforeunload handler
 		this.old_onbeforeunload = window.onbeforeunload;
 		
@@ -729,7 +730,7 @@ Wicket.Window.prototype = {
 				return "Reloading this page will cause the modal window to disappear.";
 			}				
 		}
-
+		
 		// create the mask that covers the background		
 		this.createMask();	
 	},
@@ -1122,9 +1123,13 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 								"<div class=\"w_content_3\">"+
 		 							"<div class=\"w_content\">";
 				if (isFrame) {
-					s+=								
-										"<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
+					if (Wicket.Browser.isIELessThan7() || !Wicket.Browser.isIE()) {												
+						s+= "<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
 										"</iframe>";
+					} else {
+						s+= "<iframe src='about:blank' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
+						"</iframe>";
+					}
 				} else {
 					s+=
 										"<div id='"+idContent+"'></div>";
@@ -1185,7 +1190,7 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Shows the mask.
 	 */
-	show: function() {
+	show: function() {				
 		
 		// if the mask is not alrady shown...
 		if (typeof(Wicket.Window.Mask.element) == "undefined" ||
