@@ -71,7 +71,7 @@
 				<configuration>
 					<source>1.4</source>
 					<target>1.4</target>
-					<optimise>true</optimise>
+					<optimize>true</optimize>
 					<debug>true</debug>
 				</configuration>
 			</plugin>
