@@ -109,6 +109,9 @@ import org.apache.wicket.util.string.Strings;
  * </ul>
  * Also it is recommended to put the modal window component in markup before any component (i.e.
  * AjaxLink or AjaxButton) that shows it.
+ * <p>
+ * If you want to use form in modal window component make sure that you put the modal window itself
+ * in another form (nesting forms is legal in Wicket).
  * 
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
