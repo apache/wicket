@@ -204,6 +204,24 @@ public class ValidationError implements IValidationError, IClusterable
 		return this;
 	}
 
+
+	/**
+	 * Gets error keys.
+	 * 
+	 * @return keys
+	 */
+	public List<String> getKeys()
+	{
+		if (keys == null)
+		{
+			return Collections.emptyList();
+		}
+		else
+		{
+			return Collections.unmodifiableList(keys);
+		}
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
