@@ -99,7 +99,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<List<? extends T>> choices)
+	public AbstractSingleSelectChoice(String id, IModel<? extends List<? extends T>> choices)
 	{
 		super(id, choices);
 	}
@@ -107,7 +107,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<List<? extends T>> choices)
+	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -116,7 +116,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<List<? extends T>> choices,
+	public AbstractSingleSelectChoice(String id, IModel<? extends List<? extends T>> choices,
 		IChoiceRenderer<T> renderer)
 	{
 		super(id, choices, renderer);
@@ -128,7 +128,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel<T> model,
-		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

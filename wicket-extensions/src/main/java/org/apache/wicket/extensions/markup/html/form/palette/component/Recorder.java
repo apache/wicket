@@ -158,7 +158,7 @@ public class Recorder<T> extends HiddenField<Object>
 	public Iterator<T> getUnselectedChoices()
 	{
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-		Collection<T> choices = getPalette().getChoices();
+		Collection<? extends T> choices = getPalette().getChoices();
 
 		if (choices.size() - ids.length == 0)
 		{
@@ -166,7 +166,7 @@ public class Recorder<T> extends HiddenField<Object>
 		}
 
 		List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - ids.length));
-		Iterator<T> it = choices.iterator();
+		Iterator<? extends T> it = choices.iterator();
 		while (it.hasNext())
 		{
 			final T choice = it.next();

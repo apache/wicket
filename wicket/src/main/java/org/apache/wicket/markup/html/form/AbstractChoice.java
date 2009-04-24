@@ -48,7 +48,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	private static final long serialVersionUID = 1L;
 
 	/** The list of objects. */
-	private IModel<List<? extends E>> choices;
+	private IModel<? extends List<? extends E>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
 	private IChoiceRenderer<E> renderer;
@@ -140,7 +140,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IModel<List<? extends E>> choices)
+	public AbstractChoice(final String id, final IModel<? extends List<? extends E>> choices)
 	{
 		this(id, choices, new ChoiceRenderer<E>());
 	}
@@ -156,7 +156,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IModel<List<? extends E>> choices,
+	public AbstractChoice(final String id, final IModel<? extends List<? extends E>> choices,
 		final IChoiceRenderer<E> renderer)
 	{
 		super(id);
@@ -175,7 +175,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<T> model, final IModel<List<? extends E>> choices)
+	public AbstractChoice(final String id, IModel<T> model, final IModel<? extends List<? extends E>> choices)
 	{
 		this(id, model, choices, new ChoiceRenderer<E>());
 	}
@@ -194,7 +194,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel<T> model,
-		final IModel<List<? extends E>> choices, final IChoiceRenderer<E> renderer)
+		final IModel<? extends List<? extends E>> choices, final IChoiceRenderer<E> renderer)
 	{
 		super(id, model);
 		this.choices = wrap(choices);
@@ -224,7 +224,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            model representing the list of choices
 	 * @return this for chaining
 	 */
-	public final AbstractChoice<T, E> setChoices(IModel<List<? extends E>> choices)
+	public final AbstractChoice<T, E> setChoices(IModel<? extends List<? extends E>> choices)
 	{
 		if (this.choices != null && this.choices != choices)
 		{
@@ -462,7 +462,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final IModel<List<? extends E>> oldChoices;
+		private final IModel<? extends List<? extends E>> oldChoices;
 
 		/**
 		 * Construct.

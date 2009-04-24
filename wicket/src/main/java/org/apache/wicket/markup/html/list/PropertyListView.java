@@ -57,7 +57,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(final String id, final IModel<List<T>> model)
+	public PropertyListView(final String id, final IModel<? extends List<? extends T>> model)
 	{
 		super(id, model);
 	}
@@ -71,7 +71,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(final String id, final List<T> list)
+	public PropertyListView(final String id, final List<? extends T> list)
 	{
 		super(id, list);
 	}
@@ -84,7 +84,7 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * @return a CompoundPropertyModel wrapping a ListItemModel
 	 */
 	@Override
-	protected IModel<T> getListItemModel(final IModel<List<T>> model, final int index)
+	protected IModel<T> getListItemModel(final IModel<? extends List<T>> model, final int index)
 	{
 		return new CompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}

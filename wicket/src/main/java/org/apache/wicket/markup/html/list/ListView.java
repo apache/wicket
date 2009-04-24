@@ -79,7 +79,7 @@ import org.apache.wicket.version.undo.Change;
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior...)} should be invoked on the {@link ListItem}
+ * {@link #add(org.apache.wicket.behavior.IBehavior[])} should be invoked on the {@link ListItem}
  * that is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 
@@ -137,7 +137,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @param model
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<List<T>> model)
+	public ListView(final String id, final IModel<? extends List<? extends T>> model)
 	{
 		super(id, model);
 
@@ -159,9 +159,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            List to cast to Serializable
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List<T> list)
+	public ListView(final String id, final List<? extends T> list)
 	{
-		this(id, new ListModel<T>(list));
+		this(id, Model.of(list));
 	}
 
 	/**
@@ -172,9 +172,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return The list of items in this list view.
 	 */
 	@SuppressWarnings("unchecked")
-	public final List<T> getList()
+	public final List<? extends T> getList()
 	{
-		final List<T> list = (List<T>)getDefaultModelObject();
+		final List<? extends T> list = (List<? extends T>)getDefaultModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -395,7 +395,7 @@ public abstract class ListView<T> extends AbstractRepeater
 					@Override
 					public void undo()
 					{
-						getList().add(oldIndex, removedObject);
+						((List<T>)getList()).add(oldIndex, removedObject);
 					}
 
 				});
@@ -419,7 +419,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public ListView<T> setList(List<T> list)
+	public ListView<T> setList(List<? extends T> list)
 	{
 		setDefaultModel(Model.of(list));
 		return this;
@@ -497,7 +497,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel<T> getListItemModel(final IModel<List<T>> listViewModel, final int index)
+	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel, final int index)
 	{
 		return new ListItemModel<T>(this, index);
 	}
@@ -678,9 +678,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return model
 	 */
 	@SuppressWarnings("unchecked")
-	public final IModel<List<T>> getModel()
+	public final IModel<? extends List<T>> getModel()
 	{
-		return (IModel<List<T>>)getDefaultModel();
+		return (IModel<? extends List<T>>)getDefaultModel();
 	}
 
 	/**
@@ -688,7 +688,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * 
 	 * @param model
 	 */
-	public final void setModel(IModel<List<T>> model)
+	public final void setModel(IModel<? extends List<T>> model)
 	{
 		setDefaultModel(model);
 	}
