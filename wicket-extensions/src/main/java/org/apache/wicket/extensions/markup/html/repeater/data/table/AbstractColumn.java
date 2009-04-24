@@ -74,7 +74,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	 */
 	public boolean isSortable()
 	{
-		return sortProperty != null;
+		return getSortProperty() != null;
 	}
 
 	/**
