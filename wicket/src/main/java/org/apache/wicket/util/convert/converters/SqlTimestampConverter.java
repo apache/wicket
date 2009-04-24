@@ -32,6 +32,7 @@ public class SqlTimestampConverter extends AbstractConverter
 	private static final long serialVersionUID = 1L;
 
 	private final int dateFormat;
+	private final int timeFormat;
 
 	/**
 	 * Construct.
@@ -39,6 +40,7 @@ public class SqlTimestampConverter extends AbstractConverter
 	public SqlTimestampConverter()
 	{
 		dateFormat = DateFormat.SHORT;
+		timeFormat = DateFormat.SHORT;
 	}
 
 	/**
@@ -50,7 +52,22 @@ public class SqlTimestampConverter extends AbstractConverter
 	public SqlTimestampConverter(int dateFormat)
 	{
 		this.dateFormat = dateFormat;
+		timeFormat = DateFormat.SHORT;
 	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param dateFormat
+	 *            See java.text.DateFormat for details. Defaults to DateFormat.SHORT * @param
+	 *            timeFormat See java.text.DateFormat for details. Defaults to DateFormat.SHORT
+	 */
+	public SqlTimestampConverter(int dateFormat, int timeFormat)
+	{
+		this.dateFormat = dateFormat;
+		this.timeFormat = timeFormat;
+	}
+
 
 	/**
 	 * 
@@ -69,7 +86,7 @@ public class SqlTimestampConverter extends AbstractConverter
 			locale = Locale.getDefault();
 		}
 
-		DateFormat format = DateFormat.getTimeInstance(dateFormat, locale);
+		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
 		try
 		{
 			Date date = format.parse(value);
@@ -101,7 +118,7 @@ public class SqlTimestampConverter extends AbstractConverter
 		}
 
 		Timestamp timestamp = (Timestamp)value;
-		DateFormat format = DateFormat.getTimeInstance(dateFormat, locale);
+		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
 		return format.format(timestamp);
 	}
 
