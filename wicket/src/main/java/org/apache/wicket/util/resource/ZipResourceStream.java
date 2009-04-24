@@ -20,7 +20,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -37,19 +36,14 @@ import org.slf4j.LoggerFactory;
  * An IResourceStream that ZIPs a directory's contents on the fly
  * 
  * <p>
- * <b>NOTE 1.</b> Nested directories are not supported yet, and a {@link FileNotFoundException} will
- * be thrown in that case.
- * </p>
- * 
- * <p>
- * <b>NOTE 2.</b> As a future improvement, cache a map of generated ZIP files for every directory
+ * <b>NOTE 1.</b> As a future improvement, cache a map of generated ZIP files for every directory
  * and use a Watcher to detect modifications in this directory. Using ehcache would be good for
  * that, but it's not in Wicket dependencies yet. <b>No caching of the generated ZIP files is done
  * yet.</b>
  * </p>
  * 
  * <p>
- * <b>NOTE 3.</b> As a future improvement, implement getLastModified() and request
+ * <b>NOTE 2.</b> As a future improvement, implement getLastModified() and request
  * ResourceStreamRequestTarget to generate Last-Modified and Expires HTTP headers. <b>No HTTP cache
  * headers are provided yet</b>. See WICKET-385
  * </p>
@@ -58,14 +52,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ZipResourceStream extends AbstractResourceStream
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(ZipResourceStream.class);
 
-	ByteArrayOutputStream bytearray;
+	private final ByteArrayOutputStream bytearray;
 
 	/**
 	 * Construct.
@@ -73,39 +64,21 @@ public class ZipResourceStream extends AbstractResourceStream
 	 * @param dir
 	 *            The directory where to look for files. The directory itself will not be included
 	 *            in the ZIP.
+	 * @param recursive
+	 *            If true, all subdirs will be zipped as well
 	 */
-	public ZipResourceStream(File dir)
+	public ZipResourceStream(final File dir, final boolean recursive)
 	{
+		if ((dir == null) || !dir.isDirectory())
+		{
+			throw new IllegalArgumentException("Not a directory: " + dir);
+		}
+
 		bytearray = new ByteArrayOutputStream();
 		try
 		{
-			int BUFFER = 2048;
-			BufferedInputStream origin = null;
 			ZipOutputStream out = new ZipOutputStream(bytearray);
-			byte data[] = new byte[BUFFER];
-			// get a list of files from current directory
-			String files[] = dir.list();
-
-			if (files == null)
-			{
-				throw new IllegalArgumentException("Not a directory: " + dir);
-			}
-
-			for (int i = 0; i < files.length; i++)
-			{
-				log.debug("Adding: " + files[i]);
-				FileInputStream fi = new FileInputStream(new File(dir, files[i]));
-				origin = new BufferedInputStream(fi, BUFFER);
-				ZipEntry entry = new ZipEntry(files[i]);
-				out.putNextEntry(entry);
-				int count;
-				while ((count = origin.read(data, 0, BUFFER)) != -1)
-				{
-					out.write(data, 0, count);
-				}
-				origin.close();
-			}
-			out.close();
+			zipDir(dir, out, "", recursive);
 		}
 		catch (Exception e)
 		{
@@ -113,6 +86,86 @@ public class ZipResourceStream extends AbstractResourceStream
 		}
 	}
 
+	/**
+	 * Construct. Until Wicket 1.4-RC3 recursive zip was not supported. In order not to change the
+	 * behavior, using this constructor will default to recursive == false.
+	 * 
+	 * @param dir
+	 *            The directory where to look for files. The directory itself will not be included
+	 *            in the ZIP.
+	 */
+	public ZipResourceStream(final File dir)
+	{
+		this(dir, false);
+	}
+
+	/**
+	 * Recursive method for zipping the contents of a directory including nested directories.
+	 * 
+	 * @param dir
+	 *            dir to be zipped
+	 * @param out
+	 *            ZipOutputStream to write to
+	 * @param path
+	 *            Path to nested dirs (used in resursive calls)
+	 * @param recursive
+	 *            If true, all subdirs will be zipped as well
+	 * @throws IOException
+	 */
+	private static void zipDir(final File dir, final ZipOutputStream out, final String path,
+		final boolean recursive) throws IOException
+	{
+		if (!dir.isDirectory())
+		{
+			throw new IllegalArgumentException("Not a directory: " + dir);
+		}
+
+		String[] files = dir.list();
+
+		int BUFFER = 2048;
+		BufferedInputStream origin = null;
+		byte data[] = new byte[BUFFER];
+
+		for (int i = 0; i < files.length; i++)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Adding: " + files[i]);
+			}
+
+			File f = new File(dir, files[i]);
+			if (f.isDirectory())
+			{
+				if (recursive == true)
+				{
+					zipDir(f, out, path + f.getName() + "/", recursive);
+				}
+			}
+			else
+			{
+				out.putNextEntry(new ZipEntry(path.toString() + f.getName()));
+
+				FileInputStream fi = new FileInputStream(f);
+				origin = new BufferedInputStream(fi, BUFFER);
+
+				int count;
+				while ((count = origin.read(data, 0, BUFFER)) != -1)
+				{
+					out.write(data, 0, count);
+				}
+				origin.close();
+			}
+		}
+
+		if (path.equals(""))
+		{
+			out.close();
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#close()
+	 */
 	public void close() throws IOException
 	{
 	}
@@ -126,17 +179,26 @@ public class ZipResourceStream extends AbstractResourceStream
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
+	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return new ByteArrayInputStream(bytearray.toByteArray());
 	}
 
+	/**
+	 * @see org.apache.wicket.util.resource.AbstractResourceStream#length()
+	 */
 	@Override
 	public long length()
 	{
 		return bytearray.size();
 	}
 
+	/**
+	 * @see org.apache.wicket.util.resource.AbstractResourceStream#lastModifiedTime()
+	 */
 	@Override
 	public Time lastModifiedTime()
 	{
