@@ -77,6 +77,7 @@ Wicket.Palette.moveUpHelper=function(box) {
 			if(!box.options[i-1].selected) {
 				box.insertBefore(box.options[i],box.options[i-1]);
 				dirty=true;
+				box.focus();
 			}
 		}
 	}
