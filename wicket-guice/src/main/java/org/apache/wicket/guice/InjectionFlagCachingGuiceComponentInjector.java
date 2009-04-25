@@ -80,14 +80,16 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 			Field[] currentFields = current.getDeclaredFields();
 			for (final Field field : currentFields)
 			{
-				if (field.getAnnotation(Inject.class) != null)
+				Inject injectAnnotation = field.getAnnotation(Inject.class);
+				if (injectAnnotation != null)
 				{
 					actualDoInject = true;
 					try
 					{
 						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
-								new GuiceProxyTargetLocator(field, bindingAnnotation));
+								new GuiceProxyTargetLocator(field, bindingAnnotation,
+										injectAnnotation.optional()));
 						if (!field.isAccessible())
 						{
 							field.setAccessible(true);
@@ -112,7 +114,8 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 			Method[] currentMethods = current.getDeclaredMethods();
 			for (final Method method : currentMethods)
 			{
-				if (method.getAnnotation(Inject.class) != null)
+				Inject injectAnnotation = method.getAnnotation(Inject.class);
+				if (injectAnnotation != null)
 				{
 					actualDoInject = true;
 					Annotation[][] paramAnnotations = method.getParameterAnnotations();
@@ -134,7 +137,8 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 						{
 							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
 							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
-									new GuiceProxyTargetLocator(method, i, bindingAnnotation));
+									new GuiceProxyTargetLocator(method, i, bindingAnnotation,
+											injectAnnotation.optional()));
 						}
 						catch (MoreThanOneBindingException e)
 						{

@@ -115,6 +115,7 @@ public class GuiceInjectorTest extends TestCase
 	private void doChecksForComponent(TestComponent component)
 	{
 		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
+		assertEquals(null, component.getInjectedOptionalField());
 		assertEquals(ITestService.RESULT_RED, component.getInjectedFieldRed().getString());
 		assertEquals(ITestService.RESULT_BLUE, component.getInjectedFieldBlue().getString());
 		assertEquals(ITestService.RESULT, component.getInjectedMethod().getString());

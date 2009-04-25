@@ -23,6 +23,7 @@ import org.apache.wicket.markup.MarkupStream;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 
 public class TestComponent extends Component
 {
@@ -30,6 +31,10 @@ public class TestComponent extends Component
 
 	@Inject
 	private ITestService injectedField;
+
+	@Inject(optional = true)
+	@Named("optional")
+	private String injectedOptionalField;
 
 	@Inject
 	@Red
@@ -89,6 +94,16 @@ public class TestComponent extends Component
 	public Provider<ITestService> getInjectedFieldProvider()
 	{
 		return injectedFieldProvider;
+	}
+
+	/**
+	 * Gets injectedOptionalField.
+	 * 
+	 * @return injectedOptionalField
+	 */
+	public String getInjectedOptionalField()
+	{
+		return injectedOptionalField;
 	}
 
 	public Map<String, String> getInjectedTypeLiteralField()

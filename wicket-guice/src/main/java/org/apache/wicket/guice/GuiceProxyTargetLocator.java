@@ -25,6 +25,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 
+import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
@@ -34,23 +35,28 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 	private final Annotation bindingAnnotation;
 
+	private final boolean optional;
+
 	private final String[] data;
 
 	/** index of argument in the method being injected, or -1 for field */
 	private final int argIndex;
 
-	GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation)
+	GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation, boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
+		this.optional = optional;
 		data = new String[2];
 		data[0] = field.getDeclaringClass().getName();
 		data[1] = field.getName();
 		argIndex = -1;
 	}
 
-	GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation)
+	GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation,
+			boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
+		this.optional = optional;
 		data = new String[2 + method.getParameterTypes().length];
 		data[0] = method.getDeclaringClass().getName();
 		data[1] = method.getName();
@@ -105,6 +111,16 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		{
 			key = Key.get(TypeLiteral.get(type), bindingAnnotation);
 		}
-		return holder.getInjector().getInstance(key);
+
+		Injector injector = holder.getInjector();
+
+		// if the Inject annotation is marked optional and no binding is found
+		// then skip this injection (WICKET-2241)
+		if (optional && injector.getBinding(key) == null)
+		{
+			return null;
+		}
+
+		return injector.getInstance(key);
 	}
 }

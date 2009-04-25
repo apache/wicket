@@ -104,14 +104,15 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			Field[] currentFields = current.getDeclaredFields();
 			for (final Field field : currentFields)
 			{
-				if (!Modifier.isStatic(field.getModifiers()) &&
-						field.getAnnotation(Inject.class) != null)
+				Inject injectAnnotation = field.getAnnotation(Inject.class);
+				if (!Modifier.isStatic(field.getModifiers()) && injectAnnotation != null)
 				{
 					try
 					{
 						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
-								new GuiceProxyTargetLocator(field, bindingAnnotation));
+								new GuiceProxyTargetLocator(field, bindingAnnotation,
+										injectAnnotation.optional()));
 
 						if (!field.isAccessible())
 						{
@@ -136,8 +137,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			Method[] currentMethods = current.getDeclaredMethods();
 			for (final Method method : currentMethods)
 			{
-				if (!Modifier.isStatic(method.getModifiers()) &&
-						method.getAnnotation(Inject.class) != null)
+				Inject injectAnnotation = method.getAnnotation(Inject.class);
+				if (!Modifier.isStatic(method.getModifiers()) && injectAnnotation != null)
 				{
 					Annotation[][] paramAnnotations = method.getParameterAnnotations();
 					Class< ? >[] paramTypes = method.getParameterTypes();
@@ -158,7 +159,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 						{
 							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
 							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
-									new GuiceProxyTargetLocator(method, i, bindingAnnotation));
+									new GuiceProxyTargetLocator(method, i, bindingAnnotation,
+											injectAnnotation.optional()));
 						}
 						catch (MoreThanOneBindingException e)
 						{
