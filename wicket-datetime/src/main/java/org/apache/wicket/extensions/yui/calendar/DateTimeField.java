@@ -36,8 +36,6 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
 import org.apache.wicket.util.lang.EnumeratedType;
-import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.validator.NumberValidator;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
@@ -45,10 +43,10 @@ import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a
- * field for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours
- * field depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the
- * visibility of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
+ * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a field
+ * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
+ * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
+ * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -228,14 +226,15 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 */
 	public void setDate(Date date)
 	{
-		if (date == null) {
+		if (date == null)
+		{
 			this.date = null;
 			setDefaultModelObject(null);
 			setHours(null);
 			setMinutes(null);
 			return;
 		}
-		
+
 		this.date = new MutableDateTime(date);
 		setDefaultModelObject(date);
 
@@ -474,47 +473,29 @@ public class DateTimeField extends FormComponentPanel<Date>
 
 	/**
 	 * Validator for the {@link DateTimeField}'s hours field. Behaves like
-	 * <code>RangeValidator</code>, with a flexible maximum value.
+	 * <code>RangeValidator</code>, setting appropriate range according to
+	 * {@link DateTimeField#getMaximumHours()}
 	 * 
 	 * @see DateTimeField#getMaximumHours()
 	 * @author Gerolf Seitz
 	 */
-	private class HoursValidator extends NumberValidator
+	private class HoursValidator extends RangeValidator<Integer>
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
+		 * Constructor
 		 */
-		@Override
-		protected void onValidate(IValidatable validatable)
+		public HoursValidator()
 		{
-			Number value = (Number)validatable.getValue();
-			if (value.longValue() < 0 || value.longValue() > getMaximumHours())
+			if (getMaximumHours() == 24)
 			{
-				error(validatable);
+				setRange(0, 23);
 			}
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
-		 */
-		@Override
-		protected Map variablesMap(IValidatable validatable)
-		{
-			final Map map = super.variablesMap(validatable);
-			map.put("minimum", new Long(0));
-			map.put("maximum", new Long(getMaximumHours()));
-			return map;
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey()
-		 */
-		@Override
-		protected String resourceKey()
-		{
-			return "NumberValidator.range";
+			else
+			{
+				setRange(1, 12);
+			}
 		}
 	}
 }
