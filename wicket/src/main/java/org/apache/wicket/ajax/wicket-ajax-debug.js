@@ -110,7 +110,7 @@ var WicketAjaxDebug = {
 					"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 14em; cursor: move;'>"+
 					"				Wicket Ajax Debug Window (drag me here)"+
 					"			</div>"+
-					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; color: black; overflow: auto; white-space: nowrap'>"+
+					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; color: black; overflow: auto; white-space: nowrap; text-align:left;'>"+
 					"			</div>"+
 					"           <div style='height: 10px; margin:0px; padding:0px;overflow:hidden;'>"+
 					"              <div style='height: 10px; width: 10px; background-color: gray; margin:0px; padding: 0px;overflow:hidden; float:right; cursor: nw-resize' id='" + WicketAjaxDebug.debugWindowResizeHandleId + "'>"+
