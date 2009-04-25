@@ -18,9 +18,11 @@ package org.apache.wicket.settings;
 
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 
 
 /**
@@ -89,6 +91,12 @@ public interface IPageSettings
 	 * safe. When the client does not support cookies, support gets tricky and incomplete. See
 	 * {@link WebPage}'s internals for the implementation. </strong>
 	 * </p>
+	 * 
+	 * NOTE:
+	 * 
+	 * When Wicket is used with {@link SecondLevelCacheSessionStore}, this store may disable this
+	 * feature. See the javadoc of the second level store for details. This feature can be reenabled
+	 * by calling this method from {@link Application#init}
 	 * 
 	 * @param automaticMultiWindowSupport
 	 *            Whether Wicket should try to support multiple windows transparently
