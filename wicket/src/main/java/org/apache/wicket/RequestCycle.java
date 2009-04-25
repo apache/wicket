@@ -890,7 +890,8 @@ public abstract class RequestCycle
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		final IRequestTarget target;
-		if (listener != IRedirectListener.INTERFACE && component.isStateless() &&
+		if ((listener != IRedirectListener.INTERFACE) &&
+			(listener != IResourceListener.INTERFACE) && component.isStateless() &&
 			page.isBookmarkable() && page.getStatelessHint())
 		{
 			PageParameters pageParameters = page.getPageParameters();
