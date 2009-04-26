@@ -133,19 +133,8 @@ public class WicketSessionFilter implements Filter
 					getClass().getName());
 		}
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("filterName/ application key set to " + filterName);
-		}
+		log.debug("filterName/ application key set to {}", filterName);
 
-		WebApplication application = (WebApplication)Application.get(filterName);
-		sessionKey = application.getSessionAttributePrefix(null, filterName) +
-			Session.SESSION_ATTRIBUTE_NAME;
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("will use " + sessionKey + " as the session key to get the Wicket session");
-		}
 	}
 
 	/**
@@ -159,6 +148,15 @@ public class WicketSessionFilter implements Filter
 		HttpSession httpSession = httpServletRequest.getSession(false);
 		if (httpSession != null)
 		{
+			if (sessionKey == null)
+			{
+				WebApplication application = (WebApplication)Application.get(filterName);
+				sessionKey = application.getSessionAttributePrefix(null, filterName) +
+					Session.SESSION_ATTRIBUTE_NAME;
+
+				log.debug("will use {} as the session key to get the Wicket session", sessionKey);
+			}
+
 			Session session = (Session)httpSession.getAttribute(sessionKey);
 			if (session != null)
 			{
@@ -184,11 +182,8 @@ public class WicketSessionFilter implements Filter
 		}
 		else
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("could not set Wicket session: no http session was created yet for " +
-					httpServletRequest.getContextPath() + "," + httpServletRequest.getServerName());
-			}
+			log.debug("could not set Wicket session: no http session was created yet for {},{}",
+				httpServletRequest.getContextPath(), httpServletRequest.getServerName());
 		}
 
 		try
