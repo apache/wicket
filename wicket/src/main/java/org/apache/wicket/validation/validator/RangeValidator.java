@@ -31,8 +31,8 @@ import org.apache.wicket.validation.ValidationError;
 public class RangeValidator<Z extends Comparable<Z> & Serializable> implements IValidator<Z>
 {
 	private static final long serialVersionUID = 1L;
-	private final Z minimum;
-	private final Z maximum;
+	private Z minimum;
+	private Z maximum;
 
 	/**
 	 * Constructor that sets the minimum and maximum values.
@@ -44,11 +44,30 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> implements I
 	 */
 	public RangeValidator(Z minimum, Z maximum)
 	{
-		this.minimum = minimum;
-		this.maximum = maximum;
-
+		setRange(minimum, maximum);
 	}
 
+	/**
+	 * Constructor used for subclasses who want to set the range using
+	 * {@link #setRange(Comparable, Comparable)}
+	 */
+	protected RangeValidator()
+	{
+	}
+
+	/**
+	 * Sets validator range
+	 * 
+	 * @param minimum
+	 * @param maximum
+	 */
+	protected final void setRange(Z minimum, Z maximum)
+	{
+		this.minimum = minimum;
+		this.maximum = maximum;
+	}
+
+	/** {@inheritDoc} */
 	public void validate(IValidatable<Z> validatable)
 	{
 		Z value = validatable.getValue();
