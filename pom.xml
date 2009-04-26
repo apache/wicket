@@ -262,13 +262,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket</artifactId>
-				<version>${project.version}</version>
-				<type>jar</type>
-				<classifier>tests</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
