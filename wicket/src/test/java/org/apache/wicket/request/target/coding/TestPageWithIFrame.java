@@ -30,7 +30,11 @@ public class TestPageWithIFrame extends WebPage
 
 	private static final Logger log = LoggerFactory.getLogger(TestPageWithIFrame.class);
 
-	static class TestFrame extends WebMarkupContainer implements IResourceListener
+	public static final String resourceText = "foobar - do nada nothing njet";
+
+	public String resourceContent;
+
+	class TestFrame extends WebMarkupContainer implements IResourceListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -49,7 +53,8 @@ public class TestPageWithIFrame extends WebPage
 
 		public void onResourceRequested()
 		{
-			log.info("foobar - do nada nothing njet");
+			resourceContent = resourceText;
+			log.info(resourceContent);
 		}
 	}
 

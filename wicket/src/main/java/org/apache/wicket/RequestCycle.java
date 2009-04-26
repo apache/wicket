@@ -120,7 +120,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
+ * <th align = "left">Class</th>
+ * <th align = "left">Interface</th>
+ * <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -890,8 +892,7 @@ public abstract class RequestCycle
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		final IRequestTarget target;
-		if ((listener != IRedirectListener.INTERFACE) &&
-			(listener != IResourceListener.INTERFACE) && component.isStateless() &&
+		if ((listener != IRedirectListener.INTERFACE) && component.isStateless() &&
 			page.isBookmarkable() && page.getStatelessHint())
 		{
 			PageParameters pageParameters = page.getPageParameters();

@@ -18,6 +18,7 @@ package org.apache.wicket.request.target.coding;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * @author jcompagner
@@ -27,15 +28,53 @@ public class IndexParamWithStatelessIFrameTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testIndexedUrlMountedPageWithComponentThatUsesUrlForResourceListener()
+	public void testIndexedUrlMountedPageWithComponentThatUsesUrlForResourceListener1()
 		throws Exception
+	{
+		execTest(true);
+		fail("test");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testIndexedUrlMountedPageWithComponentThatUsesUrlForResourceListener2()
+		throws Exception
+	{
+		execTest(false);
+	}
+
+	/**
+	 * @param stateless
+	 * @throws Exception
+	 */
+	public void execTest(boolean stateless) throws Exception
 	{
 		tester.getApplication().mount(
 			new IndexedParamUrlCodingStrategy("/test", TestPageWithIFrame.class));
 		TestPageWithIFrame test = new TestPageWithIFrame(new PageParameters("0=foo,1=bar"));
+		test.setStatelessHint(stateless);
 		tester.startPage(test);
 		tester.assertRenderedPage(TestPageWithIFrame.class);
 		tester.assertNoErrorMessage();
-		tester.assertContains("src=\"test/wicket:interface/:0:frame::IResourceListener::\"");
+		String doc = tester.getServletResponse().getDocument();
+		if (stateless == true)
+		{
+			tester.assertContains("src=\"test/wicket:interface/:0:frame::IResourceListener::\"");
+		}
+		else
+		{
+			tester.assertContains("src=\"\\?wicket:interface=:0:frame::IResourceListener::\"");
+		}
+
+		// TODO the URL generated doesn't work for stateless pages. The page information is missing
+		if (stateless == false)
+		{
+			WebRequestCycle cycle = tester.setupRequestAndResponse();
+			tester.getServletRequest()
+				.setURL("test/wicket:interface/:0:frame::IResourceListener::");
+			tester.processRequestCycle(cycle);
+			assertEquals(test.resourceContent, TestPageWithIFrame.resourceText);
+		}
 	}
 }
