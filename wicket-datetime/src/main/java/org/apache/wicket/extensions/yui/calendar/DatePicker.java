@@ -187,12 +187,30 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
+	 * Controls whether or not datepicker will contribute YUI libraries to the page as part of its
+	 * rendering lifecycle.
+	 * 
+	 * There may be cases when the user wants to use their own version of YUI contribution code, in
+	 * those cases this method should be overridden to return <code>false</code>.
+	 * 
+	 * @return
+	 */
+	protected boolean includeYUILibraries()
+	{
+		return true;
+	}
+
+	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		YuiLib.load(response);
+		if (includeYUILibraries())
+		{
+			YuiLib.load(response);
+		}
+
 		// variables for the initialization script
 		Map<String, Object> variables = new HashMap<String, Object>();
 		String widgetId = getEscapedComponentMarkupId();
