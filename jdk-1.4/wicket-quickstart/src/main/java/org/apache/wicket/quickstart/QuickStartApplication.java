@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.quickstart;
 
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +47,7 @@ public class QuickStartApplication extends WebApplication
 	 */
 	public Class getHomePage()
 	{
-		return TestPage.class;
+		return Index.class;
 	}
 
 	/**
@@ -53,5 +56,14 @@ public class QuickStartApplication extends WebApplication
 	protected void init()
 	{
 		// put any configuration here
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 *      org.apache.wicket.Response)
+	 */
+	public Session newSession(Request request, Response response)
+	{
+		return new QuickStartSession(this, request);
 	}
 }
