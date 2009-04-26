@@ -57,11 +57,10 @@ import org.slf4j.LoggerFactory;
  * holds the Page. So {@link Component#getSession()} traverses the component hierarchy to the root
  * Page and then calls {@link Page#getSession()}.
  * 
- * <li><b>Access via Thread Local </b>- In the odd case where neither a RequestCycle nor a
- * Component is available, the currently active Session for the calling thread can be retrieved by
- * calling the static method Session.get(). This last form should only be used if the first two
- * forms cannot be used since thread local access can involve a potentially more expensive hash map
- * lookup.
+ * <li><b>Access via Thread Local </b>- In the odd case where neither a RequestCycle nor a Component
+ * is available, the currently active Session for the calling thread can be retrieved by calling the
+ * static method Session.get(). This last form should only be used if the first two forms cannot be
+ * used since thread local access can involve a potentially more expensive hash map lookup.
  * 
  * <li><b>Locale </b>- A session has a Locale property to support localization. The Locale for a
  * session can be set by calling {@link Session#setLocale(Locale)}. The Locale for a Session
@@ -103,9 +102,9 @@ import org.slf4j.LoggerFactory;
  * <li><b>Removal </b>- Pages can be removed from the Session forcibly by calling remove(Page) or
  * removeAll(), although such an action should rarely be necessary.
  * 
- * <li><b>Flash Messages</b>- Flash messages are messages that are stored in session and are
- * removed after they are displayed to the user. Session acts as a store for these messages because
- * they can last across requests.
+ * <li><b>Flash Messages</b>- Flash messages are messages that are stored in session and are removed
+ * after they are displayed to the user. Session acts as a store for these messages because they can
+ * last across requests.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -388,8 +387,8 @@ public abstract class Session implements IClusterable
 	 * <p>
 	 * By calling this method, the session will be bound (made not-temporary) if it was not bound
 	 * yet. It is useful for cases where you want to be absolutely sure this session object will be
-	 * available in next requests. If the session was already bound ({@link ISessionStore#lookup(Request) returns a session}),
-	 * this call will be a noop.
+	 * available in next requests. If the session was already bound (
+	 * {@link ISessionStore#lookup(Request) returns a session}), this call will be a noop.
 	 * </p>
 	 */
 	public final void bind()
@@ -1367,6 +1366,7 @@ public abstract class Session implements IClusterable
 			for (int i = 0; i < touchedPages.size(); i++)
 			{
 				Page page = (Page)touchedPages.get(i);
+				page.detach();
 				page.getPageMap().put(page);
 				dirty = true;
 			}
