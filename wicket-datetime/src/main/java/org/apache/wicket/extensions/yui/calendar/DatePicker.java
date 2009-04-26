@@ -74,6 +74,7 @@ import org.joda.time.DateTime;
 public class DatePicker extends AbstractBehavior implements IHeaderContributor
 {
 	private static Method GETINSTANCEMETHOD = null;
+
 	static
 	{
 		try
@@ -222,8 +223,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("hideOnSelect", hideOnSelect());
 		// variables for YUILoader
 		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().urlFor(YUI)));
-		variables.put("wicketDatePath", Strings.stripJSessionId(RequestCycle.get().urlFor(
-				WICKET_DATE)));
+		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE));
 		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
 		{
 			variables.put("filter", "filter: \"RAW\",");
