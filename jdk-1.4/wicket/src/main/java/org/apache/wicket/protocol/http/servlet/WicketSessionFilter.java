@@ -138,13 +138,7 @@ public class WicketSessionFilter implements Filter
 			log.debug("filterName/ application key set to " + filterName);
 		}
 
-		WebApplication application = (WebApplication)Application.get(filterName);
-		sessionKey = application.getSessionAttributePrefix(null) + Session.SESSION_ATTRIBUTE_NAME;
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("will use " + sessionKey + " as the session key to get the Wicket session");
-		}
 	}
 
 	/**
@@ -158,6 +152,19 @@ public class WicketSessionFilter implements Filter
 		HttpSession httpSession = httpServletRequest.getSession(false);
 		if (httpSession != null)
 		{
+			if (sessionKey == null)
+			{
+				WebApplication application = (WebApplication)Application.get(filterName);
+				sessionKey = application.getSessionAttributePrefix(null) +
+					Session.SESSION_ATTRIBUTE_NAME;
+
+				if (log.isDebugEnabled())
+				{
+					log.debug("will use " + sessionKey +
+						" as the session key to get the Wicket session");
+				}
+			}
+
 			Session session = (Session)httpSession.getAttribute(sessionKey);
 			if (session != null)
 			{
