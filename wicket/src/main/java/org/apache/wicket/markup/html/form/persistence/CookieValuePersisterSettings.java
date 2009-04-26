@@ -23,6 +23,8 @@ import org.apache.wicket.IClusterable;
  * creates cookies.
  * 
  * @author Juergen Donnerstag
+ * 
+ * @TODO rename to CookieDefaultValues in 1.5
  */
 public class CookieValuePersisterSettings implements IClusterable
 {

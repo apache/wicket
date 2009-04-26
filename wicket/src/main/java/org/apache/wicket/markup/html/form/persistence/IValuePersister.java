@@ -29,30 +29,58 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
+ * 
+ * @deprecated remove in 1.5
  */
+@Deprecated
 public interface IValuePersister extends IClusterable
 {
 	/**
-	 * Saves the current value of the given form component
+	 * Saves the key/value pair
 	 * 
-	 * @param component
-	 *            The form component
+	 * @param key
+	 *            The key to identify the entry
+	 * @param value
+	 *            The value
 	 */
-	void save(FormComponent<?> component);
+	void save(String key, String value);
 
 	/**
-	 * Loads any persisted value for a given form component
+	 * Convenience method for FormComponent. key defaults to formComponent.getPageRelativePath() and
+	 * value to formComponent.getDefaultModelAsString()
 	 * 
-	 * @param component
-	 *            The form component
+	 * @param formComponent
 	 */
-	void load(FormComponent<?> component);
+	void save(FormComponent<?> formComponent);
 
 	/**
-	 * Remove any persisted value for a given form component.
+	 * Retrieve the key from the persistence store
 	 * 
-	 * @param component
-	 *            The form component
+	 * @param key
+	 *            The key to identify the entry
+	 * @return The loaded value
 	 */
-	void clear(FormComponent<?> component);
+	String load(String key);
+
+	/**
+	 * Retrieve the persisted value and if found update the form components model
+	 * 
+	 * @param formComponent
+	 */
+	void load(FormComponent<?> formComponent);
+
+	/**
+	 * Remove the key/value pair
+	 * 
+	 * @param key
+	 *            The key to identify the entry
+	 */
+	void clear(String key);
+
+	/**
+	 * Remove the key/value associated witht the formComponent
+	 * 
+	 * @param formComponent
+	 */
+	void clear(FormComponent<?> formComponent);
 }

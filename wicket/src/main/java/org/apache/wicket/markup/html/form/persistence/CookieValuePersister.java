@@ -29,10 +29,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class implements IValuePersister by means of HTTP cookies.
+ * Helper class to simplify Cookie handling in combination with Wicket
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
+ * 
+ * @TODO rename to CookieUtils and move into util package in 1.5 (WICKET-2213)
  */
 public class CookieValuePersister implements IValuePersister
 {
@@ -41,12 +43,32 @@ public class CookieValuePersister implements IValuePersister
 	/** Logging */
 	private final static Logger log = LoggerFactory.getLogger(CookieValuePersister.class);
 
+	private final CookieValuePersisterSettings settings;
+
 	/**
-	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#clear(org.apache.wicket.markup.html.form.FormComponent)
+	 * Construct.
 	 */
-	public void clear(final FormComponent<?> component)
+	public CookieValuePersister()
 	{
-		final Cookie cookie = getCookie(component);
+		settings = new CookieValuePersisterSettings();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param settings
+	 */
+	public CookieValuePersister(final CookieValuePersisterSettings settings)
+	{
+		this.settings = settings;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#clear(String)
+	 */
+	public void clear(final String key)
+	{
+		final Cookie cookie = getCookie(getSaveKey(key));
 		if (cookie != null)
 		{
 			clear(cookie);
@@ -54,63 +76,89 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#load(org.apache.wicket.markup.html.form.FormComponent)
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#clear(org.apache.wicket.markup.html.form.FormComponent)
 	 */
-	public void load(final FormComponent<?> component)
+	public void clear(FormComponent<?> formComponent)
 	{
-		final Cookie cookie = getCookie(component);
+		clear(formComponent.getPageRelativePath());
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#load(String)
+	 */
+	public String load(final String key)
+	{
+		final Cookie cookie = getCookie(getSaveKey(key));
 		if (cookie != null)
 		{
-			final String value = cookie.getValue();
-			if (value != null)
-			{
-				// Assign the retrieved/persisted value to the component
-				component.setModelValue(value.split(FormComponent.VALUE_SEPARATOR));
+			return cookie.getValue();
+		}
+		return null;
+	}
 
-				if (log.isDebugEnabled())
-				{
-					log.debug("Cookie value successfully transferred into Component: " + component);
-				}
-			}
+	/**
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#load(org.apache.wicket.markup.html.form.FormComponent)
+	 */
+	public void load(FormComponent<?> formComponent)
+	{
+		String value = load(formComponent.getPageRelativePath());
+		if (value != null)
+		{
+			// Assign the retrieved/persisted value to the component
+			formComponent.setModelValue(value.split(FormComponent.VALUE_SEPARATOR));
+			// formComponent.setModelValue(new String[] { value });
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#save(org.apache.wicket.markup.html.form.FormComponent)
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#save(String, String)
 	 */
-	public void save(final FormComponent<?> component)
+	public void save(String key, final String value)
 	{
-		final String name = getName(component);
-		final String value = component.getValue();
-
-		Cookie cookie = getCookie(component);
+		key = getSaveKey(key);
+		Cookie cookie = getCookie(key);
 		if (cookie == null)
 		{
-			cookie = new Cookie(name, value == null ? "" : value);
+			cookie = new Cookie(key, value == null ? "" : value);
 		}
 		else
 		{
-			cookie.setValue(value == null ? "" : value);
+			cookie.setValue(key == null ? "" : value);
 		}
 		cookie.setSecure(false);
-		cookie.setMaxAge(getSettings().getMaxAge());
+		cookie.setMaxAge(settings.getMaxAge());
 
 		save(cookie);
 	}
 
 	/**
-	 * @param component
-	 *            Component to get name for
-	 * @return The name of the component.
+	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#save(org.apache.wicket.markup.html.form.FormComponent)
 	 */
-	protected String getName(final FormComponent<?> component)
+	public void save(FormComponent<?> formComponent)
 	{
-		String name = component.getPageRelativePath();
-		// cookie names cannot contian ':',
+		save(formComponent.getPageRelativePath(), formComponent.getValue());
+		// save(formComponent.getPageRelativePath(), formComponent.getDefaultModelObjectAsString());
+	}
+
+	/**
+	 * Make sure the 'key' does not contain any illegal chars. For cookies ':' is not allowed.
+	 * 
+	 * @param key
+	 *            The key to be validated
+	 * @return The save key
+	 */
+	protected String getSaveKey(String key)
+	{
+		if (Strings.isEmpty(key))
+		{
+			throw new IllegalArgumentException("A Cookie name can not be null or empty");
+		}
+
+		// cookie names cannot contain ':',
 		// we replace ':' with '.' but first we have to encode '.' as '..'
-		name = name.replace(".", "..");
-		name = name.replace(":", ".");
-		return name;
+		key = key.replace(".", "..");
+		key = key.replace(":", ".");
+		return key;
 	}
 
 	/**
@@ -138,61 +186,6 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Gets debug info as a string for the given cookie.
-	 * 
-	 * @param cookie
-	 *            the cookie to debug.
-	 * @return a string that represents the internals of the cookie.
-	 */
-	private String cookieToDebugString(final Cookie cookie)
-	{
-		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
-			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
-	}
-
-	/**
-	 * Gets the cookie for a given persistent form component. The name of the cookie will be the
-	 * component's page relative path (@see
-	 * org.apache.wicket.markup.html.form.FormComponent#getPageRelativePath()). Be reminded that
-	 * only if the cookie data have been provided by the client (browser), they'll be accessible by
-	 * the server.
-	 * 
-	 * @param component
-	 *            The form component
-	 * @return The cookie for the component or null if none is available
-	 */
-	private Cookie getCookie(final FormComponent<?> component)
-	{
-		// Gets the cookie's name
-		final String name = getName(component);
-
-		// Get the cookie attached to the Request by the client browser
-		Cookie cookie = getCookie(name);
-		if (cookie != null)
-		{
-			// cookie with no value do me no good!
-			if (cookie.getValue() != null && cookie.getValue().length() > 0)
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Found cookie: " + cookieToDebugString(cookie) + "; request URI=" +
-						getWebRequest().getHttpServletRequest().getRequestURI());
-				}
-				return cookie;
-			}
-			else
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Found cookie " + name + ", but it had no value; returning null");
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Gets any cookies for request.
 	 * 
 	 * @param name
@@ -200,7 +193,7 @@ public class CookieValuePersister implements IValuePersister
 	 * 
 	 * @return Any cookies for this request
 	 */
-	private Cookie getCookie(String name)
+	private Cookie getCookie(final String name)
 	{
 		try
 		{
@@ -230,16 +223,49 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Persister defaults are maintained centrally by the Application.
+	 * Persist/save the data using Cookies.
 	 * 
-	 * @return Persister default value
+	 * @param cookie
+	 *            The Cookie to be persisted.
+	 * @return The cookie provided
 	 */
-	private CookieValuePersisterSettings getSettings()
+	private Cookie save(final Cookie cookie)
 	{
-		return RequestCycle.get()
-			.getApplication()
-			.getSecuritySettings()
-			.getCookieValuePersisterSettings();
+		if (cookie == null)
+		{
+			return null;
+		}
+
+		final String comment = settings.getComment();
+		if (comment != null)
+		{
+			cookie.setComment(comment);
+		}
+
+		final String domain = settings.getDomain();
+		if (domain != null)
+		{
+			cookie.setDomain(domain);
+		}
+
+		String path = getWebRequest().getHttpServletRequest().getContextPath();
+		if (Strings.isEmpty(path))
+		{
+			path = "/";
+		}
+		cookie.setPath(path);
+		cookie.setVersion(settings.getVersion());
+		cookie.setSecure(settings.getSecure());
+
+		getWebResponse().addCookie(cookie);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("Cookie saved: " + cookieToDebugString(cookie) + "; request URI=" +
+				getWebRequest().getHttpServletRequest().getRequestURI());
+		}
+
+		return cookie;
 	}
 
 	/**
@@ -263,50 +289,16 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Persist/save the data using Cookies.
+	 * Gets debug info as a string for the given cookie.
 	 * 
 	 * @param cookie
-	 *            The Cookie to be persisted.
-	 * @return The cookie provided
+	 *            the cookie to debug.
+	 * @return a string that represents the internals of the cookie.
 	 */
-	private Cookie save(final Cookie cookie)
+	private String cookieToDebugString(final Cookie cookie)
 	{
-		if (cookie == null)
-		{
-			return null;
-		}
-		else
-		{
-			final String comment = getSettings().getComment();
-			if (comment != null)
-			{
-				cookie.setComment(comment);
-			}
-
-			final String domain = getSettings().getDomain();
-			if (domain != null)
-			{
-				cookie.setDomain(domain);
-			}
-
-			String path = getWebRequest().getHttpServletRequest().getContextPath();
-			if (Strings.isEmpty(path))
-			{
-				path = "/";
-			}
-			cookie.setPath(path);
-			cookie.setVersion(getSettings().getVersion());
-			cookie.setSecure(getSettings().getSecure());
-
-			getWebResponse().addCookie(cookie);
-
-			if (log.isDebugEnabled())
-			{
-				log.debug("Cookie saved: " + cookieToDebugString(cookie) + "; request URI=" +
-					getWebRequest().getHttpServletRequest().getRequestURI());
-			}
-
-			return cookie;
-		}
+		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
+			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
+			Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 }
