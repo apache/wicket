@@ -135,6 +135,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             	    hideAutoComplete();
                 	return killEvent(event);
                		break;
+                case KEY_TAB:
                 case KEY_ENTER:
                     if(selected > -1) {
                         var value = getSelectedValue();
@@ -162,10 +163,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
         obj.onkeyup=function(event){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
+            	case KEY_TAB:
                 case KEY_ENTER:
 	                return killEvent(event);
-	            case KEY_TAB:
-	                break;
                 case KEY_UP:
                 case KEY_DOWN:
                 case KEY_ESC:
