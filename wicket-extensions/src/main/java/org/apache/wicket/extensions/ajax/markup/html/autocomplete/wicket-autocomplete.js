@@ -98,6 +98,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
       	
       	obj.onfocus=function(event){
+			if (mouseactive==1) return killEvent(event);
             if (cfg.showListOnFocusGain) {
                 if (cfg.showCompleteListOnFocusGain) {
                     updateChoices(true);
