@@ -48,6 +48,16 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
+		renderAutocompleteHead(response);
+	}
+
+	/**
+	 * Render autocomplete init javascript and other head contributions
+	 * 
+	 * @param response
+	 */
+	private void renderAutocompleteHead(IHeaderResponse response)
+	{
 		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
 
@@ -73,7 +83,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
 		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
 		sb.append(",showListOnEmptyInput: ").append(settings.getShowListOnEmptyInput());
-        sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
+		sb.append(",showListOnFocusGain: ").append(settings.getShowListOnFocusGain());
 		sb.append(",showCompleteListOnFocusGain: ").append(
 			settings.getShowCompleteListOnFocusGain());
 		if (settings.getCssClassName() != null)
