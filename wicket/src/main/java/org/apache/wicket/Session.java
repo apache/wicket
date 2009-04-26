@@ -1399,6 +1399,7 @@ public abstract class Session implements IClusterable
 			for (int i = 0; i < touchedPages.size(); i++)
 			{
 				Page page = touchedPages.get(i);
+				// page must be detached before it gets stored
 				page.detach();
 				page.getPageMap().put(page);
 				dirty = true;
