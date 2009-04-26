@@ -32,7 +32,6 @@ public class IndexParamWithStatelessIFrameTest extends WicketTestCase
 		throws Exception
 	{
 		execTest(true);
-		fail("test");
 	}
 
 	/**
