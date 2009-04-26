@@ -1,5 +1,75 @@
 This file contains the changes done to the 1.3.x releases since 1.3-final.
 
+Release Notes - Wicket - Version 1.3.6
+
+** Bug
+    * [WICKET-693] - What to do with the wicket dtd?
+    * [WICKET-1403] - Reinjection fails after Server restart
+    * [WICKET-1483] - Unusual ClassCastException (SimpleAttributeModifier to IBehaviorListener) processing onError.
+    * [WICKET-1504] - AutoCompleteTextField - javascript error "type mismatch" in line 227 in IE
+    * [WICKET-1567] - AutoLinkResolver does not work with <a href="#internal">Internal link</a>
+    * [WICKET-1605] - onclick is null or not an object in IE6, IE7; Form.appendDefaultButtonField
+    * [WICKET-1619] - PagingNavigator.setEnabled(false) doesn't work 
+    * [WICKET-1689] - style resources not looked up correctly in markup inheritance
+    * [WICKET-1781] - ParentResourceEscapePathTest fails on OS X using cmd line maven
+    * [WICKET-1855] - Using an AjaxSubmitLink outside of a Form does not set the form property
+    * [WICKET-1864] - MockHttpServletRequest does not support absolute redirection URLs.
+    * [WICKET-1868] - i18n package resource resolving depends too much on available locale
+    * [WICKET-1871] - org.apache.wicket.util.string.Strings#stripJSessionId StringIndexOutOfBoundsException
+    * [WICKET-1886] - WicketTester Cookie handling
+    * [WICKET-1890] - Palette.onBeforeRender() throws IllegalArgumentException in cases when Palette is invisible.
+    * [WICKET-1901] - Spelling error in fonts list in CaptchaImageResource
+    * [WICKET-1903] - RadioChoice disable certain choice bug
+    * [WICKET-1904] - CheckBox incorrectly converts its model value when a custom Boolean converter is installed - again
+    * [WICKET-1906] - AutocompleteTextField throws javascript error Object Required
+    * [WICKET-1909] - Wrong translation for StringValidator.range in Application_pl.properties 
+    * [WICKET-1914] - Form.appendDefaultButtonField produces invalid JavaScript if Ajax is disabled
+    * [WICKET-1915] - wicket:message sometimes broken
+    * [WICKET-1930] - FileUpload.writeToTempFile uses field Id as filename - Windows doesn't support some characters
+    * [WICKET-1943] - Wicket is changing the HTML within an input tag, autocomplete attribute from off to false
+    * [WICKET-1955] - Error about misplaced <wicket:head> very uninformative and incorrect
+    * [WICKET-1959] - PropertyResolver causes memory leaks with proxies
+    * [WICKET-1970] - package goal does not work , com.thoughtworks.xstream.converters.enums.EnumMapConverter issue
+    * [WICKET-1998] - setResponsePage redirects to wrong url
+    * [WICKET-2006] - The page set by setReponsePage does not process its own response.
+    * [WICKET-2037] - Should adding AJAX behaviour to a page make it stateful? 
+    * [WICKET-2038] - Missing redirects in AjaxPagingNavigationLink and AjaxPagingNavigationIncrementLink
+    * [WICKET-2048] - HtmlProblemFinder documentation bug
+    * [WICKET-2077] - SerializationChecker issue
+    * [WICKET-2079] - Component Use Check always fails for visible components inside an invisible border body
+    * [WICKET-2087] - typo in SpringBeanLocator.java
+    * [WICKET-2091] - Error feedback is hidden by lower level messages
+    * [WICKET-2095] - error in modal.js wrong use of typeof
+    * [WICKET-2096] - MultiFileUploadField.js can't find file input when serving pages as XHTML
+    * [WICKET-2100] - DynamicImageResouce blocks loading of AjaxLazyLoadPanel
+    * [WICKET-2109] - IResourceStream.close is not called by ResourceStreamRequestTarget
+    * [WICKET-2130] - Pages stored in Session.touchedPages aren't detached when part of ModalWindow
+    * [WICKET-2131] - RequestCycle.urlFor does not escape & properly
+    * [WICKET-2140] - FormComponentPanel should not add a name attribute
+    * [WICKET-2142] - Getting live sessions from RequestLogger results in NPE
+    * [WICKET-2150] - Wizard executes onSubmit() of wrong nested form
+    * [WICKET-2151] - WicketSessionFilter doesn't takes into account WebApplication#getSessionAttributePrefix(WebRequest)
+    * [WICKET-2154] - ServletWebRequest#getURL does not return relative URLs
+    * [WICKET-2156] - StringResourceModel's Localizer cannot be overwritten
+    * [WICKET-2191] - WebApplication is not thread-safe
+    * [WICKET-2234] - typo in pom.xml
+    * [WICKET-2236] - Palette problem in IE7 Problem
+    * [WICKET-2243] - WicketSessionFilter assumes that the WicketFilter has already been inited
+
+** Improvement
+    * [WICKET-1895] - AjaxButton should have a constructor to set the label
+    * [WICKET-1921] - Add an extension of AutoCompleteTextField which includes default css
+    * [WICKET-1965] - Remove final from MarkupCache#clear()
+    * [WICKET-1984] - MarkupContainer's add(final Component child) does not initially check for a child null reference 
+    * [WICKET-1986] - MarkupContainer's addOrReplace(final Component child) does not initially check for a child null reference
+    * [WICKET-2072] - Allow for maps in the widgetProperties
+    * [WICKET-2090] - Need reliable hook for storing/restoring data to/from page metadata that is tes compatbile
+    * [WICKET-2111] - Ability to generate markup ids in alternate fashion
+    * [WICKET-2160] - application_nl.properties is outdated
+
+** New Feature
+    * [WICKET-1900] - Implement isEscapeLabalMarkup for RadioChoice
+
 Release Notes - Wicket - Version 1.3.5
 
 ** Sub-task

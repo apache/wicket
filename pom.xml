@@ -23,7 +23,7 @@
 
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3.6</version>
 	<packaging>pom</packaging>
 
 	<name>Wicket Parent</name>
@@ -279,9 +279,9 @@
 	</ciManagement>
 
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/trunk</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/trunk</developerConnection>
-		<url>http://svn.apache.org/viewvc/wicket/trunk</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/wicket-1.3.6</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/wicket-1.3.6</developerConnection>
+		<url>http://svn.apache.org/viewvc/wicket/releases/wicket-1.3.6</url>
 	</scm>
 
 	<mailingLists>
