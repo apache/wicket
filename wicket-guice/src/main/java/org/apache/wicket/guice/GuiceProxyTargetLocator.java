@@ -116,9 +116,21 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 		// if the Inject annotation is marked optional and no binding is found
 		// then skip this injection (WICKET-2241)
-		if (optional && injector.getBinding(key) == null)
+		if (optional)
 		{
-			return null;
+			// Guice 2.0 throws a ConfigurationException if no binding is find while 1.0 simply
+			// returns null.
+			try
+			{
+				if (injector.getBinding(key) == null)
+				{
+					return null;
+				}
+			}
+			catch (RuntimeException e)
+			{
+				return null;
+			}
 		}
 
 		return injector.getInstance(key);
