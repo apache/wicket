@@ -44,7 +44,7 @@ public class StyleDateConverter extends DateConverter
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Date style to use.
+	 * Date style to use. See {@link DateTimeFormat#forStyle(String)}.
 	 */
 	private final String dateStyle;
 
