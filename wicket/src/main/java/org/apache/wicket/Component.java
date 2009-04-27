@@ -719,7 +719,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * combination of following attributes:
 	 * <ul>
 	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
-	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
+	 * <li>MetaDataEntry (optionally MetaDataEntry[] if more metadata entries are present) *
 	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate array,
 	 * they are part of the {@link #data} array (this is in order to save the space of the pointer
 	 * to an empty array as most components have no behaviours). - FIXME - explain why - is this
