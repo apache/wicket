@@ -53,6 +53,10 @@ public class WildcardListModel<T> extends GenericBaseModel<List<? extends T>>
 	@Override
 	protected List<? extends T> createSerializableVersionOf(List<? extends T> object)
 	{
+		if (object == null)
+		{
+			return null;
+		}
 		return new ArrayList<T>(object);
 	}
 }
