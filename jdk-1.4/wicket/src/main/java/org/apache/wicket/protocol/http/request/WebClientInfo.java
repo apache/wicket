@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http.request;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.protocol.http.ClientProperties;
@@ -183,13 +186,10 @@ public class WebClientInfo extends ClientInfo
 		else if (browserInternetExplorer)
 		{
 			properties.setBrowserInternetExplorer(true);
-			if (userAgent.indexOf("msie 6.") != -1)
+			Matcher matcher = Pattern.compile("msie (\\d+)").matcher(userAgent);
+			if (matcher.find())
 			{
-				majorVersion = 6;
-			}
-			else if (userAgent.indexOf("msie 7.") != -1)
-			{
-				majorVersion = 7;
+				majorVersion = Integer.parseInt(matcher.group(1));
 			}
 		}
 
