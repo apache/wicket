@@ -44,5 +44,5 @@ public interface IOptionRenderer<T> extends IClusterable
 	 * @param value
 	 * @return model that will contain the value object
 	 */
-	public IModel<T> getModel(Object value);
+	public IModel<T> getModel(T value);
 }

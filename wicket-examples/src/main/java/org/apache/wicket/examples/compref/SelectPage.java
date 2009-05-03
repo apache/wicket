@@ -88,12 +88,12 @@ public class SelectPage extends WicketExamplePage
 		{
 			public String getDisplayValue(String object)
 			{
-				return object.toString();
+				return object;
 			}
 
-			public IModel<String> getModel(Object value)
+			public IModel<String> getModel(String value)
 			{
-				return new Model<String>((String)value);
+				return new Model<String>(value);
 			}
 
 		};
