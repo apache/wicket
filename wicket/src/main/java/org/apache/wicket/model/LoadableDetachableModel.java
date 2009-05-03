@@ -95,15 +95,21 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	{
 		if (attached)
 		{
-			attached = false;
-			transientModelObject = null;
-
-			if (log.isDebugEnabled())
+			try
 			{
-				log.debug("removed transient object for " + this + ", requestCycle " +
-					RequestCycle.get());
+				onDetach();
 			}
-			onDetach();
+			finally
+			{
+				attached = false;
+				transientModelObject = null;
+
+				if (log.isDebugEnabled())
+				{
+					log.debug("removed transient object for " + this + ", requestCycle " +
+						RequestCycle.get());
+				}
+			}
 		}
 	}
 
