@@ -23,7 +23,6 @@ import org.apache.wicket.model.IModel;
  * Base class for banners.
  * 
  * @author Eelco Hillenius
- * @param <T>
  */
 public abstract class Banner extends Panel
 {

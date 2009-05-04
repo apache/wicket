@@ -30,7 +30,6 @@ import org.apache.wicket.markup.html.border.Border;
  * they are not hardwired to page navigation structure details
  * 
  * @author Jonathan Locke
- * @param <T>
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {

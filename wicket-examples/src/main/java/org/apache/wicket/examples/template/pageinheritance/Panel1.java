@@ -22,7 +22,6 @@ import org.apache.wicket.model.IModel;
  * Concrete, extending panel.
  * 
  * @author Eelco Hillenius
- * @param <T>
  */
 public class Panel1 extends TemplatePanel
 {

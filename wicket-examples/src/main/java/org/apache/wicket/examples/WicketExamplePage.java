@@ -24,7 +24,6 @@ import org.apache.wicket.util.string.Strings;
  * Base class for all example pages.
  * 
  * @author Jonathan Locke
- * @param <T>
  */
 public class WicketExamplePage extends WebPage
 {

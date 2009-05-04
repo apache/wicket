@@ -22,7 +22,6 @@ import org.apache.wicket.examples.WicketExamplePage;
  * Base class to check access to a page. If user is not logged in, redirect to the log-in page.
  * 
  * @author Jonathan Locke
- * @param <T>
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {
