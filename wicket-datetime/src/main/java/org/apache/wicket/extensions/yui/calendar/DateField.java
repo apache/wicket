@@ -61,7 +61,7 @@ public class DateField extends FormComponentPanel<Date>
 
 	private MutableDateTime date;
 
-	private final DateTextField dateField;
+	private DateTextField dateField;
 
 	/**
 	 * Construct.
@@ -83,9 +83,6 @@ public class DateField extends FormComponentPanel<Date>
 	{
 		super(id, model);
 		setType(Date.class);
-		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
-		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker());
 	}
 
 	/**
@@ -173,6 +170,14 @@ public class DateField extends FormComponentPanel<Date>
 	@Override
 	protected void onBeforeRender()
 	{
+		if (dateField == null)
+		{
+			// intiailize datefield and datepicker
+			PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
+			add(dateField = newDateTextField("date", dateFieldModel));
+			dateField.add(newDatePicker());
+		}
+
 		dateField.setRequired(isRequired());
 
 		// obsolete with WICKET-1919
@@ -189,5 +194,15 @@ public class DateField extends FormComponentPanel<Date>
 		}
 
 		super.onBeforeRender();
+	}
+
+	/**
+	 * Factory method for datepicker that will be added to the field
+	 * 
+	 * @return datepicker instance
+	 */
+	protected DatePicker newDatePicker()
+	{
+		return new DatePicker();
 	}
 }
