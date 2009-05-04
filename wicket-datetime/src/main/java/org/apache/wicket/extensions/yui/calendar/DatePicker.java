@@ -179,7 +179,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
 		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl.toString() : ""));
-		response.write("\" alt=\"\"/>");
+		response.write("\" alt=\"");
+		CharSequence alt = getIconAltText();
+		response.write(Strings.escapeMarkup((alt != null) ? alt.toString() : ""));
+		response.write("\" title=\"");
+		CharSequence title = getIconTitle();
+		response.write(Strings.escapeMarkup((title != null) ? title.toString() : ""));
+		response.write("\"/>");
+
+
 		if (renderOnLoad())
 		{
 			response.write("<br style=\"clear:left;\"/>");
@@ -502,6 +510,26 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected String getIconStyle()
 	{
 		return "cursor: pointer; border: none;";
+	}
+
+	/**
+	 * Gets the title attribute of the datepicker icon
+	 * 
+	 * @return text
+	 */
+	protected CharSequence getIconTitle()
+	{
+		return "";
+	}
+
+	/**
+	 * Gets the icon alt text for the datepicker icon
+	 * 
+	 * @return text
+	 */
+	protected CharSequence getIconAltText()
+	{
+		return "";
 	}
 
 	/**
