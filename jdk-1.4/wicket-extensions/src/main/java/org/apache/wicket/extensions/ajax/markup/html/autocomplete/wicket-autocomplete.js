@@ -305,7 +305,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         var input=wicketGet(elementId);
         var index=getOffsetParentZIndex(elementId);
         container.show();
-        container.style.zIndex=(Number(index)!=Number.NaN?Number(index)+1:index); 
+        if (!isNaN(new Number(index))) {
+            container.style.zIndex=(new Number(index)+1);
+        } 
         container.style.left=position[0]+'px';
         container.style.top=(input.offsetHeight+position[1])+'px';
         if(cfg.adjustInputWidth)
