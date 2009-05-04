@@ -359,7 +359,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 var value = getSelectedValue();
                 if(value = handleSelection(value)) {
                   wicketGet(elementId).value = value;
-                  if(typeof objonchange=="function") objonchange.apply(this,[event]);
+                  if(typeof objonchange=="function") objonchange.apply(wicketGet(elementId),[event]);
                 }
                 hideAutoComplete();
             };
