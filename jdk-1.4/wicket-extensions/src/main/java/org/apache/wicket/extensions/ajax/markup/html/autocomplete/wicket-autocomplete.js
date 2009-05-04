@@ -84,7 +84,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         objonchangeoriginal=obj.onchange; 
         obj.onchange=function(event){
       		if(mouseactive==1)return false;
-      		if(typeof objonchangeoriginal=="function")objonchangeoriginal();
+      		if(typeof objonchangeoriginal=="function")objonchangeoriginal.apply(this,[event]);
       	}
         objonchange=obj.onchange;
                 
@@ -94,7 +94,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     			return killEvent(event);
     		}
           	hideAutoComplete();
-          	if(typeof objonblur=="function")objonblur();
+          	if(typeof objonblur=="function")objonblur.apply(this,[event]);
         }
       	
       	obj.onfocus=function(event){
@@ -105,7 +105,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                     updateChoices();
                 }
             }
-          	if(typeof objonfocus=="function")objonfocus();
+          	if(typeof objonfocus=="function")objonfocus.apply(this,[event]);
         }
 
         obj.onkeydown=function(event){
@@ -140,7 +140,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                         var value = getSelectedValue();
                         if(handleSelection(value)) {
                           obj.value = value;
-                          if(typeof objonchange=="function") objonchange(event);
+                          if(typeof objonchange=="function") objonchange.apply(this,[event]);
                         }
                         hideAutoComplete();
                         hidingAutocomplete = 1;
@@ -149,7 +149,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                         hidingAutocomplete = 1;
                     }
                     mouseactive = 0;
-                    if(typeof objonkeydown=="function") objonkeydown(event);
+                    if(typeof objonkeydown=="function") objonkeydown.apply(this,[event]);
                     return true;
                 break;
                 default:
@@ -174,7 +174,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 default:
     	            updateChoices();
             }
-			if(typeof objonkeyup=="function")objonkeyup(event);
+			if(typeof objonkeyup=="function")objonkeyup.apply(this,[event]);
             return null;
         }
 
@@ -185,7 +185,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			        return killEvent(event);
                 }
             }
-			if(typeof objonkeypress=="function")objonkeypress(event);
+			if(typeof objonkeypress=="function")objonkeypress.apply(this,[event]);
         }
     }
 
@@ -359,7 +359,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 var value = getSelectedValue();
                 if(value = handleSelection(value)) {
                   wicketGet(elementId).value = value;
-                  if(typeof objonchange=="function") objonchange();
+                  if(typeof objonchange=="function") objonchange.apply(this,[event]);
                 }
                 hideAutoComplete();
             };
