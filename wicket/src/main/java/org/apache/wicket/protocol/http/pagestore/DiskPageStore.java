@@ -1168,7 +1168,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		else if (page instanceof SerializedPageWithSession)
 		{
 			SerializedPageWithSession serialized = (SerializedPageWithSession)page;
-			if (serialized.page.get() == SerializedPageWithSession.NO_PAGE)
+			if (serialized.page != null &&
+				serialized.page.get() == SerializedPageWithSession.NO_PAGE)
 			{
 				// stripped page, need to restore it first
 				result = restoreStrippedSerializedPage(serialized);
