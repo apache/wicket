@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -26,9 +27,9 @@ import org.apache.wicket.model.StringResourceModel;
 
 /**
  * Label that provides Showing x to y of z message given for a DataTable. The message can be
- * overridden using the <code>NavigatorLabel</code> property key, the default message is used is
- * of the format <code>Showing ${from} to ${to} of ${of}</code>. The message can also be
- * configured pragmatically by setting it as the model object of the label.
+ * overridden using the <code>NavigatorLabel</code> property key, the default message is used is of
+ * the format <code>Showing ${from} to ${to} of ${of}</code>. The message can also be configured
+ * pragmatically by setting it as the model object of the label.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -60,7 +61,7 @@ public class NavigatorLabel extends Label
 	 * @param id
 	 *            component id
 	 * @param table
-	 *            dataview
+	 *            table
 	 */
 	public NavigatorLabel(final String id, final DataTable<?> table)
 	{
@@ -85,6 +86,37 @@ public class NavigatorLabel extends Label
 			public int getRowsPerPage()
 			{
 				return table.getRowsPerPage();
+			}
+
+		});
+
+	}
+
+	/**
+	 * @param id
+	 *            component id
+	 * @param list
+	 *            listview
+	 */
+	public NavigatorLabel(final String id, final PageableListView<?> list)
+	{
+		this(id, new PageableComponent()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public int getCurrentPage()
+			{
+				return list.getCurrentPage();
+			}
+
+			public int getRowCount()
+			{
+				return list.getModelObject().size();
+			}
+
+			public int getRowsPerPage()
+			{
+				return list.getRowsPerPage();
 			}
 
 		});
