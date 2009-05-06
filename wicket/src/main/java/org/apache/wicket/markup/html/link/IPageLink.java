@@ -34,7 +34,6 @@ import org.apache.wicket.Page;
  * and its override in PageLink. Also, see the documentation for getPageIdentity() below.
  * 
  * @see Link#linksTo(Page)
- * @see PageLink#linksTo(Page)
  * @author Jonathan Locke
  */
 public interface IPageLink extends IClusterable
