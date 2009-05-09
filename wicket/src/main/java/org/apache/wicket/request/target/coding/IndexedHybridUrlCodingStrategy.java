@@ -97,19 +97,22 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 		{
 			urlFragment = urlFragment.substring(0, urlFragment.length() - 1);
 		}
-
-		String[] parts = urlFragment.split("/");
-		for (int i = 0; i < parts.length; i++)
+		if (urlFragment.length() > 0)
 		{
-			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			String[] parts = urlFragment.split("/");
+			for (int i = 0; i < parts.length; i++)
 			{
-				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP,
-					WebRequestCodingStrategy.decodePageMapName(urlDecodePathComponent(parts[i])));
-			}
-			else
-			{
-				params.put(String.valueOf(i), urlDecodePathComponent(parts[i]));
+				if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+				{
+					i++;
+					params.put(
+						WebRequestCodingStrategy.PAGEMAP,
+						WebRequestCodingStrategy.decodePageMapName(urlDecodePathComponent(parts[i])));
+				}
+				else
+				{
+					params.put(String.valueOf(i), urlDecodePathComponent(parts[i]));
+				}
 			}
 		}
 		return params;
