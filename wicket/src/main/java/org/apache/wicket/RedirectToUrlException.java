@@ -49,6 +49,8 @@ public class RedirectToUrlException extends AbstractRestartResponseException
 	 */
 	public RedirectToUrlException(String url)
 	{
+		// TODO refactor string url into charsequence, make class final?
+
 		RequestCycle rc = RequestCycle.get();
 		if (rc == null)
 		{
