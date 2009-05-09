@@ -132,9 +132,9 @@ Wicket.DateTime.substituteDate = function(datePattern, date) {
 	month = date[1];
 	year = date[0];
 	// optionally do some padding to match the pattern
-	if(datePattern.match(/\bdd\b/)) day = Wicket.DateTime.padDateFragment(day);
-	if(datePattern.match(/\bMM\b/)) month = Wicket.DateTime.padDateFragment(month);
-	if(datePattern.match(/\byy\b/)) year = Wicket.DateTime.padDateFragment(year % 100);
+	if(datePattern.match(/dd+/)) day = Wicket.DateTime.padDateFragment(day);
+	if(datePattern.match(/MM+/)) month = Wicket.DateTime.padDateFragment(month);
+	if(datePattern.match(/byy+/)) year = Wicket.DateTime.padDateFragment(year % 100);
 	// replace pattern with real values
 	return datePattern.replace(/d+/, day).replace(/M+/, month).replace(/y+/, year);
 }
