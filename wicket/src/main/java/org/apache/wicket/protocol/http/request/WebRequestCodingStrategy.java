@@ -55,7 +55,6 @@ import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
-import org.apache.wicket.request.target.component.PageIdRequestTarget;
 import org.apache.wicket.request.target.component.PageReferenceRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
@@ -271,7 +270,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
 		}
-		else if (requestTarget instanceof PageIdRequestTarget)
+		else if (requestTarget instanceof PageReferenceRequestTarget)
 		{
 			url = encode(requestCycle, (PageReferenceRequestTarget)requestTarget);
 		}
