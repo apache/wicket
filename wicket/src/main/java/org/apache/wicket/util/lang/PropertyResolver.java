@@ -912,6 +912,7 @@ public final class PropertyResolver
 		{
 			this.index = new Integer(index);
 			getMethod = method;
+			getMethod.setAccessible(true);
 		}
 
 		private final static Method findSetter(Method getMethod, Class<?> clz)
