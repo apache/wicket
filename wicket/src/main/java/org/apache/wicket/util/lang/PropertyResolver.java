@@ -965,6 +965,7 @@ public final class PropertyResolver
 			}
 			if (setMethod != null)
 			{
+				setMethod.setAccessible(true);
 				Object converted = converter.convert(value, getMethod.getReturnType());
 				if (converted == null && value != null)
 				{
