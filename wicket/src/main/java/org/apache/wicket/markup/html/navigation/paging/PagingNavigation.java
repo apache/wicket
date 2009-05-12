@@ -16,10 +16,16 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
+import java.util.Map;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.collections.MicroMap;
 import org.apache.wicket.version.undo.Change;
 
 /**
@@ -310,6 +316,7 @@ public class PagingNavigation extends Loop
 
 		// Add a page link pointing to the page
 		final AbstractLink link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		link.add(new TitleAppender(pageIndex));
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -425,5 +432,39 @@ public class PagingNavigation extends Loop
 	private void setIterations(int i)
 	{
 		setDefaultModelObject(new Integer(i));
+	}
+
+	/**
+	 * Appends title attribute to navigation links
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private final class TitleAppender extends AbstractBehavior
+	{
+		private static final long serialVersionUID = 1L;
+		/** resource key for the message */
+		private static final String RES = "PagingNavigation.page";
+		/** page number */
+		private final int page;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param page
+		 *            page number to use as the ${page} var
+		 */
+		public TitleAppender(int page)
+		{
+			this.page = page;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void onComponentTag(Component component, ComponentTag tag)
+		{
+			Map<String, String> vars = new MicroMap<String, String>("page",
+				String.valueOf(page + 1));
+			tag.put("title", PagingNavigation.this.getString(RES, Model.ofMap(vars)));
+		}
 	}
 }

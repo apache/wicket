@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -90,10 +93,14 @@ public class PagingNavigator extends Panel
 			add(pagingNavigation);
 
 			// Add additional page links
-			add(newPagingNavigationLink("first", pageable, 0));
-			add(newPagingNavigationIncrementLink("prev", pageable, -1));
-			add(newPagingNavigationIncrementLink("next", pageable, 1));
-			add(newPagingNavigationLink("last", pageable, -1));
+			add(newPagingNavigationLink("first", pageable, 0).add(
+				new TitleAppender("PagingNavigator.first")));
+			add(newPagingNavigationIncrementLink("prev", pageable, -1).add(
+				new TitleAppender("PagingNavigator.previous")));
+			add(newPagingNavigationIncrementLink("next", pageable, 1).add(
+				new TitleAppender("PagingNavigator.next")));
+			add(newPagingNavigationLink("last", pageable, -1).add(
+				new TitleAppender("PagingNavigator.last")));
 		}
 		super.onBeforeRender();
 	}
@@ -156,5 +163,35 @@ public class PagingNavigator extends Panel
 	public final PagingNavigation getPagingNavigation()
 	{
 		return pagingNavigation;
+	}
+
+	/**
+	 * Appends title attribute to navigation links
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private final class TitleAppender extends AbstractBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String resourceKey;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param resourceKey
+		 *            resource key of the message
+		 */
+		public TitleAppender(String resourceKey)
+		{
+			this.resourceKey = resourceKey;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void onComponentTag(Component component, ComponentTag tag)
+		{
+			tag.put("title", PagingNavigator.this.getString(resourceKey));
+		}
 	}
 }
