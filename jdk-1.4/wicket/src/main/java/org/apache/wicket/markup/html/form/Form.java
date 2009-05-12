@@ -29,6 +29,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
@@ -841,6 +842,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// run validation
 		validate();
 
+		boolean valid = false;
+
 		// If a validation error occurred
 		if (hasError())
 		{
@@ -851,7 +854,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			callOnError();
 
 			// Form has an error
-			return false;
+			valid = false;
 		}
 		else
 		{
@@ -868,8 +871,31 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			persistFormComponentData();
 
 			// Form has no error
-			return true;
+			valid = true;
 		}
+
+		// WICKET-1912
+		// If the form is stateless page parameters contain all form component
+		// values. We need to remove those otherwise they get appended to action URL
+		final PageParameters parameters = getPage().getPageParameters();
+		if (parameters != null)
+		{
+			visitFormComponents(new FormComponent.IVisitor()
+			{
+				public Object formComponent(IFormVisitorParticipant formComponent)
+				{
+					if (formComponent instanceof FormComponent)
+					{
+						parameters.remove(((FormComponent)formComponent).getInputName());
+					}
+
+					return Component.IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+			parameters.remove(getHiddenFieldId());
+		}
+
+		return valid;
 	}
 
 	/**
