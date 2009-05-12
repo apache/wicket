@@ -72,10 +72,12 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 			if (replaceForTags.contains(name.toLowerCase()))
 			{
 				tag.setType(XmlTag.OPEN);
+				tag.setModified(true);
 
 				next = new ComponentTag(tag.getName(), XmlTag.CLOSE);
 				next.setNamespace(tag.getNamespace());
 				next.setOpenTag(tag);
+				next.setModified(true);
 			}
 		}
 		return tag;
