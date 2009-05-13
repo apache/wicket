@@ -25,6 +25,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.util.collections.IntHashMap.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,6 +51,9 @@ import org.apache.wicket.util.collections.IntHashMap.Entry;
  */
 public class UrlCompressor implements IClusterable
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(UrlCompressor.class);
+
 	/**
 	 * @author jcompagner
 	 */
@@ -119,9 +124,17 @@ public class UrlCompressor implements IClusterable
 		{
 			directComponentRefs.remove(ref.uid);
 		}
-		int uid = Integer.parseInt(uidString);
-		ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);
-		return cai;
+		try
+		{
+			int uid = Integer.parseInt(uidString);
+			ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);
+			return cai;
+		}
+		catch (Exception e)
+		{
+			log.warn("cant decompress Component/Interface from '" + uidString + "'", e);
+		}
+		return null;
 	}
 
 	/**

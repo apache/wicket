@@ -26,8 +26,11 @@ import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
+import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -137,5 +140,68 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
+	}
+
+	protected CharSequence encode(RequestCycle requestCycle,
+		IBookmarkablePageRequestTarget requestTarget)
+	{
+		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget &&
+			requestTarget.getPageParameters().containsKey(
+				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME))
+		{
+			BookmarkableListenerInterfaceRequestTarget t = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
+			Page page = t.getPage();
+			int version = page.getCurrentVersionNumber();
+			String componentPath = t.getComponentPath();
+			String interfaceName = t.getInterfaceName();
+			String pageMapName = t.getPageMapName();
+
+			// add the wicket:interface param to the params.
+			// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
+			AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length() +
+				interfaceName.length());
+			if (pageMapName != null)
+			{
+				param.append(pageMapName);
+			}
+			param.append(Component.PATH_SEPARATOR);
+			// Add path to component
+			if (page instanceof WebPage && !"IResourceListener".equals(interfaceName))
+			{
+				param.append(page.getId());
+				Component comp = page.get(Strings.afterFirstPathComponent(componentPath,
+					Component.PATH_SEPARATOR));
+				param.append(Component.PATH_SEPARATOR);
+				param.append(((WebPage)page).getUrlCompressor().getUIDForComponentAndInterface(
+					comp, interfaceName));
+				interfaceName = null;
+			}
+			else
+			{
+				param.append(componentPath);
+			}
+			param.append(Component.PATH_SEPARATOR);
+			if (version != 0)
+			{
+				param.append(version);
+			}
+			// Interface
+			param.append(Component.PATH_SEPARATOR);
+			// Add listener interface
+			if (interfaceName != null &&
+				!IRedirectListener.INTERFACE.getName().equals(interfaceName))
+			{
+				param.append(interfaceName);
+			}
+
+			// Behavior (none)
+			param.append(Component.PATH_SEPARATOR);
+
+			// URL depth (not required)
+			param.append(Component.PATH_SEPARATOR);
+			t.getPageParameters().put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,
+				param.toString());
+		}
+		return super.encode(requestCycle, requestTarget);
 	}
 }
