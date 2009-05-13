@@ -64,6 +64,7 @@
 				<include>wicket-datetime/**</include>
 				<include>wicket-examples/**</include>
 				<include>wicket-extensions/**</include>
+				<include>wicket-devutils/**</include>
 				<include>wicket-jmx/**</include>
 				<include>wicket-objectssizeof-agent/**</include>
 				<include>wicket-ioc/**</include>
@@ -104,6 +105,7 @@
 				<include>org.apache.wicket:wicket-examples</include>
 				<include>org.apache.wicket:wicket-extensions</include>
 				<include>org.apache.wicket:wicket-jmx</include>
+				<include>org.apache.wicket:wicket-devutils</include>
 				<include>org.apache.wicket:wicket-objectsizeof-agent</include>
 				<include>org.apache.wicket:wicket-ioc</include>
 				<include>org.apache.wicket:wicket-guice</include>
