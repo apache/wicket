@@ -839,6 +839,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			return false;
 		}
 
+		// save the page in case form gets removed from hierarchy
+		Page page = getPage();
+
 		// run validation
 		validate();
 
@@ -877,7 +880,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// WICKET-1912
 		// If the form is stateless page parameters contain all form component
 		// values. We need to remove those otherwise they get appended to action URL
-		final PageParameters parameters = getPage().getPageParameters();
+		final PageParameters parameters = page.getPageParameters();
 		if (parameters != null)
 		{
 			visitFormComponents(new FormComponent.IVisitor()
