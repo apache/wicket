@@ -905,7 +905,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	public void process(IFormSubmittingComponent submittingComponent)
 	{
 		// save the page in case the component is removed during submit
-		Page page = getPage();
+		final Page page = getPage();
 
 		// process the form for this request
 		if (process())
