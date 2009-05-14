@@ -904,6 +904,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public void process(IFormSubmittingComponent submittingComponent)
 	{
+		// save the page in case the component is removed during submit
+		Page page = getPage();
+
 		// process the form for this request
 		if (process())
 		{
@@ -914,7 +917,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		// WICKET-1912
 		// If the form is stateless page parameters contain all form component
 		// values. We need to remove those otherwise they get appended to action URL
-		final PageParameters parameters = getPage().getPageParameters();
+		final PageParameters parameters = page.getPageParameters();
 		if (parameters != null)
 		{
 			visitFormComponents(new FormComponent.IVisitor()
