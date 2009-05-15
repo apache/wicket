@@ -565,6 +565,10 @@ public class BaseWicketTester extends MockWebApplication
 	public <C extends Component> Result isComponent(String path, Class<C> expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
+		if (component == null)
+		{
+			Result.fail("Component not found: " + path);
+		}
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
 			Classes.simpleName(expectedComponentClass),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
