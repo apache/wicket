@@ -93,7 +93,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 			{
 				// Traverse children
 				final Object o = ((MarkupContainer)component).visitChildren(visitor);
-				if (o == null)
+				if (o != null)
 				{
 					throw new IllegalArgumentException(msg + " Offending component: " + o);
 				}
