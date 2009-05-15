@@ -23,7 +23,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
-import org.apache.wicket.util.lang.Objects;
 
 /**
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
@@ -52,6 +51,7 @@ import org.apache.wicket.util.lang.Objects;
 public class Radio<T> extends LabeledWebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
 	private static final String ATTR_DISABLED = "disabled";
 
 	/**
@@ -62,11 +62,10 @@ public class Radio<T> extends LabeledWebMarkupContainer
 
 	private final RadioGroup<T> group;
 
-
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public Radio(String id)
+	public Radio(final String id)
 	{
 		this(id, null, null);
 	}
@@ -76,7 +75,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Radio(String id, IModel<T> model)
+	public Radio(final String id, final IModel<T> model)
 	{
 		this(id, model, null);
 	}
@@ -87,7 +86,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 *            parent {@link RadioGroup}
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public Radio(String id, RadioGroup<T> group)
+	public Radio(final String id, final RadioGroup<T> group)
 	{
 		this(id, null, group);
 	}
@@ -99,13 +98,12 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 *            parent {@link RadioGroup}
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Radio(String id, IModel<T> model, RadioGroup<T> group)
+	public Radio(final String id, final IModel<T> model, final RadioGroup<T> group)
 	{
 		super(id, model);
 		this.group = group;
 		setOutputMarkupId(true);
 	}
-
 
 	/**
 	 * Form submission value used for this radio component. This string will appear as the value of
@@ -122,7 +120,9 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		return "radio" + uuid;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -136,7 +136,10 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		super.onBeforeRender();
 	}
 
-
+	/**
+	 * 
+	 * @return The associated radio group Component
+	 */
 	@SuppressWarnings("unchecked")
 	protected RadioGroup<T> getGroup()
 	{
@@ -188,7 +191,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 				tag.put("checked", "checked");
 			}
 		}
-		else if (Objects.equal(group.getDefaultModelObject(), getDefaultModelObject()))
+		else if (group.getModelComparator().compare(group, getDefaultModelObject()))
 		{
 			tag.put("checked", "checked");
 		}
@@ -213,16 +216,13 @@ public class Radio<T> extends LabeledWebMarkupContainer
 			else
 			{
 				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
-				// form
-				// with an ActionURL or something
-				// NOTE: do not encode the url as that would give invalid
-				// JavaScript
+				// form with an ActionURL or something
+				// NOTE: do not encode the url as that would give invalid JavaScript
 				tag.put("onclick", "window.location.href='" + url +
 					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
 					"=' + this.value;");
 			}
 		}
-
 
 		if (!isEnabledInHierarchy())
 		{
@@ -242,7 +242,6 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		setLabelInternal(labelModel);
 		return this;
 	}
-
 
 	/**
 	 * Gets model
@@ -293,5 +292,4 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		// because we keep uuid this component cannot be stateless
 		return false;
 	}
-
 }

@@ -3687,13 +3687,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets the value defaultModelComparator. Implementations of this interface can be used in the
-	 * Component.getComparator() for testing the current value of the components model data with the
-	 * new value that is given.
+	 * Gets the component's current model comparator. Implementations can be used for testing the
+	 * current value of the components model data with the new value that is given.
 	 * 
 	 * @return the value defaultModelComparator
 	 */
-	protected IModelComparator getModelComparator()
+	public IModelComparator getModelComparator()
 	{
 		return defaultModelComparator;
 	}
