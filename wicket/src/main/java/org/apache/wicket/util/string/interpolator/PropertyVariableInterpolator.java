@@ -29,6 +29,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * method. The results of calling that method would be substituted for <code>${name}</code>. If
  * <code>getName()</code> returned <code>"Jonathan"</code>, then <code>interpolate()</code> would
  * return <code>"My name is Jonathan"</code>.
+ * <p>
+ * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation).
  * 
  * @author Jonathan Locke
  * @since 1.2.6

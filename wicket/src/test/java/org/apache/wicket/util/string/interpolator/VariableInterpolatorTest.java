@@ -66,4 +66,15 @@ public class VariableInterpolatorTest extends TestCase
 
 		}
 	}
+
+	/**
+	 * 
+	 */
+	public void testLiteral()
+	{
+		Map params = new HashMap();
+		params.put("key", "value");
+		MapVariableInterpolator in = new MapVariableInterpolator("aaa $${key} bbb", params);
+		assertEquals("aaa ${key} bbb", in.toString());
+	}
 }

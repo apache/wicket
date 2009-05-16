@@ -27,6 +27,8 @@ package org.apache.wicket.util.string.interpolator;
  * method <code>getValue(String variableName)</code>. The <code>toString()</code> method then
  * performs an interpolation by replacing each variable of the form <code>${variableName}</code>
  * with the value returned by <code>getValue("variableName")</code>.
+ * <p>
+ * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation).
  * 
  * @author Jonathan Locke
  * @since 1.2.6
