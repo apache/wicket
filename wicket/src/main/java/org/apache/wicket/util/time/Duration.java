@@ -464,6 +464,24 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
+	 * Wait for this duration on the given monitor
+	 * 
+	 * @param object
+	 *            The monitor to wait on
+	 */
+	public void wait(Object object)
+	{
+		try
+		{
+			object.wait(getMilliseconds());
+		}
+		catch (InterruptedException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * Retrieves the <code>String</code> representation of this <code>Duration</code> in days,
 	 * hours, minutes, seconds or milliseconds, as appropriate. Uses the default <code>Locale</code>
 	 * .
