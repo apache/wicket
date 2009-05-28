@@ -76,7 +76,7 @@ public class TabbedPanel extends Panel
 	/** id used for child panels */
 	public static final String TAB_PANEL_ID = "panel";
 
-	private final List<? extends ITab> tabs;
+	private final List<ITab> tabs;
 
 	private transient Boolean[] tabsVisibilityCache;
 
@@ -88,7 +88,7 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List<? extends ITab> tabs)
+	public TabbedPanel(String id, List<ITab> tabs)
 	{
 		super(id, new Model<Integer>(new Integer(-1)));
 
@@ -238,7 +238,7 @@ public class TabbedPanel extends Panel
 	/**
 	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
-	public final List<? extends ITab> getTabs()
+	public final List<ITab> getTabs()
 	{
 		return tabs;
 	}
