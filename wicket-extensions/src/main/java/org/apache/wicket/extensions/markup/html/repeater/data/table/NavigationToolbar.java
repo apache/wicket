@@ -84,18 +84,19 @@ public class NavigationToolbar extends AbstractToolbar
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#isVisible()
+	 * @see org.apache.wicket.Component#callOnBeforeRenderIfNotVisible()
 	 */
 	@Override
-	public boolean isVisible()
+	protected boolean callOnBeforeRenderIfNotVisible()
 	{
-		return table.getPageCount() > 1;
+		return true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void onBeforeRender()
 	{
+		setVisible(table.getPageCount() > 1);
 		super.onBeforeRender();
 	}
 }
