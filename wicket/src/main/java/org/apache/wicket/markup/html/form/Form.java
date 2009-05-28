@@ -816,7 +816,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				// once the user submits the Form containing that FormComponent.
 				// Note: if that is true, values may remain persisted longer
 				// than really necessary
-				if (formComponent.isVisibleInHierarchy() && formComponent.isPersistent())
+				if (formComponent.isPersistent() && formComponent.isVisibleInHierarchy())
 				{
 					// The persister
 					final IValuePersister persister = getValuePersister();
