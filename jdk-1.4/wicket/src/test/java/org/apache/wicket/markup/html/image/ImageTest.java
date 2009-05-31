@@ -63,9 +63,10 @@ public class ImageTest extends WicketTestCase
 		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer.gif\"");
 	}
 
-    public void testParentRelativeImage()
-    {
-      tester.startPage(Home.class);
-      tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/[$]up[$]/border/test.png\"");
-    }
+	public void testParentRelativeImage()
+	{
+		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
+		tester.startPage(Home.class);
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/[$]up[$]/border/test.png\"");
+	}
 }

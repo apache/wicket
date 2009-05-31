@@ -43,6 +43,7 @@ public class AutolinkTest extends WicketTestCase
 	public void testRenderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
 		executeTest(AutolinkPage_1.class, "AutolinkPageExpectedResult_1.html");
 	}
 

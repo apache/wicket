@@ -50,7 +50,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 * Construct.
 	 * 
 	 * @param requestParameters
-	 * 		the request parameters
+	 *            the request parameters
 	 */
 	public SharedResourceRequestTarget(RequestParameters requestParameters)
 	{
@@ -88,9 +88,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * @see
-	 * 	org.apache.wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters
-	 * 	()
+	 * @see org.apache.wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters
+	 *      ()
 	 */
 	public final RequestParameters getRequestParameters()
 	{
@@ -148,21 +147,21 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 					{
 						scope = resolver.resolveClass(className);
 					}
+
+					// get path component of resource key, replace '..' with escape sequence to
+					// prevent crippled urls in browser
 					final CharSequence escapeString = application.getResourceSettings()
 						.getParentFolderPlaceholder();
-					// get path component of resource key, replace' ..' with escape sequence to
-					// prevent crippled urls in browser
+
 					String path = resourceKey.substring(ix + 1);
-					path = Strings.replaceAll(path, escapeString, "..").toString();
+					if (Strings.isEmpty(escapeString) == false)
+					{
+						path = Strings.replaceAll(path, escapeString, "..").toString();
+					}
 
 					if (PackageResource.exists(scope, path, null, null))
 					{
-						PackageResource packageResource = PackageResource.get(scope, path);
-						if (sharedResources.get(resourceKey) == null)
-						{
-							sharedResources.add(scope, path, null, null, packageResource);
-						}
-						resource = packageResource;
+						resource = PackageResource.get(scope, path);
 					}
 				}
 				catch (Exception e)
@@ -177,17 +176,18 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		// if resource is still null, it doesn't exist
 		if (resource == null)
 		{
+			String msg = "shared resource " + resourceKey + " not found or not allowed access";
 			Response response = requestCycle.getResponse();
 			if (response instanceof WebResponse)
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
 					HttpServletResponse.SC_NOT_FOUND);
-				log.error("shared resource " + resourceKey + " not found");
+				log.error(msg);
 				return;
 			}
 			else
 			{
-				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+				throw new WicketRuntimeException(msg);
 			}
 		}
 
