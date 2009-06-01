@@ -544,7 +544,22 @@ public class MockWebApplication
 				cycle = createRequestCycle();
 				cycle.request();
 			}
+			else
+			{
+				String url = httpResponse.getHeader("Ajax-Location");
+				if (url != null)
+				{
+					MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(application,
+						servletSession, application.getServletContext());
+					newHttpRequest.setRequestToRedirectString(url);
+					wicketRequest = application.newWebRequest(newHttpRequest);
+
+					cycle = createRequestCycle();
+					cycle.request();
+				}
+			}
 		}
+
 		lastRenderedPage = generateLastRenderedPage(cycle);
 
 		Session.set(getWicketSession());

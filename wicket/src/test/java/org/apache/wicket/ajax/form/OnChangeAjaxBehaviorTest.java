@@ -57,4 +57,24 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 			"OnChangeAjaxBehaviorTestPage_expected.html");
 	}
 
+	/**
+	 * 
+	 */
+	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+	{
+		// start and render the test page
+		tester.startPage(HomePage.class);
+		// assert rendered page class
+		tester.assertRenderedPage(HomePage.class);
+		// assert rendered label component
+		tester.assertLabel("message",
+			"If you see this message wicket is properly configured and running");
+
+		tester.executeAjaxEvent("form:select", "onchange");
+
+		// assert rendered page class
+		tester.assertRenderedPage(ThirdPage.class);
+		tester.assertLabel("label", "Hello world.");
+		tester.assertContains("And just plain text");
+	}
 }

@@ -105,12 +105,13 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		try
 		{
 			tester.executeAjaxEvent(link, "onclick");
-			assertTrue("Excepted an error message to be thrown", false);
+			fail("Excepted an error message to be thrown");
 		}
 		catch (IllegalStateException ex)
 		{
 			// expected exception
-			tester.assertAjaxLocation();
+			assertEquals(500, ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getStatus());
 		}
 
 		tester.startPage(TestErrorPage.class);
@@ -118,12 +119,12 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		try
 		{
 			tester.clickLink("link");
-			assertTrue("Excepted an error message to be thrown", false);
+			fail("Excepted an error message to be thrown");
 		}
 		catch (IllegalStateException ex)
 		{
-			// expected exception
-			tester.assertAjaxLocation();
+			assertEquals(500, ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getStatus());
 		}
 	}
 }
