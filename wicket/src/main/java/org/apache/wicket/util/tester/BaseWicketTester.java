@@ -748,7 +748,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			WebRequestCycle requestCycle = setupRequestAndResponse(true);
 
-			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
+			submitAjaxFormSubmitBehavior(linkComponent, ajaxFormSubmitBehavior);
 
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
@@ -1188,7 +1188,7 @@ public class BaseWicketTester extends MockWebApplication
 		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
 		{
 			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
-			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
+			submitAjaxFormSubmitBehavior(component, ajaxFormSubmitBehavior);
 		}
 
 		// process the event
@@ -1270,10 +1270,13 @@ public class BaseWicketTester extends MockWebApplication
 	 * Helper method for all the places where an Ajax call should submit an associated
 	 * <code>Form</code>.
 	 * 
+	 * @param component
+	 *            The component the behavior is attached to
 	 * @param behavior
 	 *            The <code>AjaxFormSubmitBehavior</code> with the <code>Form</code> to "submit"
 	 */
-	private void submitAjaxFormSubmitBehavior(AjaxFormSubmitBehavior behavior)
+	private void submitAjaxFormSubmitBehavior(final Component component,
+		AjaxFormSubmitBehavior behavior)
 	{
 		// We need to get the form submitted, using reflection.
 		// It needs to be "submitted".
@@ -1297,17 +1300,20 @@ public class BaseWicketTester extends MockWebApplication
 			@Override
 			public void onFormComponent(FormComponent<?> formComponent)
 			{
-				if (formComponent.isVisible())
+				if (!(formComponent instanceof RadioGroup) &&
+					!(formComponent instanceof CheckGroup) &&
+					!formComponent.getClass().isAssignableFrom(Button.class) &&
+					formComponent.isVisible())
 				{
-					if (!(formComponent instanceof RadioGroup) &&
-						!(formComponent instanceof CheckGroup) &&
-						!(formComponent.getClass().isAssignableFrom(Button.class)))
+					if (!((formComponent instanceof Button) && (component instanceof Button)) ||
+						(component == formComponent))
 					{
 						String name = formComponent.getInputName();
 						String value = formComponent.getValue();
 
-						// Set request parameter with the field value, but do not modify an existing
-						// request parameter explicitly set using FormTester.setValue()
+						// Set request parameter with the field value, but do not modify an
+						// existing request parameter explicitly set using
+						// FormTester.setValue()
 						if (getServletRequest().getParameterMap().get(name) == null)
 						{
 							getServletRequest().setParameter(name, value);
