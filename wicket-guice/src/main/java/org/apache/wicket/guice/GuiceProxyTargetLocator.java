@@ -87,7 +87,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 				Class< ? >[] paramTypes = new Class[data.length - 2];
 				for (int i = 2; i < data.length; i++)
 				{
-					paramTypes[2 - i] = Class.forName(data[i]);
+					paramTypes[i - 2] = Class.forName(data[i]);
 				}
 				final Method method = clazz.getDeclaredMethod(data[1], paramTypes);
 				type = method.getGenericParameterTypes()[argIndex];
