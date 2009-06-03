@@ -27,7 +27,9 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.AccessStackPageMap.Access;
+import org.apache.wicket.protocol.http.request.InvalidUrlException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
@@ -62,180 +64,192 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	public IRequestTarget resolve(final RequestCycle requestCycle,
 		final RequestParameters requestParameters)
 	{
-		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-			.getRequestCodingStrategy();
-
-		final String path = requestParameters.getPath();
-		IRequestTarget target = null;
-
-		// See whether this request points to a bookmarkable page
-		if (requestParameters.getBookmarkablePageClass() != null)
+		try
 		{
-			target = resolveBookmarkablePage(requestCycle, requestParameters);
-		}
-		// See whether this request points to a rendered page
-		else if (requestParameters.getComponentPath() != null)
-		{
-			// marks whether or not we will be processing this request
-			int processRequest = 0; // 0 == process, 1 == page expired, 2 == not active page anymore
-			synchronized (requestCycle.getSession())
+			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+
+			final String path = requestParameters.getPath();
+			IRequestTarget target = null;
+
+			// See whether this request points to a bookmarkable page
+			if (requestParameters.getBookmarkablePageClass() != null)
 			{
-				// we need to check if this request has been flagged as
-				// process-only-if-path-is-active and if so make sure this
-				// condition is met
-				if (requestParameters.isOnlyProcessIfPathActive())
+				target = resolveBookmarkablePage(requestCycle, requestParameters);
+			}
+			// See whether this request points to a rendered page
+			else if (requestParameters.getComponentPath() != null)
+			{
+				// marks whether or not we will be processing this request
+				int processRequest = 0; // 0 == process, 1 == page expired, 2 == not active page
+				// anymore
+				synchronized (requestCycle.getSession())
 				{
-					// this request has indeed been flagged as
-					// process-only-if-path-is-active
+					// we need to check if this request has been flagged as
+					// process-only-if-path-is-active and if so make sure this
+					// condition is met
+					if (requestParameters.isOnlyProcessIfPathActive())
+					{
+						// this request has indeed been flagged as
+						// process-only-if-path-is-active
 
-					Session session = Session.get();
-					IPageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
-						false);
-					if (pageMap == null)
-					{
-						// requested pagemap no longer exists - ignore this
-						// request
-						processRequest = 1;
-					}
-					else if (pageMap instanceof AccessStackPageMap)
-					{
-						AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
-						if (accessStackPageMap.getAccessStack().size() > 0)
+						Session session = Session.get();
+						IPageMap pageMap = session.pageMapForName(
+							requestParameters.getPageMapName(), false);
+						if (pageMap == null)
 						{
-							final Access access = accessStackPageMap.getAccessStack().peek();
-
-							final int pageId = Integer.parseInt(Strings.firstPathComponent(
-								requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
-
-							if (pageId != access.getId())
+							// requested pagemap no longer exists - ignore this
+							// request
+							processRequest = 1;
+						}
+						else if (pageMap instanceof AccessStackPageMap)
+						{
+							AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
+							if (accessStackPageMap.getAccessStack().size() > 0)
 							{
-								// the page is no longer the active page
-								// - ignore this request
-								processRequest = 2;
-							}
-							else
-							{
-								final int version = requestParameters.getVersionNumber();
-								if (version != Page.LATEST_VERSION &&
-									version != access.getVersion())
+								final Access access = accessStackPageMap.getAccessStack().peek();
+
+								final int pageId = Integer.parseInt(Strings.firstPathComponent(
+									requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
+
+								if (pageId != access.getId())
 								{
-									// version is no longer the active version -
-									// ignore this request
+									// the page is no longer the active page
+									// - ignore this request
 									processRequest = 2;
+								}
+								else
+								{
+									final int version = requestParameters.getVersionNumber();
+									if (version != Page.LATEST_VERSION &&
+										version != access.getVersion())
+									{
+										// version is no longer the active version -
+										// ignore this request
+										processRequest = 2;
+									}
 								}
 							}
 						}
+						else
+						{
+							// TODO also this should work..
+						}
+					}
+				}
+				if (processRequest == 0)
+				{
+					try
+					{
+						target = resolveRenderedPage(requestCycle, requestParameters);
+					}
+					catch (IgnoreAjaxRequestException e)
+					{
+						target = EmptyAjaxRequestTarget.getInstance();
+					}
+				}
+				else
+				{
+					Request request = requestCycle.getRequest();
+					if (request instanceof WebRequest && ((WebRequest)request).isAjax() &&
+						processRequest == 2)
+					{
+						// if processRequest is false in an ajax request just have an empty ajax
+						// target
+						target = EmptyAjaxRequestTarget.getInstance();
 					}
 					else
 					{
-						// TODO also this should work..
+						throw new PageExpiredException("Request cannot be processed");
 					}
 				}
 			}
-			if (processRequest == 0)
+			// See whether this request points to a shared resource
+			else if (requestParameters.getResourceKey() != null)
 			{
-				try
+				target = resolveSharedResource(requestCycle, requestParameters);
+			}
+			// See whether this request points to the home page
+			else if (Strings.isEmpty(path) || ("/".equals(path)))
+			{
+				target = resolveHomePageTarget(requestCycle, requestParameters);
+			}
+
+			// NOTE we are doing the mount check as the last item, so that it will
+			// only be executed when everything else fails. This enables URLs like
+			// /foo/bar/?wicket:bookmarkablePage=my.Page to be resolved, where
+			// is either a valid mount or a non-valid mount. I (Eelco) am not
+			// absolutely sure this is a great way to go, but it seems to have been
+			// established as the default way of doing things. If we ever want to
+			// tighten the algorithm up, it should be combined by going back to
+			// unmounted paths so that requests with Wicket parameters like
+			// 'bookmarkablePage' are always created and resolved in the same
+			// fashion. There is a test for this in UrlMountingTest.
+			if (target == null)
+			{
+				// still null? check for a mount
+				target = requestCodingStrategy.targetForRequest(requestParameters);
+
+				if (target == null && requestParameters.getComponentPath() != null)
 				{
-					target = resolveRenderedPage(requestCycle, requestParameters);
-				}
-				catch (IgnoreAjaxRequestException e)
-				{
-					target = EmptyAjaxRequestTarget.getInstance();
+					// If the target is still null and there was a component path
+					// then the Page could not be located in the session
+					throw new PageExpiredException(
+						"Cannot find the rendered page in session [pagemap=" +
+							requestParameters.getPageMapName() + ",componentPath=" +
+							requestParameters.getComponentPath() + ",versionNumber=" +
+							requestParameters.getVersionNumber() + "]");
 				}
 			}
 			else
 			{
-				Request request = requestCycle.getRequest();
-				if (request instanceof WebRequest && ((WebRequest)request).isAjax() &&
-					processRequest == 2)
+				// a target was found, but not by looking up a mount. check whether
+				// this is allowed
+				if (Application.get().getSecuritySettings().getEnforceMounts() &&
+					requestCodingStrategy.pathForTarget(target) != null)
 				{
-					// if processRequest is false in an ajax request just have an empty ajax target
-					target = EmptyAjaxRequestTarget.getInstance();
-				}
-				else
-				{
-					throw new PageExpiredException("Request cannot be processed");
-				}
-			}
-		}
-		// See whether this request points to a shared resource
-		else if (requestParameters.getResourceKey() != null)
-		{
-			target = resolveSharedResource(requestCycle, requestParameters);
-		}
-		// See whether this request points to the home page
-		else if (Strings.isEmpty(path) || ("/".equals(path)))
-		{
-			target = resolveHomePageTarget(requestCycle, requestParameters);
-		}
 
-		// NOTE we are doing the mount check as the last item, so that it will
-		// only be executed when everything else fails. This enables URLs like
-		// /foo/bar/?wicket:bookmarkablePage=my.Page to be resolved, where
-		// is either a valid mount or a non-valid mount. I (Eelco) am not
-		// absolutely sure this is a great way to go, but it seems to have been
-		// established as the default way of doing things. If we ever want to
-		// tighten the algorithm up, it should be combined by going back to
-		// unmounted paths so that requests with Wicket parameters like
-		// 'bookmarkablePage' are always created and resolved in the same
-		// fashion. There is a test for this in UrlMountingTest.
-		if (target == null)
-		{
-			// still null? check for a mount
-			target = requestCodingStrategy.targetForRequest(requestParameters);
-
-			if (target == null && requestParameters.getComponentPath() != null)
-			{
-				// If the target is still null and there was a component path
-				// then the Page could not be located in the session
-				throw new PageExpiredException(
-					"Cannot find the rendered page in session [pagemap=" +
-						requestParameters.getPageMapName() + ",componentPath=" +
-						requestParameters.getComponentPath() + ",versionNumber=" +
-						requestParameters.getVersionNumber() + "]");
-			}
-		}
-		else
-		{
-			// a target was found, but not by looking up a mount. check whether
-			// this is allowed
-			if (Application.get().getSecuritySettings().getEnforceMounts() &&
-				requestCodingStrategy.pathForTarget(target) != null)
-			{
-
-				// we make an excepion if the homepage itself was mounted, see WICKET-1898
-				boolean homepage = false;
-				if (target instanceof BookmarkablePageRequestTarget)
-				{
-					final BookmarkablePageRequestTarget bt = (BookmarkablePageRequestTarget)target;
-					if (bt.getPageClass().equals(Application.get().getHomePage()))
+					// we make an excepion if the homepage itself was mounted, see WICKET-1898
+					boolean homepage = false;
+					if (target instanceof BookmarkablePageRequestTarget)
 					{
-						homepage = true;
+						final BookmarkablePageRequestTarget bt = (BookmarkablePageRequestTarget)target;
+						if (bt.getPageClass().equals(Application.get().getHomePage()))
+						{
+							homepage = true;
+						}
+					}
+
+					if (!homepage)
+					{
+						String msg = "Direct access not allowed for mounted targets";
+						// the target was mounted, but we got here via another path
+						// : deny the request
+						log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" +
+							target + ",session=" + Session.get() + "]");
+						throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN,
+							msg);
 					}
 				}
-
-				if (!homepage)
-				{
-					String msg = "Direct access not allowed for mounted targets";
-					// the target was mounted, but we got here via another path
-					// : deny the request
-					log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target +
-						",session=" + Session.get() + "]");
-					throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
-				}
 			}
+
+			// (WICKET-1356) in case no target was found, return null here. RequestCycle will deal
+			// with
+			// it
+			// possible letting wicket filter to pass the request down the filter chain
+			/*
+			 * if (target == null) { // if we get here, we have no recognized Wicket target, and
+			 * thus // regard this as a external (non-wicket) resource request on // this server
+			 * return resolveExternalResource(requestCycle); }
+			 */
+
+			return target;
+		}
+		catch (WicketRuntimeException e)
+		{
+			throw new InvalidUrlException(e);
 		}
 
-		// (WICKET-1356) in case no target was found, return null here. RequestCycle will deal with
-		// it
-		// possible letting wicket filter to pass the request down the filter chain
-		/*
-		 * if (target == null) { // if we get here, we have no recognized Wicket target, and thus //
-		 * regard this as a external (non-wicket) resource request on // this server return
-		 * resolveExternalResource(requestCycle); }
-		 */
-
-		return target;
 	}
 
 	/**

@@ -197,32 +197,39 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final RequestParameters decode(final Request request)
 	{
-		final RequestParameters parameters = new RequestParameters();
-		final String pathInfo = getRequestPath(request);
-		parameters.setPath(pathInfo);
-		parameters.setPageMapName(request.getParameter(PAGEMAP));
-		addInterfaceParameters(request, parameters);
-		addBookmarkablePageParameters(request, parameters);
-		addResourceParameters(request, parameters);
-		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME) != null)
+		try
 		{
-			parameters.setOnlyProcessIfPathActive(true);
-		}
-
-		Map<String, String[]> map = request.getParameterMap();
-		Iterator<String> iterator = map.keySet().iterator();
-		// remove the parameters with a wicket namepsace prefix from the paramter list
-		while (iterator.hasNext())
-		{
-			String key = iterator.next();
-			if (key.startsWith(NAME_SPACE))
+			final RequestParameters parameters = new RequestParameters();
+			final String pathInfo = getRequestPath(request);
+			parameters.setPath(pathInfo);
+			parameters.setPageMapName(request.getParameter(PAGEMAP));
+			addInterfaceParameters(request, parameters);
+			addBookmarkablePageParameters(request, parameters);
+			addResourceParameters(request, parameters);
+			if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME) != null)
 			{
-				iterator.remove();
+				parameters.setOnlyProcessIfPathActive(true);
 			}
+
+			Map<String, String[]> map = request.getParameterMap();
+			Iterator<String> iterator = map.keySet().iterator();
+			// remove the parameters with a wicket namespace prefix from the paramter list
+			while (iterator.hasNext())
+			{
+				String key = iterator.next();
+				if (key.startsWith(NAME_SPACE))
+				{
+					iterator.remove();
+				}
+			}
+			parameters.setParameters(map);
+			parameters.setQueryString(request.getQueryString());
+			return parameters;
 		}
-		parameters.setParameters(map);
-		parameters.setQueryString(request.getQueryString());
-		return parameters;
+		catch (WicketRuntimeException e)
+		{
+			throw new InvalidUrlException(e);
+		}
 	}
 
 	/**
