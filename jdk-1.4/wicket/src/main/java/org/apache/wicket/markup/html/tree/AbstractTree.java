@@ -54,7 +54,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractTree extends Panel implements ITreeStateListener, TreeModelListener, AjaxRequestTarget.ITargetRespondListener
+public abstract class AbstractTree extends Panel
+	implements
+		ITreeStateListener,
+		TreeModelListener,
+		AjaxRequestTarget.ITargetRespondListener
 {
 
 	/**
@@ -831,7 +835,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 						}
 					});
-					
+
 					getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 
 					removeItem(item);
@@ -846,10 +850,11 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	public final void treeStructureChanged(TreeModelEvent e)
 	{
 		// get the parent node of changed nodes
-		TreeNode node = (TreeNode)e.getTreePath().getLastPathComponent();
+		TreeNode node = e.getTreePath() != null ? (TreeNode)e.getTreePath().getLastPathComponent()
+			: null;
 
 		// has the tree root changed?
-		if (e.getTreePath().getPathCount() == 1)
+		if (node == null || e.getTreePath().getPathCount() == 1)
 		{
 			invalidateAll();
 		}
@@ -982,7 +987,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			updated();
 		}
 	}
-	
+
 	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
 	 * you modified the tree model during an ajax request target and you want to partially update
@@ -1234,7 +1239,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		invalidateNode(node, false);
 	}
-	
+
 	/**
 	 * INTERNAL
 	 * 
