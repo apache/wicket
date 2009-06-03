@@ -928,7 +928,7 @@ public abstract class AbstractTree extends Panel
 		Object node = e.getTreePath() != null ? e.getTreePath().getLastPathComponent() : null;
 
 		// has the tree root changed?
-		if (e == null || e.getTreePath().getPathCount() == 1)
+		if (node == null || e.getTreePath().getPathCount() == 1)
 		{
 			invalidateAll();
 		}
