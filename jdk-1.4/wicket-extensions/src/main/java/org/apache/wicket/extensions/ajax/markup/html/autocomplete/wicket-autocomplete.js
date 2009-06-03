@@ -138,7 +138,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 case KEY_ENTER:
                     if(selected > -1) {
                         var value = getSelectedValue();
-                        if(handleSelection(value)) {
+                        if(value = handleSelection(value)) {
                           obj.value = value;
                           if(typeof objonchange=="function") objonchange.apply(this,[event]);
                         }
