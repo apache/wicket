@@ -38,23 +38,32 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
   	<ul>
   	Id: <span wicket:id="id">9999</span><br/>
 	Session Size: <span wicket:id="size">none</span><br/>
+  	Session Info: <span wicket:id="sessionInfo"></span><br/>
+  	Start Date: <span wicket:id="startDate"></span><br/>
+  	Last Request Time: <span wicket:id="lastRequestTime"></span><br/>
+  	Number of Requests: <span wicket:id="numberOfRequests"></span><br/>
+  	Total Time Taken: <span wicket:id="totalTimeTaken"></span><br/>
 	</ul>
     
   	<h2>Request Information</h2>
 	<table border="1">
 		<tr>
+			<th wicket:id="sessionid">Id</th>
 			<th>Start Date</th>
 			<th>Time Taken</th>
 			<th>Event Target</th>
 			<th>Response Target</th>
 			<th>Altered Objects</th>
+			<th>Session Size</th>
 		</tr>
 		<tr wicket:id="requests">
+			<td wicket:id="id"></td>
 			<td wicket:id="startDate"></td>
 			<td wicket:id="timeTaken" align="right"></td>
 			<td wicket:id="eventTarget"></td>
 			<td wicket:id="responseTarget"></td>
 			<td wicket:id="alteredObjects"></td>
+			<td wicket:id="sessionSize"></td>
 		</tr>
 	</table>
 	<span wicket:id="navigator"/>
