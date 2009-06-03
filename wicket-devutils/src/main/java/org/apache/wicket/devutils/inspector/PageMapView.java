@@ -92,6 +92,7 @@ public final class PageMapView extends DevUtilsPanel
 				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
+				parameters.put("pageMap", pageMap.getName() == null ? "" : pageMap.getName());
 				Link<?> link = new BookmarkablePageLink<Void>("link", InspectorPage.class, parameters);
 				link.add(new Label("id", "" + entry.getNumericId()));
 				listItem.add(link);

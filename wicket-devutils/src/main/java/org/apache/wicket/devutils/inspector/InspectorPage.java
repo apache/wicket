@@ -50,11 +50,17 @@ public final class InspectorPage extends DevUtilsPage
 		IPageMapEntry entry = null;
 		try
 		{
-			entry = getPageMap().getEntry(parameters.getInt("pageId"));
+			entry = Session.get().pageMapForName(
+					parameters.getString("pageMap").equals("") ? null : parameters.getString("pageMap"),
+					false).getEntry(parameters.getInt("pageId"));
 		}
 		catch (StringValueConversionException e)
 		{
 			// Ignore
+		}
+		catch (NullPointerException e)
+		{
+		        // Ignore
 		}
 		add(new PageView("page", entry == null ? null : entry.getPage()));
 		add(new Image("bug"));
