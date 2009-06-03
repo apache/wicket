@@ -925,10 +925,10 @@ public abstract class AbstractTree extends Panel
 		}
 
 		// get the parent node of changed nodes
-		Object node = e.getTreePath().getLastPathComponent();
+		Object node = e.getTreePath() != null ? e.getTreePath().getLastPathComponent() : null;
 
 		// has the tree root changed?
-		if (e.getTreePath().getPathCount() == 1)
+		if (e == null || e.getTreePath().getPathCount() == 1)
 		{
 			invalidateAll();
 		}
