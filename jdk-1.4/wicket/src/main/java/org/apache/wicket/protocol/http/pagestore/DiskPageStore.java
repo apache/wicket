@@ -1321,7 +1321,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		int hash = Math.abs(sessionId.hashCode());
 		String low = String.valueOf(hash % 9973);
 		String high = String.valueOf((hash / 9973) % 9973);
-		StringBuilder bs = new StringBuilder(sessionId.length() + 10);
+		StringBuffer bs = new StringBuffer(sessionId.length() + 10);
 		bs.append(low);
 		bs.append(File.separator);
 		bs.append(high);
