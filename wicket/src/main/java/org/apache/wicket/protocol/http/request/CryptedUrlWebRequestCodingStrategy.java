@@ -290,7 +290,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	@Deprecated
 	protected String onError(final Exception ex)
 	{
-		throw new PageExpiredException("Invalid URL");
+		throw new PageExpiredException("Invalid URL", ex);
 	}
 
 	/**
@@ -301,7 +301,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	protected String onError(final Exception ex, String url)
 	{
-		log.info("Invalid URL: " + url + ", message:" + ex.getMessage());
+		log.info("Invalid URL: " + url + ", exception type: " + ex.getClass().getName() +
+			", exception message:" + ex.getMessage());
 		return onError(ex);
 	}
 
