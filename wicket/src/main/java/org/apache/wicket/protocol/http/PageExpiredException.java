@@ -34,4 +34,15 @@ public class PageExpiredException extends WicketRuntimeException
 	{
 		super(message);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 * @param cause
+	 */
+	public PageExpiredException(final String message, Exception cause)
+	{
+		super(message, cause);
+	}
 }
