@@ -121,7 +121,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
+ * <th align = "left">Class</th>
+ * <th align = "left">Interface</th>
+ * <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -1064,8 +1066,10 @@ public abstract class RequestCycle
 	{
 		RequestParameters requestParameters = new RequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
+		String name = resourceReference.getName();
 		if (getApplication().getResourceSettings().getAddLastModifiedTimeToResourceReferenceUrl() &&
-			!Strings.isEmpty(resourceReference.getName()))
+			!Strings.isEmpty(name) && !name.endsWith("/")) // test for / because it could be a
+		// resource reference to a path..
 		{
 			Time time = resourceReference.lastModifiedTime();
 			if (time != null)
@@ -1073,7 +1077,7 @@ public abstract class RequestCycle
 				if (parameters == null)
 				{
 					parameters = new ValueMap();
-					parameters.put("wicket:lm", new Long(time.getMilliseconds()));
+					parameters.put("w:lm", new Long(time.getMilliseconds() / 1000));
 				}
 			}
 		}
