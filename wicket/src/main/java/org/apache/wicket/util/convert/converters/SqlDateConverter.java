@@ -40,7 +40,7 @@ public class SqlDateConverter extends AbstractConverter
 		}
 		else
 		{
-			return (Date)parse(getDateFormat(locale), value, locale);
+			return new Date(((java.util.Date)parse(getDateFormat(locale), value, locale)).getTime());
 		}
 	}
 
