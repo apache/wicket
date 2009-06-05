@@ -33,32 +33,42 @@ public class DevUtilsPage extends WebPage {
 
 	public DevUtilsPage() {
 		super();
+		init();
 	}
 
 	public DevUtilsPage(IModel<?> model) {
 		super(model);
+		init();
 	}
 
 	public DevUtilsPage(IPageMap pageMap, IModel<?> model) {
 		super(pageMap, model);
+		init();
 	}
 
 	public DevUtilsPage(IPageMap pageMap, PageParameters parameters) {
 		super(pageMap, parameters);
+		init();
 	}
 
 	public DevUtilsPage(IPageMap pageMap) {
 		super(pageMap);
+		init();
 	}
 
 	public DevUtilsPage(PageParameters parameters) {
 		super(parameters);
+		init();
 	}
 
+	private void init()
+	{
+		add(new DebugBar("debug"));	
+	}
+	
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		add(new DebugBar("debug"));
 		DevelopmentUtilitiesNotEnabledException.check();
 	}
 }
