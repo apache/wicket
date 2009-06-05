@@ -614,7 +614,7 @@ Wicket.Window.prototype = {
 		}		
 	
 		// opera seems to have problem accessing contentWindow here
-		if (Wicket.Browser.isOpera() || Wicket.Browser.isSafari()) {
+		if (Wicket.Browser.isOpera()) {
 			this.content.onload = function() {
 				this.content.contentWindow.name = this.settings.iframeName;
 			}
