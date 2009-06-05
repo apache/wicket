@@ -176,6 +176,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected CharSequence getPreconditionScript()
 	{
-		return "return Wicket.$$(this)&amp;&amp;Wicket.$$('" + getForm().getMarkupId() + "')";
+		return "return Wicket.$$(this)&&Wicket.$$('" + getForm().getMarkupId() + "')";
 	}
 }

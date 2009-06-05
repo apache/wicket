@@ -70,4 +70,15 @@ public class AjaxFormSubmitTest extends WicketTestCase
 			.getDefaultModelObject());
 	}
 
+	/**
+	 * Test that onclick handler is generated with the proper XHTML entities
+	 * for special characters, notably ampersand. See WICKET-2033.
+	 */
+	public void testEventJavaScriptEscaped() throws Exception
+	{
+		tester.startPage(AjaxFormSubmitTestPage.class);
+		tester.assertResultPage(AjaxFormSubmitTestPage.class,
+			"AjaxFormSubmitTestPage_expected.html");
+	}
+
 }
