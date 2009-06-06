@@ -606,6 +606,11 @@ public class FormTester
 		{
 			setFormComponentValue((FormComponent<?>)component, value);
 		}
+		else
+		{
+			throw new IllegalArgumentException("Componet with id: " + formComponentId +
+				" is not a FormComponent");
+		}
 	}
 
 	public void setValue(String checkBoxId, boolean value)
