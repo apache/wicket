@@ -1617,4 +1617,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");
 	}
 
+	/**
+	 * Gets page instance's unique identifier
+	 * 
+	 * @return instance unique identifier
+	 */
+	public PageReference getPageReference()
+	{
+		setStatelessHint(false);
+		return new PageReference(pageMapName, numericId, getCurrentVersionNumber());
+
+	}
 }
