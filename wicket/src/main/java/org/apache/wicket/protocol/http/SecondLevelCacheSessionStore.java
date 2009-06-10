@@ -263,9 +263,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				return true;
 			}
-			else
+			else if (getSession().getId() != null)
 			{
 				return getStore().containsPage(getSession().getId(), getName(), id, versionNumber);
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -287,20 +291,21 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 
 			String sessionId = getSession().getId();
-			if (getLastPage() != null && getLastPage().getNumericId() == id)
-			{
-				page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
-					: getLastPage();
-				if (page != null)
-				{
-					// ask the page store if it is ready saving the page.
-					getStore().pageAccessed(sessionId, page);
-					pages.put(id, page);
-					return page;
-				}
-			}
 			if (sessionId != null)
 			{
+				if (getLastPage() != null && getLastPage().getNumericId() == id)
+				{
+					page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
+						: getLastPage();
+					if (page != null)
+					{
+						// ask the page store if it is ready saving the page.
+						getStore().pageAccessed(sessionId, page);
+						pages.put(id, page);
+						return page;
+					}
+				}
+
 				setLastPage(null);
 				page = getStore().getPage(sessionId, getName(), id, versionNumber, -1);
 				pages.put(id, page);
