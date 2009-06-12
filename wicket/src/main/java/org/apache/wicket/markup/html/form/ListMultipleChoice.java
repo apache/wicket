@@ -114,7 +114,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *      List,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -131,8 +131,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(final String id, IModel<Collection<T>> object, final List<? extends T> choices,
-		final IChoiceRenderer<T> renderer)
+	public ListMultipleChoice(final String id, IModel<Collection<T>> object,
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, object, choices, renderer);
 	}
@@ -159,7 +159,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -170,7 +170,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(String id, IModel<Collection<T>> model,
-		IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
+		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

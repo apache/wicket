@@ -90,7 +90,8 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListChoice(final String id, final List<? extends T> choices, final IChoiceRenderer<T> renderer)
+	public ListChoice(final String id, final List<? extends T> choices,
+		final IChoiceRenderer<? super T> renderer)
 	{
 		this(id, null, choices, renderer, defaultMaxRows);
 	}
@@ -139,7 +140,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
 	public ListChoice(final String id, final IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
 	}
@@ -158,7 +159,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
 	public ListChoice(final String id, final IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<T> renderer, final int maxRows)
+		final IChoiceRenderer<? super T> renderer, final int maxRows)
 	{
 		super(id, model, choices, renderer);
 		this.maxRows = maxRows;
@@ -184,7 +185,8 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
+	public ListChoice(String id, IModel<? extends List<? extends T>> choices,
+		IChoiceRenderer<? super T> renderer)
 	{
 		this(id, null, choices, renderer, defaultMaxRows);
 	}
@@ -195,7 +197,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		this(id, model, choices, renderer, defaultMaxRows);
 	}
@@ -210,7 +212,7 @@ public class ListChoice<T> extends DropDownChoice<T>
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<T> renderer, int maxRows)
+		IChoiceRenderer<? super T> renderer, int maxRows)
 	{
 		super(id, model, choices, renderer);
 		this.maxRows = maxRows;

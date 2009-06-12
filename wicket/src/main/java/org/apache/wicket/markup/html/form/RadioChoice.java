@@ -181,7 +181,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, final List<? extends T> choices, final IChoiceRenderer<T> renderer)
+	public RadioChoice(final String id, final List<? extends T> choices,
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -219,7 +220,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(final String id, IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<T> renderer)
+		final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -269,7 +270,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      IModel,IChoiceRenderer)
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public RadioChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
+	public RadioChoice(String id, IModel<? extends List<? extends T>> choices,
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -291,7 +293,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      IModel,IChoiceRenderer)
 	 */
 	public RadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<T> renderer)
+		IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
 	}

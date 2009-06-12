@@ -51,7 +51,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	private IModel<? extends List<? extends E>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer<E> renderer;
+	private IChoiceRenderer<? super E> renderer;
 
 	/**
 	 * Constructor.
@@ -91,7 +91,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices,
-		final IChoiceRenderer<E> renderer)
+		final IChoiceRenderer<? super E> renderer)
 	{
 		this(id, new WildcardListModel<E>(choices), renderer);
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices,
-		final IChoiceRenderer<E> renderer)
+		final IChoiceRenderer<? super E> renderer)
 	{
 		this(id, model, new WildcardListModel<E>(choices), renderer);
 	}
@@ -157,7 +157,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public AbstractChoice(final String id, final IModel<? extends List<? extends E>> choices,
-		final IChoiceRenderer<E> renderer)
+		final IChoiceRenderer<? super E> renderer)
 	{
 		super(id);
 		this.choices = wrap(choices);
@@ -194,7 +194,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel<T> model,
-		final IModel<? extends List<? extends E>> choices, final IChoiceRenderer<E> renderer)
+		final IModel<? extends List<? extends E>> choices, final IChoiceRenderer<? super E> renderer)
 	{
 		super(id, model);
 		this.choices = wrap(choices);
@@ -260,7 +260,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * @return The IChoiceRenderer used for rendering the data objects
 	 */
-	public final IChoiceRenderer<E> getChoiceRenderer()
+	public final IChoiceRenderer<? super E> getChoiceRenderer()
 	{
 		return renderer;
 	}
@@ -271,7 +271,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * @param renderer
 	 * @return this for chaining
 	 */
-	public final AbstractChoice<T, E> setChoiceRenderer(IChoiceRenderer<E> renderer)
+	public final AbstractChoice<T, E> setChoiceRenderer(IChoiceRenderer<? super E> renderer)
 	{
 		if (renderer == null)
 		{
