@@ -630,6 +630,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private static final int FLAG_MODEL_SET = 0x100000;
 
+	/** True when a component is being removed from the hierarchy */
+	protected static final int FLAG_REMOVING_FROM_HIERARCHY = 0x200000;
+
 	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
 
 	/**
@@ -1131,6 +1134,23 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		Session.get().getFeedbackMessages().debug(this, message);
 		Session.get().dirty();
+	}
+
+	/**
+	 * Signals this Component that it is removed from the Component hierarchy.
+	 */
+	final void internalOnRemove()
+	{
+		setFlag(FLAG_REMOVING_FROM_HIERARCHY, true);
+		onRemove();
+		if (getFlag(FLAG_REMOVING_FROM_HIERARCHY))
+		{
+			throw new IllegalStateException(Component.class.getName() +
+				" has not been properly removed from hierachy. Something in the hierarchy of " +
+				getClass().getName() +
+				" has not called super.onRemovalFromHierarchy() in the override of onRemovalFromHierarchy() method");
+		}
+		removeChildren();
 	}
 
 	/**
@@ -3962,6 +3982,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Called to notify the component it is being removed from the component hierarchy
+	 * 
+	 * Overrides of this method MUST call the super implementation, the most logical place to do
+	 * this is the last line of the override method.
+	 * 
+	 * 
+	 */
+	protected void onRemove()
+	{
+		setFlag(FLAG_REMOVING_FROM_HIERARCHY, false);
+	}
+
+	/**
 	 * @deprecated use onDetach() instead
 	 */
 	// TODO remove after the deprecation release
@@ -4196,6 +4229,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Detaches any child components
 	 */
 	void detachChildren()
+	{
+	}
+
+	/**
+	 * Signals this components removal from hierarchy to all its children.
+	 */
+	void removeChildren()
 	{
 	}
 

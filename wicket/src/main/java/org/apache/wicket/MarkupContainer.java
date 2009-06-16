@@ -1370,6 +1370,8 @@ public abstract class MarkupContainer extends Component
 
 		component.detach();
 
+		component.internalOnRemove();
+
 		// Component is removed
 		component.setParent(null);
 	}
@@ -1628,6 +1630,26 @@ public abstract class MarkupContainer extends Component
 			parent.children_set(index, child, false);
 		}
 	}
+
+	/**
+	 * @see org.apache.wicket.Component#removeChildren()
+	 */
+	@Override
+	void removeChildren()
+	{
+		super.removeChildren();
+
+		for (int i = children_size(); i-- > 0;)
+		{
+			Object child = children_get(i, false);
+			if (child instanceof Component)
+			{
+				Component component = (Component)child;
+				component.internalOnRemove();
+			}
+		}
+	}
+
 
 	/**
 	 * 
