@@ -169,8 +169,9 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(String id, IModel<List<T>> model, IModel<? extends Collection<? extends T>> choicesModel,
-		IChoiceRenderer<T> choiceRenderer, int rows, boolean allowOrder)
+	public Palette(String id, IModel<List<T>> model,
+		IModel<? extends Collection<? extends T>> choicesModel, IChoiceRenderer<T> choiceRenderer,
+		int rows, boolean allowOrder)
 	{
 		super(id, model);
 
@@ -447,12 +448,12 @@ public class Palette<T> extends Panel implements IHeaderContributor
 		return null;
 	}
 
-	private Component getChoicesComponent()
+	protected Component getChoicesComponent()
 	{
 		return choicesComponent;
 	}
 
-	private Component getSelectionComponent()
+	protected Component getSelectionComponent()
 	{
 		return selectionComponent;
 	}
