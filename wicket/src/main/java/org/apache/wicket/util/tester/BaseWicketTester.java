@@ -1283,12 +1283,13 @@ public class BaseWicketTester extends MockWebApplication
 		Form<?> form = null;
 		try
 		{
-			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("__form");
 			formField.setAccessible(true);
 			form = (Form<?>)formField.get(behavior);
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 
