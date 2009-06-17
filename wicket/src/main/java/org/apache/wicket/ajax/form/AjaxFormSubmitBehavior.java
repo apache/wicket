@@ -40,7 +40,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form<?> form;
+	/**
+	 * should never be accessed directly (thus the __ cause its overkil to create a super class),
+	 * instead always use #getForm()
+	 */
+	private Form<?> __form;
 
 	/**
 	 * Constructor. This constructor can only be used when the component this behavior is attached
@@ -65,7 +69,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	public AjaxFormSubmitBehavior(Form<?> form, String event)
 	{
 		super(event);
-		this.form = form;
+		__form = form;
 
 		if (form != null)
 		{
@@ -79,12 +83,12 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 */
 	protected Form<?> getForm()
 	{
-		if (form == null)
+		if (__form == null)
 		{
 			// try to find form in the hierarchy of owning component
 			Component component = getComponent();
-			form = component.findParent(Form.class);
-			if (form == null)
+			__form = component.findParent(Form.class);
+			if (__form == null)
 			{
 				throw new IllegalStateException(
 					"form was not specified in the constructor and cannot "
@@ -92,7 +96,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 						+ "is attached to");
 			}
 		}
-		return form;
+		return __form;
 	}
 
 	/**
@@ -139,7 +143,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			onSubmit(target);
 		}
-		if (form.findParent(Page.class) != null)
+		if (getForm().findParent(Page.class) != null)
 		{
 			/*
 			 * there can be cases when a form is replaced with another component in the onsubmit()
