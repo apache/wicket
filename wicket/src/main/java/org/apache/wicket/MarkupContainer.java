@@ -1377,12 +1377,14 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	private final void renderNext(final MarkupStream markupStream)
+	protected final void renderNext(final MarkupStream markupStream)
 	{
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();

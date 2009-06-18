@@ -69,7 +69,7 @@ public class Markup
 	 * @param markupResourceData
 	 *            The associated Markup
 	 */
-	Markup(final MarkupResourceData markupResourceData)
+	public Markup(final MarkupResourceData markupResourceData)
 	{
 		this.markupResourceData = markupResourceData;
 		markupElements = new ArrayList<MarkupElement>();
@@ -145,7 +145,7 @@ public class Markup
 	/**
 	 * Make all tags immutable and the list of elements unmodifiable.
 	 */
-	final void makeImmutable()
+	final public void makeImmutable()
 	{
 		for (int i = 0; i < markupElements.size(); i++)
 		{
