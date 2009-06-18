@@ -25,7 +25,9 @@ import org.apache.wicket.validation.IValidatable;
  * Validator for checking numbers. Use the static factory methods to make range/minimum or maximum
  * validators for <code>double</code>s or <code>long</code>s.
  * 
- * @deprecated see (Range,Maximum,Minimum)Validator&lt;Z extends Comparable&lt;Z&gt;&gt;
+ * @deprecated {@link org.apache.wicket.validation.validator.RangeValidator},
+ *             {@link org.apache.wicket.validation.validator.MaximumValidator},
+ *             {@link org.apache.wicket.validation.validator.MinimumValidator}
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -45,7 +47,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * a validator for ensuring for a positive number value (>0 so not including 0)
 	 * 
-	 * @deprecated see {@link MinimumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MinimumValidator}
 	 */
 	@Deprecated
 	public static final NumberValidator POSITIVE = new DoubleMinimumValidator(Double.MIN_VALUE)
@@ -62,7 +64,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * a validator for ensuring a negative number value (<0 so not including 0)
 	 * 
-	 * @deprecated see {@link MaximumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MaximumValidator}
 	 */
 	@Deprecated
 	public static final NumberValidator NEGATIVE = new DoubleMaximumValidator(-Double.MIN_VALUE)
@@ -97,7 +99,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the request <code>NumberValidator</code>
-	 * @deprecated see {@link RangeValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.RangeValidator}
 	 */
 	@Deprecated
 	public static NumberValidator range(long minimum, long maximum)
@@ -123,7 +125,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the minimum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
-	 * @deprecated see {@link MinimumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MinimumValidator}
 	 */
 	@Deprecated
 	public static NumberValidator minimum(long minimum)
@@ -150,7 +152,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
-	 * @deprecated see {@link MaximumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MaximumValidator}
 	 */
 	@Deprecated
 	public static NumberValidator maximum(long maximum)
@@ -179,7 +181,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
-	 * @deprecated see {@link RangeValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.RangeValidator}
 	 */
 	@Deprecated
 	public static NumberValidator range(double minimum, double maximum)
@@ -205,7 +207,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the minimum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
-	 * @deprecated see {@link MinimumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MinimumValidator}
 	 */
 	@Deprecated
 	public static NumberValidator minimum(double minimum)
@@ -231,7 +233,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	 *            the maximum value
 	 * 
 	 * @return the requested <code>NumberValidator</code>
-	 * @deprecated see {@link MaximumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MaximumValidator}
 	 */
 	@Deprecated
 	public static NumberValidator maximum(double maximum)
@@ -242,7 +244,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given number is within the specified range.
 	 * 
-	 * @deprecated see {@link RangeValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.RangeValidator}
 	 */
 	@Deprecated
 	public static class RangeValidator extends NumberValidator
@@ -324,7 +326,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given number number meets the minimum requirement.
 	 * 
-	 * @deprecated see {@link MinimumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MinimumValidator}
 	 */
 	@Deprecated
 	public static class MinimumValidator extends NumberValidator
@@ -390,7 +392,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given number meets the maximum requirement.
 	 * 
-	 * @deprecated see {@link MaximumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MaximumValidator}
 	 */
 	@Deprecated
 	public static class MaximumValidator extends NumberValidator
@@ -455,7 +457,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given <code>double</code> is within the specified range.
 	 * 
-	 * @deprecated see {@link RangeValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.RangeValidator}
 	 */
 	@Deprecated
 	public static class DoubleRangeValidator extends NumberValidator
@@ -537,7 +539,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given <code>double</code> meets the minimum requirement.
 	 * 
-	 * @deprecated see {@link MinimumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MinimumValidator}
 	 */
 	@Deprecated
 	public static class DoubleMinimumValidator extends NumberValidator
@@ -609,7 +611,7 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 	/**
 	 * Validator for checking if a given <code>double</code> meets a maximum requirement.
 	 * 
-	 * @deprecated see {@link MaximumValidator}&lt;Z extends Comparable&lt;Z&gt;&gt;
+	 * @deprecated see {@link org.apache.wicket.validation.validator.MaximumValidator}
 	 */
 	@Deprecated
 	public static class DoubleMaximumValidator extends NumberValidator
@@ -677,5 +679,4 @@ public abstract class NumberValidator<T extends Number> extends AbstractValidato
 			return maximum;
 		}
 	}
-
 }
