@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
@@ -34,11 +35,13 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.BehaviorsUtil;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
@@ -1105,6 +1108,38 @@ public class BaseWicketTester extends MockWebApplication
 		Component component = getComponentFromLastRenderedPage(componentPath);
 		executeAjaxEvent(component, event);
 	}
+
+	/**
+	 * Simulates the firing of all ajax timer behaviors on the page
+	 * 
+	 * @param wt
+	 * @param container
+	 */
+	public void executeAllTimerBehaviors(MarkupContainer container)
+	{
+		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer>()
+		{
+			public Object component(MarkupContainer component)
+			{
+				// get the AbstractAjaxBehaviour which is responsible for
+				// getting the contents of the lazy panel
+				List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component,
+					AjaxSelfUpdatingTimerBehavior.class);
+				for (IBehavior b : behaviors)
+				{
+					if (b instanceof AjaxSelfUpdatingTimerBehavior)
+					{
+						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
+							component.getClassRelativePath());
+						AjaxSelfUpdatingTimerBehavior abstractAjaxBehaviour = (AjaxSelfUpdatingTimerBehavior)b;
+						executeBehavior(abstractAjaxBehaviour);
+					}
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
 
 	/**
 	 * Simulates the firing of an Ajax event. You add an Ajax event to a <code>Component</code> by
