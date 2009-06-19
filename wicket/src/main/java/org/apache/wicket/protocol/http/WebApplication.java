@@ -572,8 +572,8 @@ public abstract class WebApplication extends Application
 		configure();
 	}
 
-	/*
-	 * @see org.apache.wicket.Application#getConfigurationType()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getConfigurationType()
