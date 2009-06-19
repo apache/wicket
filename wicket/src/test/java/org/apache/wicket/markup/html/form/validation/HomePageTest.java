@@ -88,21 +88,24 @@ public class HomePageTest extends TestCase
 		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnSubmit);
 	}
 
+	/**
+	 * wicket-2202
+	 */
 	public void testWithPanelAjax()
 	{
 		tester.executeAjaxEvent("form3:submit", "onclick");
 
 		HomePage page = (HomePage)tester.getLastRenderedPage();
-		assertTrue((page.getFormSubmitted() & HomePage.AJAX) == HomePage.AJAX);
+		assertFalse((page.getFormSubmitted() & HomePage.AJAX) == HomePage.AJAX);
 	}
 
 	/**
-	   * 
-	   */
+	 * wicket-2202
+	 */
 	public void testWithPanelForm()
 	{
 		tester.clickLink("form3:submit2");
 		HomePage page = (HomePage)tester.getLastRenderedPage();
-		assertTrue((page.getFormSubmitted() & HomePage.NORMAL) == HomePage.NORMAL);
+		assertFalse((page.getFormSubmitted() & HomePage.NORMAL) == HomePage.NORMAL);
 	}
 }

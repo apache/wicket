@@ -24,13 +24,14 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ * 
+ */
 public class MyPanel extends Panel
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public String textfield1;
-
 
 	/**
 	 * Construct.
@@ -51,7 +52,6 @@ public class MyPanel extends Panel
 
 		form.add(new AbstractFormValidator()
 		{
-
 			public FormComponent<?>[] getDependentFormComponents()
 			{
 				return null;
@@ -61,9 +61,6 @@ public class MyPanel extends Panel
 			{
 				form.error("form validation error");
 			}
-
 		});
-
 	}
-
 }

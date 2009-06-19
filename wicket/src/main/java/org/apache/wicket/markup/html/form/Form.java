@@ -1238,11 +1238,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			}
 		};
 
-		visitChildren(FormComponent.class, new IVisitor<Component>()
+		visitChildren(Component.class, new IVisitor<Component>()
 		{
 			public Object component(final Component component)
 			{
-				return visitor.component(component);
+				if ((component instanceof Form) || (component instanceof FormComponent))
+				{
+					return visitor.component(component);
+				}
+				return Component.IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 
