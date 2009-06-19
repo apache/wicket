@@ -426,6 +426,15 @@ public abstract class Application
 	 * You may also override Application.getConfigurationType() to provide your own custom switch,
 	 * in which case none of the above logic is used. </div>
 	 * 
+	 * <p>
+	 * IMPORTANT NOTE
+	 * </p>
+	 * THIS METHOD IS CALLED OFTEN FROM MANY DIFFERENT POINTS IN CODE, INCLUDING DURING THE RENDER
+	 * PROCESS, THEREFORE THE IMPLEMENTATION SHOULD BE FAST - PREFERRABLY USING A FAST-TO-RETRIEVE
+	 * CACHED VALUE
+	 * 
+	 * 
+	 * 
 	 * @return configuration
 	 * @since 1.2.3 (function existed as a property getter)
 	 * @since 1.3.0 (abstract, used to configure things)
