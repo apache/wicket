@@ -53,9 +53,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	var objonchange;
 	var objonchangeoriginal;
 	
-	// holds the eventual margins, padding, etc. of the menu container.
-	// it is computed when the menu is first rendered, and then reused.
-	var initialDelta = -1;
+      var ignoreOneFocusGain = false; // on FF, clicking an option in the popup would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
 
 	// holds a throttler, for not sending many requests if the user types
 	// too quickly.
@@ -90,6 +88,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 
       	obj.onblur=function(event){      		
     		if(mouseactive==1){
+                  ignoreOneFocusGain = true;
     			Wicket.$(elementId).focus();
     			return killEvent(event);
     		}
@@ -98,20 +97,21 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
       	
       	obj.onfocus=function(event){
-            if (cfg.showListOnFocusGain) {
+            if (!ignoreOneFocusGain && cfg.showListOnFocusGain) {
                 if (cfg.showCompleteListOnFocusGain) {
                     updateChoices(true);
                 } else {
                     updateChoices();
                 }
             }
+            ignoreOneFocusGain = false;
           	if(typeof objonfocus=="function")objonfocus.apply(this,[event]);
         }
 
         obj.onkeydown=function(event){
             switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_UP:
-        	        if(selected>-1)selected--;
+        	        if(selected>-1) selected--;
             	    if(selected==-1){
     	           	    hideAutoComplete();
                    	} else {
@@ -120,9 +120,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             	    if(Wicket.Browser.isSafari())return killEvent(event);
                 	break;
                 case KEY_DOWN:
-               		if(selected<elementCount-1){
-                	    selected++;
-	                }
+               		if(selected<elementCount-1) selected++;
     	            if(visible==0){
         	            updateChoices();
             	    } else {
@@ -327,16 +325,17 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
 
 	 function getPosition(obj) {
-        var leftPosition=0;
-        var topPosition=0;
-        do {
+        var leftPosition = obj.offsetLeft || 0;
+        var topPosition = obj.offsetTop || 0;
+        obj = obj.offsetParent;
+        while (obj && obj != document.documentElement && obj != document.body) {
             topPosition += obj.offsetTop || 0;
      		topPosition -= obj.scrollTop || 0;
             leftPosition += obj.offsetLeft || 0;
      		leftPosition -= obj.scrollLeft || 0;
             obj = obj.offsetParent;
-        } while (obj);
- 
+        }
+
         return [leftPosition,topPosition];
     }
     
@@ -362,9 +361,15 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                   if(typeof objonchange=="function") objonchange.apply(wicketGet(elementId),[event]);
                 }
                 hideAutoComplete();
+                if (Wicket.Focus.getFocusedElement() != input)
+                {
+                    ignoreOneFocusGain = true;
+                    input.focus();
+                }
             };
 			
             var mouseOverFunc = function(event) {
+                mouseactive=1; // Opera needs this as mousemove for menu is not always triggered
                 selected = getElementIndex(this);
                 render();
                 showAutoComplete();
@@ -452,18 +457,17 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			if (classNames != origClassNames)
                 node.className = classNames;
 	
-			if ((cfg.maxHeight > -1) && (height < cfg.maxHeight))
+			if (cfg.maxHeight > -1)
 				height+=node.offsetHeight;
 	
 			node = node.nextSibling;
 		}
         if (cfg.maxHeight > -1) {
-			// If we don't exceed the maximum size, we add the extra space 
-			// that may be there due to padding, margins, etc.
-			if (initialDelta == -1)
-				initialDelta = menu.parentNode.offsetHeight - height;
-        	height = height<cfg.maxHeight ? height+initialDelta : cfg.maxHeight;
-        	menu.parentNode.style.height=height+"px";
+        	if (height<cfg.maxHeight) {
+                menu.parentNode.style.height="auto";
+            } else {
+        	    menu.parentNode.style.height=cfg.maxHeight+"px";
+            }
         }
     }
     
