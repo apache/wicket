@@ -288,15 +288,15 @@ public abstract class RatingPanel extends Panel
 	{
 		super(id, rating);
 
-		this.nrOfStars = nrOfStars;
-		this.nrOfVotes = nrOfVotes;
-		this.hasVoted = hasVoted;
+		this.nrOfStars = wrap(nrOfStars);
+		this.nrOfVotes = wrap(nrOfVotes);
+		this.hasVoted = wrap(hasVoted);
 
 		WebMarkupContainer rater = new WebMarkupContainer("rater");
-		rater.add(newRatingStarBar("element", nrOfStars));
+		rater.add(newRatingStarBar("element", this.nrOfStars));
 
 		// add the text label for the message 'Rating 4.5 out of 25 votes'
-		rater.add(ratingLabel = newRatingLabel("rating", rating, nrOfVotes));
+		rater.add(ratingLabel = newRatingLabel("rating", wrap(rating), this.nrOfVotes));
 
 		// set auto generation of the markup id on, such that ajax calls work.
 		rater.setOutputMarkupId(true);
