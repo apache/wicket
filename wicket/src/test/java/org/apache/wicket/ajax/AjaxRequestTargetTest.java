@@ -157,4 +157,27 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			DiffUtil.validatePage(headerContribution, getClass(), expectedFile, true);
 		}
 	}
+
+	/**
+	 * WICKET-2328
+	 */
+	public void testRenderMyPage()
+	{
+		// start and render the test page
+		tester.startPage(HomePage2.class);
+
+		// assert rendered page class
+		tester.assertRenderedPage(HomePage2.class);
+
+		// assert rendered label component
+		tester.assertLabel("msg", "onBeforeRender called");
+
+		// click the ajax link; this should have no effect
+		tester.clickLink("link");
+
+		// assert rendered label component again to make sure
+		// THIS FAILS! even though the same sequence of clicks
+		// done in a browser does not cause the label to change
+		tester.assertLabel("msg", "onBeforeRender called");
+	}
 }
