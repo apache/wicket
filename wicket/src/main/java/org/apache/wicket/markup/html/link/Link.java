@@ -61,11 +61,11 @@ import org.apache.wicket.version.undo.Change;
  * responded by the Link.
  * 
  * <pre>
- * add(new Link(&quot;link&quot;, listItem.getModel())
+ * add(new Link<MyObject>(&quot;link&quot;, listItem.getModel())
  * {
  *     public void onClick()
  *     {
- *         MyObject obj = (MyObject)getModelObject();
+ *         MyObject obj = getModelObject();
  *         setResponsePage(new MyPage(obj));
  *     }
  * </pre>
