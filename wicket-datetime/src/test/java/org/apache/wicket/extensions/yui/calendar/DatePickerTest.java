@@ -16,18 +16,50 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
-import org.apache.wicket.WicketTestCase;
 
 /**
  * 
  */
-public class DatePickerTest extends WicketTestCase
+public class DatePickerTest // extends TestCase
 {
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage() throws Exception
-	{
-		executeTest(DatesPage.class, "DatesPage_1_ExpectedResult.html");
-	}
+	// Disabled until we fixed the issue that WicketTestCase or WicketTester is not available in
+	// other projects. They are in src/test/java. Maven will create a compile error since in Maven
+	// the test folder is not exported, which is what we want. We don't want the test cases to be
+	// part of the Wicket distribution jar. In Eclipse it works since all source folders are
+	// exported and you can not disable specific ones.
+
+// WicketTester tester = new WicketTester();
+//
+// /**
+// * @throws Exception
+// */
+// public void testRenderHomePage() throws Exception
+// {
+// myTestExecution(DatesPage.class, "DatesPage_1_ExpectedResult.html");
+// }
+//
+// /**
+// * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+// * output file.
+// *
+// * @param <T>
+// *
+// * @param pageClass
+// * @param filename
+// * @throws Exception
+// */
+// protected <T extends Page> void myTestExecution(final Class<T> pageClass, final String filename)
+// throws Exception
+// {
+// System.out.println("=== " + pageClass.getName() + " ===");
+//
+// tester.startPage(pageClass);
+// tester.assertRenderedPage(pageClass);
+//
+// String document = tester.getServletResponse().getDocument();
+// document = document.replaceAll("\\d\\d\\.\\d\\d\\.\\d\\d", "xx.xx.xx");
+// document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d\\d\\d", "xx.xx.xx");
+//
+// DiffUtil.validatePage(document, pageClass, filename, true);
+// }
 }
