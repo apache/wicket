@@ -169,7 +169,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * Will let the wizard contribute a CSS include to the page's header. It will add Wizard.css
 	 * from this package. This method is typically called by the class that creates the wizard.
 	 */
-	public final void addDefaultCssStyle()
+	public void addDefaultCssStyle()
 	{
 		add(HeaderContributor.forCss(Wizard.class, "Wizard.css"));
 	}
