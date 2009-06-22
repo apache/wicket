@@ -32,11 +32,23 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	public ApacheLicenceHeaderTest()
 	{
 		// addHeaders = true;
+		htmlIgnore = new String[] {
+		/*
+		 * .html in test is very test specific and a license header would confuse and make it
+		 * unclear what the test is about.
+		 */
+		"src/test/java",
+		/*
+		 * See NOTICE.txt
+		 */
+		"src/main/java/org/apache/wicket/util/diff" };
 
 		/*
 		 * YUI lib. See NOTICE
 		 */
-		cssIgnore = new String[] { "src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar.css" };
+		cssIgnore = new String[] {
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar.css",
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar.css" };
 
 		/*
 		 * YUI lib. See NOTICE
