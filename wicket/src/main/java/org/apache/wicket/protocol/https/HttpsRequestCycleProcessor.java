@@ -131,6 +131,36 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 		}
 	}
 
+	protected IRequestTarget checkSecure(IRequestTarget target)
+	{
+		if (portConfig == null)
+		{
+			return target;
+		}
+		else
+		{
+			Class<?> pageClass = getPageClass(target);
+			if (pageClass != null)
+			{
+				IRequestTarget redirect = null;
+				if (hasSecureAnnotation(pageClass))
+				{
+					redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTPS);
+				}
+				else
+				{
+					redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTP);
+				}
+				if (redirect != null)
+				{
+					return redirect;
+				}
+
+			}
+			return target;
+		}
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public IRequestTarget resolve(RequestCycle rc, RequestParameters rp)
@@ -140,24 +170,6 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 		Session.get().bind();
 
 		IRequestTarget target = super.resolve(rc, rp);
-		Class<?> pageClass = getPageClass(target);
-		if (pageClass != null)
-		{
-			IRequestTarget redirect = null;
-			if (hasSecureAnnotation(pageClass))
-			{
-				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTPS);
-			}
-			else
-			{
-				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTP);
-			}
-			if (redirect != null)
-			{
-				return redirect;
-			}
-
-		}
-		return target;
+		return checkSecure(target);
 	}
 }
