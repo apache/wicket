@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
  * Abstract base class for single-select choices.
  * 
  * @author Jonathan Locke
- * @author Eelco Hillenius
+ * @author Eelco Hillenius                          nm
  * @author Johan Compagner
  * 
  * @param <T>
@@ -44,7 +44,9 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 
 	private static final String EMPTY_STRING = "";
 
-	/** Is the null value a valid value? */
+    /** whether or not null will be offered as a choice once
+     * a nonnull value is saved
+     */
 	private boolean nullValid = false;
 
 	/**
@@ -167,11 +169,26 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will be
-	 * displayed, typically to the user as 'choose one' or something similar. Note that this doesn't
-	 * say anything about whether a null value (not selecting a value) is permitted; use
-	 * {@link #setRequired(boolean)} for that.
-	 * 
+     * Determines whether or not the null value should be included in the
+     * list of choices when the field's model value is nonnull, and whether or
+     * not the null_valid string property (e.g. "Choose One") should be
+     * displayed until a nonnull value is selected.
+     *
+     * If set to false, then "Choose One" will be displayed when the value is
+     * null. After a value is selected, and that change is propagated to the
+     * underlying model, the user will no longer see the "Choose One" option,
+     * and there will be no way to reselect null as the value.
+     *
+     * If set to true, the null string property (the empty string, by default)
+     * will always be displayed as an option, whether or not a nonnull value
+     * has ever been selected.
+     *
+     * Note that this setting has no effect on validation; in order to guarantee
+     * that a value will be specified on form validation, {@link #setRequired(boolean)}.
+     * This is because even if setNullValid() is called with false, the user
+     * can fail to provide a value simply by never activating
+     * (i.e. clicking on) the component.
+	 *
 	 * @return <code>true</code> when the <code>null</code> value is allowed.
 	 */
 	public boolean isNullValid()
@@ -180,13 +197,28 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will be
-	 * displayed, typically to the user as 'choose one' or something similar. Note that this doesn't
-	 * say anything about whether a null value (not selecting a value) is permitted; use
-	 * {@link #setRequired(boolean)} for that.
-	 * 
-	 * @param nullValid
-	 *            whether null is a valid value
+     /**
+      * Determines whether or not the null value should be included in the
+      * list of choices when the field's model value is nonnull, and whether or
+      * not the null_valid string property (e.g. "Choose One") should be
+      * displayed until a nonnull value is selected.
+      *
+      * If set to false, then "Choose One" will be displayed when the value is
+      * null. After a value is selected, and that change is propagated to the
+      * underlying model, the user will no longer see the "Choose One" option,
+      * and there will be no way to reselect null as the value.
+      *
+      * If set to true, the null string property (the empty string, by default)
+      * will always be displayed as an option, whether or not a nonnull value
+      * has ever been selected.
+      *
+      * Note that this setting has no effect on validation; in order to guarantee
+      * that a value will be specified on form validation, {@link #setRequired(boolean)}.
+      * This is because even if setNullValid() is called with false, the user
+      * can fail to provide a value simply by never activating
+      * (i.e. clicking on) the component.
+      *
+	 * @param nullValid whether null is a valid value
 	 * @return this for chaining
 	 */
 	public AbstractSingleSelectChoice<T> setNullValid(boolean nullValid)
