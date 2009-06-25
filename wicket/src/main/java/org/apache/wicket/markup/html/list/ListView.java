@@ -62,11 +62,11 @@ import org.apache.wicket.version.undo.Change;
  * The related Java code:
  * 
  * <pre>
- * add(new ListView(&quot;rows&quot;, listData)
+ * add(new ListView&lt;UserDetails&gt;(&quot;rows&quot;, listData)
  * {
- * 	public void populateItem(final ListItem item)
+ * 	public void populateItem(final ListItem&lt;UserDetails&gt; item)
  * 	{
- * 		final UserDetails user = (UserDetails)item.getModelObject();
+ * 		final UserDetails user = item.getModelObject();
  * 		item.add(new Label(&quot;id&quot;, user.getId()));
  * 	}
  * });

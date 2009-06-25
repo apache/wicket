@@ -44,11 +44,11 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
  * And the related Java code:
  * 
  * <pre>
- * add(new DataView(&quot;rows&quot;, dataProvider)
+ * add(new DataView&lt;UserDetails&gt;(&quot;rows&quot;, dataProvider)
  * {
- * 	public void populateItem(final Item item)
+ * 	public void populateItem(final Item&lt;UserDetails&gt; item)
  * 	{
- * 		final UserDetails user = (UserDetails)item.getModelObject();
+ * 		final UserDetails user = item.getModelObject();
  * 		item.add(new Label(&quot;id&quot;, user.getId()));
  * 	}
  * });
