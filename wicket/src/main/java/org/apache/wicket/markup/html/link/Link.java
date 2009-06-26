@@ -61,7 +61,7 @@ import org.apache.wicket.version.undo.Change;
  * responded by the Link.
  * 
  * <pre>
- * add(new Link<MyObject>(&quot;link&quot;, listItem.getModel())
+ * add(new Link&lt;MyObject&gt;(&quot;link&quot;, listItem.getModel())
  * {
  *     public void onClick()
  *     {
@@ -168,7 +168,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 * 
 	 * @return the popup specification.
 	 */
-	public PopupSettings getPopupSettings()
+	public final PopupSettings getPopupSettings()
 	{
 		return popupSettings;
 	}
@@ -188,6 +188,9 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		return super.isEnabled();
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#getStatelessHint()
+	 */
 	@Override
 	protected boolean getStatelessHint()
 	{
