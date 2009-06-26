@@ -636,7 +636,14 @@ public abstract class MarkupContainer extends Component
 		setMarkupStream(associatedMarkupStream);
 
 		// Get open tag in associated markup of border component
-		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
+		MarkupElement elem = associatedMarkupStream.get();
+		if ((elem instanceof ComponentTag) == false)
+		{
+			associatedMarkupStream.throwMarkupException("Expected the open tag. " +
+				exceptionMessage);
+		}
+
+		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
 
 		// Check for required open tag name
 		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
