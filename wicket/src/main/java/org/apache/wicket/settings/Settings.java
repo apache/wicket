@@ -66,6 +66,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 
 
@@ -236,7 +237,7 @@ public final class Settings
 	private IResourceStreamLocator resourceStreamLocator;
 
 	/** ModificationWatcher to watch for changes in markup files */
-	private ModificationWatcher resourceWatcher;
+	private IModificationWatcher resourceWatcher;
 
 	/** List of {@link IResponseFilter}s. */
 	private List<IResponseFilter> responseFilters;
@@ -699,9 +700,9 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getResourceWatcher(boolean)
 	 */
-	public ModificationWatcher getResourceWatcher(boolean start)
+	public IModificationWatcher getResourceWatcher(boolean start)
 	{
-		if (resourceWatcher == null && start)
+		if ((resourceWatcher == null) && start)
 		{
 			final Duration pollFrequency = getResourcePollFrequency();
 			if (pollFrequency != null)
@@ -1107,6 +1108,14 @@ public final class Settings
 	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
 	{
 		this.resourceStreamLocator = resourceStreamLocator;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceWatcher(org.apache.wicket.util.watch.IModificationWatcher)
+	 */
+	public void setResourceWatcher(IModificationWatcher watcher)
+	{
+		resourceWatcher = watcher;
 	}
 
 	/**

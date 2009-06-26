@@ -52,7 +52,7 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.PackageName;
-import org.apache.wicket.util.watch.ModificationWatcher;
+import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -521,7 +521,7 @@ public abstract class WebApplication extends Application
 	protected void internalDestroy()
 	{
 		// destroy the resource watcher
-		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher(false);
+		IModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher(false);
 		if (resourceWatcher != null)
 		{
 			resourceWatcher.destroy();

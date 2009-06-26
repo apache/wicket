@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class ReloadingClassLoader extends URLClassLoader
 
 	private final Duration pollFrequency = Duration.seconds(3);
 
-	private final ModificationWatcher watcher;
+	private final IModificationWatcher watcher;
 
 	static
 	{

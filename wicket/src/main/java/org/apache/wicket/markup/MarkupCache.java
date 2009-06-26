@@ -31,6 +31,7 @@ import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.watch.IModifiable;
+import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,7 +175,7 @@ public class MarkupCache implements IMarkupCache
 			// resources no longer in the cache. Note that you can not use
 			// Application.get() since removeMarkup() will be call from a
 			// ModificationWatcher thread which has no associated Application.
-			final ModificationWatcher watcher = application.getResourceSettings()
+			final IModificationWatcher watcher = application.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{
@@ -528,7 +529,7 @@ public class MarkupCache implements IMarkupCache
 				return markup;
 			}
 			// Watch file in the future
-			final ModificationWatcher watcher = Application.get()
+			final IModificationWatcher watcher = Application.get()
 				.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)

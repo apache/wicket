@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public final class ModificationWatcher
+public class ModificationWatcher implements IModificationWatcher
 {
 	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
@@ -84,15 +84,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Adds an <code>IModifiable</code> object and an <code>IChangeListener</code> object to call
-	 * when the modifiable object is modified.
-	 * 
-	 * @param modifiable
-	 *            an <code>IModifiable</code> object to monitor
-	 * @param listener
-	 *            an <code>IChangeListener</code> to call if the <code>IModifiable</code> object is
-	 *            modified
-	 * @return <code>true</code> if the set did not already contain the specified element
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#add(org.apache.wicket.util.watch.IModifiable, org.apache.wicket.util.listener.IChangeListener)
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
@@ -131,11 +123,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Removes all entries associated with an <code>IModifiable</code> object.
-	 * 
-	 * @param modifiable
-	 *            an <code>IModifiable</code> object
-	 * @return the <code>IModifiable</code> object that was removed, else <code>null</code>
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#remove(org.apache.wicket.util.watch.IModifiable)
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
@@ -148,10 +136,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Starts watching at a given <code>Duration</code> polling rate.
-	 * 
-	 * @param pollFrequency
-	 *            the polling rate <code>Duration</code>
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#start(org.apache.wicket.util.time.Duration)
 	 */
 	public void start(final Duration pollFrequency)
 	{
@@ -188,7 +173,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Stops this <code>ModificationWatcher</code>.
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#destroy()
 	 */
 	public void destroy()
 	{
@@ -200,9 +185,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Retrieves a key set of all <code>IModifiable</code> objects currently being monitored.
-	 * 
-	 * @return a <code>Set</code> of all <code>IModifiable</code> entries currently maintained
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#getEntries()
 	 */
 	public final Set<IModifiable> getEntries()
 	{

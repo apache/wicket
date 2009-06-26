@@ -33,6 +33,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,7 +225,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			}
 
 			// Watch file modifications
-			final ModificationWatcher watcher = application.getResourceSettings()
+			final IModificationWatcher watcher = application.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{

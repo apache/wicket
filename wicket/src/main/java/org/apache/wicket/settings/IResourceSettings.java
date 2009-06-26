@@ -30,7 +30,7 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.watch.ModificationWatcher;
+import org.apache.wicket.util.watch.IModificationWatcher;
 
 
 /**
@@ -191,7 +191,7 @@ public interface IResourceSettings
 	 * @return Resource watcher with polling frequency determined by setting, or null if no polling
 	 *         frequency has been set.
 	 */
-	ModificationWatcher getResourceWatcher(boolean start);
+	IModificationWatcher getResourceWatcher(boolean start);
 
 	/**
 	 * @see #addStringResourceLoader(IStringResourceLoader)
@@ -281,6 +281,13 @@ public interface IResourceSettings
 	 *            new resource stream locator
 	 */
 	void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator);
+
+	/**
+	 * Sets the resource watcher
+	 * 
+	 * @param watcher
+	 */
+	void setResourceWatcher(IModificationWatcher watcher);
 
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
