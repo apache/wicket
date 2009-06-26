@@ -3931,6 +3931,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Processes the component tag.
+	 * <p/>
+	 * Overrides of this method most likely should call the super implementation.
 	 * 
 	 * @param tag
 	 *            Tag to modify
