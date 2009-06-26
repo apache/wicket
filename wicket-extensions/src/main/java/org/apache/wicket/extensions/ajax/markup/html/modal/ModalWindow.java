@@ -1026,7 +1026,7 @@ public class ModalWindow extends Panel
 			buffer.append("settings.height=null;\n");
 		}
 
-		appendAssignment(buffer, "settings.resizable", Boolean.toString(isResizable()));
+		appendAssignment(buffer, "settings.resizable", isResizable());
 
 		if (isResizable() == false)
 		{
@@ -1117,6 +1117,20 @@ public class ModalWindow extends Panel
 	{
 		buffer.append(key).append("=");
 		buffer.append(value);
+		buffer.append(";\n");
+	}
+
+	/**
+	 * 
+	 * @param buffer
+	 * @param key
+	 * @param value
+	 */
+	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
+		final boolean value)
+	{
+		buffer.append(key).append("=");
+		buffer.append(Boolean.toString(value));
 		buffer.append(";\n");
 	}
 
