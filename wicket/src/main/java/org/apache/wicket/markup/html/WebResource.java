@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Resource;
 import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -28,10 +29,6 @@ import org.apache.wicket.protocol.http.WebResponse;
  */
 public abstract class WebResource extends Resource
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -89,9 +86,10 @@ public abstract class WebResource extends Resource
 	 * classes.
 	 * 
 	 * @return The cache duration in seconds
+	 * @TODO change to long in 1.5
 	 */
 	protected int getCacheDuration()
 	{
-		return 3600;
+		return (int)Application.get().getResourceSettings().getDefaultCacheDuration();
 	}
 }

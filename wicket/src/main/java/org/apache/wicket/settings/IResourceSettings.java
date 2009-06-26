@@ -119,6 +119,13 @@ public interface IResourceSettings
 	void addStringResourceLoader(final int index, final IStringResourceLoader loader);
 
 	/**
+	 * Get the the default cache duration (3600 secs == 1hr) for WebResource.
+	 * 
+	 * @return cache duration
+	 */
+	int getDefaultCacheDuration();
+
+	/**
 	 * Whether to disable gzip compression for resources. You need this on SAP, which gzips things
 	 * twice.
 	 * 
@@ -205,6 +212,14 @@ public interface IResourceSettings
 	 * @return Whether to use a default value (if available) when a missing resource is requested
 	 */
 	boolean getUseDefaultOnMissingResource();
+
+	/**
+	 * Set the the default cache duration for WebResource.
+	 * 
+	 * @param defaultDuration
+	 *            default cache duration in seconds
+	 */
+	void setDefaultCacheDuration(int defaultDuration);
 
 	/**
 	 * Sets whether to disable gzip compression for resources. You need to set this on some SAP

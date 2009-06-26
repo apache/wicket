@@ -329,10 +329,11 @@ public final class Settings
 	/** */
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
-	/**
-	 * escape string for '..' within resource keys
-	 */
+	/** escape string for '..' within resource keys */
 	private CharSequence parentFolderPlaceholder = null;
+
+	/** Default cache duration */
+	private int defaultCacheDuration = 3600;
 
 	/**
 	 * Create the application settings, carrying out any necessary initializations.
@@ -1519,4 +1520,23 @@ public final class Settings
 		return developmentUtilitiesEnabled;
 	}
 
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#getDefaultCacheDuration()
+	 */
+	public final int getDefaultCacheDuration()
+	{
+		return defaultCacheDuration;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setDefaultCacheDuration(long)
+	 */
+	public final void setDefaultCacheDuration(int defaultDuration)
+	{
+		if (defaultDuration < 0)
+		{
+			throw new IllegalArgumentException("Parameter 'defaultDuration' must not be < 0");
+		}
+		defaultCacheDuration = defaultDuration;
+	}
 }
