@@ -195,7 +195,6 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class Component implements IClusterable, IConverterLocator
 {
@@ -1211,24 +1210,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void detachBehaviors()
 	{
-		List<IBehavior> behaviors = getBehaviors();
-		if (behaviors != null)
+		for (IBehavior behavior : getBehaviors())
 		{
-			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+			// Always detach models, 'accepted' or not. Otherwise, if they
+			// are accepted during render, but not here - something can go
+			// undetached, and calling isEnabled can also lead to nasty side
+			// effects. See for instance Timo's comment on
+			// http://issues.apache.org/jira/browse/WICKET-673
+			behavior.detach(this);
+
+			if (behavior.isTemporary())
 			{
-				IBehavior behavior = i.next();
-
-				// Always detach models, 'accepted' or not. Otherwise, if they
-				// are accepted during render, but not here - something can go
-				// undetached, and calling isEnabled can also lead to nasty side
-				// effects. See for instance Timo's comment on
-				// http://issues.apache.org/jira/browse/WICKET-673
-				behavior.detach(this);
-
-				if (behavior.isTemporary())
-				{
-					removeBehavior(behavior);
-				}
+				removeBehavior(behavior);
 			}
 		}
 	}
