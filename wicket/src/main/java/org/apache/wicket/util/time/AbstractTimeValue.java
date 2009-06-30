@@ -27,9 +27,6 @@ import org.apache.wicket.util.value.LongValue;
  */
 abstract class AbstractTimeValue extends LongValue
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

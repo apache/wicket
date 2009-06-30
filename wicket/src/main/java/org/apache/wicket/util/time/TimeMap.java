@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.time;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,8 +37,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public final class TimeMap
+public final class TimeMap implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing objects to
 	 * <code>Object</code> values.

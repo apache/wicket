@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.time;
 
+import java.io.Serializable;
+
 /**
  * An <code>ITimeFrameSource</code> produces <code>TimeFrame</code> values. The value returned by an
  * <code>ITimeFrameSource</code> source may vary over time.
@@ -25,7 +27,7 @@ package org.apache.wicket.util.time;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-public interface ITimeFrameSource
+public interface ITimeFrameSource extends Serializable
 {
 	/**
 	 * Retrieves the current <code>TimeFrame</code> value.

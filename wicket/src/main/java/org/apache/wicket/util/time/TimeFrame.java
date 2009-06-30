@@ -45,6 +45,8 @@ import org.apache.wicket.util.lang.Objects;
  */
 public final class TimeFrame implements ITimeFrameSource
 {
+	private static final long serialVersionUID = 1L;
+
 	/** end of this <code>TimeFrame</code> */
 	private final Time end;
 
@@ -71,6 +73,8 @@ public final class TimeFrame implements ITimeFrameSource
 
 		return new ITimeFrameSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public TimeFrame getTimeFrame()
 			{
 				return new TimeFrame(Time.valueOf(startTimeOfDay), Time.valueOf(endTimeOfDay));
