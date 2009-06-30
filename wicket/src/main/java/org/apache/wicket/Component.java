@@ -2713,6 +2713,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param replacement
 	 *            component to replace this one
+	 * 
+	 *            TODO 1.5 - this method should return <code>replacement</code> to facilitate easy
+	 *            chaning such as <code>component=component.replaceWith(newcomponent);</code>
 	 */
 	public void replaceWith(Component replacement)
 	{
