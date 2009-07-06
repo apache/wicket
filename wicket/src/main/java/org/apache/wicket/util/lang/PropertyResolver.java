@@ -217,6 +217,12 @@ public final class PropertyResolver
 		while (index != -1)
 		{
 			exp = expressionBracketsSeperated.substring(lastIndex, index);
+			if (exp.length() == 0)
+			{
+				exp = expressionBracketsSeperated.substring(index + 1);
+				break;
+			}
+
 			IGetAndSet getAndSetter = null;
 			try
 			{
@@ -762,6 +768,8 @@ public final class PropertyResolver
 		 */
 		public Object getValue(Object object)
 		{
+			if (((List<?>)object).size() <= index)
+				return null;
 			return ((List<?>)object).get(index);
 		}
 
@@ -819,7 +827,11 @@ public final class PropertyResolver
 		 */
 		public Object getValue(Object object)
 		{
-			return Array.get(object, index);
+			if (Array.getLength(object) > index)
+			{
+				return Array.get(object, index);
+			}
+			return null;
 		}
 
 		/**

@@ -294,6 +294,42 @@ public class PropertyResolverTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testGetPropertyByNotExistingIndexArrayLookup() throws Exception
+	{
+		PropertyResolver.setValue("addressArray", person, new Address[] { }, CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressArray.0.street", person);
+		assertNull(street);
+		street = (String)PropertyResolver.getValue("addressArray[0].street", person);
+		assertNull(street);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testGetPropertyByNotExistingIndexListLookup() throws Exception
+	{
+		PropertyResolver.setValue("addressList", person, new ArrayList(), CONVERTER);
+		String street = (String)PropertyResolver.getValue("addressList.0.street", person);
+		assertNull(street);
+		street = (String)PropertyResolver.getValue("addressList[0].street", person);
+		assertNull(street);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testGetIndexPropertyDirectly() throws Exception
+	{
+		Address address = new Address();
+		Address[] addresses = new Address[] { address };
+
+		Address address2 = (Address)PropertyResolver.getValue("[0]", addresses);
+		assertSame(address, address2);
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testListSizeLookup() throws Exception
 	{
 		List/* <Address> */addresses = new ArrayList/* <Address> */();
@@ -305,6 +341,7 @@ public class PropertyResolverTest extends TestCase
 		size = PropertyResolver.getValue("addressList.size()", person);
 		assertEquals(size, new Integer(2));
 	}
+
 
 	/**
 	 * @throws Exception
