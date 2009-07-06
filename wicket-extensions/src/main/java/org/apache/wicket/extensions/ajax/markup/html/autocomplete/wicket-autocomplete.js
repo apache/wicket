@@ -52,6 +52,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	var objonkeypress;
 	var objonchange;
 	var objonchangeoriginal;
+	var objonfocus;
 	
       var ignoreOneFocusGain = false; // on FF, clicking an option in the popup would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
 
