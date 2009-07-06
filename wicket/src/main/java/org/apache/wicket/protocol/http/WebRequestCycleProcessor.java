@@ -247,7 +247,20 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		}
 		catch (WicketRuntimeException e)
 		{
-			throw new InvalidUrlException(e);
+			// we need to let page expired exception sift through instead of covering it up
+
+			if (e instanceof PageExpiredException)
+			{
+				throw e;
+			}
+			else if (e.getCause() instanceof PageExpiredException)
+			{
+				throw e;
+			}
+			else
+			{
+				throw new InvalidUrlException(e);
+			}
 		}
 
 	}
