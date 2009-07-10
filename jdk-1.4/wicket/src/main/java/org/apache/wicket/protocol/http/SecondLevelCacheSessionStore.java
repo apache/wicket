@@ -67,8 +67,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * <p>
 		 * Note that the versionNumber and ajaxVersionNumber parameters may be -1.
 		 * <ul>
-		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the page store must
-		 * return the page with highest ajax version.
+		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the page store must return
+		 * the page with highest ajax version.
 		 * <li>If both versionNumber and ajaxVersioNumber are -1, the pagestore must return last
 		 * touched (saved) page version with given id.
 		 * </ul>
@@ -258,9 +258,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				return true;
 			}
-			else
+			else if (getSession().getId() != null)
 			{
 				return getStore().containsPage(getSession().getId(), getName(), id, versionNumber);
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -293,20 +297,21 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 
 			String sessionId = getSession().getId();
-			if (getLastPage() != null && getLastPage().getNumericId() == id)
-			{
-				page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
-					: getLastPage();
-				if (page != null)
-				{
-					// ask the page store if it is ready saving the page.
-					getStore().pageAccessed(sessionId, page);
-					pages.put(id, page);
-					return page;
-				}
-			}
 			if (sessionId != null)
 			{
+				if (getLastPage() != null && getLastPage().getNumericId() == id)
+				{
+					page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
+						: getLastPage();
+					if (page != null)
+					{
+						// ask the page store if it is ready saving the page.
+						getStore().pageAccessed(sessionId, page);
+						pages.put(id, page);
+						return page;
+					}
+				}
+
 				setLastPage(null);
 				page = getStore().getPage(sessionId, getName(), id, versionNumber, -1);
 				pages.put(id, page);
