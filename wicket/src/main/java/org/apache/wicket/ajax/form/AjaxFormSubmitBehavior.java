@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * Ajax event behavior that submits a form via ajax when the event it is attached to is invoked.
+ * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
  * <p>
  * The form must have an id attribute in the markup or have MarkupIdSetter added.
  * 
@@ -34,14 +34,13 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * should never be accessed directly (thus the __ cause its overkil to create a super class),
+	 * should never be accessed directly (thus the __ cause its overkill to create a super class),
 	 * instead always use #getForm()
 	 */
 	private Form<?> __form;
@@ -81,7 +80,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * 
 	 * @return Form that will be submitted by this behavior
 	 */
-	protected Form<?> getForm()
+	public final Form<?> getForm()
 	{
 		if (__form == null)
 		{

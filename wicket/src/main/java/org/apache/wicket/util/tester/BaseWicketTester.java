@@ -1177,7 +1177,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            the event to simulate being fired. If <code>event</code> is <code>null</code>, the
 	 *            test will fail.
 	 */
-	public void executeAjaxEvent(Component component, String event)
+	public void executeAjaxEvent(final Component component, final String event)
 	{
 		setCreateAjaxRequest(true);
 
@@ -1186,6 +1186,12 @@ public class BaseWicketTester extends MockWebApplication
 
 		failMessage = "event must not be null";
 		notNull(failMessage, event);
+
+		if (component.isVisibleInHierarchy() == false)
+		{
+			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
+				" Component: " + component + "; Event: " + event);
+		}
 
 		// Run through all the behavior and select the LAST ADDED behavior which
 		// matches the event parameter.
@@ -1313,20 +1319,8 @@ public class BaseWicketTester extends MockWebApplication
 	private void submitAjaxFormSubmitBehavior(final Component component,
 		AjaxFormSubmitBehavior behavior)
 	{
-		// We need to get the form submitted, using reflection.
-		// It needs to be "submitted".
-		Form<?> form = null;
-		try
-		{
-			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("__form");
-			formField.setAccessible(true);
-			form = (Form<?>)formField.get(behavior);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		// The form that needs to be "submitted".
+		Form<?> form = behavior.getForm();
 
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
