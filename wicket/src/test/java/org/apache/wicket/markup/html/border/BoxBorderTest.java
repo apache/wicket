@@ -208,4 +208,21 @@ public class BoxBorderTest extends WicketTestCase
 			"Expected a WicketRuntimeException. Border tag must be open tags. Open-close tags are not allowed",
 			e);
 	}
+
+	/**
+	 * Test a simply page containing the debug component
+	 * 
+	 * @throws Exception
+	 */
+	public void test11() throws Exception
+	{
+		executeTest(BoxBorderTestPage_11.class, "BoxBorderTestPage_ExpectedResult_11.html");
+
+		Page page = tester.getLastRenderedPage();
+		tester.clickLink("border:title");
+
+		tester.clickLink("border:title");
+
+		tester.clickLink("border:title");
+	}
 }

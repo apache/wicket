@@ -688,7 +688,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -1067,7 +1067,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
-						// If auto component ...
+						// If not an auto component ...
 						if (!component.isAuto() && component.isVisibleInHierarchy())
 						{
 							// Increase number of unrendered components
@@ -1106,8 +1106,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				renderedComponents = null;
 
 				Iterator<Component> iterator = unrenderedComponents.iterator();
-
-				while (iterator.hasNext())
+				outerWhile : while (iterator.hasNext())
 				{
 					Component component = iterator.next();
 					// Now first test if the component has a sibling that is a transparent resolver.
@@ -1129,7 +1128,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 									"Component {} wasn't rendered but most likely it has a transparent parent: {}",
 									component, sibling);
 								iterator.remove();
-								break;
+								continue outerWhile;
 							}
 						}
 					}
@@ -1139,7 +1138,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					Border border = component.findParent(Border.class);
 					if (border != null && !border.getBodyContainer().isVisibleInHierarchy())
 					{
-
 						// Suppose:
 						//						  
 						// <div wicket:id="border"><div wicket:id="label"></div> suppose
