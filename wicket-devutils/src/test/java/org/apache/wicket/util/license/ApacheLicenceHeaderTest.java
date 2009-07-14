@@ -25,12 +25,13 @@ package org.apache.wicket.util.license;
  */
 public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-
 	/**
 	 * Construct.
 	 */
 	public ApacheLicenceHeaderTest()
 	{
 		// addHeaders = true;
+
+		xmlIgnore = new String[] { ".settings", "EclipseCodeFormat.xml" };
 	}
 }
