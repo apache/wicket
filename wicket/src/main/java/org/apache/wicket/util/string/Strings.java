@@ -420,16 +420,6 @@ public final class Strings
 		char[] in = escapedUnicodeString.toCharArray();
 		int len = in.length;
 		char[] convtBuf = new char[len];
-
-		if (convtBuf.length < len)
-		{
-			int newLen = len * 2;
-			if (newLen < 0)
-			{
-				newLen = Integer.MAX_VALUE;
-			}
-			convtBuf = new char[newLen];
-		}
 		char aChar;
 		char[] out = convtBuf;
 		int outLen = 0;
