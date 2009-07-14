@@ -159,11 +159,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			String prefix = formComponent.getValidatorKeyPrefix();
 			String message = null;
 
-			// first try the full form of key [prefix].[form-component-id].[key]
-			String resource = prefix(prefix, getId() + "." + key);
+			// first try the full form of key [form-component-id].[key]
+			String resource = getId() + "." + prefix(prefix, key);
 			message = getString(localizer, resource, formComponent);
 
-			// if not found, try a more general form (without prefix) [form-component-id].[key]
+			// if not found, try a more general form (without prefix)
+			// [form-component-id].[prefix].[key]
 			if (Strings.isEmpty(message) && Strings.isEmpty(prefix))
 			{
 				resource = getId() + "." + key;

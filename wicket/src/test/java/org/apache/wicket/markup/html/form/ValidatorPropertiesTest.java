@@ -109,8 +109,7 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text5 required", page.getText5()
-		// assertEquals("ok: 555text555 is missing", page.getText5()
+		assertEquals("ok: 555text555 is found in TestForm.properties", page.getText5()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
@@ -126,12 +125,11 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text9 required", page.getText9()
-		// assertEquals("found it in panel", page.getText9()
+		assertEquals("found it in panel", page.getText9()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text10 required", page.getText10()
+		assertEquals("found it in form", page.getText10()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
@@ -139,7 +137,7 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text12 required", page.getText12()
+		assertEquals("found it in page", page.getText12()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
@@ -206,8 +204,7 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text5 verplicht", page.getText5()
-		// assertEquals("ok: 555text555 mist", page.getText5()
+		assertEquals("gevonden in form", page.getText5()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
@@ -223,12 +220,11 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text9 verplicht", page.getText9()
-		// assertEquals("gevonden in panel", page.getText9()
+		assertEquals("gevonden in panel", page.getText9()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text10 verplicht", page.getText10()
+		assertEquals("gevonden in form", page.getText10()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
@@ -236,7 +232,7 @@ public class ValidatorPropertiesTest extends TestCase
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
-		assertEquals("Default message: text12 verplicht", page.getText12()
+		assertEquals("gevonden in page", page.getText12()
 			.getFeedbackMessage()
 			.getMessage()
 			.toString());
