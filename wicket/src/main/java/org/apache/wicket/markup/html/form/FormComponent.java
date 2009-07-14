@@ -158,14 +158,27 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			// retrieve prefix that will be used to construct message keys
 			String prefix = formComponent.getValidatorKeyPrefix();
 			String message = null;
-			if (!Strings.isEmpty(prefix))
+
+			// first try the full form of key [prefix].[form-component-id].[key]
+			String resource = prefix(prefix, getId() + "." + key);
+			message = getString(localizer, resource, formComponent);
+
+			// if not found, try a more general form (without prefix) [form-component-id].[key]
+			if (Strings.isEmpty(message) && Strings.isEmpty(prefix))
 			{
-				String resource = prefix + "." + key;
+				resource = getId() + "." + key;
 				message = getString(localizer, resource, formComponent);
 			}
 
-			// If not found, than ...
+			// If not found try a more general form [prefix].[key]
 			if (Strings.isEmpty(message))
+			{
+				resource = prefix(prefix, key);
+				message = getString(localizer, key, formComponent);
+			}
+
+			// If not found try the most general form [key]
+			if (Strings.isEmpty(message) && Strings.isEmpty(prefix))
 			{
 				// Try a variation of the resource key
 				message = getString(localizer, key, formComponent);
@@ -178,6 +191,18 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				message = null;
 			}
 			return message;
+		}
+
+		private String prefix(String prefix, String key)
+		{
+			if (!Strings.isEmpty(prefix))
+			{
+				return prefix + "." + key;
+			}
+			else
+			{
+				return key;
+			}
 		}
 
 		/**
