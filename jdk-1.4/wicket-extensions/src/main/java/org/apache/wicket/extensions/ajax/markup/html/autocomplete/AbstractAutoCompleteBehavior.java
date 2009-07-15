@@ -62,7 +62,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append("new Wicket.AutoComplete('")
 			.append(getComponent().getMarkupId())
 			.append("','")
-			.append(getCallbackUrl())
+			.append(getCallbackUrl().toString())
 			.append("',")
 			.append(constructSettingsJS())
 			.append(",");
