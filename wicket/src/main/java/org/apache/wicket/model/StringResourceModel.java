@@ -462,6 +462,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		}
 	}
 
+
 	/**
 	 * Gets the string currently represented by this string resource model. The string that is
 	 * returned may vary for each call to this method depending on the values contained in the model
@@ -657,6 +658,19 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			model.detach();
 		}
+
+		// some parameters can be imodels, detach them
+		if (parameters != null)
+		{
+			for (Object parameter : parameters)
+			{
+				if (parameter instanceof IModel<?>)
+				{
+					((IModel<?>)parameter).detach();
+				}
+			}
+		}
+
 
 		// Null out references
 		localizer = null;
