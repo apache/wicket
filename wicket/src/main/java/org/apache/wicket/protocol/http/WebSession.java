@@ -197,8 +197,13 @@ public class WebSession extends Session
 				}
 			}
 
-			// clean up all component related feedback messages
-			getFeedbackMessages().clear(WebSession.MESSAGES_FOR_COMPONENTS);
+			cleanupComponentFeedbackMessages();
 		}
+	}
+
+	protected void cleanupComponentFeedbackMessages()
+	{
+		// clean up all component related feedback messages
+		getFeedbackMessages().clear(WebSession.MESSAGES_FOR_COMPONENTS);
 	}
 }
