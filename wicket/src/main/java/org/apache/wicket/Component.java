@@ -1605,7 +1605,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return meta data entry
 	 */
-	@SuppressWarnings("unchecked")
 	private MetaDataEntry<?>[] getMetaData()
 	{
 		MetaDataEntry<?>[] metaData = null;
@@ -2231,15 +2230,26 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void prepareForRender(boolean setRenderingFlag)
 	{
 		beforeRender();
-		List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
-		if (feedbacks != null)
+
+		if (setRenderingFlag)
 		{
-			for (Component feedback : feedbacks)
+			// only process feedback panel when we are about to be rendered.
+			// setRenderingFlag is false in case prepareForRender is called only to build component
+			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestTarget).
+			// prepareForRender(true) is always called before the actual rendering is done so
+			// that's where feedback panels gather the messages
+
+			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
+			if (feedbacks != null)
 			{
-				feedback.internalBeforeRender();
+				for (Component feedback : feedbacks)
+				{
+					feedback.internalBeforeRender();
+				}
 			}
+			getRequestCycle().setMetaData(FEEDBACK_LIST, null);
 		}
-		getRequestCycle().setMetaData(FEEDBACK_LIST, null);
+
 		markRendering(setRenderingFlag);
 
 		// check authorization
@@ -2938,7 +2948,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            The model
 	 * @return This
 	 */
-	@SuppressWarnings("unchecked")
 	public Component setDefaultModel(final IModel<?> model)
 	{
 		IModel<?> prevModel = getModelImpl();
@@ -3516,7 +3525,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Detaches the model for this component if it is detachable.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void detachModel()
 	{
 		IModel<?> model = getModelImpl();
@@ -3643,7 +3651,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            The model
 	 * @return The innermost (most nested) model
 	 */
-	@SuppressWarnings("unchecked")
 	protected final IModel<?> getInnermostModel(final IModel<?> model)
 	{
 		IModel<?> nested = model;
@@ -4165,7 +4172,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            The model to wrap if need be
 	 * @return The wrapped model
 	 */
-	@SuppressWarnings("unchecked")
 	protected final <V> IModel<V> wrap(final IModel<V> model)
 	{
 		if (model instanceof IComponentAssignedModel)
@@ -4225,10 +4231,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
-		setFlag(FLAG_PREPARED_FOR_RENDER, false);
-
 		if (setRenderingFlag)
 		{
+			setFlag(FLAG_PREPARED_FOR_RENDER, false);
 			setFlag(FLAG_RENDERING, true);
 		}
 	}
