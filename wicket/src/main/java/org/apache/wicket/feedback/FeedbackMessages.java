@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FeedbackMessages implements IClusterable
+public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMessage>
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(FeedbackMessages.class);
