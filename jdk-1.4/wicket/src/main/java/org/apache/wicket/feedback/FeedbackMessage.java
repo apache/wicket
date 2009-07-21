@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.model.IDetachable;
 
 
 /**
@@ -30,7 +31,7 @@ import org.apache.wicket.IClusterable;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FeedbackMessage implements IClusterable
+public class FeedbackMessage implements IClusterable, IDetachable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,7 +80,7 @@ public class FeedbackMessage implements IClusterable
 	private final Serializable message;
 
 	/** The reporting component. */
-	private final Component reporter;
+	private Component reporter;
 
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
@@ -95,8 +96,8 @@ public class FeedbackMessage implements IClusterable
 	 *            The level of the message
 	 */
 	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
-	{                                                               
-		if(message == null)
+	{
+		if (message == null)
 			throw new IllegalArgumentException("Parameter message can't not be null.");
 
 		this.reporter = reporter;
@@ -243,7 +244,15 @@ public class FeedbackMessage implements IClusterable
 	public String toString()
 	{
 		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = " +
-				((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
-				getLevelAsString() + "]";
+			((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
+			getLevelAsString() + "]";
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		reporter = null;
 	}
 }
