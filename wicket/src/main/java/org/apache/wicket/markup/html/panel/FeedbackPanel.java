@@ -94,6 +94,13 @@ public class FeedbackPanel extends Panel implements IFeedback
 			listItem.add(levelModifier);
 			listItem.add(label);
 		}
+
+		@Override
+		protected void onDetach()
+		{
+			removeAll();
+			super.onDetach();
+		}
 	}
 
 	private static final long serialVersionUID = 1L;
