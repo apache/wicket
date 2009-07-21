@@ -50,7 +50,7 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 		}
 		else if (number instanceof Long)
 		{
-			return new BigDecimal(number.longValue());
+			return new BigDecimal(Long.toString(number.longValue()));
 		}
 		else if (number instanceof Float)
 		{
@@ -58,7 +58,7 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 		}
 		else if (number instanceof Integer)
 		{
-			return new BigDecimal(number.intValue());
+			return new BigDecimal(Integer.toString(number.intValue()));
 		}
 		else
 		{
