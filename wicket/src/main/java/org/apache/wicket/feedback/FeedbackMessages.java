@@ -96,11 +96,17 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 		}
 
 		List<FeedbackMessage> toDelete = messages(filter);
-		int count = toDelete.size();
+
+
+		for (FeedbackMessage message : toDelete)
+		{
+			message.detach();
+		}
+
 		messages.removeAll(toDelete);
 
 		trimToSize();
-		return count;
+		return toDelete.size();
 	}
 
 	/**
@@ -327,9 +333,9 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final void trimToSize()
 	{
-		if (messages instanceof ArrayList)
+		if (messages instanceof ArrayList<?>)
 		{
-			((ArrayList<FeedbackMessage>)messages).trimToSize();
+			((ArrayList<?>)messages).trimToSize();
 		}
 	}
 

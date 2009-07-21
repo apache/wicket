@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.model.IDetachable;
 
 
 /**
@@ -30,7 +31,7 @@ import org.apache.wicket.IClusterable;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FeedbackMessage implements IClusterable
+public class FeedbackMessage implements IClusterable, IDetachable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,7 +80,7 @@ public class FeedbackMessage implements IClusterable
 	private final Serializable message;
 
 	/** The reporting component. */
-	private final Component reporter;
+	private Component reporter;
 
 	/** Whether or not this message has been rendered */
 	private boolean rendered = false;
@@ -247,5 +248,11 @@ public class FeedbackMessage implements IClusterable
 		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = " +
 			((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
 			getLevelAsString() + "]";
+	}
+
+	/** {@inheritDoc} */
+	public void detach()
+	{
+		reporter = null;
 	}
 }
