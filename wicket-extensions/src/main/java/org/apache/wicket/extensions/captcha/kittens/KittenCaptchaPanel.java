@@ -170,7 +170,7 @@ public class KittenCaptchaPanel extends Panel
 				// ajax request passing in mouse co-ordinates
 				return generateCallbackScript("showLoadingIndicator(); wicketAjaxGet('" +
 					getCallbackUrl(onlyTargetActivePage) +
-					"&amp;x=' + getEventX(this, event) + '&amp;y=' + getEventY(this, event)");
+					"&x=' + getEventX(this, event) + '&y=' + getEventY(this, event)");
 			}
 
 			@SuppressWarnings("unchecked")
