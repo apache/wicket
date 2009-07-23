@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -230,6 +231,18 @@ public class MarkupComponentBorder implements IComponentBorder
 			throw new WicketRuntimeException(
 				"Could not parse markup from markup resource stream: " +
 					markupResourceStream.toString());
+		}
+		finally
+		{
+			try
+			{
+				markupResourceStream.close();
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException("Cannot close markup resource stream: " +
+					markupResourceStream, e);
+			}
 		}
 	}
 
