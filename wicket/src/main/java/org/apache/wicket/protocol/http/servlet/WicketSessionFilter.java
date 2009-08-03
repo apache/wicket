@@ -151,6 +151,14 @@ public class WicketSessionFilter implements Filter
 			if (sessionKey == null)
 			{
 				WebApplication application = (WebApplication)Application.get(filterName);
+				if (application == null)
+				{
+					throw new IllegalStateException(
+						"Could not find wicket application mapped to filter: " +
+							filterName +
+							". Make sure you set filterName attribute to the name of the wicket filter " +
+							"for the wicket application whose session you want to access.");
+				}
 				sessionKey = application.getSessionAttributePrefix(null, filterName) +
 					Session.SESSION_ATTRIBUTE_NAME;
 
