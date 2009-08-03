@@ -33,6 +33,7 @@ import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
 import org.apache.wicket.markup.IMarkupCache;
+import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -348,6 +349,8 @@ public abstract class Application
 			getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 			// getDebugSettings().setOutputMarkupContainerClassName(true);
 			getResourceSettings().setJavascriptCompressor(null);
+			getRequestCycleSettings().addResponseFilter(
+				EmptySrcAttributeCheckFilter.INSTANCE);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
