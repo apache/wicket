@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
 
@@ -74,11 +75,40 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		while (options.hasNext())
 		{
 			final T choice = options.next();
-			String id = renderer.getIdValue(choice, 0);
-			Object displayValue = renderer.getDisplayValue(choice);
-			Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
-			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
-			value = getLocalizer().getString(value, this, value);
+
+
+			final CharSequence id;
+			{
+				String value = renderer.getIdValue(choice, 0);
+
+				if (getEscapeModelStrings())
+				{
+					id = Strings.escapeMarkup(value);
+				}
+				else
+				{
+					id = value;
+				}
+			}
+
+			final CharSequence value;
+			{
+				Object displayValue = renderer.getDisplayValue(choice);
+				Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
+
+				String displayString = getConverter(displayClass).convertToString(displayValue,
+					getLocale());
+				displayString = getLocalizer().getString(displayString, this, displayString);
+
+				if (getEscapeModelStrings())
+				{
+					value = Strings.escapeMarkup(displayString);
+				}
+				else
+				{
+					value = displayString;
+				}
+			}
 
 			buffer.append("\n<option value=\"").append(id).append("\"");
 
