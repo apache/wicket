@@ -151,10 +151,10 @@ public class ResourceReference implements IClusterable
 						// still null? try to see whether it is a package
 						// resource that should
 						// be lazily loaded
-						PackageResource packageResource = PackageResource.get(getScope(), name);
+						resource = PackageResource.get(getScope(), name);
 						// will throw an exception if not found, so if we come
 						// here, it was found
-						sharedResources.add(name, packageResource);
+						sharedResources.add(name, resource);
 					}
 				}
 
