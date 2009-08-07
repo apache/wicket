@@ -1046,9 +1046,20 @@ Wicket.Ajax.Call.prototype = {
 		return this.request.post(body);
 	},
 
+	// Submits a form using ajax
+	submitFormById: function(formId, submitButton) {
+		var form = Wicket.$(formId);
+		if (form == null || typeof (form) == "undefined")
+			Wicket.Log.error("Wicket.Ajax.Call.submitFormById: Trying to submit form with id '"+formId+"' that is not in document.");
+		return this.submitForm(form, submitButton);
+	},
+	
 	// Submits a form using ajax.
 	// This method serializes a form and sends it as POST body.
 	submitForm: function(form, submitButton) {
+	    if (this.handleMultipart(form)) {
+	    	return true;
+	    }
 	    var body = function() {
 	    	var s = Wicket.Form.serialize(form);
 	    	if (submitButton != null) {
@@ -1058,13 +1069,76 @@ Wicket.Ajax.Call.prototype = {
 	    }
 	    return this.request.post(body);
 	},
+
+	// If the form contains multipart content this function will post 
+	// the form using an iframe instead of the regular ajax call
+	// and bridge the output - transparently making this work  as if it was an ajax call
+	handleMultipart: function (form) {
+		
+	 	if (form.enctype!="multipart/form-data") {
+	 		// not handled, return false
+	 		return false;
+	 	}
+			
+		var originalFormAction=form.action;
+		var originalFormTarget=form.target;
+		
+		var iframeName="wicket-submit-"+(""+Math.random()).substr(2);
+		
+		try {
+    		var iframe = document.createElement("<iframe name='"+iframeName+"' id='"+iframeName+"' src='about:blank'/>");
+		} catch (ex) {
+		    var iframe = document.createElement("iframe");
+		    iframe.name=iframeName;
+			iframe.id=iframe.name;
+			iframe.src="about:blank";
+		}
+		
+		//iframe.style.width="600px";
+		//iframe.style.height="300px";
+		iframe.style.display="none";
+		iframe.style.visibility="hidden";
+				
+		Wicket.Event.add(iframe, "load", this.handleMultipartComplete.bind(this));
+		
+		document.body.appendChild(iframe);
+		
+		// reconfigure the form
+		form.target=iframe.name;
+		form.action=this.request.url;
+
+		//submit the form into the iframe, response will be handled by the onload callback
+		form.submit();
+
+		// handled, restore state and return true
+		form.action=originalFormAction;
+		form.target=originalFormTarget;
+		
+ 		return true;
+ 	},
+ 
+ 	// Completes the multipart ajax handling started via handleMultipart()
+	handleMultipartComplete: function (event) {
+		if (event==null) { event=window.event; }
+		if (event.target!=null) { var iframe=event.target; } else { var iframe=event.srcElement};
+
+		var envelope=iframe.contentWindow.document;
+		if (envelope.XMLDocument!=null) { envelope=envelope.XMLDocument; }
 	
-	// Submits a form using ajax
-	submitFormById: function(formId, submitButton) {
-		var form = Wicket.$(formId);
-		if (form == null || typeof (form) == "undefined")
-			Wicket.Log.error("Wicket.Ajax.Call.submitFormById: Trying to submit form with id '"+formId+"' that is not in document.");
-		return this.submitForm(form, submitButton);
+		// process the response
+		this.loadedCallback(envelope);
+
+		// stop the event
+		if (event.stopPropagation) { event.stopPropagation(); } else { event.cancelBubble=true; }
+
+		// remove the event
+		if (iframe.detachEvent)  
+			iframe.detachEvent("onload", this.handleMultipartComplete);  
+		else  
+			iframe.removeEventListener("load", this.handleMultipartComplete, false);
+		
+		// remove the iframe
+		setTimeout(function() { iframe.parentNode.removeChild(iframe); }, 250);
 	},
 	
 	// Processes the response

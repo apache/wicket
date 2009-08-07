@@ -69,6 +69,8 @@ public class AjaxApplication extends WicketExampleApplication
 		mount(new HybridUrlCodingStrategy("tree/simple", SimpleTreePage.class));
 		mount(new HybridUrlCodingStrategy("tree/table", TreeTablePage.class));
 		mount(new HybridUrlCodingStrategy("tree/table/editable", EditableTreeTablePage.class));
+		mount(new HybridUrlCodingStrategy("upload", FileUploadPage.class));
+
 	}
 
 	/**
