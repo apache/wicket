@@ -42,7 +42,7 @@ import org.apache.wicket.request.target.component.IPageRequestTarget;
  * 	&#064;Override
  * 	protected IRequestCycleProcessor newRequestCycleProcessor()
  * 	{
- * 		return new SecureRequestCycleProcessor(config);
+ * 		return new HttpsRequestCycleProcessor(config);
  * 	}
  * }
  * </pre>
