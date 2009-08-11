@@ -16,20 +16,13 @@
  */
 package org.apache.wicket.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.model.util.MapModel;
-import org.apache.wicket.model.util.WildcardCollectionModel;
-import org.apache.wicket.model.util.WildcardListModel;
-import org.apache.wicket.model.util.WildcardSetModel;
+import org.apache.wicket.model.util.*;
 import org.apache.wicket.util.lang.Objects;
+
+import java.io.Serializable;
+import java.util.*;
 
 
 /**
@@ -107,9 +100,26 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            model type
 	 * @param list
 	 *            The List, which may or may not be Serializable
+	 * @deprecated see {@link Model#ofList(List)}
 	 * @return A Model object wrapping the List
 	 */
+	@Deprecated
 	public static <C> IModel<List<? extends C>> of(final List<? extends C> list)
+	{
+		return new WildcardListModel<C>(list);
+	}
+
+	/**
+	 * Factory method for models that contain lists. This factory method will automatically rebuild
+	 * a nonserializable <code>list</code> into a serializable one.
+	 *
+	 * @param <C>
+	 *            model type
+	 * @param list
+	 *            The List, which may or may not be Serializable
+	 * @return A Model object wrapping the List
+	 */
+	public static <C> IModel<List<? extends C>> ofList(final List<? extends C> list)
 	{
 		return new WildcardListModel<C>(list);
 	}
@@ -160,9 +170,26 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            model type
 	 * @param set
 	 *            The Set, which may or may not be Serializable
+	 * @deprecated replace by {@link Model#ofSet(java.util.Set)}.
 	 * @return A Model object wrapping the Set
 	 */
+	@Deprecated
 	public static <C> IModel<Set<? extends C>> of(final Set<? extends C> set)
+	{
+		return new WildcardSetModel<C>(set);
+	}
+
+	/**
+	 * Factory method for models that contain sets. This factory method will automatically rebuild a
+	 * nonserializable <code>set</code> into a serializable one.
+	 *
+	 * @param <C>
+	 *            model type
+	 * @param set
+	 *            The Set, which may or may not be Serializable
+	 * @return A Model object wrapping the Set
+	 */
+	public static <C> IModel<Set<? extends C>> ofSet(final Set<? extends C> set)
 	{
 		return new WildcardSetModel<C>(set);
 	}
