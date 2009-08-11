@@ -78,7 +78,7 @@ public class FilterForm extends Form<Object>
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				AppendingStringBuffer script = new AppendingStringBuffer(
-					"<script type='text/javascript'>_filter_focus_restore('").append(
+					"<script type=\"text/javascript\">_filter_focus_restore('").append(
 					getFocusTrackerFieldCssId()).append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
