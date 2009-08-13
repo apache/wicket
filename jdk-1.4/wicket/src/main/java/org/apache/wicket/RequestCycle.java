@@ -1124,6 +1124,15 @@ public abstract class RequestCycle
 			}
 		}
 
+		try
+		{
+			onAfterTargetsDetached();
+		}
+		catch (Throwable re)
+		{
+			log.error("there was an error processing onAfterTargetsDetached", re);
+		}
+
 		if (automaticallyClearFeedbackMessages)
 		{
 			// remove any rendered and otherwise obsolete feedback messages from
@@ -1516,6 +1525,13 @@ public abstract class RequestCycle
 	 * Called when the request cycle object is beginning its response
 	 */
 	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has detached all request targets.
+	 */
+	protected void onAfterTargetsDetached()
 	{
 	}
 
