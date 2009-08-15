@@ -107,7 +107,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		 */
 		public Object formComponent(IFormVisitorParticipant component)
 		{
-			if (component instanceof FormComponent)
+			if (component instanceof FormComponent<?>)
 			{
 				onFormComponent((FormComponent<?>)component);
 			}
@@ -435,7 +435,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 		}
 
-		if (component instanceof FormComponent)
+		if (component instanceof FormComponent<?>)
 		{
 			final FormComponent<?> fc = (FormComponent<?>)component;
 			return visitor.formComponent(fc);
@@ -799,7 +799,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form && ((Form<?>)c).isRootForm()) || c instanceof Page)
+			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
+				c instanceof Page)
 			{
 				break;
 			}
@@ -1269,7 +1270,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			return 0;
 		}
-		if (validators instanceof IValidator[])
+		if (validators instanceof IValidator<?>[])
 		{
 			return ((IValidator[])validators).length;
 		}
@@ -1606,7 +1607,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			{
 				validator = validators_get(i);
 
-				if (isNull == false || validator instanceof INullAcceptingValidator)
+				if (isNull == false || validator instanceof INullAcceptingValidator<?>)
 				{
 					validator.validate(validatable);
 				}
