@@ -460,6 +460,7 @@ public class FormTester
 			}
 
 		});
+		workingForm.detach();
 	}
 
 	/**
