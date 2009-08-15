@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.examples.panels.signin;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -80,22 +82,26 @@ public class CookieTest extends TestCase
 		panel.setPersistent(true);
 		form = (Form<?>)panel.get("signInForm");
 
-		final ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory()
-				.newCrypt();
+		final ICrypt crypt = tester.getApplication()
+			.getSecuritySettings()
+			.getCryptFactory()
+			.newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
 		cookieUsername = new Cookie("panel.signInForm.username", "juergen");
 		Cookie cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
-		Cookie[] cookies = new Cookie[]{cookieUsername, cookiePassword};
+		Cookie[] cookies = new Cookie[] { cookieUsername, cookiePassword };
 
 		tester.getServletRequest().setCookies(cookies);
 
-		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester.getWicketResponse());
+		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(),
+			tester.getWicketResponse());
 
 		page = new MockPage(null);
 		page.add(panel);
 
-		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester.getWicketResponse());
+		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(),
+			tester.getWicketResponse());
 	}
 
 	public void testSetCookieOnForm() throws IOException, ServletException
@@ -135,9 +141,12 @@ public class CookieTest extends TestCase
 	public void testPersistCookie() throws IOException, ServletException
 	{
 		panel.setPersistent(true);
+		tester.getServletRequest().setParameter("username", "johndoe");
+		tester.getServletRequest().setParameter("password", "secret");
+		tester.getServletRequest().setParameter("rememberMeRow:rememberMe", "on");
 
-		// test will call persistFromComponentData(), which is private
 		form.onFormSubmitted();
+
 
 		// validate
 		Collection<Cookie> cookies = tester.getServletResponse().getCookies();
@@ -145,12 +154,15 @@ public class CookieTest extends TestCase
 		for (Cookie cooky : cookies)
 		{
 			String pathOfStoredComponent = cooky.getName().replaceAll("\\.", ":");
+			if (!pathOfStoredComponent.equals("panel:signInForm:username"))
+			{
+				continue;
+			}
 			Assert.assertNotNull(page.get(pathOfStoredComponent));
 			// Skip "deleted" cookies
 			if (!page.get(pathOfStoredComponent).getDefaultModelObjectAsString().equals(""))
 			{
-				Assert.assertEquals(cooky.getValue(), page.get(pathOfStoredComponent)
-						.getDefaultModelObjectAsString());
+				Assert.assertEquals(cooky.getValue(), "johndoe");
 			}
 		}
 	}
