@@ -664,8 +664,31 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			final Component component = entry.getValue();
 			final String markupId = entry.getKey();
 
-			respondComponent(response, markupId, component);
+			if (!containsAncestorFor(component))
+			{
+				respondComponent(response, markupId, component);
+			}
 		}
+	}
+
+	/**
+	 * Checks if the target contains an ancestor for the given component
+	 * 
+	 * @param component
+	 * @return <code>true</code> if target contains an ancestor for the given component
+	 */
+	private boolean containsAncestorFor(Component component)
+	{
+		Component cursor = component.getParent();
+		while (cursor != null)
+		{
+			if (markupIdToComponent.containsValue(cursor))
+			{
+				return true;
+			}
+			cursor = cursor.getParent();
+		}
+		return false;
 	}
 
 	/**
