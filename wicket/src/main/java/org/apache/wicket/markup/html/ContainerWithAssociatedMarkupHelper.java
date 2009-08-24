@@ -150,9 +150,10 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
-				final String headerId = "_" + Classes.simpleName(markupClass) +
-					(container.getVariation() == null ? "" : container.getVariation()) + "Header" +
-					index;
+				final String headerId = "_" +
+					Classes.simpleName(markupClass) +
+					(container.getVariation() == null ? "" : container.getVariation().replace(':',
+						'_')) + "Header" + index;
 
 				// Create the header container and associate the markup with
 				// it
