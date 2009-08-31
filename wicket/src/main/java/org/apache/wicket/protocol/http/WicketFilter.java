@@ -178,6 +178,18 @@ public class WicketFilter implements Filter
 		}
 	}
 
+
+	/**
+	 * Gets webApplication managed by this filter
+	 * 
+	 * @return webApplication
+	 */
+	protected WebApplication getWebApplication()
+	{
+		return webApplication;
+	}
+
+
 	/**
 	 * As per {@link javax.servlet.Filter#doFilter}, is called by the container each time a
 	 * request/response pair is passed through the chain due to a client request for a resource at
