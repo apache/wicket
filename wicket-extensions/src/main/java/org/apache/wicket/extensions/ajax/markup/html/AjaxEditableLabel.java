@@ -26,7 +26,6 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -78,7 +77,7 @@ public class AjaxEditableLabel<T> extends Panel
 	private FormComponent<T> editor;
 
 	/** label component. */
-	private WebComponent label;
+	private Component label;
 
 	protected class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
@@ -321,7 +320,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 *            The model
 	 * @return The editor
 	 */
-	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
+	protected Component newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
@@ -384,7 +383,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * 
 	 * @return The label component
 	 */
-	protected final WebComponent getLabel()
+	protected final Component getLabel()
 	{
 		if (label == null)
 		{
