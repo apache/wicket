@@ -17,7 +17,11 @@
 package org.apache.wicket.resource;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -313,11 +317,26 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	public class PropertiesFilePropertiesLoader extends AbstractPropertiesLoader
 	{
+	    /** Can the JDK read properties from Reader ? */
+	    private boolean loadFromReaderAvailable = false;
+
+	    /**
+	     * Buffer size used when reading a properties file.
+	     */
+	    private static final int BUFFER_SIZE = 2000;
+
 		/**
 		 * Construct.
 		 */
 		public PropertiesFilePropertiesLoader()
 		{
+	        try {
+	              Properties.class.getMethod("load", new Class[] {Reader.class});
+	              loadFromReaderAvailable = true;
+	            }
+	            catch (NoSuchMethodException ex) {
+	                loadFromReaderAvailable = false;
+	            }
 		}
 
 		/**
@@ -340,9 +359,53 @@ public class PropertiesFactory implements IPropertiesFactory
 		protected java.util.Properties loadProperties(BufferedInputStream in) throws IOException
 		{
 			java.util.Properties properties = new java.util.Properties();
+		    // If we are on JDK 6 we load from Reader
+		    if (loadFromReaderAvailable) {
 			properties.load(in);
+	        // If we are on JDK <=5 then we convert to ASCII
+		    } else {
+	            properties.load(readUTFStreamToEscapedASCII(in));
+		    }
 			return properties;
 		}
+
+	    /**
+	     * Reads a UTF-8 stream, performing a conversion to ASCII (i.e., ISO8859-1 encoding). Characters outside the normal
+	     * range for ISO8859-1 are converted to unicode escapes. In effect, Tapestry is performing native2ascii on the
+	     * files, on the fly.
+	     */
+	    private InputStream readUTFStreamToEscapedASCII(InputStream is) throws IOException
+	    {
+	        Reader reader = new InputStreamReader(is, "UTF-8");
+
+	        StringBuilder builder = new StringBuilder(BUFFER_SIZE);
+	        char[] buffer = new char[BUFFER_SIZE];
+
+	        while (true)
+	        {
+	            int length = reader.read(buffer);
+
+	            if (length < 0) break;
+
+	            for (int i = 0; i < length; i++)
+	            {
+	                char ch = buffer[i];
+
+	                if (ch <= '\u007f')
+	                {
+	                    builder.append(ch);
+	                    continue;
+	                }
+	                builder.append(String.format("\\u%04x", (int) ch));
+	            }
+	        }
+
+	        reader.close();
+
+	        byte[] resourceContent = builder.toString().getBytes();
+	        return new ByteArrayInputStream(resourceContent);
+	    }
+
 	}
 
 	/**
