@@ -27,7 +27,7 @@ import org.apache.wicket.PageReference;
  * @see PageReference
  * 
  * @author igor.vaynberg
- * @depricated will be removed before 1.5
+ * @deprecated will be removed before 1.5
  */
 @Deprecated
 public class PageIdRequestTarget extends PageReferenceRequestTarget

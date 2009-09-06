@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author marrink
- * @param <T>
- *            The model object type
  */
 public class UsernamePasswordSignInPanel extends Panel
 {
@@ -78,10 +76,10 @@ public class UsernamePasswordSignInPanel extends Panel
 	 */
 	public static final class SignInForm extends StatelessForm<IValueMap>
 	{
-		/** Voor serializatie. */
+		/** For serialisation. */
 		private static final long serialVersionUID = 1L;
 
-		/** Moeten de inlog waarden bewaard blijven? */
+		/** Should the login values preserved? */
 		private boolean rememberMe = true;
 
 		private final UsernamePasswordSignInPanel panel;
@@ -143,7 +141,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		}
 
 		/**
-		 * Geeft terug of de waarden van het formulier bewaard moeten worden of niet.
+		 * Returns whether the values of the form should be kept or not.
 		 * 
 		 * @return
 		 */
@@ -153,7 +151,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		}
 
 		/**
-		 * Zet of de waarden van het formulier bewaard moeten worden of niet.
+		 * Set whether the values of the form should be kept or not.
 		 * 
 		 * @param rememberMe
 		 */

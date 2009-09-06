@@ -426,7 +426,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	}
 
 	/**
-	 * @see IValueMap#getAsEnum(String, Class<T>)
+	 * @see IValueMap#getAsEnum(String, Class)
 	 */
 	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass)
 	{
@@ -442,7 +442,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	}
 
 	/**
-	 * @see IValueMap#getAsEnum(String, Class<T>, T)
+	 * @see IValueMap#getAsEnum(String, Class, Enum)
 	 */
 	public <T extends Enum<T>> T getAsEnum(String key, Class<T> eClass, T defaultValue)
 	{

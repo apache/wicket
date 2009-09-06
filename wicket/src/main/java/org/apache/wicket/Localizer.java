@@ -150,8 +150,9 @@ public class Localizer
 	 * @return String
 	 * @throws MissingResourceException
 	 * 
-	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
+	 * @deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
+	@Deprecated
 	public String getString(final String key, final Component component, final IModel<?> model,
 		final Locale locale, final String style, final String defaultValue)
 		throws MissingResourceException

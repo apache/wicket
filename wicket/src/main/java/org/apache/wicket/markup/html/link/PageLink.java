@@ -32,7 +32,7 @@ import org.apache.wicket.Page;
  * @param <T>
  *            type of model object
  * 
- * @deprecated use BookmarkabpePageLink or Link instead
+ * @deprecated use {@link BookmarkablePageLink} or {@link Link} instead
  * 
  */
 @Deprecated

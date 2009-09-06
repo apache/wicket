@@ -539,7 +539,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
+	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(String,
+	 *      boolean)
 	 */
 	@Override
 	public boolean matches(final String path, final boolean caseSensitive)

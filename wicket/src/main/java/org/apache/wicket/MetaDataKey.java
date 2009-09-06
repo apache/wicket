@@ -36,9 +36,6 @@ public abstract class MetaDataKey<T> implements IClusterable
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param type
-	 *            The type of value stored under this key
 	 */
 	public MetaDataKey()
 	{

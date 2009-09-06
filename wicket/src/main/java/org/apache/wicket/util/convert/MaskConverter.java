@@ -81,8 +81,6 @@ import org.apache.wicket.WicketRuntimeException;
  * mask is on a per character basis, and will thus adjust to fit as many chars as are needed.
  * </p>
  * 
- * @param <T>
- *            The converter object type
  * @see MaskFormatter
  * 
  * @author Eelco Hillenius
@@ -151,7 +149,6 @@ public class MaskConverter implements IConverter
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
-	@SuppressWarnings("unchecked")
 	public Object convertToObject(String value, Locale locale)
 	{
 		try
