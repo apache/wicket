@@ -27,10 +27,7 @@ import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.value.ValueMap;
 
-/**
- * 
- * @author
- */
+/** */
 public class IndexedSharedResourceCodingStrategyTest extends WicketTestCase
 {
 	private static final String URL_PREFIX = "/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/";
@@ -39,7 +36,6 @@ public class IndexedSharedResourceCodingStrategyTest extends WicketTestCase
 	private TestResource resource;
 
 	/**
-	 * 
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
 	@Override

@@ -48,7 +48,7 @@ public class IntValue implements Comparable<IntValue>, Serializable
 	}
 
 	/**
-	 * @param object
+	 * @param that
 	 *            The object to compare with
 	 * @return 0 if equal, -1 if less than or 1 if greater than
 	 */
@@ -70,7 +70,7 @@ public class IntValue implements Comparable<IntValue>, Serializable
 	/**
 	 * Compares this <code>Object</code> to a given <code>Object</code>.
 	 * 
-	 * @param object
+	 * @param that
 	 *            the <code>Object</code> to compare with
 	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
 	 *         than given <code>Object</code>'s value

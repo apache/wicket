@@ -688,7 +688,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] { }) != null)
+				if (getClass().getConstructor(new Class[] {}) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -1670,7 +1670,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @return instance unique identifier
 	 * 
-	 * @depricated This method will be removed before the final of 1.4
+	 * @deprecated This method will be removed before the final of 1.4
 	 */
 	@Deprecated
 	public PageId getPageId()

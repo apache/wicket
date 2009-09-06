@@ -434,7 +434,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see java.util.Map#put(java.lang.String, java.lang.Object)
+	 * @see java.util.Map#put(Object, Object)
 	 */
 	@Override
 	public Object put(final String key, final Object value)

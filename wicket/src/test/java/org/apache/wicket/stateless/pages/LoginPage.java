@@ -39,8 +39,8 @@ public class LoginPage extends WebPage
 	}
 
 	/**
-	 * Creeert een sign in panel voor instellingen die hun authenticatie enkel baseren op
-	 * username/wachtwoord.
+	 * Creates a sign in panel on institutions that rely solely on their authentication username /
+	 * password.
 	 * 
 	 * @param panelId
 	 * @param info

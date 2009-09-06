@@ -54,9 +54,6 @@ public class ConverterLocator implements IConverterLocator
 {
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
-	 * 
-	 * @param <X>
-	 *            The converter object type
 	 */
 	private class DefaultConverter implements IConverter
 	{
@@ -175,15 +172,11 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * Gets the type converter that is registered for class c.
 	 * 
-	 * @param <T>
-	 *            converter type
-	 * 
 	 * @param c
 	 *            The class to get the type converter for
 	 * @return The type converter that is registered for class c or null if no type converter was
 	 *         registered for class c
 	 */
-	@SuppressWarnings("unchecked")
 	public final IConverter get(Class<?> c)
 	{
 		return classToConverter.get(c.getName());
@@ -199,7 +192,6 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
-	@SuppressWarnings("unchecked")
 	public final IConverter getConverter(Class<?> type)
 	{
 		// Null is always converted to null
@@ -221,14 +213,11 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * Removes the type converter currently registered for class c.
 	 * 
-	 * @param The
-	 *            type of the converter
 	 * @param c
 	 *            The class for which the converter registration should be removed
 	 * @return The converter that was registered for class c before removal or null if none was
 	 *         registered
 	 */
-	@SuppressWarnings("unchecked")
 	public final IConverter remove(Class<?> c)
 	{
 		return classToConverter.remove(c.getName());
@@ -236,9 +225,6 @@ public class ConverterLocator implements IConverterLocator
 
 	/**
 	 * Registers a converter for use with class c.
-	 * 
-	 * @param The
-	 *            type of the converter
 	 * 
 	 * @param converter
 	 *            The converter to add

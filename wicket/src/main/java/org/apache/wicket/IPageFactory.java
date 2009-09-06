@@ -27,7 +27,6 @@ package org.apache.wicket;
  * 
  * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()
- * @see Session#getPageFactory(Page)
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke

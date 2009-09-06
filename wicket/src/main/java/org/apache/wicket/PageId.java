@@ -22,7 +22,7 @@ package org.apache.wicket;
  * 
  * @author igor.vaynberg
  * 
- * @depricated will be removed
+ * @deprecated will be removed
  */
 @Deprecated
 public final class PageId extends PageReference
