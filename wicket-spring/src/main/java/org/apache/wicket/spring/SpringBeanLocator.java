@@ -17,6 +17,10 @@
 package org.apache.wicket.spring;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Classes;
@@ -103,25 +107,41 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	private final String getBeanNameOfClass(ApplicationContext ctx, Class< ? > clazz)
 	{
-		String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz);
-		if (names.length == 0)
+		// get the list of all possible matching beans
+		List<String> names = new ArrayList<String>(Arrays.asList(BeanFactoryUtils
+				.beanNamesForTypeIncludingAncestors(ctx, clazz)));
+		Iterator<String> it = names.iterator();
+
+		// filter out beans that are not condidates for autowiring
+		while (it.hasNext())
+		{
+			final String possibility = it.next();
+			if (BeanFactoryUtils.isFactoryDereference(possibility) ||
+					possibility.startsWith("scopedTarget."))
+			{
+				it.remove();
+			}
+		}
+
+		if (names.isEmpty())
 		{
 			throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
 		}
-		if (names.length > 1)
+		else if (names.size() > 1)
 		{
-			StringBuffer msg = new StringBuffer();
+			StringBuilder msg = new StringBuilder();
 			msg.append("more then one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
 			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
-
 			msg.append("Matched beans: ");
-			msg.append(Strings.join(",", names));
-
+			msg.append(Strings.join(",", names.toArray(new String[0])));
 			throw new IllegalStateException(msg.toString());
 		}
-		return names[0];
+		else
+		{
+			return names.get(0);
+		}
 	}
 
 	/**
