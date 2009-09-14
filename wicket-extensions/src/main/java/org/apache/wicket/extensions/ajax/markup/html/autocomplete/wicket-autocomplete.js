@@ -59,7 +59,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	// holds a throttler, for not sending many requests if the user types
 	// too quickly.
 	var localThrottler = new Wicket.Throttler(true);
-	var throttleDelay = 300;
+	var throttleDelay = cfg.throttleDelay;
 
     function initialize(){
 		// Remove the autocompletion menu if still present from
