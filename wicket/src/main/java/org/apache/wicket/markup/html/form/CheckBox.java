@@ -189,16 +189,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	}
 
 	/**
-	 * @see FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected final boolean supportsPersistence()
-	{
-		return true;
-	}
-
-
-	/**
 	 * Final because we made {@link #convertInput()} final and it no longer delegates to
 	 * {@link #getConverter(Class)}
 	 * 

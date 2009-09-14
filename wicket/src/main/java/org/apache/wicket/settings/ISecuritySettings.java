@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
-import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import org.apache.wicket.util.crypt.ICryptFactory;
 
 /**
@@ -41,11 +41,11 @@ public interface ISecuritySettings
 	IAuthorizationStrategy getAuthorizationStrategy();
 
 	/**
-	 * Get the defaults to be used by persistence manager
+	 * Gets the authentication strategy.
 	 * 
-	 * @return CookieValuePersisterSettings
+	 * @return Returns the authentication strategy.
 	 */
-	CookieValuePersisterSettings getCookieValuePersisterSettings();
+	IAuthenticationStrategy getAuthenticationStrategy();
 
 	/**
 	 * @return crypt factory used to generate crypt objects
@@ -72,15 +72,16 @@ public interface ISecuritySettings
 	 * 
 	 * @param strategy
 	 *            new authorization strategy
-	 * 
 	 */
 	void setAuthorizationStrategy(IAuthorizationStrategy strategy);
 
 	/**
-	 * @param cookieValuePersisterSettings
-	 *            The cookieValuePersisterSettings to set.
+	 * Sets the authentication strategy.
+	 * 
+	 * @param strategy
+	 *            new authentication strategy
 	 */
-	void setCookieValuePersisterSettings(CookieValuePersisterSettings cookieValuePersisterSettings);
+	void setAuthenticationStrategy(IAuthenticationStrategy strategy);
 
 	/**
 	 * Sets the factory that will be used to create crypt objects. The crypt object returned from

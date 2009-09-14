@@ -174,17 +174,6 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * Check group does not support persistence through cookies
-	 * 
-	 * @see FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected final boolean supportsPersistence()
-	{
-		return false;
-	}
-
-	/**
 	 * @see FormComponent#onComponentTag(ComponentTag)
 	 */
 	@Override

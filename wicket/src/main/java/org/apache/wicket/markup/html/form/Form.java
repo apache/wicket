@@ -38,15 +38,12 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.form.persistence.CookieValuePersister;
-import org.apache.wicket.markup.html.form.persistence.IValuePersister;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
@@ -798,37 +795,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Retrieves FormComponent values related to the page using the persister and assign the values
-	 * to the FormComponent. Thus initializing them.
-	 */
-	public final void loadPersistentFormComponentValues()
-	{
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent)
-			{
-				// Component must implement persister interface and
-				// persistence for that component must be enabled.
-				// Else ignore the persisted value. It'll be deleted
-				// once the user submits the Form containing that FormComponent.
-				// Note: if that is true, values may remain persisted longer
-				// than really necessary
-				if (formComponent.isPersistent() && formComponent.isVisibleInHierarchy())
-				{
-					// The persister
-					final IValuePersister persister = getValuePersister();
-
-					// Retrieve persisted value
-					persister.load(formComponent);
-				}
-			}
-		});
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * 
 	 * Handles form submissions.
@@ -983,9 +949,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Update model using form data
 			updateFormComponentModels();
 
-			// Persist FormComponents if requested
-			persistFormComponentData();
-
 			// Form has no error
 			return true;
 		}
@@ -1036,44 +999,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-			}
-		});
-	}
-
-	/**
-	 * Removes already persisted data for all FormComponent children and disable persistence for the
-	 * same components.
-	 * 
-	 * @see Page#removePersistedFormData(Class, boolean)
-	 * 
-	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that page. If false, it
-	 *            will remain unchanged.
-	 */
-	public void removePersistentFormComponentValues(final boolean disablePersistence)
-	{
-		// The persistence manager responsible to persist and retrieve
-		// FormComponent data
-		final IValuePersister persister = getValuePersister();
-
-		// Search for FormComponents like TextField etc.
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent)
-			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					// remove the FormComponent's persisted data
-					persister.clear(formComponent);
-
-					// Disable persistence if requested. Leave unchanged
-					// otherwise.
-					if (formComponent.isPersistent() && disablePersistence)
-					{
-						formComponent.setPersistent(false);
-					}
-				}
 			}
 		});
 	}
@@ -1394,48 +1319,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned to the FormComponent
-	 * automatically when the page is visited by the user next time.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	private void persistFormComponentData()
-	{
-		// Cannot add cookies to request cycle unless it accepts them
-		// We could conceivably be HTML over some other protocol!
-		if (getRequestCycle() instanceof WebRequestCycle)
-		{
-			// The persistence manager responsible to persist and retrieve
-			// FormComponent data
-			final IValuePersister persister = getValuePersister();
-
-			// Search for FormComponent children. Ignore all other
-			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-			{
-				@Override
-				public void onFormComponent(final FormComponent<?> formComponent)
-				{
-					if (formComponent.isVisibleInHierarchy())
-					{
-						// If persistence is switched on for that FormComponent
-						// ...
-						if (formComponent.isPersistent())
-						{
-							// Save component's data (e.g. in a cookie)
-							persister.save(formComponent);
-						}
-						else
-						{
-							// Remove component's data (e.g. cookie)
-							persister.clear(formComponent);
-						}
-					}
-				}
-			});
-		}
-	}
-
-	/**
 	 * If a default IFormSubmittingComponent was set on this form, this method will be called to
 	 * render an extra field with an invisible style so that pressing enter in one of the textfields
 	 * will do a form submit using this component. This method is overridable as what we do is best
@@ -1581,16 +1464,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	protected boolean getStatelessHint()
 	{
 		return false;
-	}
-
-	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
-	 * @return The form component value persister
-	 */
-	protected IValuePersister getValuePersister()
-	{
-		return new CookieValuePersister();
 	}
 
 	private boolean isMultiPart()

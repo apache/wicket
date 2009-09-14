@@ -33,6 +33,8 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
@@ -43,7 +45,6 @@ import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
-import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
@@ -112,6 +113,9 @@ public final class Settings
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
+	/** The authentication strategy. */
+	private IAuthenticationStrategy authenticationStrategy;
+
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
 
@@ -134,9 +138,6 @@ public final class Settings
 
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
-
-	/** Default values for persistence of form data (by means of cookies) */
-	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
 
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
@@ -489,14 +490,6 @@ public final class Settings
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#getCookieValuePersisterSettings()
-	 */
-	public CookieValuePersisterSettings getCookieValuePersisterSettings()
-	{
-		return cookieValuePersisterSettings;
 	}
 
 	/**
@@ -919,15 +912,6 @@ public final class Settings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.ISecuritySettings#setCookieValuePersisterSettings(org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettings)
-	 */
-	public void setCookieValuePersisterSettings(
-		CookieValuePersisterSettings cookieValuePersisterSettings)
-	{
-		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
 	}
 
 	/**
@@ -1547,5 +1531,25 @@ public final class Settings
 			throw new IllegalArgumentException("Parameter 'defaultDuration' must not be < 0");
 		}
 		defaultCacheDuration = defaultDuration;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthenticationStrategy()
+	 */
+	public IAuthenticationStrategy getAuthenticationStrategy()
+	{
+		if (authenticationStrategy == null)
+		{
+			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn");
+		}
+		return authenticationStrategy;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.ISecuritySettings#setAuthenticationStrategy(org.apache.wicket.authentication.IAuthenticationStrategy)
+	 */
+	public void setAuthenticationStrategy(final IAuthenticationStrategy strategy)
+	{
+		authenticationStrategy = strategy;
 	}
 }

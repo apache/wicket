@@ -626,6 +626,11 @@ public abstract class WebApplication extends Application
 		return Application.DEVELOPMENT;
 	}
 
+	/**
+	 * By default it return a WebApplicationPath
+	 * 
+	 * @return resource finder
+	 */
 	protected IResourceFinder getResourceFinder()
 	{
 		return new WebApplicationPath(getServletContext());

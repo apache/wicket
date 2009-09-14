@@ -34,7 +34,6 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.RequestParameters;
@@ -687,12 +686,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			try
 			{
-
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
-
 			}
 			catch (Exception ignore)
 			{
@@ -707,14 +704,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				{
 				}
 			}
+
 			if (bookmarkable == null)
 			{
 				bookmarkable = Boolean.FALSE;
 			}
 			pageClassToBookmarkableCache.put(getClass().getName(), bookmarkable);
 		}
-		return bookmarkable.booleanValue();
 
+		return bookmarkable.booleanValue();
 	}
 
 	/**
@@ -821,47 +819,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Convenience method. Search for children of type fromClass and invoke their respective
-	 * removePersistedFormData() methods.
-	 * 
-	 * @param <C>
-	 * 
-	 * @see Form#removePersistentFormComponentValues(boolean)
-	 * 
-	 * @param formClass
-	 *            Form to be selected. Pages may have more than one Form.
-	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that page. If false, it
-	 *            will remain unchanged.
-	 */
-	public final <C extends Form<?>> void removePersistedFormData(final Class<C> formClass,
-		final boolean disablePersistence)
-	{
-		// Check that formClass is an instanceof Form
-		if (!Form.class.isAssignableFrom(formClass))
-		{
-			throw new WicketRuntimeException("Form class " + formClass.getName() +
-				" is not a subclass of Form");
-		}
-
-		// Visit all children which are an instance of formClass
-		visitChildren(formClass, new IVisitor<Component>()
-		{
-			public Object component(final Component component)
-			{
-				// They must be of type Form as well
-				if (component instanceof Form)
-				{
-					// Delete persistent FormComponent data and disable
-					// persistence
-					((Form<?>)component).removePersistentFormComponentValues(disablePersistence);
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
 	public final void renderPage()
@@ -884,9 +841,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			stateless = null;
 		}
-
-		// Set form component values from cookies
-		setFormComponentValuesFromCookies();
 
 		try
 		{
@@ -1607,24 +1561,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			versionManager.componentStateChanging(change);
 		}
-	}
-
-	/**
-	 * Sets values for form components based on cookie values in the request.
-	 * 
-	 */
-	final void setFormComponentValuesFromCookies()
-	{
-		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor<Component>()
-		{
-			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
-			{
-				((Form<?>)component).loadPersistentFormComponentValues();
-				return CONTINUE_TRAVERSAL;
-			}
-		});
 	}
 
 	/**

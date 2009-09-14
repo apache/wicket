@@ -86,7 +86,6 @@ public class InstantiationPermissionsTest extends TestCase
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public void testRemove2()
 	{
 		WicketTester tester = new WicketTester();

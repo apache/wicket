@@ -253,13 +253,4 @@ public class ListChoice<T> extends DropDownChoice<T>
 			tag.put("size", maxRows);
 		}
 	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected final boolean supportsPersistence()
-	{
-		return true;
-	}
 }

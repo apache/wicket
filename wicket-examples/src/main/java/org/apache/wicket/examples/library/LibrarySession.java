@@ -29,6 +29,7 @@ import org.apache.wicket.protocol.http.WebSession;
  */
 public final class LibrarySession extends WebSession
 {
+	// Logged in user
 	private User user;
 
 	/**
@@ -52,43 +53,38 @@ public final class LibrarySession extends WebSession
 	 *            The password
 	 * @return The signed in user
 	 */
-	public final User authenticate(final String username, final String password)
+	@Override
+	public final boolean authenticate(final String username, final String password)
 	{
-		if (user == null)
+		final String WICKET = "wicket";
+
+		// Trivial password "db"
+		if (WICKET.equalsIgnoreCase(username) && WICKET.equalsIgnoreCase(password))
 		{
-			// Trivial password "db"
-			if ("wicket".equalsIgnoreCase(username) && "wicket".equalsIgnoreCase(password))
-			{
-				// Create User object
-				final User user = new User();
+			// Create User object
+			final User user = new User();
 
-				user.setName(username);
+			user.setName(username);
 
-				final List<Book> books = user.getBooks();
+			final List<Book> books = user.getBooks();
 
-				books.add(new Book("Effective Java", "Joshua Bloch", Book.NON_FICTION));
-				books.add(new Book("The Illiad", "Homer Simpson", Book.FICTION));
-				books.add(new Book("Why Stock Markets Crash", "Didier Sornette", Book.NON_FICTION));
-				books.add(new Book("The Netherlands", "Mike Jones", Book.NON_FICTION));
-				books.add(new Book("Windows, Windows, Windows!", "Steve Ballmer", Book.FICTION));
-				books.add(new Book("This is a test", "Vincent Rumsfield", Book.FICTION));
-				books.add(new Book("Movies", "Mark Marksfield", Book.NON_FICTION));
-				books.add(new Book("DOS Capitol", "Billy G", Book.FICTION));
-				books.add(new Book("Whatever", "Jonny Zoom", Book.FICTION));
-				books.add(new Book("Tooty Fruity", "Rudy O", Book.FICTION));
-				setUser(user);
-			}
+			books.add(new Book("Effective Java", "Joshua Bloch", Book.NON_FICTION));
+			books.add(new Book("The Illiad", "Homer Simpson", Book.FICTION));
+			books.add(new Book("Why Stock Markets Crash", "Didier Sornette", Book.NON_FICTION));
+			books.add(new Book("The Netherlands", "Mike Jones", Book.NON_FICTION));
+			books.add(new Book("Windows, Windows, Windows!", "Steve Ballmer", Book.FICTION));
+			books.add(new Book("This is a test", "Vincent Rumsfield", Book.FICTION));
+			books.add(new Book("Movies", "Mark Marksfield", Book.NON_FICTION));
+			books.add(new Book("DOS Capitol", "Billy G", Book.FICTION));
+			books.add(new Book("Whatever", "Jonny Zoom", Book.FICTION));
+			books.add(new Book("Tooty Fruity", "Rudy O", Book.FICTION));
+
+			setUser(user);
+
+			return true;
 		}
 
-		return user;
-	}
-
-	/**
-	 * @return True if user is signed in
-	 */
-	public boolean isSignedIn()
-	{
-		return user != null;
+		return false;
 	}
 
 	/**
@@ -106,5 +102,14 @@ public final class LibrarySession extends WebSession
 	public void setUser(final User user)
 	{
 		this.user = user;
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.WebSession#signOut()
+	 */
+	@Override
+	public void signOut()
+	{
+		user = null;
 	}
 }

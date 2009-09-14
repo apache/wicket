@@ -63,13 +63,14 @@ public abstract class AbstractCrypt implements ICrypt
 	{
 		try
 		{
-			byte[] encrypted = Base64UrlSafe.decodeBase64(text.getBytes());
-			return new String(decryptByteArray(encrypted), CHARACTER_ENCODING);
+			byte[] decoded = new Base64(true).decode(text);
+			return new String(decryptByteArray(decoded), CHARACTER_ENCODING);
 		}
-		catch (UnsupportedEncodingException ex)
+		catch (Exception ex)
 		{
-			throw new WicketRuntimeException("Error decoding text: " + text, ex);
+			log.error("Error decoding text: " + text, ex);
 		}
+		return null;
 	}
 
 	/**
@@ -83,10 +84,15 @@ public abstract class AbstractCrypt implements ICrypt
 	{
 		try
 		{
-			byte[] cipherText = encryptStringToByteArray(plainText);
-			return new String(Base64UrlSafe.encodeBase64(cipherText));
+			byte[] encrypted = encryptStringToByteArray(plainText);
+			return new String(new Base64(-1, null, true).encode(encrypted), CHARACTER_ENCODING);
 		}
 		catch (GeneralSecurityException e)
+		{
+			log.error("Unable to encrypt text '" + plainText + "'", e);
+			return null;
+		}
+		catch (UnsupportedEncodingException e)
 		{
 			log.error("Unable to encrypt text '" + plainText + "'", e);
 			return null;

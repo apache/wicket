@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples;
 
-import com.meterware.httpunit.HttpUnitOptions;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import org.apache.wicket.examples.ajax.prototype.AjaxTest;
 import org.apache.wicket.examples.compref.ComprefTest;
 import org.apache.wicket.examples.encodings.EncodingTest;
@@ -31,10 +31,11 @@ import org.apache.wicket.examples.images.ImagesTest;
 import org.apache.wicket.examples.library.LibraryTest;
 import org.apache.wicket.examples.linkomatic.LinkomaticTest;
 import org.apache.wicket.examples.niceurl.NiceUrlTest;
-import org.apache.wicket.examples.panels.signin.CookieTest;
 import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
 import org.apache.wicket.util.license.ApacheLicenceHeaderTest;
+
+import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * All tests in the project; used by Maven.
@@ -61,7 +62,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(FormInputTest.class);
 		suite.addTestSuite(LinkomaticTest.class);
 		suite.addTestSuite(Signin2Test.class);
-		suite.addTestSuite(CookieTest.class);
 		suite.addTestSuite(AjaxTest.class);
 		suite.addTestSuite(ComprefTest.class);
 		suite.addTestSuite(EncodingTest.class);
@@ -89,17 +89,6 @@ public final class AllTests extends TestSuite
 	public AllTests(Class<?> arg0)
 	{
 		super(arg0);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public AllTests(Class<?> arg0, String arg1)
-	{
-		super(arg0, arg1);
 	}
 
 	/**

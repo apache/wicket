@@ -433,15 +433,6 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected boolean supportsPersistence()
-	{
-		return true;
-	}
-
-	/**
 	 * Override this method if you want to localize the display values of the generated options. By
 	 * default false is returned so that the display values of options are not tested if they have a
 	 * i18n key.

@@ -147,8 +147,10 @@ public abstract class Session implements IClusterable
 		}
 	}
 
-	/** a sequence used for whenever something session-specific needs a unique value */
-	private int sequence = 1;
+	private static final long serialVersionUID = 1L;
+
+	/** Logging object */
+	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
 	/** meta data key for missing body tags logging. */
 	public static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>()
@@ -165,19 +167,17 @@ public abstract class Session implements IClusterable
 	/** A store for dirty objects for one request */
 	private static final ThreadLocal<List<IClusterable>> dirtyObjects = new ThreadLocal<List<IClusterable>>();
 
-	/** Logging object */
-	private static final Logger log = LoggerFactory.getLogger(Session.class);
-
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";
-
-	private static final long serialVersionUID = 1L;
 
 	/** A store for touched pages for one request */
 	private static final ThreadLocal<List<Page>> touchedPages = new ThreadLocal<List<Page>>();
 
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
+
+	/** a sequence used for whenever something session-specific needs a unique value */
+	private int sequence = 1;
 
 	/** */
 	private int pageIdCounter = 0;
@@ -869,10 +869,9 @@ public abstract class Session implements IClusterable
 	 */
 	public void invalidateNow()
 	{
-		sessionInvalidated = true; // set this for isSessionInvalidated
+		invalidate();
 		getSessionStore().invalidate(RequestCycle.get().getRequest());
 	}
-
 
 	/**
 	 * Replaces the underlying (Web)Session, invalidating the current one and creating a new one. By

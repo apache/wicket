@@ -361,12 +361,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
 
-	/**
-	 * Whether this form component should save and restore state between sessions. This is false by
-	 * default.
-	 */
-	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
-
 	/** Whether or not this component's value is required (non-empty) */
 	private static final short FLAG_REQUIRED = FLAG_RESERVED3;
 
@@ -974,15 +968,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @return True if this component supports persistence AND it has been asked to persist itself
-	 *         with setPersistent().
-	 */
-	public final boolean isPersistent()
-	{
-		return supportsPersistence() && getFlag(FLAG_PERSISTENT);
-	}
-
-	/**
 	 * @return whether or not this component's value is required
 	 */
 	public boolean isRequired()
@@ -1088,27 +1073,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	{
 		convertedInput = convertValue(value);
 		updateModel();
-	}
-
-	/**
-	 * Sets whether this component is to be persisted.
-	 * 
-	 * @param persistent
-	 *            True if this component is to be persisted.
-	 * @return this for chaining
-	 */
-	public final FormComponent<T> setPersistent(final boolean persistent)
-	{
-		if (supportsPersistence())
-		{
-			setFlag(FLAG_PERSISTENT, persistent);
-		}
-		else
-		{
-			throw new UnsupportedOperationException("FormComponent " + getClass() +
-				" does not support cookies");
-		}
-		return this;
 	}
 
 	/**
@@ -1558,14 +1522,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			trimmed = trimmed.trim();
 		}
 		return trimmed;
-	}
-
-	/**
-	 * @return True if this type of FormComponent can be persisted.
-	 */
-	protected boolean supportsPersistence()
-	{
-		return false;
 	}
 
 	/**

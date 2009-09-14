@@ -170,15 +170,4 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	protected void onSelectionChanged(final Object newSelection)
 	{
 	}
-
-	/**
-	 * Radio group does not support persistence through cookies
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected final boolean supportsPersistence()
-	{
-		return false;
-	}
 }

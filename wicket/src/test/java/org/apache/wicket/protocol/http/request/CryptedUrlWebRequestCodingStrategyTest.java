@@ -18,8 +18,10 @@ package org.apache.wicket.protocol.http.request;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
+import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -36,9 +38,9 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 	WebApplication _app = new WebApplication()
 	{
 		@Override
-		public Class<WebPage> getHomePage()
+		public Class<? extends Page> getHomePage()
 		{
-			return null;
+			return MockPage.class;
 		}
 
 		@Override

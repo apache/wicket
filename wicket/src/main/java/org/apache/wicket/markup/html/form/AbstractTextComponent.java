@@ -200,13 +200,4 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		}
 		return super.convertValue(value);
 	}
-
-	/**
-	 * @see FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected boolean supportsPersistence()
-	{
-		return true;
-	}
 }

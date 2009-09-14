@@ -20,7 +20,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
@@ -97,7 +96,7 @@ public class UsernamePasswordSignInPanel extends Panel
 			this.panel = panel;
 
 			// only save username, not passwords
-			add(new TextField<String>("username").setPersistent(rememberMe));
+			add(new TextField<String>("username"));
 			add(new PasswordTextField("password"));
 			// MarkupContainer row for remember me checkbox
 			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
@@ -117,7 +116,7 @@ public class UsernamePasswordSignInPanel extends Panel
 			if (!rememberMe)
 			{
 				// Verwijder de persistente waarden van het formulier
-				getPage().removePersistedFormData(SignInForm.class, true);
+				// getPage().removePersistedFormData(SignInForm.class, true);
 			}
 
 			ValueMap values = (ValueMap)getDefaultModelObject();
@@ -158,7 +157,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		public void setRememberMe(boolean rememberMe)
 		{
 			this.rememberMe = rememberMe;
-			((FormComponent)get("username")).setPersistent(rememberMe);
+			// ((FormComponent)get("username")).setPersistent(rememberMe);
 		}
 	}
 }

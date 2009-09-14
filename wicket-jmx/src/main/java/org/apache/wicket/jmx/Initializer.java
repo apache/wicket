@@ -41,11 +41,11 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Users can specify the MBeanServer implementation in which to register the MBeans by setting the
  * <code>org.apache.wicket.mbean.server.agentid</code> property to the agent id of the MBeanServer
- * implementation they want, or by setting <code>org.apache.wicket.mbean.server.class</code> to
- * the mbean server class they want (if both are provided, and the agent id returns a server, that
- * one is used). This initializer will log an error when no mbean server with the provided agent id
- * can be found, and will then fall back to use the platform mbean server. When no agent id is
- * provided, the platform mbean server will be used.
+ * implementation they want, or by setting <code>org.apache.wicket.mbean.server.class</code> to the
+ * mbean server class they want (if both are provided, and the agent id returns a server, that one
+ * is used). This initializer will log an error when no mbean server with the provided agent id can
+ * be found, and will then fall back to use the platform mbean server. When no agent id is provided,
+ * the platform mbean server will be used.
  * 
  * @author eelcohillenius
  * @author David Hosier
@@ -88,7 +88,6 @@ public class Initializer implements IInitializer, IDestroyer
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
-	@SuppressWarnings("unchecked")
 	public void init(org.apache.wicket.Application application)
 	{
 		try
@@ -128,7 +127,8 @@ public class Initializer implements IInitializer, IDestroyer
 				catch (SecurityException e)
 				{
 					// Ignore - we're not allowed to read this property.
-					log.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
+					log
+							.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
 				}
 				if (impl != null)
 				{
@@ -191,8 +191,6 @@ public class Initializer implements IInitializer, IDestroyer
 					":type=Application,name=SecuritySettings"));
 			register(new SessionSettings(application), new ObjectName(domain +
 					":type=Application,name=SessionSettings"));
-			register(new CookieValuePersisterSettings(application), new ObjectName(domain +
-					":type=Application,name=CookieValuePersisterSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");

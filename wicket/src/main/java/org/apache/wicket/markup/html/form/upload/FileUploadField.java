@@ -165,17 +165,6 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
-	 * FileInputs cannot be persisted; returns false.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected boolean supportsPersistence()
-	{
-		return false;
-	}
-
-	/**
 	 * Clean up at the end of the request. This means closing all inputstreams which might have been
 	 * opened from the fileUpload.
 	 * 

@@ -105,7 +105,8 @@ public final class BookDetails extends AuthenticatedWebPage
 	public static BookmarkablePageLink<Void> link(final String name, final Book book,
 		final String noBookTitle)
 	{
-		final BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>(name, BookDetails.class);
+		final BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>(name,
+			BookDetails.class);
 
 		if (book != null)
 		{

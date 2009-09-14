@@ -119,13 +119,4 @@ public class PasswordTextField extends TextField<String>
 	{
 		return "password";
 	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent#supportsPersistence()
-	 */
-	@Override
-	protected boolean supportsPersistence()
-	{
-		return false;
-	}
 }

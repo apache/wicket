@@ -33,7 +33,6 @@ import org.apache.wicket.Page;
  *            type of model object
  * 
  * @deprecated use {@link BookmarkablePageLink} or {@link Link} instead
- * 
  */
 @Deprecated
 public class PageLink<T> extends Link<T>

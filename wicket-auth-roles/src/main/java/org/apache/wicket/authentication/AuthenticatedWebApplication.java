@@ -57,6 +57,9 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			getWebSessionClass());
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#init()
+	 */
 	@Override
 	protected void init()
 	{
@@ -73,7 +76,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public final boolean hasAnyRole(final Roles roles)
 	{
 		final Roles sessionRoles = AuthenticatedWebSession.get().getRoles();
-		return sessionRoles != null && sessionRoles.hasAnyRole(roles);
+		return (sessionRoles != null) && sessionRoles.hasAnyRole(roles);
 	}
 
 	/**

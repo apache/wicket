@@ -605,7 +605,7 @@ public final class Strings
 	 */
 	public static String join(String separator, String... fragments)
 	{
-		if (fragments.length < 1)
+		if ((fragments == null) || (fragments.length < 1))
 		{
 			// no elements
 			return "";

@@ -22,7 +22,9 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.settings.ISecuritySettings;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -153,9 +155,9 @@ public class Base64Test extends TestCase
 			byte bytes1[] = new byte[200];
 			new Random().nextBytes(bytes1);
 
-			byte[] s = new Base64UrlSafe().encode(bytes1);
+			byte[] s = new Base64().encode(bytes1);
 
-			byte[] bytes2 = new Base64UrlSafe().decode(s);
+			byte[] bytes2 = new Base64().decode(s);
 			boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2));
 			assertEquals(true, isEqual);
 		}
@@ -168,9 +170,9 @@ public class Base64Test extends TestCase
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 
-		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		byte[] s = new Base64().encode(input.getBytes());
 
-		byte[] bytes2 = new Base64UrlSafe().decode(s);
+		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
 		boolean isEqual = input.equals(output);
 		assertEquals(true, isEqual);
@@ -183,9 +185,9 @@ public class Base64Test extends TestCase
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
 
-		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		byte[] s = new Base64().encode(input.getBytes());
 
-		byte[] bytes2 = new Base64UrlSafe().decode(s);
+		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
 		boolean isEqual = input.equals(output);
 		assertEquals(true, isEqual);
@@ -198,9 +200,9 @@ public class Base64Test extends TestCase
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
 
-		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		byte[] s = new Base64().encode(input.getBytes());
 
-		byte[] bytes2 = new Base64UrlSafe().decode(s);
+		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
 		boolean isEqual = input.equals(output);
 		assertEquals(true, isEqual);
@@ -213,9 +215,9 @@ public class Base64Test extends TestCase
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
 
-		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		byte[] s = new Base64().encode(input.getBytes());
 
-		byte[] bytes2 = new Base64UrlSafe().decode(s);
+		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
 		boolean isEqual = input.equals(output);
 		assertEquals(true, isEqual);
@@ -244,5 +246,42 @@ public class Base64Test extends TestCase
 
 		String output = crypt.decryptUrlSafe(s);
 		assertEquals(input, output);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_4() throws IOException
+	{
+		String input = "wicket-sep-wicket";
+		for (int i = input.length(); i >= 0; i--)
+		{
+			String in = input.substring(i);
+			byte[] s = Base64.encodeBase64URLSafe(in.getBytes());
+
+			byte[] output = Base64.decodeBase64(s);
+			String out = new String(output);
+			assertEquals(in, out);
+		}
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void test_5() throws IOException
+	{
+		WicketTester tester = new WicketTester();
+		RequestCycle cycle = tester.createRequestCycle();
+		ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
+
+		String input = "wicket-sep-wicket";
+		for (int i = input.length(); i >= 0; i--)
+		{
+			String in = input.substring(i);
+			String encrypted = crypt.encryptUrlSafe(in);
+
+			String output = crypt.decryptUrlSafe(encrypted);
+			assertEquals(in, output);
+		}
 	}
 }

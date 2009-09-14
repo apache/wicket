@@ -17,8 +17,8 @@
 package org.apache.wicket.examples.library;
 
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.authentication.panel.SignInPanel;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.panels.signin.SignInPanel;
 
 
 /**
@@ -30,41 +30,20 @@ public final class SignIn extends WicketExamplePage
 {
 	/**
 	 * Constructor
+	 */
+	public SignIn()
+	{
+		this(null);
+	}
+
+	/**
+	 * Constructor
 	 * 
 	 * @param parameters
 	 *            The page parameters
 	 */
 	public SignIn(final PageParameters parameters)
 	{
-		add(new SignInPanel("signInPanel")
-		{
-			@Override
-			public boolean signIn(final String username, final String password)
-			{
-				// Sign the user in
-				final User user = ((LibrarySession)getSession()).authenticate(username, password);
-
-				// If the user was signed in
-				if (user != null)
-				{
-					return true;
-				}
-				else
-				{
-					error(getLocalizer().getString("couldNotAuthenticate", this));
-					return false;
-				}
-			}
-		});
-	}
-
-	/**
-	 * Constructor
-	 */
-	public SignIn()
-	{
-		this(null);
+		add(new SignInPanel("signInPanel", false));
 	}
 }
-
-// 

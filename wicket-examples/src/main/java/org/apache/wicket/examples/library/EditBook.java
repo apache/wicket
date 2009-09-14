@@ -20,9 +20,7 @@ package org.apache.wicket.examples.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -30,8 +28,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.FormComponentFeedbackBorder;
-import org.apache.wicket.markup.html.link.IPageLink;
-import org.apache.wicket.markup.html.link.PageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.lang.EnumeratedType;
@@ -56,9 +53,7 @@ public final class EditBook extends AuthenticatedWebPage
 	public EditBook(final Book book)
 	{
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-
-		add(feedback);
+		add(new FeedbackPanel("feedback"));
 
 		// Add edit book form to page
 		add(new EditBookForm("editBookForm", book));
@@ -73,20 +68,19 @@ public final class EditBook extends AuthenticatedWebPage
 	 *            The id of the book that the page will edit
 	 * @return The page link
 	 */
-	public static PageLink link(final String name, final long id)
+	public static Link<Void> link(final String name, final long id)
 	{
-		return new PageLink(name, new IPageLink()
+		return new Link<Void>(name)
 		{
-			public Page getPage()
+			/**
+			 * @see org.apache.wicket.markup.html.link.Link#onClick()
+			 */
+			@Override
+			public void onClick()
 			{
-				return new EditBook(Book.get(id));
+				setResponsePage(new EditBook(Book.get(id)));
 			}
-
-			public Class<? extends Page> getPageIdentity()
-			{
-				return EditBook.class;
-			}
-		});
+		};
 	}
 
 	/**
@@ -113,16 +107,15 @@ public final class EditBook extends AuthenticatedWebPage
 			final TextField<String> title = new TextField<String>("title");
 			title.setRequired(true);
 			title.add(StringValidator.maximumLength(30));
-			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
-				"titleFeedback");
+
+			final MarkupContainer titleFeedback = new FormComponentFeedbackBorder("titleFeedback");
 			add(titleFeedback);
 			titleFeedback.add(title);
 
 			// Create a required text field that edits the book's author
 			final TextField<String> author = new TextField<String>("author");
 			author.setRequired(true);
-			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
-				"authorFeedback");
+			final MarkupContainer authorFeedback = new FormComponentFeedbackBorder("authorFeedback");
 			add(authorFeedback);
 			authorFeedback.add(author);
 
@@ -131,7 +124,6 @@ public final class EditBook extends AuthenticatedWebPage
 
 			// Books is everything but otherBook
 			List<Book> books = new ArrayList<Book>();
-
 			books.addAll(Book.getBooks());
 			books.remove(otherBook);
 
@@ -153,13 +145,9 @@ public final class EditBook extends AuthenticatedWebPage
 		@Override
 		public final void onSubmit()
 		{
-			final RequestCycle cycle = getRequestCycle();
-			PageParameters parameters = new PageParameters();
 			final Book book = getModelObject();
-			parameters.put("id", book.getId());
-			cycle.setResponsePage(getSession().getPageFactory().newPage(BookDetails.class,
-				parameters));
-			cycle.setRedirect(true);
+			setResponsePage(new BookDetails(book));
+			// setRedirect(true);
 		}
 	}
 }

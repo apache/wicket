@@ -221,24 +221,6 @@
 	</filter>
 
 	<filter>
-		<filter-name>SignInApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>org.apache.wicket.examples.signin.SignInApplication</param-value>
-		</init-param>
-	</filter>
-
-	<filter>
-		<filter-name>SignIn2Application</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>org.apache.wicket.examples.signin2.SignIn2Application</param-value>
-		</init-param>
-	</filter>
-
-	<filter>
 		<filter-name>UploadApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -377,11 +359,29 @@
 	</filter>
 
 	<filter>
+		<filter-name>SignInApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.authentication1.SignInApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>SignIn2Application</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.authentication2.SignIn2Application</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>org.apache.wicket.examples.authentication.MyAuthenticatedWebApplication</param-value>
+			<param-value>org.apache.wicket.examples.authentication3.MyAuthenticatedWebApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -473,26 +473,12 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>	
 
-	<filter-mapping>
-		<filter-name>SignInApplication</filter-name>
-		<url-pattern>/signin/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
-
     <filter-mapping>
         <filter-name>StockQuoteApplication</filter-name>
         <url-pattern>/stock/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
-    
-	<filter-mapping>
-		<filter-name>SignIn2Application</filter-name>
-		<url-pattern>/signin2/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>HangmanApplication</filter-name>
@@ -675,15 +661,29 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>RolesAuthApplication</filter-name>
-		<url-pattern>/authorization/*</url-pattern>
+		<filter-name>SignInApplication</filter-name>
+		<url-pattern>/authentication1/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+    
+	<filter-mapping>
+		<filter-name>SignIn2Application</filter-name>
+		<url-pattern>/authentication2/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
-		<url-pattern>/authentication/*</url-pattern>
+		<url-pattern>/authentication3/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>RolesAuthApplication</filter-name>
+		<url-pattern>/authorization/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>

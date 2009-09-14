@@ -35,14 +35,10 @@ import org.apache.wicket.util.lang.EnumeratedType;
  */
 public final class Book implements IClusterable
 {
-	/**
-	 * Value for fiction books.
-	 */
+	/** Value for fiction books. */
 	public static final boolean FICTION = true;
 
-	/**
-	 * Value for non-fiction books.
-	 */
+	/** Value for non-fiction books. */
 	public static final boolean NON_FICTION = false;
 
 	/** Funny book */
@@ -95,6 +91,10 @@ public final class Book implements IClusterable
 		add(this);
 	}
 
+	/**
+	 * 
+	 * @param book
+	 */
 	private void add(final Book book)
 	{
 		boolean hit = false;

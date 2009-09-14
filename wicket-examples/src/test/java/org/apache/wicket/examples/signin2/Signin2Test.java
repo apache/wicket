@@ -22,6 +22,10 @@ import javax.servlet.http.Cookie;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.examples.authentication2.Home;
+import org.apache.wicket.examples.authentication2.SignIn2;
+import org.apache.wicket.examples.authentication2.SignIn2Application;
+import org.apache.wicket.examples.authentication2.SignOut;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 
