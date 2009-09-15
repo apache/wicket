@@ -67,7 +67,6 @@ public class Recorder<T> extends HiddenField<Object>
 	 * @param palette
 	 *            parent palette object
 	 */
-	@SuppressWarnings("unchecked")
 	public Recorder(String id, Palette<T> palette)
 	{
 		super(id);
@@ -76,6 +75,10 @@ public class Recorder<T> extends HiddenField<Object>
 		setOutputMarkupId(true);
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -162,7 +165,7 @@ public class Recorder<T> extends HiddenField<Object>
 
 		if (choices.size() - ids.length == 0)
 		{
-			return Collections.<T>emptyList().iterator();
+			return Collections.<T> emptyList().iterator();
 		}
 
 		List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - ids.length));

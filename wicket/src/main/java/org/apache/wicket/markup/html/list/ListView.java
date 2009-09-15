@@ -26,7 +26,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
 
@@ -497,7 +496,8 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel, final int index)
+	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel,
+		final int index)
 	{
 		return new ListItemModel<T>(this, index);
 	}

@@ -63,8 +63,11 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 
 	protected abstract Iterator<T> getOptionsIterator();
 
-
-	@SuppressWarnings("unchecked")
+	/**
+	 * 
+	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
+	 */
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{

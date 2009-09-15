@@ -173,7 +173,6 @@ public class KittenCaptchaPanel extends Panel
 					"&x=' + getEventX(this, event) + '&y=' + getEventY(this, event)");
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			protected void onEvent(final AjaxRequestTarget target)
 			{

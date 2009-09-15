@@ -63,7 +63,6 @@ public class BodyFrame extends WebPage
 	/**
 	 * Constructor
 	 */
-	@SuppressWarnings("unchecked")
 	public BodyFrame()
 	{
 		// create a new page instance, passing this 'master page' as an argument

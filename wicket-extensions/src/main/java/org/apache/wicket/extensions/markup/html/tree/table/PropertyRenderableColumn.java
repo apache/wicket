@@ -34,7 +34,6 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 {
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
 	private IConverter converter;
 
 	private Locale locale;
@@ -83,7 +82,6 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	/**
 	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public String getNodeValue(TreeNode node)
 	{
@@ -110,7 +108,6 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param converter
 	 *            any converter
 	 */
-	@SuppressWarnings("unchecked")
 	public void setConverter(IConverter converter)
 	{
 		this.converter = converter;
