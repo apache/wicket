@@ -60,6 +60,8 @@ class TestForm extends Form<Void>
 		super(id);
 		add((new Button("cancel", Model.of("I am not empty label"))
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onSubmit()
 			{
@@ -69,6 +71,8 @@ class TestForm extends Form<Void>
 
 		add((submitButton = new AjaxButton("submit")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{

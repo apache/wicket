@@ -25,6 +25,8 @@ import org.apache.wicket.model.util.GenericBaseModel;
  */
 public class WicketTreeModel extends GenericBaseModel<TreeModel>
 {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected TreeModel createSerializableVersionOf(TreeModel object)
 	{

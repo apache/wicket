@@ -46,6 +46,8 @@ public class HomePage2 extends WebPage
 		add(new Label("msg", new PropertyModel<String>(this, "_message")));
 		add(new AjaxLink("link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget tgt)
 			{

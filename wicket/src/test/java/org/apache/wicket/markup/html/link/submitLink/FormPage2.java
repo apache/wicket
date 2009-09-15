@@ -39,6 +39,8 @@ public class FormPage2 extends WebPage
 	{
 		form = new Form("form")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit()
 			{
@@ -51,6 +53,8 @@ public class FormPage2 extends WebPage
 
 		form.add(new SubmitLink("link", form)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onSubmit()
 			{

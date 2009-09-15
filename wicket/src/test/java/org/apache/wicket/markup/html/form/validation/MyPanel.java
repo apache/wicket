@@ -52,6 +52,8 @@ public class MyPanel extends Panel
 
 		form.add(new AbstractFormValidator()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public FormComponent<?>[] getDependentFormComponents()
 			{
 				return null;

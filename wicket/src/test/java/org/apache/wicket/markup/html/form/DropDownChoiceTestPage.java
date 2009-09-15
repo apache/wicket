@@ -134,6 +134,8 @@ public class DropDownChoiceTestPage extends WebPage
 
 		TextField expiryDate = new TextField("text", new PropertyModel(this, "myDate"), Date.class)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isRequired()
 			{

@@ -1068,17 +1068,11 @@ public final class Objects
 				return new Integer((int)value);
 
 			case FLOAT :
-				if (value == value)
-				{
-					return new Float(value);
-				}
-				// else fall through:
+				return new Float(value);
+
 			case DOUBLE :
-				if (value == value)
-				{
-					return new Double(value);
-				}
-				// else fall through:
+				return new Double(value);
+
 			case LONG :
 				return new Long(value);
 

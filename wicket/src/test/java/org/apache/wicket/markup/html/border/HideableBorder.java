@@ -39,6 +39,8 @@ public class HideableBorder extends Border
 		super(name);
 		final WebMarkupContainer containerWrapper = new WebMarkupContainer("wrapper")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isVisible()
 			{

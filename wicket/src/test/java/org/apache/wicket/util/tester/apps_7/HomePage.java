@@ -55,6 +55,8 @@ public class HomePage extends WebPage
 		form.add(new Button("hiddenButton").setVisible(false));
 		form.add(new AjaxButton("ajaxButton")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
