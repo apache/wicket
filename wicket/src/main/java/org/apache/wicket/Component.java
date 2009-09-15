@@ -43,7 +43,6 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
@@ -1352,16 +1351,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * @return nothing, will always throw an exception. Use {@link #getConverter(Class)} instead.
-	 * @deprecated To be removed. Please use/ override {@link #getConverter(Class)} instead.
-	 */
-	@Deprecated
-	public final IConverter getConverter()
-	{
-		throw new UnsupportedOperationException("use #getConverter(Class) instead");
-	}
-
-	/**
 	 * Gets the converter that should be used by this component.
 	 * 
 	 * @param type
@@ -1999,26 +1988,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * @deprecated
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	public final void internalAttach()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	public final void internalDetach()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Authorizes an action for a component.
 	 * 
 	 * @param action
@@ -2035,20 +2004,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return authorizationStrategy.isActionAuthorized(this, action);
 		}
 		return true;
-	}
-
-	/**
-	 * Returns true if this component is an ancestor of the given component
-	 * 
-	 * @param component
-	 *            The component to check
-	 * @return True if the given component has this component as an ancestor
-	 * @deprecated use getParent().contains(component, false)
-	 */
-	@Deprecated
-	public final boolean isAncestorOf(final Component component)
-	{
-		return getParent().contains(component, false);
 	}
 
 	/**
@@ -3732,33 +3687,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
 	 * <p>
-	 * Called when a request begins.
-	 * </p>
-	 * 
-	 * @Deprecated use {@link #onBeforeRender()} instead
-	 */
-	protected final void internalOnAttach()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
-	 * <p>
-	 * Called when a request ends.
-	 * </p>
-	 * 
-	 * @Deprecated use {@link #onBeforeRender()} instead
-	 * 
-	 */
-	protected final void internalOnDetach()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
-	 * <p>
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 * </p>
 	 */
@@ -3829,23 +3757,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * The onAttach method is no longer available.
-	 * <p>
-	 * If you need to initialize component before it is rendered, either use
-	 * {@link #onBeforeRender()} or do the initialization lazily (on first demand, such as
-	 * {@link LoadableDetachableModel} does.
-	 * <p>
-	 * If you need to get notification when page is taken out of Session (before calling the event
-	 * listener), you can use the {@link Page#onPageAttached()} method.
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	protected final void onAttach()
-	{
-	}
-
-	/**
 	 * Called just before a component is rendered.
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
@@ -3876,16 +3787,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected boolean callOnBeforeRenderIfNotVisible()
 	{
 		return false;
-	}
-
-	/**
-	 * @deprecated use onAttach() instead
-	 */
-	// TODO remove after the deprecation release
-	@Deprecated
-	protected final void onBeginRequest()
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -3950,16 +3851,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected void onRemove()
 	{
 		setFlag(FLAG_REMOVING_FROM_HIERARCHY, false);
-	}
-
-	/**
-	 * @deprecated use onDetach() instead
-	 */
-	// TODO remove after the deprecation release
-	@Deprecated
-	protected final void onEndRequest()
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**

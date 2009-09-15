@@ -237,20 +237,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * 
-	 * @param component
-	 *            The component to add
-	 * @return True, if component has been added
-	 * 
-	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
-	 */
-	@Deprecated
-	public final boolean autoAdd(final Component component)
-	{
-		return autoAdd(component, null);
-	}
-
-	/**
 	 * @param component
 	 *            The component to check
 	 * @param recurse

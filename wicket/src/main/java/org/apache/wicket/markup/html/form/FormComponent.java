@@ -1049,21 +1049,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Sets the value for a form component this value will be split the string with
-	 * {@link FormComponent#VALUE_SEPARATOR} and calls setModelValue(String[]) with that.
-	 * 
-	 * @param value
-	 *            The value
-	 * 
-	 * @deprecated call or override setModelValue(String[])
-	 */
-	@Deprecated
-	public void setModelValue(final String value)
-	{
-		setModelValue(value.split(VALUE_SEPARATOR));
-	}
-
-	/**
 	 * Sets the value for a form component.
 	 * 
 	 * @param value

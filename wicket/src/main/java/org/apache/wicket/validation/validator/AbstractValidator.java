@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
@@ -202,84 +201,5 @@ public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>
 	{
 		final Map<String, Object> resourceModel = new HashMap<String, Object>(1);
 		return resourceModel;
-	}
-
-	// deprecated methods
-
-	/**
-	 * DEPRECATED/UNSUPPORTED
-	 * 
-	 * Gets the default variables for interpolation. These are:
-	 * <ul>
-	 * <li>${input}: the user's input</li>
-	 * <li>${name}: the name of the component</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes from
-	 * <code>FormComponent.labelModel
-	 * </code> or resource key [form-id].[form-component-id] in that order</li>
-	 * </ul>
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @return a map with the variables for interpolation
-	 * 
-	 * @deprecated use {@link #variablesMap(IValidatable)} instead
-	 * @throws UnsupportedOperationException
-	 * 
-	 * 
-	 *             FIXME 2.0: remove asap
-	 */
-	@Deprecated
-	protected final Map<String, Object> messageModel(final FormComponent<T> formComponent)
-	{
-		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
-	}
-
-	/**
-	 * DEPRECATED/UNSUPPORTED
-	 * 
-	 * Gets the resource key for validator's error message from the ApplicationSettings class.
-	 * 
-	 * @param formComponent
-	 *            form component that is being validated
-	 * 
-	 * @return the resource key based on the form component
-	 * 
-	 * @deprecated use {@link #resourceKey()} instead
-	 * @throws UnsupportedOperationException
-	 * 
-	 * 
-	 *             FIXME 2.0: remove asap
-	 * 
-	 */
-	@Deprecated
-	protected final String resourceKey(final FormComponent<T> formComponent)
-	{
-		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
-	}
-
-	/**
-	 * DEPRECATED/UNSUPPORTED
-	 * 
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
-	 * <p>
-	 * Instead of subclassing IValidator, you should use one of the existing validators, which cover
-	 * a huge number of cases, or if none satisfies your need, subclass AbstractValidator.
-	 * <p>
-	 * Validates the given input. The input corresponds to the input from the request for a
-	 * component.
-	 * 
-	 * @param component
-	 *            Component to validate
-	 * 
-	 * @deprecated use {@link #variablesMap(IValidatable)} instead
-	 * @throws UnsupportedOperationException
-	 * 
-	 * 
-	 *             FIXME 2.0: remove asap
-	 */
-	@Deprecated
-	public final void validate(final FormComponent<T> component)
-	{
-		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
 }

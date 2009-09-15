@@ -18,9 +18,7 @@ package org.apache.wicket.model;
 
 import java.util.Properties;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.basic.Label;
 
 
 /**
@@ -91,36 +89,29 @@ public class ModelToStringTest extends WicketTestCase
 	/**
 	 * Tests the BoundCompoundPropertyModel.toString() method.
 	 */
-	@SuppressWarnings("deprecation")
 	public void testBoundCompoundPropertyModel()
 	{
-		BoundCompoundPropertyModel<String> emptyModel = new BoundCompoundPropertyModel<String>("");
-		String expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[]:bindings=[]";
+		CompoundPropertyModel<String> emptyModel = new CompoundPropertyModel<String>("");
+		String expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[]";
 		assertEquals(expected, emptyModel.toString());
 
 		Properties properties = new Properties();
 		properties.put("name", "foo");
-		BoundCompoundPropertyModel<String> stringProperty = new BoundCompoundPropertyModel<String>(
-			properties);
+		CompoundPropertyModel<String> stringProperty = new CompoundPropertyModel<String>(properties);
 
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[{name=foo}]:bindings=[]";
+		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
 		assertEquals(expected, stringProperty.toString());
 
 		stringProperty.getObject();
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[{name=foo}]:bindings=[]";
+		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
 		assertEquals(expected, stringProperty.toString());
 
 		InnerPOJO innerPOJO = new InnerPOJO();
-		BoundCompoundPropertyModel<InnerPOJO> pojoProperty = new BoundCompoundPropertyModel<InnerPOJO>(
+		CompoundPropertyModel<InnerPOJO> pojoProperty = new CompoundPropertyModel<InnerPOJO>(
 			innerPOJO);
 
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[" +
-			innerPOJO + "]:bindings=[]";
-		assertEquals(expected, pojoProperty.toString());
-
-		Component component1 = pojoProperty.bind(new Label("label"));
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[" +
-			innerPOJO + "]:bindings=[Binding(:component=[" + component1 + "]:expression=[label])]";
+		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[" +
+			innerPOJO + "]";
 		assertEquals(expected, pojoProperty.toString());
 	}
 

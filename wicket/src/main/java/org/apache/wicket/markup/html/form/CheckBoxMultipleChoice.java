@@ -455,17 +455,4 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
-
-	/**
-	 * Overridable method to determine whether the label markup should be escaped.
-	 * 
-	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
-	 * 
-	 * @return true if label markup should be escaped
-	 */
-	@Deprecated
-	protected final boolean isEscapeLabelMarkup()
-	{
-		return getEscapeModelStrings();
-	}
 }

@@ -316,27 +316,6 @@ public class PopupSettings implements IClusterable
 	/**
 	 * Gets the pagemap where the popup page must be created in.
 	 * 
-	 * @return The pagemap where the popup page must be created in
-	 * @deprecated will be removed in Wicket 2.0; use {@link #getPageMap(Component)} instead
-	 */
-	@Deprecated
-	public IPageMap getPageMap()
-	{
-		if (pageMapName != null)
-		{
-			return PageMap.forName(pageMapName);
-		}
-		else
-		{
-			throw new UnsupportedOperationException(
-				"this method can only work when a page map is set. Either call"
-					+ " getPageMap(Component) or set the page map");
-		}
-	}
-
-	/**
-	 * Gets the pagemap where the popup page must be created in.
-	 * 
 	 * @param callee
 	 *            Calling component
 	 * @return The pagemap where the popup page must be created in

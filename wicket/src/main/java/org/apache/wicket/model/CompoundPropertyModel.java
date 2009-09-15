@@ -214,29 +214,4 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}
-
-	// TODO These methods are for helping people upgrade. Remove after
-	// deprecation release.
-	/**
-	 * @param component
-	 * @return the model object
-	 * @deprecated replace by {@link IModel#getObject()}.
-	 */
-	@Deprecated
-	public final Object getObject(Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param component
-	 * @param object
-	 * @deprecated replace by {@link IModel#setObject(Object)}.
-	 */
-	@Deprecated
-	public final void setObject(Component component, Object object)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 }

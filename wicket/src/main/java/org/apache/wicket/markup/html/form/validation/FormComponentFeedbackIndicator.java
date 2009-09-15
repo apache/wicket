@@ -22,7 +22,6 @@ import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 
 /**
  * A panel that hides or shows itself depending on whether there are feedback messages for a given
@@ -52,17 +51,6 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 * 
-	 * @deprecated no need for a model in this component
-	 */
-	@Deprecated
-	public FormComponentFeedbackIndicator(final String id, IModel<?> model)
-	{
-		super(id, model);
-	}
-
-	/**
 	 * @param component
 	 *            The component to watch for messages
 	 */
@@ -82,6 +70,9 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 		setVisible(Session.get().getFeedbackMessages().hasMessage(getFeedbackMessageFilter()));
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#callOnBeforeRenderIfNotVisible()
+	 */
 	@Override
 	protected boolean callOnBeforeRenderIfNotVisible()
 	{

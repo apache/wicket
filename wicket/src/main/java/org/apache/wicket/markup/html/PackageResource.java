@@ -16,14 +16,6 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -42,10 +34,8 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.watch.IModifiable;
 import org.slf4j.Logger;
@@ -92,75 +82,10 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		}
 	}
 
-	/**
-	 * common extension pattern for css files; matches all files with extension 'css'.
-	 * 
-	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
-	 */
-	@Deprecated
-	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
-
-	/**
-	 * common extension pattern for javascript files; matches all files with extension 'js'.
-	 * 
-	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
-	 */
-	@Deprecated
-	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
-
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Binds the resources that match the provided pattern to the given application object. Will
-	 * create any resources if not already in the shared resources of the application object.
-	 * 
-	 * @param application
-	 *            The application to bind to.
-	 * @param scope
-	 *            The scope of the resource.
-	 * @param pattern
-	 *            A regular expression to match against the contents of the package of the provided
-	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
-	 *            &quot;js&quot; from that package).
-	 * 
-	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op. {@link PackageResource
-	 *             package resources} are automatically tried and bound as shared resources so that
-	 *             they don't have to be pre-registered anymore. Will be removed in 2.0
-	 */
-	@Deprecated
-	public static void bind(Application application, Class<?> scope, Pattern pattern)
-	{
-	}
-
-	/**
-	 * Binds the resources that match the provided pattern to the given application object. Will
-	 * create any resources if not already in the shared resources of the application object and
-	 * does that recursively when the recurse parameter is true, or just for the scoped package if
-	 * that parameter is false
-	 * 
-	 * @param application
-	 *            The application to bind to.
-	 * @param scope
-	 *            The scope of the resource.
-	 * @param pattern
-	 *            A regular expression to match against the contents of the package of the provided
-	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
-	 *            &quot;js&quot; from that package).
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
-	 * 
-	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op. {@link PackageResource
-	 *             package resources} are automatically tried and bound as shared resources so that
-	 *             they don't have to be pre-registered anymore. Will be removed in 2.0
-	 */
-	@Deprecated
-	public static void bind(Application application, Class<?> scope, Pattern pattern,
-		boolean recurse)
-	{
-	}
 
 	/**
 	 * Binds a resource to the given application object. Will create the resource if not already in
@@ -260,122 +185,6 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		String absolutePath = Packages.absolutePath(scope, path);
 		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
 			absolutePath, style, locale, null) != null;
-	}
-
-	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
-	 * the same criteria if they match the pattern. If no resources were found, this method returns
-	 * null.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading the package
-	 *            resource, and to determine what package it is in. Typically this is the calling
-	 *            class/ the class in which you call this method
-	 * @param pattern
-	 *            Regexp pattern to match resources
-	 * @return The resources, never null but may be empty
-	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
-	 */
-	@Deprecated
-	public static PackageResource[] get(Class<?> scope, Pattern pattern)
-	{
-		return get(scope, pattern, false);
-	}
-
-	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
-	 * the same criteria if they match the pattern. If no resources were found, this method returns
-	 * null.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading the package
-	 *            resource, and to determine what package it is in. Typically this is the calling
-	 *            class/ the class in which you call this method
-	 * @param pattern
-	 *            Regexp pattern to match resources
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
-	 * @return The resources, never null but may be empty
-	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static PackageResource[] get(Class<?> scope, Pattern pattern, boolean recurse)
-	{
-		final List resources = new ArrayList();
-		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
-			.toString();
-		ClassLoader loader = scope.getClassLoader();
-		try
-		{
-			// loop through the resources of the package
-			Enumeration packageResources = loader.getResources(packageRef);
-			while (packageResources.hasMoreElements())
-			{
-				URL resource = (URL)packageResources.nextElement();
-				URLConnection connection = resource.openConnection();
-				if (connection instanceof JarURLConnection)
-				{
-					JarFile jf = ((JarURLConnection)connection).getJarFile();
-					scanJarFile(scope, pattern, recurse, resources, packageRef, jf);
-				}
-				else
-				{
-					String absolutePath = scope.getResource("").toExternalForm();
-					File basedir;
-					URI uri;
-					try
-					{
-						uri = new URI(absolutePath);
-					}
-					catch (URISyntaxException e)
-					{
-						throw new RuntimeException(e);
-					}
-					try
-					{
-						basedir = new File(uri);
-					}
-					catch (IllegalArgumentException e)
-					{
-						log.debug("Can't construct the uri as a file: " + absolutePath);
-						// if this is thrown then the path is not really a
-						// file. but could be a zip.
-						String jarZipPart = uri.getSchemeSpecificPart();
-						// lowercased for testing if jar/zip, but leave the real
-						// filespec unchanged
-						String lowerJarZipPart = jarZipPart.toLowerCase();
-						int index = lowerJarZipPart.indexOf(".zip");
-						if (index == -1)
-						{
-							index = lowerJarZipPart.indexOf(".jar");
-						}
-						if (index == -1)
-						{
-							throw e;
-						}
-
-						String filename = jarZipPart.substring(0, index + 4); // 4 =
-						// len of ".jar" or ".zip"
-						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
-						JarFile jarFile = new JarFile(filename, false);
-						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
-						return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
-					}
-					if (!basedir.isDirectory())
-					{
-						throw new IllegalStateException("unable to read resources from directory " +
-							basedir);
-					}
-				}
-			}
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-
-		return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
 	}
 
 	/**

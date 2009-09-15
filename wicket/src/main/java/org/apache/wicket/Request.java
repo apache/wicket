@@ -129,20 +129,6 @@ public abstract class Request
 	public abstract String getRelativePathPrefixToWicketHandler();
 
 	/**
-	 * Gets the relative (to some root) url (e.g. in a servlet environment, the url without the
-	 * context path and without a leading '/'). Use this method e.g. to load resources using the
-	 * servlet context.
-	 * 
-	 * @return Request URL
-	 * @deprecated Use {@link #getURL()} instead.
-	 */
-	@Deprecated
-	public String getRelativeURL()
-	{
-		return getURL();
-	}
-
-	/**
 	 * Gets the request parameters object using the instance of {@link IRequestCodingStrategy} of
 	 * the provided request cycle processor.
 	 * 

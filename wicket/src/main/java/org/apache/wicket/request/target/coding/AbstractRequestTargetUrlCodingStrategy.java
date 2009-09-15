@@ -227,30 +227,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * @param value
-	 * @return decoded value
-	 * 
-	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
-	 */
-	@Deprecated
-	protected String urlDecode(String value)
-	{
-		return urlDecodePathComponent(value);
-	}
-
-	/**
-	 * @param string
-	 * @return encoded value
-	 * 
-	 * @deprecated Use urlEncodePathComponent or urlEncodeQueryComponent instead
-	 */
-	@Deprecated
-	protected String urlEncode(String string)
-	{
-		return urlEncodePathComponent(string);
-	}
-
-	/**
 	 * Does given path match this mount? We match /mount/point or /mount/point/with/extra/path, but
 	 * not /mount/pointXXX.
 	 * 

@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
@@ -150,20 +149,6 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * DO NOT USE.
-	 * 
-	 * @param name
-	 * @param session
-	 * @return created pagemap
-	 * @deprecated remove after deprecation release
-	 */
-	@Deprecated
-	public final IPageMap createPageMap(String name, Session session)
-	{
-		throw new UnsupportedOperationException("obsolete method");
-	}
-
-	/**
 	 * @see org.apache.wicket.session.ISessionStore#destroy()
 	 */
 	public void destroy()
@@ -171,7 +156,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		// nop
 	}
 
-	/*
+	/**
 	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request, boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)

@@ -185,19 +185,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Gets whether model messages should be HTML escaped. Default is true.
-	 * 
-	 * @return whether model messages should be HTML escaped
-	 * 
-	 * @deprecated use {@link #getEscapeModelStrings()} instead
-	 */
-	@Deprecated
-	public final boolean getEscapeMessages()
-	{
-		return getEscapeModelStrings();
-	}
-
-	/**
 	 * @return Model for feedback messages on which you can install filters and other properties
 	 */
 	public final FeedbackMessagesModel getFeedbackMessagesModel()
@@ -228,20 +215,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public boolean isVersioned()
 	{
 		return false;
-	}
-
-	/**
-	 * Sets whether model messages should be HTML escaped. Default is true.
-	 * 
-	 * @param escapeMessages
-	 *            whether model messages should be HTML escaped
-	 * 
-	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
-	 */
-	@Deprecated
-	public final void setEscapeMessages(boolean escapeMessages)
-	{
-		setEscapeModelStrings(escapeMessages);
 	}
 
 	/**

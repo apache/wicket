@@ -1425,19 +1425,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Returns the javascript/css id of this form that will be used to generated the id="xxx"
-	 * attribute.
-	 * 
-	 * @return The javascript/css id of this form.
-	 * @deprecated use {@link #getMarkupId()}
-	 */
-	@Deprecated
-	protected final String getJavascriptId()
-	{
-		return getMarkupId();
-	}
-
-	/**
 	 * Gets the HTTP submit method that will appear in form markup. If no method is specified in the
 	 * template, "post" is the default. Note that the markup-declared HTTP method may not correspond
 	 * to the one actually used to submit the form; in an Ajax submit, for example, JavaScript event
@@ -1831,7 +1818,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	@Override
 	protected void onDetach()
 	{
-		super.internalOnDetach();
 		setFlag(FLAG_SUBMITTED, false);
 
 		super.onDetach();

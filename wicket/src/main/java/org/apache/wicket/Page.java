@@ -1436,16 +1436,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Factory method that creates a version manager for this Page
-	 * @deprecated TODO Remove in 1.4
-	 */
-	@Deprecated
-	protected final IPageVersionManager newVersionManager()
-	{
-		return null;
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
@@ -1602,20 +1592,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * This method will be removed before the final of 1.4
-	 * 
-	 * @return instance unique identifier
-	 * 
-	 * @deprecated This method will be removed before the final of 1.4
-	 */
-	@Deprecated
-	public PageId getPageId()
-	{
-		setStatelessHint(false);
-		return new PageId(pageMapName, numericId, getCurrentVersionNumber());
-	}
-
-	/**
 	 * Gets page instance's unique identifier
 	 * 
 	 * @return instance unique identifier
@@ -1624,7 +1600,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		setStatelessHint(false);
 		return new PageReference(pageMapName, numericId, getCurrentVersionNumber());
-
 	}
-
 }

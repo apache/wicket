@@ -77,38 +77,6 @@ public class WebSession extends Session
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
-	 * @deprecated Use #WebSession(Request) instead
-	 * 
-	 * @param application
-	 *            The application
-	 * @param request
-	 *            The current request
-	 */
-	@Deprecated
-	public WebSession(final Application application, Request request)
-	{
-		super(application, request);
-	}
-
-	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
-	 * @deprecated Use #WebSession(Request)
-	 * 
-	 * @param application
-	 *            The application
-	 * @param request
-	 *            The current request
-	 */
-	@Deprecated
-	public WebSession(final WebApplication application, Request request)
-	{
-		super(application, request);
-	}
-
-	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
 	 * @param request
 	 *            The current request
 	 */

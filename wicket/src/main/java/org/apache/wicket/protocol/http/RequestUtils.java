@@ -145,28 +145,6 @@ public final class RequestUtils
 	}
 
 	/**
-	 * @param path
-	 * @return decoded path
-	 * @deprecated Use {@link WicketURLDecoder} instead.
-	 */
-	@Deprecated
-	public static String decode(String path)
-	{
-		return WicketURLDecoder.QUERY_INSTANCE.decode(path);
-	}
-
-	/**
-	 * @param value
-	 * @return encoded value
-	 * @deprecated Use {@link WicketURLEncoder} instead.
-	 */
-	@Deprecated
-	public static String encode(String value)
-	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(value);
-	}
-
-	/**
 	 * Calculates absolute path to url relative to another absolute url.
 	 * 
 	 * @param relativePagePath

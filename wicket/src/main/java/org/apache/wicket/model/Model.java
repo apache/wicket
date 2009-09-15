@@ -16,13 +16,19 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.model.util.*;
-import org.apache.wicket.util.lang.Objects;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.WildcardListModel;
+import org.apache.wicket.model.util.WildcardSetModel;
+import org.apache.wicket.util.lang.Objects;
 
 
 /**
@@ -63,56 +69,9 @@ public class Model<T extends Serializable> implements IModel<T>
 	}
 
 	/**
-	 * @param <K>
-	 *            type of key inside map
-	 * @param <V>
-	 *            type of value inside map
-	 * @param map
-	 *            The Map, which may or may not be Serializable
-	 * @deprecated see {@link Model#of(Map)}
-	 * @return A Model object wrapping the Map
-	 */
-	@Deprecated
-	public static <K, V> IModel<Map<K, V>> valueOf(final Map<K, V> map)
-	{
-		return of(map);
-	}
-
-	/**
-	 * @param <C>
-	 *            type of object inside list
-	 * @param list
-	 *            The List, which may or may not be Serializable
-	 * @deprecated see {@link Model#of(List)}
-	 * @return A Model object wrapping the List
-	 */
-	@Deprecated
-	public static <C> IModel<List<? extends C>> valueOf(final List<? extends C> list)
-	{
-		return of(list);
-	}
-
-	/**
 	 * Factory method for models that contain lists. This factory method will automatically rebuild
 	 * a nonserializable <code>list</code> into a serializable one.
 	 * 
-	 * @param <C>
-	 *            model type
-	 * @param list
-	 *            The List, which may or may not be Serializable
-	 * @deprecated see {@link Model#ofList(List)}
-	 * @return A Model object wrapping the List
-	 */
-	@Deprecated
-	public static <C> IModel<List<? extends C>> of(final List<? extends C> list)
-	{
-		return new WildcardListModel<C>(list);
-	}
-
-	/**
-	 * Factory method for models that contain lists. This factory method will automatically rebuild
-	 * a nonserializable <code>list</code> into a serializable one.
-	 *
 	 * @param <C>
 	 *            model type
 	 * @param list
@@ -122,27 +81,6 @@ public class Model<T extends Serializable> implements IModel<T>
 	public static <C> IModel<List<? extends C>> ofList(final List<? extends C> list)
 	{
 		return new WildcardListModel<C>(list);
-	}
-
-	/**
-	 * Factory method for models that contain maps. This factory method will automatically rebuild a
-	 * nonserializable <code>map</code> into a serializable one.
-	 * 
-	 * @param <K>
-	 *            key type in map
-	 * @param <V>
-	 *            value type in map
-	 * @param map
-	 *            The Map, which may or may not be Serializable
-	 * 
-	 * @deprecated use {@link #ofMap(Map)}
-	 * 
-	 * @return A Model object wrapping the Map
-	 */
-	@Deprecated
-	public static <K, V> IModel<Map<K, V>> of(final Map<K, V> map)
-	{
-		return new MapModel<K, V>(map);
 	}
 
 	/**
@@ -166,23 +104,6 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
 	 * nonserializable <code>set</code> into a serializable one.
 	 * 
-	 * @param <C>
-	 *            model type
-	 * @param set
-	 *            The Set, which may or may not be Serializable
-	 * @deprecated replace by {@link Model#ofSet(java.util.Set)}.
-	 * @return A Model object wrapping the Set
-	 */
-	@Deprecated
-	public static <C> IModel<Set<? extends C>> of(final Set<? extends C> set)
-	{
-		return new WildcardSetModel<C>(set);
-	}
-
-	/**
-	 * Factory method for models that contain sets. This factory method will automatically rebuild a
-	 * nonserializable <code>set</code> into a serializable one.
-	 *
 	 * @param <C>
 	 *            model type
 	 * @param set
@@ -272,30 +193,6 @@ public class Model<T extends Serializable> implements IModel<T>
 		sb.append(getClass().getName()).append("]");
 		sb.append(":object=[").append(object).append("]");
 		return sb.toString();
-	}
-
-	// TODO These methods are for helping people upgrade. Remove after
-	// deprecation release.
-	/**
-	 * @param component
-	 * @return the model object
-	 * @deprecated replace by {@link IModel#getObject()}.
-	 */
-	@Deprecated
-	public final Object getObject(Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param component
-	 * @param object
-	 * @deprecated replace by {@link IModel#setObject(Object)}.
-	 */
-	@Deprecated
-	public final void setObject(Component component, Object object)
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	@Override

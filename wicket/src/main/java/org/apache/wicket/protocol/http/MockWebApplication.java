@@ -47,7 +47,6 @@ import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.tester.BaseWicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -398,13 +397,11 @@ public class MockWebApplication
 	 * @param pageClass
 	 * @param params
 	 */
-	@SuppressWarnings("deprecation")
 	public <C extends Page> void processRequestCycle(final Class<C> pageClass, PageParameters params)
 	{
 		final WebRequestCycle cycle = setupRequestAndResponse();
 		try
 		{
-			BaseWicketTester.callOnBeginRequest(cycle);
 			BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(
 				pageClass, params);
 			if (pageClass == application.getHomePage())

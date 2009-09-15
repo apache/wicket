@@ -68,7 +68,7 @@ public class Index extends WicketExamplePage
 			 * label.
 			 */
 			@Override
-			protected String getOnClickScript(String url)
+			protected String getOnClickScript(CharSequence url)
 			{
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
 					urlFor(ILinkListener.INTERFACE))

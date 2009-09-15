@@ -164,7 +164,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			// it was attached, but it needs to go through that again now
 			// as the signaling component attached after this
 			getDefaultModel().detach();
-			super.internalOnAttach();
 		}
 
 		/**

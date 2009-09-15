@@ -139,28 +139,6 @@ public class Localizer
 	}
 
 	/**
-	 * This method is now deprecated.
-	 * 
-	 * @param key
-	 * @param component
-	 * @param model
-	 * @param locale
-	 * @param style
-	 * @param defaultValue
-	 * @return String
-	 * @throws MissingResourceException
-	 * 
-	 * @deprecated please use {@link #getString(String, Component, IModel, String)}
-	 */
-	@Deprecated
-	public String getString(final String key, final Component component, final IModel<?> model,
-		final Locale locale, final String style, final String defaultValue)
-		throws MissingResourceException
-	{
-		return getString(key, component, model, defaultValue);
-	}
-
-	/**
 	 * This is similar to {@link #getString(String, Component, IModel, String)} except that the
 	 * resource settings are ignored. This allows to to code something like
 	 * 

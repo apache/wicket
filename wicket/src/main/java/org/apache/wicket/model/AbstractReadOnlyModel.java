@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.Component;
 
 
 /**
@@ -72,18 +71,5 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	 */
 	public void detach()
 	{
-	}
-
-	// TODO This method is for helping people upgrade. Remove after deprecation
-	// release.
-	/**
-	 * @param component
-	 * @return the model object
-	 * @deprecated replace by {@link IModel#getObject()}.
-	 */
-	@Deprecated
-	public final Object getObject(Component component)
-	{
-		throw new UnsupportedOperationException();
 	}
 }

@@ -179,21 +179,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * When this method is called with a false value the components and raw markup that this border
-	 * wraps will not be rendered.
-	 * 
-	 * @param bodyVisible
-	 * @return this for chaining
-	 * @deprecated 1.3 please use #getBodyContainer().setVisible(false) instead
-	 */
-	@Deprecated
-	public Border setBorderBodyVisible(boolean bodyVisible)
-	{
-		body.setVisible(false);
-		return this;
-	}
-
-	/**
 	 * Borders used for bordered pages should set it to "true". Default is "false". If enabled, than
 	 * requests to find a component are passed to the parent container as well. Thus the child may
 	 * not be added to the Border, but might be added to the parent of the Border as well.

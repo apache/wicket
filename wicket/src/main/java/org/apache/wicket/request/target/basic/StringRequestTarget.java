@@ -17,7 +17,6 @@
 package org.apache.wicket.request.target.basic;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
@@ -84,24 +83,6 @@ public class StringRequestTarget implements IRequestTarget
 		this.contentType = contentType;
 		this.string = string;
 		this.encoding = encoding;
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param contentType
-	 *            content type of the data the string represents eg
-	 *            <code>text/html; charset=utf-8</code>
-	 * @param charset
-	 *            charset to use
-	 * @param string
-	 *            string for the response
-	 * @deprecated use {@link #StringRequestTarget(String, String, String)} instead
-	 */
-	@Deprecated
-	public StringRequestTarget(String contentType, Charset charset, String string)
-	{
-		this(contentType, charset.aliases().iterator().next(), string);
 	}
 
 	/**

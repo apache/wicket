@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.lang.PropertyResolverConverter;
@@ -303,29 +302,4 @@ public abstract class AbstractPropertyModel<T>
 	 * @return The property expression for the component
 	 */
 	protected abstract String propertyExpression();
-
-	/**
-	 * @param component
-	 * @return nothing
-	 * @deprecated use {@link #getObject()} instead
-	 */
-	@Deprecated
-	protected final Object onGetObject(Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	// TODO remove these methods after a deprecation release
-
-	/**
-	 * @param component
-	 * @param object
-	 * @deprecated use {@link #setObject(Object)} instead
-	 */
-	@Deprecated
-	protected final void onSetObject(Component component, Object object)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 }

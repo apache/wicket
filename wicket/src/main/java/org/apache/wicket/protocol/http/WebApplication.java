@@ -226,23 +226,6 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param request
 	 *            the request
-	 * 
-	 * @return the prefix for storing variables in the actual session
-	 * @deprecated since 1.4RC3 please use {@link #getSessionAttributePrefix(WebRequest, String)}
-	 *             instead
-	 */
-	@Deprecated
-	public String getSessionAttributePrefix(final WebRequest request)
-	{
-		return getSessionAttributePrefix(request, null);
-	}
-
-	/**
-	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
-	 * for this application instance.
-	 * 
-	 * @param request
-	 *            the request
 	 * @param filterName
 	 *            If null, than it defaults to the WicketFilter filter name. However according to
 	 *            the ServletSpec the Filter is not guaranteed to be initialized e.g. when
@@ -415,35 +398,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create new Wicket Session object. Note, this method is not called if you registered your own
-	 * ISessionFactory with the Application.
-	 * 
-	 * @return The created session
-	 * @deprecated see {@link WebApplication#newSession(Request, Response)}.
-	 */
-	// FIXME remove this method after 1.3.0
-	@Deprecated
-	public final Session newSession()
-	{
-		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
-	}
-
-	/**
-	 * Create new Wicket Session object. Note, this method is not called if you registered your own
-	 * ISessionFactory with the Application.
-	 * 
-	 * @param request
-	 * @return The created session
-	 * @deprecated {@link WebApplication#newSession(Request, Response)}.
-	 */
-	// FIXME remove this method after 1.3.0
-	@Deprecated
-	public final Session newSession(Request request)
-	{
-		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
-	}
-
-	/**
 	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
@@ -489,17 +443,6 @@ public abstract class WebApplication extends Application
 	public final void unmount(String path)
 	{
 		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
-	}
-
-	/**
-	 * @return nada
-	 * @deprecated Replaced by {@link #newRequestCycle(Request, Response)}
-	 */
-	// TODO remove after compatibility release.
-	@Deprecated
-	protected final Object getDefaultRequestCycleFactory()
-	{
-		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
 	}
 
 	/**

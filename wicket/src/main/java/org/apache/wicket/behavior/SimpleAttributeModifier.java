@@ -74,18 +74,6 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	}
 
 	/**
-	 * This method is deprecated, use the isEnabled(Component)
-	 * 
-	 * @return true
-	 * @deprecated use isEnabled(Component) now.
-	 */
-	@Deprecated
-	public final boolean isEnabled()
-	{
-		return true;
-	}
-
-	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */

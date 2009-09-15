@@ -316,7 +316,7 @@ public final class Settings
 	 * 
 	 * @TODO Remove in 1.5
 	 */
-	private boolean stripJavascriptCommentsAndWhitespace = false;
+	private final boolean stripJavascriptCommentsAndWhitespace = false;
 
 	/** The Javascript compressor */
 	private IJavascriptCompressor javascriptCompressor;
@@ -1256,38 +1256,6 @@ public final class Settings
 	public void setRequestsWindowSize(int size)
 	{
 		requestsWindowSize = size;
-	}
-
-	/**
-	 * For backwards compatibility reasons, if the return value is true, wicket's default javascript
-	 * compressor will be used no matter which one was configured via
-	 * {@link #setJavascriptCompressor(IJavascriptCompressor)}.
-	 * 
-	 * @see org.apache.wicket.settings.IResourceSettings#getStripJavascriptCommentsAndWhitespace()
-	 * 
-	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
-	 *             be removed in 1.5
-	 */
-	@Deprecated
-	public boolean getStripJavascriptCommentsAndWhitespace()
-	{
-		return stripJavascriptCommentsAndWhitespace;
-	}
-
-	/**
-	 * For backwards compatibility reasons, if the return value is true, wicket's default javascript
-	 * compressor will be used no matter which one was configured via
-	 * {@link #setJavascriptCompressor(IJavascriptCompressor)}.
-	 * 
-	 * @see org.apache.wicket.settings.IResourceSettings#setStripJavascriptCommentsAndWhitespace(boolean)
-	 * 
-	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
-	 *             be removed in 1.5
-	 */
-	@Deprecated
-	public void setStripJavascriptCommentsAndWhitespace(boolean value)
-	{
-		stripJavascriptCommentsAndWhitespace = value;
 	}
 
 	/**

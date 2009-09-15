@@ -50,11 +50,10 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for BoundCompoundPropertyModel.
 	 */
-	@SuppressWarnings("deprecation")
 	public void testBoundCompoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
-		IModel<Detachable> model = new BoundCompoundPropertyModel<Detachable>(detachable);
+		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
 		model.detach();
 		assertTrue(detachable.detached);
 	}

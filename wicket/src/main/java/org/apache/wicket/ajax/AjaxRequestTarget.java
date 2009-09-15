@@ -387,18 +387,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
-	 * 
-	 * @deprecated use appendJavascript(String javascript) instead
-	 * @param javascript
-	 */
-	@Deprecated
-	public final void addJavascript(String javascript)
-	{
-		appendJavascript(javascript);
-	}
-
-	/**
 	 * Sets the focus in the browser to the given component. The markup id must be set. If the
 	 * component is null the focus will not be set to any component.
 	 * 

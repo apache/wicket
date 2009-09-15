@@ -360,16 +360,19 @@ public class MarkupCache implements IMarkupCache
 	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
 	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
 	 * 
+	 * More sophisticated implementations may call a container method to e.g. cache it per container
+	 * instance.
+	 * 
 	 * @param locationString
 	 *            If null, than ignore the cache
+	 * @param container
+	 *            The container this markup is for.
 	 * @param markup
 	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
 	 *         the markup from the cache is provided.
-	 * 
-	 * @deprecated see {@link #putIntoCache(String, MarkupContainer, Markup)}
 	 */
-	@Deprecated
-	protected Markup putIntoCache(final String locationString, Markup markup)
+	protected Markup putIntoCache(final String locationString, MarkupContainer container,
+		Markup markup)
 	{
 		if (locationString != null)
 		{
@@ -390,27 +393,6 @@ public class MarkupCache implements IMarkupCache
 			}
 		}
 		return markup;
-	}
-
-	/**
-	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
-	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
-	 * 
-	 * More sophisticated implementations may call a container method to e.g. cache it per container
-	 * instance.
-	 * 
-	 * @param locationString
-	 *            If null, than ignore the cache
-	 * @param container
-	 *            The container this markup is for.
-	 * @param markup
-	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
-	 *         the markup from the cache is provided.
-	 */
-	protected Markup putIntoCache(final String locationString, MarkupContainer container,
-		Markup markup)
-	{
-		return putIntoCache(locationString, markup);
 	}
 
 	/**

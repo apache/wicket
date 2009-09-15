@@ -32,7 +32,6 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
-import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -349,8 +348,7 @@ public abstract class Application
 			getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 			// getDebugSettings().setOutputMarkupContainerClassName(true);
 			getResourceSettings().setJavascriptCompressor(null);
-			getRequestCycleSettings().addResponseFilter(
-				EmptySrcAttributeCheckFilter.INSTANCE);
+			getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
@@ -488,18 +486,6 @@ public abstract class Application
 	 * @return Home page class for this application
 	 */
 	public abstract Class<? extends Page> getHomePage();
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * @return The markup cache associated with the application
-	 * @deprecated please use {@link IMarkupSettings#getMarkupCache()} instead
-	 */
-	@Deprecated
-	public final IMarkupCache getMarkupCache()
-	{
-		return getMarkupSettings().getMarkupCache();
-	}
 
 	/**
 	 * @return Application's markup related settings
@@ -712,25 +698,6 @@ public abstract class Application
 	public abstract RequestCycle newRequestCycle(final Request request, final Response response);
 
 	/**
-	 * FOR DEPRECATION ONLY.
-	 * 
-	 * @param application
-	 * @param request
-	 * @param response
-	 * @return nothing
-	 * @throws UnsupportedOperationException
-	 *             always
-	 * @deprecated Applications wishing to provide custom request cycles should override method
-	 *             {@link #newRequestCycle(Request, Response)}
-	 */
-	@Deprecated
-	public final RequestCycle newRequestCycle(Application application, Request request,
-		Response response)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Creates a new session. Override this method if you want to provide a custom session.
 	 * 
 	 * @param request
@@ -888,44 +855,9 @@ public abstract class Application
 
 	/**
 	 * Called when wicket servlet is destroyed. Overrides do not have to call super.
-	 * 
-	 * @deprecated use {@link #onDestroy()} instead
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	protected final void destroy()
-	{
-	}
-
-	/**
-	 * Called when wicket servlet is destroyed. Overrides do not have to call super.
 	 */
 	protected void onDestroy()
 	{
-	}
-
-	/**
-	 * @return Request cycle factory for this kind of session.
-	 * @deprecated replaced by {@link #newRequestCycle(Request, Response)}
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	protected final Object getRequestCycleFactory()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Gets the factory for creating session instances.
-	 * 
-	 * @return Factory for creating session instances
-	 * @deprecated replaced by {@link #newSession(Request, Response)}
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	protected final Object getSessionFactory()
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**

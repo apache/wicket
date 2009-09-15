@@ -69,44 +69,6 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 *            The component id
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
-	 * 
-	 * @deprecated use {@link #Fragment(String, String, MarkupContainer)}
-	 */
-	@Deprecated
-	public Fragment(final String id, final String markupId)
-	{
-		this(id, markupId, null, null);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @see org.apache.wicket.Component#Component(String)
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param markupId
-	 *            The associated id of the associated markup fragment
-	 * @param model
-	 *            The model for this fragment
-	 * 
-	 * @deprecated use {@link #Fragment(String, String, MarkupContainer, IModel)}
-	 */
-	@Deprecated
-	public Fragment(final String id, final String markupId, final IModel<?> model)
-	{
-		this(id, markupId, null, model);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @see org.apache.wicket.Component#Component(String)
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param markupId
-	 *            The associated id of the associated markup fragment
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */

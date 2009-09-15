@@ -33,29 +33,7 @@ import org.apache.wicket.validation.ValidationError;
  */
 public abstract class AbstractFormValidator implements IFormValidator
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * DEPRECATED/UNSUPPORTED
-	 * 
-	 * Gets the default variables for interpolation.
-	 * 
-	 * @return a map with the variables for interpolation
-	 * 
-	 * @deprecated use {@link #variablesMap()} instead
-	 * @throws UnsupportedOperationException
-	 * 
-	 *             FIXME 2.0: remove asap
-	 */
-	@Deprecated
-	protected final Map<?, ?> messageModel()
-	{
-		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
-	}
-
 
 	/**
 	 * Reports an error against validatable using the map returned by {@link #variablesMap()}for

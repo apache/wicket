@@ -392,18 +392,6 @@ public abstract class RequestCycle
 	public abstract IRequestCycleProcessor getProcessor();
 
 	/**
-	 * Gets whether the page for this request should be redirected.
-	 * 
-	 * @return whether the page for this request should be redirected
-	 * @deprecated Use {@link #isRedirect()} instead
-	 */
-	@Deprecated
-	public final boolean getRedirect()
-	{
-		return isRedirect();
-	}
-
-	/**
 	 * Gets the request.
 	 * 
 	 * @return Request object

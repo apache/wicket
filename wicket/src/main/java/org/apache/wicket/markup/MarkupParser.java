@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
@@ -185,18 +184,6 @@ public class MarkupParser
 		appendMarkupFilter(new OpenCloseTagExpander());
 		appendMarkupFilter(new RelativePathPrefixHandler());
 		appendMarkupFilter(new EnclosureHandler());
-	}
-
-	/**
-	 * By default don't do anything. Subclasses may append additional markup filters if required.
-	 * 
-	 * @see #appendMarkupFilter(IMarkupFilter)
-	 * @deprecated since 1.3
-	 */
-	@Deprecated
-	protected void initFilterChain()
-	{
-		throw new WicketRuntimeException("This method is no longer suppoert: since 1.3");
 	}
 
 	/**

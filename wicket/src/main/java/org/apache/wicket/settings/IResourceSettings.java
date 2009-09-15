@@ -303,25 +303,6 @@ public interface IResourceSettings
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
 	/**
-	 * Sets whether the whitespace characters and comments should be stripped for resources served
-	 * through {@link JavascriptPackageResource}
-	 * 
-	 * @param value
-	 * @deprecated please us {@link #setJavascriptCompressor(IJavascriptCompressor)} instead. Will
-	 *             be removed in 1.5
-	 */
-	@Deprecated
-	void setStripJavascriptCommentsAndWhitespace(boolean value);
-
-	/**
-	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link JavascriptPackageResource}
-	 * @deprecated please use {@link #getJavascriptCompressor()} instead. Will be removed in 1.5
-	 */
-	@Deprecated
-	boolean getStripJavascriptCommentsAndWhitespace();
-
-	/**
 	 * Set the javascript compressor implemententation use e.g. by {@link JavascriptPackageResource}
 	 * . A typical implementation will remove comments and whitespace. But a no-op implementation is
 	 * available as well.

@@ -346,21 +346,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
 	 */
-	@SuppressWarnings("deprecation")
 	protected CharSequence getOnClickScript(final CharSequence url)
-	{
-		return getOnClickScript(url.toString());
-	}
-
-	/**
-	 * @param url
-	 *            The url for the link
-	 * @return Any onClick JavaScript that should be used
-	 * @deprecated this method will be removed by {@link #getOnClickScript(CharSequence)} shortly.
-	 *             Please override that method instead.
-	 */
-	@Deprecated
-	protected String getOnClickScript(final String url)
 	{
 		return null;
 	}

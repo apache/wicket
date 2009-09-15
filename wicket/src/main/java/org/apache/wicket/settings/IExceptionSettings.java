@@ -66,24 +66,9 @@ public interface IExceptionSettings
 		"SHOW_NO_EXCEPTION_PAGE");
 
 	/**
-	 * @return Whether to throw an exception when a missing resource is requested
-	 * @deprecated use {@link IResourceSettings#getThrowExceptionOnMissingResource()} instead
-	 */
-	@Deprecated
-	boolean getThrowExceptionOnMissingResource();
-
-	/**
 	 * @return Returns the unexpectedExceptionDisplay.
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
-
-	/**
-	 * @param throwExceptionOnMissingResource
-	 *            Whether to throw an exception when a missing resource is requested
-	 * @deprecated use {@link IResourceSettings#setThrowExceptionOnMissingResource(boolean)} instead
-	 */
-	@Deprecated
-	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
 
 	/**
 	 * The exception display type determines how the framework displays exceptions to you as a

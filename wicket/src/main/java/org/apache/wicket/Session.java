@@ -364,22 +364,6 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
-	 * @deprecated Use #Session(Request)
-	 * 
-	 * @param application
-	 *            The application that this is a session of
-	 * @param request
-	 *            The current request
-	 */
-	@Deprecated
-	protected Session(Application application, Request request)
-	{
-		this(request);
-	}
-
-	/**
 	 * Force binding this session to the application's {@link ISessionStore session store} if not
 	 * already done so.
 	 * <p>
@@ -1320,19 +1304,6 @@ public abstract class Session implements IClusterable
 			temporarySessionAttributes.put(name, value);
 		}
 	}
-
-	/**
-	 * NOT TO BE CALLED BY FRAMEWORK USERS.
-	 * 
-	 * @deprecated obsolete method (was meant for internal book keeping really). Clients should
-	 *             override {@link #detach()} instead.
-	 */
-	@Deprecated
-	protected final void update()
-	{
-		throw new UnsupportedOperationException();
-	}
-
 
 	/**
 	 * @param page

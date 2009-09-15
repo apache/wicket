@@ -209,18 +209,6 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Checks whether this attribute modifier is enabled or not.
-	 * 
-	 * @return Whether enabled or not
-	 * @deprecated
-	 */
-	@Deprecated
-	public final boolean isEnabled()
-	{
-		return enabled;
-	}
-
-	/**
 	 * Made final to support the parameterless variant.
 	 * 
 	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
@@ -242,24 +230,6 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 		{
 			replaceAttributeValue(component, tag);
 		}
-	}
-
-	/**
-	 * Checks the given component tag for an instance of the attribute to modify and if all criteria
-	 * are met then replace the value of this attribute with the value of the contained model
-	 * object.
-	 * 
-	 * @param component
-	 *            The component
-	 * @param tag
-	 *            The tag to replace the attribute value for
-	 * 
-	 * @deprecated see {@link #replaceAttributeValue(Component, ComponentTag)}
-	 */
-	@Deprecated
-	public void replaceAttibuteValue(final Component component, final ComponentTag tag)
-	{
-		replaceAttributeValue(component, tag);
 	}
 
 	/**
