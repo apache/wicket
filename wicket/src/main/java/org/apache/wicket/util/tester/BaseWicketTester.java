@@ -18,7 +18,6 @@ package org.apache.wicket.util.tester;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -56,9 +55,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.IPageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.http.HttpSessionStore;
@@ -508,50 +505,6 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		Label label = (Label)getComponentFromLastRenderedPage(path);
 		return isEqual(expectedLabelText, label.getDefaultModelObjectAsString());
-	}
-
-	/**
-	 * assert <code>PageLink</code> link to page class.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param path
-	 *            path to <code>PageLink</code> component
-	 * @param expectedPageClass
-	 *            expected page class to link
-	 * @return a <code>Result</code>
-	 */
-	public <C extends Page> Result isPageLink(String path, Class<C> expectedPageClass)
-	{
-		PageLink<?> pageLink = (PageLink<?>)getComponentFromLastRenderedPage(path);
-		try
-		{
-			for (Class<?> type = pageLink.getClass(); type != PageLink.class.getSuperclass(); type = type.getSuperclass())
-			{
-				try
-				{
-					Field iPageLinkField = type.getDeclaredField("pageLink");
-					iPageLinkField.setAccessible(true);
-					IPageLink iPageLink = (IPageLink)iPageLinkField.get(pageLink);
-					return isEqual(expectedPageClass, iPageLink.getPageIdentity());
-				}
-
-				catch (NoSuchFieldException e)
-				{
-					continue;
-				}
-			}
-			throw new WicketRuntimeException(
-				"Is this realy a PageLink? Cannot find 'pageLink' field");
-		}
-		catch (SecurityException e)
-		{
-			throw convertoUnexpect(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw convertoUnexpect(e);
-		}
 	}
 
 	/**

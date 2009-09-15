@@ -909,12 +909,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * See the class documentation for further details on the form processing
 	 * </p>
 	 * 
-	 * @deprecated use {@link #process(IFormSubmittingComponent)}
-	 * 
 	 * @return False if the form had an error
 	 */
-	@Deprecated
-	public boolean process()
+	private boolean process()
 	{
 		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{

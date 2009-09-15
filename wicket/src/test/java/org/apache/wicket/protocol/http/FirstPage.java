@@ -16,33 +16,32 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.IPageLink;
-import org.apache.wicket.markup.html.link.PageLink;
+import org.apache.wicket.markup.html.link.Link;
 
+/**
+ * 
+ */
 public class FirstPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public FirstPage()
 	{
-		add(new PageLink("link", new IPageLink()
+		add(new Link<Void>("link")
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			SecondPage page = new SecondPage(FirstPage.this);
 
-			public Page getPage()
+			@Override
+			public void onClick()
 			{
-				return page;
+				setResponsePage(page);
 			}
-
-			public Class getPageIdentity()
-			{
-				return SecondPage.class;
-			}
-		}));
+		});
 	}
 }

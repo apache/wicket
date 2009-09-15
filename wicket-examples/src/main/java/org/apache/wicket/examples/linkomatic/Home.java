@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.linkomatic;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.examples.WicketExamplePage;
@@ -26,10 +25,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.IPageLink;
 import org.apache.wicket.markup.html.link.ImageMap;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -93,32 +90,24 @@ public class Home extends WicketExamplePage
 			"3++2 & 5 � >< space + �"));
 
 		// Link to BookDetails page
-		add(new PageLink("bookDetailsLink", new IPageLink()
+		add(new Link<Void>("bookDetailsLink")
 		{
-			public Page getPage()
+			@Override
+			public void onClick()
 			{
-				return new BookDetails(new Book("The Hobbit"));
+				setResponsePage(new BookDetails(new Book("The Hobbit")));
 			}
-
-			public Class<? extends Page> getPageIdentity()
-			{
-				return BookDetails.class;
-			}
-		}));
+		});
 
 		// Delayed link to BookDetails page
-		add(new PageLink("bookDetailsLink2", new IPageLink()
+		add(new Link<Void>("bookDetailsLink2")
 		{
-			public Page getPage()
+			@Override
+			public void onClick()
 			{
-				return new BookDetails(new Book("Inside The Matrix"));
+				setResponsePage(new BookDetails(new Book("Inside The Matrix")));
 			}
-
-			public Class<? extends Page> getPageIdentity()
-			{
-				return BookDetails.class;
-			}
-		}));
+		});
 
 		// Image map link example
 		add(new ImageMap("imageMap").addRectangleLink(0, 0, 100, 100,

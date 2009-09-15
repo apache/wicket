@@ -49,9 +49,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final Class<?> scope, final String path)
 	{
 		return CSSPackageResource.getHeaderContribution(scope, path);
@@ -69,9 +67,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final Class<?> scope, final String path,
 		final String media)
 	{
@@ -85,9 +81,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param reference
 	 * 
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final ResourceReference reference)
 	{
 		return CSSPackageResource.getHeaderContribution(reference);
@@ -101,9 +95,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final ResourceReference reference,
 		final String media)
 	{
@@ -123,9 +115,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param location
 	 *            The location of the css file.
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final String location)
 	{
 		return CSSPackageResource.getHeaderContribution(location);
@@ -146,9 +136,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
-	 * @deprecated please use CSSPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forCss(final String location, final String media)
 	{
 		return CSSPackageResource.getHeaderContribution(location, media);
@@ -164,9 +152,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
-	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forJavaScript(final Class<?> scope, final String path)
 	{
 		return JavascriptPackageResource.getHeaderContribution(scope, path);
@@ -179,9 +165,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param reference
 	 * 
 	 * @return the new header contributor instance
-	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forJavaScript(final ResourceReference reference)
 	{
 		return JavascriptPackageResource.getHeaderContribution(reference);
@@ -200,9 +184,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param location
 	 *            The location of the java script file.
 	 * @return the new header contributor instance
-	 * @deprecated please use JavascriptPackageResource.getHeaderContribution() instead
 	 */
-	@Deprecated
 	public static final HeaderContributor forJavaScript(final String location)
 	{
 		return JavascriptPackageResource.getHeaderContribution(location);

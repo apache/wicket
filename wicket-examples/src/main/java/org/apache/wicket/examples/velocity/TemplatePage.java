@@ -87,7 +87,7 @@ public class TemplatePage extends WicketExamplePage
 	{
 		Map<String, List<Person>> map = new HashMap<String, List<Person>>();
 		map.put("persons", VelocityTemplateApplication.getPersons());
-		templateContext = Model.valueOf(map);
+		templateContext = Model.ofMap(map);
 
 		add(new TemplateForm("templateForm"));
 		add(new VelocityPanel("templatePanel", templateContext)

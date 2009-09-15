@@ -48,7 +48,8 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
-import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.wicket.validation.validator.MinimumValidator;
+import org.apache.wicket.validation.validator.RangeValidator;
 
 
 /**
@@ -94,10 +95,10 @@ public class FormInput extends WicketExamplePage
 			add(stringTextField);
 			RequiredTextField<Integer> integerTextField = new RequiredTextField<Integer>(
 				"integerProperty");
-			add(integerTextField.add(NumberValidator.POSITIVE));
+			add(integerTextField.add(new MinimumValidator<Integer>(0)));
 			add(new RequiredTextField<Double>("doubleProperty"));
 
-			add(new RequiredTextField<Integer>("integerInRangeProperty").add(NumberValidator.range(
+			add(new RequiredTextField<Integer>("integerInRangeProperty").add(new RangeValidator<Integer>(
 				0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));

@@ -100,8 +100,6 @@ public class InterceptTest extends TestCase
 		form.submit();
 		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
 			.getClass());
-
-		application.assertPageLink("link", PageA.class);
 	}
 
 	/**
@@ -195,7 +193,7 @@ public class InterceptTest extends TestCase
 		@Override
 		public Session newSession(Request request, Response response)
 		{
-			return new MySession(this, request);
+			return new MySession(request);
 		}
 
 		@Override
@@ -231,9 +229,9 @@ public class InterceptTest extends TestCase
 		 * @param application
 		 * @param request
 		 */
-		protected MySession(WebApplication application, Request request)
+		protected MySession(Request request)
 		{
-			super(application, request);
+			super(request);
 		}
 
 		protected final String getUsername()

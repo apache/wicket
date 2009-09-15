@@ -55,12 +55,16 @@ public class StatelessForm<T> extends Form<T>
 		super(id, model);
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.Form#process(org.apache.wicket.markup.html.form.IFormSubmittingComponent)
+	 */
 	@Override
-	public boolean process()
+	public void process(IFormSubmittingComponent submittingComponent)
 	{
 		// set redirect to true for a stateless form.
 		setRedirect(true);
-		return super.process();
+
+		super.process(submittingComponent);
 	}
 
 	@Override

@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.link.IPageLink;
-import org.apache.wicket.markup.html.link.PageLink;
+import org.apache.wicket.markup.html.link.Link;
 
 
 /**
- * Page with examples on {@link org.apache.wicket.markup.html.link.PageLink}.
+ * Page with examples on {@link org.apache.wicket.markup.html.link.Link}.
  * 
  * @author Eelco Hillenius
  */
@@ -47,18 +45,14 @@ public class PageLinkPage extends WicketExamplePage
 		// anonymous class, which will create the page instance only when
 		// needed.
 
-		add(new PageLink("pageLink", new IPageLink()
+		add(new Link<Void>("pageLink")
 		{
-			public Page getPage()
+			@Override
+			public void onClick()
 			{
-				return new NonBookmarkablePage(PageLinkPage.this);
+				setResponsePage(new NonBookmarkablePage(PageLinkPage.this));
 			}
-
-			public Class<? extends Page> getPageIdentity()
-			{
-				return NonBookmarkablePage.class;
-			}
-		}));
+		});
 
 		// Note that this would have had the same effect, except that the link
 		// wouldn't check

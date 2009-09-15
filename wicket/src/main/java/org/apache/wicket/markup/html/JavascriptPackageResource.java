@@ -32,7 +32,6 @@ import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.string.JavascriptStripper;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -305,15 +304,6 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			{
 				try
 				{
-					// @TODO remove in 1.5
-					if (Application.get()
-						.getResourceSettings()
-						.getStripJavascriptCommentsAndWhitespace())
-					{
-						String s = new String(input, "UTF-8");
-						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("UTF-8");
-					}
-
 					IJavascriptCompressor compressor = Application.get()
 						.getResourceSettings()
 						.getJavascriptCompressor();

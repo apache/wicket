@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.wicket.validation.validator.MaximumValidator;
 
 /**
  * Another page of the stateless example.
@@ -44,7 +44,7 @@ public class StatelessPage1 extends WebPage
 		add(new BookmarkablePageLink("indexLink", Index.class));
 		final TextField<Integer> field = new TextField<Integer>("textfield",
 			new PropertyModel<Integer>(this, "number"));
-		field.add(NumberValidator.maximum(20));
+		field.add(new MaximumValidator<Integer>(20));
 		field.setRequired(true);
 
 		StatelessForm<?> statelessForm = new StatelessForm("statelessform")

@@ -137,7 +137,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 */
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices)
 	{
-		this(id, model, Model.of(choices));
+		this(id, model, Model.ofList(choices));
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices,
 		IChoiceRenderer<T> renderer)
 	{
-		this(id, model, Model.of(choices), renderer);
+		this(id, model, Model.ofList(choices), renderer);
 	}
 
 

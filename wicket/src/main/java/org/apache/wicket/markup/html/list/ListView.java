@@ -160,7 +160,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	public ListView(final String id, final List<? extends T> list)
 	{
-		this(id, Model.of(list));
+		this(id, Model.ofList(list));
 	}
 
 	/**
@@ -420,7 +420,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	public ListView<T> setList(List<? extends T> list)
 	{
-		setDefaultModel(Model.of(list));
+		setDefaultModel(Model.ofList(list));
 		return this;
 	}
 

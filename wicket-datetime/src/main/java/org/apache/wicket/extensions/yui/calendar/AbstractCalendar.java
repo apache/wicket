@@ -88,7 +88,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 *            them in your web application dir. To contribute yourself (in case you want to pass
 	 *            false), your page header should look like:
 	 * 
-	 * <pre>
+	 *            <pre>
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt;
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt;
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt;

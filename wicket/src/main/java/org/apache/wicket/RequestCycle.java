@@ -36,7 +36,6 @@ import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
-import org.apache.wicket.request.target.component.PageIdRequestTarget;
 import org.apache.wicket.request.target.component.PageReferenceRequestTarget;
 import org.apache.wicket.request.target.component.PageRequestTarget;
 import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;

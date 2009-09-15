@@ -34,10 +34,10 @@ public class InlinePanel_4 extends Panel
 	{
 		super(id);
 
-		Fragment panel1 = new Fragment("myPanel1", "frag1");
+		Fragment panel1 = new Fragment("myPanel1", "frag1", this);
 		add(panel1);
 
-		Fragment panel2 = new Fragment("myPanel2", "frag2");
+		Fragment panel2 = new Fragment("myPanel2", "frag2", this);
 		add(panel2);
 	}
 }

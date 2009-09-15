@@ -505,19 +505,6 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts a <code>PageLink</code> link to a <code>Page</code> class.
-	 * 
-	 * @param path
-	 *            path to <code>PageLink</code> <code>Component</code>
-	 * @param expectedPageClass
-	 *            expected <code>Page</code> class to link
-	 */
-	public void assertPageLink(String path, Class<? extends Page> expectedPageClass)
-	{
-		assertResult(isPageLink(path, expectedPageClass));
-	}
-
-	/**
 	 * Asserts a last-rendered <code>Page</code> class.
 	 * 
 	 * @param expectedRenderedPageClass

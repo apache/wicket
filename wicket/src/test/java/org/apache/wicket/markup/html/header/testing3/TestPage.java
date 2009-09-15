@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.markup.html.header.testing3;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.IPageLink;
-import org.apache.wicket.markup.html.link.PageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -42,21 +40,17 @@ public class TestPage extends WebPage
 		current = panel1;
 		add(current);
 
-		add(new PageLink("link", new IPageLink()
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Page getPage()
+			@Override
+			public void onClick()
 			{
 				replacePanel();
-				return TestPage.this;
+				setResponsePage(TestPage.this);
 			}
-
-			public Class getPageIdentity()
-			{
-				return TestPage.this.getClass();
-			}
-		}));
+		});
 	}
 
 	/**
