@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupResourceData;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -46,7 +46,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	private static List<String> wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
-	private final MarkupResourceData markup;
+	private final MarkupResourceStream markup;
 
 	/**
 	 * Construct.
@@ -54,7 +54,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * @param markup
 	 *            The markup as known by now
 	 */
-	public WicketTagIdentifier(final MarkupResourceData markup)
+	public WicketTagIdentifier(final MarkupResourceStream markup)
 	{
 		this.markup = markup;
 	}

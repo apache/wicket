@@ -113,7 +113,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#removeMarkup(java.lang.String)
 	 */
-	public final Markup removeMarkup(final String cacheKey)
+	public final IMarkupFragment removeMarkup(final String cacheKey)
 	{
 		if (cacheKey == null)
 		{
@@ -128,7 +128,7 @@ public class MarkupCache implements IMarkupCache
 		// Remove the markup and any other markup which depends on it
 		// (inheritance)
 		String locationString = (String)markupKeyCache.get(cacheKey);
-		Markup markup = markupCache.get(locationString);
+		IMarkupFragment markup = markupCache.get(locationString);
 		if (markup != null)
 		{
 			markupCache.remove(locationString);
@@ -148,11 +148,11 @@ public class MarkupCache implements IMarkupCache
 				while (iter.hasNext())
 				{
 					Markup cacheMarkup = markupCache.get(iter.next());
-					MarkupResourceData resourceData = cacheMarkup.getMarkupResourceData()
-						.getBaseMarkupResourceData();
+					MarkupResourceStream resourceData = cacheMarkup.getMarkupResourceStream()
+						.getBaseMarkupResourceStream();
 					if (resourceData != null)
 					{
-						String baseCacheKey = resourceData.getResource().getCacheKey();
+						String baseCacheKey = resourceData.getCacheKey();
 						String baseLocationString = (String)markupKeyCache.get(baseCacheKey);
 						if (baseLocationString != null &&
 							markupCache.get(baseLocationString) == null)
@@ -160,7 +160,7 @@ public class MarkupCache implements IMarkupCache
 							if (log.isDebugEnabled())
 							{
 								log.debug("Remove from cache: cacheKey=" +
-									cacheMarkup.getMarkupResourceData().getResource().getCacheKey());
+									cacheMarkup.getMarkupResourceStream().getCacheKey());
 							}
 
 							iter.remove();
@@ -201,11 +201,11 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#getMarkupStream(org.apache.wicket.MarkupContainer,
-	 *      boolean, boolean)
+	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
+	 *      boolean)
 	 */
-	public final MarkupStream getMarkupStream(final MarkupContainer container,
-		final boolean enforceReload, final boolean throwException)
+	public final IMarkupFragment getMarkup(final MarkupContainer container,
+		final boolean enforceReload)
 	{
 		if (container == null)
 		{
@@ -213,28 +213,7 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// Look for associated markup
-		final Markup markup = getMarkup(container, container.getClass(), enforceReload);
-
-		// If we found markup for this container
-		if (markup != Markup.NO_MARKUP)
-		{
-			return new MarkupStream(markup);
-		}
-
-		if (throwException == true)
-		{
-			// throw exception since there is no associated markup
-			throw new MarkupNotFoundException(
-				"Markup of type '" +
-					container.getMarkupType() +
-					"' for component '" +
-					container.getClass().getName() +
-					"' not found." +
-					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: " +
-					container.toString());
-		}
-
-		return null;
+		return getMarkup(container, container.getClass(), enforceReload);
 	}
 
 	/**

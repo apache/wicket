@@ -32,6 +32,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.apache.wicket.markup.parser.filter.RootMarkupFilter;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
@@ -115,10 +116,7 @@ public class MarkupParser
 		this.xmlParser = xmlParser;
 		markupSettings = Application.get().getMarkupSettings();
 
-		MarkupResourceData markup = new MarkupResourceData();
-		markup.setResource(resource);
-
-		this.markup = new Markup(markup);
+		markup = new Markup(resource);
 
 		// Initialize the markup filter chain
 		initializeMarkupFilters();
@@ -132,7 +130,7 @@ public class MarkupParser
 	 */
 	public final void setWicketNamespace(final String namespace)
 	{
-		markup.getMarkupResourceData().setWicketNamespace(namespace);
+		markup.getMarkupResourceStream().setWicketNamespace(namespace);
 	}
 
 	/**
@@ -143,7 +141,7 @@ public class MarkupParser
 	 */
 	protected MarkupResourceStream getMarkupResourceStream()
 	{
-		return markup.getMarkupResourceData().getResource();
+		return markup.getMarkupResourceStream();
 	}
 
 	/**
@@ -152,21 +150,20 @@ public class MarkupParser
 	private final void initializeMarkupFilters()
 	{
 		// Chain together all the different markup filters and configure them
-		markupFilterChain = xmlParser;
+		markupFilterChain = new RootMarkupFilter(xmlParser);
 
-		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
+		MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
 
-		appendMarkupFilter(new WicketTagIdentifier(markupResourceData));
+		appendMarkupFilter(new WicketTagIdentifier(markupResourceStream));
 		appendMarkupFilter(new HtmlHandler());
 		appendMarkupFilter(new WicketRemoveTagHandler());
 		appendMarkupFilter(new WicketLinkTagHandler());
-		appendMarkupFilter(new WicketNamespaceHandler(markupResourceData));
+		appendMarkupFilter(new WicketNamespaceHandler(markupResourceStream));
 
 		// Provided the wicket component requesting the markup is known ...
-		final MarkupResourceStream resource = markupResourceData.getResource();
-		if (resource != null)
+		if ((markupResourceStream != null) && (markupResourceStream.getResource() != null))
 		{
-			final ContainerInfo containerInfo = resource.getContainerInfo();
+			final ContainerInfo containerInfo = markupResourceStream.getContainerInfo();
 			if (containerInfo != null)
 			{
 				appendMarkupFilter(new WicketMessageTagHandler());
@@ -246,31 +243,31 @@ public class MarkupParser
 	 */
 	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
-		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
+		MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
 
 		// Initialize the xml parser
-		xmlParser.parse(markupResourceData.getResource().getInputStream(),
+		xmlParser.parse(markupResourceStream.getResource().getInputStream(),
 			markupSettings.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
 		parseMarkup();
 
-		markupResourceData.setEncoding(xmlParser.getEncoding());
-		markupResourceData.setXmlDeclaration(xmlParser.getXmlDeclaration());
+		markupResourceStream.setEncoding(xmlParser.getEncoding());
+		markupResourceStream.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
 		if (xmlParser.getXmlDeclaration() == null)
 		{
 			if (markupSettings.getThrowExceptionOnMissingXmlDeclaration())
 			{
-				throw new MarkupException(markupResourceData.getResource(),
+				throw new MarkupException(markupResourceStream.getResource(),
 					"The markup file does not have a XML declaration prolog. "
 						+ ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
 			}
 			else
 			{
 				log.debug("The markup file does not have a XML declaration prolog: " +
-					markupResourceData.getResource() +
+					markupResourceStream.getResource() +
 					". It is more save to use it. E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
 			}
 		}
@@ -284,21 +281,16 @@ public class MarkupParser
 	 * @return The next tag
 	 * @throws ParseException
 	 */
-	public ComponentTag getNextTag() throws ParseException
+	private ComponentTag getNextTag() throws ParseException
 	{
 		return (ComponentTag)markupFilterChain.nextTag();
 	}
 
 	/**
 	 * Scans the given markup and extracts balancing tags.
-	 * 
 	 */
 	private void parseMarkup()
 	{
-		// Get relevant settings from the Application
-		final boolean stripComments = markupSettings.getStripComments();
-		final boolean compressWhitespace = markupSettings.getCompressWhitespace();
-
 		try
 		{
 			// always remember the latest index (size)
@@ -318,24 +310,14 @@ public class MarkupParser
 				if (add || tag.isModified() || (markup.size() != size))
 				{
 					// Add text from last position to the current tag position
-					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
+					CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
 					if (text.length() > 0)
 					{
-						String rawMarkup = text.toString();
-
-						if (stripComments)
-						{
-							rawMarkup = removeComment(rawMarkup);
-						}
-
-						if (compressWhitespace)
-						{
-							rawMarkup = compressWhitespace(rawMarkup);
-						}
+						text = handleRawText(text.toString());
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						markup.addMarkupElement(size, new RawMarkup(rawMarkup));
+						markup.addMarkupElement(size, new RawMarkup(text));
 					}
 
 					xmlParser.setPositionMarker();
@@ -372,8 +354,8 @@ public class MarkupParser
 				markup.addMarkupElement(new RawMarkup(text));
 			}
 
-			markup.getMarkupResourceData().setEncoding(xmlParser.getEncoding());
-			markup.getMarkupResourceData().setXmlDeclaration(xmlParser.getXmlDeclaration());
+			markup.getMarkupResourceStream().setEncoding(xmlParser.getEncoding());
+			markup.getMarkupResourceStream().setXmlDeclaration(xmlParser.getXmlDeclaration());
 
 			final MarkupStream markupStream = new MarkupStream(markup);
 			markupStream.setCurrentIndex(markup.size() - 1);
@@ -381,28 +363,42 @@ public class MarkupParser
 		}
 
 		// Add tail?
-		final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+		CharSequence text = xmlParser.getInputFromPositionMarker(-1);
 		if (text.length() > 0)
 		{
-			String rawMarkup = text.toString();
-
-			if (stripComments)
-			{
-				rawMarkup = removeComment(rawMarkup);
-			}
-
-			if (compressWhitespace)
-			{
-				rawMarkup = compressWhitespace(rawMarkup);
-			}
+			text = handleRawText(text.toString());
 
 			// Make sure you add it at the correct location.
 			// IMarkupFilters might have added elements as well.
-			markup.addMarkupElement(new RawMarkup(rawMarkup));
+			markup.addMarkupElement(new RawMarkup(text));
 		}
 
 		// Make all tags immutable and the list of elements unmodifiable
 		markup.makeImmutable();
+	}
+
+	/**
+	 * 
+	 * @param rawMarkup
+	 * @return The modified raw markup
+	 */
+	protected CharSequence handleRawText(String rawMarkup)
+	{
+		// Get relevant settings from the Application
+		final boolean stripComments = markupSettings.getStripComments();
+		final boolean compressWhitespace = markupSettings.getCompressWhitespace();
+
+		if (stripComments)
+		{
+			rawMarkup = removeComment(rawMarkup);
+		}
+
+		if (compressWhitespace)
+		{
+			rawMarkup = compressWhitespace(rawMarkup);
+		}
+
+		return rawMarkup;
 	}
 
 	/**

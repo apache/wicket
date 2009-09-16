@@ -23,8 +23,7 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupResourceData;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.value.IValueMap;
 
 
@@ -36,13 +35,13 @@ import org.apache.wicket.util.value.IValueMap;
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
-public final class WicketNamespaceHandler extends AbstractMarkupFilter
+public final class WicketNamespaceHandler extends BaseMarkupFilter
 {
 	/** Wicket URI */
 	private static final String WICKET_URI = "http://wicket.apache.org";
 
 	/** The markup created by reading the markup file */
-	private final MarkupResourceData markup;
+	private final MarkupResourceStream markup;
 
 	/**
 	 * namespace prefix: e.g. <html xmlns:wicket="http://wicket.apache.org">
@@ -55,27 +54,17 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	 * @param markup
 	 *            The markup created by reading the markup file
 	 */
-	public WicketNamespaceHandler(final MarkupResourceData markup)
+	public WicketNamespaceHandler(final MarkupResourceStream markup)
 	{
 		this.markup = markup;
 	}
 
 	/**
-	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag from markup to be processed. If null, no more tags are available
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the markup.
-		// If null, no more tags are available
-		final ComponentTag tag = nextComponentTag();
-		if (tag == null)
-		{
-			return tag;
-		}
-
 		if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
 		{
 			final String namespace = determineWicketNamespace(tag);

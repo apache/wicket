@@ -126,7 +126,8 @@ public class XmlTag extends MarkupElement
 	 */
 	public final boolean closes(final XmlTag open)
 	{
-		return (closes == open) || (closes == open.copyOf);
+// return (closes == open) || (closes == open.copyOf);
+		return (closes == open) || ((closes == open.copyOf) && (this != open));
 	}
 
 	/**

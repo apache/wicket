@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
 
@@ -53,7 +54,7 @@ public class HeadersToolbar extends AbstractToolbar
 		final IColumn<?>[] columns = table.getColumns();
 		for (final IColumn<?> column : columns)
 		{
-			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
+			AbstractItem item = new AbstractItem(headers.newChildId());
 			headers.add(item);
 
 			WebMarkupContainer header = null;
@@ -113,5 +114,4 @@ public class HeadersToolbar extends AbstractToolbar
 			}
 		};
 	}
-
 }

@@ -37,7 +37,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPullParser
+public final class XmlPullParser implements IXmlPullParser
 {
 	/** next() must be called at least once for the Type to be valid */
 	public static final int NOT_INITIALIZED = 0;
@@ -51,14 +51,17 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	/** <!-- ... --> */
 	public static final int COMMENT = 3;
 
+	/** <!--[if ] ... --> */
+	public static final int CONDITIONAL_COMMENT = 4;
+
 	/** <![CDATA[ .. ]]> */
-	public static final int CDATA = 4;
+	public static final int CDATA = 5;
 
 	/** <?...> */
-	public static final int PROCESSING_INSTRUCTION = 5;
+	public static final int PROCESSING_INSTRUCTION = 6;
 
 	/** all other tags which look like <!.. > */
-	public static final int SPECIAL_TAG = 6;
+	public static final int SPECIAL_TAG = 7;
 
 	/**
 	 * Reads the xml data from an input stream and converts the chars according to its encoding
@@ -173,23 +176,21 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
-	 * Gets the next tag from the input string.
-	 * 
-	 * @return The extracted tag (will always be of type XmlTag).
+	 * @return XXX
 	 * @throws ParseException
 	 */
-	public final boolean next() throws ParseException
+	public final int next() throws ParseException
 	{
 		// Reached end of markup file?
 		if (input.getPosition() >= input.size())
 		{
-			return false;
+			return NOT_INITIALIZED;
 		}
 
 		if (skipUntilText != null)
 		{
 			skipUntil();
-			return true;
+			return lastType;
 		}
 
 		// Any more tags in the markup?
@@ -204,13 +205,13 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				lastText = input.getSubstring(-1);
 				input.setPosition(input.size());
 				lastType = BODY;
-				return true;
+				return lastType;
 			}
 
 			lastText = input.getSubstring(openBracketIndex);
 			input.setPosition(openBracketIndex);
 			lastType = BODY;
-			return true;
+			return lastType;
 		}
 
 		// Determine the line number
@@ -240,7 +241,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		if ((firstChar == '!') || (firstChar == '?'))
 		{
 			specialTagHandling(tagText, openBracketIndex, closeBracketIndex);
-			return true;
+			return lastType;
 		}
 
 		// Type of the tag, to be determined next
@@ -298,7 +299,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
 			lastType = TAG;
-			return true;
+			return lastType;
 		}
 		else
 		{
@@ -315,7 +316,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * @param closeBracketIndex
 	 * @throws ParseException
 	 */
-	private void specialTagHandling(String tagText, final int openBracketIndex,
+	protected void specialTagHandling(String tagText, final int openBracketIndex,
 		int closeBracketIndex) throws ParseException
 	{
 		// Handle comments
@@ -336,10 +337,12 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			lastText = input.getSubstring(openBracketIndex, pos);
 			lastType = COMMENT;
 
-			// Conditional comment? <!--[if ...]>..<![endif]-->
+			// Conditional comment? E.g. "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
 			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") &&
 				lastText.toString().endsWith("<![endif]-->"))
 			{
+				lastType = CONDITIONAL_COMMENT;
+
 				// Actually it is no longer a comment. It is now
 				// up to the browser to select the section appropriate.
 				input.setPosition(closeBracketIndex + 1);
@@ -351,10 +354,11 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			return;
 		}
 
-		// The closing tag of a conditional comment <!--[if IE]>...<![endif]-->
+		// The closing tag of a conditional comment, e.g.
+		// "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
 		if (tagText.equals("![endif]--"))
 		{
-			lastType = COMMENT;
+			lastType = CONDITIONAL_COMMENT;
 			input.setPosition(closeBracketIndex + 1);
 			return;
 		}
@@ -411,14 +415,28 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
-	 * Gets the next tag from the input string.
-	 * 
-	 * @return The extracted tag (will always be of type XmlTag).
+	 * @return MarkupElement
+	 */
+	public final MarkupElement getElement()
+	{
+		return lastTag;
+	}
+
+	/**
+	 * @return The xml string from the last element
+	 */
+	public final CharSequence getString()
+	{
+		return lastText;
+	}
+
+	/**
+	 * @return The next XML tag
 	 * @throws ParseException
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
-		while (next())
+		while (next() != NOT_INITIALIZED)
 		{
 			switch (lastType)
 			{
@@ -429,6 +447,9 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 					break;
 
 				case COMMENT :
+					break;
+
+				case CONDITIONAL_COMMENT :
 					break;
 
 				case CDATA :

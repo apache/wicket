@@ -20,6 +20,10 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -109,10 +113,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	implements
 		IComponentResolver
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	static final String BODY = "body";
 	static final String BORDER = "border";
 
@@ -387,6 +389,19 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 			return false;
 		}
+
+		/**
+		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+		 */
+		@Override
+		public IMarkupFragment getMarkup(final Component child)
+		{
+			// Find the Border component
+			MarkupContainer parent = findParent(Border.class);
+
+			// Get the "calling" markup
+			return parent.getMarkup();
+		}
 	}
 
 	/**
@@ -407,5 +422,71 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			cursor = cursor.getParent();
 		}
 		return bodyVisible;
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+	 */
+	@Override
+	public IMarkupFragment getMarkup(final Component child)
+	{
+		if ((child != null) && ("_body".equals(child.getId()) == false))
+		{
+			// First check if markup can be found in between <span wicket:id="myborder">...</span>
+			IMarkupFragment markup = getMarkup();
+			if (markup == null)
+			{
+				return null;
+			}
+
+			markup = markup.find(null, child.getId(), 0);
+			if (markup != null)
+			{
+				return markup;
+			}
+		}
+
+		// Than check if markup can be found in between <wicket:border>...</wicket:border>
+		IMarkupFragment markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			throw new MarkupException("Unable to find associated markup file for Border: " +
+				this.toString());
+		}
+
+		// Find <wicket:border>
+		int i;
+		for (i = 0; i < markup.size(); i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof WicketTag)
+			{
+				WicketTag tag = (WicketTag)elem;
+				if (tag.isBorderTag())
+				{
+					break;
+				}
+			}
+		}
+
+		// If child == null, return the markup fragment starting with the <wicket:border> tag
+		if (child == null)
+		{
+			return new MarkupFragment(markup, i);
+		}
+		else if ("_body".equals(child.getId()))
+		{
+			// Find <wicket:body>
+			int index = markup.findComponentIndex(null, child.getId(), i);
+			if (index == -1)
+			{
+				throw new MarkupException("Unable to find <wicket:body> tag. Border: " +
+					this.toString() + ". Associated Markup: " + markup.toString());
+			}
+			return new MarkupFragment(markup, index);
+		}
+
+		// Find the markup for the child component
+		return markup.find(null, child.getId(), i);
 	}
 }

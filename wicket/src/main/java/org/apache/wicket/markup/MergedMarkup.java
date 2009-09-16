@@ -59,23 +59,16 @@ public class MergedMarkup extends Markup
 	 */
 	public MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{
-		super(new MarkupResourceData());
+		super(markup.getMarkupResourceStream());
 
-		// Copy settings from derived markup
-		getMarkupResourceData().setResource(markup.getMarkupResourceData().getResource());
-		getMarkupResourceData().setXmlDeclaration(
-			markup.getMarkupResourceData().getXmlDeclaration());
-		getMarkupResourceData().setEncoding(markup.getMarkupResourceData().getEncoding());
-		getMarkupResourceData().setWicketNamespace(
-			markup.getMarkupResourceData().getWicketNamespace());
-		getMarkupResourceData().setBaseMarkup(baseMarkup);
+		getMarkupResourceStream().setBaseMarkup(baseMarkup);
 
 		if (log.isDebugEnabled())
 		{
-			String derivedResource = Strings.afterLast(markup.getMarkupResourceData()
+			String derivedResource = Strings.afterLast(markup.getMarkupResourceStream()
 				.getResource()
 				.toString(), '/');
-			String baseResource = Strings.afterLast(baseMarkup.getMarkupResourceData()
+			String baseResource = Strings.afterLast(baseMarkup.getMarkupResourceStream()
 				.getResource()
 				.toString(), '/');
 			log.debug("Merge markup: derived markup: " + derivedResource + "; base markup: " +
@@ -102,8 +95,8 @@ public class MergedMarkup extends Markup
 		 * does, the location is unique to this combination (or vice versa) SEE WICKET-1507 (Jeremy
 		 * Thomerson)
 		 */
-		return getMarkupResourceData().getBaseMarkup().locationAsString() + ":" +
-			getMarkupResourceData().getResource().locationAsString();
+		return getMarkupResourceStream().getBaseMarkup().locationAsString() + ":" +
+			getMarkupResourceStream().locationAsString();
 	}
 
 	/**
@@ -116,7 +109,8 @@ public class MergedMarkup extends Markup
 	 * @param extendIndex
 	 *            Index where <wicket:extend> has been found
 	 */
-	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
+	private void merge(final IMarkupFragment markup, final IMarkupFragment baseMarkup,
+		int extendIndex)
 	{
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
@@ -143,12 +137,10 @@ public class MergedMarkup extends Markup
 
 			// Make sure all tags of the base markup remember where they are
 			// from
-			if ((baseMarkup.getMarkupResourceData().getResource() != null) &&
+			if ((baseMarkup.getMarkupResourceStream().getResource() != null) &&
 				(tag.getMarkupClass() == null))
 			{
-				tag.setMarkupClass(baseMarkup.getMarkupResourceData()
-					.getResource()
-					.getMarkupClass());
+				tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
 			}
 
 			if (element instanceof WicketTag)
@@ -159,9 +151,7 @@ public class MergedMarkup extends Markup
 				// level inheritance make sure the child tag is not from one of
 				// the deeper levels
 				if (wtag.isChildTag() &&
-					(tag.getMarkupClass() == baseMarkup.getMarkupResourceData()
-						.getResource()
-						.getMarkupClass()))
+					(tag.getMarkupClass() == baseMarkup.getMarkupResourceStream().getMarkupClass()))
 				{
 					if (wtag.isOpenClose())
 					{
@@ -169,8 +159,7 @@ public class MergedMarkup extends Markup
 						childTag = wtag;
 						WicketTag childOpenTag = (WicketTag)wtag.mutable();
 						childOpenTag.getXmlTag().setType(XmlTag.OPEN);
-						childOpenTag.setMarkupClass(baseMarkup.getMarkupResourceData()
-							.getResource()
+						childOpenTag.setMarkupClass(baseMarkup.getMarkupResourceStream()
 							.getMarkupClass());
 						addMarkupElement(childOpenTag);
 						break;
@@ -283,9 +272,7 @@ public class MergedMarkup extends Markup
 					if (tag.isChildTag() && tag.isClose())
 					{
 						// Ok, skipped the childs content
-						tag.setMarkupClass(baseMarkup.getMarkupResourceData()
-							.getResource()
-							.getMarkupClass());
+						tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
 						addMarkupElement(tag);
 						break;
 					}
@@ -317,9 +304,7 @@ public class MergedMarkup extends Markup
 			// But first add </wicket:child>
 			WicketTag childCloseTag = (WicketTag)childTag.mutable();
 			childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
-			childCloseTag.setMarkupClass(baseMarkup.getMarkupResourceData()
-				.getResource()
-				.getMarkupClass());
+			childCloseTag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
 			addMarkupElement(childCloseTag);
 		}
 
@@ -331,12 +316,10 @@ public class MergedMarkup extends Markup
 			// Make sure all tags of the base markup remember where they are
 			// from
 			if ((element instanceof ComponentTag) &&
-				(baseMarkup.getMarkupResourceData().getResource() != null))
+				(baseMarkup.getMarkupResourceStream().getResource() != null))
 			{
 				ComponentTag tag = (ComponentTag)element;
-				tag.setMarkupClass(baseMarkup.getMarkupResourceData()
-					.getResource()
-					.getMarkupClass());
+				tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
 			}
 		}
 
@@ -344,9 +327,7 @@ public class MergedMarkup extends Markup
 		// it must enclose ALL of the <wicket:head> tags.
 		// Note: HtmlHeaderSectionHandler does something similar, but because
 		// markup filters are not called for merged markup again, ...
-		if (Page.class.isAssignableFrom(markup.getMarkupResourceData()
-			.getResource()
-			.getMarkupClass()))
+		if (Page.class.isAssignableFrom(markup.getMarkupResourceStream().getMarkupClass()))
 		{
 			// Find the position inside the markup for first <wicket:head>,
 			// last </wicket:head> and <head>
@@ -407,7 +388,7 @@ public class MergedMarkup extends Markup
 	 * @param markup
 	 * @param extendIndex
 	 */
-	private void copyWicketHead(final Markup markup, int extendIndex)
+	private void copyWicketHead(final IMarkupFragment markup, int extendIndex)
 	{
 		boolean copy = false;
 		for (int i = 0; i < extendIndex; i++)

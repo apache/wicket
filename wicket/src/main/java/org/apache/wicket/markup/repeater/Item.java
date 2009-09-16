@@ -18,9 +18,8 @@ package org.apache.wicket.markup.repeater;
 
 import java.util.Comparator;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -35,14 +34,13 @@ import org.apache.wicket.version.undo.Change;
  * @param <T>
  *            Model object type
  */
-public class Item<T> extends WebMarkupContainer
+public class Item<T> extends ListItem<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** relative index of this item */
-	private int index;
-
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 *            component id
 	 * @param index
@@ -52,11 +50,12 @@ public class Item<T> extends WebMarkupContainer
 	 */
 	public Item(final String id, int index, final IModel<T> model)
 	{
-		super(id.intern(), model);
-		this.index = index;
+		super(id, index, model);
 	}
 
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 *            component id
 	 * @param index
@@ -64,52 +63,8 @@ public class Item<T> extends WebMarkupContainer
 	 */
 	public Item(final String id, int index)
 	{
-		super(id.intern());
-		this.index = index;
+		super(id, index);
 	}
-
-	/**
-	 * Sets the index of this item
-	 * 
-	 * @param index
-	 *            new index
-	 */
-	public void setIndex(int index)
-	{
-		if (this.index != index)
-		{
-			if (isVersioned())
-			{
-				addStateChange(new Change()
-				{
-					final int oldIndex = Item.this.index;
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void undo()
-					{
-						Item.this.index = oldIndex;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
-					}
-				});
-			}
-			this.index = index;
-		}
-	}
-
-	/**
-	 * @return the index assigned to this item
-	 */
-	public int getIndex()
-	{
-		return index;
-	}
-
 
 	/**
 	 * @return the primary key assigned to this item
@@ -144,50 +99,5 @@ public class Item<T> extends WebMarkupContainer
 		{
 			return lhs.getIndex() - rhs.getIndex();
 		}
-
 	};
-
-	/**
-	 * Gets model
-	 * 
-	 * @return model
-	 */
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	/**
-	 * Sets model
-	 * 
-	 * @param model
-	 */
-	public final void setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-	}
-
-	/**
-	 * Gets model object
-	 * 
-	 * @return model object
-	 */
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	/**
-	 * Sets model object
-	 * 
-	 * @param object
-	 */
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-	}
-
-
 }

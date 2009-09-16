@@ -23,14 +23,16 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
-import org.apache.wicket.markup.resolver.EnclosureResolver;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,6 +232,86 @@ public class Enclosure extends WebMarkupContainer
 			originalVisibilityStatus = null;
 		}
 		super.onDetach();
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#getMarkup()
+	 */
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		// Get the associated markup file
+		MarkupContainer parent = getParent();
+		IMarkupFragment markup = parent.getMarkup();
+		if ((markup != null) && (markup instanceof MarkupFragment))
+		{
+			markup = ((MarkupFragment)markup).getRootMarkup();
+		}
+
+		// Find the enclosure tag
+		markup = findEnclosureMarkup(markup);
+		if (markup != null)
+		{
+			return markup;
+		}
+
+		markup = parent.getMarkup(null);
+		if ((markup != null) && (markup instanceof MarkupFragment))
+		{
+			markup = ((MarkupFragment)markup).getRootMarkup();
+		}
+
+		// Find the enclosure tag
+		markup = findEnclosureMarkup(markup);
+		if (markup != null)
+		{
+			return markup;
+		}
+
+		// In case of BorderBody the enclosure markup is expected to be in between the
+		// <span wicket:id="myBorder">...</span> tags.
+		if (parent instanceof BorderBodyContainer)
+		{
+			// Find the Border component
+			while (((parent instanceof Border) == false) && (parent != null))
+			{
+				parent = parent.getParent();
+			}
+
+			// Get the borders "calling" markup and find the enclosure tag
+			markup = parent.getMarkup();
+			return findEnclosureMarkup(markup);
+		}
+		return null;
+	}
+
+	/**
+	 * Find the enclose tag
+	 * 
+	 * @param markup
+	 * @return Null, if not found
+	 */
+	private IMarkupFragment findEnclosureMarkup(IMarkupFragment markup)
+	{
+		for (int i = 0; i < markup.size(); i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof WicketTag)
+			{
+				WicketTag tag = (WicketTag)elem;
+				if (tag.isEnclosureTag())
+				{
+					if ("_enclosure".equals(tag.getId()) || getId().equals(tag.getId()))
+					{
+						if (childId.equals(tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE)))
+						{
+							return new MarkupFragment(markup, i);
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

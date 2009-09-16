@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.list;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,47 +34,10 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  * @author Jonathan Locke
- * 
  */
 public abstract class Loop extends AbstractRepeater
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Item container for a Loop iteration.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static class LoopItem extends WebMarkupContainer
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** The iteration number */
-		private final int iteration;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param iteration
-		 *            The iteration of the loop
-		 */
-		public LoopItem(final int iteration)
-		{
-			super(Integer.toString(iteration).intern());
-			this.iteration = iteration;
-		}
-
-		/**
-		 * @return Returns the iteration.
-		 */
-		public final int getIteration()
-		{
-			return iteration;
-		}
-	}
 
 	/**
 	 * Construct.
@@ -137,7 +99,6 @@ public abstract class Loop extends AbstractRepeater
 				populateItem(item);
 			}
 		}
-
 	}
 
 	/**
@@ -173,7 +134,6 @@ public abstract class Loop extends AbstractRepeater
 			{
 				return get(Integer.toString(index++));
 			}
-
 		};
 	}
 

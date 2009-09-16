@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -28,12 +27,22 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public class ListItem<T> extends WebMarkupContainer
+public class ListItem<T> extends LoopItem
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The index of the ListItem in the parent ListView */
-	private final int index;
+	/**
+	 * @param id
+	 *            component id
+	 * @param index
+	 *            relative index of this item in the pageable view
+	 * @param model
+	 *            model for this item
+	 */
+	public ListItem(final String id, int index, final IModel<T> model)
+	{
+		super(id, index, model);
+	}
 
 	/**
 	 * A constructor which uses the index and the list provided to create a ListItem. This
@@ -46,18 +55,20 @@ public class ListItem<T> extends WebMarkupContainer
 	 */
 	public ListItem(final int index, final IModel<T> model)
 	{
-		super(Integer.toString(index).intern(), model);
-		this.index = index;
+		super(index, model);
 	}
 
 	/**
-	 * Gets the index of the listItem in the parent listView.
+	 * Constructor
 	 * 
-	 * @return The index of this listItem in the parent listView
+	 * @param id
+	 *            component id
+	 * @param index
+	 *            relative index of this item in the pageable view
 	 */
-	public final int getIndex()
+	public ListItem(final String id, final int index)
 	{
-		return index;
+		super(id, index);
 	}
 
 	/**

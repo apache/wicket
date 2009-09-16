@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupNotFoundException;
@@ -97,8 +98,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 		{
 			throw new MarkupNotFoundException(
 				"Base markup of inherited markup not found. Component class: " +
-					markup.getMarkupResourceData()
-						.getResource()
+					markup.getMarkupResourceStream()
 						.getContainerInfo()
 						.getContainerClass()
 						.getName() +
@@ -120,8 +120,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	{
 		// get the base markup
 		Markup baseMarkup = Application.get().getMarkupSettings().getMarkupCache().getMarkup(
-			container,
-			markup.getMarkupResourceData().getResource().getMarkupClass().getSuperclass(),
+			container, markup.getMarkupResourceStream().getMarkupClass().getSuperclass(),
 			enforceReload);
 
 		return baseMarkup;
@@ -136,7 +135,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * @return == 0, if no wicket:extend was found
 	 * @TODO move into IMarkupLoader
 	 */
-	private int requiresBaseMarkup(final Markup markup)
+	private int requiresBaseMarkup(final IMarkupFragment markup)
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{

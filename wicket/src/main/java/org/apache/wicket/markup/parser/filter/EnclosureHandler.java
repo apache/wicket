@@ -19,12 +19,13 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.Enclosure;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.markup.resolver.EnclosureResolver;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 
 
 /**
@@ -42,8 +43,10 @@ import org.apache.wicket.markup.resolver.EnclosureResolver;
  * 
  * @author Juergen Donnerstag
  */
-public final class EnclosureHandler extends AbstractMarkupFilter
+public final class EnclosureHandler extends BaseMarkupFilter implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The child attribute */
 	public static final String CHILD_ATTRIBUTE = "child";
 
@@ -67,18 +70,11 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the next MarkupFilter in the chain.
-		// If null, no more tags are available
-		final ComponentTag tag = nextComponentTag();
-		if (tag == null)
-		{
-			return tag;
-		}
-
 		final boolean isWicketTag = tag instanceof WicketTag;
 		final boolean isEnclosureTag = isWicketTag && ((WicketTag)tag).isEnclosureTag();
 
@@ -152,5 +148,37 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 		}
 
 		return tag;
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 */
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag)
+	{
+		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
+		{
+			CharSequence wicketId = tag.getString("wicket:id");
+			String id = null;
+			if (wicketId != null)
+			{
+				id = wicketId.toString();
+			}
+			if (id == null)
+			{
+				id = "enclosure-" + container.getPage().getAutoIndex();
+			}
+			final Enclosure enclosure = new Enclosure(id,
+				tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+			container.autoAdd(enclosure, markupStream);
+
+			// Yes, we handled the tag
+			return true;
+		}
+
+		// We were not able to handle the tag
+		return false;
 	}
 }

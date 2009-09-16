@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
  * <code>child.render(getMarkupStream());</code>.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
- * 
  */
 public abstract class AbstractRepeater extends WebMarkupContainer
 {
@@ -155,5 +153,4 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * Callback to let the repeater know it should populate itself with its items.
 	 */
 	protected abstract void onPopulate();
-
 }

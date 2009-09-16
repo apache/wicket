@@ -18,6 +18,8 @@ package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -100,6 +102,30 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		public boolean isTransparentResolver()
 		{
 			return true;
+		}
+
+		/**
+		 * @see org.apache.wicket.Component#getMarkup()
+		 */
+		@Override
+		public IMarkupFragment getMarkup()
+		{
+			// In case parent is a Panel or Border, than get the associate markup file
+			IMarkupFragment markup = getParent().getMarkup(null);
+			if (markup == null)
+			{
+				throw new MarkupException("Unable to find Markup for Component: " +
+					getParent().toString());
+			}
+
+			if (getId().startsWith("_child"))
+			{
+				return markup.find(null, "_child", 0);
+			}
+			else
+			{
+				return markup.find(null, "_extend", 0);
+			}
 		}
 	}
 }

@@ -42,7 +42,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public final class MarkupStream
+public class MarkupStream
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
@@ -51,7 +51,7 @@ public final class MarkupStream
 	private int currentIndex = 0;
 
 	/** The markup element list */
-	private final Markup markup;
+	private final IMarkupFragment markup;
 
 	/**
 	 * Constructor
@@ -59,7 +59,7 @@ public final class MarkupStream
 	 * @param markup
 	 *            List of markup elements
 	 */
-	public MarkupStream(final Markup markup)
+	public MarkupStream(final IMarkupFragment markup)
 	{
 		this.markup = markup;
 
@@ -198,7 +198,7 @@ public final class MarkupStream
 	 */
 	public final int findComponentIndex(final String path, final String id)
 	{
-		return markup.findComponentIndex(path, id);
+		return markup.findComponentIndex(path, id, 0);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public final class MarkupStream
 	 */
 	public final Class<? extends Component> getContainerClass()
 	{
-		return markup.getMarkupResourceData().getResource().getMarkupClass();
+		return markup.getMarkupResourceStream().getMarkupClass();
 	}
 
 	/**
@@ -245,7 +245,7 @@ public final class MarkupStream
 	 */
 	public final String getEncoding()
 	{
-		return markup.getMarkupResourceData().getEncoding();
+		return markup.getMarkupResourceStream().getEncoding();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public final class MarkupStream
 	 */
 	public IResourceStream getResource()
 	{
-		return markup.getMarkupResourceData().getResource();
+		return markup.getMarkupResourceStream().getResource();
 	}
 
 	/**
@@ -278,7 +278,7 @@ public final class MarkupStream
 	 */
 	public final String getWicketNamespace()
 	{
-		return markup.getMarkupResourceData().getWicketNamespace();
+		return markup.getMarkupResourceStream().getWicketNamespace();
 	}
 
 	/**
@@ -288,7 +288,7 @@ public final class MarkupStream
 	 */
 	public String getXmlDeclaration()
 	{
-		return markup.getMarkupResourceData().getXmlDeclaration();
+		return markup.getMarkupResourceStream().getXmlDeclaration();
 	}
 
 	/**

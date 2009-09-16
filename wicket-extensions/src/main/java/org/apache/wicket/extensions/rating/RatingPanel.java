@@ -25,6 +25,7 @@ import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -121,7 +122,7 @@ public abstract class RatingPanel extends Panel
 					// of our rating component, so other components can also get
 					// updated in case of an AJAX event.
 
-					onRated(item.getIteration() + 1, target);
+					onRated(item.getIndex() + 1, target);
 
 					// if we process an AJAX event, update this panel
 					if (target != null)
@@ -137,7 +138,7 @@ public abstract class RatingPanel extends Panel
 				}
 			};
 
-			int iteration = item.getIteration();
+			int iteration = item.getIndex();
 
 			// add the star image, which is either active (highlighted) or
 			// inactive (no star)

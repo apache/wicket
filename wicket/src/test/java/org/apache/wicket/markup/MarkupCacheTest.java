@@ -53,7 +53,7 @@ public class MarkupCacheTest extends TestCase
 
 	public void testMarkupNotFoundInformationIsCachedInDeploymentMode()
 	{
-		Markup markup = cache.getMarkup(component, null, false);
+		IMarkupFragment markup = cache.getMarkup(component, null, false);
 		assertEquals(Markup.NO_MARKUP, markup);
 
 		markup = cache.getMarkup(component, null, false);

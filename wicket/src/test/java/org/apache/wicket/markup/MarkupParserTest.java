@@ -66,7 +66,7 @@ public final class MarkupParserTest extends WicketTestCase
 				+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
 		parser.setWicketNamespace("componentName");
 
-		final Markup markup = parser.parse();
+		final IMarkupFragment markup = parser.parse();
 		final MarkupStream markupStream = new MarkupStream(markup);
 		final ComponentTag aOpen = (ComponentTag)markupStream.next();
 
@@ -127,7 +127,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(
 			"This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10></b></a> of the emergency broadcasting system");
 		parser.setWicketNamespace("componentName");
-		final Markup tokens = parser.parse();
+		final IMarkupFragment tokens = parser.parse();
 
 		log.info("tok(0)=" + tokens.get(0));
 		log.info("tok(1)=" + tokens.get(1));
@@ -166,7 +166,7 @@ public final class MarkupParserTest extends WicketTestCase
 			+ "<body><h1>XHTML Test</h1></body>" + "</html>";
 		final MarkupParser parser = new MarkupParser(docText);
 		parser.setWicketNamespace("componentName");
-		final Markup tokens = parser.parse();
+		final IMarkupFragment tokens = parser.parse();
 
 		log.info("tok(0)=" + tokens.get(0));
 
@@ -202,7 +202,7 @@ public final class MarkupParserTest extends WicketTestCase
 		MarkupParser parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 
-		Markup tokens = parser.parse();
+		IMarkupFragment tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
@@ -305,7 +305,7 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		Markup markup = new MarkupParser("<wicket:remove>  </wicket:remove>").parse();
+		IMarkupFragment markup = new MarkupParser("<wicket:remove>  </wicket:remove>").parse();
 		assertEquals(0, markup.size());
 
 		markup = new MarkupParser("<wicket:remove> <span id=\"test\"/> </wicket:remove>").parse();
@@ -351,7 +351,7 @@ public final class MarkupParserTest extends WicketTestCase
 		MarkupParser parser = new MarkupParser("<image wcn:id=\"test\"/>");
 		parser.setWicketNamespace("wcn");
 
-		Markup markup = parser.parse();
+		IMarkupFragment markup = parser.parse();
 		assertEquals(1, markup.size());
 
 		markup = new MarkupParser("<image wicket:id=\"test\"/>").parse();
@@ -377,7 +377,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(
 			"<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 
-		Markup markup = parser.parse();
+		IMarkupFragment markup = parser.parse();
 		assertEquals(3, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
@@ -397,7 +397,7 @@ public final class MarkupParserTest extends WicketTestCase
 			"<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
 
 		// Note: <img> is one of these none-balanced HTML tags
-		Markup markup = parser.parse();
+		IMarkupFragment markup = parser.parse();
 
 		ComponentTag t = (ComponentTag)markup.get(0);
 		assertEquals(t.getId(), "span");

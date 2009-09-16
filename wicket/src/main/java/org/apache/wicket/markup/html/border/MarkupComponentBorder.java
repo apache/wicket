@@ -27,7 +27,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ContainerInfo;
-import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
@@ -219,7 +219,7 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		try
 		{
-			Markup markup = Application.get()
+			IMarkupFragment markup = Application.get()
 				.getMarkupSettings()
 				.getMarkupParserFactory()
 				.newMarkupParser(markupResourceStream)

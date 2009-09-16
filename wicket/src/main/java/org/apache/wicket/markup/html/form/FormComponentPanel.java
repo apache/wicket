@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
 import org.apache.wicket.markup.html.HeaderPartContainer;
@@ -125,7 +129,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		WicketTagIdentifier.registerWellKnownTagName("panel");
 	}
 
-
 	private ContainerWithAssociatedMarkupHelper markupHelper;
 
 	/** If if tag was an open-close tag */
@@ -228,5 +231,37 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+	 */
+	@Override
+	public IMarkupFragment getMarkup(final Component child)
+	{
+		IMarkupFragment markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			throw new MarkupException("Failed to find associated markup file. Component: " +
+				toString());
+		}
+
+		// Find <wicket:panel>
+		int index = markup.findComponentIndex(null, "_panel", 0);
+		if (index == -1)
+		{
+			throw new MarkupException(
+				"Expected to find <wicket:panel> in associated markup file. Markup: " +
+					markup.toString());
+		}
+
+		// If child == null, return the markup starting with <wicket:panel>
+		if (child == null)
+		{
+			return new MarkupFragment(markup, index);
+		}
+
+		// else, find the markup fragment for the child component
+		return markup.find(null, child.getId(), index);
 	}
 }

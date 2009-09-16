@@ -38,6 +38,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IDetachable;
@@ -83,7 +84,7 @@ public abstract class AbstractTree extends Panel
 	 * This class represents one row in rendered tree (TreeNode). Only TreeNodes that are visible
 	 * (all their parent are expanded) have TreeItem created for them.
 	 */
-	private final class TreeItem extends WebMarkupContainer
+	private final class TreeItem extends AbstractItem
 	{
 		/**
 		 * whether this tree item should also render it's children to response. this is set if we

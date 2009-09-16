@@ -164,6 +164,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		{
 			componentId = "anonymous-" + container.getPage().getAutoIndex();
 		}
+		tag.setId(componentId);
 
 		// Get the component class name
 		final String classname = tag.getAttributes().getString("class");

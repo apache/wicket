@@ -49,7 +49,6 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 		table.setOutputMarkupId(true);
 	}
 
-
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar#newSortableHeader(java.lang.String,
 	 *      java.lang.String,
@@ -88,6 +87,4 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	{
 		return null;
 	}
-
-
 }

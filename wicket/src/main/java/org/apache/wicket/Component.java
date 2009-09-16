@@ -33,6 +33,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -318,7 +319,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Undo change for component border property
 	 * 
 	 * @author ivaynberg
+	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
 	 */
+	@Deprecated
 	private class ComponentBorderChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
@@ -525,7 +528,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
 
-	/** meta data key for missing body tags logging. */
+	/**
+	 * meta data key for missing body tags logging.
+	 * 
+	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
+	 */
+	@Deprecated
 	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -929,6 +937,42 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			setModelImpl(wrap(model));
 		}
+	}
+
+	/**
+	 * Get the Markup associated with the Component. If not subclassed, the parent container is
+	 * asked to return the markup of this child component.
+	 * <p/>
+	 * Components like Panel and Border should return the "calling" markup fragment, e.g.
+	 * <code>&lt;span wicket:id="myPanel"&gt;body&lt;/span&gt;</code>. You may use
+	 * Panel/Border/Enclosure.getMarkup(null) to return the associated markup file. And
+	 * Panel/Border/Enclosure.getMarkup(child) will search the child in the appropriate markup
+	 * fragment.
+	 * 
+	 * @see MarkupContainer#getMarkup(Component)
+	 * 
+	 * @return The markup fragment
+	 */
+	public IMarkupFragment getMarkup()
+	{
+		if (parent == null)
+		{
+			throw new MarkupException(
+				"Can not determine Markup. Component is not yet connected to a parent. " +
+					toString());
+		}
+		return parent.getMarkup(this);
+	}
+
+	/**
+	 * Callback method invoked after the component was added to its parent AND you can walk up the
+	 * hierarchy up until the Page. That is, all parents must be have been added to their parents as
+	 * well. Add this point in time {@link #getMarkup() getMarkup} is guaranteed to be available.
+	 * <p/>
+	 * If you don't like constructors to initialize your component, this is the method to use.
+	 */
+	protected void onConnectedToPage()
+	{
 	}
 
 	/**
@@ -1344,7 +1388,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * @return component border assigned to this component, or null if none
+	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
 	 */
+	@Deprecated
 	public final IComponentBorder getComponentBorder()
 	{
 		return getMetaData(BORDER_KEY);
@@ -2370,6 +2416,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
+		if (getApplication().getMarkupFragmentEnabled())
+		{
+			IMarkupFragment markup = getMarkup();
+			if (!(this instanceof Page) && (markup == null))
+			{
+				throw new IllegalArgumentException("jdo: Markup not found: " + toString());
+			}
+		}
+
 		// We need to know the index before we do the visibility check.
 		// Otherwise we wouldn't know the markup index for invisible components
 		if (markupStream != null)
@@ -2739,7 +2794,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @param border
 	 *            component border to assign, or <code>null</code> to clear any previous
 	 * @return component for chaining
+	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
 	 */
+	@Deprecated
 	public final Component setComponentBorder(final IComponentBorder border)
 	{
 		if (!Objects.equal(getComponentBorder(), border))

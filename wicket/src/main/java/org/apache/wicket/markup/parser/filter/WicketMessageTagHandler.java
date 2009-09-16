@@ -28,7 +28,6 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
 
@@ -44,9 +43,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
  */
-public final class WicketMessageTagHandler extends AbstractMarkupFilter
-	implements
-		IComponentResolver
+public final class WicketMessageTagHandler extends BaseMarkupFilter implements IComponentResolver
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -70,16 +67,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag to be processed. Null, if not more tags are available
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the next MarkupFilter in the chain
-		// If null, no more tags are available
-		final ComponentTag tag = nextComponentTag();
-		if ((tag == null) || tag.isClose())
+		if (tag.isClose())
 		{
 			return tag;
 		}
@@ -169,19 +162,19 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs
-
-		if (WICKET_MESSAGE_CONTAINER_ID.equals(tag.getId()))
+		if ((tag != null) && (tag.getId().startsWith(WICKET_MESSAGE_CONTAINER_ID)))
 		{
 			Component wc = null;
+			String id = WICKET_MESSAGE_CONTAINER_ID + container.getPage().getAutoIndex();
+			tag.setId(id);
+
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID +
-					container.getPage().getAutoIndex());
+				wc = new WebComponent(id);
 			}
 			else
 			{
-				wc = new TransparentContainer(WICKET_MESSAGE_CONTAINER_ID +
-					container.getPage().getAutoIndex());
+				wc = new TransparentContainer(id);
 			}
 
 			container.autoAdd(wc, markupStream);

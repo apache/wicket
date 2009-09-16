@@ -343,6 +343,31 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	public final void testConditionalComments2() throws Exception
+	{
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
+		int type = parser.next();
+		assertEquals(type, XmlPullParser.CONDITIONAL_COMMENT);
+		type = parser.next();
+		assertEquals(type, XmlPullParser.TAG);
+		assertTrue(((XmlTag)parser.getElement()).isOpen());
+		type = parser.next();
+		assertEquals(type, XmlPullParser.BODY);
+		type = parser.next();
+		assertEquals(type, XmlPullParser.TAG);
+		assertEquals("a", ((XmlTag)parser.getElement()).getName());
+		assertTrue(((XmlTag)parser.getElement()).isClose());
+		type = parser.next();
+		assertEquals(type, XmlPullParser.CONDITIONAL_COMMENT);
+		type = parser.next();
+		assertEquals(0, type);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public final void testNames() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();

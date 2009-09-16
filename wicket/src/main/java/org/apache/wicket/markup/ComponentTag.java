@@ -74,7 +74,7 @@ public class ComponentTag extends MarkupElement
 	private String path;
 
 	/** True, if attributes have been modified or added */
-	private boolean modified = false;
+	private transient boolean modified = false;
 
 	/**
 	 * If true, than the MarkupParser will ignore (remove) it. Temporary working variable
@@ -737,7 +737,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return True, if the component tag has been marked modified
 	 */
-	public final boolean isModified()
+	final boolean isModified()
 	{
 		return modified;
 	}

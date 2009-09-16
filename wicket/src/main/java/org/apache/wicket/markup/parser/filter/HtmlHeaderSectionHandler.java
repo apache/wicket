@@ -21,7 +21,6 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
 
 
@@ -35,7 +34,7 @@ import org.apache.wicket.markup.parser.XmlTag;
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
-public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
+public final class HtmlHeaderSectionHandler extends BaseMarkupFilter
 {
 	private static final String BODY = "body";
 	private static final String HEAD = "head";
@@ -64,22 +63,11 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
-	 * <p>
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag from markup to be processed. If null, no more tags are available
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the markup.
-		// If null, no more tags are available
-		final ComponentTag tag = nextComponentTag();
-		if (tag == null)
-		{
-			return tag;
-		}
-
 		// Whatever there is left in the markup, ignore it
 		if (ignoreTheRest == true)
 		{

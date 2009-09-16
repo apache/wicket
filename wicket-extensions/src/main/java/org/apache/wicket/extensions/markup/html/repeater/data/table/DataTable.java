@@ -22,6 +22,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
@@ -382,12 +383,11 @@ public class DataTable<T> extends Panel implements IPageable
 	 * 
 	 * @author igor.vaynberg
 	 */
-	private final class ToolbarContainer extends WebMarkupContainer
+	private final class ToolbarContainer extends AbstractItem
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * 
 		 * Construct.
 		 * 
 		 * @param id
@@ -395,6 +395,13 @@ public class DataTable<T> extends Panel implements IPageable
 		private ToolbarContainer(String id)
 		{
 			super(id);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isVisible()
+		{
+			return ((Component)iterator().next()).isVisible();
 		}
 	}
 

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 
@@ -89,5 +90,14 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	public final void setMyMarkupStream(final MarkupStream markupStream)
 	{
 		super.setMarkupStream(markupStream);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#getMarkup()
+	 */
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		return container.getAssociatedMarkup().find(null, "_head", 0);
 	}
 }

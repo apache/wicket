@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
@@ -34,7 +36,6 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
@@ -145,7 +146,6 @@ public abstract class MarkupContainer extends Component
 				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
 					child.getId() + "' already exists"));
 			}
-
 		}
 		return this;
 	}
@@ -332,10 +332,50 @@ public abstract class MarkupContainer extends Component
 	 */
 	public MarkupStream getAssociatedMarkupStream(final boolean throwException)
 	{
+		IMarkupFragment markup = getAssociatedMarkup();
+
+		// If we found markup for this container
+		if (markup != null)
+		{
+			return new MarkupStream(markup);
+		}
+
+		if (throwException == true)
+		{
+			// throw exception since there is no associated markup
+			throw new MarkupNotFoundException(
+				"Markup of type '" +
+					getMarkupType() +
+					"' for component '" +
+					getClass().getName() +
+					"' not found." +
+					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: " +
+					toString());
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
+	 * 
+	 * @return A stream of MarkupElement elements
+	 */
+	public IMarkupFragment getAssociatedMarkup()
+	{
 		try
 		{
-			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this,
-				false, throwException);
+			IMarkupFragment markup = getApplication().getMarkupSettings()
+				.getMarkupCache()
+				.getMarkup(this, false);
+
+			// If we found markup for this container
+			if ((markup != null) && (markup != Markup.NO_MARKUP))
+			{
+				return markup;
+			}
+
+			return null;
 		}
 		catch (MarkupException ex)
 		{
@@ -360,7 +400,6 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
-
 	/**
 	 * Get the markup stream set on this container.
 	 * 
@@ -371,6 +410,88 @@ public abstract class MarkupContainer extends Component
 		return markupStream;
 	}
 
+	/**
+	 * Get the childs markup
+	 * 
+	 * @see Component#getMarkup()
+	 * 
+	 * @param child
+	 *            The child component. If null, the container's markup will be returned. See Border,
+	 *            Panel or Enclosure where getMarkup(null) != getMarkup().
+	 * @return The childs markup
+	 */
+	public IMarkupFragment getMarkup(final Component child)
+	{
+		// Get the markup for the container
+		IMarkupFragment markup = getMarkup();
+		if (markup == null)
+		{
+			throw new MarkupException("Unable to determine Markup for Component: " + toString());
+		}
+		else if (child == null)
+		{
+			return markup;
+		}
+
+		// Find the childs markup
+		markup = markup.find(null, child.getId(), 0);
+		if (markup != null)
+		{
+			return markup;
+		}
+
+		// The following code makes sure that add(new Border()).setTransparentResolver(true) is
+		// properly covered as well.
+		markup = (IMarkupFragment)visitChildren(new IVisitor<Component>()
+		{
+			public Object component(final Component component)
+			{
+				if (component instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)component;
+					if (container.isTransparentResolver())
+					{
+						IMarkupFragment markup = container.getMarkup(child);
+						if (markup != null)
+						{
+							return markup;
+						}
+						return CONTINUE_TRAVERSAL;
+					}
+				}
+				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+			}
+		});
+
+		// This is to make migration for Items from 1.4 to 1.5 more easy
+		if (Character.isDigit(child.getId().charAt(0)))
+		{
+			String id = child.getId();
+			boolean miss = false;
+			for (int i = 1; i < id.length(); i++)
+			{
+				if (Character.isDigit(id.charAt(i)) == false)
+				{
+					miss = true;
+					break;
+				}
+			}
+
+			if (miss == false)
+			{
+				// The LoopItems markup is equal to the Loops markup
+				markup = getMarkup();
+
+				if (log.isWarnEnabled())
+				{
+					log.warn("1.4 to 1.5 migration issue: your item component should be derived from AbstractItem. Item=" +
+						child.toString());
+				}
+			}
+		}
+
+		return markup;
+	}
 
 	/**
 	 * Get the type of associated markup for this component.
@@ -482,24 +603,6 @@ public abstract class MarkupContainer extends Component
 		}
 		Collections.sort(sorted, comparator);
 		return sorted.iterator();
-	}
-
-	/**
-	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to Wicket 1.3
-	 * 
-	 * @param <C>
-	 * 
-	 * @param containerClass
-	 * @return nothing
-	 * @throws IllegalStateException
-	 *             throws an {@link IllegalStateException}
-	 */
-	// TODO remove after release 1.3.0
-	public final <C extends Component> IResourceStream newMarkupResourceStream(
-		Class<C> containerClass)
-	{
-		throw new IllegalStateException(
-			"this method is not used any more (and shouldn't be called by clients anyway)");
 	}
 
 	/**
@@ -905,46 +1008,62 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * @param component
+	 * @param child
 	 *            Component being added
 	 */
-	private final void addedComponent(final Component component)
+	private final void addedComponent(final Component child)
 	{
 		// Check for degenerate case
-		if (component == this)
+		if (child == this)
 		{
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
 
-		MarkupContainer parent = component.getParent();
+		MarkupContainer parent = child.getParent();
 		if (parent != null)
 		{
-			parent.remove(component);
+			parent.remove(child);
 		}
 
 		// Set child's parent
-		component.setParent(this);
+		child.setParent(this);
 
 		final Page page = findPage();
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
-			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException(
+			child.setMetaData(ADDED_AT_KEY, Strings.toString(child, new MarkupException(
 				"added")));
 		}
 
 		if (page != null)
 		{
-			page.componentAdded(component);
+			child.onConnectedToPage();
+
+			// Tell all children of "component" as well
+			if (child instanceof MarkupContainer)
+			{
+				MarkupContainer container = (MarkupContainer)child;
+				container.visitChildren(new IVisitor<Component>()
+				{
+					public Object component(final Component component)
+					{
+						component.onConnectedToPage();
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+
+			// Tell the page a component has been added
+			page.componentAdded(child);
 		}
 
 		// if the PREPARED_FOR_RENDER flag is set, we have already called
-		// beforeRender on this
-		// component's children. So we need to initialize the newly added one
+		// beforeRender on this component's children. So we need to initialize the newly added one
 		if (isPreparedForRender())
 		{
-			component.beforeRender();
+			child.beforeRender();
 		}
 	}
 
@@ -1959,6 +2078,5 @@ public abstract class MarkupContainer extends Component
 			list.childs[idx1] = list.childs[idx2];
 			list.childs[idx2] = tmp;
 		}
-
 	}
 }

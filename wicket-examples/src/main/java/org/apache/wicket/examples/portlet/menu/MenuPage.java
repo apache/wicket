@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 
 /**
@@ -41,14 +42,14 @@ public class MenuPage extends WebPage
 			@Override
 			protected void populateItem(LoopItem item)
 			{
-				final int index = item.getIteration();
+				final int index = item.getIndex();
 				ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(index + 1);
 				Link link = new Link("example")
 				{
 					@Override
 					public void onClick()
 					{
-						int index = ((LoopItem)getParent()).getIteration();
+						int index = ((LoopItem)getParent()).getIndex();
 						ExampleApplication ea = WicketExamplesMenuApplication.getExamples().get(
 							index + 1);
 						PortletSession session = ((PortletRequestContext)RequestContext.get()).getPortletRequest()

@@ -21,7 +21,6 @@ import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Juergen Donnerstag
  */
-public final class HtmlProblemFinder extends AbstractMarkupFilter
+public final class HtmlProblemFinder extends BaseMarkupFilter
 {
 	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(HtmlProblemFinder.class);
@@ -80,22 +79,11 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
-	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
-	 * modified or it remove by asking the parent handler for the next tag.
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return Return the next eligible MarkupElement
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag. If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if (tag == null)
-		{
-			return tag;
-		}
-
 		// Make sure some typical and may be tricky problems are detected and
 		// logged.
 		if ("img".equals(tag.getName()) && (tag.isOpen() || tag.isOpenClose()))

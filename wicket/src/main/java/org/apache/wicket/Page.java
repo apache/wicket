@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -1584,6 +1585,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 	}
 
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
+	 */
 	@Override
 	public String getMarkupType()
 	{
@@ -1600,5 +1604,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		setStatelessHint(false);
 		return new PageReference(pageMapName, numericId, getCurrentVersionNumber());
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#getMarkup()
+	 */
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		return getAssociatedMarkup();
 	}
 }

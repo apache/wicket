@@ -26,6 +26,8 @@ import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,12 +39,12 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 {
 	private static final long serialVersionUID = 1846489965076612828L;
 
+	private static final Logger log = LoggerFactory.getLogger(MarkupResourceStream.class);
+
 	/** The associated markup resource stream */
 	private final IResourceStream resourceStream;
 
-	/**
-	 * Container info like Class, locale and style which were used to locate the resource
-	 */
+	/** Container info like Class, locale and style which were used to locate the resource */
 	private final ContainerInfo containerInfo;
 
 	/**
@@ -54,6 +56,36 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	/** The key used to cache the markup resource stream */
 	private String cacheKey;
 
+	/** In case of the inherited markup, this is the base markup */
+	private Markup baseMarkup;
+
+	/** If found in the markup, the <?xml ...?> string */
+	private String xmlDeclaration;
+
+	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
+	private String encoding;
+
+	/**
+	 * Wicket namespace: <html
+	 * xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd>
+	 */
+	private String wicketNamespace;
+
+	/** == wicket namespace name + ":id" */
+	private String wicketId;
+
+	/**
+	 * Construct. Private by purpose.
+	 */
+	private MarkupResourceStream()
+	{
+		resourceStream = null;
+		markupClassName = null;
+		containerInfo = null;
+
+		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
+	}
+
 	/**
 	 * Construct.
 	 * 
@@ -61,14 +93,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream)
 	{
-		this.resourceStream = resourceStream;
-		containerInfo = null;
-		markupClassName = null;
-
-		if (resourceStream == null)
-		{
-			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
-		}
+		this(resourceStream, null, null);
 	}
 
 	/**
@@ -89,6 +114,8 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		{
 			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
 		}
+
+		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	}
 
 	/**
@@ -208,12 +235,143 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	}
 
 	/**
+	 * Gets the resource that contains this markup
+	 * 
+	 * @return The resource where this markup came from
+	 */
+	public IResourceStream getResource()
+	{
+		return resourceStream;
+	}
+
+	/**
+	 * Return the XML declaration string, in case if found in the markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration()
+	{
+		return xmlDeclaration;
+	}
+
+	/**
+	 * Gets the markup encoding. A markup encoding may be specified in a markup file with an XML
+	 * encoding specifier of the form &lt;?xml ... encoding="..." ?&gt;.
+	 * 
+	 * @return Encoding, or null if not found.
+	 */
+	public String getEncoding()
+	{
+		return encoding;
+	}
+
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+		return wicketNamespace;
+	}
+
+	/**
+	 * 
+	 * @return usually it is "wicket:id"
+	 */
+	final public String getWicketId()
+	{
+		return wicketId;
+	}
+
+	/**
+	 * Sets encoding.
+	 * 
+	 * @param encoding
+	 *            encoding
+	 */
+	final void setEncoding(final String encoding)
+	{
+		this.encoding = encoding;
+	}
+
+	/**
+	 * Sets wicketNamespace.
+	 * 
+	 * @param wicketNamespace
+	 *            wicketNamespace
+	 */
+	public final void setWicketNamespace(final String wicketNamespace)
+	{
+		this.wicketNamespace = wicketNamespace;
+		wicketId = wicketNamespace + ":id";
+
+		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
+		{
+			log.info("You are using a non-standard component name: " + wicketNamespace);
+		}
+	}
+
+	/**
+	 * Sets xmlDeclaration.
+	 * 
+	 * @param xmlDeclaration
+	 *            xmlDeclaration
+	 */
+	final void setXmlDeclaration(final String xmlDeclaration)
+	{
+		this.xmlDeclaration = xmlDeclaration;
+	}
+
+	/**
+	 * Get the resource stream containing the base markup (markup inheritance)
+	 * 
+	 * @return baseMarkupResource Null, if not base markup
+	 */
+	public MarkupResourceStream getBaseMarkupResourceStream()
+	{
+		if (baseMarkup == null)
+		{
+			return null;
+		}
+		return baseMarkup.getMarkupResourceStream();
+	}
+
+	/**
+	 * In case of markup inheritance, the base markup.
+	 * 
+	 * @param baseMarkup
+	 *            The base markup
+	 */
+	public void setBaseMarkup(Markup baseMarkup)
+	{
+		this.baseMarkup = baseMarkup;
+	}
+
+	/**
+	 * In case of markup inheritance, the base markup resource.
+	 * 
+	 * @return The base markup
+	 */
+	public Markup getBaseMarkup()
+	{
+		return baseMarkup;
+	}
+
+	/**
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return resourceStream.toString();
+		if (resourceStream != null)
+		{
+			return resourceStream.toString();
+		}
+		else
+		{
+			return "(unknown resource)";
+		}
 	}
 }

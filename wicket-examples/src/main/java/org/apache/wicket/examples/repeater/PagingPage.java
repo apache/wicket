@@ -39,7 +39,6 @@ public class PagingPage extends BasePage
 	{
 		DataView<Contact> dataView = new DataView<Contact>("pageable", new ContactDataProvider())
 		{
-
 			@Override
 			protected void populateItem(final Item<Contact> item)
 			{

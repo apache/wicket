@@ -41,17 +41,16 @@ import org.apache.wicket.version.undo.Change;
  * to return a model that will work with the item's true primary key, or use a different repeater
  * that does not rely on the list index.
  * 
- * 
  * A ListView holds ListItem children. Items can be re-ordered and deleted, either one at a time or
  * many at a time.
  * <p>
  * Example:
  * 
  * <pre>
- *                      &lt;tbody&gt;
- *                        &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                            &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                        ...
+ * &lt;tbody&gt;
+ *   &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *     ...
  * </pre>
  * 
  * <p>
@@ -391,12 +390,12 @@ public abstract class ListView<T> extends AbstractRepeater
 					final int oldIndex = getList().indexOf(item.getModelObject());
 					final T removedObject = item.getModelObject();
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public void undo()
 					{
 						((List<T>)getList()).add(oldIndex, removedObject);
 					}
-
 				});
 
 				item.modelChanging();
@@ -626,7 +625,6 @@ public abstract class ListView<T> extends AbstractRepeater
 		renderItem((ListItem<?>)child);
 	}
 
-
 	/**
 	 * Render a single item.
 	 * 
@@ -644,7 +642,6 @@ public abstract class ListView<T> extends AbstractRepeater
 	@Override
 	protected Iterator<Component> renderIterator()
 	{
-
 		final int size = size();
 		return new ReadOnlyIterator<Component>()
 		{
@@ -665,6 +662,10 @@ public abstract class ListView<T> extends AbstractRepeater
 		};
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.MarkupContainer#iterator()
+	 */
 	@SuppressWarnings( { "unchecked" })
 	@Override
 	public Iterator<? extends ListItem<T>> iterator()
@@ -713,5 +714,4 @@ public abstract class ListView<T> extends AbstractRepeater
 	{
 		setDefaultModelObject(object);
 	}
-
 }

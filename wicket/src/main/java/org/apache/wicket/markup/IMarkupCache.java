@@ -62,8 +62,7 @@ public interface IMarkupCache
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	MarkupStream getMarkupStream(final MarkupContainer container, final boolean enforceReload,
-		final boolean throwException);
+	IMarkupFragment getMarkup(final MarkupContainer container, final boolean enforceReload);
 
 	/**
 	 * Check if container has associated markup
@@ -83,7 +82,7 @@ public interface IMarkupCache
 	 * @param cacheKey
 	 * @return The markup removed from the cache. Null, if nothing was found.
 	 */
-	Markup removeMarkup(final String cacheKey);
+	IMarkupFragment removeMarkup(final String cacheKey);
 
 	/**
 	 * @return the number of elements currently in the cache.

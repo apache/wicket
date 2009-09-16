@@ -19,8 +19,8 @@ package org.apache.wicket.examples.repeater;
 import java.util.Iterator;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
@@ -45,7 +45,8 @@ public class RepeatingPage extends BasePage
 		int index = 0;
 		while (contacts.hasNext())
 		{
-			WebMarkupContainer item = new WebMarkupContainer(repeating.newChildId());
+			AbstractItem item = new AbstractItem(repeating.newChildId());
+
 			repeating.add(item);
 			Contact contact = contacts.next();
 

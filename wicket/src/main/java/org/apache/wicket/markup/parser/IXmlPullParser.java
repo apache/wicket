@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 
@@ -29,7 +30,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public interface IXmlPullParser extends IMarkupFilter
+public interface IXmlPullParser
 {
 	/**
 	 * Return the encoding applied while reading the markup resource. The encoding is determined by
@@ -69,18 +70,6 @@ public interface IXmlPullParser extends IMarkupFilter
 	CharSequence getInput(final int fromPos, final int toPos);
 
 	/**
-	 * Dissect the XML markup into tags and text. Tags are further analyzed into comments, CDATA,
-	 * processing instruction etc as well as "standard" tags. By means of getType() the type of the
-	 * current element can be retrieved and the appropriate getters must used to get hold of the
-	 * information.
-	 * 
-	 * @return false, if end-of-file as been reached. If true, than use getType() to determine what
-	 *         has been found.
-	 * @throws ParseException
-	 */
-	boolean next() throws ParseException;
-
-	/**
 	 * Parse the markup provided. Use nextTag() to access the tags contained one after another.
 	 * <p>
 	 * Note: xml character encoding is NOT applied. It is assumed the input provided does have the
@@ -106,8 +95,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
-	public abstract void parse(final InputStream inputStream) throws IOException,
-		ResourceStreamNotFoundException;
+	void parse(final InputStream inputStream) throws IOException, ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from an input stream. Use nextTag() to access the tags contained, one
@@ -124,6 +112,20 @@ public interface IXmlPullParser extends IMarkupFilter
 	 */
 	void parse(InputStream inputStream, final String encoding) throws IOException,
 		ResourceStreamNotFoundException;
+
+	/**
+	 * Move to the next XML element
+	 * 
+	 * @return o, if end of file. Else a TAG, COMMENT etc.
+	 * @throws ParseException
+	 */
+	int next() throws ParseException;
+
+	/**
+	 * 
+	 * @return The current element
+	 */
+	MarkupElement getElement();
 
 	/**
 	 * Set the position marker of the markup at the current position.

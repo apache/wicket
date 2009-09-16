@@ -24,6 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MicroMap;
 import org.apache.wicket.version.undo.Change;
@@ -309,10 +310,10 @@ public class PagingNavigation extends Loop
 	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
 	 */
 	@Override
-	protected void populateItem(final Loop.LoopItem loopItem)
+	protected void populateItem(final LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = getStartIndex() + loopItem.getIteration();
+		final int pageIndex = getStartIndex() + loopItem.getIndex();
 
 		// Add a page link pointing to the page
 		final AbstractLink link = newPagingNavigationLink("pageLink", pageable, pageIndex);
@@ -354,13 +355,13 @@ public class PagingNavigation extends Loop
 	 * @see Loop#renderItem(Loop.LoopItem)
 	 */
 	@Override
-	protected void renderItem(final Loop.LoopItem loopItem)
+	protected void renderItem(final LoopItem loopItem)
 	{
 		// Call default implementation
 		super.renderItem(loopItem);
 
 		// Add separator if not last page
-		if (separator != null && (loopItem.getIteration() != getIterations() - 1))
+		if (separator != null && (loopItem.getIndex() != getIterations() - 1))
 		{
 			getResponse().write(separator);
 		}

@@ -29,7 +29,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.slf4j.Logger;
@@ -52,9 +51,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Al Maw
  */
-public final class RelativePathPrefixHandler extends AbstractMarkupFilter
-	implements
-		IComponentResolver
+public final class RelativePathPrefixHandler extends BaseMarkupFilter implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -103,18 +100,12 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	};
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
-	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
-	 * modified or it remove by asking the parent handler for the next tag.
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return Return the next eligible MarkupElement
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag. If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if ((tag == null) || tag.isClose())
+		if (tag.isClose())
 		{
 			return tag;
 		}
@@ -156,11 +147,14 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		if (WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID.equals(tag.getId()))
+		if ((tag != null) && (tag.getId().startsWith(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID)))
 		{
 			final Component wc;
+
 			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
 				container.getPage().getAutoIndex();
+			tag.setId(id);
+
 			if (tag.isOpenClose())
 			{
 				wc = new WebComponent(id);

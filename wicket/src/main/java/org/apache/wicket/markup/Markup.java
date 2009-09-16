@@ -25,34 +25,34 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * A list of markup elements associated with a Markup. Might be all elements of a markup resource,
- * might be just the elements associated with a specific tag.
+ * The content of a markup file, consisting of aalist of markup elements.
  * 
- * @see org.apache.wicket.markup.MarkupResourceData
- * @see org.apache.wicket.markup.MarkupElement
- * @see org.apache.wicket.markup.ComponentTag
- * @see org.apache.wicket.markup.RawMarkup
+ * @see MarkupResourceStream
+ * @see MarkupElement
+ * @see ComponentTag
+ * @see RawMarkup
  * 
  * @author Juergen Donnerstag
  */
-public class Markup
+public class Markup implements IMarkupFragment
 {
 	private static final Logger log = LoggerFactory.getLogger(Markup.class);
 
 	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup(MarkupResourceData.NO_MARKUP_RESOURCE_DATA);
+	public static final Markup NO_MARKUP = new Markup();
 
 	/** The list of markup elements */
 	private/* final */List<MarkupElement> markupElements;
 
-	/** The associated markup */
-	private final MarkupResourceData markupResourceData;
+	/** The associated markup file */
+	private final MarkupResourceStream markupResourceStream;
 
 	/** A cache which maps (componentPath + id) to the componentTags index in the markup */
 	private Map<String, Integer> componentMap;
@@ -64,24 +64,32 @@ public class Markup
 	private StringBuffer currentPath;
 
 	/**
+	 * Private Constructor for NO_MARKUP only
+	 */
+	private Markup()
+	{
+		markupResourceStream = null;
+	}
+
+	/**
 	 * Constructor
 	 * 
-	 * @param markupResourceData
+	 * @param markupResourceStream
 	 *            The associated Markup
 	 */
-	public Markup(final MarkupResourceData markupResourceData)
+	public Markup(final MarkupResourceStream markupResourceStream)
 	{
-		this.markupResourceData = markupResourceData;
+		if (markupResourceStream == null)
+		{
+			throw new IllegalArgumentException("Parameter 'markupResourceStream' must not be null");
+		}
+
+		this.markupResourceStream = markupResourceStream;
 		markupElements = new ArrayList<MarkupElement>();
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package protected. However to allow
-	 * wicket-bench easy access to the information ...
-	 * 
-	 * @param index
-	 *            Index into markup list
-	 * @return Markup element
+	 * @see org.apache.wicket.markup.IMarkupFragment#get(int)
 	 */
 	public final MarkupElement get(final int index)
 	{
@@ -89,34 +97,32 @@ public class Markup
 	}
 
 	/**
-	 * Gets the associate markup
-	 * 
-	 * @return The associated markup
+	 * @see org.apache.wicket.markup.IMarkupFragment#getMarkupResourceStream()
 	 */
-	public final MarkupResourceData getMarkupResourceData()
+	public final MarkupResourceStream getMarkupResourceStream()
 	{
-		return markupResourceData;
+		return markupResourceStream;
 	}
 
 	/**
-	 * Allowing the markup to return its own location allows special types of Markup (i.e.
-	 * MergedMarkup) to override their location, as they are composed of multiple Markups in
-	 * different locations. SEE WICKET-1507 (Jeremy Thomerson)
+	 * @see MarkupResourceStream#locationAsString()
+<<<<<<< HEAD:wicket/src/main/java/org/apache/wicket/markup/Markup.java
+	 * @return Markup Resource Stream location as string
+=======
+	 * @see IFixedLocationResourceStream#locationAsString()
 	 * 
-	 * @return the location of this markup
+	 * @return The fixed location as a string, e.g. the file name or the URL
+>>>>>>> found a bug. Unfortunately it is not yet working correctly.:wicket/src/main/java/org/apache/wicket/markup/Markup.java
 	 */
 	public String locationAsString()
 	{
-		return markupResourceData.getResource().locationAsString();
+		return markupResourceStream.locationAsString();
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package protected. However to allow
-	 * wicket-bench easy access to the information ...
-	 * 
-	 * @return Number of markup elements
+	 * @see org.apache.wicket.markup.IMarkupFragment#size()
 	 */
-	public int size()
+	public final int size()
 	{
 		return markupElements.size();
 	}
@@ -171,7 +177,7 @@ public class Markup
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) &&
-			tag.getAttributes().containsKey(getMarkupResourceData().getWicketId()))
+			tag.getAttributes().containsKey(getMarkupResourceStream().getWicketId()))
 		{
 			// Add the tag to the cache
 			if (componentMap == null)
@@ -211,7 +217,7 @@ public class Markup
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) &&
-			tag.getAttributes().containsKey(markupResourceData.getWicketId()))
+			tag.getAttributes().containsKey(markupResourceStream.getWicketId()))
 		{
 			// With open-close the path does not change. It can/will not have
 			// children. The same is true for HTML tags like <br> or <img>
@@ -246,7 +252,7 @@ public class Markup
 		{
 			// For example <wicket:message> does not have an id
 			if ((tag.getOpenTag() == null) ||
-				tag.getOpenTag().getAttributes().containsKey(markupResourceData.getWicketId()))
+				tag.getOpenTag().getAttributes().containsKey(markupResourceStream.getWicketId()))
 			{
 				// Remove the last element from the component path
 				int index = currentPath.lastIndexOf(":");
@@ -265,15 +271,10 @@ public class Markup
 	}
 
 	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @param id
-	 *            The component's id to search for
-	 * @return -1, if not found
+	 * @see org.apache.wicket.markup.IMarkupFragment#findComponentIndex(java.lang.String,
+	 *      java.lang.String, int)
 	 */
-	public int findComponentIndex(final String path, final String id)
+	public final int findComponentIndex(final String path, final String id, final int startIndex)
 	{
 		if ((id == null) || (id.length() == 0))
 		{
@@ -296,41 +297,57 @@ public class Markup
 		completePath = matcher.replaceAll("");
 
 		// All component tags are registered with the cache
-		if (componentMap == null)
+		if (componentMap != null)
 		{
-			// not found
-			return -1;
+			final Integer value = componentMap.get(completePath);
+			if (value != null)
+			{
+				// return the components position in the markup stream
+				return value.intValue();
+			}
 		}
 
-		final Integer value = componentMap.get(completePath);
-		if (value == null)
+		for (int i = Math.max(0, startIndex); i < size(); i++)
 		{
-			// not found
-			return -1;
+			MarkupElement elem = get(i);
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag)elem;
+				if (tag.isAutoComponentTag() && (tag.getId() != null) && tag.getId().startsWith(id))
+				{
+					return i;
+				}
+			}
 		}
 
-		// return the components position in the markup stream
-		return value.intValue();
+		return -1;
 	}
 
 	/**
+<<<<<<< HEAD:wicket/src/main/java/org/apache/wicket/markup/Markup.java
+	 * Compare two Markups
+	 * 
 	 * @param that
-	 *            The markup to compare with
-	 * @return True if the two markups are equal
+	 * @return true, if equal
+=======
+	 * 
+	 * @see org.apache.wicket.markup.IMarkupFragment#find(java.lang.String, java.lang.String, int)
+>>>>>>> found a bug. Unfortunately it is not yet working correctly.:wicket/src/main/java/org/apache/wicket/markup/Markup.java
 	 */
-	public boolean equalTo(final Markup that)
+	public final IMarkupFragment find(final String path, final String id, final int startIndex)
 	{
-		final MarkupStream thisStream = new MarkupStream(this);
-		final MarkupStream thatStream = new MarkupStream(that);
-
-		// Compare the streams
-		return thisStream.equalTo(thatStream);
+		int index = findComponentIndex(path, id, startIndex);
+		if (index >= 0)
+		{
+			return new MarkupFragment(this, index);
+		}
+		return null;
 	}
 
 	/**
 	 * Initialize the index where wicket tags can be found
 	 */
-	protected void initialize()
+	protected final void initialize()
 	{
 		// Reset
 		componentMap = null;
@@ -364,13 +381,13 @@ public class Markup
 	}
 
 	/**
-	 * @return String representation of markup list
+	 * @see org.apache.wicket.markup.IMarkupFragment#toString()
 	 */
 	@Override
 	public final String toString()
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(markupResourceData.toString());
+		buf.append(markupResourceStream.toString());
 		buf.append("\n");
 
 		final Iterator<MarkupElement> iter = markupElements.iterator();

@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -136,5 +139,37 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 	{
 		renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+	 */
+	@Override
+	public IMarkupFragment getMarkup(final Component child)
+	{
+		IMarkupFragment markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			throw new MarkupException("Failed to find markup file associated with panel. Panel: " +
+				this.toString());
+		}
+
+		// Find <wicket:panel>
+		int index = markup.findComponentIndex(null, "_panel", 0);
+		if (index == -1)
+		{
+			throw new MarkupException(
+				"Expected to find <wicket:panel> in associated markup file. Markup: " +
+					markup.toString());
+		}
+
+		// If child == null, than return the markup fragment starting with <wicket:panel>
+		if (child == null)
+		{
+			return new MarkupFragment(markup, index);
+		}
+
+		// Find the markup for the child component
+		return markup.find(null, child.getId(), index);
 	}
 }

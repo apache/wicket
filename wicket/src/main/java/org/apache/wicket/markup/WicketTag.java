@@ -75,6 +75,14 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:container'
+	 */
+	public final boolean isContainerTag()
+	{
+		return "container".equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * @return True, if tag name equals 'wicket:link'
 	 */
 	public final boolean isLinkTag()

@@ -21,7 +21,6 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 
 
 /**
@@ -31,7 +30,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketRemoveTagHandler extends AbstractMarkupFilter
+public final class WicketRemoveTagHandler extends BaseMarkupFilter
 {
 	static
 	{
@@ -47,33 +46,22 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Removes preview regions enclosed by &lt;wicket:remove&gt; tags. Note that for obvious
-	 * reasons, nested components are not allowed.
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag to be processed. Null, if not more tags are available
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the next MarkupFilter in the chain
-		// If null, no more tags are available
-		final ComponentTag openTag = (ComponentTag)getParent().nextTag();
-		if (openTag == null)
-		{
-			return openTag;
-		}
-
 		// If it is not a remove tag, than we are finished
-		if (!(openTag instanceof WicketTag) || !((WicketTag)openTag).isRemoveTag())
+		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isRemoveTag())
 		{
-			return openTag;
+			return tag;
 		}
 
 		// remove tag must not be open-close tags
-		if (openTag.isOpenClose())
+		if (tag.isOpenClose())
 		{
 			throw new ParseException("Wicket remove tag must not be an open-close tag: " +
-				openTag.toUserDebugString(), openTag.getPos());
+				tag.toUserDebugString(), tag.getPos());
 		}
 
 		// Find the corresponding close tag and remove all tags in between
@@ -89,12 +77,12 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 
 			// The first Wicket component following the preview region open
 			// tag, must be it's corresponding close tag.
-			if (closeTag.closes(openTag))
+			if (closeTag.closes(tag))
 			{
 				// The tag (from open to close) should be ignored by
 				// MarkupParser and not be added to the Markup.
-				openTag.setIgnore(true);
-				return openTag;
+				tag.setIgnore(true);
+				return tag;
 			}
 
 			throw new ParseException(
@@ -103,6 +91,6 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		}
 
 		throw new ParseException("Did not find close tag for markup remove region. Open tag: " +
-			openTag.toUserDebugString(), openTag.getPos());
+			tag.toUserDebugString(), tag.getPos());
 	}
 }

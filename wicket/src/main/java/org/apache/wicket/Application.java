@@ -36,17 +36,17 @@ import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.BorderBodyResolver;
-import org.apache.wicket.markup.resolver.EnclosureResolver;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.ParentResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
-import org.apache.wicket.markup.resolver.WicketLinkResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
@@ -117,9 +117,7 @@ public abstract class Application
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
 
-	/**
-	 * Configuration type constant for getting the context path out of the web.xml
-	 */
+	/** Configuration type constant for getting the context path out of the web.xml */
 	public static final String CONTEXTPATH = "contextpath";
 
 	/** Configuration type constant for deployment */
@@ -908,12 +906,12 @@ public abstract class Application
 		pageSettings.addComponentResolver(new AutoComponentResolver());
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
-		pageSettings.addComponentResolver(new WicketLinkResolver());
+		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
 		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
-		pageSettings.addComponentResolver(new EnclosureResolver());
+		pageSettings.addComponentResolver(new EnclosureHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
 		pageSettings.addComponentResolver(new BorderBodyResolver());
 
@@ -1183,5 +1181,16 @@ public abstract class Application
 				listener.renderHead(response);
 			}
 		}
+	}
+
+	/**
+	 * TODO To be removed before we release 1.5. By default IMarkupFragment is enabled. In case it
+	 * cases to much problems, you may disable by subclassing this method and returning false.
+	 * 
+	 * @return true, if IMarkupFragment resp. getMarkup() shall be enabled.
+	 */
+	public boolean getMarkupFragmentEnabled()
+	{
+		return true;
 	}
 }

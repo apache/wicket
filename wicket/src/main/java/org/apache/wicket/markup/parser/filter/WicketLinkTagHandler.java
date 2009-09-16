@@ -19,11 +19,15 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
@@ -44,8 +48,10 @@ import org.apache.wicket.util.value.IValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketLinkTagHandler extends AbstractMarkupFilter
+public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
@@ -81,22 +87,11 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handles it if the specific filter
-	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
-	 * modified or it remove by asking the parent handler for the next tag.
-	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return Return the next eligible MarkupElement
+	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	@Override
+	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
-		// Get next tag. Null, if no more tag available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if (tag == null)
-		{
-			return tag;
-		}
-
 		// Only xml tags not already identified as Wicket components will be
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
@@ -201,5 +196,45 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	private final boolean checkRef(String ref)
 	{
 		return (ref != null) && (ref.indexOf(":") == -1);
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 */
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag)
+	{
+		if (tag instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)tag;
+			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
+			{
+				final String id = tag.getId() + container.getPage().getAutoIndex();
+				tag.setId(id);
+
+				final Component component = new WebMarkupContainer(id)
+				{
+					private static final long serialVersionUID = 1L;
+
+					/**
+					 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+					 */
+					@Override
+					public boolean isTransparentResolver()
+					{
+						return true;
+					}
+				};
+
+				container.autoAdd(component, markupStream);
+
+				// Yes, we handled the tag
+				return true;
+			}
+		}
+
+		// We were not able to handle the tag
+		return false;
 	}
 }

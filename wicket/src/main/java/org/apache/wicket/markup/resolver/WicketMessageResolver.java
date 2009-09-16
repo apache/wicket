@@ -26,8 +26,10 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -405,6 +407,38 @@ public class WicketMessageResolver implements IComponentResolver
 				tag.setType(XmlTag.OPEN);
 			}
 			super.onComponentTag(tag);
+		}
+
+		/**
+		 * @see org.apache.wicket.Component#getMarkup()
+		 */
+		@Override
+		public IMarkupFragment getMarkup()
+		{
+			String key = getDefaultModelObjectAsString();
+			if (Strings.isEmpty(key))
+			{
+				throw new WicketRuntimeException(
+					"Expected the model object to contain the message key. But the model object was null");
+			}
+
+			// Get the parent markup. Make sure that in case of Border and Panel you get the
+			// associated markup
+			IMarkupFragment markup = getParent().getMarkup(null);
+			for (int i = 0; i < markup.size(); i++)
+			{
+				MarkupElement elem = markup.get(i);
+				if (elem instanceof WicketTag)
+				{
+					WicketTag tag = (WicketTag)elem;
+					if (tag.isMessageTag() && key.equals(tag.getAttribute("key")))
+					{
+						return new MarkupFragment(markup, i);
+					}
+				}
+			}
+
+			return null;
 		}
 	}
 }
