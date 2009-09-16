@@ -57,7 +57,8 @@ import org.apache.wicket.threadtest.apps.app1.FormInputModel.Line;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
-import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.wicket.validation.validator.MinimumValidator;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.apache.wicket.version.undo.Change;
 
 /**
@@ -124,13 +125,13 @@ public class Home extends WebPage
 			add(stringTextField);
 			TextField<Integer> integerTextField = new TextField<Integer>("integerProperty",
 				Integer.class);
-			add(integerTextField.add(NumberValidator.POSITIVE));
+			add(integerTextField.add(new MinimumValidator<Integer>(0)));
 			add(new TextField<Double>("doubleProperty", Double.class));
 			WebMarkupContainer dateLabel = new WebMarkupContainer("dateLabel");
 			add(dateLabel);
 			TextField<Date> datePropertyTextField = new TextField<Date>("dateProperty", Date.class);
 			add(datePropertyTextField);
-			add(new TextField<Integer>("integerInRangeProperty", Integer.class).add(NumberValidator.range(
+			add(new TextField<Integer>("integerInRangeProperty", Integer.class).add(new RangeValidator<Integer>(
 				0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");

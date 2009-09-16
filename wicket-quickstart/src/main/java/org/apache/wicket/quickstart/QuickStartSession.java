@@ -17,7 +17,6 @@
 package org.apache.wicket.quickstart;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
 /**
@@ -33,15 +32,11 @@ public final class QuickStartSession extends WebSession
 	/**
 	 * Constructor
 	 * 
-	 * @param application
-	 *            The application
 	 * @param request
 	 *            The request
-	 * @param response
-	 *            The response
 	 */
-	protected QuickStartSession(final WebApplication application, final Request request)
+	protected QuickStartSession(final Request request)
 	{
-		super(application, request);
+		super(request);
 	}
 }

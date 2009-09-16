@@ -45,6 +45,7 @@ public class QuickStartApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;
@@ -53,14 +54,16 @@ public class QuickStartApplication extends WebApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 	 */
+	@Override
 	public Session newSession(Request request, Response response)
 	{
-		return new QuickStartSession(QuickStartApplication.this, request);
+		return new QuickStartSession(request);
 	}
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// put any configuration here
