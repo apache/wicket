@@ -1074,6 +1074,18 @@ Wicket.Ajax.Call.prototype = {
 	// and bridge the output - transparently making this work  as if it was an ajax call
 	handleMultipart: function (form, submitButton) {
 		
+		// find root form
+		if (form.tagName.toLowerCase() != "form") {
+			do {
+				form = form.parentNode;
+			} while(form.tagName.toLowerCase() != "form" && form.tagName.toLowerCase() != "body")
+		}	
+
+		if (form.tagName.toLowerCase() != "form") {
+			// no form in the hierarchy, cant handle multipart
+			return false;
+		}
+		
 	 	if (form.enctype!="multipart/form-data") {
 	 		// not handled, return false
 	 		return false;
