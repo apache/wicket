@@ -31,6 +31,7 @@ import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
+import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.upload.ServletRequestContext;
@@ -65,7 +66,9 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 * 
+	 * This constructor will use {@link DiskFileItemFactory} to store uploads.
 	 * 
 	 * @param maxSize
 	 *            the maximum size allowed for this request
@@ -76,6 +79,25 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 */
 	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize)
 		throws FileUploadException
+	{
+		this(request, maxSize, new DiskFileItemFactory());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param maxSize
+	 *            the maximum size allowed for this request
+	 * @param request
+	 *            the servlet request
+	 * @param factory
+	 *            {@link DiskFileItemFactory} to use when creating file items used to represent
+	 *            uploaded files
+	 * @throws FileUploadException
+	 *             Thrown if something goes wrong with upload
+	 */
+	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize,
+		FileItemFactory factory) throws FileUploadException
 	{
 		super(request);
 
@@ -91,7 +113,6 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 			throw new IllegalStateException("ServletRequest does not contain multipart content");
 		}
 
-		DiskFileItemFactory factory = new DiskFileItemFactory();
 
 		// Configure the factory here, if desired.
 		ServletFileUpload upload = new ServletFileUpload(factory);
