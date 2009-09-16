@@ -34,6 +34,7 @@ import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.UrlUtils;
@@ -46,10 +47,9 @@ import org.slf4j.LoggerFactory;
  * This is a request coding strategy which encrypts the URL and hence makes it impossible for users
  * to guess what is in the url and rebuild it manually. It uses the CryptFactory registered with the
  * application to encode and decode the URL. Hence, the coding algorithm must be a two-way one
- * (reversible). Because the algorithm is reversible, URLs which were bookmarkable before will
- * remain bookmarkable.
+ * (reversible).
  * <p>
- * To register the request coding strategy to need to do the following:
+ * To register the request coding strategy you need to do the following:
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
@@ -68,13 +68,23 @@ import org.slf4j.LoggerFactory;
  * the URL. By default, for safety reasons a very simple WicketRuntimeException is thrown. The
  * original stack trace is only logged.
  * <p/>
+ * <p>
  * <b>Note:</b> by default Wicket uses
  * {@link org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory} to encrypt the query-string.
- * KeyInSessionSunJceCryptFactory creates a unique encryption key per session and and uses the
- * session as persistence store. Hence stateless pages will create a session as well and are no
- * longer stateless. You may avoid that by implementing your own ICryptFactory which e.g. uses an
- * application wide encryption key and thus doesn't need a session. You can register your own
- * ICryptFactory via Application.getSecuritySettings().setCryptFactory().
+ * KeyInSessionSunJceCryptFactory creates a unique encryption key per session and uses the session
+ * as persistence store. Hence stateless pages will create a session as well and are no longer
+ * stateless. You may avoid that by implementing your own ICryptFactory which e.g. uses an
+ * application wide encryption key and thus doesn't need a session, but can potentially open your
+ * application to vulnerabilities such as CSRF attacks. You can register your own ICryptFactory via
+ * Application.getSecuritySettings().setCryptFactory().
+ * </p>
+ * <p>
+ * <b>Note:</b> The usage of the default {@link KeyInSessionSunJceCryptFactory} will also make all
+ * bookmarkable urls generated during the user's session non-bookmarkable because they will be
+ * encrypted using a session-relative encryption key; however, bookmarkable urls are still available
+ * through their mounts.
+ * </p>
+ * 
  * 
  * @author Juergen Donnerstag
  */
