@@ -1056,7 +1056,7 @@ Wicket.Ajax.Call.prototype = {
 	// Submits a form using ajax.
 	// This method serializes a form and sends it as POST body.
 	submitForm: function(form, submitButton) {
-	    if (this.handleMultipart(form)) {
+	    if (this.handleMultipart(form, submitButton)) {
 	    	return true;
 	    }
 	    var body = function() {
@@ -1072,7 +1072,7 @@ Wicket.Ajax.Call.prototype = {
 	// If the form contains multipart content this function will post 
 	// the form using an iframe instead of the regular ajax call
 	// and bridge the output - transparently making this work  as if it was an ajax call
-	handleMultipart: function (form) {
+	handleMultipart: function (form, submitButton) {
 		
 	 	if (form.enctype!="multipart/form-data") {
 	 		// not handled, return false
@@ -1105,6 +1105,20 @@ Wicket.Ajax.Call.prototype = {
 		// reconfigure the form
 		form.target=iframe.name;
 		form.action=this.request.url;
+		
+		// create submitting button element
+		if (submitButton!=null) {
+			try {
+	    		var btn = document.createElement("<input type='hidden' name='"+submitButton+"' id='"+iframe.id+"-btn' value='1'/>");
+			} catch (ex) {
+			    var btn = document.createElement("input");
+			    btn.type="hidden";
+				btn.name=submitButton;
+				btn.id=iframe.id+"-btn";
+				btn.value="1";
+			}
+		}
+		form.appendChild(btn);
 
 		//submit the form into the iframe, response will be handled by the onload callback
 		form.submit();
@@ -1136,8 +1150,8 @@ Wicket.Ajax.Call.prototype = {
 		else  
 			iframe.removeEventListener("load", this.handleMultipartComplete, false);
 		
-		// remove the iframe
-		setTimeout(function() { iframe.parentNode.removeChild(iframe); }, 250);
+		// remove the iframe and button elements
+		setTimeout(function() { var e=document.getElementById(iframe.id+"-btn"); if (e!=null) { e.parentNode.removeChild(e); } iframe.parentNode.removeChild(iframe); }, 250);
 	},
 	
 	// Processes the response
