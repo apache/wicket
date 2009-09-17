@@ -106,13 +106,9 @@ public class Markup implements IMarkupFragment
 
 	/**
 	 * @see MarkupResourceStream#locationAsString()
-<<<<<<< HEAD:wicket/src/main/java/org/apache/wicket/markup/Markup.java
-	 * @return Markup Resource Stream location as string
-=======
 	 * @see IFixedLocationResourceStream#locationAsString()
 	 * 
 	 * @return The fixed location as a string, e.g. the file name or the URL
->>>>>>> found a bug. Unfortunately it is not yet working correctly.:wicket/src/main/java/org/apache/wicket/markup/Markup.java
 	 */
 	public String locationAsString()
 	{
@@ -324,15 +320,9 @@ public class Markup implements IMarkupFragment
 	}
 
 	/**
-<<<<<<< HEAD:wicket/src/main/java/org/apache/wicket/markup/Markup.java
-	 * Compare two Markups
 	 * 
 	 * @param that
 	 * @return true, if equal
-=======
-	 * 
-	 * @see org.apache.wicket.markup.IMarkupFragment#find(java.lang.String, java.lang.String, int)
->>>>>>> found a bug. Unfortunately it is not yet working correctly.:wicket/src/main/java/org/apache/wicket/markup/Markup.java
 	 */
 	public final IMarkupFragment find(final String path, final String id, final int startIndex)
 	{
