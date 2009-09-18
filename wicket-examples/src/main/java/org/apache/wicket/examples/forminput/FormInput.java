@@ -107,7 +107,7 @@ public class FormInput extends WicketExamplePage
 				getDefaultModel(), "multiply"));
 			// just for fun, add a border so that our result will be displayed
 			// as '[ x ]'
-			multiplyLabel.setComponentBorder(new BeforeAndAfterBorder());
+			multiplyLabel.add(new BeforeAndAfterBorder());
 			add(multiplyLabel);
 			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model<String>("number"));
