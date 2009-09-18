@@ -21,11 +21,11 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IComponentBorder;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -43,7 +43,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
  * 
  * @author jcompagner
  */
-public class MarkupComponentBorder implements IComponentBorder
+public class MarkupComponentBorder extends AbstractBehavior
 {
 	static
 	{
@@ -60,10 +60,10 @@ public class MarkupComponentBorder implements IComponentBorder
 	private transient MarkupStream markupStream;
 
 	/**
-	 * 
-	 * @see org.apache.wicket.IComponentBorder#renderBefore(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#beforeRender(org.apache.wicket.Component)
 	 */
-	public void renderBefore(Component component)
+	@Override
+	public void beforeRender(final Component component)
 	{
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
@@ -121,10 +121,10 @@ public class MarkupComponentBorder implements IComponentBorder
 	}
 
 	/**
-	 * 
-	 * @see IComponentBorder#renderAfter(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
-	public void renderAfter(Component component)
+	@Override
+	public void onRendered(final Component component)
 	{
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
@@ -157,7 +157,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * @param component
 	 * @return markup stream
 	 */
-	private MarkupStream getMarkupStream(Component component)
+	private MarkupStream getMarkupStream(final Component component)
 	{
 		if (markupStream == null)
 		{
@@ -171,7 +171,7 @@ public class MarkupComponentBorder implements IComponentBorder
 	 * @param owner
 	 * @return markup stream
 	 */
-	private MarkupStream findMarkupStream(Component owner)
+	private MarkupStream findMarkupStream(final Component owner)
 	{
 		final String markupType = getMarkupType(owner);
 

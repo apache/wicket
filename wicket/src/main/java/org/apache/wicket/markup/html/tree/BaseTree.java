@@ -20,9 +20,7 @@ import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IComponentBorder;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -105,7 +103,7 @@ public abstract class BaseTree extends AbstractTree
 		// add junction link
 		Object node = item.getDefaultModelObject();
 		Component junctionLink = newJunctionLink(item, JUNCTION_LINK_ID, node);
-		junctionLink.setComponentBorder(new JunctionBorder(node, level));
+		junctionLink.add(new JunctionBorder(node, level));
 		item.add(junctionLink);
 
 		// add node component
@@ -197,7 +195,7 @@ public abstract class BaseTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	private class JunctionBorder implements IComponentBorder
+	private class JunctionBorder extends AbstractBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -216,14 +214,22 @@ public abstract class BaseTree extends AbstractTree
 			this.level = level;
 		}
 
-		public void renderAfter(Component component)
+		/**
+		 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+		 */
+		@Override
+		public void onRendered(final Component component)
 		{
-			RequestCycle.get().getResponse().write("</td>");
+			component.getResponse().write("</td>");
 		}
 
-		public void renderBefore(Component component)
+		/**
+		 * @see org.apache.wicket.behavior.AbstractBehavior#beforeRender(org.apache.wicket.Component)
+		 */
+		@Override
+		public void beforeRender(final Component component)
 		{
-			Response response = RequestCycle.get().getResponse();
+			Response response = component.getResponse();
 			Object parent = getParentNode(node);
 
 			CharSequence classes[] = new CharSequence[level];

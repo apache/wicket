@@ -58,7 +58,9 @@ public final class PageParameters extends ValueMap
 	 * 
 	 * @param parameterMap
 	 *            The map to copy
-	 * @see ValueMap#ValueMap(java.util.Map)
+	 * 
+	 * @see RequestUtils#decodeParameters(String, ValueMap)
+	 * @see ValueMap#ValueMap(String, String)
 	 */
 	public PageParameters(final Map<String, ?> parameterMap)
 	{

@@ -316,38 +316,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Undo change for component border property
-	 * 
-	 * @author ivaynberg
-	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
-	 */
-	@Deprecated
-	private class ComponentBorderChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IComponentBorder old = getComponentBorder();
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setComponentBorder(old);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return getClass().getSimpleName() + "[component: " + getPath() + ",border:" + old + "]";
-		}
-	}
-
-	/**
 	 * Change object for undoing removal of behavior
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
@@ -527,17 +495,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * </p>
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
-
-	/**
-	 * meta data key for missing body tags logging.
-	 * 
-	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
-	 */
-	@Deprecated
-	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/** meta data for user specified markup id */
 	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>()
@@ -1384,16 +1341,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final String getClassRelativePath()
 	{
 		return getClass().getName() + PATH_SEPARATOR + getPageRelativePath();
-	}
-
-	/**
-	 * @return component border assigned to this component, or null if none
-	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
-	 */
-	@Deprecated
-	public final IComponentBorder getComponentBorder()
-	{
-		return getMetaData(BORDER_KEY);
 	}
 
 	/**
@@ -2457,19 +2404,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			try
 			{
-				// Call implementation to render component
-				final IComponentBorder border = getComponentBorder();
-				if (border != null)
-				{
-					border.renderBefore(this);
-				}
 				notifyBehaviorsComponentBeforeRender();
 				onRender(markupStream);
 				notifyBehaviorsComponentRendered();
-				if (border != null)
-				{
-					border.renderAfter(this);
-				}
+
 				// Component has been rendered
 				rendered();
 			}
@@ -2785,26 +2723,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		return false;
-	}
-
-	/**
-	 * Assigns a component border to this component. If called with <code>null</code> any previous
-	 * border will be cleared.
-	 * 
-	 * @param border
-	 *            component border to assign, or <code>null</code> to clear any previous
-	 * @return component for chaining
-	 * @deprecated since 1.4 please use IBehavior renderBefore and renderAfter instead
-	 */
-	@Deprecated
-	public final Component setComponentBorder(final IComponentBorder border)
-	{
-		if (!Objects.equal(getComponentBorder(), border))
-		{
-			addStateChange(new ComponentBorderChange());
-		}
-		setMetaData(BORDER_KEY, border);
-		return this;
 	}
 
 	/**
