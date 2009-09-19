@@ -2311,12 +2311,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		if (form == null)
 		{
 			// check whether the form is a child of a surrounding border
-			final Border border = component.findParent(Border.class);
-			if (border != null)
+			Border border = component.findParent(Border.class);
+			while ((form == null) && (border != null))
 			{
 				FindFormVisitor formVisitor = new FindFormVisitor();
 				border.visitChildren(Form.class, formVisitor);
 				form = formVisitor.form;
+				if (form == null)
+				{
+					border = border.findParent(Border.class);
+				}
 			}
 		}
 		return form;
