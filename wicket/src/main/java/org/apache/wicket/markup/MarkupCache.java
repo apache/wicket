@@ -741,6 +741,10 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public V get(Object key)
 		{
+			if (key == null)
+			{
+				return null;
+			}
 			return cache.get(key);
 		}
 
