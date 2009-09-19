@@ -694,6 +694,10 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public boolean containsKey(Object key)
 		{
+			if (key == null)
+			{
+				return false;
+			}
 			return cache.containsKey(key);
 		}
 
@@ -702,6 +706,10 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public V get(Object key)
 		{
+			if (key == null)
+			{
+				return null;
+			}
 			return cache.get(key);
 		}
 
