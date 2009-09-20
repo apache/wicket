@@ -16,17 +16,23 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import junit.framework.TestCase;
+
 
 /**
  * 
  */
-public class DatePickerTest // extends TestCase
+public class DatePickerTest extends TestCase
 {
 	// Disabled until we fixed the issue that WicketTestCase or WicketTester is not available in
 	// other projects. They are in src/test/java. Maven will create a compile error since in Maven
 	// the test folder is not exported, which is what we want. We don't want the test cases to be
 	// part of the Wicket distribution jar. In Eclipse it works since all source folders are
 	// exported and you can not disable specific ones.
+
+	public void testDummy()
+	{
+	}
 
 // WicketTester tester = new WicketTester();
 //
