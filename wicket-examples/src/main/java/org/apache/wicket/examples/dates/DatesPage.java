@@ -1,5 +1,6 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
+
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -29,6 +30,7 @@ import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
+import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -130,6 +132,7 @@ public class DatesPage extends WicketExamplePage
 	}
 
 	private final Date date = new Date();
+	private final Date date2 = new Date();
 
 	private Locale selectedLocale = LOCALE_EN;
 
@@ -139,7 +142,7 @@ public class DatesPage extends WicketExamplePage
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form<?> localeForm = new Form("localeForm");
+		Form<?> localeForm = new Form<Void>("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
 		localeForm.add(new Link("localeUSLink")
 		{
@@ -159,7 +162,7 @@ public class DatesPage extends WicketExamplePage
 				return selectedLocale;
 			}
 		};
-		Form<?> form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -171,6 +174,17 @@ public class DatesPage extends WicketExamplePage
 		form.add(dateTextField);
 		dateTextField.add(new DatePicker());
 		add(new FeedbackPanel("feedback"));
+
+		Form<?> form2 = new Form<Void>("form2")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				info("set date2 to " + date2);
+			}
+		};
+		add(form2);
+		form2.add(new DateTimeField("dateTimeField", new PropertyModel<Date>(this, "date2")));
 	}
 
 	/**

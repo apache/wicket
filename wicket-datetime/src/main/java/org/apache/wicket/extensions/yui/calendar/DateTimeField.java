@@ -35,7 +35,6 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
-import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
@@ -53,32 +52,33 @@ import org.joda.time.format.DateTimeFormat;
  */
 public class DateTimeField extends FormComponentPanel<Date>
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
 	 */
-	// enums are mucho nicer, but let's keep this project at 1.4 for now
-	private static class AM_PM extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
+	private static enum AM_PM {
+		AM("AM"), PM("PM");
 
-		static final AM_PM AM = new AM_PM("AM");
+		/** */
+		private String value;
 
-		static final AM_PM PM = new AM_PM("PM");
-
-		public static AM_PM[] values()
+		AM_PM(final String name)
 		{
-			return new AM_PM[] { AM, PM };
+			value = name;
 		}
 
-		private AM_PM(final String name)
+		/**
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString()
 		{
-			super(name);
+			return value;
 		}
 	}
 
 	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
-
-	private static final long serialVersionUID = 1L;
 
 	private AM_PM amOrPm = AM_PM.AM;
 
@@ -101,7 +101,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * 
 	 * @param id
 	 */
-	public DateTimeField(String id)
+	public DateTimeField(final String id)
 	{
 		this(id, null);
 	}
@@ -112,9 +112,10 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @param id
 	 * @param model
 	 */
-	public DateTimeField(String id, IModel<Date> model)
+	public DateTimeField(final String id, final IModel<Date> model)
 	{
 		super(id, model);
+
 		setType(Date.class);
 		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
@@ -181,9 +182,13 @@ public class DateTimeField extends FormComponentPanel<Date>
 		return hours;
 	}
 
-	protected void configure(Map widgetProperties)
+	/**
+	 * TODO comment
+	 * 
+	 * @param widgetProperties
+	 */
+	protected void configure(Map< ? , ? > widgetProperties)
 	{
-
 	}
 
 	/**
@@ -213,7 +218,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @param amOrPm
 	 *            amOrPm
 	 */
-	public void setAmOrPm(AM_PM amOrPm)
+	public void setAmOrPm(final AM_PM amOrPm)
 	{
 		this.amOrPm = amOrPm;
 	}
@@ -224,7 +229,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @param date
 	 *            date
 	 */
-	public void setDate(Date date)
+	public void setDate(final Date date)
 	{
 		if (date == null)
 		{
@@ -236,17 +241,18 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 
 		this.date = new MutableDateTime(date);
-		setDefaultModelObject(date);
 
 		Integer hours = getHours();
-		Integer minutes = getMinutes();
-		boolean use12HourFormat = use12HourFormat();
 		if (hours != null)
 		{
+			boolean use12HourFormat = use12HourFormat();
 			this.date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
 					(use12HourFormat ? 12 : 24));
+
+			Integer minutes = getMinutes();
 			this.date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
 		}
+
 		setDefaultModelObject(this.date.toDate());
 	}
 
@@ -256,7 +262,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @param hours
 	 *            hours
 	 */
-	public void setHours(Integer hours)
+	public void setHours(final Integer hours)
 	{
 		this.hours = hours;
 	}
@@ -267,7 +273,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * @param minutes
 	 *            minutes
 	 */
-	public void setMinutes(Integer minutes)
+	public void setMinutes(final Integer minutes)
 	{
 		this.minutes = minutes;
 	}
@@ -346,20 +352,17 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 	}
 
+	/**
+	 * 
+	 * @param to
+	 * @param from
+	 * @param instant
+	 * @return millis
+	 */
 	private long getMillis(TimeZone to, TimeZone from, long instant)
 	{
 		return DateTimeZone.forTimeZone(from).getMillisKeepLocal(DateTimeZone.forTimeZone(to),
 				instant);
-	}
-
-	/**
-	 * @deprecated replaced by {@link #newDateTextField(String, PropertyModel)}
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	protected final DateTextField newDateTextField(PropertyModel dateFieldModel)
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -369,7 +372,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 *            model that should be used by the {@link DateTextField}
 	 * @return a new date text field instance
 	 */
-	protected DateTextField newDateTextField(String id, PropertyModel dateFieldModel)
+	protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
 	{
 		return new DateTextField(id, dateFieldModel, new StyleDateConverter(false));
 	}
@@ -383,12 +386,6 @@ public class DateTimeField extends FormComponentPanel<Date>
 		dateField.setRequired(isRequired());
 		hoursField.setRequired(isRequired());
 		minutesField.setRequired(isRequired());
-
-		// obsolete with WICKET-1919
-		// dateField.setEnabled(isEnabledInHierarchy());
-		// hoursField.setEnabled(isEnabledInHierarchy());
-		// minutesField.setEnabled(isEnabledInHierarchy());
-		// amOrPmChoice.setEnabled(isEnabledInHierarchy());
 
 		boolean use12HourFormat = use12HourFormat();
 		amOrPmChoice.setVisible(use12HourFormat);
