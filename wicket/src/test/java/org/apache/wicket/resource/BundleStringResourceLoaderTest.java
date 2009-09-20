@@ -59,7 +59,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	@Override
 	public void testLoaderValidKeyStyleNoLocale()
 	{
-		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt");
+		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt", null);
 		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 	}
 
@@ -71,7 +71,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	{
 		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
-			component.getClass(), "test.string", Locale.getDefault(), null));
+			component.getClass(), "test.string", Locale.getDefault(), null, null));
 	}
 
 }

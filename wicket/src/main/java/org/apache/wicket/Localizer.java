@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -212,10 +212,8 @@ public class Localizer
 
 			// Iterate over all registered string resource loaders until the
 			// property has been found
-			Iterator<IStringResourceLoader> iter = getStringResourceLoaders();
-			while (iter.hasNext())
+			for (IStringResourceLoader loader : getStringResourceLoaders())
 			{
-				IStringResourceLoader loader = iter.next();
 				value = loader.loadStringResource(component, key);
 				if (value != null)
 				{
@@ -254,15 +252,11 @@ public class Localizer
 	/**
 	 * In case you want to provide your own list of string resource loaders
 	 * 
-	 * @return Iterator
+	 * @return List of string resource loaders
 	 */
-	protected Iterator<IStringResourceLoader> getStringResourceLoaders()
+	protected List<IStringResourceLoader> getStringResourceLoaders()
 	{
-		Iterator<IStringResourceLoader> iter = Application.get()
-			.getResourceSettings()
-			.getStringResourceLoaders()
-			.iterator();
-		return iter;
+		return Application.get().getResourceSettings().getStringResourceLoaders();
 	}
 
 	/**
@@ -415,9 +409,7 @@ public class Localizer
 
 			buffer.append("-").append(component.getLocale());
 			buffer.append("-").append(component.getStyle());
-			// TODO 1.4 look if we want to properly separate getstyle/getvariation
-			// for now getvariation() is rolled up into getstyle()
-			// buffer.append("-").append(component.getVariation());
+			buffer.append("-").append(component.getVariation());
 			cacheKey = buffer.toString();
 		}
 		else

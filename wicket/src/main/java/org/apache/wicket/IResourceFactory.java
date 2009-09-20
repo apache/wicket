@@ -36,7 +36,10 @@ public interface IResourceFactory
 	 *            The locale for the resource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation
 	 * @return The resource
 	 */
-	Resource newResource(final String specification, final Locale locale, final String style);
+	Resource newResource(final String specification, final Locale locale, final String style,
+		final String variation);
 }

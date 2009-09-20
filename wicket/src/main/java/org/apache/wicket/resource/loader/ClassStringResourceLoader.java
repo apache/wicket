@@ -55,14 +55,15 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	}
 
 	/**
+	 * 
 	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String)
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
-		return super.loadStringResource(clazzRef.get(), key, locale, style);
+		return super.loadStringResource(clazzRef.get(), key, locale, style, variation);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 		if (component == null)
 		{
 			return loadStringResource(null, key, Session.get().getLocale(), Session.get()
-				.getStyle());
+				.getStyle(), null);
 		}
 		return super.loadStringResource(component, key);
 	}

@@ -96,6 +96,9 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	/** The style of the image resource */
 	private String style;
 
+	/** The component's variation (of the style) */
+	private String variation;
+
 	/**
 	 * Parses image value specifications of the form "[factoryName]:
 	 * [shared-image-name]?:[specification]"
@@ -166,6 +169,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		this.component = component;
 		locale = component.getLocale();
 		style = component.getStyle();
+		variation = component.getVariation();
 	}
 
 	/**
@@ -258,11 +262,14 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		// resource, then we need to reload the resource in the new locale
 		Locale l = component.getLocale();
 		String s = component.getStyle();
-		if (resourceKind == null && (!Objects.equal(locale, l) || !Objects.equal(style, s)))
+		String v = component.getVariation();
+		if (resourceKind == null &&
+			(!Objects.equal(locale, l) || !Objects.equal(style, s) || !Objects.equal(variation, v)))
 		{
 			// Get new component locale and style
 			locale = l;
 			style = s;
+			variation = v;
 
 			// Invalidate current resource so it will be reloaded/recomputed
 			resourceReference = null;
@@ -388,13 +395,14 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			protected Resource newResource()
 			{
 				PackageResource pr = PackageResource.get(getScope(), getName(),
-					LocalizedImageResource.this.locale, style);
+					LocalizedImageResource.this.locale, style, variation);
 				locale = pr.getLocale();
 				return pr;
 			}
 		};
 		resourceReference.setLocale(locale);
 		resourceReference.setStyle(style);
+		resourceReference.setVariation(variation);
 		bind();
 	}
 
@@ -422,25 +430,26 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			{
 				// Is resource already available via the application?
 				if (application.getSharedResources().get(Application.class, imageReferenceName,
-					locale, style, true) == null)
+					locale, style, variation, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
 					final Resource imageResource = getResourceFactory(application, factoryName).newResource(
-						specification, locale, style);
+						specification, locale, style, variation);
 					application.getSharedResources().add(Application.class, imageReferenceName,
-						locale, style, imageResource);
+						locale, style, variation, imageResource);
 				}
 
 				// Create resource reference
 				resourceReference = new ResourceReference(Application.class, imageReferenceName);
 				resourceReference.setLocale(locale);
 				resourceReference.setStyle(style);
+				resourceReference.setVariation(variation);
 			}
 			else
 			{
 				resource = getResourceFactory(application, factoryName).newResource(specification,
-					locale, style);
+					locale, style, variation);
 			}
 		}
 		else

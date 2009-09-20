@@ -107,14 +107,16 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	/**
 	 * 
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
-	 *      java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
+	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
+	 *      java.lang.String)
 	 */
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
-		final Locale locale, final String extension)
+		final String variation, final Locale locale, final String extension)
 	{
 		// Try the various combinations of style, locale and extension to find
 		// the resource.
-		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
+		ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
+			extension);
 		while (iter.hasNext())
 		{
 			String newPath = iter.next();

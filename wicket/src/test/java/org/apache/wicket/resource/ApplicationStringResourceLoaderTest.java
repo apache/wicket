@@ -65,7 +65,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		WebApplication app = tester.getApplication();
 		IStringResourceLoader loader = new ClassStringResourceLoader(app.getClass());
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
-			component.getClass(), "test.string", Locale.getDefault(), null));
+			component.getClass(), "test.string", Locale.getDefault(), null, null));
 		tester.destroy();
 	}
 }

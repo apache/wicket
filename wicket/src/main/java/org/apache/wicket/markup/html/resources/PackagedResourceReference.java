@@ -99,7 +99,8 @@ public class PackagedResourceReference extends WebMarkupContainer
 					throw new IllegalArgumentException("The model must provide a string");
 				}
 				String f = getConverter(String.class).convertToString(str, getLocale());
-				ResourceReference ref = new ResourceReference(referer, f, getLocale(), getStyle());
+				ResourceReference ref = new ResourceReference(referer, f, getLocale(), getStyle(),
+					getVariation());
 				CharSequence url = urlFor(ref);
 				return url != null ? url.toString() : null;
 			}

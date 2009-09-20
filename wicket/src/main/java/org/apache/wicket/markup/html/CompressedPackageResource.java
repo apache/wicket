@@ -187,12 +187,14 @@ public class CompressedPackageResource extends PackageResource
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The compoent's variation (of the style)
 	 * @return The resource
 	 */
 	public static PackageResource newPackageResource(final Class<?> scope, final String path,
-		final Locale locale, final String style)
+		final Locale locale, final String style, final String variation)
 	{
-		return new CompressedPackageResource(scope, path, locale, style);
+		return new CompressedPackageResource(scope, path, locale, style, variation);
 	}
 
 	/**
@@ -207,10 +209,13 @@ public class CompressedPackageResource extends PackageResource
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource
+	 * @param variation
+	 *            The compoent's variation (of the style)
 	 */
-	protected CompressedPackageResource(Class<?> scope, String path, Locale locale, String style)
+	protected CompressedPackageResource(Class<?> scope, String path, Locale locale, String style,
+		String variation)
 	{
-		super(scope, path, locale, style);
+		super(scope, path, locale, style, variation);
 		resourceStream = newResourceStream();
 	}
 

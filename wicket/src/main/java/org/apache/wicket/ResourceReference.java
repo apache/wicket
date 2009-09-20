@@ -71,6 +71,9 @@ public class ResourceReference implements IClusterable
 	/** The style of the resource */
 	private String style;
 
+	/** The component's variation (of the scope) */
+	private String variation;
+
 	/**
 	 * Constructs a ResourceReference with the given scope and name. The scope is used as a
 	 * namespace and the scope together with the name must uniquely identify the reference.
@@ -82,7 +85,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public ResourceReference(final Class<?> scope, final String name)
 	{
-		this(scope, name, null, null);
+		this(scope, name, null, null, null);
 	}
 
 	/**
@@ -99,13 +102,17 @@ public class ResourceReference implements IClusterable
 	 *            The Locale from which the search for the PackageResource must start
 	 * @param style
 	 *            The Style of the PackageResource
+	 * @param variation
+	 *            The component's variation (of the style)
 	 */
-	public ResourceReference(final Class<?> scope, final String name, Locale locale, String style)
+	public ResourceReference(final Class<?> scope, final String name, Locale locale, String style,
+		String variation)
 	{
 		scopeName = scope.getName();
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
+		this.variation = variation;
 	}
 
 	/**
@@ -134,7 +141,7 @@ public class ResourceReference implements IClusterable
 		{
 			SharedResources sharedResources = application.getSharedResources();
 			// Try to get resource from Application repository
-			resource = sharedResources.get(getScope(), name, locale, style, true);
+			resource = sharedResources.get(getScope(), name, locale, style, variation, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -145,7 +152,8 @@ public class ResourceReference implements IClusterable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = sharedResources.get(getScope(), name, locale, style, false);
+					resource = sharedResources.get(getScope(), name, locale, style, variation,
+						false);
 					if (resource == null)
 					{
 						// still null? try to see whether it is a package
@@ -159,7 +167,7 @@ public class ResourceReference implements IClusterable
 				}
 
 				// Share through application
-				sharedResources.add(getScope(), name, locale, style, resource);
+				sharedResources.add(getScope(), name, locale, style, variation, resource);
 			}
 		}
 	}
@@ -223,7 +231,8 @@ public class ResourceReference implements IClusterable
 	{
 		Application application = Application.get();
 		bind(application);
-		return application.getSharedResources().resourceKey(getScope(), name, locale, style);
+		return application.getSharedResources().resourceKey(getScope(), name, locale, style,
+			variation);
 	}
 
 	/**
@@ -232,6 +241,14 @@ public class ResourceReference implements IClusterable
 	public final String getStyle()
 	{
 		return style;
+	}
+
+	/**
+	 * @return Returns the style. (see {@link org.apache.wicket.Session})
+	 */
+	public final String getVariation()
+	{
+		return variation;
 	}
 
 	/**
@@ -277,6 +294,16 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
+	 * @param variation
+	 *            The style variation to set (see {@link org.apache.wicket.Component}).
+	 */
+	public final void setVariation(String variation)
+	{
+		this.variation = variation;
+		invalidate();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -294,7 +321,7 @@ public class ResourceReference implements IClusterable
 	protected Resource newResource()
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
-			getStyle());
+			getStyle(), getVariation());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();

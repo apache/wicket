@@ -160,7 +160,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 						path = path.replace(escapeString, "..");
 					}
 
-					if (PackageResource.exists(scope, path, null, null))
+					if (PackageResource.exists(scope, path, null, null, null))
 					{
 						resource = PackageResource.get(scope, path);
 					}

@@ -178,10 +178,11 @@ public final class MarkupParserTest extends WicketTestCase
 	}
 
 	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator,
-		final Class c, final String style, final Locale locale, final String extension)
+		final Class c, final String style, final String variation, final Locale locale,
+		final String extension)
 	{
-		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'), style, locale,
-			extension);
+		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'), style,
+			variation, locale, extension);
 		MarkupResourceStream res = new MarkupResourceStream(resource, null, null);
 		return res;
 	}
@@ -197,7 +198,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator();
 		MarkupResourceStream resource = newMarkupResourceStream(locator, getClass(), "1", null,
-			"html");
+			null, "html");
 
 		MarkupParser parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
@@ -206,21 +207,21 @@ public final class MarkupParserTest extends WicketTestCase
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "2", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "2", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "3", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "3", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "4", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "4", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
@@ -228,42 +229,43 @@ public final class MarkupParserTest extends WicketTestCase
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
 		// File from jar (URL resource)
-		resource = newMarkupResourceStream(locator, PageExpiredErrorPage.class, null, null, "html");
+		resource = newMarkupResourceStream(locator, PageExpiredErrorPage.class, null, null, null,
+			"html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "5", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "5", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "6", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "6", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "7", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "7", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "8", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "8", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
-		resource = newMarkupResourceStream(locator, getClass(), "9", null, "html");
+		resource = newMarkupResourceStream(locator, getClass(), "9", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();

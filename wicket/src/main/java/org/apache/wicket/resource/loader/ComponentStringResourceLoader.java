@@ -108,10 +108,10 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	/**
 	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String)
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		if (clazz == null)
 		{
@@ -121,7 +121,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		if (log.isDebugEnabled())
 		{
 			log.debug("key: '" + key + "'; class: '" + clazz.getName() + "'; locale: '" + locale +
-				"'; Style: '" + style + "'");
+				"'; Style: '" + style + "'; Variation: '" + variation + "'");
 		}
 
 		// Load the properties associated with the path
@@ -132,7 +132,8 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			String path = clazz.getName().replace('.', '/');
 
 			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
+			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
+				null);
 			while (iter.hasNext())
 			{
 				String newPath = iter.next();
@@ -165,7 +166,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 				{
 					if (log.isDebugEnabled())
 					{
-						// log.debug("Properties file not found: '" + newPath + "'");
+						log.debug("Properties file not found: '" + newPath + "'");
 					}
 				}
 			}
@@ -222,6 +223,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		String string = null;
 		Locale locale = component.getLocale();
 		String style = component.getStyle();
+		String variation = component.getVariation();
 
 		// The key prefix is equal to the component path relative to the
 		// current component on the top of the stack.
@@ -240,8 +242,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			// component on the path from page down.
 			if ((prefix != null) && (prefix.length() > 0))
 			{
-				string = loadStringResource(clazz, prefix + '.' + key, locale, style);
-
+				string = loadStringResource(clazz, prefix + '.' + key, locale, style, variation);
 				if (string == null)
 				{
 					prefix = Strings.afterFirst(prefix, '.');
@@ -257,7 +258,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 			{
 				Class<?> clazz = searchStack.get(i);
-				string = loadStringResource(clazz, key, locale, style);
+				string = loadStringResource(clazz, key, locale, style, variation);
 			}
 		}
 

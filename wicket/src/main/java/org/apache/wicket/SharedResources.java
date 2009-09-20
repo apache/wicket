@@ -62,9 +62,12 @@ public class SharedResources
 	 *            The locale
 	 * @param style
 	 *            The style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component specific variation of the style
 	 * @return The localized path
 	 */
-	public static String resourceKey(final String path, final Locale locale, final String style)
+	public static String resourceKey(final String path, final Locale locale, final String style,
+		final String variation)
 	{
 		// escape sequence for '..' (prevents crippled urls in browser)
 		final CharSequence parentEscape = Application.get()
@@ -93,12 +96,17 @@ public class SharedResources
 		// First style because locale can append later on.
 		if (style != null)
 		{
-			buffer.append('_');
+			buffer.append("_");
 			buffer.append(style);
+		}
+		if (variation != null)
+		{
+			buffer.append("_");
+			buffer.append(variation);
 		}
 		if (locale != null)
 		{
-			buffer.append('_');
+			buffer.append("_");
 			boolean l = locale.getLanguage().length() != 0;
 			boolean c = locale.getCountry().length() != 0;
 			boolean v = locale.getVariant().length() != 0;
@@ -151,14 +159,16 @@ public class SharedResources
 	 *            The locale of the resource
 	 * @param style
 	 *            The resource style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component specific variation of the style
 	 * @param resource
 	 *            Resource to store
 	 */
 	public final void add(final Class<?> scope, final String name, final Locale locale,
-		final String style, final Resource resource)
+		final String style, final String variation, final Resource resource)
 	{
 		// Store resource
-		final String key = resourceKey(scope, name, locale, style);
+		final String key = resourceKey(scope, name, locale, style, variation);
 		if (resourceMap.putIfAbsent(key, resource) == null)
 		{
 			if (log.isDebugEnabled())
@@ -180,7 +190,7 @@ public class SharedResources
 	 */
 	public final void add(final String name, final Locale locale, final Resource resource)
 	{
-		add(Application.class, name, locale, null, resource);
+		add(Application.class, name, locale, null, null, resource);
 	}
 
 	/**
@@ -193,7 +203,7 @@ public class SharedResources
 	 */
 	public final void add(final String name, final Resource resource)
 	{
-		add(Application.class, name, null, null, resource);
+		add(Application.class, name, null, null, null, resource);
 	}
 
 	/**
@@ -205,6 +215,8 @@ public class SharedResources
 	 *            The locale of the resource
 	 * @param style
 	 *            The resource style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component specific variation of the style
 	 * @param exact
 	 *            If true then only return the resource that is registered for the given locale and
 	 *            style.
@@ -212,50 +224,30 @@ public class SharedResources
 	 * @return The logical resource
 	 */
 	public final Resource get(final Class<?> scope, final String name, final Locale locale,
-		final String style, boolean exact)
+		final String style, final String variation, boolean exact)
 	{
 		if (exact)
 		{
-			final String resourceKey = resourceKey(scope, name, locale, style);
+			final String resourceKey = resourceKey(scope, name, locale, style, variation);
 			return get(resourceKey);
 		}
 
-		// 1. Look for fully qualified entry with locale and style
-		if (locale != null && style != null)
+		for (int i = 7; i >= 0; i--)
 		{
-			final String resourceKey = resourceKey(scope, name, locale, style);
-			final Resource resource = get(resourceKey);
+			boolean testLocale = (i & 4) != 0;
+			boolean testStyle = (i & 2) != 0;
+			boolean testVariation = (i & 1) != 0;
+
+			String resourceKey = resourceKey(scope, name, (testLocale ? locale : null), (testStyle
+				? style : null), (testVariation ? variation : null));
+			Resource resource = get(resourceKey);
 			if (resource != null)
 			{
 				return resource;
 			}
 		}
 
-		// 2. Look for entry without style
-		if (locale != null)
-		{
-			final String key = resourceKey(scope, name, locale, null);
-			final Resource resource = get(key);
-			if (resource != null)
-			{
-				return resource;
-			}
-		}
-
-		// 3. Look for entry without locale
-		if (style != null)
-		{
-			final String key = resourceKey(scope, name, null, style);
-			final Resource resource = get(key);
-			if (resource != null)
-			{
-				return resource;
-			}
-		}
-
-		// 4. Look for base name with no locale or style
-		final String key = resourceKey(scope, name, null, null);
-		return get(key);
+		return null;
 	}
 
 	/**
@@ -324,16 +316,18 @@ public class SharedResources
 	 *            The locale
 	 * @param style
 	 *            The style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component specific variation of style
 	 * @return The localized path
 	 */
 	public String resourceKey(final Class<?> scope, final String path, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		String alias = classAliasMap.get(scope);
 		if (alias == null)
 		{
 			alias = scope.getName();
 		}
-		return alias + '/' + resourceKey(path, locale, style);
+		return alias + '/' + resourceKey(path, locale, style, variation);
 	}
 }

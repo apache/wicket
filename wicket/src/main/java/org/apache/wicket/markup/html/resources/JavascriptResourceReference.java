@@ -41,10 +41,12 @@ public class JavascriptResourceReference extends ResourceReference
 	 * @param name
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 */
-	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style)
+	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+		String variation)
 	{
-		super(scope, name, locale, style);
+		super(scope, name, locale, style, variation);
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class JavascriptResourceReference extends ResourceReference
 	protected Resource newResource()
 	{
 		PackageResource packageResource = JavascriptPackageResource.newPackageResource(getScope(),
-			getName(), getLocale(), getStyle());
+			getName(), getLocale(), getStyle(), getVariation());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();

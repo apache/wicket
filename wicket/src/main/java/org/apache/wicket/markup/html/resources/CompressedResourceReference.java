@@ -46,11 +46,12 @@ public class CompressedResourceReference extends ResourceReference
 
 	/**
 	 * @see ResourceReference#ResourceReference(Class scope, String name, Locale locale, String
-	 *      style)
+	 *      style, String variation)
 	 */
-	public CompressedResourceReference(Class<?> scope, String name, Locale locale, String style)
+	public CompressedResourceReference(Class<?> scope, String name, Locale locale, String style,
+		String variation)
 	{
-		super(scope, name, locale, style);
+		super(scope, name, locale, style, variation);
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class CompressedResourceReference extends ResourceReference
 	protected Resource newResource()
 	{
 		PackageResource packageResource = CompressedPackageResource.newPackageResource(getScope(),
-			getName(), getLocale(), getStyle());
+			getName(), getLocale(), getStyle(), getVariation());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();

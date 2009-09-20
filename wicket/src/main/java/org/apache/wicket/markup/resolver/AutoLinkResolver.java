@@ -554,10 +554,11 @@ public final class AutoLinkResolver implements IComponentResolver
 
 			this.attribute = attribute;
 			// Check whether it is a valid resource reference
-			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
+			if (PackageResource.exists(clazz, href, getLocale(), getStyle(), getVariation()))
 			{
 				// Create the component implementing the link
-				resourceReference = new ResourceReference(clazz, href, getLocale(), getStyle());
+				resourceReference = new ResourceReference(clazz, href, getLocale(), getStyle(),
+					getVariation());
 			}
 			else
 			{

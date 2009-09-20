@@ -154,12 +154,13 @@ import org.slf4j.LoggerFactory;
  * Application Localizer for easy access in Components.
  * 
  * <li><b>Style </b>- The style ("skin") for a component is available through
- * {@link Component#getStyle()}, which is equivalent to getSession().getStyle(). Styles are intended
- * to give a particular look to a Component or Resource that is independent of its Locale. For
- * example, a style might be a set of resources, including images and markup files, which gives the
- * design look of "ocean" to the user. If the Session's style is set to "ocean" and these resources
- * are given names suffixed with "_ocean", Wicket's resource management logic will prefer these
- * resources to other resources, such as default resources, which are not as good of a match.
+ * {@link Component#getStyleAndVariation()}, which is equivalent to getSession().getStyle(). Styles
+ * are intended to give a particular look to a Component or Resource that is independent of its
+ * Locale. For example, a style might be a set of resources, including images and markup files,
+ * which gives the design look of "ocean" to the user. If the Session's style is set to "ocean" and
+ * these resources are given names suffixed with "_ocean", Wicket's resource management logic will
+ * prefer these resources to other resources, such as default resources, which are not as good of a
+ * match.
  * 
  * <li><b>Variation </b>- Whereas Styles are Session (user) specific, variations are component
  * specific. E.g. if the Style is "ocean" and the Variation is "NorthSea", than the resources are
@@ -1901,29 +1902,20 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets the style of this component (see {@link org.apache.wicket.Session}).
+	 * A convinient method. Same as Session.get().getStyle().
 	 * 
-	 * @return The style of this component.
+	 * @return The style of this component respectively the style of the Session.
 	 * 
-	 * @see org.apache.wicket.Session
 	 * @see org.apache.wicket.Session#getStyle()
 	 */
 	public final String getStyle()
 	{
-		String variation = getVariation();
-		String style = getSession().getStyle();
-		if (variation != null && !"".equals(variation))
+		Session session = getSession();
+		if (session == null)
 		{
-			if (style != null && !"".equals(style))
-			{
-				style = variation + "_" + style;
-			}
-			else
-			{
-				style = variation;
-			}
+			throw new WicketRuntimeException("Wicket Session object not avaiable");
 		}
-		return style;
+		return session.getStyle();
 	}
 
 	/**

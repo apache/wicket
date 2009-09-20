@@ -101,7 +101,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 */
 	public static void bind(Application application, Class<?> scope, String name)
 	{
-		bind(application, scope, name, null, null);
+		bind(application, scope, name, null, null, null);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 */
 	public static void bind(Application application, Class<?> scope, String name, Locale locale)
 	{
-		bind(application, scope, name, locale, null);
+		bind(application, scope, name, locale, null, null);
 	}
 
 	/**
@@ -137,10 +137,12 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 *            The locale of the resource.
 	 * @param style
 	 *            The style of the resource.
+	 * @param variation
+	 *            The component's variation (of the style)
 	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
 	public static void bind(Application application, Class<?> scope, String name, Locale locale,
-		String style)
+		String style, final String variation)
 	{
 		if (name == null)
 		{
@@ -148,19 +150,20 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		}
 
 		// first check on a direct hit for efficiency
-		if (exists(scope, name, locale, style))
+		if (exists(scope, name, locale, style, variation))
 		{
 			// we have got a hit, so we may safely assume the name
 			// argument is not a regular expression, and can thus
 			// just add the resource and return
-			PackageResource packageResource = get(scope, name, locale, style);
+			PackageResource packageResource = get(scope, name, locale, style, variation);
 			SharedResources sharedResources = Application.get().getSharedResources();
-			sharedResources.add(scope, name, locale, style, packageResource);
+			sharedResources.add(scope, name, locale, style, variation, packageResource);
 		}
 		else
 		{
 			throw new IllegalArgumentException("no package resource was found for scope " + scope +
-				", name " + name + ", locale " + locale + ", style " + style);
+				", name " + name + ", locale " + locale + ", style " + style + ", variation " +
+				variation);
 		}
 	}
 
@@ -177,14 +180,16 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
 	 * @return true if a resource could be loaded, false otherwise
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
-			absolutePath, style, locale, null) != null;
+			absolutePath, style, variation, locale, null) != null;
 	}
 
 	/**
@@ -201,7 +206,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 */
 	public static PackageResource get(final Class<?> scope, final String path)
 	{
-		return get(scope, path, null, null);
+		return get(scope, path, null, null, null);
 	}
 
 	/**
@@ -218,18 +223,21 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The compoent's variation (of the style)
 	 * @return The resource
 	 */
 	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-			true);
+			variation, true);
 		if (resource == null)
 		{
-			resource = newPackageResource(scope, path, locale, style);
-			Application.get().getSharedResources().add(scope, path, locale, style, resource);
+			resource = newPackageResource(scope, path, locale, style, variation);
+			Application.get().getSharedResources().add(scope, path, locale, style, variation,
+				resource);
 		}
 		return resource;
 	}
@@ -247,12 +255,14 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The compoent's variation (of the style)
 	 * @return The resource
 	 */
 	protected static PackageResource newPackageResource(final Class<?> scope, final String path,
-		final Locale locale, final String style)
+		final Locale locale, final String style, final String variation)
 	{
-		return new PackageResource(scope, path, locale, style);
+		return new PackageResource(scope, path, locale, style, variation);
 	}
 
 	/* removed in 2.0 */
@@ -270,7 +280,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 				if (pattern.matcher(name).matches() && (recurse || (name.indexOf('/') == -1)))
 				{
 					// we add the entry as a package resource
-					resources.add(get(scope, name, null, null));
+					resources.add(get(scope, name, null, null, null));
 				}
 			}
 		}
@@ -291,6 +301,9 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	/** The resource's style */
 	private final String style;
 
+	/** The component's variation (of the style) */
+	private final String variation;
+
 	/**
 	 * Hidden constructor.
 	 * 
@@ -303,9 +316,11 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource
+	 * @param variation
+	 *            The component's variation (of the style)
 	 */
 	protected PackageResource(final Class<?> scope, final String path, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, path);
@@ -321,6 +336,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		this.path = path;
 		this.locale = locale;
 		this.style = style;
+		this.variation = variation;
 
 		if (locale != null)
 		{
@@ -385,7 +401,7 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		IResourceStream resourceStream = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator()
-			.locate(getScope(), absolutePath, style, locale, null);
+			.locate(getScope(), absolutePath, style, variation, locale, null);
 
 		// Check that resource was found
 		if (resourceStream == null)
@@ -397,8 +413,9 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 			}
 
 			String msg = "Unable to find package resource [path = " + absolutePath + ", style = " +
-				style + ", locale = " + locale + "]";
+				style + ", variation = " + variation + ", locale = " + locale + "]";
 			log.warn(msg);
+
 			if (RequestCycle.get() instanceof WebRequestCycle)
 			{
 				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_NOT_FOUND, msg);

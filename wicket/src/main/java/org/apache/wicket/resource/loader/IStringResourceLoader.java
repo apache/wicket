@@ -61,9 +61,12 @@ public interface IStringResourceLoader
 	 * @param style
 	 *            The style identifying the resource set to select the strings from (see
 	 *            {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The components variation (of the style)
 	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
-	String loadStringResource(Class<?> clazz, String key, Locale locale, String style);
+	String loadStringResource(Class<?> clazz, String key, Locale locale, String style,
+		String variation);
 
 	/**
 	 * Get the string resource for the given combination of component and resource key. The

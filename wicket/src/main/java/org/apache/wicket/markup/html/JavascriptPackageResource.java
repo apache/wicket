@@ -271,9 +271,9 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 * @return The resource
 	 */
 	public static PackageResource newPackageResource(final Class<?> scope, final String path,
-		final Locale locale, final String style)
+		final Locale locale, final String style, final String variation)
 	{
-		return new JavascriptPackageResource(scope, path, locale, style);
+		return new JavascriptPackageResource(scope, path, locale, style, variation);
 	}
 
 	/**
@@ -283,10 +283,12 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	 * @param path
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 */
-	protected JavascriptPackageResource(Class<?> scope, String path, Locale locale, String style)
+	protected JavascriptPackageResource(Class<?> scope, String path, Locale locale, String style,
+		String variation)
 	{
-		super(scope, path, locale, style);
+		super(scope, path, locale, style, variation);
 	}
 
 	/**

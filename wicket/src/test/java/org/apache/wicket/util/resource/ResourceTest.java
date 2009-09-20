@@ -58,15 +58,17 @@ public class ResourceTest extends TestCase
 	 * 
 	 * @param sourcePath
 	 * @param style
+	 * @param variation
 	 * @param locale
 	 * @param extension
 	 */
-	public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
+	public void createAndTestResource(Path sourcePath, String style, String variation,
+		Locale locale, String extension)
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
 		IResourceStream resource = locator.locate(this.getClass(), this.getClass()
 			.getName()
-			.replace('.', '/'), style, locale, "txt");
+			.replace('.', '/'), style, variation, locale, "txt");
 		compareFilename(resource, extension);
 	}
 
@@ -76,32 +78,32 @@ public class ResourceTest extends TestCase
 	 */
 	public void executeMultiple(Path sourcePath)
 	{
-		createAndTestResource(sourcePath, null, null, "");
-		createAndTestResource(sourcePath, "style", null, "_style");
+		createAndTestResource(sourcePath, null, null, null, "");
+		createAndTestResource(sourcePath, "style", null, null, "_style");
 
-		createAndTestResource(sourcePath, null, locale_de, "_de");
-		createAndTestResource(sourcePath, null, locale_de_DE, "_de_DE");
-		createAndTestResource(sourcePath, null, locale_de_DE_POSIX, "_de_DE_POSIX");
-		createAndTestResource(sourcePath, null, locale_de_POSIX, "_de__POSIX");
-		createAndTestResource(sourcePath, null, locale_de_CH, "_de");
+		createAndTestResource(sourcePath, null, null, locale_de, "_de");
+		createAndTestResource(sourcePath, null, null, locale_de_DE, "_de_DE");
+		createAndTestResource(sourcePath, null, null, locale_de_DE_POSIX, "_de_DE_POSIX");
+		createAndTestResource(sourcePath, null, null, locale_de_POSIX, "_de__POSIX");
+		createAndTestResource(sourcePath, null, null, locale_de_CH, "_de");
 
-		createAndTestResource(sourcePath, "style", locale_de, "_style_de");
-		createAndTestResource(sourcePath, "style", locale_de_DE, "_style_de_DE");
-		createAndTestResource(sourcePath, "style", locale_de_DE_POSIX, "_style_de_DE_POSIX");
-		createAndTestResource(sourcePath, "style", locale_de_POSIX, "_style_de__POSIX");
-		createAndTestResource(sourcePath, "style", locale_de_CH, "_style_de");
+		createAndTestResource(sourcePath, "style", null, locale_de, "_style_de");
+		createAndTestResource(sourcePath, "style", null, locale_de_DE, "_style_de_DE");
+		createAndTestResource(sourcePath, "style", null, locale_de_DE_POSIX, "_style_de_DE_POSIX");
+		createAndTestResource(sourcePath, "style", null, locale_de_POSIX, "_style_de__POSIX");
+		createAndTestResource(sourcePath, "style", null, locale_de_CH, "_style_de");
 
-		createAndTestResource(sourcePath, null, locale_en, "");
-		createAndTestResource(sourcePath, null, locale_en_US, "");
-		createAndTestResource(sourcePath, null, locale_en_US_WIN, "");
-		createAndTestResource(sourcePath, null, locale_en_WIN, "");
-		createAndTestResource(sourcePath, "style", locale_en_WIN, "_style");
+		createAndTestResource(sourcePath, null, null, locale_en, "");
+		createAndTestResource(sourcePath, null, null, locale_en_US, "");
+		createAndTestResource(sourcePath, null, null, locale_en_US_WIN, "");
+		createAndTestResource(sourcePath, null, null, locale_en_WIN, "");
+		createAndTestResource(sourcePath, "style", null, locale_en_WIN, "_style");
 
-		createAndTestResource(sourcePath, null, locale_fr, "_fr");
-		createAndTestResource(sourcePath, null, locale_fr_FR, "_fr");
-		createAndTestResource(sourcePath, null, locale_fr_FR_WIN, "_fr");
-		createAndTestResource(sourcePath, null, locale_fr_WIN, "_fr");
-		createAndTestResource(sourcePath, "style", locale_fr_WIN, "_style");
+		createAndTestResource(sourcePath, null, null, locale_fr, "_fr");
+		createAndTestResource(sourcePath, null, null, locale_fr_FR, "_fr");
+		createAndTestResource(sourcePath, null, null, locale_fr_FR_WIN, "_fr");
+		createAndTestResource(sourcePath, null, null, locale_fr_WIN, "_fr");
+		createAndTestResource(sourcePath, "style", null, locale_fr_WIN, "_style");
 	}
 
 	/**
@@ -115,7 +117,7 @@ public class ResourceTest extends TestCase
 		// Determine source path
 		IResourceStreamLocator locator = new ResourceStreamLocator();
 		IResourceStream resource = locator.locate(getClass(), this.getClass().getName().replace(
-			'.', '/'), null, null, "txt");
+			'.', '/'), null, null, null, "txt");
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 

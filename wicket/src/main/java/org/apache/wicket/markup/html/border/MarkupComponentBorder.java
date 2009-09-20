@@ -23,7 +23,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ContainerInfo;
@@ -184,9 +183,9 @@ public class MarkupComponentBorder extends AbstractBehavior
 			.getResourceSettings()
 			.getResourceStreamLocator();
 
-		final Session session = Session.get();
-		final String style = session.getStyle();
-		final Locale locale = session.getLocale();
+		final String style = owner.getStyle();
+		final String variation = (owner == null ? null : owner.getVariation());
+		final Locale locale = owner.getLocale();
 
 		MarkupResourceStream markupResourceStream = null;
 		Class<?> containerClass = getClass();
@@ -194,13 +193,13 @@ public class MarkupComponentBorder extends AbstractBehavior
 		while (!(containerClass.equals(MarkupComponentBorder.class)))
 		{
 			String path = containerClass.getName().replace('.', '/');
-			IResourceStream resourceStream = locator.locate(containerClass, path, style, locale,
-				markupType);
+			IResourceStream resourceStream = locator.locate(containerClass, path, style, variation,
+				locale, markupType);
 
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
+				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, variation,
 					markupType);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
 				break;

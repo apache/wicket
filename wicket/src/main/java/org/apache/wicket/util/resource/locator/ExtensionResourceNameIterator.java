@@ -22,8 +22,8 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Contains the logic to build the various combinations of file path, style and locale required
- * while searching for Wicket resources. The full filename will be built like:
+ * Contains the logic to build the various combinations of file path, style, variation and locale
+ * required while searching for Wicket resources. The full filename will be built like:
  * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:

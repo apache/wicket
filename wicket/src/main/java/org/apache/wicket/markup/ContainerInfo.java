@@ -22,10 +22,9 @@ import java.util.Locale;
 import org.apache.wicket.MarkupContainer;
 
 /**
- * Because a Component has reference to its parents, which eventually is the Page, and because the
- * Page contains a reference to the Session, keeping a "copy" of a component is very expensive.
- * ContainerInfo shall be used instead of MarkupContainer whenever a small subset of the container's
- * information is required.
+ * Because Component has a reference to its parents, which eventually is the Page, keeping a "copy"
+ * of a component is very expensive. ContainerInfo shall be used instead of MarkupContainer whenever
+ * a small subset of the container's information is required.
  * 
  * @author Juergen Donnerstag
  */
@@ -45,8 +44,8 @@ public class ContainerInfo
 	 */
 	public ContainerInfo(final MarkupContainer container)
 	{
-		this(container.getClass(), container.getLocale(), container.getStyle(), null,
-			container.getMarkupType());
+		this(container.getClass(), container.getLocale(), container.getStyle(),
+			container.getVariation(), container.getMarkupType());
 	}
 
 	/**

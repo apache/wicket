@@ -77,7 +77,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 	 */
 	public boolean hasNext()
 	{
-		return (state < 3);
+		return (state < 4);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 			state++;
 			if ((style != null) && (variation != null))
 			{
-				return path + '_' + style + '_' + variation;
+				return path + '_' + variation + '_' + style;
 			}
 		}
 
@@ -104,7 +104,16 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 			}
 		}
 
-		state = 3;
+		if (state == 2)
+		{
+			state++;
+			if (variation != null)
+			{
+				return path + '_' + variation;
+			}
+		}
+
+		state = 4;
 		return path;
 	}
 

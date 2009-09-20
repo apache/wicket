@@ -68,7 +68,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		page.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertNull("Missing resource should return null", loader.loadStringResource(
-			c.getClass(), "test.string.bad", Locale.getDefault(), null));
+			c.getClass(), "test.string.bad", Locale.getDefault(), null, null));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	public void testNullComponent()
 	{
 		Assert.assertNull("Null component should skip resource load", loader.loadStringResource(
-			null, "test.string", Locale.getDefault(), null));
+			null, "test.string", Locale.getDefault(), null, null));
 	}
 
 	/**
@@ -92,7 +92,8 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		panel.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertEquals("Valid resourse string should be found", "Component string",
-			loader.loadStringResource(c.getClass(), "component.string", Locale.getDefault(), null));
+			loader.loadStringResource(c.getClass(), "component.string", Locale.getDefault(), null,
+				null));
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertEquals("Valid resourse string should be found", "Another string",
 			loader.loadStringResource(p.getClass(), "another.test.string", Locale.getDefault(),
-				null));
+				null, null));
 	}
 
 	/**
@@ -116,9 +117,9 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertEquals("Valid resource string should be found", "SubClass Test String",
 			loader.loadStringResource(p.getClass(), "subclass.test.string", Locale.getDefault(),
-				null));
+				null, null));
 		Assert.assertEquals("Valid resource string should be found", "Another string",
 			loader.loadStringResource(p.getClass(), "another.test.string", Locale.getDefault(),
-				null));
+				null, null));
 	}
 }

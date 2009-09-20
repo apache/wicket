@@ -83,13 +83,15 @@ public class ResourceNameIterator implements Iterator<String>
 	 *            The path of the resource without extension
 	 * @param style
 	 *            A theme or style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
 	 * @param locale
 	 *            The Locale to apply
 	 * @param extensions
 	 *            the filname's extensions (comma separated)
 	 */
-	public ResourceNameIterator(String path, final String style, final Locale locale,
-		final String extensions)
+	public ResourceNameIterator(String path, final String style, final String variation,
+		final Locale locale, final String extensions)
 	{
 		this.locale = locale;
 		if ((extensions == null) && (path.indexOf('.') != -1))
@@ -102,7 +104,22 @@ public class ResourceNameIterator implements Iterator<String>
 			this.extensions = extensions;
 		}
 
-		String filename = Strings.lastPathComponent(path, '/');
+		path = getLocaleFromFilename(path);
+
+		styleIterator = new StyleAndVariationResourceNameIterator(path, style, variation);
+	}
+
+	/**
+	 * Extract the locale from the filename in case where the user
+	 * 
+	 * @param path
+	 *            The file path
+	 * @return The updated path, without the locale
+	 * @TODO That should really be external to RNI in a helper kind of class
+	 */
+	protected String getLocaleFromFilename(String path)
+	{
+		final String filename = Strings.lastPathComponent(path, '/');
 		Matcher matcher = LOCALE_PATTERN.matcher(filename);
 		if (matcher.find())
 		{
@@ -139,7 +156,7 @@ public class ResourceNameIterator implements Iterator<String>
 			}
 		} // else skip the whole thing... probably user specific underscores used
 
-		styleIterator = new StyleAndVariationResourceNameIterator(path, style, null);
+		return path;
 	}
 
 	/**

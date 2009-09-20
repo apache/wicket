@@ -60,12 +60,12 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 
 	/**
 	 * 
-	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String)
+	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		if (clazz == null)
 		{
@@ -86,7 +86,8 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 			String path = packageName + "/" + filename;
 
 			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
+			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
+				null);
 			while (iter.hasNext())
 			{
 				String newPath = iter.next();

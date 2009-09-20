@@ -74,9 +74,9 @@ public class PackageResourceTest extends TestCase
 		final SharedResources sharedResources = Application.get().getSharedResources();
 		PackageResource.bind(application, PackageResourceTest.class, "packaged1.txt");
 		assertNotNull("resource packaged1.txt should be available as a packaged resource",
-			sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, true));
+			sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, null, true));
 		assertNull("resource packaged2.txt should NOT be available as a packaged resource",
-			sharedResources.get(PackageResourceTest.class, "packaged2.txt", null, null, true));
+			sharedResources.get(PackageResourceTest.class, "packaged2.txt", null, null, null, true));
 	}
 
 	/**
@@ -109,34 +109,37 @@ public class PackageResourceTest extends TestCase
 	{
 		Application.get().getSharedResources();
 		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt",
-			Locale.ENGLISH, null);
+			Locale.ENGLISH, null, null);
 		assertNotNull(
 			"resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
 			invalidResource);
 
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", Locale.CHINA,
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null,
 			null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", Locale.CHINA,
-			"foo"));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, "foo"));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en.txt", null, null));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt", null,
+			null, null));
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", Locale.CHINA,
+			"foo", null));
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, "foo",
 			null));
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en.txt", null,
+			null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt", null,
-			"foo"));
+			null, null));
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt", null,
+			"foo", null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt",
-			Locale.US, null));
+			Locale.US, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt",
-			Locale.CANADA, null));
+			Locale.CANADA, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt",
-			Locale.CHINA, null));
+			Locale.CHINA, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_foo_bar_en.txt",
-			null, null));
+			null, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_foo_bar_en_US.txt",
-			null, null));
+			null, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class,
-			"packaged1_foo_bar_en_US_MAC.txt", null, null));
+			"packaged1_foo_bar_en_US_MAC.txt", null, null, null));
 
 		try
 		{

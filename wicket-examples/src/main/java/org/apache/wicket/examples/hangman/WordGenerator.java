@@ -53,7 +53,8 @@ public class WordGenerator implements IClusterable
 		try
 		{
 			final IResourceStream resource = new ResourceStreamLocator().locate(null,
-				"org/apache/wicket/examples/hangman/WordList", "", Locale.getDefault(), ".txt");
+				"org/apache/wicket/examples/hangman/WordList", null, null, Locale.getDefault(),
+				".txt");
 			final String wordlist = Streams.readString(resource.getInputStream());
 			words = Arrays.asList(wordlist.split("\\s+"));
 			shuffle();

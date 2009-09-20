@@ -216,9 +216,11 @@ public class CSSPackageResource extends PackageResource
 	 * @param path
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 */
-	protected CSSPackageResource(Class<?> scope, String path, Locale locale, String style)
+	protected CSSPackageResource(Class<?> scope, String path, Locale locale, String style,
+		String variation)
 	{
-		super(scope, path, locale, style);
+		super(scope, path, locale, style, variation);
 	}
 }

@@ -53,11 +53,12 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
+	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String)
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		// only care about IValidator subclasses
 		if (clazz == null || !IValidator.class.isAssignableFrom(clazz))
@@ -75,7 +76,8 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 			String path = clazz.getName().replace('.', '/');
 
 			// iterate over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
+			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
+				null);
 			while (iter.hasNext())
 			{
 				String newPath = iter.next();
@@ -127,10 +129,12 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 
 		Locale locale = component.getLocale();
 		String style = component.getStyle();
+		String variation = component.getVariation();
 
 		for (IValidator<?> validator : fc.getValidators())
 		{
-			String resource = loadStringResource(validator.getClass(), key, locale, style);
+			String resource = loadStringResource(validator.getClass(), key, locale, style,
+				variation);
 			if (resource != null)
 			{
 				return resource;

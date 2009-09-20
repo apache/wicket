@@ -36,10 +36,12 @@ import org.apache.wicket.util.parse.metapattern.parsers.MetaPatternParser;
 public class DefaultButtonImageResourceFactory implements IResourceFactory
 {
 	/**
+	 * 
 	 * @see org.apache.wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale,
-	 *      java.lang.String)
+	 *      java.lang.String, java.lang.String)
 	 */
-	public Resource newResource(final String specification, final Locale locale, final String style)
+	public Resource newResource(final String specification, final Locale locale,
+		final String style, final String variation)
 	{
 		final Parser parser = new Parser(specification);
 		if (parser.matches())

@@ -49,21 +49,12 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Get the requested string resource from the underlying resource bundle. The bundle is selected
-	 * by locale and the string obtained from the best matching bundle.
 	 * 
-	 * @param clazz
-	 *            Not used for this implementation
-	 * @param key
-	 *            The key to obtain the string for
-	 * @param locale
-	 *            The locale identifying the resource set to select the strings from
-	 * @param style
-	 *            Not used for this implementation (see {@link org.apache.wicket.Session})
-	 * @return The string resource value or null if resource not found
+	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	public final String loadStringResource(final Class<?> clazz, final String key, Locale locale,
-		final String style)
+		final String style, final String variation)
 	{
 		if (locale == null)
 		{
@@ -93,6 +84,6 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	public final String loadStringResource(final Component component, final String key)
 	{
 		final Locale locale = (component != null) ? component.getLocale() : null;
-		return loadStringResource(null, key, locale, null);
+		return loadStringResource(null, key, locale, null, null);
 	}
 }
