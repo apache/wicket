@@ -371,13 +371,20 @@ public class TabbedPanel extends Panel
 			tabsVisibilityCache = new Boolean[tabs.size()];
 		}
 
-		Boolean visible = tabsVisibilityCache[tabIndex];
-		if (visible == null)
+		if (tabsVisibilityCache.length > 0)
 		{
-			visible = tabs.get(tabIndex).isVisible();
-			tabsVisibilityCache[tabIndex] = visible;
+			Boolean visible = tabsVisibilityCache[tabIndex];
+			if (visible == null)
+			{
+				visible = tabs.get(tabIndex).isVisible();
+				tabsVisibilityCache[tabIndex] = visible;
+			}
+			return visible;
 		}
-		return visible;
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override
