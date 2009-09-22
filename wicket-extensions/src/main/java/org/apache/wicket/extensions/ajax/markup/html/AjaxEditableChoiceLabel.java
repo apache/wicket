@@ -290,4 +290,17 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	{
 		super.onModelChanging();
 	}
+
+	/**
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
+	@Override
+	protected void onDetach()
+	{
+		if (choices != null)
+		{
+			choices.detach();
+		}
+		super.onDetach();
+	}
 }
