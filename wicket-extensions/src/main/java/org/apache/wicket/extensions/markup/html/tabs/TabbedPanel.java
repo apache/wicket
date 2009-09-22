@@ -110,7 +110,7 @@ public class TabbedPanel extends Panel
 			}
 		};
 
-		WebMarkupContainer tabsContainer = newTabsContainer("tabs-container"); 
+		WebMarkupContainer tabsContainer = newTabsContainer("tabs-container");
 		add(tabsContainer);
 
 		// add the loop used to generate tab names
@@ -138,6 +138,14 @@ public class TabbedPanel extends Panel
 		});
 	}
 
+	/**
+	 * Generates the container for all tabs. The default container automatically adds the css
+	 * <code>class</code> attribute based on the return value of {@link #getTabContainerCssClass()}
+	 * 
+	 * @param id
+	 *            container id
+	 * @return container
+	 */
 	protected WebMarkupContainer newTabsContainer(String id)
 	{
 		return new WebMarkupContainer(id)
@@ -152,7 +160,7 @@ public class TabbedPanel extends Panel
 			}
 		};
 	}
-	
+
 	/**
 	 * Generates a loop item used to represent a specific tab's <code>li</code> element.
 	 * 
