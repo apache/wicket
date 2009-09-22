@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,9 +31,8 @@ import org.apache.wicket.util.collections.ArrayListStack;
  * optional by using {@link ICondition}. The wizard is initialized with a wizard model through
  * calling method {@link Wizard#init(IWizardModel)}.
  * <p>
- * Steps can be added to this model directly using either the
- * {@link #add(IWizardStep) normal add method} or
- * {@link #add(IWizardStep, ICondition) the conditional add method}.
+ * Steps can be added to this model directly using either the {@link #add(IWizardStep) normal add
+ * method} or {@link #add(IWizardStep, ICondition) the conditional add method}.
  * </p>
  * 
  * <p>
@@ -99,8 +99,8 @@ public class WizardModel extends AbstractWizardModel
 
 	/**
 	 * Adds the next step to the wizard. If the {@link WizardStep} implements {@link ICondition},
-	 * then this method is equivalent to calling
-	 * {@link #add(IWizardStep, ICondition) add(step, (ICondition)step)}.
+	 * then this method is equivalent to calling {@link #add(IWizardStep, ICondition) add(step,
+	 * (ICondition)step)}.
 	 * 
 	 * @param step
 	 *            the step to added.
@@ -244,11 +244,10 @@ public class WizardModel extends AbstractWizardModel
 
 	/**
 	 * Returns true if all the steps in the wizard return <tt>true</tt> from
-	 * {@link IWizardStep#isComplete}. This is primarily used to determine if the last button can
-	 * be enabled.
+	 * {@link IWizardStep#isComplete}. This is primarily used to determine if the last button can be
+	 * enabled.
 	 * 
-	 * @return <tt>true</tt> if all the steps in the wizard are complete, <tt>false</tt>
-	 *         otherwise.
+	 * @return <tt>true</tt> if all the steps in the wizard are complete, <tt>false</tt> otherwise.
 	 */
 	protected final boolean allStepsComplete()
 	{
@@ -302,4 +301,16 @@ public class WizardModel extends AbstractWizardModel
 
 		throw new IllegalStateException("Wizard contains no more visible steps");
 	}
+
+	/**
+	 * Gets conditions.
+	 * 
+	 * @return unmodifiable list of conditions
+	 */
+	public List<ICondition> getConditions()
+	{
+		return Collections.unmodifiableList(conditions);
+	}
+
+
 }
