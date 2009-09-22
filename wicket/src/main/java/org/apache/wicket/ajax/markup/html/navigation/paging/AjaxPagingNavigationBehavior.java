@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax.markup.html.navigation.paging;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
@@ -77,14 +76,13 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 
 		// find the PagingNavigator parent of this link
 		AjaxPagingNavigator navigator = ((Component)owner).findParent(AjaxPagingNavigator.class);
-		if (navigator == null)
-		{
-			throw new WicketRuntimeException(
-				"Unable to find AjaxPagingNavigator component in hierarchy starting from " + owner);
-		}
 
-		// tell the PagingNavigator to update the IPageable
-		navigator.onAjaxEvent(target);
+		// if this is embedded inside a navigator
+		if (navigator != null)
+		{
+			// tell the PagingNavigator to update the IPageable
+			navigator.onAjaxEvent(target);
+		}
 	}
 
 	/**
