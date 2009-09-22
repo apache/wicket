@@ -110,17 +110,7 @@ public class TabbedPanel extends Panel
 			}
 		};
 
-		WebMarkupContainer tabsContainer = new WebMarkupContainer("tabs-container")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.put("class", getTabContainerCssClass());
-			}
-		};
+		WebMarkupContainer tabsContainer = newTabsContainer("tabs-container"); 
 		add(tabsContainer);
 
 		// add the loop used to generate tab names
@@ -148,6 +138,21 @@ public class TabbedPanel extends Panel
 		});
 	}
 
+	protected WebMarkupContainer newTabsContainer(String id)
+	{
+		return new WebMarkupContainer(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.put("class", getTabContainerCssClass());
+			}
+		};
+	}
+	
 	/**
 	 * Generates a loop item used to represent a specific tab's <code>li</code> element.
 	 * 
@@ -296,7 +301,7 @@ public class TabbedPanel extends Panel
 	 */
 	protected WebMarkupContainer newLink(String linkId, final int index)
 	{
-		return new Link(linkId)
+		return new Link<Void>(linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
