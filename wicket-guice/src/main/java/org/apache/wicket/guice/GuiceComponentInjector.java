@@ -195,27 +195,33 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		inject(component);
 	}
 
-	private Annotation findBindingAnnotation(Annotation[] annotations)
+	/**
+	 * 
+	 * @param annotations
+	 * @return
+	 * @throws MoreThanOneBindingException
+	 */
+	public static Annotation findBindingAnnotation(final Annotation[] annotations)
 			throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
 
 		// Work out if we have a BindingAnnotation on this parameter.
-		for (int i = 0; i < annotations.length; i++)
+		for (Annotation annotation : annotations)
 		{
-			if (annotations[i].annotationType().getAnnotation(BindingAnnotation.class) != null)
+			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null)
 			{
 				if (bindingAnnotation != null)
 				{
 					throw new MoreThanOneBindingException();
 				}
-				bindingAnnotation = annotations[i];
+				bindingAnnotation = annotation;
 			}
 		}
 		return bindingAnnotation;
 	}
 
-	private static class MoreThanOneBindingException extends Exception
+	public static class MoreThanOneBindingException extends Exception
 	{
 		private static final long serialVersionUID = 1L;
 	}

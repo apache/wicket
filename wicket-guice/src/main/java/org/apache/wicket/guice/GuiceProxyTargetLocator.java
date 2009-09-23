@@ -42,7 +42,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 	/** index of argument in the method being injected, or -1 for field */
 	private final int argIndex;
 
-	GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation, boolean optional)
+	public GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation, boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
 		this.optional = optional;
@@ -52,7 +52,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		argIndex = -1;
 	}
 
-	GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation,
+	public GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation,
 			boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;

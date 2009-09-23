@@ -30,7 +30,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
-import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -183,37 +182,5 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 		inject(component);
 	}
 
-	/**
-	 * 
-	 * @param annotations
-	 * @return
-	 * @throws MoreThanOneBindingException
-	 */
-	private Annotation findBindingAnnotation(final Annotation[] annotations)
-			throws MoreThanOneBindingException
-	{
-		Annotation bindingAnnotation = null;
 
-		// Work out if we have a BindingAnnotation on this parameter.
-		for (Annotation annotation : annotations)
-		{
-			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null)
-			{
-				if (bindingAnnotation != null)
-				{
-					throw new MoreThanOneBindingException();
-				}
-				bindingAnnotation = annotation;
-			}
-		}
-		return bindingAnnotation;
-	}
-
-	/**
-	 * 
-	 */
-	private static class MoreThanOneBindingException extends Exception
-	{
-		private static final long serialVersionUID = 1L;
-	}
 }
