@@ -32,11 +32,8 @@ import org.apache.wicket.util.convert.converters.DateConverter;
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object.
  * 
- * If you provide a <code>SimpleDateFormat</code> pattern, it will both parse and validate the text
- * field according to it.
- * 
- * If you don't, it is the same as creating a <code>TextField</code> with
- * <code>java.util.Date</code> as it's type (it will get the pattern from the user's locale)
+ * If no date pattern is explicitly specified, the default <code>DateFormat.SHORT</code> pattern for
+ * the current locale will be used.
  * 
  * @author Stefan Kanev
  * @author Igor Vaynberg (ivaynberg)
@@ -47,8 +44,6 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 
 	private static final long serialVersionUID = 1L;
 
-	// XXX i18n: we can probably make this lazy and localize according to
-	// session locale
 	private static final String DEFAULT_PATTERN = "MM/dd/yyyy";
 
 	/**
