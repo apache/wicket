@@ -1411,7 +1411,9 @@ Wicket.Head.Contributor.prototype = {
 		var xmldoc;
 		if (window.ActiveXObject) {
 	        xmldoc = new ActiveXObject("Microsoft.XMLDOM");
-			xmldoc.loadXML(text);
+			if (!xmldoc.loadXML(text)) {
+				Wicket.Log.error("Error parsing response: "+text);
+			}
 		} else {
 		    var parser = new DOMParser();    
 		    xmldoc = parser.parseFromString(text, "text/xml");	
