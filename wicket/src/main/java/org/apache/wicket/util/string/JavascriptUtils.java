@@ -76,7 +76,7 @@ public class JavascriptUtils
 
 
 	/**
-	 * Escape quotes and double quotes so that they can be part of e.g. an alert call.
+	 * Escape single and double quotes so that they can be part of e.g. an alert call.
 	 * 
 	 * @param input
 	 *            input
@@ -88,6 +88,7 @@ public class JavascriptUtils
 		if (s != null)
 		{
 			s = Strings.replaceAll(s, "'", "\\'");
+			s = Strings.replaceAll(s, "\"", "\\\"");
 		}
 		return s;
 	}
