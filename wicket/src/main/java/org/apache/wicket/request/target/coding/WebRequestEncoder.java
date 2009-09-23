@@ -38,7 +38,12 @@ public class WebRequestEncoder
 	 */
 	public WebRequestEncoder(AppendingStringBuffer url)
 	{
+		if (url.indexOf("?") > 0)
+		{
+			firstParameter = false;
+		}
 		this.url = url;
+
 	}
 
 	/**
