@@ -31,7 +31,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
@@ -1520,33 +1520,9 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				// 2rd try: Components like Border and Panel might implement
-				// the ComponentResolver interface as well.
-				MarkupContainer container = this;
-				while (container != null)
+				if (ComponentResolvers.resolve(getApplication(), this, markupStream, tag))
 				{
-					if (container instanceof IComponentResolver)
-					{
-						if (((IComponentResolver)container).resolve(this, markupStream, tag))
-						{
-							return;
-						}
-					}
-
-					container = container.findParent(MarkupContainer.class);
-				}
-
-				// 3rd try: Try application's component resolvers
-				final List<IComponentResolver> componentResolvers = getApplication().getPageSettings()
-					.getComponentResolvers();
-				final Iterator<IComponentResolver> iterator = componentResolvers.iterator();
-				while (iterator.hasNext())
-				{
-					final IComponentResolver resolver = iterator.next();
-					if (resolver.resolve(this, markupStream, tag))
-					{
-						return;
-					}
+					return;
 				}
 
 				if (tag instanceof WicketTag)

@@ -23,17 +23,13 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
-import org.apache.wicket.util.collections.ReadOnlyIterator;
+import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +85,7 @@ public class Enclosure extends WebMarkupContainer
 	/** Id of the child component that will control visibility of the enclosure */
 	private final CharSequence childId;
 
-	private transient Map<Component, Boolean> originalVisibilityStatus;
+	private transient Map<Component, Boolean> changes;
 
 	/**
 	 * Construct.
@@ -100,6 +96,14 @@ public class Enclosure extends WebMarkupContainer
 	public Enclosure(final String id, final CharSequence childId)
 	{
 		super(id);
+
+
+		if (childId == null)
+		{
+			throw new MarkupException(
+				"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
+		}
+
 		this.childId = childId;
 	}
 
@@ -111,35 +115,6 @@ public class Enclosure extends WebMarkupContainer
 	public boolean isTransparentResolver()
 	{
 		return true;
-	}
-
-	/**
-	 * 
-	 * @param childId
-	 * @return Child Component
-	 */
-	public Component getChildComponent()
-	{
-		if (childComponent == null)
-		{
-			MarkupContainer parent = getEnclosureParent();
-
-			if (childId == null)
-			{
-				throw new MarkupException(
-					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
-			}
-
-			final Component child = parent.get(childId.toString());
-			if (child == null)
-			{
-				throw new MarkupException(
-					"Didn't find child component of <wicket:enclosure> with id='" + childId +
-						"'. Component: " + this.toString());
-			}
-			childComponent = child;
-		}
-		return childComponent;
 	}
 
 	/**
@@ -180,225 +155,131 @@ public class Enclosure extends WebMarkupContainer
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, ComponentTag enclosureOpenTag)
 	{
-		final Component controller = getChildComponent();
-		if (controller == this)
+		// init changes map
+		changes = new HashMap<Component, Boolean>();
+
+		// enclosure's parent container
+		final MarkupContainer container = getEnclosureParent();
+
+		// iterate over all child tags and make sure all components are present, resolving them if
+		// necessary
+		ensureAllChildrenPresent(container, markupStream, enclosureOpenTag);
+
+		Component controller = container.get(childId.toString());
+		checkChildComponent(controller);
+
+		// set the enclosure visibility
+		setVisible(controller.determineVisibility());
+
+		// transfer visibility to direct children
+		applyEnclosureVisibilityToChildren(container, markupStream, enclosureOpenTag);
+
+		// render components inside the enclosure if its visible or skip it if it is not
+		if (isVisible() == true)
+		{
+			super.onComponentTagBody(markupStream, enclosureOpenTag);
+		}
+		else
+		{
+			markupStream.skipToMatchingCloseTag(enclosureOpenTag);
+		}
+	}
+
+	private void applyEnclosureVisibilityToChildren(final MarkupContainer container,
+		final MarkupStream markupStream, ComponentTag enclosureOpenTag)
+	{
+		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, enclosureOpenTag);
+		while (it.hasNext())
+		{
+			final ComponentTag tag = it.next();
+			final Component child = container.get(tag.getId());
+			// record original visiblity allowed value, will restore later
+			changes.put(child, child.isVisibilityAllowed());
+			child.setVisibilityAllowed(isVisible());
+		}
+		it.rewind();
+	}
+
+	private void checkChildComponent(Component controller)
+	{
+		if (controller == null)
+		{
+			throw new WicketRuntimeException("Could not find child with id: " + childId +
+				" in the wicket:enclosure");
+		}
+		else if (controller == this)
 		{
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
 		}
+	}
 
-		setVisible(controller.determineVisibility());
-
-		// transfer visibility to direct children
-		originalVisibilityStatus = new HashMap<Component, Boolean>();
-		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, openTag);
-		MarkupContainer controllerParent = getEnclosureParent();
+	private void ensureAllChildrenPresent(final MarkupContainer container,
+		final MarkupStream markupStream, ComponentTag enclosureOpenTag)
+	{
+		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, enclosureOpenTag);
 		while (it.hasNext())
 		{
-			ComponentTag t = it.next();
-			Component child = controllerParent.get(t.getId());
-			if (child != null)
-			{
-				// record original visiblity allowed value, will restore later
-				originalVisibilityStatus.put(child, child.isVisibilityAllowed());
-				child.setVisibilityAllowed(isVisible());
+			final ComponentTag tag = it.next();
 
+			Component child = container.get(tag.getId());
+			if (child == null)
+			{
+				// component does not yet exist in the container, attempt to resolve it using
+				// resolvers
+				final int tagIndex = it.getCurrentIndex();
+
+				// because the resolvers can auto-add and therefore immediately render the component
+				// we have to buffer the output since we do not yet know the visibility of the
+				// enclosure
+				CharSequence buffer = new ResponseBufferZone(getRequestCycle(), markupStream)
+				{
+					@Override
+					protected void executeInsideBufferedZone()
+					{
+						markupStream.setCurrentIndex(tagIndex);
+						ComponentResolvers.resolve(getApplication(), container, markupStream, tag);
+					}
+				}.execute();
+
+				child = container.get(tag.getId());
+				checkChildComponent(child);
+
+				if (buffer.length() > 0)
+				{
+					// we have already rendered this child component, insert a stub component that
+					// will dump the markup during the normal render process if the enclosure is
+					// visible
+					final Component stub = new AutoMarkupLabel(child.getId(), buffer);
+					container.replace(stub); // ok here because we are replacing auto with auto
+				}
 			}
 		}
 		it.rewind();
-
-		if (isVisible() == true)
-		{
-			super.onComponentTagBody(markupStream, openTag);
-		}
-		else
-		{
-			markupStream.skipToMatchingCloseTag(openTag);
-		}
 	}
+
 
 	@Override
 	protected void onDetach()
 	{
-		if (originalVisibilityStatus != null)
-		{
-			// restore original visibility statuses
-			for (Map.Entry<Component, Boolean> entry : originalVisibilityStatus.entrySet())
-			{
-				entry.getKey().setVisibilityAllowed(entry.getValue());
-			}
-			originalVisibilityStatus = null;
-		}
+		restoreOriginalChildVisibility();
 		super.onDetach();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#getMarkup()
-	 */
-	@Override
-	public IMarkupFragment getMarkup()
+	private void restoreOriginalChildVisibility()
 	{
-		// Get the associated markup file
-		MarkupContainer parent = getParent();
-		IMarkupFragment markup = parent.getMarkup();
-		if ((markup != null) && (markup instanceof MarkupFragment))
+		if (changes != null)
 		{
-			markup = ((MarkupFragment)markup).getRootMarkup();
-		}
+			MarkupContainer container = getEnclosureParent();
 
-		// Find the enclosure tag
-		markup = findEnclosureMarkup(markup);
-		if (markup != null)
-		{
-			return markup;
-		}
-
-		markup = parent.getMarkup(null);
-		if ((markup != null) && (markup instanceof MarkupFragment))
-		{
-			markup = ((MarkupFragment)markup).getRootMarkup();
-		}
-
-		// Find the enclosure tag
-		markup = findEnclosureMarkup(markup);
-		if (markup != null)
-		{
-			return markup;
-		}
-
-		// In case of BorderBody the enclosure markup is expected to be in between the
-		// <span wicket:id="myBorder">...</span> tags.
-		if (parent instanceof BorderBodyContainer)
-		{
-			// Find the Border component
-			while (((parent instanceof Border) == false) && (parent != null))
+			// restore original visibility statuses
+			for (Map.Entry<Component, Boolean> entry : changes.entrySet())
 			{
-				parent = parent.getParent();
+				entry.getKey().setVisibilityAllowed(entry.getValue());
 			}
-
-			// Get the borders "calling" markup and find the enclosure tag
-			markup = parent.getMarkup();
-			return findEnclosureMarkup(markup);
-		}
-		return null;
-	}
-
-	/**
-	 * Find the enclose tag
-	 * 
-	 * @param markup
-	 * @return Null, if not found
-	 */
-	private IMarkupFragment findEnclosureMarkup(IMarkupFragment markup)
-	{
-		for (int i = 0; i < markup.size(); i++)
-		{
-			MarkupElement elem = markup.get(i);
-			if (elem instanceof WicketTag)
-			{
-				WicketTag tag = (WicketTag)elem;
-				if (tag.isEnclosureTag())
-				{
-					if ("_enclosure".equals(tag.getId()) || getId().equals(tag.getId()))
-					{
-						if (childId.equals(tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE)))
-						{
-							return new MarkupFragment(markup, i);
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Iterator that iterates over direct child component tags of the given component tag
-	 * 
-	 */
-	private static class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
-	{
-		private final MarkupStream markupStream;
-		private final ComponentTag parent;
-		private ComponentTag next = null;
-		private final int originalIndex;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param markupStream
-		 * @param parent
-		 */
-		public DirectChildTagIterator(MarkupStream markupStream, ComponentTag parent)
-		{
-			super();
-			this.markupStream = markupStream;
-			this.parent = parent;
-			originalIndex = markupStream.getCurrentIndex();
-			findNext();
-		}
-
-		/**
-		 * Resets markup stream to the original position
-		 */
-		public void rewind()
-		{
-			markupStream.setCurrentIndex(originalIndex);
-		}
-
-		/**
-		 * @see java.util.Iterator#hasNext()
-		 */
-		public boolean hasNext()
-		{
-			return next != null;
-		}
-
-		/**
-		 * @see java.util.Iterator#next()
-		 */
-		public ComponentTag next()
-		{
-			ComponentTag ret = next;
-			findNext();
-			return ret;
-		}
-
-		private void findNext()
-		{
-			ComponentTag tag = next;
-			next = null;
-
-			if (tag != null && tag.isOpenClose())
-			{
-				// if current child tag is open-close look for next child
-				tag = null;
-			}
-
-			while (markupStream.hasMore())
-			{
-				final MarkupElement cursor = markupStream.next();
-
-				if (cursor.closes(parent))
-				{
-					// parent close tag found, we are done
-					break;
-				}
-
-				if (tag != null && cursor.closes(tag))
-				{
-					// child tag is closed, next tag is either parent-close or next direct child
-					tag = null;
-				}
-				else if (tag == null && cursor instanceof ComponentTag)
-				{
-					// found next child
-					next = (ComponentTag)cursor;
-					break;
-				}
-			}
+			changes = null;
 		}
 	}
 }
