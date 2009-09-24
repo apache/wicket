@@ -169,6 +169,8 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 			if (id == null)
 			{
 				id = "enclosure-" + container.getPage().getAutoIndex();
+				tag.setId(id);
+				tag.setModified(true);
 			}
 			final Enclosure enclosure = new Enclosure(id,
 				tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
