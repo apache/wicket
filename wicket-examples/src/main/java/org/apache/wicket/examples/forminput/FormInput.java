@@ -35,7 +35,6 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -48,7 +47,6 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
-import org.apache.wicket.validation.validator.MinimumValidator;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 
@@ -89,17 +87,17 @@ public class FormInput extends WicketExamplePage
 				}
 			});
 
-			RequiredTextField<String> stringTextField = new RequiredTextField<String>(
-				"stringProperty");
-			stringTextField.setLabel(new Model<String>("String"));
-			add(stringTextField);
-			RequiredTextField<Integer> integerTextField = new RequiredTextField<Integer>(
-				"integerProperty");
-			add(integerTextField.add(new MinimumValidator<Integer>(0)));
-			add(new RequiredTextField<Double>("doubleProperty"));
+			add(new TextField<String>("stringProperty").setRequired(true).setLabel(
+				new Model<String>("String")));
 
-			add(new RequiredTextField<Integer>("integerInRangeProperty").add(new RangeValidator<Integer>(
-				0, 100)));
+			add(new TextField<Integer>("integerProperty", Integer.class).setRequired(true).add(
+				new RangeValidator<Integer>(1, Integer.MAX_VALUE)));
+
+			add(new TextField<Double>("doubleProperty", Double.class).setRequired(true));
+
+			add(new TextField<Integer>("integerInRangeProperty").setRequired(true).add(
+				new RangeValidator<Integer>(0, 100)));
+
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
 			// display the multiply result
