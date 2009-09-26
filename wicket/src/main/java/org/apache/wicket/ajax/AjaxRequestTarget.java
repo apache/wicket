@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -391,14 +392,13 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * Return true, if the Component has already been added
+	 * Returns an unmodifiable collection of all components added to this target
 	 * 
-	 * @param component
-	 * @return true, if already added
+	 * @return unmodifiable collection of all components added to this target
 	 */
-	public final boolean isAdded(final Component component)
+	public final Collection<? extends Component> getComponents()
 	{
-		return (null != markupIdToComponent.get(component.getMarkupId()));
+		return Collections.unmodifiableCollection(markupIdToComponent.values());
 	}
 
 	/**
