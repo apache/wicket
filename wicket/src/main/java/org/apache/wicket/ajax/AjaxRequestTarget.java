@@ -387,6 +387,17 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
+	 * Return true, if the Component has already been added
+	 * 
+	 * @param component
+	 * @return true, if already added
+	 */
+	public final boolean isAdded(final Component component)
+	{
+		return (null != markupIdToComponent.get(component.getMarkupId()));
+	}
+
+	/**
 	 * Adds javascript that will be evaluated on the client side after components are replaced
 	 * 
 	 * @deprecated use appendJavascript(String javascript) instead
