@@ -86,13 +86,21 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			// try to find form in the hierarchy of owning component
 			Component component = getComponent();
-			__form = component.findParent(Form.class);
+			if (component instanceof Form<?>)
+			{
+				__form = (Form<?>)component;
+			}
+			else
+			{
+				__form = component.findParent(Form.class);
+			}
+
 			if (__form == null)
 			{
 				throw new IllegalStateException(
-					"form was not specified in the constructor and cannot "
-						+ "be found in the hierarchy of the component this behavior "
-						+ "is attached to");
+					"form was not specified in the constructor and cannot " +
+						"be found in the hierarchy of the component this behavior " +
+						"is attached to: Component=" + component.toString(false));
 			}
 		}
 		return __form;
@@ -126,7 +134,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * 
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	@Override
@@ -168,12 +175,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * Listener method invoked when the form has been processed and errors occurred
 	 * 
 	 * @param target
-	 * 
 	 */
 	protected abstract void onError(AjaxRequestTarget target);
 
 	/**
-	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
 	 */
 	@Override
