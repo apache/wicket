@@ -27,6 +27,26 @@ public class WicketTreeModel extends GenericBaseModel<TreeModel>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
+	public WicketTreeModel()
+	{
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param treeModel
+	 */
+	public WicketTreeModel(final TreeModel treeModel)
+	{
+		setObject(treeModel);
+	}
+
+	/**
+	 * @see org.apache.wicket.model.util.GenericBaseModel#createSerializableVersionOf(java.lang.Object)
+	 */
 	@Override
 	protected TreeModel createSerializableVersionOf(TreeModel object)
 	{
