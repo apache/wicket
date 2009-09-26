@@ -428,7 +428,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param target
 	 *            Ajax target
 	 */
-	protected void onEdit(AjaxRequestTarget target)
+	public void onEdit(AjaxRequestTarget target)
 	{
 		label.setVisible(false);
 		editor.setVisible(true);
