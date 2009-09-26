@@ -35,15 +35,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * Configuration example:
  * 
  * <pre>
- * &lt;servlet&gt;
- *    &lt;servlet-name&gt;phonebook&lt;/servlet-name&gt;
- *    &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *    &lt;init-param&gt;
- *    &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *    &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
- *    &lt;/init-param&gt;
- *    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
  * </pre>
  * 
  * <code>applicationBean</code> init parameter can be used if there are multiple WebApplications
@@ -52,19 +51,18 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * Example:
  * 
  * <pre>
- * &lt;servlet&gt;
- *    &lt;servlet-name&gt;phonebook&lt;/servlet-name&gt;
- *    &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *    &lt;init-param&gt;
- *    &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *    &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
- *    &lt;/init-param&gt;
- *    &lt;init-param&gt;
- *    &lt;param-name&gt;applicationBean&lt;/param-name&gt;
- *    &lt;param-value&gt;phonebookApplication&lt;/param-value&gt;
- *    &lt;/init-param&gt;
- *    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationBean&lt;/param-name&gt;
+ *     &lt;param-value&gt;phonebookApplication&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
  * </pre>
  * 
  * 

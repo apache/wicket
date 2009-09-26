@@ -35,23 +35,22 @@ import com.google.inject.Stage;
  * Configuration example:
  * 
  * <pre>
- *    &lt;servlet&gt;
- *      &lt;servlet-name&gt;myApp&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *        &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;module&lt;/param-name&gt;
- *        &lt;param-value&gt;com.company.MyGuiceModule,com.company.MyOtherGuiceModule&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;wicket-guice.stage&lt;/param-name&gt;
- *        &lt;param-value&gt;DEVELOPMENT&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;module&lt;/param-name&gt;
+ *     &lt;param-value&gt;com.company.MyGuiceModule,com.company.MyOtherGuiceModule&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;wicket-guice.stage&lt;/param-name&gt;
+ *     &lt;param-value&gt;DEVELOPMENT&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
  * </pre>
  * 
  * This factory will create an Injector configured using the Guice Module implementation you pass it
@@ -67,19 +66,18 @@ import com.google.inject.Stage;
  * Alternatively, you can dig the Injector out of the ServletContext as an attribute, like so:
  * 
  * <pre>
- *    &lt;servlet&gt;
- *      &lt;servlet-name&gt;myApp&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *        &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;injectorContextAttribute&lt;/param-name&gt;
- *        &lt;param-value&gt;GuiceInjector&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;injectorContextAttribute&lt;/param-name&gt;
+ *     &lt;param-value&gt;GuiceInjector&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
  * </pre>
  * 
  * <b>NB: You no longer have to add a GuiceComponentInjector manually in your

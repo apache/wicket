@@ -21,11 +21,14 @@ package org.apache.wicket.protocol.http;
  * webapplication to use this factory in web.xml like:
  * 
  * <pre>
- *     &lt;init-param&gt;
- *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *         &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
- *     &lt;/init-param&gt;
- * 
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.mycompany.MyApplication&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
