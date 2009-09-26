@@ -221,7 +221,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 				buffer.append(cs);
 			}
 		}
-
 	}
 
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
@@ -245,11 +244,16 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	/** the component instances that will be rendered */
 	private final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
+	/** */
 	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
 
+	/** */
+	private final Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
+
+	/** The associated Page */
 	private final Page page;
 
 	/**
@@ -387,6 +391,17 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
+	 * Return true, if the Component has already been added
+	 * 
+	 * @param component
+	 * @return true, if already added
+	 */
+	public final boolean isAdded(final Component component)
+	{
+		return (null != markupIdToComponent.get(component.getMarkupId()));
+	}
+
+	/**
 	 * Sets the focus in the browser to the given component. The markup id must be set. If the
 	 * component is null the focus will not be set to any component.
 	 * 
@@ -497,8 +512,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 */
 		public void onTargetRespond(AjaxRequestTarget target);
 	};
-
-	private final Set<ITargetRespondListener> respondListeners = new HashSet<ITargetRespondListener>();
 
 	/**
 	 * Register the given respond listener. The listener's
@@ -618,7 +631,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			// javascript
 			final IJavascriptResponse jsresponse = new IJavascriptResponse()
 			{
-
 				public void addJavascript(String script)
 				{
 					respondInvocation(response, script);
@@ -641,7 +653,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	private void respondComponents(WebResponse response)
 	{
-
 		// TODO: We might need to call prepareRender on all components upfront
 
 		// process component markup
@@ -838,7 +849,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	private class AjaxHeaderResponse extends HeaderResponse
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		private void checkHeaderRendering()
@@ -925,7 +935,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 */
 		public AjaxHeaderResponse()
 		{
-
 		}
 
 		/**
