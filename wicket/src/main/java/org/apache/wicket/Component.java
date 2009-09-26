@@ -1643,8 +1643,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IModel<?> model = getDefaultModel();
 		if (model != null)
 		{
-			// Get model value for this component.
-			return model.getObject();
+			try
+			{
+				// Get model value for this component.
+				return model.getObject();
+			}
+			catch (RuntimeException ex)
+			{
+				log.error("Error while getting default model object for Component: " +
+					this.toString(true));
+
+				throw ex;
+			}
 		}
 		return null;
 	}
