@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.include;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -254,6 +255,15 @@ public class Include extends WebComponent
 	}
 
 	/**
+	 * 
+	 * @return The charset of the text to be retrieved and included
+	 */
+	public Charset getCharset()
+	{
+		return null;
+	}
+
+	/**
 	 * Imports the contents from the given url.
 	 * 
 	 * @param url
@@ -263,6 +273,11 @@ public class Include extends WebComponent
 	private final String importUrl(URL url)
 	{
 		UrlResourceStream resourceStream = new UrlResourceStream(url);
+		Charset charset = getCharset();
+		if (charset != null)
+		{
+			resourceStream.setCharset(charset);
+		}
 		String content = resourceStream.asString();
 		return content;
 	}
