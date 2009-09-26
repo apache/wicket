@@ -237,7 +237,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @return this for chaining
 	 */
 	@Override
-	public final TextTemplate interpolate(Map<String, Object> variables)
+	public final TextTemplate interpolate(Map<String, ?> variables)
 	{
 		if (variables != null)
 		{

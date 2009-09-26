@@ -83,7 +83,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * @see org.apache.wicket.util.template.TextTemplate#asString(java.util.Map)
 	 */
 	@Override
-	public String asString(Map<String, Object> variables)
+	public String asString(Map<String, ?> variables)
 	{
 		StringBuffer b = new StringBuffer();
 		b.append(getBeforeTemplateContents());

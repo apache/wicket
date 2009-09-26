@@ -99,7 +99,7 @@ public class TextTemplateSharedResourceFactory
 	 * @return a <code>ResourceReference</code> to the template encoded as a resource with the given
 	 *         variables interpolated
 	 */
-	public ResourceReference resourceReference(final Map<String, Object> variables)
+	public ResourceReference resourceReference(final Map<String, ?> variables)
 	{
 		final String uniqueName = sharedResourceName(variables);
 		final String templateValue = template.asString(variables);
@@ -142,10 +142,10 @@ public class TextTemplateSharedResourceFactory
 	 *            variables that parameterize the linked-to resource
 	 * @return a unique name for the variables to use as a resource key
 	 */
-	protected String sharedResourceName(final Map<String, Object> variables)
+	protected String sharedResourceName(final Map<String, ?> variables)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (final Iterator<Object> iterator = variables.values().iterator(); iterator.hasNext();)
+		for (final Iterator<?> iterator = variables.values().iterator(); iterator.hasNext();)
 		{
 			final String value = iterator.next().toString();
 			buffer.append(encodeValue(value));

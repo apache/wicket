@@ -69,7 +69,7 @@ public final class CssTemplate extends TextTemplateDecorator
 	 * @return <code>this</code>, for chaining purposes
 	 */
 	@Override
-	public TextTemplate interpolate(final Map<String, Object> variables)
+	public TextTemplate interpolate(final Map<String, ?> variables)
 	{
 		return this;
 	}

@@ -45,7 +45,7 @@ public class TextTemplateLink<T> extends ResourceLink<T>
 	 *            variables to interpolate into the template held by the shared resource factory
 	 */
 	public TextTemplateLink(final String id, final TextTemplateSharedResourceFactory factory,
-		final Map<String, Object> variables)
+		final Map<String, ?> variables)
 	{
 		super(id, factory.resourceReference(variables));
 	}

@@ -50,7 +50,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * The <code>IModel</code> that holds any variables for interpolation. It should return a
 		 * {@link Map} or <code>null</code>.
 		 */
-		private final IModel<Map<String, Object>> variablesModel;
+		private final IModel<Map<String, ?>> variablesModel;
 
 		/**
 		 * Constructor.
@@ -61,7 +61,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 *            the <code>IModel</code> that holds any variables for interpolation. It should
 		 *            return a {@link Map} or <code>null</code>.
 		 */
-		protected TemplateModel(TextTemplate template, IModel<Map<String, Object>> variablesModel)
+		protected TemplateModel(TextTemplate template, IModel<Map<String, ?>> variablesModel)
 		{
 			if (template == null)
 			{
@@ -90,7 +90,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		{
 			if (variablesModel != null)
 			{
-				Map<String, Object> variables = variablesModel.getObject();
+				Map<String, ?> variables = variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);
@@ -112,7 +112,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
 	public static TextTemplateHeaderContributor forCss(TextTemplate template,
-		IModel<Map<String, Object>> variablesModel)
+		IModel<Map<String, ?>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
 	}
@@ -133,7 +133,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
 	public static TextTemplateHeaderContributor forCss(final Class<?> clazz, final String fileName,
-		IModel<Map<String, Object>> variablesModel)
+		IModel<Map<String, ?>> variablesModel)
 	{
 		return forCss(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -150,7 +150,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
 	public static TextTemplateHeaderContributor forJavaScript(TextTemplate template,
-		IModel<Map<String, Object>> variablesModel)
+		IModel<Map<String, ?>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new JavaScriptTemplate(template), variablesModel);
 	}
@@ -171,7 +171,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return the <code>TextTemplateHeaderContributor</code> instance
 	 */
 	public static TextTemplateHeaderContributor forJavaScript(final Class<?> clazz,
-		final String fileName, IModel<Map<String, Object>> variablesModel)
+		final String fileName, IModel<Map<String, ?>> variablesModel)
 	{
 		return forJavaScript(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -185,7 +185,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            optional <code>IModel</code> for variable substitution
 	 */
 	protected TextTemplateHeaderContributor(TextTemplate template,
-		IModel<Map<String, Object>> variablesModel)
+		IModel<Map<String, ?>> variablesModel)
 	{
 		super(new TemplateModel(template, variablesModel));
 	}
