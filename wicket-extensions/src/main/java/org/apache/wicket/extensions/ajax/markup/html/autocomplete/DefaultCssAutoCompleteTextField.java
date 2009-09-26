@@ -25,16 +25,24 @@ import org.apache.wicket.model.IModel;
  * 
  * @see AutoCompleteTextField
  * @author Antony Stubbs
+ * @param <T>
+ *            The model type
  */
-public abstract class DefaultCssAutocompleteTextField<T> extends AutoCompleteTextField<T>
+public abstract class DefaultCssAutoCompleteTextField<T> extends AutoCompleteTextField<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	public DefaultCssAutocompleteTextField(String string, IModel<T> model)
+	/**
+	 * Construct.
+	 * 
+	 * @param string
+	 * @param model
+	 */
+	public DefaultCssAutoCompleteTextField(String string, IModel<T> model)
 	{
 		super(string, model);
-		add(HeaderContributor.forCss(DefaultCssAutocompleteTextField.class,
-			"DefaultCssAutocompleteTextField.css"));
+		add(HeaderContributor.forCss(DefaultCssAutoCompleteTextField.class,
+			"DefaultCssAutoCompleteTextField.css"));
 	}
 
 }
