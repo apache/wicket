@@ -202,4 +202,66 @@ public final class PageParameters extends ValueMap
 		}
 		return params;
 	}
+
+	/**
+	 * Get an instance of an interface, which transparently reads and writes to this PageParameters.
+	 * Useful if you would prefer to deal in Java objects rather than extracting key/value pairs.
+	 * <h4>Usage:</h4> Write an interface that follows the beans pattern, such as
+	 * 
+	 * <pre>
+	 * public interface MyData
+	 * {
+	 * 	double getUserid();
+	 * 
+	 * 	void setUserId(double id);
+	 * 
+	 * 	String getRequestedCheese();
+	 * 
+	 * 	void setRequestedCheese(String cheese);
+	 * 
+	 * 	boolean isBackorder();
+	 * 
+	 * 	void setBackorder(boolean val);
+	 * }
+	 * </pre>
+	 * 
+	 * It <em>must</em> be a Java interface, because the implementation uses dynamic proxies to
+	 * generate an implementation of that interface.
+	 * <p/>
+	 * Your PageParameters should contain key/value pairs with names such as
+	 * &quot;requestedCheese&quot;, &quot;userid&quot; and &quot;backorder&quot;
+	 * <p/>
+	 * You will be returned an implementation of your interface, which delegates to the
+	 * PageParameters for the actual values, but handles typecasting and avoids issues with typos in
+	 * string keys.
+	 * <p/>
+	 * The resulting object is read/write, so you can use it both to populate and to read from a
+	 * PageParameters object.
+	 * <p/>
+	 * If the requested value does not exist in the PageParameters, the return value will be null,
+	 * -1 or false depending on the requested type.
+	 * <p/>
+	 * Note that it is possible to read and write <code>Serializable</code> objects; however, this
+	 * should not be done for objects with many fields, as it may exceed the browser's URL-length
+	 * limit.
+	 * 
+	 * @param <T>
+	 *            The return type
+	 * @param ifaceType
+	 *            The concrete type of the interface you need
+	 * @return An instance of that interface, dynamically generated
+	 */
+	public <T> T asObject(Class<T> ifaceType)
+	{
+		if (ifaceType == null)
+		{
+			throw new NullPointerException("Parameter 'ifaceType' must not be null");
+		}
+		if (!ifaceType.isInterface())
+		{
+			throw new IllegalArgumentException("ifaceType is not an interface: " +
+				ifaceType.getName());
+		}
+		return new PageParametersMarshaller().read(ifaceType, this);
+	}
 }
