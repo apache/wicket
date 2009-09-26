@@ -63,6 +63,7 @@ public class PasswordTextField extends TextField<String>
 	{
 		super(id, model);
 		setRequired(true);
+		setType(String.class);
 	}
 
 	/**
