@@ -116,7 +116,8 @@ public class WicketTesterHelper
 	 */
 	public static void assertEquals(final Collection<?> expects, final Collection<?> actuals)
 	{
-		if (!expects.containsAll(actuals) || !actuals.containsAll(expects))
+		if ((actuals.size() != expects.size()) || !expects.containsAll(actuals) ||
+			!actuals.containsAll(expects))
 		{
 			failWithVerboseMessage(expects, actuals);
 		}
