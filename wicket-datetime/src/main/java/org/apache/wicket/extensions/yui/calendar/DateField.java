@@ -141,16 +141,6 @@ public class DateField extends FormComponentPanel<Date>
 	}
 
 	/**
-	 * @deprecated replaced by {@link #newDateTextField(String, PropertyModel)}
-	 */
-	// TODO remove after deprecation release
-	@Deprecated
-	protected final DateTextField newDateTextField(PropertyModel dateFieldModel)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * create a new {@link DateTextField} instance to be added to this panel.
 	 * 
 	 * @param id
@@ -159,7 +149,8 @@ public class DateField extends FormComponentPanel<Date>
 	 *            model that should be used by the {@link DateTextField}
 	 * @return a new date text field instance
 	 */
-	protected DateTextField newDateTextField(String id, PropertyModel dateFieldModel)
+	protected DateTextField newDateTextField(final String id,
+			final PropertyModel<Date> dateFieldModel)
 	{
 		return DateTextField.forShortStyle(id, dateFieldModel);
 	}
