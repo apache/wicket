@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.image.resource;
 
-import java.awt.Image;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,14 +32,15 @@ import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Image resource that dynamically scales the given original resource to a thumbnail. It is scaled
  * either using the given maxSize as width or height, depending on its shape. If both the width and
  * height are less than maxSize, no scaling is performed.
  * 
  * @author Eelco Hillenius
+ * @author Eugene Kamenev
  */
+
 public class ThumbnailImageResource extends DynamicImageResource
 {
 	private static final long serialVersionUID = 1L;
@@ -49,12 +51,8 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/** the unscaled, original image resource. */
 	private final WebResource unscaledImageResource;
 
-
 	/** maximum size (width or height) for resize operation. */
 	private final int maxSize;
-
-	/** hint(s) for the scale operation. */
-	private int scaleHints = Image.SCALE_SMOOTH;
 
 	/** the cached byte array of the thumbnail. */
 	private transient byte[] thumbnail;
@@ -70,10 +68,12 @@ public class ThumbnailImageResource extends DynamicImageResource
 	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
 		super();
+
 		if (unscaledImageResource == null)
 		{
 			throw new IllegalArgumentException("Argument unscaledImageResource must be not null");
 		}
+
 		this.unscaledImageResource = unscaledImageResource;
 		this.maxSize = maxSize;
 	}
@@ -81,6 +81,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/**
 	 * @return The image data for this dynamic image
 	 */
+	@Override
 	protected byte[] getImageData()
 	{
 		if (thumbnail == null)
@@ -108,7 +109,8 @@ public class ThumbnailImageResource extends DynamicImageResource
 			originalImage = ImageIO.read(is);
 			if (originalImage == null)
 			{
-				throw new IOException("unable to read image");
+				throw new IOException("Unable to read image: " +
+					unscaledImageResource.getResourceStream().toString());
 			}
 		}
 		catch (IOException e)
@@ -137,7 +139,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		int originalWidth = originalImage.getWidth();
 		int originalHeight = originalImage.getHeight();
 
-		if (originalWidth > maxSize || originalHeight > maxSize)
+		if ((originalWidth > maxSize) || (originalHeight > maxSize))
 		{
 			final int newWidth;
 			final int newHeight;
@@ -152,14 +154,17 @@ public class ThumbnailImageResource extends DynamicImageResource
 				newWidth = (maxSize * originalWidth) / originalHeight;
 				newHeight = maxSize;
 			}
-			Image image = originalImage.getScaledInstance(newWidth, newHeight, scaleHints);
 
-			// convert Image to BufferedImage
-			BufferedImage bufferedImage = new BufferedImage(newWidth, newHeight,
-					BufferedImage.TYPE_INT_ARGB);
-			bufferedImage.createGraphics().drawImage(image, 0, 0, null);
+			// http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
+			BufferedImage dimg = new BufferedImage(newWidth, newHeight, originalImage.getType());
+			Graphics2D g = dimg.createGraphics();
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.drawImage(originalImage, 0, 0, newWidth, newHeight, 0, 0, originalWidth,
+				originalHeight, null);
+			g.dispose();
 
-			return bufferedImage;
+			return dimg;
 		}
 
 		// no need for resizing
@@ -167,20 +172,9 @@ public class ThumbnailImageResource extends DynamicImageResource
 	}
 
 	/**
-	 * Sets hint(s) for the scale operation.
-	 * 
-	 * @param scaleHints
-	 *            hint(s) for the scale operation
-	 */
-	public synchronized final void setScaleHints(int scaleHints)
-	{
-		this.scaleHints = scaleHints;
-		invalidate();
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.html.DynamicWebResource#invalidate()
 	 */
+	@Override
 	public synchronized void invalidate()
 	{
 		thumbnail = null;
