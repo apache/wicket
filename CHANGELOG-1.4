@@ -1,5 +1,49 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.2
+
+** Bug
+    * [WICKET-2393] - Passwords should not be trimmed
+    * [WICKET-2430] - Malformed \uxxxx encoding in MultipleUploadField_sl.properties
+    * [WICKET-2433] - Ajax support for multipart forms broken in a nested form
+    * [WICKET-2434] - RequestCycle urlFor ignores existing parameters when appending provided params
+    * [WICKET-2436] - invalid DataTable markup breaks table layout
+    * [WICKET-2438] - AjaxEventBehavior not working on feedback message components
+    * [WICKET-2453] - Form.findForm(Component c) bug. When form is part of Border and form component like TextField is inside another Border , component cannot resolve its form.
+    * [WICKET-2456] - DateTextField cannot work with default converter (or javadoc wrong)
+    * [WICKET-2457] - Flash/ExternalInterface does not work in IE if movie is fetched via Wicket/Ajax
+    * [WICKET-2458] - JavascriptUtils.escapeQuotes() misses escaping double quotes
+    * [WICKET-2461] - AjaxPagingNavigationIncrementLink does not work without AjaxPagingNavigator component
+    * [WICKET-2463] - Ajax miltipart form submitting ignores setDefaultFormProcessing(false)
+    * [WICKET-2466] - javadoc the CryptedUrlWebRequestCodingStrategy needs to be update/corrected to reflect the usage of session-id for encryption and hence URLs which were bookmarkable before will NOT remain bookmarkable. 
+    * [WICKET-2475] - NPE after application hot redeployment
+    * [WICKET-2477] - AjaxEditableChoiceLabel does not detach choices model
+    * [WICKET-2478] - TabbedPanel rendering bug
+    * [WICKET-2485] - IComponentResolvers are not supported inside wicket:enclosure
+    * [WICKET-2488] - QuickFix proposal WicketTesterHelper.assertEquals(final Collection<?> expects, final Collection<?> actuals) should compare list sizes
+
+** Improvement
+    * [WICKET-626] - profile Wicket for 1.4.0
+    * [WICKET-2435] - TabbedPanel extract factory method for tabs-container
+    * [WICKET-2439] - Improve MixedParamUrlCodingStrategy, introduce Hybrid
+    * [WICKET-2444] - Internal Spring beans should be ignored
+    * [WICKET-2445] - FormInput.java needs the validators updated. 
+    * [WICKET-2449] - Fix javadoc biggest mistakes - mainly @Deprecated tags
+    * [WICKET-2451] - Add ability to load UTF-8 encoded properties not in XML format.
+    * [WICKET-2454] - IE8: be more verbose if ajax refresh fails
+    * [WICKET-2469] - Allow using a different FileItemFactory by extracting a method in MultipartServletWebRequest class
+    * [WICKET-2492] - Application_pt_BR.properties path
+
+** New Feature
+    * [WICKET-2395] - add MixedParamHybridUrlCodingStrategy
+    * [WICKET-2483] - Access to WizardModel.conditions
+
+** Wish
+    * [WICKET-2120] - widen visibiliy of GuiceProxyTargetLocator  and  findBindingAnnotation  
+    * [WICKET-2462] - Would it possible add chinese resource label for WizardButton eg. CancelButton, NextButton and PreviousButton etc.
+    * [WICKET-2489] - need to know if a component has been added to the AjaxRequestTarget
+
+
 Release Notes - Wicket - Version 1.4.1
 
 
