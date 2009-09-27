@@ -1,5 +1,110 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.1
+
+
+** Bug
+    * [WICKET-2316] - Form generates invalid html in appendDefaultButtonField
+    * [WICKET-2378] - FormTester should call detach
+    * [WICKET-2397] - text fields do not honor isrequired()
+    * [WICKET-2402] - SetRowsPerPage with AjaxFallbackDefaultDataTable
+    * [WICKET-2406] - Palette component breaks XHTML validation
+    * [WICKET-2407] - AbstractOptions of Palette may cause an HTML error with illegal chars
+    * [WICKET-2415] - Estonian translation for StringValidator.minimum contains ${mimimum} instead of ${minimum}
+    * [WICKET-2418] - NPE in ResourceReference
+    * [WICKET-2422] - DefaultDataTable hides NavigationToolbar once and forever
+    * [WICKET-2423] - Not all "domready" events are called when two wicket-event.js files are added to the page
+
+** Improvement
+    * [WICKET-2020] - Callback after detaching the page but before the PageMap lock is released
+    * [WICKET-2290] - upgrade pom reference for joda-time to 1.6
+    * [WICKET-2374] - Model's factory methods are inconsistent
+    * [WICKET-2410] - AjaxRequestTarget could skip component when its ancestor is added too
+    * [WICKET-2413] - Better error handling when filterName attribute of WicketSessionFilter is misconfigured
+    * [WICKET-2417] - FilterToolbar, FilterForm conformity to XHTML strict
+
+** New Feature
+    * [WICKET-2412] - Add dev time check for empty src="" attribute that can cause problems
+    * [WICKET-2420] - Ajax support for multipart forms
+
+
+
+Release Notes - Wicket - Version 1.4.0
+
+
+** Bug
+    * [WICKET-2350] - Localization messages stops working with validators since 1.4-rc2
+    * [WICKET-2363] - Two minor quick-to-fix quality bugs in WicketTester
+    * [WICKET-2366] - Refactor: org.apache.wicket.util.string.Strings#fromEscapedUnicode(String escapedUnicodeString)
+    * [WICKET-2367] - ApacheLicenceHeaderTest fails checking non-project file
+    * [WICKET-2368] - Page.checkRendering fails after setting BorderBodyContainer visiblity to false
+    * [WICKET-2381] - IModel parameters of StringResourceModel not getting detached
+    * [WICKET-2382] - Stateless problems
+    * [WICKET-2384] - OutOfMemoryError occur for memory leak on FeedbackPanel & FeedbackMessages
+    * [WICKET-2386] - JavaDoc: Some JavDoc examples still refer to WicketServlet
+    * [WICKET-2391] - Tag '<BODY>'has a mismatched close tag at '</SPAN>'
+    * [WICKET-2392] - MarkupComponentBorder fails to close stream (?)
+    * [WICKET-2394] - KittenCaptcha example broken
+
+** Improvement
+    * [WICKET-2362] - Update hungarian localization
+
+
+Release Notes - Wicket - Version 1.4-RC7
+
+
+** Bug
+    * [WICKET-2337] - IndexOutOfBoundsException when PropertyResolver is using an invalid list index
+    * [WICKET-2346] - Problem with displaying expired page.
+    * [WICKET-2354] - PropertyModel does not support index only property ("[0]")
+    * [WICKET-2358] - EmailAddressValidator property has a typo in French version
+
+** Improvement
+    * [WICKET-2351] - Make TimeFrame, Duration, Time and related classes Serializable.
+    * [WICKET-2360] - Checkbox: Make setters fluid
+
+
+Release Notes - Wicket - Version 1.4-RC6
+
+
+** Bug
+    * [WICKET-1897] - StatelessForm submitted to the wrong page
+    * [WICKET-2127] - Javascript function Wicket.replaceAll is unbearably slow
+    * [WICKET-2202] - Form gets submitted using AjaxSubmitBehavior when sub-form has error's
+    * [WICKET-2268] - NullPointerException NPE in DiskPageStore after Session Timeout
+    * [WICKET-2284] - German translation for NumberValidator.minimum is wrong
+    * [WICKET-2294] - CryptedUrlWebRequestCodingStrategy fails while decoding parameters after the app has been up and running for quite some time.
+    * [WICKET-2325] - IChoiceRenderer generic type parameters are wrong throughout the AbstractChoice class hierarchy
+    * [WICKET-2330] - AjaxFormSubmitBehavior throws an NullPointerException when getForm() is overridden
+    * [WICKET-2333] - RatingPanel doesn't "wrap" models
+    * [WICKET-2334] - DebugBar throws an java.lang.ExceptionInInitializerError when Tomcat is restarted
+    * [WICKET-2335] - JavaDoc inconsistent to the code
+    * [WICKET-2336] - JavaDoc, point out the need of a super call.
+    * [WICKET-2341] - AbstractSingleSelectChoice nullValid javadocs are misleading.
+    * [WICKET-2345] - ModalWindow.setResizable(false) does not work after 1.4-rc4
+    * [WICKET-2349] - Time.valueOf(TimeOfDay) needs to use 24 hour clock
+
+** Improvement
+    * [WICKET-2321] - create a Component#onRemove() method
+    * [WICKET-2332] - Open up Markup ctor and MarkupContainer#renderNext
+    * [WICKET-2340] - Make ModificationWatcher replacable
+    * [WICKET-2342] - Cryptic error "WicketMessage: Tag Expected" when wicket:panel tags are missing
+    * [WICKET-2343] - Link: PopupSettings - overriding getPopupSettings has no effect
+
+** New Feature
+    * [WICKET-2306] - Extension for WicketTester to easily get AjaxLazyLoadPanel's to render their contents
+
+
+
+
+** Task
+    * [WICKET-2338] - Find and fix errata in 1.4 JavaDoc
+
+
+
+** Wish
+    * [WICKET-2314] - Custom css for Wizard
+
 
 Release Notes - Wicket - Version 1.4-RC5
 
