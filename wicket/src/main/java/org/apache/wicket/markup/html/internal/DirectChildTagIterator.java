@@ -23,14 +23,21 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
 
 /**
  * Iterator that iterates over direct child component tags of the given component tag
+ * 
+ * @author Juergen Donnerstag
  */
-class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
+public class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 {
 	private final MarkupStream markupStream;
+
 	private final ComponentTag parent;
+
 	private ComponentTag next = null;
+
 	private int nextIndex;
+
 	private int currentIndex;
+
 	private final int originalIndex;
 
 	/**
@@ -39,9 +46,10 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 	 * @param markupStream
 	 * @param parent
 	 */
-	public DirectChildTagIterator(MarkupStream markupStream, ComponentTag parent)
+	public DirectChildTagIterator(final MarkupStream markupStream, final ComponentTag parent)
 	{
 		super();
+
 		this.markupStream = markupStream;
 		this.parent = parent;
 		originalIndex = markupStream.getCurrentIndex();

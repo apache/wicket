@@ -79,4 +79,12 @@ public interface IMarkupFragment
 	 * @return -1, if not found
 	 */
 	IMarkupFragment find(final String path, final String id, final int startIndex);
+
+	/**
+	 * 
+	 * @param markupOnly
+	 *            True if only the markup shall be returned
+	 * @return markup string
+	 */
+	String toString(final boolean markupOnly);
 }

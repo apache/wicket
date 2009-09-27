@@ -517,6 +517,8 @@ public class PageParametersTest extends TestCase
 
 	public static final class SerializableThing implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		public final String word;
 
 		public SerializableThing(String word)

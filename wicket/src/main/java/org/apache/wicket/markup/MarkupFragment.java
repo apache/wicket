@@ -241,9 +241,20 @@ public class MarkupFragment implements IMarkupFragment
 	@Override
 	public String toString()
 	{
+		return toString(false);
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.IMarkupFragment#toString(boolean)
+	 */
+	public String toString(boolean markupOnly)
+	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(getRootMarkup().getMarkupResourceStream().toString());
-		buf.append("\n");
+		if (markupOnly == false)
+		{
+			buf.append(getRootMarkup().getMarkupResourceStream().toString());
+			buf.append("\n");
+		}
 
 		for (int i = 0; i < size(); i++)
 		{

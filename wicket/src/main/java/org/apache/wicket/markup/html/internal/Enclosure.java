@@ -97,7 +97,6 @@ public class Enclosure extends WebMarkupContainer
 	{
 		super(id);
 
-
 		if (childId == null)
 		{
 			throw new MarkupException(
@@ -240,7 +239,7 @@ public class Enclosure extends WebMarkupContainer
 					protected void executeInsideBufferedZone()
 					{
 						markupStream.setCurrentIndex(tagIndex);
-						ComponentResolvers.resolve(getApplication(), container, markupStream, tag);
+						ComponentResolvers.resolve(container, markupStream, tag);
 					}
 				}.execute();
 

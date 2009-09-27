@@ -52,7 +52,6 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();
-		// TODO until now getStyle() == style + variation
 		final String style = container.getStyle() + "_" + container.getVariation();
 		final String markupType = container.getMarkupType();
 

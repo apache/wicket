@@ -16,15 +16,13 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
@@ -351,88 +349,41 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup#getMarkup()
+	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
 	 */
 	@Override
-	public IMarkupFragment getMarkup()
+	public IMarkupFragment getMarkup(final Component child)
 	{
 		IMarkupFragment markup = null;
 
 		// Get the markup provider
 		MarkupContainer provider = getMarkupProvider();
-		if (provider != null)
+		if (provider == null)
 		{
-			markup = findFragmentMarkup(provider);
+			provider = getParent();
 		}
 
-		if ((markup == null) && (getParent() != null))
-		{
-			markup = findFragmentMarkup(getParent());
-		}
-
-		if (markup == null)
-		{
-			markup = findFragmentMarkup(this);
-		}
-
-		return markup;
-	}
-
-	/**
-	 * Find the fragment markup fragment
-	 * 
-	 * @param provider
-	 * @return markup
-	 */
-	private IMarkupFragment findFragmentMarkup(final MarkupContainer provider)
-	{
-		// Get the markup from the provider
-		IMarkupFragment markup = provider.getMarkup();
 		if (provider.hasAssociatedMarkup())
 		{
 			markup = provider.getAssociatedMarkup();
 		}
-
-		// Search the relevant fragment tag
-		if (markup != null)
+		else
 		{
-			markup = findFragmentMarkup(markup);
+			markup = getParent().getMarkup();
 		}
 
-		// If not yet found, try the parent "calling" markup as well. This is relevant e.g. for
-		// Border and Panel.
-		if ((markup == null) && provider.hasAssociatedMarkup())
+		if (markup == null)
 		{
-			markup = provider.getParent().getMarkup(provider);
-			if (markup != null)
-			{
-				markup = findFragmentMarkup(markup);
-			}
+			return null;
 		}
 
-		return markup;
-	}
+		markup = markup.find(null, markupId, 0);
 
-	/**
-	 * Find the fragment markup fragment
-	 * 
-	 * @param markup
-	 * @return Null, if not found
-	 */
-	private IMarkupFragment findFragmentMarkup(final IMarkupFragment markup)
-	{
-		for (int i = 0; i < markup.size(); i++)
+		if (child == null)
 		{
-			MarkupElement elem = markup.get(i);
-			if (elem instanceof WicketTag)
-			{
-				WicketTag tag = (WicketTag)elem;
-				if (tag.isFragementTag() && tag.getId().equals(markupId))
-				{
-					return new MarkupFragment(markup, i);
-				}
-			}
+			return markup;
 		}
-		return null;
+
+		return markup.find(null, child.getId(), 0);
 	}
 }

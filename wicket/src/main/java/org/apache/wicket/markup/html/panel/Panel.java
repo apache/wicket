@@ -21,6 +21,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -150,15 +151,15 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 		IMarkupFragment markup = getAssociatedMarkup();
 		if (markup == null)
 		{
-			throw new MarkupException("Failed to find markup file associated with panel. Panel: " +
-				this.toString());
+			throw new MarkupNotFoundException(
+				"Failed to find markup file associated with panel. Panel: " + this.toString());
 		}
 
 		// Find <wicket:panel>
 		int index = markup.findComponentIndex(null, "_panel", 0);
 		if (index == -1)
 		{
-			throw new MarkupException(
+			throw new MarkupNotFoundException(
 				"Expected to find <wicket:panel> in associated markup file. Markup: " +
 					markup.toString());
 		}

@@ -29,9 +29,9 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.internal.MarkupTagIterator;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
@@ -110,7 +110,6 @@ public class WicketMessageResolver implements IComponentResolver
 	 * here, as people might want to override wicket:messages to empty strings.
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
-
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container and render it.
@@ -425,16 +424,14 @@ public class WicketMessageResolver implements IComponentResolver
 			// Get the parent markup. Make sure that in case of Border and Panel you get the
 			// associated markup
 			IMarkupFragment markup = getParent().getMarkup(null);
-			for (int i = 0; i < markup.size(); i++)
+			MarkupTagIterator iter = new MarkupTagIterator(markup).setWicketTagsOnly(true)
+				.setOpenTagOnly(true);
+			while (iter.hasNext())
 			{
-				MarkupElement elem = markup.get(i);
-				if (elem instanceof WicketTag)
+				WicketTag tag = iter.nextWicketTag();
+				if (tag.isMessageTag() && key.equals(tag.getAttribute("key")))
 				{
-					WicketTag tag = (WicketTag)elem;
-					if (tag.isMessageTag() && key.equals(tag.getAttribute("key")))
-					{
-						return new MarkupFragment(markup, i);
-					}
+					return iter.getMarkupFragment();
 				}
 			}
 

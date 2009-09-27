@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.resolver;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -33,7 +31,6 @@ public class ComponentResolvers
 {
 	private ComponentResolvers()
 	{
-
 	}
 
 	/**
@@ -44,17 +41,15 @@ public class ComponentResolvers
 	 * component needs to be resolved under normal circumstances.
 	 * </p>
 	 * 
-	 * @param application
 	 * @param container
 	 * @param markupStream
 	 * @param tag
-	 * @return <code>true</code> if a component was resolved using on of tried resolvers,
+	 * @return <code>true</code> if a component was resolved using one of tried resolvers,
 	 *         <code>false</code> otherwise.
 	 */
-	public static boolean resolve(final Application application, final MarkupContainer container,
-		MarkupStream markupStream, ComponentTag tag)
+	public static boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
-
 		// try to resolve using component hierarchy
 
 		Component cursor = container;
@@ -67,17 +62,15 @@ public class ComponentResolvers
 					return true;
 				}
 			}
-			cursor = cursor.findParent(MarkupContainer.class);
+			cursor = cursor.getParent();
 		}
 
 		// fallback to application-level resolvers
 
-		Iterator<IComponentResolver> resolvers = application.getPageSettings()
-			.getComponentResolvers()
-			.iterator();
-		while (resolvers.hasNext())
+		for (final IComponentResolver resolver : Application.get()
+			.getPageSettings()
+			.getComponentResolvers())
 		{
-			IComponentResolver resolver = resolvers.next();
 			if (resolver.resolve(container, markupStream, tag))
 			{
 				return true;
@@ -86,5 +79,4 @@ public class ComponentResolvers
 
 		return false;
 	}
-
 }

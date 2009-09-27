@@ -376,9 +376,22 @@ public class Markup implements IMarkupFragment
 	@Override
 	public final String toString()
 	{
+		return toString(false);
+	}
+
+	/**
+	 * @param markupOnly
+	 *            True, if only the markup shall be returned
+	 * @return String
+	 */
+	public final String toString(final boolean markupOnly)
+	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(markupResourceStream.toString());
-		buf.append("\n");
+		if (markupOnly == false)
+		{
+			buf.append(markupResourceStream.toString());
+			buf.append("\n");
+		}
 
 		final Iterator<MarkupElement> iter = markupElements.iterator();
 		while (iter.hasNext())

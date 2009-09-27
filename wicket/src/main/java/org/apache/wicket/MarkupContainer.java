@@ -151,6 +151,45 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Find a child component. It may have been directly added to the container or to a transparent
+	 * child container. From a user's point of view, it was added to this container.
+	 * 
+	 * @param child
+	 * @return The container the child was actually added to. Null if not found.
+	 */
+	private MarkupContainer findChild(final Component child)
+	{
+		if (get(child.getId()) != null)
+		{
+			return this;
+		}
+
+		MarkupContainer container = (MarkupContainer)visitChildren(MarkupContainer.class,
+			new IVisitor<MarkupContainer>()
+			{
+				public Object component(MarkupContainer container)
+				{
+					if (container.isTransparentResolver())
+					{
+						if (container.getId().equals(child.getId()))
+						{
+							return container;
+						}
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				}
+			});
+
+		if (container != null)
+		{
+			return container;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Replaces a child component of this container with another or just adds it in case no child
 	 * with the same id existed yet.
 	 * 
@@ -426,9 +465,10 @@ public abstract class MarkupContainer extends Component
 		IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
-			throw new MarkupException("Unable to determine Markup for Component: " + toString());
+			return null;
 		}
-		else if (child == null)
+
+		if (child == null)
 		{
 			return markup;
 		}
@@ -1033,8 +1073,7 @@ public abstract class MarkupContainer extends Component
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
-			child.setMetaData(ADDED_AT_KEY, Strings.toString(child, new MarkupException(
-				"added")));
+			child.setMetaData(ADDED_AT_KEY, Strings.toString(child, new MarkupException("added")));
 		}
 
 		if (page != null)
@@ -1520,7 +1559,7 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				if (ComponentResolvers.resolve(getApplication(), this, markupStream, tag))
+				if (ComponentResolvers.resolve(this, markupStream, tag))
 				{
 					return;
 				}
