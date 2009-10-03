@@ -81,7 +81,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
-
 		if (field.isAnnotationPresent(SpringBean.class))
 		{
 			SpringBean annot = field.getAnnotation(SpringBean.class);
@@ -89,7 +88,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 					contextLocator);
 
 			// only check the cache if the bean is a singleton
-			if (locator.isSingletonBean() && cache.containsKey(locator))
+			if (cache.containsKey(locator))
 			{
 				return cache.get(locator);
 			}

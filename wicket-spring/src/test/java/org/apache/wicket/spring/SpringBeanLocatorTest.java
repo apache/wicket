@@ -16,13 +16,11 @@
  */
 package org.apache.wicket.spring;
 
-import org.apache.wicket.spring.ISpringContextLocator;
-import org.apache.wicket.spring.SpringBeanLocator;
+import junit.framework.TestCase;
+
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
 import org.apache.wicket.util.lang.Objects;
-
-import junit.framework.TestCase;
 
 /**
  * Tests {@link SpringBeanLocator}
@@ -44,6 +42,7 @@ public class SpringBeanLocatorTest extends TestCase
 
 	private ISpringContextLocator ctxLocator;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		ctx = new ApplicationContextMock();
@@ -231,6 +230,7 @@ public class SpringBeanLocatorTest extends TestCase
 
 		assertEquals(d, dprime);
 		assertEquals(dprime, d);
+		ctx.putBean("locator", a); // we need to register a Bean of type d.getClass()
 		assertEquals(d.hashCode(), dprime.hashCode());
 
 		assertFalse(a.equals(d));
