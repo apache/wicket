@@ -59,7 +59,7 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 					@Override
 					public Component getLazyLoadComponent(String markupId)
 					{
-						return new Label(markupId, "lazy panel test");
+						return new Label(markupId, "lazy panel test").setRenderBodyOnly(true);
 					}
 				};
 				ajaxLazyLoadPanel = ajaxLazyLoadPanel1;
@@ -73,6 +73,7 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(wt, dummyPanelPage);
 		wt.debugComponentTrees();
 		wt.assertLabel("panel:content", "lazy panel test");
+		String doc = wt.getServletResponse().getDocument();
+		assertNotNull(doc);
 	}
-
 }
