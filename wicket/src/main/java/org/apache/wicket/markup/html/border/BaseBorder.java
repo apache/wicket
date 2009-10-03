@@ -103,7 +103,7 @@ import org.apache.wicket.model.IModel;
  *   &lt;/html&gt;
  * </pre>
  * 
- * Two convenience methods {@link #addToBorder(Component...)} and {@link #getFromBorder(String)} are
+ * Two convenience methods {@link #addToBorderBody(Component...)} and {@link #getFromBorderBody(String)} are
  * provided to add or get components to the body container.
  * 
  * This implementation does not apply any magic with respect to component handling. In doubt think
@@ -215,19 +215,19 @@ public abstract class BaseBorder extends WebMarkupContainerWithAssociatedMarkup
 	 * @param child
 	 * @return this
 	 */
-	public BaseBorder addToBorder(final Component... child)
+	public BaseBorder addToBorderBody(final Component... child)
 	{
 		getBodyContainer().add(child);
 		return this;
 	}
 
 	/**
-	 * @see #addToBorder(Component...)
+	 * @see #addToBorderBody(Component...)
 	 * @set #get(String)
 	 * @param path
 	 * @return The component added to the border
 	 */
-	public final Component getFromBorder(final String path)
+	public final Component getFromBorderBody(final String path)
 	{
 		return getBodyContainer().get(path);
 	}

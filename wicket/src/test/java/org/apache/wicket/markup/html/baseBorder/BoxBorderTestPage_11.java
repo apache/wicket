@@ -40,6 +40,6 @@ public class BoxBorderTestPage_11 extends WebPage
 		BaseBorder border = new TogglePanel("border", new Model<String>("model"));
 		add(border);
 
-		border.addToBorder(new Label("label", "my test"));
+		border.addToBorderBody(new Label("label", "my test"));
 	}
 }
