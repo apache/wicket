@@ -2692,7 +2692,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		if (isVisible() && isRenderAllowed())
+		if (isVisibleInHierarchy() && isRenderAllowed())
 		{
 			if (this instanceof IHeaderContributor)
 			{
