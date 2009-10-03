@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -26,11 +25,6 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.markup.parser.XmlTag;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.BorderBodyResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -102,47 +96,21 @@ import org.apache.wicket.model.IModel;
  *   &lt;/html&gt;
  * </pre>
  * 
+ * Please note that rather sooner than later Border will be removed and BaseBorder be renamed to
+ * Border.
+ * 
  * @see BorderBodyResolver
  * @see BorderBodyContainer
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
- * 
  */
-public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
-	implements
-		IComponentResolver
+public abstract class Border extends BaseBorder implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
-	static final String BODY = "body";
-	static final String BORDER = "border";
-
-	static
-	{
-		// register "wicket:body" and "wicket:border"
-		WicketTagIdentifier.registerWellKnownTagName(BORDER);
-		WicketTagIdentifier.registerWellKnownTagName(BODY);
-	}
-
 	/** Should be true for bordered pages */
 	private boolean transparentResolver = false;
-
-	/** Must be the same as the id automatically assigned to <wicket:body> */
-	private static final String BODY_ID = "_body";
-
-	/** The body component associated with <wicket:body> */
-	private BorderBodyContainer body;
-
-	/**
-	 * only required during render phase. The markup stream associated with <span
-	 * wicket:id="myBorder"
-	 */
-	private transient MarkupStream originalMarkupStream;
-
-	/** only required during render phase. The <span wicket:id="myBorder"> tag */
-	private transient ComponentTag openTag;
-	private int beginOfBodyIndex;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -150,9 +118,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	public Border(final String id)
 	{
 		super(id);
-
-		body = new BorderBodyContainer(BODY_ID);
-		add(body);
 	}
 
 	/**
@@ -161,23 +126,15 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	public Border(final String id, final IModel<?> model)
 	{
 		super(id, model);
-
-		body = new BorderBodyContainer(BODY_ID);
-		add(body);
 	}
 
 	/**
-	 * Gets the container associated with &lt;wicket:body&gt;
-	 * 
-	 * @return The border body container
+	 * @see org.apache.wicket.markup.html.border.BaseBorder#newBorderBodyContainer(java.lang.String)
 	 */
-	public final BorderBodyContainer getBodyContainer()
+	@Override
+	MarkupContainer newBorderBodyContainer(String id)
 	{
-		if (body == null)
-		{
-			body = (BorderBodyContainer)get(BODY_ID);
-		}
-		return body;
+		return new BorderBodyContainer(BODY_ID);
 	}
 
 	/**
@@ -188,7 +145,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @param enable
 	 *            true, to enable transparent resolving
 	 * @return this for chaining
+	 * @deprecated in 1.5. Use {@link #getBodyContainer()} to create a proper hierarchy
 	 */
+	@Deprecated
 	public final Border setTransparentResolver(final boolean enable)
 	{
 		transparentResolver = enable;
@@ -198,7 +157,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see #setTransparentResolver(boolean)
 	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+	 * @deprecated in 1.5. Use {@link #getBodyContainer()} to create a proper hierarchy
 	 */
+	@Deprecated
 	@Override
 	public boolean isTransparentResolver()
 	{
@@ -209,6 +170,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
@@ -248,160 +210,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return false;
 		}
 
-		body.render(markupStream);
+		getBodyContainer().render(markupStream);
 		return true;
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		if (tag.isOpen() == false)
-		{
-			throw new WicketRuntimeException(
-				"The border tag must be an open tag. Open-close is not allowed: " + tag.toString());
-		}
-
-		super.onComponentTag(tag);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
-	{
-		// Remember the data for easy access by the Body component
-		this.openTag = openTag;
-		originalMarkupStream = getMarkupStream();
-
-		// Remember the current position (start of border-body) of the markupstream
-		beginOfBodyIndex = originalMarkupStream.getCurrentIndex();
-
-		// body.isVisible(false) needs a little extra work. We must skip the
-		// markup between <span wicket:id="myBorder"> and </span>
-		if (isBodyVisible() == false)
-		{
-			originalMarkupStream.skipToMatchingCloseTag(openTag);
-		}
-		// Render the associated markup
-		renderAssociatedMarkup("border",
-			"Markup for a border component must begin a tag like '<wicket:border>'");
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	@Override
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
-	}
-
-	/**
-	 * The container to be associated with the &lt;wicket:body&gt; tag
-	 */
-	public class BorderBodyContainer extends WebMarkupContainer implements IComponentResolver
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** remember the original status of the wicket:body tag */
-		private transient boolean wasOpenCloseTag = false;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param id
-		 */
-		public BorderBodyContainer(final String id)
-		{
-			super(id);
-		}
-
-		/**
-		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-		 */
-		@Override
-		protected void onComponentTag(final ComponentTag tag)
-		{
-			// Convert open-close to open-body-close
-			if (tag.getType() == XmlTag.OPEN_CLOSE)
-			{
-				tag.setType(XmlTag.OPEN);
-				tag.setModified(true);
-				wasOpenCloseTag = true;
-			}
-
-			super.onComponentTag(tag);
-		}
-
-		/**
-		 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-		 *      org.apache.wicket.markup.ComponentTag)
-		 */
-		@Override
-		protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
-		{
-			if (wasOpenCloseTag == false)
-			{
-				// It is open-preview-close. Only RawMarkup is allowed within
-				// the preview region, which gets stripped from output
-				markupStream.skipRawMarkup();
-			}
-
-			// this check always results in false for normal requests.
-			// in case of ajax requests, the markupstream is not reset after the first render, thus
-			// the current index of the markup stream points to the element after the body.
-			// as a result, no elements are detected and always omitted.
-			if (beginOfBodyIndex != originalMarkupStream.getCurrentIndex())
-			{
-				originalMarkupStream.setCurrentIndex(beginOfBodyIndex);
-			}
-
-			super.onComponentTagBody(originalMarkupStream, Border.this.openTag);
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-		 */
-		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
-		{
-			// Usually you add child components to Border instead of Body. Hence
-			// we need to help Body to properly resolve the children.
-			String id = tag.getId();
-			if (!id.equals(BODY_ID))
-			{
-				Component component = Border.this.get(id);
-				if (component != null)
-				{
-					component.render(markupStream);
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/**
-		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-		 */
-		@Override
-		public IMarkupFragment getMarkup(final Component child)
-		{
-			// Find the Border component
-			MarkupContainer parent = findParent(Border.class);
-
-			// Get the "calling" markup
-			return parent.getMarkup();
-		}
 	}
 
 	/**
@@ -415,7 +225,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// body because border body can be embedded inside other containers.
 
 		boolean bodyVisible = true;
-		Component cursor = body;
+		Component cursor = getBodyContainer();
 		while (cursor != this && bodyVisible)
 		{
 			bodyVisible = cursor.determineVisibility();
@@ -430,7 +240,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		if ((child != null) && ("_body".equals(child.getId()) == false))
+		if ((child != null) && (BODY_ID.equals(child.getId()) == false))
 		{
 			// First check if markup can be found in between <span wicket:id="myborder">...</span>
 			IMarkupFragment markup = getMarkup();
@@ -474,7 +284,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		{
 			return new MarkupFragment(markup, i);
 		}
-		else if ("_body".equals(child.getId()))
+
+		if (BODY_ID.equals(child.getId()))
 		{
 			// Find <wicket:body>
 			int index = markup.findComponentIndex(null, child.getId(), i);
@@ -488,5 +299,48 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 		// Find the markup for the child component
 		return markup.find(null, child.getId(), i);
+	}
+
+	/**
+	 * The container to be associated with the &lt;wicket:body&gt; tag
+	 */
+	public class BorderBodyContainer extends BaseBorder.BorderBodyContainer
+		implements
+			IComponentResolver
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param id
+		 */
+		public BorderBodyContainer(final String id)
+		{
+			super(id);
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+		 */
+		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+			final ComponentTag tag)
+		{
+			// Usually you add child components to Border instead of Body. Hence
+			// we need to help Body to properly resolve the children.
+			String id = tag.getId();
+			if (!id.equals(BODY_ID))
+			{
+				Component component = Border.this.get(id);
+				if (component != null)
+				{
+					component.render(markupStream);
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }

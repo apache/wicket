@@ -47,8 +47,8 @@ public class MarkupComponentBorder extends AbstractBehavior
 	static
 	{
 		// register "wicket:border" and "wicket:body"
-		WicketTagIdentifier.registerWellKnownTagName(Border.BORDER);
-		WicketTagIdentifier.registerWellKnownTagName(Border.BODY);
+		WicketTagIdentifier.registerWellKnownTagName(BaseBorder.BORDER);
+		WicketTagIdentifier.registerWellKnownTagName(BaseBorder.BODY);
 	}
 
 	private static final long serialVersionUID = 1L;

@@ -473,7 +473,7 @@ public abstract class MarkupContainer extends Component
 			return markup;
 		}
 
-		// Find the childs markup
+		// Find the child's markup
 		markup = markup.find(null, child.getId(), 0);
 		if (markup != null)
 		{
@@ -481,7 +481,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// The following code makes sure that add(new Border()).setTransparentResolver(true) is
-		// properly covered as well.
+		// properly covered as well. Can be removed in 1.6 again
 		markup = (IMarkupFragment)visitChildren(new IVisitor<Component>()
 		{
 			public Object component(final Component component)
