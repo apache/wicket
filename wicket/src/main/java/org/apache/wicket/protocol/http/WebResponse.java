@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -231,6 +232,8 @@ public class WebResponse extends Response
 						// safari chokes on empty response. but perhaps this is
 						// not the best place?
 						httpServletResponse.getWriter().write("-");
+
+						configureAjaxRedirect();
 					}
 					else
 					{
@@ -248,6 +251,21 @@ public class WebResponse extends Response
 		{
 			log.info("Already redirecting to an url current one ignored: " + url);
 		}
+	}
+
+	/**
+	 * Additional header configs for ajax redirects
+	 */
+	protected void configureAjaxRedirect()
+	{
+		// Set the encoding (see Wicket-2348)
+		final String encoding = Application.get()
+			.getRequestCycleSettings()
+			.getResponseRequestEncoding();
+
+		// Set content type based on markup type for page
+		setCharacterEncoding(encoding);
+		setContentType("text/xml; charset=" + encoding);
 	}
 
 	/**
