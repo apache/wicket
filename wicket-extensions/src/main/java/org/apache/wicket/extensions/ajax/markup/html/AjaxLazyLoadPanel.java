@@ -28,8 +28,8 @@ import org.apache.wicket.version.undo.Change;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component
- * that is pretty heavy in creation and you first want to show the user the page and the replace the
- * panel when it is ready.
+ * that is pretty heavy in creation and you first want to show the user the page and then replace
+ * the panel when it is ready.
  * 
  * @author jcompagner
  * 
@@ -37,6 +37,8 @@ import org.apache.wicket.version.undo.Change;
  */
 public abstract class AjaxLazyLoadPanel extends Panel
 {
+	private static final String LAZY_LOAD_COMPONENT_ID = "content";
+
 	private static final long serialVersionUID = 1L;
 
 	// state,
@@ -46,20 +48,25 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	private byte state = 0;
 
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 */
-	public AjaxLazyLoadPanel(String id)
+	public AjaxLazyLoadPanel(final String id)
 	{
 		this(id, null);
 	}
 
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 */
-	public AjaxLazyLoadPanel(String id, IModel<?> model)
+	public AjaxLazyLoadPanel(final String id, final IModel<?> model)
 	{
 		super(id, model);
+
 		setOutputMarkupId(true);
 
 		add(new AbstractDefaultAjaxBehavior()
@@ -69,8 +76,8 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			@Override
 			protected void respond(AjaxRequestTarget target)
 			{
-				Component component = getLazyLoadComponent("content");
-				AjaxLazyLoadPanel.this.replace(component.setRenderBodyOnly(true));
+				Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
+				AjaxLazyLoadPanel.this.replace(component);
 				target.addComponent(AjaxLazyLoadPanel.this);
 				setState((byte)2);
 			}
@@ -90,18 +97,24 @@ public abstract class AjaxLazyLoadPanel extends Panel
 		});
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
 		if (state == 0)
 		{
-			Component loadingComponent = getLoadingComponent("content");
-			add(loadingComponent.setRenderBodyOnly(true));
+			add(getLoadingComponent(LAZY_LOAD_COMPONENT_ID));
 			setState((byte)1);
 		}
 		super.onBeforeRender();
 	}
 
+	/**
+	 * 
+	 * @param state
+	 */
 	private void setState(byte state)
 	{
 		if (this.state != state)
@@ -112,9 +125,11 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	}
 
 	/**
+	 * 
 	 * @param markupId
 	 *            The components markupid.
-	 * @return The component that must be lazy created.
+	 * @return The component that must be lazy created. You may call setRenderBodyOnly(true) on this
+	 *         component if you need the body only.
 	 */
 	public abstract Component getLazyLoadComponent(String markupId);
 
@@ -123,28 +138,38 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 *            The components markupid.
 	 * @return The component to show while the real component is being created.
 	 */
-	public Component getLoadingComponent(String markupId)
+	public Component getLoadingComponent(final String markupId)
 	{
 		return new Label(markupId, "<img src=\"" +
 			RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
 	}
 
+	/**
+	 * 
+	 */
 	private final class StateChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
 
 		private final byte state;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param state
+		 */
 		public StateChange(byte state)
 		{
 			this.state = state;
 		}
 
+		/**
+		 * @see org.apache.wicket.version.undo.Change#undo()
+		 */
 		@Override
 		public void undo()
 		{
 			AjaxLazyLoadPanel.this.state = state;
 		}
-
 	}
 }
