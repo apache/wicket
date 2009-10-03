@@ -61,7 +61,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(Class< ? > beanType, ISpringContextLocator locator)
+	public SpringBeanLocator(final Class< ? > beanType, final ISpringContextLocator locator)
 	{
 		this(null, beanType, locator);
 	}
@@ -76,7 +76,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(String beanName, Class< ? > beanType, ISpringContextLocator locator)
+	public SpringBeanLocator(final String beanName, final Class< ? > beanType,
+			final ISpringContextLocator locator)
 	{
 		if (locator == null)
 		{
@@ -213,7 +214,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		if (beanName == null || "".equals(beanName))
 		{
 			beanName = getBeanNameOfClass(getSpringContext(), getBeanType());
-
 		}
 		return beanName;
 	}
@@ -273,7 +273,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof SpringBeanLocator)
 		{
@@ -291,7 +291,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	public int hashCode()
 	{
 		int hashcode = beanTypeName.hashCode();
-		if (beanName != null)
+		if (getBeanName() != null)
 		{
 			hashcode = hashcode + (127 * beanName.hashCode());
 		}
