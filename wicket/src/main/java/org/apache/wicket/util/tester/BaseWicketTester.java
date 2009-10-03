@@ -694,7 +694,6 @@ public class BaseWicketTester extends MockWebApplication
 
 			setupRequestAndResponse(true);
 			WebRequestCycle requestCycle = createRequestCycle();
-			callOnBeginRequest(requestCycle);
 			AjaxRequestTarget target = getApplication().newAjaxRequestTarget(link.getPage());
 			requestCycle.setRequestTarget(target);
 
