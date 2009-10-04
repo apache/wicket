@@ -50,13 +50,15 @@ public class TestHomePage extends TestCase
 
 		// formTester.setValue("..:textfield1", "testxxx");
 		TextField<String> textfield = (TextField<String>)tester.getLastRenderedPage().get(
-			"border:textfield");
+			"border:form:border_body:textfield");
 		tester.getServletRequest().setParameter(textfield.getInputName(), "abcde");
 
-		MyTextField datefield = (MyTextField)tester.getLastRenderedPage().get("border:datefield");
+		MyTextField datefield = (MyTextField)tester.getLastRenderedPage().get(
+			"border:form:border_body:datefield");
 		tester.getServletRequest().setParameter(datefield.getInputName(), "aaabbb");
 
-		MyDateField datefield2 = (MyDateField)tester.getLastRenderedPage().get("border:datefield2");
+		MyDateField datefield2 = (MyDateField)tester.getLastRenderedPage().get(
+			"border:form:border_body:datefield2");
 		TextField<String> date = (TextField<String>)datefield2.get("date");
 		tester.getServletRequest().setParameter(date.getInputName(), "abcdef");
 
@@ -68,10 +70,11 @@ public class TestHomePage extends TestCase
 		assertEquals("aaabbb-converted", page.getDatefield());
 		assertEquals("abcdef-converted", page.getDatefield2());
 
-		assertEquals("abcde", page.get("border:lbltextfield").getDefaultModelObjectAsString());
-		assertEquals("aaabbb-converted", page.get("border:lbldatefield")
+		assertEquals("abcde", page.get("border:form:border_body:lbltextfield")
 			.getDefaultModelObjectAsString());
-		assertEquals("abcdef-converted", page.get("border:lbldatefield2")
+		assertEquals("aaabbb-converted", page.get("border:form:border_body:lbldatefield")
+			.getDefaultModelObjectAsString());
+		assertEquals("abcdef-converted", page.get("border:form:border_body:lbldatefield2")
 			.getDefaultModelObjectAsString());
 	}
 }

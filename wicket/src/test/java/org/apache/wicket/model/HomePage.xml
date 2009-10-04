@@ -18,5 +18,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
 <properties>
-    <entry key="bookingForm.nameBorder.partyDetails.name.Required">Name is required</entry>
+    <entry key="bookingForm.nameBorder.nameBorder_body.partyDetails.name.Required">Name is required</entry>
 </properties>

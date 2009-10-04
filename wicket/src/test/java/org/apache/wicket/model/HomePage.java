@@ -63,8 +63,8 @@ public class HomePage extends WebPage
 			name.add(new StringValidator.LengthBetweenValidator(1, 30));
 
 			FormComponentFeedbackBorder nameBorder = new FormComponentFeedbackBorder("nameBorder");
-			nameBorder.add(name);
 			add(nameBorder);
+			nameBorder.addToBorderBody(name);
 		}
 	}
 

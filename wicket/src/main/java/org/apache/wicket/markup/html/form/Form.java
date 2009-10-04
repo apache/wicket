@@ -20,14 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Request;
@@ -37,7 +35,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
@@ -1088,8 +1085,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-
-		visitChildrenInContainingBorder(visitor);
 	}
 
 	/**
@@ -1102,38 +1097,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	public final void visitFormComponentsPostOrder(final FormComponent.IVisitor visitor)
 	{
 		FormComponent.visitFormComponentsPostOrder(this, visitor);
-
-		if (getParent() instanceof Border)
-		{
-			FormComponent.visitFormComponentsPostOrder(getParent(), visitor);
-		}
-	}
-
-	/**
-	 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented, because there
-	 * are just too many exceptions in the code base because of borders. This time it is to solve
-	 * the problem tested in BoxBorderTestPage_3 where the Form is defined in the box border and the
-	 * FormComponents are in the "body". Thus, the formComponents are not children of the form. They
-	 * are rather children of the border, as the Form itself.
-	 * 
-	 * @param visitor
-	 *            The {@link Component}.{@link IVisitor} used to visit the children.
-	 */
-	private void visitChildrenInContainingBorder(final FormComponent.IVisitor visitor)
-	{
-		if (getParent() instanceof Border)
-		{
-			MarkupContainer border = getParent();
-			Iterator<? extends Component> iter = border.iterator();
-			while (iter.hasNext())
-			{
-				Component child = iter.next();
-				if (child instanceof FormComponent)
-				{
-					visitor.formComponent((FormComponent<?>)child);
-				}
-			}
-		}
 	}
 
 	/**
@@ -1171,27 +1134,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				return Component.IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
-
-		if (!error[0])
-		{
-			if (getParent() instanceof Border)
-			{
-				MarkupContainer border = getParent();
-				Iterator<? extends Component> iter = border.iterator();
-				while (iter.hasNext())
-				{
-					Component child = iter.next();
-					if ((child != this) && (child instanceof FormComponent))
-					{
-						visitor.component(child);
-						if (error[0])
-						{
-							break;
-						}
-					}
-				}
-			}
-		}
 
 		return error[0];
 	}
@@ -1905,12 +1847,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	private void internalUpdateFormComponentModels()
 	{
 		FormComponent.visitComponentsPostOrder(this, new FormModelUpdateVisitor(this));
-
-		MarkupContainer border = findParent(Border.class);
-		if (border != null)
-		{
-			FormComponent.visitComponentsPostOrder(border, new FormModelUpdateVisitor(this));
-		}
 	}
 
 	/**
@@ -2152,34 +2088,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public static Form<?> findForm(Component component)
 	{
-		class FindFormVisitor implements Component.IVisitor<Form<?>>
-		{
-			Form<?> form = null;
-
-			public Object component(Form<?> component)
-			{
-				form = component;
-				return Component.IVisitor.STOP_TRAVERSAL;
-			}
-		}
-
-		Form<?> form = component.findParent(Form.class);
-		if (form == null)
-		{
-			// check whether the form is a child of a surrounding border
-			Border border = component.findParent(Border.class);
-			while ((form == null) && (border != null))
-			{
-				FindFormVisitor formVisitor = new FindFormVisitor();
-				border.visitChildren(Form.class, formVisitor);
-				form = formVisitor.form;
-				if (form == null)
-				{
-					border = border.findParent(Border.class);
-				}
-			}
-		}
-		return form;
-
+		return component.findParent(Form.class);
 	}
 }

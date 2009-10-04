@@ -32,15 +32,13 @@ public class BoxBorderTestPage_2 extends WebPage
 
 	/**
 	 * Construct.
-	 * 
-	 * 
 	 */
 	public BoxBorderTestPage_2()
 	{
 		BoxBorder border = new BoxBorder("box");
 		add(border);
 
-		border.add(new TextField<String>("text"));
-		border.add(new Image("img"));
+		border.addToBorderBody(new TextField<String>("text"));
+		border.addToBorderBody(new Image("img"));
 	}
 }

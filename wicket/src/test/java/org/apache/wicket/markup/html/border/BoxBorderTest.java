@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;
@@ -78,8 +79,8 @@ public class BoxBorderTest extends WicketTestCase
 		assertNotNull(border);
 		Form<?> form = (Form<?>)tester.getLastRenderedPage().get("border:myForm");
 
-		TextField<String> input = (TextField<String>)tester.getLastRenderedPage()
-			.get("border:name");
+		TextField<String> input = (TextField<String>)tester.getLastRenderedPage().get(
+			"border:myForm:border_body:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
 		tester.setupRequestAndResponse();
@@ -90,7 +91,8 @@ public class BoxBorderTest extends WicketTestCase
 
 		tester.processRequestCycle();
 
-		input = (TextField<String>)tester.getLastRenderedPage().get("border:name");
+		input = (TextField<String>)tester.getLastRenderedPage().get(
+			"border:myForm:border_body:name");
 		assertEquals("jdo", input.getDefaultModelObjectAsString());
 	}
 

@@ -47,9 +47,9 @@ public class HideableBorder extends Border
 				return !hidden;
 			}
 		};
-		add(containerWrapper);
+		addToBorder(containerWrapper);
 		containerWrapper.add(getBodyContainer());
-		add(new AjaxLink("hideLink")
+		addToBorder(new AjaxLink("hideLink")
 		{
 			private static final long serialVersionUID = 1L;
 

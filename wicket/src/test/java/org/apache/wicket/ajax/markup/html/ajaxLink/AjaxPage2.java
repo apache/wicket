@@ -40,14 +40,13 @@ public class AjaxPage2 extends WebPage
 		super();
 
 		myBorder = new BoxBorder("pageLayout");
-		myBorder.setTransparentResolver(true);
 		add(myBorder);
 
 		ajaxLabel = new Label("ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
-		add(ajaxLabel);
+		myBorder.addToBorderBody(ajaxLabel);
 
-		add(new AjaxLink("ajaxLink")
+		myBorder.addToBorderBody(new AjaxLink("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

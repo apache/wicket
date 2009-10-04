@@ -78,11 +78,17 @@ public class HomePage extends WebPage
 		MyBorder border = new MyBorder("border");
 		add(border);
 
-		border.add(new TextField<String>("textfield", new PropertyModel<String>(this, "textfield")));
-		border.add(new Label("lbltextfield", new PropertyModel<String>(this, "textfield")));
-		border.add(new MyTextField("datefield", new PropertyModel<String>(this, "datefield")).setOutputMarkupId(true));
-		border.add(new Label("lbldatefield", new PropertyModel<String>(this, "datefield")));
-		border.add(new MyDateField("datefield2", new PropertyModel<String>(this, "datefield2")).setOutputMarkupId(true));
-		border.add(new Label("lbldatefield2", new PropertyModel<String>(this, "datefield2")));
+		border.addToBorderBody(new TextField<String>("textfield", new PropertyModel<String>(this,
+			"textfield")));
+		border.addToBorderBody(new Label("lbltextfield", new PropertyModel<String>(this,
+			"textfield")));
+		border.addToBorderBody(new MyTextField("datefield", new PropertyModel<String>(this,
+			"datefield")).setOutputMarkupId(true));
+		border.addToBorderBody(new Label("lbldatefield", new PropertyModel<String>(this,
+			"datefield")));
+		border.addToBorderBody(new MyDateField("datefield2", new PropertyModel<String>(this,
+			"datefield2")).setOutputMarkupId(true));
+		border.addToBorderBody(new Label("lbldatefield2", new PropertyModel<String>(this,
+			"datefield2")));
 	}
 }

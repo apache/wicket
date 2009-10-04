@@ -80,7 +80,8 @@ public class HomePageTest extends TestCase
 	 */
 	public void testWithBorder2()
 	{
-		TextField textfield = (TextField)tester.getLastRenderedPage().get("border:textfield1");
+		TextField textfield = (TextField)tester.getLastRenderedPage().get(
+			"border:form2:border_body:textfield1");
 		tester.getServletRequest().setParameter(textfield.getInputName(), "abcde");
 		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		tester.assertNoErrorMessage();

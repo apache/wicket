@@ -41,7 +41,6 @@ import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
-import org.apache.wicket.markup.resolver.BorderBodyResolver;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
@@ -913,7 +912,6 @@ public abstract class Application
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
-		pageSettings.addComponentResolver(new BorderBodyResolver());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",

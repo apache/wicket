@@ -454,6 +454,14 @@ public class MarkupStream
 	}
 
 	/**
+	 * @return A markup fragment starting at the current position
+	 */
+	public final IMarkupFragment getMarkupFragment()
+	{
+		return new MarkupFragment(markup, currentIndex);
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message

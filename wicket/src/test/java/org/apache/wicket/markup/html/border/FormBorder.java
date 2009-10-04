@@ -40,12 +40,10 @@ public class FormBorder extends Border
 	{
 		super(id);
 
-		form = new Form("myForm");
-		add(form);
+		form = new Form<Void>("myForm");
+		addToBorder(form);
 
-		// Due to BorderBodyResolver it works without the following line. But
-		// for clarity reasons it is recommended to use it.
-		// form.add(getBodyContainer());
+		form.add(getBodyContainer());
 	}
 
 	/**

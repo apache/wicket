@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.border.Border;
 
 
 /**
@@ -38,6 +39,6 @@ public class BoxBorderTestPage_6 extends WebPage
 		add(border1);
 
 		Border border2 = new BoxBorder("border2");
-		border1.add(border2);
+		border1.getBodyContainer().add(border2);
 	}
 }

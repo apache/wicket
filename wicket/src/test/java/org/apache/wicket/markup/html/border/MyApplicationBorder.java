@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.border;
 
 
+
 /**
- * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
@@ -34,6 +34,8 @@ public class MyApplicationBorder extends Border
 		super(id);
 
 		Border border = new BoxBorder("boxBorder");
-		add(border);
+		addToBorder(border);
+
+		border.add(getBodyContainer());
 	}
 }

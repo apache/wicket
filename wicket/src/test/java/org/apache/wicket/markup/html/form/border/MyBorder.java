@@ -32,7 +32,8 @@ public class MyBorder extends Border
 
 		final Form<Void> form = new Form<Void>("form");
 		form.setOutputMarkupId(true);
-		add(form);
+		addToBorder(form);
+		form.add(getBodyContainer());
 
 		form.add(new AjaxSubmitLink("submit")
 		{

@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import org.apache.wicket.markup.html.border.Border;
+
 
 /**
- * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */

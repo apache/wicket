@@ -30,23 +30,14 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 
 	/**
 	 * Construct.
-	 * 
-	 * 
 	 */
 	public BorderRenderWrappedTestPage_1()
 	{
 		BoxBorder border = new BoxBorder("box");
-// border.setBorderBodyVisible(false);
 		border.getBodyContainer().setVisible(false);
 
 		add(border);
 
-		// NOTE in order for body.setVisible(false) to be able to work properly,
-		// you must add the body child components to the body. It is only for
-		// the developers convinience that he may add all border child
-		// components to the border.
-// border.add(new TextField("text"));
-// border.add(new Image("img"));
 		border.getBodyContainer().add(new TextField<String>("text"));
 		border.getBodyContainer().add(new Image("img"));
 	}

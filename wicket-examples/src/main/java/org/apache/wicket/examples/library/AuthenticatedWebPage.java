@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.library;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.border.Border;
 
@@ -41,10 +43,11 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	public AuthenticatedWebPage()
 	{
 		// Create border and add it to the page
-		border = new LibraryApplicationBorder("border");
-		border.setTransparentResolver(true);
-		super.add(border);
+		add(border = new LibraryApplicationBorder("border"));
 
+		// The WicketExamplePage constructor already created and added it. We need to move it into
+		// the border.
+		border.addToBorder(get("mainNavigation"));
 	}
 
 	/**
@@ -55,5 +58,36 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	public LibrarySession getLibrarySession()
 	{
 		return (LibrarySession)getSession();
+	}
+
+	/**
+	 * For all components which shall not be added to the border
+	 * 
+	 * @param children
+	 * @return this.
+	 */
+	protected MarkupContainer addToPage(Component... children)
+	{
+		return super.add(children);
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#add(org.apache.wicket.Component[])
+	 */
+	@Override
+	public MarkupContainer add(final Component... children)
+	{
+		for (Component child : children)
+		{
+			if ((border == null) || (child == border))
+			{
+				super.add(children);
+			}
+			else
+			{
+				border.addToBorderBody(child);
+			}
+		}
+		return this;
 	}
 }

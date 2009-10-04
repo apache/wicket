@@ -17,13 +17,14 @@
 package org.apache.wicket.examples.library;
 
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
  * Simple logout page.
  * 
  * @author Jonathan Locke
  */
-public class SignOut extends AuthenticatedWebPage
+public class SignOut extends WicketExamplePage
 {
 	/**
 	 * Constructor

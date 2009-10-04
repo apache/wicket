@@ -30,7 +30,6 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.PackageResource;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -379,10 +378,6 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private void loadStaticImage(final String path)
 	{
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();
-		if (parent instanceof Border)
-		{
-			parent = parent.getParent();
-		}
 		final Class scope = parent.getClass();
 		resourceReference = new ResourceReference(scope, path)
 		{

@@ -88,7 +88,7 @@ public class AjaxLinkTest extends WicketTestCase
 		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
 
 		Page page = tester.getLastRenderedPage();
-		Component ajaxLink = page.get("ajaxLink");
+		Component ajaxLink = page.get("pageLayout:pageLayout_body:ajaxLink");
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 
 		executedBehavior(AjaxPage2.class, behavior, "AjaxPage2-1_ExpectedResult.html");
@@ -113,7 +113,7 @@ public class AjaxLinkTest extends WicketTestCase
 		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
 
 		Page page = tester.getLastRenderedPage();
-		Component ajaxLink = page.get("ajaxLink");
+		Component ajaxLink = page.get("border:border_body:ajaxLink");
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 
 		executedBehavior(AjaxPage2.class, behavior, "AjaxLinkWithBorderPage-1ExpectedResult.html");

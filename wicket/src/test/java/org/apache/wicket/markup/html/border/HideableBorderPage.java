@@ -35,7 +35,7 @@ public class HideableBorderPage extends WebPage
 	{
 		border = new HideableBorder("hideable");
 		add(border);
-		border.add(new Label("content", "label"));
+		border.addToBorderBody(new Label("content", "label"));
 	}
 
 	/** @return hideable border */
@@ -43,6 +43,4 @@ public class HideableBorderPage extends WebPage
 	{
 		return border;
 	}
-
-
 }

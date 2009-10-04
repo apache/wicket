@@ -123,7 +123,7 @@ public abstract class MarkupContainer extends Component
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public final MarkupContainer add(final Component... childs)
+	public MarkupContainer add(final Component... childs)
 	{
 		for (Component child : childs)
 		{
@@ -479,29 +479,6 @@ public abstract class MarkupContainer extends Component
 		{
 			return markup;
 		}
-
-		// The following code makes sure that add(new Border()).setTransparentResolver(true) is
-		// properly covered as well. Can be removed in 1.6 again
-		markup = (IMarkupFragment)visitChildren(new IVisitor<Component>()
-		{
-			public Object component(final Component component)
-			{
-				if (component instanceof MarkupContainer)
-				{
-					MarkupContainer container = (MarkupContainer)component;
-					if (container.isTransparentResolver())
-					{
-						IMarkupFragment markup = container.getMarkup(child);
-						if (markup != null)
-						{
-							return markup;
-						}
-						return CONTINUE_TRAVERSAL;
-					}
-				}
-				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-			}
-		});
 
 		// This is to make migration for Items from 1.4 to 1.5 more easy
 		if (Character.isDigit(child.getId().charAt(0)))

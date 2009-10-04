@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.Model;
 
 
@@ -39,6 +40,6 @@ public class BoxBorderTestPage_11 extends WebPage
 		Border border = new TogglePanel("border", new Model<String>("model"));
 		add(border);
 
-		border.add(new Label("label", "my test"));
+		border.addToBorderBody(new Label("label", "my test"));
 	}
 }

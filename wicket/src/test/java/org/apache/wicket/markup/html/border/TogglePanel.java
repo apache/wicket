@@ -55,6 +55,6 @@ public class TogglePanel extends Border
 		};
 		link.add(new Label("titleLabel", titleModel));
 
-		add(link);
+		addToBorder(link);
 	}
 }

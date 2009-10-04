@@ -45,7 +45,7 @@ public class TestHomePage_2134 extends TestCase
 		// assert rendered page class
 		tester.assertRenderedPage(CommonModelPage.class);
 
-		FormTester formTester = tester.newFormTester("border:form1");
+		FormTester formTester = tester.newFormTester("border:border_body:form1");
 		formTester.submit();
 
 		CommonModelPage page = (CommonModelPage)tester.getLastRenderedPage();
@@ -64,7 +64,7 @@ public class TestHomePage_2134 extends TestCase
 		// assert rendered page class
 		tester.assertRenderedPage(CommonModelPage.class);
 
-		FormTester formTester = tester.newFormTester("border:form1");
+		FormTester formTester = tester.newFormTester("border:border_body:form1");
 		formTester.setValue("quantity1", "123");
 		// formTester.setValue("quantity2", "44");
 		formTester.submit();
@@ -85,7 +85,7 @@ public class TestHomePage_2134 extends TestCase
 		// assert rendered page class
 		tester.assertRenderedPage(CommonModelPage.class);
 
-		FormTester formTester = tester.newFormTester("border:form2");
+		FormTester formTester = tester.newFormTester("border:border_body:form2");
 		// formTester.setValue("quantity1", "123");
 		formTester.setValue("quantity2", "44");
 		formTester.submit();

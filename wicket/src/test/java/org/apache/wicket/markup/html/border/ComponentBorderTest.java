@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.border.Border;
 
 /**
  * @author jcompagner
@@ -35,15 +36,6 @@ public class ComponentBorderTest extends WicketTestCase
 	public ComponentBorderTest(String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testMarkupComponentBorder() throws Exception
-	{
-		executeTest(MarkupComponentBorderTestPage.class,
-			"MarkupComponentBorderTestPage_ExpectedResult.html");
 	}
 
 	/**
@@ -86,11 +78,14 @@ public class ComponentBorderTest extends WicketTestCase
 		Border border = (Border)page.get("hideable");
 		assertNotNull(border);
 		AjaxLink link = (AjaxLink)border.get("hideLink");
-		WebMarkupContainer wrapper = (WebMarkupContainer)border.get("wrapper");
 		assertNotNull(link);
+		WebMarkupContainer wrapper = (WebMarkupContainer)border.get("wrapper");
+		assertNotNull(wrapper);
 		tester.clickLink("hideable:hideLink");
+		String ajaxResponse = tester.getServletResponse().getDocument();
 		tester.assertComponentOnAjaxResponse(wrapper);
 		tester.clickLink("hideable:hideLink");
+		ajaxResponse = tester.getServletResponse().getDocument();
 		tester.assertComponentOnAjaxResponse(wrapper);
 	}
 }

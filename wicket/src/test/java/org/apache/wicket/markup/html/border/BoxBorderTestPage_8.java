@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 
 
@@ -36,9 +37,9 @@ public class BoxBorderTestPage_8 extends WebPage
 		add(border1);
 
 		Fragment panel1 = new Fragment("panel1", "frag1", this);
-		border1.add(panel1);
+		border1.addToBorderBody(panel1);
 
 		Fragment panel2 = new Fragment("panel2", "frag2", this);
-		border1.add(panel2);
+		border1.addToBorderBody(panel2);
 	}
 }
