@@ -136,4 +136,13 @@ public class EnclosureTest extends WicketTestCase
 		assertTrue(doc.contains("content1"));
 		assertTrue(doc.contains("content2"));
 	}
+
+	/**
+	 * 
+	 */
+	public void testRender()
+	{
+		tester = new WicketTester(EnclosurePage_7.class);
+		tester.startPage(EnclosurePage_7.class);
+	}
 }

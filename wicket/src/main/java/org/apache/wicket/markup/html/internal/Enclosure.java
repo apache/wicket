@@ -195,10 +195,13 @@ public class Enclosure extends WebMarkupContainer
 		while (it.hasNext())
 		{
 			final ComponentTag tag = it.next();
-			final Component child = container.get(tag.getId());
-			// record original visiblity allowed value, will restore later
-			changes.put(child, child.isVisibilityAllowed());
-			child.setVisibilityAllowed(isVisible());
+			if (tag.isAutoComponentTag() == false)
+			{
+				final Component child = container.get(tag.getId());
+				// record original visiblity allowed value, will restore later
+				changes.put(child, child.isVisibilityAllowed());
+				child.setVisibilityAllowed(isVisible());
+			}
 		}
 		it.rewind();
 	}
@@ -225,43 +228,49 @@ public class Enclosure extends WebMarkupContainer
 		{
 			final ComponentTag tag = it.next();
 
-			Component child = container.get(tag.getId());
-			if (child == null)
+			if (tag.isAutoComponentTag() == false)
 			{
-				// component does not yet exist in the container, attempt to resolve it using
-				// resolvers
-				final int tagIndex = it.getCurrentIndex();
-
-				// because the resolvers can auto-add and therefore immediately render the component
-				// we have to buffer the output since we do not yet know the visibility of the
-				// enclosure
-				CharSequence buffer = new ResponseBufferZone(getRequestCycle(), markupStream)
+				Component child = container.get(tag.getId());
+				if (child == null)
 				{
-					@Override
-					protected void executeInsideBufferedZone()
+					// component does not yet exist in the container, attempt to resolve it using
+					// resolvers
+					final int tagIndex = it.getCurrentIndex();
+
+					// because the resolvers can auto-add and therefore immediately render the
+					// component we have to buffer the output since we do not yet know the
+					// visibility of the enclosure
+					CharSequence buffer = new ResponseBufferZone(getRequestCycle(), markupStream)
 					{
-						markupStream.setCurrentIndex(tagIndex);
-						ComponentResolvers.resolve(getApplication(), container, markupStream, tag);
+						@Override
+						protected void executeInsideBufferedZone()
+						{
+							markupStream.setCurrentIndex(tagIndex);
+							ComponentResolvers.resolve(getApplication(), container, markupStream,
+								tag);
+						}
+					}.execute();
+
+					child = container.get(tag.getId());
+					checkChildComponent(child);
+
+					if (buffer.length() > 0)
+					{
+						// we have already rendered this child component, insert a stub component
+						// that will dump the markup during the normal render process if the
+						// enclosure is visible
+						final Component stub = new AutoMarkupLabel(child.getId(), buffer);
+						container.replace(stub); // ok here because we are replacing auto with auto
 					}
-				}.execute();
-
-				child = container.get(tag.getId());
-				checkChildComponent(child);
-
-				if (buffer.length() > 0)
-				{
-					// we have already rendered this child component, insert a stub component that
-					// will dump the markup during the normal render process if the enclosure is
-					// visible
-					final Component stub = new AutoMarkupLabel(child.getId(), buffer);
-					container.replace(stub); // ok here because we are replacing auto with auto
 				}
 			}
 		}
 		it.rewind();
 	}
 
-
+	/**
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
 	@Override
 	protected void onDetach()
 	{
@@ -269,6 +278,9 @@ public class Enclosure extends WebMarkupContainer
 		super.onDetach();
 	}
 
+	/**
+	 * 
+	 */
 	private void restoreOriginalChildVisibility()
 	{
 		if (changes != null)
