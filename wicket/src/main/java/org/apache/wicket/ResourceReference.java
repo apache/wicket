@@ -135,6 +135,11 @@ public class ResourceReference implements IClusterable
 			SharedResources sharedResources = application.getSharedResources();
 			// Try to get resource from Application repository
 			resource = sharedResources.get(getScope(), name, locale, style, true);
+			if ((resource != null) && (resource instanceof PackageResource))
+			{
+				// see newResource() as well.
+				locale = ((PackageResource)resource).getLocale();
+			}
 
 			// Not available yet?
 			if (resource == null)
