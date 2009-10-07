@@ -220,9 +220,8 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button.
+	 * whenever the user clicks this particular button, except if validation fails.
 	 */
-	// TODO 1.5: make this method abstract
 	public void onSubmit()
 	{
 	}
