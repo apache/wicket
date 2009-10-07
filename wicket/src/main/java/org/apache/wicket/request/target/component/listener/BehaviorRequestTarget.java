@@ -91,6 +91,12 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 
 		final int idAsInt = Integer.parseInt(id);
 		final List<IBehavior> behaviors = component.getBehaviorsRawList();
+		if (behaviors == null)
+		{
+			throw new PageExpiredException("No behaviors attached to component " +
+				component.toString());
+		}
+
 		IBehaviorListener behaviorListener = null;
 
 		if (behaviors.size() > idAsInt)
