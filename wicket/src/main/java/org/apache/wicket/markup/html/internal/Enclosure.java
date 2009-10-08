@@ -196,10 +196,16 @@ public class Enclosure extends WebMarkupContainer
 			if (tag.isAutoComponentTag() == false)
 			{
 				final Component child = container.get(tag.getId());
+				final boolean childVisibility = child.isVisibilityAllowed();
 
-				// record original visiblity allowed value, will restore later
-				changes.put(child, child.isVisibilityAllowed());
-				child.setVisibilityAllowed(isVisible());
+				// we only apply visibility changes to hide a component, otherwise it would be
+				// possible to unhide a component which should be hidden
+				if (!isVisible() && childVisibility)
+				{
+					// record original visiblity allowed value, will restore later
+					changes.put(child, childVisibility);
+					child.setVisibilityAllowed(false);
+				}
 			}
 		}
 		it.rewind();
