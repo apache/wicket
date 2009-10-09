@@ -33,6 +33,7 @@ import org.apache.wicket.examples.linkomatic.LinkomaticTest;
 import org.apache.wicket.examples.niceurl.NiceUrlTest;
 import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
+import org.apache.wicket.examples.template.TemplateTest;
 import org.apache.wicket.util.license.ApacheLicenceHeaderTest;
 
 import com.meterware.httpunit.HttpUnitOptions;
@@ -69,6 +70,7 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(RepeaterTest.class);
 		suite.addTestSuite(ImagesTest.class);
 		suite.addTestSuite(LibraryTest.class);
+		suite.addTestSuite(TemplateTest.class);
 		suite.addTestSuite(ApacheLicenceHeaderTest.class);
 		return new JettyTestCaseDecorator(suite);
 	}

@@ -73,11 +73,5 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * Configuration files with no "intelligent" content
 		 */
 		"src/main/java/commons-logging.properties", "src/main/java/log4j.properties" };
-
-		javaIgnore = new String[] {
-		/*
-		 * MIT style license. See NOTICE
-		 */
-		"src/test/java/com/meterware/httpunit/ParsedHTML.java" };
 	}
 }

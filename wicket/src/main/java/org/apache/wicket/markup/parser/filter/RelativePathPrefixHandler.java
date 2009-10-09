@@ -24,6 +24,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -145,7 +146,8 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		if ((tag != null) && (tag.getId().startsWith(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID)))
 		{
@@ -153,28 +155,34 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 
 			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
 				container.getPage().getAutoIndex();
-			tag.setId(id);
 
-			if (tag.isOpenClose())
+			// we do not want to mess with the hierarchy, so the container has to be
+			// transparent as it may have wicket components inside. for example a raw anchor tag
+			// that contains a label.
+			wc = new WebMarkupContainer(id)
 			{
-				wc = new WebComponent(id);
-			}
-			else
-			{
-				// we do not want to mess with the hierarchy, so the container has to be
-				// transparent as it may have wicket components inside. for example a raw anchor tag
-				// that contains a label.
-				wc = new WebMarkupContainer(id)
+				private static final long serialVersionUID = 1L;
+
+				/**
+				 * @see org.apache.wicket.Component#getMarkup()
+				 */
+				@Override
+				public IMarkupFragment getMarkup()
 				{
-					private static final long serialVersionUID = 1L;
+					// This is a small trick. We can not find markup fragments by ID, only by
+					// Component. To search for an ID we simply need to create a dummy component
+					// with that ID.
+					return getParent().getMarkup(
+						new WebComponent(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID));
+				}
 
-					@Override
-					public boolean isTransparentResolver()
-					{
-						return true;
-					}
-				};
-			}
+				@Override
+				public boolean isTransparentResolver()
+				{
+					return tag.isOpenClose() == false;
+				}
+			};
+
 			container.autoAdd(wc, markupStream);
 			return true;
 		}
