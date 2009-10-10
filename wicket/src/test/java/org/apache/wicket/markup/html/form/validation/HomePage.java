@@ -126,6 +126,12 @@ public class HomePage extends WebPage
 				formSubmitted = formSubmitted | AJAX;
 				target.addComponent(form);
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
+
 		});
 		form3.add(new SubmitLink("submit2")
 		{

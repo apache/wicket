@@ -91,6 +91,13 @@ public class FileUploadPage extends BasePage
 				target.addComponent(feedback);
 			}
 
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+				// update feedback to display errors
+				target.addComponent(feedback);
+			}
+
 		});
 	}
 }

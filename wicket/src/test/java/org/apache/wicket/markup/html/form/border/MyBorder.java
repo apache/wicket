@@ -44,6 +44,11 @@ public class MyBorder extends Border
 			{
 				target.addComponent(form);
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		});
 	}
 }

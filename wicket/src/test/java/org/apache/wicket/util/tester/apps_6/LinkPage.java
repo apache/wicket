@@ -118,6 +118,11 @@ public class LinkPage extends WebPage
 			{
 				getRequestCycle().setResponsePage(new ResultPage("A form label"));
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		};
 		form.add(submit);
 	}

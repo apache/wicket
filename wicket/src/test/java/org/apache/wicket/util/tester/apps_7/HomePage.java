@@ -62,6 +62,11 @@ public class HomePage extends WebPage
 			{
 
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		});
 	}
 }

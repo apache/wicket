@@ -71,6 +71,11 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 				assertNotNull(form);
 				linkClicked = true;
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		});
 
 		tester.startPage(new ITestPageSource()
@@ -116,6 +121,11 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			{
 				assertNotNull(form);
 				linkClicked = true;
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
 			}
 		};
 		page.add(link);

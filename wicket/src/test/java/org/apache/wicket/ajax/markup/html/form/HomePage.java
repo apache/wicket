@@ -78,6 +78,11 @@ class TestForm extends Form<Void>
 			{
 				System.out.println("Ajax ok");
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		}).setDefaultFormProcessing(false));
 	}
 

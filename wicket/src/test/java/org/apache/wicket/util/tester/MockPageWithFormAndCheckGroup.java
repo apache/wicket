@@ -66,6 +66,11 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 			{
 				target.addComponent(this);
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		});
 	}
 

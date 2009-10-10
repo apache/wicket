@@ -189,10 +189,6 @@ public abstract class AjaxButton extends Button
 	 * 
 	 * @param target
 	 * @param form
-	 * 
-	 *            TODO 1.3: Make abstract to be consistent with onSubmit()
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
-	{
-	}
+	protected abstract void onError(AjaxRequestTarget target, Form<?> form);
 }

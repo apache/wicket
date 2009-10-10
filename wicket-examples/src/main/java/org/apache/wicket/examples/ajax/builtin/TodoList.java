@@ -264,6 +264,11 @@ public class TodoList extends BasePage
 						// add the item
 						onAdd(item, target);
 					}
+
+					@Override
+					protected void onError(AjaxRequestTarget target, Form<?> form)
+					{
+					}
 				});
 
 				add(new AjaxButton("cancel", this)
@@ -272,6 +277,11 @@ public class TodoList extends BasePage
 					public void onSubmit(AjaxRequestTarget target, Form<?> form)
 					{
 						onCancelTodo(target);
+					}
+
+					@Override
+					protected void onError(AjaxRequestTarget target, Form<?> form)
+					{
 					}
 				});
 			}
