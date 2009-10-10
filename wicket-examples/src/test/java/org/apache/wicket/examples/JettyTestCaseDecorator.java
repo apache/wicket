@@ -28,16 +28,16 @@ import org.mortbay.jetty.webapp.WebAppContext;
  * Test decorator that starts a jetty instance
  * 
  * @author ivaynberg
- * 
  */
 public class JettyTestCaseDecorator extends TestSetup
 {
-
 	private Server server;
 	private String contextPath;
 	private String webappLocation;
 
 	/**
+	 * Construct.
+	 * 
 	 * @param test
 	 */
 	public JettyTestCaseDecorator(Test test)
@@ -107,5 +107,4 @@ public class JettyTestCaseDecorator extends TestSetup
 	{
 		this.webappLocation = webappLocation;
 	}
-
 }

@@ -30,7 +30,7 @@ public class Page1 extends TemplatePage
 	 */
 	public Page1()
 	{
-		setPageTitle("Template example, page 1");
+		setPageTitle("Template example, page 1 - page inheritance");
 		add(new Panel1("panel1"));
 	}
 }
