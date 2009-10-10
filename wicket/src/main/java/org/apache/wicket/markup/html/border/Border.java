@@ -148,7 +148,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	static final String BODY_ID = "_body";
 
 	/** The body component associated with <wicket:body> */
-	private final MarkupContainer body;
+	private final BorderBodyContainer body;
 
 	/**
 	 * only required during render phase. The markup stream associated with <span
@@ -187,7 +187,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @return The border body container
 	 */
-	public final MarkupContainer getBodyContainer()
+	public final BorderBodyContainer getBodyContainer()
 	{
 		return body;
 	}
@@ -198,7 +198,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @param id
 	 * @return A new instance
 	 */
-	MarkupContainer newBorderBodyContainer(final String id)
+	BorderBodyContainer newBorderBodyContainer(final String id)
 	{
 		return new BorderBodyContainer(id);
 	}

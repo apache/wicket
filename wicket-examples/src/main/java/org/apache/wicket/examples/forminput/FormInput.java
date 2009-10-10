@@ -103,8 +103,7 @@ public class FormInput extends WicketExamplePage
 			// display the multiply result
 			Label multiplyLabel = new Label("multiplyLabel", new PropertyModel<Integer>(
 				getDefaultModel(), "multiply"));
-			// just for fun, add a border so that our result will be displayed
-			// as '[ x ]'
+			// just for fun, add a border so that our result will be displayed as '[ x ]'
 			multiplyLabel.add(new BeforeAndAfterBorder());
 			add(multiplyLabel);
 			RadioChoice<String> rc = new RadioChoice<String>("numberRadioChoice", NUMBERS).setSuffix("");
