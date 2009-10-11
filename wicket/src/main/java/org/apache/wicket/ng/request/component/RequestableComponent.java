@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.component;
 import java.util.List;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.ng.model.IDetachable;
+import org.apache.wicket.model.IDetachable;
 
 /**
  * Base interface for components. The purpose of this interface is to make certain parts of Wicket
@@ -42,14 +42,14 @@ public interface RequestableComponent extends IDetachable
 	 * @return The id of this component
 	 */
 	public String getId();
-	
+
 	/**
 	 * Returns page this component belongs to.
 	 * 
 	 * @return page instance or <code>null</code>
 	 */
 	public RequestablePage getPage();
-	
+
 	/**
 	 * Gets the component at the given path.
 	 * 
@@ -58,15 +58,15 @@ public interface RequestableComponent extends IDetachable
 	 * @return The component at the path
 	 */
 	public RequestableComponent get(String path);
-	
+
 	/**
-	 * Returns true if the listener interface method can be called on this component. Normally
-	 * this would check if component is enabled and visible in hierarchy.
+	 * Returns true if the listener interface method can be called on this component. Normally this
+	 * would check if component is enabled and visible in hierarchy.
 	 * 
 	 * @return
 	 */
 	public boolean canCallListenerInterface();
-	
+
 	/**
 	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.

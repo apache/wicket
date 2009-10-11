@@ -1,6 +1,6 @@
 package org.apache.wicket.ng.page;
 
-import org.apache.wicket.ng.model.IDetachable;
+import org.apache.wicket.model.IDetachable;
 
 public interface ManageablePage extends IDetachable
 {

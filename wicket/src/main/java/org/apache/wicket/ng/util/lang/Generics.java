@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.ng.model.IModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Generics related utilities
