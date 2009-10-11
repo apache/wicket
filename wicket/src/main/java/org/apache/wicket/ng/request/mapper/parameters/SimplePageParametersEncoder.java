@@ -22,7 +22,7 @@ import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * Simple encoder with direct indexed/named parameters mapping.

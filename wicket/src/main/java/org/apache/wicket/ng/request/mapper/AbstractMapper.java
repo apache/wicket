@@ -28,7 +28,7 @@ import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Classes;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Convenience class for implementing page/components related encoders.

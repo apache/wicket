@@ -20,17 +20,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-
-import javax.servlet.http.HttpServletRequest;
+import org.slf4j.LoggerFactory;
 
 /**
  * Url coding strategy for bookmarkable pages that encodes a set of given parameters in the url's

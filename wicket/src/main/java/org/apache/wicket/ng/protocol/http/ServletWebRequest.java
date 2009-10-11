@@ -35,8 +35,8 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.util.io.Streams;
 import org.apache.wicket.ng.util.lang.Check;
-import org.apache.wicket.ng.util.string.StringValue;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.ng.behavior.IBehavior;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Simple {@link RequestableComponent} implementation for testing purposes

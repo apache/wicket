@@ -21,7 +21,6 @@ import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.request.mapper.MapperContext;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
 /**

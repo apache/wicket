@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng.request.component;
 
+import org.apache.wicket.IPageFactory;
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.WicketRuntimeException;

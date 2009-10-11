@@ -23,8 +23,6 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
-import org.apache.wicket.ng.request.mapper.MapperContext;
-import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
 
 /**
  * @author Matej Knopp

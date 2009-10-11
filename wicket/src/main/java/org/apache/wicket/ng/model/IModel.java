@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.ng.model;
 
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
+
 
 /**
  * A IModel wraps the actual model Object used by a Component. IModel implementations are used as a

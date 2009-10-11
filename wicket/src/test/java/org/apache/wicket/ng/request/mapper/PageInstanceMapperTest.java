@@ -26,9 +26,6 @@ import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.mapper.MapperContext;
-import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
-import org.apache.wicket.ng.request.mapper.StalePageException;
 
 /**
  * 

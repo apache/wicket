@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.response;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 
 /**

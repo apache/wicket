@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * Mount parameters

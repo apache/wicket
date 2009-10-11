@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper.info;
 
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.util.lang.Check;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Possible string representation of PageInfo:

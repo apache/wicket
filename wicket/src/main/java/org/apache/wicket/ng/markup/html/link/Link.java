@@ -7,7 +7,7 @@ import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 @SuppressWarnings("serial")
 // Very simple and naive link component

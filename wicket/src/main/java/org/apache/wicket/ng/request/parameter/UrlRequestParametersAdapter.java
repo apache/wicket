@@ -27,7 +27,7 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * Utility class that expresses query parameters from {@link Url} as {@link RequestParameters}.

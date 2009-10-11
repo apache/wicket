@@ -30,9 +30,6 @@ import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRe
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
-import org.apache.wicket.ng.request.mapper.MapperContext;
-import org.apache.wicket.ng.request.mapper.StalePageException;
 
 /**
  * @author Matej Knopp

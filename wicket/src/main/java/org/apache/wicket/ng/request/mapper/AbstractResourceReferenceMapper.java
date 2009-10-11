@@ -21,7 +21,7 @@ import java.util.Locale;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Base class for encoding and decoding {@link ResourceReference}s

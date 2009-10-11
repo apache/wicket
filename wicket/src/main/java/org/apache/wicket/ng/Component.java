@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.wicket.ng.behavior.IBehavior;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Naive component implementation. Should be enough for some basic tests
@@ -19,26 +19,26 @@ public class Component implements RequestableComponent
 	private static final long serialVersionUID = 1L;
 
 	private final String id;
-	
+
 	public Component(String id)
 	{
 		this.id = id;
 	}
 
-	private List<Component> children = new ArrayList<Component>();
-	
+	private final List<Component> children = new ArrayList<Component>();
+
 	public List<Component> getChildren()
 	{
 		return Collections.unmodifiableList(children);
 	}
-	
+
 	private Component parent;
-	
+
 	public Component getParent()
 	{
 		return parent;
 	}
-	
+
 	public void remove(Component component)
 	{
 		if (component == null)
@@ -52,7 +52,7 @@ public class Component implements RequestableComponent
 		children.remove(component);
 		component.parent = null;
 	}
-	
+
 	public void add(Component component)
 	{
 		if (component == null)
@@ -67,23 +67,24 @@ public class Component implements RequestableComponent
 		{
 			if (c.getId().equals(component.getId()))
 			{
-				throw new IllegalStateException("Component with same id already added to this component.");
+				throw new IllegalStateException(
+					"Component with same id already added to this component.");
 			}
 		}
 		component.parent = this;
 		children.add(component);
 	}
-	
+
 	public boolean isEnabled()
 	{
 		return true;
 	}
-	
+
 	public boolean isVisible()
 	{
 		return true;
 	}
-	
+
 	public boolean canCallListenerInterface()
 	{
 		if (!isEnabled() || !isVisible())
@@ -100,8 +101,8 @@ public class Component implements RequestableComponent
 		}
 	}
 
-	private static final char PATH_SEPARATOR = ':'; 
-	
+	private static final char PATH_SEPARATOR = ':';
+
 	public Component get(String path)
 	{
 		String first = Strings.firstPathComponent(path, PATH_SEPARATOR);
@@ -123,13 +124,13 @@ public class Component implements RequestableComponent
 		return null;
 	}
 
-	private List<IBehavior> behaviors = new ArrayList<IBehavior>();
-	
+	private final List<IBehavior> behaviors = new ArrayList<IBehavior>();
+
 	public void add(IBehavior behavior)
 	{
 		behaviors.add(behavior);
 	}
-	
+
 	public List<IBehavior> getBehaviors()
 	{
 		return Collections.unmodifiableList(behaviors);
@@ -141,7 +142,7 @@ public class Component implements RequestableComponent
 	}
 
 	private String markupId;
-	
+
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		if (markupId == null && createIfDoesNotExist)
@@ -177,9 +178,9 @@ public class Component implements RequestableComponent
 
 	protected void onDetach()
 	{
-		
+
 	}
-	
+
 	public void detach()
 	{
 		for (Component c : getChildren())
@@ -196,7 +197,7 @@ public class Component implements RequestableComponent
 			c.prepareForRender(setRenderingFlag);
 		}
 	}
-	
+
 	public void renderComponent()
 	{
 		for (Component c : children)

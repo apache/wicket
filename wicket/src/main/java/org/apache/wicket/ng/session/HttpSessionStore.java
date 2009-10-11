@@ -32,6 +32,7 @@ import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.ServletWebRequest;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.session.ISessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

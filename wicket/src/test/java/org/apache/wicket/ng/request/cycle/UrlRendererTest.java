@@ -19,7 +19,6 @@ package org.apache.wicket.ng.request.cycle;
 import junit.framework.TestCase;
 
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.cycle.UrlRenderer;
 
 /**
  * @author MAtej Knopp

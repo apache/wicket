@@ -6,7 +6,7 @@ import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.mapper.AbstractMapper;
 import org.apache.wicket.ng.util.lang.Check;
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * {@link RequestMapper} that can mount requests onto urls. TODO docs and unit test

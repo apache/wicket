@@ -1,6 +1,6 @@
 package org.apache.wicket.ng.util.lang;
 
-import org.apache.wicket.ng.util.string.Strings;
+import org.apache.wicket.util.string.Strings;
 
 public class Check
 {

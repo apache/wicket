@@ -11,7 +11,7 @@ import java.util.TreeSet;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * Mutable class that holds parameters of a Page. Page parameters consist of indexed parameters and

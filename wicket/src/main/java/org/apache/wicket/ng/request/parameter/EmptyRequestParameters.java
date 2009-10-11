@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.ng.request.RequestParameters;
-import org.apache.wicket.ng.util.string.StringValue;
+import org.apache.wicket.util.string.StringValue;
 
 public class EmptyRequestParameters implements RequestParameters
 {

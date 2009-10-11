@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ng.request.mapper.info;
 
-import org.apache.wicket.ng.request.mapper.info.ComponentInfo;
-
 import junit.framework.TestCase;
 
 /**
