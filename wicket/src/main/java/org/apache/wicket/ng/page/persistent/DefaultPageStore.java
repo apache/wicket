@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.page.persistent;
 
 import java.io.Serializable;
@@ -16,17 +32,17 @@ public class DefaultPageStore implements PageStore
 	private final String applicationName;
 
 	private final SerializedPagesCache serializedPagesCache;
-	
+
 	private final DataStore pageDataStore;
 
 	public DefaultPageStore(String applicationName, DataStore dataStore, int cacheSize)
 	{
 		Checks.argumentNotNull(applicationName, "applicationName");
 		Checks.argumentNotNull(dataStore, "DataStore");
-		
+
 		this.applicationName = applicationName;
-		this.pageDataStore = dataStore;
-		this.serializedPagesCache = new SerializedPagesCache(cacheSize);
+		pageDataStore = dataStore;
+		serializedPagesCache = new SerializedPagesCache(cacheSize);
 	}
 
 	public void destroy()
@@ -107,7 +123,7 @@ public class DefaultPageStore implements PageStore
 		}
 		else if (object instanceof SerializedPage)
 		{
-			SerializedPage page = (SerializedPage) object;
+			SerializedPage page = (SerializedPage)object;
 			byte data[] = page.getData();
 			if (data == null)
 			{
@@ -129,17 +145,19 @@ public class DefaultPageStore implements PageStore
 		else
 		{
 			String type = object != null ? object.getClass().getName() : null;
-			throw new IllegalArgumentException("Unknown object type " + type);	
+			throw new IllegalArgumentException("Unknown object type " + type);
 		}
 	}
 
 	private SerializedPage restoreStrippedSerializedPage(SerializedPage serializedPage)
 	{
-		SerializedPage result = serializedPagesCache.getPage(serializedPage.getSessionId(), serializedPage.getPageId());
+		SerializedPage result = serializedPagesCache.getPage(serializedPage.getSessionId(),
+			serializedPage.getPageId());
 		if (result == null)
 		{
 			byte data[] = getPageData(serializedPage.getSessionId(), serializedPage.getPageId());
-			return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(), data);
+			return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(),
+				data);
 		}
 		else
 		{
@@ -153,12 +171,12 @@ public class DefaultPageStore implements PageStore
 		{
 			return null;
 		}
-		
+
 		SerializedPage result = null;
-		
+
 		if (object instanceof ManageablePage)
 		{
-			ManageablePage page = (ManageablePage) object;
+			ManageablePage page = (ManageablePage)object;
 			result = serializedPagesCache.getPage(sessionId, page.getPageId());
 			if (result == null)
 			{
@@ -168,7 +186,7 @@ public class DefaultPageStore implements PageStore
 		}
 		else if (object instanceof SerializedPage)
 		{
-			SerializedPage page = (SerializedPage) object;
+			SerializedPage page = (SerializedPage)object;
 			if (page.getData() == null)
 			{
 				result = restoreStrippedSerializedPage(page);
@@ -178,17 +196,17 @@ public class DefaultPageStore implements PageStore
 				result = page;
 			}
 		}
-		
+
 		if (result != null)
 		{
 			return result;
 		}
 		else
 		{
-			return (Serializable) object;
+			return (Serializable)object;
 		}
 	}
-	
+
 	protected boolean storeAfterSessionReplication()
 	{
 		return true;
@@ -266,8 +284,9 @@ public class DefaultPageStore implements PageStore
 			{
 				return false;
 			}
-			SerializedPage rhs = (SerializedPage) obj;
-			return Objects.equal(getPageId(), rhs.getPageId()) && Objects.equal(getSessionId(), rhs.getSessionId());
+			SerializedPage rhs = (SerializedPage)obj;
+			return Objects.equal(getPageId(), rhs.getPageId()) &&
+				Objects.equal(getSessionId(), rhs.getSessionId());
 		}
 
 		@Override
@@ -288,7 +307,7 @@ public class DefaultPageStore implements PageStore
 
 	protected ManageablePage deserializePage(byte data[])
 	{
-		return (ManageablePage) Objects.byteArrayToObject(data);
+		return (ManageablePage)Objects.byteArrayToObject(data);
 	}
 
 	/**
@@ -319,7 +338,7 @@ public class DefaultPageStore implements PageStore
 		private final List<SoftReference<SerializedPage>> cache;
 
 		public SerializedPage removePage(String sessionId, int id)
-		{			
+		{
 			Checks.argumentNotNull(sessionId, "sessionId");
 
 			if (size > 0)
@@ -330,7 +349,8 @@ public class DefaultPageStore implements PageStore
 					{
 						SoftReference<SerializedPage> ref = i.next();
 						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == id && entry.getSessionId().equals(sessionId))
+						if (entry != null && entry.getPageId() == id &&
+							entry.getSessionId().equals(sessionId))
 						{
 							i.remove();
 							return entry;
@@ -342,7 +362,7 @@ public class DefaultPageStore implements PageStore
 		}
 
 		public void removePages(String sessionId)
-		{			
+		{
 			Checks.argumentNotNull(sessionId, "sessionId");
 
 			if (size > 0)
@@ -375,7 +395,8 @@ public class DefaultPageStore implements PageStore
 					{
 						SoftReference<SerializedPage> ref = i.next();
 						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == id && entry.getSessionId().equals(sessionId))
+						if (entry != null && entry.getPageId() == id &&
+							entry.getSessionId().equals(sessionId))
 						{
 							i.remove();
 							result = entry;

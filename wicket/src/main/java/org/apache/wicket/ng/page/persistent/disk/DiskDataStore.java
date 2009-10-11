@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.page.persistent.disk;
 
 import java.io.File;
@@ -35,20 +51,21 @@ public class DiskDataStore implements DataStore
 	private final ConcurrentMap<String, SessionEntry> sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
 	public DiskDataStore(String applicationName, File fileStoreFolder, int maxSizePerSession,
-			int fileChannelPoolCapacity)
+		int fileChannelPoolCapacity)
 	{
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
-		this.maxSizePerPageSession = maxSizePerSession;
-		this.fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
-		
-		this.fileStoreFolder.mkdirs();		
+		maxSizePerPageSession = maxSizePerSession;
+		fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
+
+		this.fileStoreFolder.mkdirs();
 		loadIndex();
 	}
 
 	public DiskDataStore(String applicationName, int maxSizePerSession, int fileChannelPoolCapacity)
 	{
-		this(applicationName, getDefaultFileStoreFolder(), maxSizePerSession, fileChannelPoolCapacity);
+		this(applicationName, getDefaultFileStoreFolder(), maxSizePerSession,
+			fileChannelPoolCapacity);
 	}
 
 	public void destroy()
@@ -66,8 +83,8 @@ public class DiskDataStore implements DataStore
 		}
 		else
 		{
-			return null;	
-		}		
+			return null;
+		}
 	}
 
 	public boolean isReplicated()
@@ -92,8 +109,8 @@ public class DiskDataStore implements DataStore
 			synchronized (sessionEntry)
 			{
 				sessionEntryMap.remove(sessionEntry.sessionId);
-				sessionEntry.unbind();	
-			}			
+				sessionEntry.unbind();
+			}
 		}
 	}
 
@@ -105,7 +122,7 @@ public class DiskDataStore implements DataStore
 			sessionEntry.savePage(id, data);
 		}
 	}
-	
+
 	private SessionEntry getSessionEntry(String sessionId, boolean create)
 	{
 		if (!create)
@@ -121,7 +138,7 @@ public class DiskDataStore implements DataStore
 	}
 
 	private static final String INDEX_FILE_NAME = "DiskDataStoreIndex";
-	
+
 	@SuppressWarnings("unchecked")
 	private void loadIndex()
 	{
@@ -136,7 +153,7 @@ public class DiskDataStore implements DataStore
 				Map<String, SessionEntry> map = (Map<String, SessionEntry>)ois.readObject();
 				sessionEntryMap.clear();
 				sessionEntryMap.putAll(map);
-				
+
 				for (Iterator<Entry<String, SessionEntry>> entries = sessionEntryMap.entrySet()
 					.iterator(); entries.hasNext();)
 				{
@@ -154,7 +171,7 @@ public class DiskDataStore implements DataStore
 		}
 		index.delete();
 	}
-	
+
 	private void saveIndex()
 	{
 		File storeFolder = getStoreFolder();
@@ -166,7 +183,8 @@ public class DiskDataStore implements DataStore
 			{
 				OutputStream stream = new FileOutputStream(index);
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
-				Map<String, SessionEntry> map = new HashMap<String, SessionEntry>(sessionEntryMap.size());
+				Map<String, SessionEntry> map = new HashMap<String, SessionEntry>(
+					sessionEntryMap.size());
 				for (Entry<String, SessionEntry> e : sessionEntryMap.entrySet())
 				{
 					if (e.getValue().unbound == false)
@@ -184,7 +202,7 @@ public class DiskDataStore implements DataStore
 		}
 	}
 
-	
+
 	protected static class SessionEntry implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -197,28 +215,30 @@ public class DiskDataStore implements DataStore
 
 		protected SessionEntry(DiskDataStore diskDataStore, String sessionId)
 		{
-			this.diskDataStore = diskDataStore;			
+			this.diskDataStore = diskDataStore;
 			this.sessionId = sessionId;
 		}
-		
+
 		private PageWindowManager getManager()
 		{
 			if (manager == null)
 			{
-				manager = new PageWindowManager(diskDataStore.maxSizePerPageSession);;
+				manager = new PageWindowManager(diskDataStore.maxSizePerPageSession);
+				;
 			}
 			return manager;
 		}
-		
+
 		private String getFileName()
 		{
 			if (fileName == null)
 			{
-				fileName = diskDataStore.getSessionFileName(sessionId, true);; 
+				fileName = diskDataStore.getSessionFileName(sessionId, true);
+				;
 			}
 			return fileName;
 		}
-		
+
 		/**
 		 * @return session id
 		 */
@@ -245,7 +265,8 @@ public class DiskDataStore implements DataStore
 				PageWindow window = getManager().createPageWindow(pageId, data.length);
 
 				// take the filechannel from the pool
-				FileChannel channel = diskDataStore.fileChannelPool.getFileChannel(getFileName(), true);
+				FileChannel channel = diskDataStore.fileChannelPool.getFileChannel(getFileName(),
+					true);
 				try
 				{
 					// write the content
@@ -286,7 +307,7 @@ public class DiskDataStore implements DataStore
 		 * @return serialized page data
 		 */
 		public byte[] loadPage(PageWindow window)
-		{			
+		{
 			byte[] result = null;
 			FileChannel channel = diskDataStore.fileChannelPool.getFileChannel(getFileName(), false);
 			if (channel != null)
@@ -311,7 +332,7 @@ public class DiskDataStore implements DataStore
 			}
 			return result;
 		}
-		
+
 		/**
 		 * Loads the specified page data.
 		 * 
@@ -333,7 +354,7 @@ public class DiskDataStore implements DataStore
 			}
 			return result;
 		}
-		
+
 		/**
 		 * Deletes all files for this session.
 		 */
@@ -370,8 +391,8 @@ public class DiskDataStore implements DataStore
 
 		if (Application.exists())
 		{
-			dir = (File) ((WebApplication) Application.get()).getServletContext().getAttribute(
-					"javax.servlet.context.tempdir");
+			dir = (File)((WebApplication)Application.get()).getServletContext().getAttribute(
+				"javax.servlet.context.tempdir");
 		}
 
 		if (dir != null)

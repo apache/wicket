@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng;
 
 import org.apache.wicket.ng.request.component.PageParameters;
@@ -10,32 +26,32 @@ public class Page extends Component implements RequestablePage
 	private static final long serialVersionUID = 1L;
 
 	int pageId;
-	
+
 	static int pageIdCounter;
-	
+
 	public Page()
 	{
 		this(null);
 	}
-	
+
 	public Page(PageParameters parameters)
 	{
 		super("");
 		pageId = pageIdCounter++;
 		if (parameters == null)
 		{
-			this.pageParameters = new PageParameters();
+			pageParameters = new PageParameters();
 		}
 		else
 		{
-			this.pageParameters = parameters;
+			pageParameters = parameters;
 		}
 	}
-	
+
 	public static Page get(int id)
 	{
 		Application app = Application.get();
-		return (Page) app.getPageManager().getPage(id);
+		return (Page)app.getPageManager().getPage(id);
 	}
 
 	public int getPageId()
@@ -44,12 +60,12 @@ public class Page extends Component implements RequestablePage
 	}
 
 	private final PageParameters pageParameters;
-	
+
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
 	}
-	
+
 	private int renderCount = 0;
 
 	public int getRenderCount()
@@ -65,7 +81,7 @@ public class Page extends Component implements RequestablePage
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -101,44 +117,45 @@ public class Page extends Component implements RequestablePage
 	public void renderPage()
 	{
 		++renderCount;
-		
+
 		System.out.println("Rendering");
-		
+
 		Response response = RequestCycle.get().getResponse();
 		response.write("<html>\n");
-		
+
 		response.write("<body>\n");
-		
+
 		response.write("<p>This is a " + getClass().getName() + "</p>\n");
 
 		for (Component c : getChildren())
 		{
 			c.renderComponent();
 		}
-		
+
 		response.write("</body>\n");
 		response.write("</html>\n");
 	}
 
 	private boolean wasCreatedBookmarkable;
-	
+
 	public void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
 	{
 		this.wasCreatedBookmarkable = wasCreatedBookmarkable;
 	}
-	
+
 	public boolean wasCreatedBookmarkable()
 	{
 		return wasCreatedBookmarkable;
 	}
 
+	@Override
 	public Page getPage()
 	{
 		return this;
 	}
-	
+
 	private int markupIdConter = 0;
-	
+
 	public int getMarkupIdConterNextValue()
 	{
 		return markupIdConter++;

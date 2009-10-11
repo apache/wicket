@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.Application;
@@ -18,14 +34,14 @@ import org.apache.wicket.util.lang.Checks;
  * until {@link #getPageInstance()} is called.
  * <p>
  * Purpose of this class is to reduce complexity of both {@link RequestMapper}s and
- * {@link RequestHandler}s. {@link RequestMapper} examines the URL, gathers all relevant
- * information about the page in the URL (combination of page id, page class, page parameters and
- * render count), creates {@link PageProvider} object and creates a {@link RequestHandler} instance
- * that can use the {@link PageProvider} to access the page.
+ * {@link RequestHandler}s. {@link RequestMapper} examines the URL, gathers all relevant information
+ * about the page in the URL (combination of page id, page class, page parameters and render count),
+ * creates {@link PageProvider} object and creates a {@link RequestHandler} instance that can use
+ * the {@link PageProvider} to access the page.
  * <p>
- * Apart from simplifying {@link RequestMapper}s and {@link RequestHandler}s
- * {@link PageProvider} also helps performance because creating or obtaining page from
- * {@link PageManager} is delayed until the {@link RequestHandler} actually requires the page.
+ * Apart from simplifying {@link RequestMapper}s and {@link RequestHandler}s {@link PageProvider}
+ * also helps performance because creating or obtaining page from {@link PageManager} is delayed
+ * until the {@link RequestHandler} actually requires the page.
  * 
  * @author Matej Knopp
  */
@@ -78,7 +94,8 @@ public class PageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public PageProvider(int pageId, Class<? extends RequestablePage> pageClass, PageParameters pageParameters, Integer renderCount)
+	public PageProvider(int pageId, Class<? extends RequestablePage> pageClass,
+		PageParameters pageParameters, Integer renderCount)
 	{
 		this.pageId = pageId;
 		setPageClass(pageClass);
@@ -120,7 +137,7 @@ public class PageProvider
 	{
 		Checks.argumentNotNull(page, "page");
 
-		this.pageInstance = page;
+		pageInstance = page;
 	}
 
 	/**
@@ -199,12 +216,13 @@ public class PageProvider
 		else
 		{
 			throw new IllegalStateException(
-					"No application is bound to current thread. Call setPageSource() to manually assign pageSource to this provider.");
+				"No application is bound to current thread. Call setPageSource() to manually assign pageSource to this provider.");
 		}
 	}
 
-	private RequestablePage getPageInstance(Integer pageId, Class<? extends RequestablePage> pageClass, PageParameters pageParameters,
-			Integer renderCount)
+	private RequestablePage getPageInstance(Integer pageId,
+		Class<? extends RequestablePage> pageClass, PageParameters pageParameters,
+		Integer renderCount)
 	{
 		RequestablePage page = null;
 
@@ -230,7 +248,7 @@ public class PageProvider
 				freshCreated = true;
 				if (prepareForRenderNewPage() && page instanceof Page)
 				{
-					((Page) page).prepareForRender(false);
+					((Page)page).prepareForRender(false);
 				}
 			}
 		}
@@ -247,8 +265,9 @@ public class PageProvider
 	}
 
 	/**
-	 * Detaches the page if it has been loaded (that means either {@link #PageProvider(RequestablePage)}
-	 * constructor has been used or {@link #getPageInstance()} has been called).
+	 * Detaches the page if it has been loaded (that means either
+	 * {@link #PageProvider(RequestablePage)} constructor has been used or
+	 * {@link #getPageInstance()} has been called).
 	 */
 	public void detach()
 	{

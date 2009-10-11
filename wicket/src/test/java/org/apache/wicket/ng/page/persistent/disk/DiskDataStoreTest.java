@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.page.persistent.disk;
 
 import java.util.ArrayList;
@@ -21,7 +37,7 @@ public class DiskDataStoreTest extends TestCase
 
 	public DiskDataStoreTest()
 	{
-		
+
 	}
 
 	private static final Random random = new Random();
@@ -34,32 +50,32 @@ public class DiskDataStoreTest extends TestCase
 	private static final int SLEEP_MAX = 10;
 	private static final int THREAD_COUNT = 20;
 	private static final int READ_MODULO = 100;
-	
+
 	private static class File
 	{
 		private final String sessionId;
 		private final int id;
-		
+
 		private byte first;
 		private byte last;
 		private int length;
-		
+
 		public File(String sessionId, int id)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
 		}
-		
+
 		public String getSessionId()
 		{
 			return sessionId;
 		}
-		
+
 		public int getId()
 		{
 			return id;
 		}
-		
+
 		public byte[] generateData()
 		{
 			length = FILE_SIZE_MIN + random.nextInt(FILE_SIZE_MAX - FILE_SIZE_MIN);
@@ -69,7 +85,7 @@ public class DiskDataStoreTest extends TestCase
 			last = data[data.length - 1];
 			return data;
 		}
-		
+
 		public boolean checkData(byte data[])
 		{
 			Checks.argumentNotNull(data, "data");
@@ -88,39 +104,39 @@ public class DiskDataStoreTest extends TestCase
 			return true;
 		}
 	}
-		
-	private Map<String, AtomicInteger> sessionCounter = new ConcurrentHashMap<String, AtomicInteger>();
-	private ConcurrentLinkedQueue<File> filesToSave = new ConcurrentLinkedQueue<File>();
-	private ConcurrentLinkedQueue<File> filesToRead1 = new ConcurrentLinkedQueue<File>();
-	private ConcurrentLinkedQueue<File> filesToRead2 = new ConcurrentLinkedQueue<File>();
-	
-	private AtomicInteger read1Count = new AtomicInteger(0);
-	private AtomicInteger read2Count = new AtomicInteger(0);
-	private AtomicInteger saveCount = new AtomicInteger(0);
-	
-	private AtomicBoolean saveDone = new AtomicBoolean(false);
-	private AtomicBoolean read1Done = new AtomicBoolean(false);
-	private AtomicBoolean read2Done = new AtomicBoolean(false);
-	
-	private AtomicInteger failures = new AtomicInteger();
-	
-	private AtomicInteger bytesWritten = new AtomicInteger(0);
-	private AtomicInteger bytesRead = new AtomicInteger(0);
-	
-	private AtomicInteger saveTime = new AtomicInteger(0);
-	
+
+	private final Map<String, AtomicInteger> sessionCounter = new ConcurrentHashMap<String, AtomicInteger>();
+	private final ConcurrentLinkedQueue<File> filesToSave = new ConcurrentLinkedQueue<File>();
+	private final ConcurrentLinkedQueue<File> filesToRead1 = new ConcurrentLinkedQueue<File>();
+	private final ConcurrentLinkedQueue<File> filesToRead2 = new ConcurrentLinkedQueue<File>();
+
+	private final AtomicInteger read1Count = new AtomicInteger(0);
+	private final AtomicInteger read2Count = new AtomicInteger(0);
+	private final AtomicInteger saveCount = new AtomicInteger(0);
+
+	private final AtomicBoolean saveDone = new AtomicBoolean(false);
+	private final AtomicBoolean read1Done = new AtomicBoolean(false);
+	private final AtomicBoolean read2Done = new AtomicBoolean(false);
+
+	private final AtomicInteger failures = new AtomicInteger();
+
+	private final AtomicInteger bytesWritten = new AtomicInteger(0);
+	private final AtomicInteger bytesRead = new AtomicInteger(0);
+
+	private final AtomicInteger saveTime = new AtomicInteger(0);
+
 	private String randomSessionId()
 	{
 		List<String> s = new ArrayList<String>(sessionCounter.keySet());
 		return s.get(random.nextInt(s.size()));
 	}
-	
+
 	private int nextSessionId(String sessionId)
 	{
 		AtomicInteger i = sessionCounter.get(sessionId);
 		return i.incrementAndGet();
 	}
-	
+
 	private void generateFiles()
 	{
 		for (int i = 0; i < SESSION_COUNT; ++i)
@@ -134,26 +150,26 @@ public class DiskDataStoreTest extends TestCase
 			long now = System.nanoTime();
 			filesToSave.add(file);
 			long duration = System.nanoTime() - now;
-			saveTime.addAndGet((int) duration);
+			saveTime.addAndGet((int)duration);
 		}
-		
+
 	}
-	
+
 	private DataStore dataStore;
-	
+
 	private class SaveRunnable implements Runnable
 	{
 		public void run()
 		{
 			File file;
-			
+
 			while ((file = filesToSave.poll()) != null || saveCount.get() < FILES_COUNT)
 			{
 				if (file != null)
-				{					
+				{
 					byte data[] = file.generateData();
 					dataStore.storeData(file.getSessionId(), file.getId(), data);
-					
+
 					if (saveCount.get() % READ_MODULO == 0)
 					{
 						filesToRead1.add(file);
@@ -161,7 +177,7 @@ public class DiskDataStoreTest extends TestCase
 					saveCount.incrementAndGet();
 					bytesWritten.addAndGet(data.length);
 				}
-					
+
 				try
 				{
 					Thread.sleep(random.nextInt(SLEEP_MAX));
@@ -170,12 +186,12 @@ public class DiskDataStoreTest extends TestCase
 				{
 					e.printStackTrace();
 				}
-			}						
-			
-			saveDone.set(true);			
-		}		
+			}
+
+			saveDone.set(true);
+		}
 	};
-	
+
 	private class Read1Runnable implements Runnable
 	{
 		public void run()
@@ -190,11 +206,11 @@ public class DiskDataStoreTest extends TestCase
 					{
 						failures.incrementAndGet();
 					}
-					filesToRead2.add(file);	
+					filesToRead2.add(file);
 					read1Count.incrementAndGet();
 					bytesRead.addAndGet(bytes.length);
 				}
-								
+
 				try
 				{
 					Thread.sleep(random.nextInt(SLEEP_MAX));
@@ -203,13 +219,13 @@ public class DiskDataStoreTest extends TestCase
 				{
 					e.printStackTrace();
 				}
-			}			
-			
+			}
+
 			read1Done.set(true);
-		}		
+		}
 	};
-	
-	
+
+
 	private class Read2Runnable implements Runnable
 	{
 		public void run()
@@ -223,11 +239,11 @@ public class DiskDataStoreTest extends TestCase
 					if (file.checkData(bytes) == false)
 					{
 						failures.incrementAndGet();
-					}	
+					}
 					read2Count.incrementAndGet();
 					bytesRead.addAndGet(bytes.length);
 				}
-								
+
 				try
 				{
 					Thread.sleep(random.nextInt(SLEEP_MAX));
@@ -235,34 +251,34 @@ public class DiskDataStoreTest extends TestCase
 				catch (InterruptedException e)
 				{
 					e.printStackTrace();
-				}							
+				}
 			}
-			
-			read2Done.set(true);			
+
+			read2Done.set(true);
 		}
 	};
-	
+
 	private void doTestDataStore()
 	{
 		System.out.println("Starting...");
 		long start = System.currentTimeMillis();
-		
+
 		for (int i = 0; i < THREAD_COUNT; ++i)
 		{
 			new Thread(new SaveRunnable()).start();
 		}
-		
+
 		for (int i = 0; i < THREAD_COUNT; ++i)
 		{
 			new Thread(new Read1Runnable()).start();
 		}
-		
+
 		for (int i = 0; i < THREAD_COUNT; ++i)
 		{
 			new Thread(new Read2Runnable()).start();
 		}
-		
-		while(!(read1Done.get() && read2Done.get() && saveDone.get()))
+
+		while (!(read1Done.get() && read2Done.get() && saveDone.get()))
 		{
 			try
 			{
@@ -275,30 +291,33 @@ public class DiskDataStoreTest extends TestCase
 		}
 
 		long duration = System.currentTimeMillis() - start;
-		
-		System.out.println("Took: " + duration + " ms");
-		System.out.println("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() +" bytes");
-		System.out.println("Read: " + (read1Count.get() + read2Count.get()) + " files, " + bytesRead.get() + " bytes");
 
-		System.out.println("Average save time (ns): " + (double) saveTime.get() / (double) saveCount.get());
-		
+		System.out.println("Took: " + duration + " ms");
+		System.out.println("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() +
+			" bytes");
+		System.out.println("Read: " + (read1Count.get() + read2Count.get()) + " files, " +
+			bytesRead.get() + " bytes");
+
+		System.out.println("Average save time (ns): " + (double)saveTime.get() /
+			(double)saveCount.get());
+
 		assertEquals(0, failures.get());
-		
+
 		for (String s : sessionCounter.keySet())
 		{
 			dataStore.removeData(s);
-		}		
+		}
 	}
-	
+
 	public void test1()
 	{
-		generateFiles();		
-		
+		generateFiles();
+
 		dataStore = new DiskDataStore("app1", MAX_SIZE_PER_SESSION, FILE_CHANNEL_POOL_CAPACITY);
 		dataStore = new AsynchronousDataStore(dataStore);
-		
+
 		doTestDataStore();
-		
+
 		dataStore.destroy();
 	}
 

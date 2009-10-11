@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.Session;
@@ -37,21 +53,21 @@ public class BufferedResponseMapper implements RequestMapper
 		else
 		{
 			return false;
-		}		
+		}
 	}
 
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
-	
+
 	private Request getRequest(Request original)
 	{
 		// The buffers are stored under "real" URL which can be different
 		// than the URL handlers get due to global URL pre/postprocessing
 		// (i.e. prepending URL with language segment).
 		// Because of that we need find out the real URL from request cycle
-		
+
 		if (RequestCycle.get() != null)
 		{
 			return RequestCycle.get().getRequest();
@@ -61,11 +77,11 @@ public class BufferedResponseMapper implements RequestMapper
 			return original;
 		}
 	}
-	
+
 	public RequestHandler mapRequest(Request request)
-	{		
+	{
 		request = getRequest(request);
-		
+
 		BufferedWebResponse response = getAndRemoveBufferedResponse(request.getUrl());
 		if (response != null)
 		{
@@ -85,7 +101,7 @@ public class BufferedResponseMapper implements RequestMapper
 	public int getCompatibilityScore(Request request)
 	{
 		request = getRequest(request);
-		
+
 		if (hasBufferedResponse(request.getUrl()))
 		{
 			return Integer.MAX_VALUE;

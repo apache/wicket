@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.ng.request.component;
 
 import java.io.Serializable;
@@ -45,10 +61,10 @@ public class PageParameters implements Serializable
 		Checks.argumentNotNull(copy, "copy");
 
 		if (copy.indexedParameters != null)
-			this.indexedParameters = new ArrayList<String>(copy.indexedParameters);
+			indexedParameters = new ArrayList<String>(copy.indexedParameters);
 
 		if (copy.namedParameters != null)
-			this.namedParameters = new ArrayList<Entry>(copy.namedParameters);
+			namedParameters = new ArrayList<Entry>(copy.namedParameters);
 	}
 
 	private List<String> indexedParameters = null;
@@ -200,7 +216,7 @@ public class PageParameters implements Serializable
 	public void removeNamedParameter(String name)
 	{
 		Checks.argumentNotNull(name, "name");
-		
+
 		if (namedParameters != null)
 		{
 			for (Iterator<Entry> i = namedParameters.iterator(); i.hasNext();)
@@ -226,8 +242,8 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Adds named parameter to a specified position. The {@link RequestMapper}s may or may
-	 * not take the order into account.
+	 * Adds named parameter to a specified position. The {@link RequestMapper}s may or may not take
+	 * the order into account.
 	 * 
 	 * @param name
 	 * @param value
@@ -251,8 +267,8 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Sets the named parameter on specified position. The {@link RequestMapper}s may or
-	 * may not take the order into account.
+	 * Sets the named parameter on specified position. The {@link RequestMapper}s may or may not
+	 * take the order into account.
 	 * 
 	 * @param name
 	 * @param value
@@ -284,7 +300,7 @@ public class PageParameters implements Serializable
 	 */
 	public void clearIndexedParameters()
 	{
-		this.indexedParameters = null;
+		indexedParameters = null;
 	}
 
 	/**
@@ -292,7 +308,7 @@ public class PageParameters implements Serializable
 	 */
 	public void clearNamedParameters()
 	{
-		this.namedParameters = null;
+		namedParameters = null;
 	}
 
 	/**
@@ -304,8 +320,8 @@ public class PageParameters implements Serializable
 	{
 		if (this != other)
 		{
-			this.indexedParameters = other.indexedParameters;
-			this.namedParameters = other.namedParameters;
+			indexedParameters = other.indexedParameters;
+			namedParameters = other.namedParameters;
 		}
 	}
 
@@ -383,7 +399,7 @@ public class PageParameters implements Serializable
 		}
 		return false;
 	}
-	
+
 	public boolean isEmpty()
 	{
 		return getIndexedParamsCount() == 0 && getNamedParameterKeys().isEmpty();
