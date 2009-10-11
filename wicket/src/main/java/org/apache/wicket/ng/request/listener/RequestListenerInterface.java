@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.behavior.IBehavior;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerException;
 import org.slf4j.Logger;

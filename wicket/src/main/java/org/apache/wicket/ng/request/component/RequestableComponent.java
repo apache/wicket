@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.component;
 
 import java.util.List;
 
-import org.apache.wicket.ng.behavior.IBehavior;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.model.IDetachable;
 
 /**
