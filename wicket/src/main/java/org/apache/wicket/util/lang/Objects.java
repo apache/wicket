@@ -1092,6 +1092,48 @@ public final class Objects
 	 * 
 	 * @param object
 	 *            The object
+	 * 
+	 * @param applicationName
+	 *            The name of application - required when serialization and deserialisation happen
+	 *            outside thread in which application thread local is set
+	 * 
+	 * @return The serialized object
+	 */
+	public static byte[] objectToByteArray(final Object object, String applicationName)
+	{
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
+			try
+			{
+				oos = objectStreamFactory.newObjectOutputStream(out);
+				oos.writeObject(applicationName);
+				oos.writeObject(object);
+			}
+			finally
+			{
+				if (oos != null)
+				{
+					oos.close();
+				}
+				out.close();
+			}
+			return out.toByteArray();
+		}
+		catch (Exception e)
+		{
+			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
+				e);
+		}
+		return null;
+	}
+
+	/**
+	 * Serializes an object into a byte array.
+	 * 
+	 * @param object
+	 *            The object
 	 * @return The serialized object
 	 */
 	public static byte[] objectToByteArray(final Object object)

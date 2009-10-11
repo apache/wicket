@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.apache.wicket.ng.protocol.http.WicketURLDecoder;
 import org.apache.wicket.ng.protocol.http.WicketURLEncoder;
-import org.apache.wicket.ng.util.lang.Objects;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 

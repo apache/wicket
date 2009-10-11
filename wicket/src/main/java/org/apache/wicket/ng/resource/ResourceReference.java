@@ -19,9 +19,9 @@ package org.apache.wicket.ng.resource;
 import java.io.Serializable;
 import java.util.Locale;
 
-import org.apache.wicket.ng.util.lang.Objects;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -35,7 +35,7 @@ public abstract class ResourceReference implements Serializable
 	private final String scope;
 	private final String name;
 	private final Locale locale;
-	private String style;
+	private final String style;
 
 	/**
 	 * Creates new {@link ResourceReference} instance.
@@ -52,7 +52,7 @@ public abstract class ResourceReference implements Serializable
 		Checks.argumentNotNull(scope, "scope");
 		Checks.argumentNotNull(name, "name");
 
-		this.scope = scope.getName();		
+		this.scope = scope.getName();
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
@@ -113,7 +113,7 @@ public abstract class ResourceReference implements Serializable
 	{
 		return Objects.hashCode(scope, name, locale, style);
 	}
-	
+
 	/**
 	 * Creates new resource.
 	 * 

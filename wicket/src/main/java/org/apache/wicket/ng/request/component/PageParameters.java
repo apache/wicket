@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.wicket.ng.request.RequestMapper;
-import org.apache.wicket.ng.util.lang.Objects;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 
 /**

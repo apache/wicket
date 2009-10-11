@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.ng.util.lang.Objects;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Objects;
 
 public class DefaultPageStore implements PageStore
 {
