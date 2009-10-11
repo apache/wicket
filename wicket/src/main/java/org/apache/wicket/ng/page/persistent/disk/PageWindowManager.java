@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.ng.util.collections.IntHashMap;
+import org.apache.wicket.util.collections.IntHashMap;
 
 /**
  * Manages positions and size of serialized pages in the pagemap file.

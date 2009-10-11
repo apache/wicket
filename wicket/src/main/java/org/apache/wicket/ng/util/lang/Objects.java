@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.util.io.IObjectStreamFactory;
-import org.apache.wicket.ng.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
+import org.apache.wicket.util.io.IObjectStreamFactory;
+import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
