@@ -2363,14 +2363,28 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param markupStream
 	 */
-	public final void render(final MarkupStream markupStream)
+	public final void render(MarkupStream markupStream)
 	{
 		if (getApplication().getMarkupFragmentEnabled())
 		{
+			// Step 1: Make sure there is a markup available for the Component
 			IMarkupFragment markup = getMarkup();
 			if (!(this instanceof Page) && (markup == null))
 			{
 				throw new IllegalArgumentException("jdo: Markup not found: " + toString());
+			}
+
+			// Step 2: A markup stream based on the markup should yield the same result.
+			if (markupStream != null)
+			{
+				MarkupStream ms = new MarkupStream(markup);
+
+				// We need to skip the component in the original markup stream to avoid
+				// exceptions later on.
+				markupStream.skipComponent();
+
+				// We want to use the new markup stream
+				markupStream = ms;
 			}
 		}
 
@@ -3722,6 +3736,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected MarkupStream locateMarkupStream()
 	{
+		if (getApplication().getMarkupFragmentEnabled())
+		{
+			return new MarkupStream(getMarkup());
+		}
 		return new MarkupFragmentFinder().find(this);
 	}
 

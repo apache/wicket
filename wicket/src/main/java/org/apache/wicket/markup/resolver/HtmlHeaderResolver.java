@@ -20,6 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -89,6 +90,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// head first.
 			if (container instanceof WebPage)
 			{
+				final IMarkupFragment markup = markupStream.getMarkupFragment();
+
 				// Create a special header component which will gather
 				// additional input the <head> from 'contributors'.
 				final MarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
@@ -108,6 +111,12 @@ public class HtmlHeaderResolver implements IComponentResolver
 					{
 						return true;
 					}
+
+					@Override
+					public IMarkupFragment getMarkup()
+					{
+						return markup;
+					}
 				};
 
 				header2.setRenderBodyOnly(true);
@@ -118,6 +127,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 			}
 			else if (container instanceof HtmlHeaderContainer)
 			{
+				final IMarkupFragment markup = markupStream.getMarkupFragment();
+
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality there are merely a means of surrounding
 				// relevant markup. Thus we simply create a WebMarkupContainer to handle
@@ -131,6 +142,12 @@ public class HtmlHeaderResolver implements IComponentResolver
 					public boolean isTransparentResolver()
 					{
 						return true;
+					}
+
+					@Override
+					public IMarkupFragment getMarkup()
+					{
+						return markup;
 					}
 				};
 				header.setRenderBodyOnly(true);

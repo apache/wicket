@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
@@ -65,13 +66,21 @@ public class InlinePanelPage_5 extends WebPage
 			return getAssociatedMarkupStream(false);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.panel.Fragment#getMarkup()
-		 */
 		@Override
-		public IMarkupFragment getMarkup()
+		public IMarkupFragment getMarkup(Component child)
 		{
-			return getAssociatedMarkup();
+			IMarkupFragment markup = getAssociatedMarkup();
+			if (markup == null)
+			{
+				return null;
+			}
+
+			if (child == null)
+			{
+				return markup;
+			}
+
+			return markup.find(null, child.getId(), 0);
 		}
 	}
 }

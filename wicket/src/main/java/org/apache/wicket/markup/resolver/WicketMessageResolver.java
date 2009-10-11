@@ -31,7 +31,6 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.internal.MarkupTagIterator;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
@@ -141,7 +140,9 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
-				MessageContainer label = new MessageContainer(id, messageKey);
+				MessageContainer label = new MessageContainer(id, messageKey,
+					markupStream.getMarkupFragment());
+
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());
@@ -178,16 +179,22 @@ public class WicketMessageResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
+		private final IMarkupFragment markupFragment;
+
 		/**
 		 * Construct.
 		 * 
 		 * @param id
 		 * @param messageKey
+		 * @param markupFragment
 		 */
-		public MessageContainer(final String id, final String messageKey)
+		public MessageContainer(final String id, final String messageKey,
+			final IMarkupFragment markupFragment)
 		{
 			// The message key becomes the model
 			super(id, new Model<String>(messageKey));
+
+			this.markupFragment = markupFragment;
 
 			setEscapeModelStrings(false);
 		}
@@ -414,28 +421,7 @@ public class WicketMessageResolver implements IComponentResolver
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			String key = getDefaultModelObjectAsString();
-			if (Strings.isEmpty(key))
-			{
-				throw new WicketRuntimeException(
-					"Expected the model object to contain the message key. But the model object was null");
-			}
-
-			// Get the parent markup. Make sure that in case of Border and Panel you get the
-			// associated markup
-			IMarkupFragment markup = getParent().getMarkup(null);
-			MarkupTagIterator iter = new MarkupTagIterator(markup).setWicketTagsOnly(true)
-				.setOpenTagOnly(true);
-			while (iter.hasNext())
-			{
-				WicketTag tag = iter.nextWicketTag();
-				if (tag.isMessageTag() && key.equals(tag.getAttribute("key")))
-				{
-					return iter.getMarkupFragment();
-				}
-			}
-
-			return null;
+			return markupFragment;
 		}
 	}
 }

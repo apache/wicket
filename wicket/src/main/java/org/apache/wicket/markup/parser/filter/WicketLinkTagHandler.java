@@ -214,6 +214,8 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 				final String id = tag.getId() + container.getPage().getAutoIndex();
 				tag.setId(id);
 
+				final IMarkupFragment markup = markupStream.getMarkupFragment();
+
 				final Component component = new WebMarkupContainer(id)
 				{
 					private static final long serialVersionUID = 1L;
@@ -233,7 +235,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 					@Override
 					public IMarkupFragment getMarkup()
 					{
-						return markupStream.getMarkupFragment();
+						return markup;
 					}
 				};
 

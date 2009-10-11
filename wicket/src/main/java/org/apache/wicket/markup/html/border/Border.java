@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -508,24 +509,32 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		/**
-		 * The implementation is against the rule that getMarkup() returns the components markup
-		 * which in this case would be something like <code>&lt;wicket:body/&gt;</code>. But that
-		 * doesn't work if the body container has been added to some kind of wrapper (e.g. Form,
-		 * another Border, etc.). Such a parent would not be able to find the body. The reason is
-		 * that the body container's id and the tag id are different. The tag's id is always "_body"
-		 * where as the body's id must be unique per parent and thus is something like border.id +
-		 * "_body". Since the Page object is not yet available in the constructor,
-		 * Page#getAutoIndex() can not be used. So Border.BorderBodyContainer is an exception in
-		 * that it returns what you would expect from getMarkup(null). Via
-		 * <code>getBodyContainer().getParent().getMarkup(new WebComponent("_body"));</code> you can
-		 * still access the <code>&lt;wicket:body/&gt;</code> markup if really needed.
-		 * 
 		 * @see org.apache.wicket.Component#getMarkup()
 		 */
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return Border.this.getMarkup();
+			return getParent().getMarkup(new WebComponent(BODY_ID));
+		}
+
+		/**
+		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+		 */
+		@Override
+		public IMarkupFragment getMarkup(final Component child)
+		{
+			IMarkupFragment markup = Border.this.getMarkup();
+			if (markup == null)
+			{
+				return null;
+			}
+
+			if (child == null)
+			{
+				return markup;
+			}
+
+			return markup.find(null, child.getId(), 0);
 		}
 	}
 }

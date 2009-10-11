@@ -158,6 +158,9 @@ public class MarkupFragmentTest extends WicketTestCase
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
 		markup = border.getBodyContainer().getMarkup();
+		compare(markup, "<wicket:body/>");
+
+		markup = border.getBodyContainer().getMarkup(null);
 		compare(markup, "<span wicket:id=\"border\">test</span>");
 
 		markup = border.getBodyContainer().getParent().getMarkup(new WebComponent("_body"));
@@ -196,6 +199,9 @@ public class MarkupFragmentTest extends WicketTestCase
 		compare(markup, "<wicket:body>333</wicket:body>");
 
 		markup = border.getBodyContainer().getMarkup();
+		compare(markup, "<wicket:body>333</wicket:body>");
+
+		markup = border.getBodyContainer().getMarkup(null);
 		compare(markup, "<span wicket:id=\"border2\">test</span>");
 
 		// getMarkup(null) returns the markup which is used to find a child component

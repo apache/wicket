@@ -1643,6 +1643,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#renderPlaceholderTag(org.apache.wicket.markup.ComponentTag,
+	 *      org.apache.wicket.Response)
+	 */
 	@Override
 	protected void renderPlaceholderTag(ComponentTag tag, Response response)
 	{
