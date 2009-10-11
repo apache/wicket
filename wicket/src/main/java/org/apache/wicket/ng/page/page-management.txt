@@ -1,0 +1,106 @@
+Render Count
+============
+
+Render count is new concept to detect stale page links. 
+Scenario:
+	1. Page contains list of items, each item has "delete" link.
+	2. User clicks delete on first item, but he chooses "open in new tab"
+	3. Page rerenders, but it new tab. The indexes shift and the links that
+	   user sees in first tab no longer match the actual items
+	     (This is not solved by regular versioning, because during page render (when the items are rebuilt)
+	      bumping page version is not possible)
+    4. On first tab user clicks delete on second item
+        
+  This will likely result in deleting invalid item user see stale page
+  
+FIXME: Component hierarchy changes in beforeRender, not during render. At that point we can bump the version.
+       So why is versioning disabled during render in Wicket? What can actually change? RenderCount detects
+       changes that would normally result in version bump but they don't because they happen during render. 
+       What are those changes? 
+       
+UPDATE:
+		Versioning is disabled during page render (i.e. IRedirectRenderer). That also includes onBeforeRender
+		call that can rebuild component hierarchy but it doesn't increment version (otherwise there would be a 
+		new version each time user refreshes a page with listview). This is where render count can detect that
+		page version rendered in one tab is stalled because it was rerendered in another.
+  
+How to detect this?
+
+Page has new variable - render-count. Every time page is rendered and component hierarchy changes render-count 
+increases. The component hierarchy changes *before* render so we know whether to increment render count or not
+before the rendering actually begins.
+
+Every listener-interface link contains the render-count. Every time listener interface request handler is invoked
+there's a check in place that throws StalePageException when the link is stale.
+
+Later in game we can have fancy detection that immediately (matter of seconds) tells user that the page he sees
+become stale (because same page was rendered in another tab/window). This can be achieved by a cookie containing 
+last x page render counts. The cookie is updated on every page render and it's periodically checked for changes.
+
+Basically the difference between render count and page version is that render count can change during page render
+(well, actually in onBeforeRender - because during actual render hierarchy must not change) and is only in
+listener interface links so it never makes it to URL that user sees. On the other hand version changes during
+listener interface actions and is visible in URL. Also version change requires underlying page manager to store
+page snapshot (whereas render is only a property on existing page version).
+
+Q: Will this break master/detail page where each detail link is opened in new window/tab?
+A: No. The detail link either changes component hierarchy (before render) or sets another page as response. So 
+   when the link is clicked the original page never gets rendered thus the links don't become stale.
+   
+
+Page Storage
+============
+
+There will be two page managers. PersistentPageManager and SessionPageManager.
+
+PersistentPageManager
+---------------------
+
+Works like current SecondLevelCacheSessionStore. Has support for versioning, with a slight difference - page version
+is not a separate field. Rather than that page id gets incremented.
+
+SessionPageManager
+------------------
+
+Keeps last N pages in Session as session attributes. Versioning is not supported. Page eviction should take in account
+different pages/tabs. So for example when user goes X pages back PageExpiredException is to be expected. But when user 
+returns to page in different tab he should not gets page expired.
+
+Idea for detecting tabs:
+(this is only relevant for SessionPageManager. PeristentPageManager should keep enough pages/versions to make
+ page expirations rare) 
+
+Current
+  There are no pagemaps so we can't use the solution from current Wicket. Also the solution is not very reliable and
+  under certain circumstances it can lead to various funny things like infinite redirects.
+  
+Possibly better solution
+  Every time page is rendered it checks window.name. If window name is empty it sets it to unique generated value. Page
+  Fires ajax request to server letting it know that PageX has been opened in new tab/window or that it has been opened in
+  existing tab (in that case window.name has already been set to unique value). This request would be very
+  extremely quick and light, merely changing a page manager page property.
+  
+  If page is rerendered it checks the window.name. If it has changed it fires ajax request to server letting it know
+  that the page has either moved to existing tab or been opened in new one.
+  
+
+Locking
+=======
+
+In current wicket version we lock on pagemap. Unfortunately in 99.99% cases this pretty much equals locking on session
+because there is only one pagemap.
+
+Since there will be no pagemaps (actually there will be but only as implementation details of SessionPageManager) we 
+could try locking on individual pages. This introduces several problems:
+
+Assuming users are disciplined and don't pass page instances between pages, rather then that they use PageReferences.
+
+PageA is being processed (current thread has lock on pageA) and it requests page B. If there is no lock on pageB solution 
+is simple - current thread gets lock to pageB as well. 
+
+However if pageB is also being processed, another thread has lock on PageB. PageA would have to wait until pageB is done
+to obtain the lock. But if for some reason PageB requires pageA, this would end in a deadlock.
+
+Perhaps with proper timeouts it would be possible for PageA to obtain PageB instance even though it's locked. This
+is not very safe but I don't really see any other solution. It's a bad idea to put synchronous long-duration tasks to 
+pages anyway.    

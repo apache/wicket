@@ -1,0 +1,99 @@
+package org.apache.wicket.ng.request.mapper;
+
+import org.apache.wicket.ng.Session;
+import org.apache.wicket.ng.protocol.http.WebApplication;
+import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.impl.BufferedResponseRequestHandler;
+import org.apache.wicket.ng.request.response.BufferedWebResponse;
+
+/**
+ * Encoder that intercepts requests for which there is already stored buffer with rendered data.
+ * 
+ * @author Matej Knopp
+ */
+public class BufferedResponseMapper implements RequestMapper
+{
+
+	public BufferedResponseMapper()
+	{
+	}
+
+	protected String getSessionId()
+	{
+		return Session.get().getId();
+	}
+
+	protected boolean hasBufferedResponse(Url url)
+	{
+		String sessionId = getSessionId();
+		if (sessionId != null)
+		{
+			return WebApplication.get().hasBufferedResponse(sessionId, url);
+		}
+		else
+		{
+			return false;
+		}		
+	}
+
+	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
+	{
+		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
+	}
+	
+	private Request getRequest(Request original)
+	{
+		// The buffers are stored under "real" URL which can be different
+		// than the URL handlers get due to global URL pre/postprocessing
+		// (i.e. prepending URL with language segment).
+		// Because of that we need find out the real URL from request cycle
+		
+		if (RequestCycle.get() != null)
+		{
+			return RequestCycle.get().getRequest();
+		}
+		else
+		{
+			return original;
+		}
+	}
+	
+	public RequestHandler mapRequest(Request request)
+	{		
+		request = getRequest(request);
+		
+		BufferedWebResponse response = getAndRemoveBufferedResponse(request.getUrl());
+		if (response != null)
+		{
+			return new BufferedResponseRequestHandler(response);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public Url mapHandler(RequestHandler requestHandler)
+	{
+		return null;
+	}
+
+	public int getCompatibilityScore(Request request)
+	{
+		request = getRequest(request);
+		
+		if (hasBufferedResponse(request.getUrl()))
+		{
+			return Integer.MAX_VALUE;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+}

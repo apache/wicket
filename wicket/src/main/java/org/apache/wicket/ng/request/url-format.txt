@@ -1,0 +1,62 @@
+NOTE - According to http://www.rfc-editor.org/rfc/rfc1738.txt ':' is not a valid
+       character in URL and must be encoded. 
+       In order for Wicket to produce valid URLs I've decided to use - as separator instead
+       This will only affect listener URLs anyway, which are not shown in location bar 
+       (except for bookmarkable listeners on stateless pages)
+       '-' in component name is encoded as '--'.
+
+
+NOT BOOKMARKABLE
+----------------
+
+Page Instance - Render (RenderPageRequestHandler)
+/wicket/page?2
+
+Page Instance - Listener (ListenerInterfaceRequestHandler)
+/wicket/page?2-5.click-foo-bar-baz   (5 is render count)
+
+Page Instance - Listener with behavior (ListenerInterfaceRequestHandler) 
+/wicket/page?2-5.click.1-foo-bar-baz   (5 is render count, 1 is behavior index)
+
+BOOKMARKABLE - NOT MOUNTED
+--------------------------
+
+Page Class - Render (BookmarkablePageRequestHandler)
+/wicket/bookmarkable/org.apache.wicket.MyPage
+/wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
+(these will redirect to hybrid alternative if page is not stateless)
+
+Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
+/wicket/bookmarkable/org.apache.wicket.MyPage?2
+
+Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
+/wicket/bookmarkable/org.apache.wicket.MyPage?2-5.click-foo-bar-baz (5 is renderCount)
+/wicket/bookmarkable/org.apache.wicket.MyPage?2-5.click.1-foo-bar-baz (5 is renderCount, 1 is behavior index)
+(these will redirect to hybrid if page is not stateless)
+
+BOOKMARKABLE - MOUNTED
+----------------------
+
+Page Class - Render (BookmarkablePageRequestHandler for mounted pages)
+/mount/point
+/mount/point?pageMap
+(these will redirect to hybrid alternative if page is not stateless)
+
+Page Instance - Render Hybrid (RenderPageRequestHandler for mounted pages) 
+/mount/point?2
+
+Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages) 
+/mount/point?2-5.click-foo-bar-baz (5 is render count)
+/mount/point?2-5.click.1-foo-bar-baz (5 is render count, 1 is behavior index)
+(these will redirect to hybrid if page is not stateless)
+
+mount path can also contain parameter placeholders
+e.g. when mount path is /foo/${bar}/baz and the incoming url is /foo/abc/baz   the extracted page parameters will 
+contain named parameter bar="abc".
+
+RESOURCES
+---------
+/wicket/resource/org.apache.wicket.ResourceScope/resource/path.xyz?en_EN-style
+/mounted/resource?en_EN-style  (with locale and style)
+/mounted/resource
+
