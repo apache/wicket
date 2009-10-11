@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Encoder for mounted URL. The mount path can contain parameter placeholders, i.e.
@@ -69,9 +69,9 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	public MountedMapper(String mountPath, Class<? extends RequestablePage> pageClass,
 			PageParametersEncoder pageParametersEncoder)
 	{
-		Check.argumentNotEmpty(mountPath, "mountPath");
-		Check.argumentNotNull(pageClass, "pageClass");
-		Check.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
+		Checks.argumentNotEmpty(mountPath, "mountPath");
+		Checks.argumentNotNull(pageClass, "pageClass");
+		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.pageParametersEncoder = pageParametersEncoder;
 		this.pageClass = new WeakReference<Class<? extends RequestablePage>>(pageClass);

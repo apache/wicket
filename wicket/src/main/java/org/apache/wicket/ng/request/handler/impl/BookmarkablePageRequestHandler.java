@@ -21,7 +21,7 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageClassRequestHandler;
 import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Request handler for bookmarkable pages. This handler is only used to generate URLs. Rendering is
@@ -41,7 +41,7 @@ public class BookmarkablePageRequestHandler implements PageClassRequestHandler
 	public BookmarkablePageRequestHandler(PageProvider pageProvider)
 	{
 		
-		Check.argumentNotNull(pageProvider, "pageProvider");
+		Checks.argumentNotNull(pageProvider, "pageProvider");
 		
 		this.pageProvider = pageProvider;
 	}

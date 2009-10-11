@@ -20,7 +20,7 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Request handler for {@link ResourceReference}. This handler is only used to generate URLs.
@@ -40,7 +40,7 @@ public class ResourceReferenceRequestHandler implements RequestHandler
 	 */
 	public ResourceReferenceRequestHandler(ResourceReference resourceReference, PageParameters pageParameters)
 	{
-		Check.argumentNotNull(resourceReference, "resourceReference");
+		Checks.argumentNotNull(resourceReference, "resourceReference");
 
 		this.resourceReference = resourceReference;
 		this.pageParameters = pageParameters;

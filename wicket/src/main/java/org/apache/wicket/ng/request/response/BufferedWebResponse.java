@@ -27,7 +27,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -170,7 +170,7 @@ public abstract class BufferedWebResponse extends WebResponse
 	 */
 	public void writeTo(final WebResponse response)
 	{
-		Check.argumentNotNull(response, "response");
+		Checks.argumentNotNull(response, "response");
 
 		for (CookieEntry e : cookieEntries)
 		{

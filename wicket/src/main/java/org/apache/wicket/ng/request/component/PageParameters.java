@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.wicket.ng.request.RequestMapper;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -42,7 +42,7 @@ public class PageParameters implements Serializable
 	 */
 	public PageParameters(PageParameters copy)
 	{
-		Check.argumentNotNull(copy, "copy");
+		Checks.argumentNotNull(copy, "copy");
 
 		if (copy.indexedParameters != null)
 			this.indexedParameters = new ArrayList<String>(copy.indexedParameters);
@@ -149,7 +149,7 @@ public class PageParameters implements Serializable
 	 */
 	public StringValue getNamedParameter(String name)
 	{
-		Check.argumentNotNull(name, "name");
+		Checks.argumentNotNull(name, "name");
 
 		if (namedParameters != null)
 		{
@@ -172,7 +172,7 @@ public class PageParameters implements Serializable
 	 */
 	public List<StringValue> getNamedParameters(String name)
 	{
-		Check.argumentNotNull(name, "name");
+		Checks.argumentNotNull(name, "name");
 
 		if (namedParameters != null)
 		{
@@ -199,7 +199,7 @@ public class PageParameters implements Serializable
 	 */
 	public void removeNamedParameter(String name)
 	{
-		Check.argumentNotNull(name, "name");
+		Checks.argumentNotNull(name, "name");
 		
 		if (namedParameters != null)
 		{
@@ -235,8 +235,8 @@ public class PageParameters implements Serializable
 	 */
 	public void addNamedParameter(String name, Object value, int index)
 	{
-		Check.argumentNotNull(name, "name");
-		Check.argumentNotNull(value, "value");
+		Checks.argumentNotNull(name, "name");
+		Checks.argumentNotNull(value, "value");
 
 		if (namedParameters == null)
 			namedParameters = new ArrayList<Entry>(1);

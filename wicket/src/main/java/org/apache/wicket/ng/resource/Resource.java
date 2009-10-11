@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Resource is an object capable of writing output to response.
@@ -59,9 +59,9 @@ public interface Resource extends Serializable
 		public Attributes(Request request, Response response, Locale locale, String style,
 			PageParameters parameters)
 		{
-			Check.argumentNotNull(request, "request");
-			Check.argumentNotNull(response, "response");
-			Check.argumentNotNull(locale, "locale");
+			Checks.argumentNotNull(request, "request");
+			Checks.argumentNotNull(response, "response");
+			Checks.argumentNotNull(locale, "locale");
 
 			this.request = request;
 			this.response = response;

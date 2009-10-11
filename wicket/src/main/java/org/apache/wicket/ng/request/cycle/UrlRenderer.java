@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Takes care of rendering relative (or in future possibly absolute - depending on configuration)
@@ -42,7 +42,7 @@ public class UrlRenderer
 	 */
 	public UrlRenderer(Url base)
 	{
-		Check.argumentNotNull(base, "base");
+		Checks.argumentNotNull(base, "base");
 
 		this.baseUrl = base;
 	}
@@ -55,7 +55,7 @@ public class UrlRenderer
 	 */
 	public Url setBaseUrl(Url base)
 	{
-		Check.argumentNotNull(base, "base");
+		Checks.argumentNotNull(base, "base");
 		
 		Url original = this.baseUrl;
 		this.baseUrl = base;
@@ -82,7 +82,7 @@ public class UrlRenderer
 	 */
 	public String renderUrl(Url url)
 	{
-		Check.argumentNotNull(url, "url");
+		Checks.argumentNotNull(url, "url");
 
 		if (url.isAbsolute())
 		{

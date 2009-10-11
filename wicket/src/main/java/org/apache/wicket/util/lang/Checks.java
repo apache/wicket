@@ -1,8 +1,8 @@
-package org.apache.wicket.ng.util.lang;
+package org.apache.wicket.util.lang;
 
 import org.apache.wicket.util.string.Strings;
 
-public class Check
+public class Checks
 {
     public static void argumentNotNull(Object argument, String name)
     {

@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.handler.PageClassRequestHandler;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * {@link RequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
@@ -87,8 +87,8 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 	 */
 	public RenderPageRequestHandler(PageProvider pageProvider, RedirectPolicy redirectPolicy)
 	{
-		Check.argumentNotNull(pageProvider, "pageProvider");
-		Check.argumentNotNull(redirectPolicy, "redirectPolicy");
+		Checks.argumentNotNull(pageProvider, "pageProvider");
+		Checks.argumentNotNull(redirectPolicy, "redirectPolicy");
 
 		this.redirectPolicy = redirectPolicy;
 		this.pageProvider = pageProvider;

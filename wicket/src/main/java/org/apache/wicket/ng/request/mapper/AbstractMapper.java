@@ -26,8 +26,8 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Classes;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -50,7 +50,7 @@ public abstract class AbstractMapper implements RequestMapper
      */
     protected String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
     {
-        Check.argumentNotNull(listenerInterface, "listenerInterface");
+        Checks.argumentNotNull(listenerInterface, "listenerInterface");
 
         return getContext().requestListenerInterfaceToString(listenerInterface);
     }
@@ -63,7 +63,7 @@ public abstract class AbstractMapper implements RequestMapper
      */
     protected RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
     {
-        Check.argumentNotEmpty(interfaceName, "interfaceName");
+        Checks.argumentNotEmpty(interfaceName, "interfaceName");
 
         return getContext().requestListenerInterfaceFromString(interfaceName);
     }
@@ -187,7 +187,7 @@ public abstract class AbstractMapper implements RequestMapper
      */
     protected Class< ? extends RequestablePage> getPageClass(String name)
     {
-        Check.argumentNotEmpty(name, "name");
+        Checks.argumentNotEmpty(name, "name");
 
         return Classes.resolveClass(name);
     }
@@ -205,8 +205,8 @@ public abstract class AbstractMapper implements RequestMapper
     protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
             PageParametersEncoder encoder)
     {
-        Check.argumentNotNull(request, "request");
-        Check.argumentNotNull(encoder, "encoder");
+        Checks.argumentNotNull(request, "request");
+        Checks.argumentNotNull(encoder, "encoder");
 
         // strip the segments and first query parameter from URL
         Url urlCopy = new Url(request.getUrl());
@@ -238,8 +238,8 @@ public abstract class AbstractMapper implements RequestMapper
     protected Url encodePageParameters(Url url, PageParameters pageParameters,
             PageParametersEncoder encoder)
     {
-        Check.argumentNotNull(url, "url");
-        Check.argumentNotNull(encoder, "encoder");
+        Checks.argumentNotNull(url, "url");
+        Checks.argumentNotNull(encoder, "encoder");
 
         if (pageParameters == null)
         {

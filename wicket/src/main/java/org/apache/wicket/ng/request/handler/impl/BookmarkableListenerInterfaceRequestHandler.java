@@ -24,7 +24,7 @@ import org.apache.wicket.ng.request.handler.ComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Request handler for bookmarkable pages with listener interface. This handler is only used to
@@ -51,8 +51,8 @@ public class BookmarkableListenerInterfaceRequestHandler
 	public BookmarkableListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider,
 		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
-		Check.argumentNotNull(pageComponentProvider, "pageComponentProvider");
-		Check.argumentNotNull(listenerInterface, "listenerInterface");
+		Checks.argumentNotNull(pageComponentProvider, "pageComponentProvider");
+		Checks.argumentNotNull(listenerInterface, "listenerInterface");
 
 		this.pageComponentProvider = pageComponentProvider;
 		this.listenerInterface = listenerInterface;

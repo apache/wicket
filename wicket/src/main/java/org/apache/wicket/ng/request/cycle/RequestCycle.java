@@ -31,7 +31,7 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,12 +71,12 @@ public class RequestCycle extends RequestHandlerStack
     {
         super(context.getResponse());
 
-        Check.argumentNotNull(context, "context");
+        Checks.argumentNotNull(context, "context");
 
-        Check.argumentNotNull(context.getRequest(), "context.request");
-        Check.argumentNotNull(context.getResponse(), "context.response");
-        Check.argumentNotNull(context.getRequestMapper(), "context.requestMapper");
-        Check.argumentNotNull(context.getExceptionMapper(), "context.exceptionMapper");
+        Checks.argumentNotNull(context.getRequest(), "context.request");
+        Checks.argumentNotNull(context.getResponse(), "context.response");
+        Checks.argumentNotNull(context.getRequestMapper(), "context.requestMapper");
+        Checks.argumentNotNull(context.getExceptionMapper(), "context.exceptionMapper");
 
         this.request = context.getRequest();
         this.originalResponse = context.getResponse();

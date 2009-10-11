@@ -31,7 +31,7 @@ import org.apache.wicket.ng.session.SessionStore;
 import org.apache.wicket.ng.session.SessionStore.UnboundListener;
 import org.apache.wicket.ng.settings.ApplicationSettings;
 import org.apache.wicket.ng.settings.RequestCycleSettings;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Generic application that is environment (servlet, portlet, test) agnostic.
@@ -85,7 +85,7 @@ public abstract class Application implements UnboundListener
      */
     public final void setName(String name)
     {
-        Check.argumentNotEmpty(name, "name");
+        Checks.argumentNotEmpty(name, "name");
 
         if (this.name != null)
         {
@@ -316,7 +316,7 @@ public abstract class Application implements UnboundListener
 
     Session fetchCreateAndSetSession(RequestCycle requestCycle)
     {
-        Check.argumentNotNull(requestCycle, "requestCycle");
+        Checks.argumentNotNull(requestCycle, "requestCycle");
 
         Session session = getSessionStore().lookup(requestCycle.getRequest());
         if (session == null)

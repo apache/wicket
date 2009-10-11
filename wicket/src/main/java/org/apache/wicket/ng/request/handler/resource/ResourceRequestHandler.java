@@ -22,7 +22,7 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.Resource;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Request handler that renders a resource.
@@ -47,7 +47,7 @@ public class ResourceRequestHandler implements RequestHandler
 	public ResourceRequestHandler(Resource resource, Locale locale, String style,
 		PageParameters pageParameters)
 	{
-		Check.argumentNotNull(resource, "resource");
+		Checks.argumentNotNull(resource, "resource");
 
 		this.resource = resource;
 		this.locale = locale;

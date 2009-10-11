@@ -33,8 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -61,8 +61,8 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
 	{
-		Check.argumentNotNull(httpServletRequest, "httpServletRequest");
-		Check.argumentNotNull(filterPrefix, "filterPrefix");
+		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
+		Checks.argumentNotNull(filterPrefix, "filterPrefix");
 		
 		this.url = getUrl(httpServletRequest, filterPrefix);
 		this.httpServletRequest = httpServletRequest;

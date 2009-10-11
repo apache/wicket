@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.mapper.info;
 
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -57,7 +57,7 @@ public class PageInfo
 	 */
 	public PageInfo(RequestablePage page)
 	{
-		Check.argumentNotNull(page, "page");
+		Checks.argumentNotNull(page, "page");
 
 		this.pageId = page.getPageId();
 	}

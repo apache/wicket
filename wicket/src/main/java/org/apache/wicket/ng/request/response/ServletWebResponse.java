@@ -22,7 +22,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
@@ -39,7 +39,7 @@ public class ServletWebResponse extends WebResponse
 	 */
 	public ServletWebResponse(HttpServletResponse httpServletResponse)
 	{
-		Check.argumentNotNull(httpServletResponse, "httpServletResponse");
+		Checks.argumentNotNull(httpServletResponse, "httpServletResponse");
 
 		this.httpServletResponse = httpServletResponse;
 	}

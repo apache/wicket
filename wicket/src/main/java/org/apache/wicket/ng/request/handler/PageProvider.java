@@ -10,7 +10,7 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.mapper.PageSource;
 import org.apache.wicket.ng.request.mapper.StalePageException;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Provides page instance for request handlers. Each of the constructors has just enough information
@@ -118,7 +118,7 @@ public class PageProvider
 	 */
 	public PageProvider(RequestablePage page)
 	{
-		Check.argumentNotNull(page, "page");
+		Checks.argumentNotNull(page, "page");
 
 		this.pageInstance = page;
 	}
@@ -272,14 +272,14 @@ public class PageProvider
 
 	private void setPageClass(Class<? extends RequestablePage> pageClass)
 	{
-		Check.argumentNotNull(pageClass, "pageClass");
+		Checks.argumentNotNull(pageClass, "pageClass");
 
 		this.pageClass = pageClass;
 	}
 
 	private void setPageParameters(PageParameters pageParameters)
 	{
-		Check.argumentNotNull(pageParameters, "pageParameters");
+		Checks.argumentNotNull(pageParameters, "pageParameters");
 
 		this.pageParameters = pageParameters;
 	}

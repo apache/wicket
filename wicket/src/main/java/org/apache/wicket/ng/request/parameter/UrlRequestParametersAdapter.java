@@ -25,8 +25,8 @@ import java.util.Set;
 import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -44,7 +44,7 @@ public class UrlRequestParametersAdapter implements RequestParameters
 	 */
 	public UrlRequestParametersAdapter(Url url)
 	{
-		Check.argumentNotNull(url, "url");
+		Checks.argumentNotNull(url, "url");
 		
 		this.url = url;
 	}

@@ -3,7 +3,7 @@ package org.apache.wicket.ng.request.handler;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Extension of {@link PageProvider} that is also capable of providing a Component belonging to the
@@ -40,7 +40,7 @@ public class PageAndComponentProvider extends PageProvider
 	{
 		super(page);		
 		
-		Check.argumentNotNull(component, "component");
+		Checks.argumentNotNull(component, "component");
 		
 		this.component = component;
 	}
@@ -160,7 +160,7 @@ public class PageAndComponentProvider extends PageProvider
 
 	private void setComponentPath(String componentPath)
 	{
-		Check.argumentNotNull(componentPath, "componentPath");
+		Checks.argumentNotNull(componentPath, "componentPath");
 				
 		this.componentPath = componentPath;
 	}

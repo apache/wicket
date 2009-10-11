@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Allows to register and lookup {@link ResourceReference}s.
@@ -39,8 +39,8 @@ public class ResourceReferenceRegistry
 
 		public Key(String scope, String name, Locale locale, String style)
 		{
-			Check.argumentNotNull(scope, "scope");
-			Check.argumentNotNull(name, "name");
+			Checks.argumentNotNull(scope, "scope");
+			Checks.argumentNotNull(name, "name");
 
 			this.scope = scope;
 			this.name = name;
@@ -82,7 +82,7 @@ public class ResourceReferenceRegistry
 	 */
 	public void registerResourceReference(ResourceReference reference)
 	{
-		Check.argumentNotNull(reference, "reference");
+		Checks.argumentNotNull(reference, "reference");
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle());
@@ -96,7 +96,7 @@ public class ResourceReferenceRegistry
 	 */
 	public void unregisterResourceReference(ResourceReference reference)
 	{
-		Check.argumentNotNull(reference, "reference");
+		Checks.argumentNotNull(reference, "reference");
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle());

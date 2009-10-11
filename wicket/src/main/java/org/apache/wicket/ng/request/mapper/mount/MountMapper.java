@@ -5,7 +5,7 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.mapper.AbstractMapper;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -20,8 +20,8 @@ public class MountMapper extends AbstractMapper
 
     public MountMapper(String mountPath, MountedRequestMapper mapper)
     {
-        Check.argumentNotEmpty(mountPath, "mountPath");
-        Check.argumentNotNull(mapper, "mapper");
+        Checks.argumentNotEmpty(mountPath, "mountPath");
+        Checks.argumentNotNull(mapper, "mapper");
 
         this.mountSegments = getMountSegments(mountPath);
         this.mapper = mapper;
@@ -29,8 +29,8 @@ public class MountMapper extends AbstractMapper
 
     public MountMapper(String mountPath, RequestMapper mapper)
     {
-        Check.argumentNotEmpty(mountPath, "mountPath");
-        Check.argumentNotNull(mapper, "mapper");
+        Checks.argumentNotEmpty(mountPath, "mountPath");
+        Checks.argumentNotNull(mapper, "mapper");
 
         this.mountSegments = getMountSegments(mountPath);
         this.mapper = new UnmountedMapperAdapter(mapper);
@@ -38,8 +38,8 @@ public class MountMapper extends AbstractMapper
 
     public MountMapper(String mountPath, RequestHandler handler)
     {
-        Check.argumentNotEmpty(mountPath, "mountPath");
-        Check.argumentNotNull(handler, "handler");
+        Checks.argumentNotEmpty(mountPath, "mountPath");
+        Checks.argumentNotNull(handler, "handler");
 
         this.mountSegments = getMountSegments(mountPath);
         this.mapper = new UnmountedRequestHandlerAdapter(handler);

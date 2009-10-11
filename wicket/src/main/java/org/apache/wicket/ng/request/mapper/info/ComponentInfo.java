@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper.info;
 
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -50,8 +50,8 @@ public class ComponentInfo
 	public ComponentInfo(Integer renderCount, String listenerInterface, String componentPath,
 		Integer behaviorIndex)
 	{
-		Check.argumentNotEmpty(listenerInterface, "listenerInterface");
-		Check.argumentNotEmpty(componentPath, "componentPath");
+		Checks.argumentNotEmpty(listenerInterface, "listenerInterface");
+		Checks.argumentNotEmpty(componentPath, "componentPath");
 
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;

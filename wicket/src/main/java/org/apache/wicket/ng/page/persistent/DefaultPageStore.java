@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
+import org.apache.wicket.util.lang.Checks;
 
 public class DefaultPageStore implements PageStore
 {
@@ -21,8 +21,8 @@ public class DefaultPageStore implements PageStore
 
 	public DefaultPageStore(String applicationName, DataStore dataStore, int cacheSize)
 	{
-		Check.argumentNotNull(applicationName, "applicationName");
-		Check.argumentNotNull(dataStore, "DataStore");
+		Checks.argumentNotNull(applicationName, "applicationName");
+		Checks.argumentNotNull(dataStore, "DataStore");
 		
 		this.applicationName = applicationName;
 		this.pageDataStore = dataStore;
@@ -279,8 +279,8 @@ public class DefaultPageStore implements PageStore
 
 	protected SerializedPage serializePage(String sessionId, ManageablePage page)
 	{
-		Check.argumentNotNull(sessionId, "sessionId");
-		Check.argumentNotNull(page, "page");
+		Checks.argumentNotNull(sessionId, "sessionId");
+		Checks.argumentNotNull(page, "page");
 
 		byte data[] = Objects.objectToByteArray(page, applicationName);
 		return new SerializedPage(sessionId, page.getPageId(), data);
@@ -320,7 +320,7 @@ public class DefaultPageStore implements PageStore
 
 		public SerializedPage removePage(String sessionId, int id)
 		{			
-			Check.argumentNotNull(sessionId, "sessionId");
+			Checks.argumentNotNull(sessionId, "sessionId");
 
 			if (size > 0)
 			{
@@ -343,7 +343,7 @@ public class DefaultPageStore implements PageStore
 
 		public void removePages(String sessionId)
 		{			
-			Check.argumentNotNull(sessionId, "sessionId");
+			Checks.argumentNotNull(sessionId, "sessionId");
 
 			if (size > 0)
 			{
@@ -364,7 +364,7 @@ public class DefaultPageStore implements PageStore
 
 		public SerializedPage getPage(String sessionId, int id)
 		{
-			Check.argumentNotNull(sessionId, "sessionId");
+			Checks.argumentNotNull(sessionId, "sessionId");
 
 			SerializedPage result = null;
 			if (size > 0)

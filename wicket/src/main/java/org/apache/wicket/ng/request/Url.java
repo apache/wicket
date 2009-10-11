@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.apache.wicket.ng.protocol.http.WicketURLDecoder;
 import org.apache.wicket.ng.protocol.http.WicketURLEncoder;
-import org.apache.wicket.ng.util.lang.Check;
 import org.apache.wicket.ng.util.lang.Objects;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
@@ -74,7 +74,7 @@ public final class Url implements Serializable
      */
     public Url(Url url)
     {
-        Check.argumentNotNull(url, "url");
+        Checks.argumentNotNull(url, "url");
 
         segments.addAll(url.getSegments());
         parameters.addAll(url.getQueryParameters());
@@ -88,8 +88,8 @@ public final class Url implements Serializable
      */
     public Url(List<String> segments, List<QueryParameter> parameters)
     {
-        Check.argumentNotNull(segments, "segments");
-        Check.argumentNotNull(parameters, "parameters");
+        Checks.argumentNotNull(segments, "segments");
+        Checks.argumentNotNull(parameters, "parameters");
 
         this.segments.addAll(segments);
         this.parameters.addAll(parameters);
@@ -150,7 +150,7 @@ public final class Url implements Serializable
      */
     public void removeLeadingSegments(int count)
     {
-        Check.argumentWithinRange(0, segments.size(), count, "count");
+        Checks.argumentWithinRange(0, segments.size(), count, "count");
         for (int i = 0; i < count; i++)
         {
             segments.remove(0);
@@ -164,7 +164,7 @@ public final class Url implements Serializable
      */
     public void prependLeadingSegments(List<String> newSegments)
     {
-        Check.argumentNotNull(newSegments, "segments");
+        Checks.argumentNotNull(newSegments, "segments");
         segments.addAll(0, newSegments);
     }
 
@@ -247,8 +247,8 @@ public final class Url implements Serializable
          */
         public QueryParameter(String name, String value)
         {
-            Check.argumentNotNull(name, "name");
-            Check.argumentNotNull(value, "value");
+            Checks.argumentNotNull(name, "name");
+            Checks.argumentNotNull(value, "value");
 
             this.name = name;
             this.value = value;
@@ -416,7 +416,7 @@ public final class Url implements Serializable
      */
     public static Url parse(String url)
     {
-        Check.argumentNotNull(url, "url");
+        Checks.argumentNotNull(url, "url");
 
         Url result = new Url();
 

@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.ng.page.persistent.AsynchronousDataStore;
 import org.apache.wicket.ng.page.persistent.DataStore;
-import org.apache.wicket.ng.util.lang.Check;
+import org.apache.wicket.util.lang.Checks;
 
 public class DiskDataStoreTest extends TestCase
 {
@@ -72,7 +72,7 @@ public class DiskDataStoreTest extends TestCase
 		
 		public boolean checkData(byte data[])
 		{
-			Check.argumentNotNull(data, "data");
+			Checks.argumentNotNull(data, "data");
 			if (data.length != length)
 			{
 				return false;
