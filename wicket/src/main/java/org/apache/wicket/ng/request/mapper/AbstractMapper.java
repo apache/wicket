@@ -26,8 +26,8 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
-import org.apache.wicket.ng.util.lang.Classes;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
 /**

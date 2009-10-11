@@ -19,9 +19,9 @@ package org.apache.wicket.ng.resource;
 import java.io.Serializable;
 import java.util.Locale;
 
-import org.apache.wicket.ng.util.lang.Classes;
 import org.apache.wicket.ng.util.lang.Objects;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Reference to a resource. Can be used to reference global resources.

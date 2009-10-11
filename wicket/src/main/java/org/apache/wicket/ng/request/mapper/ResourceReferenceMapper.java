@@ -26,7 +26,7 @@ import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.ng.resource.Resource;
 import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.util.lang.Classes;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted

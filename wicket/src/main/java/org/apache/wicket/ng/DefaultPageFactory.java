@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.wicket.ng.request.component.PageFactory;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.util.lang.Generics;
+import org.apache.wicket.util.lang.Generics;
 
 
 /**
@@ -146,7 +146,7 @@ public final class DefaultPageFactory implements PageFactory
 			if (argument != null)
 				return (Page)constructor.newInstance(new Object[] { argument });
 			else
-				return (Page)constructor.newInstance(new Object[] {});
+				return (Page)constructor.newInstance(new Object[] { });
 		}
 		catch (InstantiationException e)
 		{
@@ -160,12 +160,12 @@ public final class DefaultPageFactory implements PageFactory
 		{
 			// honor redirect exception contract defined in IPageFactory
 			// TODO - Honor the exceptions
-//			if (e.getTargetException() instanceof AbortException ||
-//				e.getTargetException() instanceof AuthorizationException ||
-//				e.getTargetException() instanceof MarkupException)
-//			{
-//				throw (RuntimeException)e.getTargetException();
-//			}
+// if (e.getTargetException() instanceof AbortException ||
+// e.getTargetException() instanceof AuthorizationException ||
+// e.getTargetException() instanceof MarkupException)
+// {
+// throw (RuntimeException)e.getTargetException();
+// }
 			throw new WicketRuntimeException(createDescription(constructor, argument), e);
 		}
 	}
@@ -173,17 +173,17 @@ public final class DefaultPageFactory implements PageFactory
 	private Page processPage(Page page, PageParameters pageParameters)
 	{
 		// the page might have not propagate page parameters from constructor. if that's the case
-		// we force the parameters 
+		// we force the parameters
 		if (pageParameters != null && page.getPageParameters() != pageParameters)
 		{
 			page.getPageParameters().assign(pageParameters);
 		}
-		
+
 		page.setWasCreatedBookmarkable(true);
-		
+
 		return page;
-	} 
-	
+	}
+
 	private String createDescription(Constructor<?> constructor, Object argument)
 	{
 		if (argument != null)
