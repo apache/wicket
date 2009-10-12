@@ -595,13 +595,15 @@ public class MockWebApplication
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
-						newLastRenderedPage = application.getSessionSettings()
+						// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+						newLastRenderedPage = (Page)application.getSessionSettings()
 							.getPageFactory()
 							.newPage(pageClass);
 					}
 					else
 					{
-						newLastRenderedPage = application.getSessionSettings()
+						// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+						newLastRenderedPage = (Page)application.getSessionSettings()
 							.getPageFactory()
 							.newPage(pageClass, parameters);
 					}

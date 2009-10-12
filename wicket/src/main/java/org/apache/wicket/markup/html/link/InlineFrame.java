@@ -94,11 +94,13 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				if (params == null)
 				{
 					// Create page using page factory
-					return Session.get().getPageFactory().newPage(c);
+					// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+					return (Page)Session.get().getPageFactory().newPage(c);
 				}
 				else
 				{
-					return Session.get().getPageFactory().newPage(c, params);
+					// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+					return (Page)Session.get().getPageFactory().newPage(c, params);
 				}
 			}
 

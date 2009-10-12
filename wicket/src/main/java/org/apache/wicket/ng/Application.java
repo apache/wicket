@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.wicket.IPageFactory;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.ng.page.PageManager;
@@ -31,7 +32,6 @@ import org.apache.wicket.ng.page.persistent.PersistentPageManager;
 import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestMapper;
-import org.apache.wicket.ng.request.component.PageFactory;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -47,6 +47,7 @@ import org.apache.wicket.ng.session.SessionStore;
 import org.apache.wicket.ng.session.SessionStore.UnboundListener;
 import org.apache.wicket.ng.settings.ApplicationSettings;
 import org.apache.wicket.ng.settings.RequestCycleSettings;
+import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -506,14 +507,14 @@ public abstract class Application implements UnboundListener
 		return resourceReferenceRegistry;
 	}
 
-	private PageFactory pageFactory;
+	private IPageFactory pageFactory;
 
 	/**
 	 * Override to create custom {@link PageFactory}
 	 * 
 	 * @return new {@link PageFactory} instance.
 	 */
-	protected PageFactory newPageFactory()
+	protected IPageFactory newPageFactory()
 	{
 		return new DefaultPageFactory();
 	}
@@ -523,7 +524,7 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @return
 	 */
-	public final PageFactory getPageFactory()
+	public final IPageFactory getPageFactory()
 	{
 		return pageFactory;
 	}

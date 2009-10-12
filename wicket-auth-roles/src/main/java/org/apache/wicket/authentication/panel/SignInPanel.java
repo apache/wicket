@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.authentication.panel;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
@@ -121,9 +122,11 @@ public class SignInPanel extends Panel
 					if (!continueToOriginalDestination())
 					{
 						// Ups, no original destination. Go to the home page
-						throw new RestartResponseException(getApplication().getSessionSettings()
-							.getPageFactory()
-							.newPage(getApplication().getHomePage()));
+
+						// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+						throw new RestartResponseException(
+							(Page)getApplication().getSessionSettings().getPageFactory().newPage(
+								getApplication().getHomePage()));
 					}
 				}
 			}
@@ -234,7 +237,8 @@ public class SignInPanel extends Panel
 		// original destination, otherwise to the Home page
 		if (!continueToOriginalDestination())
 		{
-			setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
+			// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
+			setResponsePage((Page)getApplication().getSessionSettings().getPageFactory().newPage(
 				getApplication().getHomePage()));
 		}
 	}

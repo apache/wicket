@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.quickstart;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Basic bookmarkable index page.

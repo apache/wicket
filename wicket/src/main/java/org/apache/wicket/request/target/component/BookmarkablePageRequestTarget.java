@@ -296,14 +296,14 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 		if (pageParameters == null || pageParameters.size() == 0)
 		{
-			return pageFactory.newPage(pageClass);
+			return (Page)pageFactory.newPage(pageClass);
 		}
 		else
 		{
 			// Add bookmarkable params in for WICKET-400.
 			final Map<String, String[]> requestMap = requestCycle.getRequest().getParameterMap();
 			requestMap.putAll(pageParameters.toRequestParameters());
-			return pageFactory.newPage(pageClass, pageParameters);
+			return (Page)pageFactory.newPage(pageClass, pageParameters);
 		}
 	}
 
