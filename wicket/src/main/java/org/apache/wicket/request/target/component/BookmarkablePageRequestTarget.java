@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.settings.IRequestCycleSettings;
 

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.redirect.encodingtest;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Homepage

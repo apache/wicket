@@ -18,10 +18,10 @@ package org.apache.wicket.markup.html.form.imagebutton;
 
 import java.util.Locale;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ImageButton;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**

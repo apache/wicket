@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -44,6 +45,41 @@ public final class RequestUtils
 	 *            parameters map to write the found key/ value pairs to
 	 */
 	public static void decodeParameters(String queryString, ValueMap params)
+	{
+		final String[] paramTuples = queryString.split("&");
+		for (int t = 0; t < paramTuples.length; t++)
+		{
+			final String[] bits = paramTuples[t].split("=");
+			if (bits.length == 2)
+			{
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
+					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
+			}
+			else
+			{
+				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
+			}
+		}
+	}
+
+	/**
+	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
+	 * value map.
+	 * 
+	 * TODO NG MIGRATION
+	 * 
+	 * @param queryString
+	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            value
+	 * @param params
+	 *            parameters map to write the found key/ value pairs to
+	 * 
+	 * 
+	 * @deprecated
+	 * 
+	 */
+	@Deprecated
+	public static void decodeParameters(String queryString, PageParameters params)
 	{
 		final String[] paramTuples = queryString.split("&");
 		for (int t = 0; t < paramTuples.length; t++)

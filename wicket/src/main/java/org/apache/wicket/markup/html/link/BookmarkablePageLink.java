@@ -23,8 +23,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Classes;
 
@@ -68,8 +68,8 @@ public class BookmarkablePageLink<T> extends Link<T>
 	{
 		if (parameters != null)
 		{
-			MiniMap<String, Object> map = new MiniMap<String, Object>(parameters,
-				parameters.keySet().size());
+			MiniMap<String, Object> map = new MiniMap<String, Object>(
+				parameters.getNamedParametersMap(), parameters.keySet().size());
 			return map;
 		}
 		else

@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.util.string.Strings;
 

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.niceurl;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
 /**

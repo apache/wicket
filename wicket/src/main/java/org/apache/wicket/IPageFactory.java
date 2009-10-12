@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.PageParameters;
+
 
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or without a

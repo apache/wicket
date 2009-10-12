@@ -18,7 +18,7 @@ package org.apache.wicket.request.target.component;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.target.IEventProcessor;
 
 /**

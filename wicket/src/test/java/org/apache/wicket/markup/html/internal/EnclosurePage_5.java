@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Mock page for testing.

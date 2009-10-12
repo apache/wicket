@@ -18,10 +18,10 @@ package org.apache.wicket.util.tester;
 
 import java.util.Locale;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
 import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;

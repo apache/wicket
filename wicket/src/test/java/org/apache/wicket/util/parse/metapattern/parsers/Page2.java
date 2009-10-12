@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.util.parse.metapattern.parsers;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

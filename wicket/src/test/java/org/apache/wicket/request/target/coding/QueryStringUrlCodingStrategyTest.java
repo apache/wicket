@@ -17,8 +17,8 @@
 package org.apache.wicket.request.target.coding;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

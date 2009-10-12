@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.PageParameters;
+
 /**
  * Causes wicket to interrupt current request processing and immediately respond with the specified
  * page.

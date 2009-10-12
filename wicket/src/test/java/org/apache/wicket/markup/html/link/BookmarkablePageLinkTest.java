@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jcompagner
