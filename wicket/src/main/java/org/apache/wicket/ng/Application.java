@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.ng.application.ClassResolver;
-import org.apache.wicket.ng.application.DefaultClassResolver;
+import org.apache.wicket.application.DefaultClassResolver;
+import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.ng.page.PageManagerContext;
 import org.apache.wicket.ng.page.persistent.DataStore;
@@ -232,14 +232,14 @@ public abstract class Application implements UnboundListener
 	// TODO: - Do properly
 	private final ApplicationSettings applicationSettings = new ApplicationSettings()
 	{
-		private ClassResolver resolver = new DefaultClassResolver();
+		private IClassResolver resolver = new DefaultClassResolver();
 
-		public ClassResolver getClassResolver()
+		public IClassResolver getClassResolver()
 		{
 			return resolver;
 		}
 
-		public void setClassResolver(ClassResolver defaultClassResolver)
+		public void setClassResolver(IClassResolver defaultClassResolver)
 		{
 			resolver = defaultClassResolver;
 		}
