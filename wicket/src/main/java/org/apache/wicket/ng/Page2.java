@@ -21,7 +21,7 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.response.Response;
 
-public class Page extends Component implements RequestablePage
+public class Page2 extends Component2 implements RequestablePage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -29,12 +29,12 @@ public class Page extends Component implements RequestablePage
 
 	static int pageIdCounter;
 
-	public Page()
+	public Page2()
 	{
 		this(null);
 	}
 
-	public Page(PageParameters parameters)
+	public Page2(PageParameters parameters)
 	{
 		super("");
 		pageId = pageIdCounter++;
@@ -48,10 +48,10 @@ public class Page extends Component implements RequestablePage
 		}
 	}
 
-	public static Page get(int id)
+	public static Page2 get(int id)
 	{
 		Application app = Application.get();
-		return (Page)app.getPageManager().getPage(id);
+		return (Page2)app.getPageManager().getPage(id);
 	}
 
 	public int getPageId()
@@ -127,7 +127,7 @@ public class Page extends Component implements RequestablePage
 
 		response.write("<p>This is a " + getClass().getName() + "</p>\n");
 
-		for (Component c : getChildren())
+		for (Component2 c : getChildren())
 		{
 			c.renderComponent();
 		}
@@ -149,7 +149,7 @@ public class Page extends Component implements RequestablePage
 	}
 
 	@Override
-	public Page getPage()
+	public Page2 getPage()
 	{
 		return this;
 	}

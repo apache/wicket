@@ -580,7 +580,7 @@ public abstract class Application implements UnboundListener
 
 		public RequestablePage getPageInstance(int pageId)
 		{
-			return Page.get(pageId);
+			return Page2.get(pageId);
 		}
 
 		public Class<? extends RequestablePage> getHomePageClass()

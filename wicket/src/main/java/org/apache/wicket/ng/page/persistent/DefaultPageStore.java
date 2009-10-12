@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.ng.Page2;
 import org.apache.wicket.ng.page.ManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
@@ -214,7 +214,7 @@ public class DefaultPageStore implements PageStore
 
 	public Object restoreAfterSerialization(Serializable serializable)
 	{
-		if (!storeAfterSessionReplication() || serializable instanceof Page)
+		if (!storeAfterSessionReplication() || serializable instanceof Page2)
 		{
 			return serializable;
 		}

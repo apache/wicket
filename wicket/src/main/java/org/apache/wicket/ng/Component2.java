@@ -30,65 +30,65 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-public class Component implements RequestableComponent
+public class Component2 implements RequestableComponent
 {
 	private static final long serialVersionUID = 1L;
 
 	private final String id;
 
-	public Component(String id)
+	public Component2(String id)
 	{
 		this.id = id;
 	}
 
-	private final List<Component> children = new ArrayList<Component>();
+	private final List<Component2> children = new ArrayList<Component2>();
 
-	public List<Component> getChildren()
+	public List<Component2> getChildren()
 	{
 		return Collections.unmodifiableList(children);
 	}
 
-	private Component parent;
+	private Component2 parent;
 
-	public Component getParent()
+	public Component2 getParent()
 	{
 		return parent;
 	}
 
-	public void remove(Component component)
+	public void remove(Component2 Component2)
 	{
-		if (component == null)
+		if (Component2 == null)
 		{
-			throw new NullPointerException("Argument 'component' may not be null.");
+			throw new NullPointerException("Argument 'Component2' may not be null.");
 		}
-		if (component.getParent() != this)
+		if (Component2.getParent() != this)
 		{
-			throw new IllegalStateException("Component is not child of this component.");
+			throw new IllegalStateException("Component2 is not child of this Component2.");
 		}
-		children.remove(component);
-		component.parent = null;
+		children.remove(Component2);
+		Component2.parent = null;
 	}
 
-	public void add(Component component)
+	public void add(Component2 Component2)
 	{
-		if (component == null)
+		if (Component2 == null)
 		{
-			throw new NullPointerException("Argument 'component' may not be null.");
+			throw new NullPointerException("Argument 'Component2' may not be null.");
 		}
-		if (component.getParent() != null)
+		if (Component2.getParent() != null)
 		{
-			throw new IllegalStateException("Component is already added to another component.");
+			throw new IllegalStateException("Component2 is already added to another Component2.");
 		}
-		for (Component c : children)
+		for (Component2 c : children)
 		{
-			if (c.getId().equals(component.getId()))
+			if (c.getId().equals(Component2.getId()))
 			{
 				throw new IllegalStateException(
-					"Component with same id already added to this component.");
+					"Component2 with same id already added to this Component2.");
 			}
 		}
-		component.parent = this;
-		children.add(component);
+		Component2.parent = this;
+		children.add(Component2);
 	}
 
 	public boolean isEnabled()
@@ -119,11 +119,11 @@ public class Component implements RequestableComponent
 
 	private static final char PATH_SEPARATOR = ':';
 
-	public Component get(String path)
+	public Component2 get(String path)
 	{
 		String first = Strings.firstPathComponent(path, PATH_SEPARATOR);
 		String after = Strings.afterFirstPathComponent(path, PATH_SEPARATOR);
-		for (Component c : getChildren())
+		for (Component2 c : getChildren())
 		{
 			if (first.equals(c.getId()))
 			{
@@ -163,12 +163,13 @@ public class Component implements RequestableComponent
 	{
 		if (markupId == null && createIfDoesNotExist)
 		{
-			markupId = getId() + getPage().getMarkupIdConterNextValue();
+			throw new RuntimeException("check code");
+			// markupId = getId() + getPage().getMarkupIdConterNextValue();
 		}
 		return markupId;
 	}
 
-	public Page getPage()
+	public Page2 getPage()
 	{
 		if (getParent() != null)
 		{
@@ -199,7 +200,7 @@ public class Component implements RequestableComponent
 
 	public void detach()
 	{
-		for (Component c : getChildren())
+		for (Component2 c : getChildren())
 		{
 			c.detach();
 		}
@@ -208,7 +209,7 @@ public class Component implements RequestableComponent
 
 	public final void prepareForRender(boolean setRenderingFlag)
 	{
-		for (Component c : getChildren())
+		for (Component2 c : getChildren())
 		{
 			c.prepareForRender(setRenderingFlag);
 		}
@@ -216,7 +217,7 @@ public class Component implements RequestableComponent
 
 	public void renderComponent()
 	{
-		for (Component c : children)
+		for (Component2 c : children)
 		{
 			c.renderComponent();
 		}

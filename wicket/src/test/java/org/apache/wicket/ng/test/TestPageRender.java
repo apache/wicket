@@ -18,7 +18,7 @@ package org.apache.wicket.ng.test;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.ng.Page2;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.markup.html.link.Link;
@@ -35,7 +35,7 @@ import org.apache.wicket.ng.request.response.StringResponse;
 
 public class TestPageRender extends TestCase
 {
-	public static class Page1 extends Page
+	public static class Page1 extends Page2
 	{
 		private static final long serialVersionUID = 1L;
 

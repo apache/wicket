@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.markup.html.link;
 
-import org.apache.wicket.ng.Component;
+import org.apache.wicket.ng.Component2;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
 
 @SuppressWarnings("serial")
 // Very simple and naive link component
-public abstract class Link extends Component implements ILinkListener
+public abstract class Link extends Component2 implements ILinkListener
 {
 	public Link(String id)
 	{

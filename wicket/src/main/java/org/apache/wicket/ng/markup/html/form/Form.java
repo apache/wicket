@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.markup.html.form;
 
-import org.apache.wicket.ng.Component;
+import org.apache.wicket.ng.Component2;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRe
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.response.Response;
 
-public class Form extends Component implements IFormSubmitListener
+public class Form extends Component2 implements IFormSubmitListener
 {
 	private static final long serialVersionUID = 1L;
 

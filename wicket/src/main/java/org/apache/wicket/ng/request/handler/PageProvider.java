@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.ng.Page2;
 import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
@@ -246,9 +246,9 @@ public class PageProvider
 			{
 				page = getPageSource().newPageInstance(pageClass, pageParameters);
 				freshCreated = true;
-				if (prepareForRenderNewPage() && page instanceof Page)
+				if (prepareForRenderNewPage() && page instanceof Page2)
 				{
-					((Page)page).prepareForRender(false);
+					((Page2)page).prepareForRender(false);
 				}
 			}
 		}

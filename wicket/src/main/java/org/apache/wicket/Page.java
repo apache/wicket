@@ -37,6 +37,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
@@ -121,8 +122,23 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
+public abstract class Page extends MarkupContainer
+	implements
+		IRedirectListener,
+		IPageMapEntry,
+		RequestablePage
 {
+	/** TODO javadoc */
+	int pageId;
+	/** TODO javadoc */
+	static int pageIdCounter;
+	/** TODO javadoc */
+	private boolean wasCreatedBookmarkable;
+
+	/** TODO javadoc */
+	private int renderCount = 0;
+
+
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
 	 * implementation will handle the serialization of this page. The serializePage method is called
@@ -325,6 +341,33 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public PageParameters getPageParameters()
 	{
 		return parameters;
+	}
+
+	/**
+	 * TODO javadoc
+	 * 
+	 * @param wasCreatedBookmarkable
+	 */
+	public void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
+	{
+		this.wasCreatedBookmarkable = wasCreatedBookmarkable;
+	}
+
+
+	/**
+	 * ${inheritDoc}
+	 */
+	public boolean wasCreatedBookmarkable()
+	{
+		return wasCreatedBookmarkable;
+	}
+
+	/**
+	 * ${inheritDoc}
+	 */
+	public int getRenderCount()
+	{
+		return renderCount;
 	}
 
 	/**
@@ -834,6 +877,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			throw new UnauthorizedActionException(this, Component.RENDER);
 		}
 
+		++renderCount;
+
 		// Make sure it is really empty
 		renderedComponents = null;
 
@@ -1137,6 +1182,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void init()
 	{
+		pageId = pageIdCounter++;
+
+
 		final RequestCycle cycle = getRequestCycle();
 		String pageMapName = null;
 		if (cycle != null)
@@ -1592,4 +1640,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return getAssociatedMarkup();
 	}
+
+	public int getPageId()
+	{
+		return pageId;
+	}
+
+
 }
