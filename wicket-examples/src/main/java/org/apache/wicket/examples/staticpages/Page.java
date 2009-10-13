@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.staticpages;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jbq

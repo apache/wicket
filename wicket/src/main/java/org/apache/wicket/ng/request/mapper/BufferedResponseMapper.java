@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
@@ -40,7 +40,7 @@ public class BufferedResponseMapper implements RequestMapper
 
 	protected String getSessionId()
 	{
-		return ThreadContext.getSession().getId();
+		return Session.get().getId();
 	}
 
 	protected boolean hasBufferedResponse(Url url)

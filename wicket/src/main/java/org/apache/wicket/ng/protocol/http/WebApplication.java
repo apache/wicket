@@ -29,8 +29,8 @@ import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandler
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.ng.request.response.BufferedWebResponse;
-import org.apache.wicket.protocol.http.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.ng.session.HttpSessionStore;
+import org.apache.wicket.ng.session.SessionStore;
 
 /**
  * 
@@ -40,82 +40,82 @@ import org.apache.wicket.session.ISessionStore;
 public abstract class WebApplication extends Application
 {
 
-	public WebApplication()
-	{
-		super();
-	}
+    public WebApplication()
+    {
+        super();
+    }
 
-	@Override
-	protected void registerDefaultEncoders()
-	{
-		registerEncoder(new SystemMapper());
-	}
+    @Override
+    protected void registerDefaultEncoders()
+    {
+        registerEncoder(new SystemMapper());
+    }
 
-	public void mount(RequestMapper encoder)
-	{
-		registerEncoder(encoder);
-	}
+    public void mount(RequestMapper encoder)
+    {
+        registerEncoder(encoder);
+    }
 
-	// TODO: Do this properly
-	private final Map<String, BufferedWebResponse> storedResponses = new ConcurrentHashMap<String, BufferedWebResponse>();
+    // TODO: Do this properly
+    private Map<String, BufferedWebResponse> storedResponses = new ConcurrentHashMap<String, BufferedWebResponse>();
 
-	public boolean hasBufferedResponse(String sessionId, Url url)
-	{
-		String key = sessionId + url.toString();
-		return storedResponses.containsKey(key);
-	}
+    public boolean hasBufferedResponse(String sessionId, Url url)
+    {
+        String key = sessionId + url.toString();
+        return storedResponses.containsKey(key);
+    }
 
-	public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
-	{
-		String key = sessionId + url.toString();
-		return storedResponses.remove(key);
-	}
+    public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
+    {
+        String key = sessionId + url.toString();
+        return storedResponses.remove(key);
+    }
 
-	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
-	{
-		String key = sessionId + url.toString();
-		storedResponses.put(key, response);
-	}
+    public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
+    {
+        String key = sessionId + url.toString();
+        storedResponses.put(key, response);
+    }
 
-	@Override
-	protected ISessionStore newSessionStore()
-	{
-		return new HttpSessionStore(this);
-	}
+    @Override
+    protected SessionStore newSessionStore()
+    {
+        return new HttpSessionStore(this);
+    }
 
-	/**
-	 * Gets the servlet context for this application. Use this to get references to absolute paths,
-	 * global web.xml parameters (&lt;context-param&gt;), etc.
-	 * 
-	 * @return The servlet context for this application
-	 */
-	public ServletContext getServletContext()
-	{
-		if (wicketFilter != null)
-		{
-			return wicketFilter.getFilterConfig().getServletContext();
-		}
-		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-			+ " Application object that uses the wicket filter instance should be put"
-			+ " in the init() method instead of your constructor");
-	}
+    /**
+     * Gets the servlet context for this application. Use this to get references to absolute paths,
+     * global web.xml parameters (&lt;context-param&gt;), etc.
+     * 
+     * @return The servlet context for this application
+     */
+    public ServletContext getServletContext()
+    {
+        if (wicketFilter != null)
+        {
+            return wicketFilter.getFilterConfig().getServletContext();
+        }
+        throw new IllegalStateException("servletContext is not set yet. Any code in your"
+                + " Application object that uses the wicket filter instance should be put"
+                + " in the init() method instead of your constructor");
+    }
 
-	public void setWicketFilter(WicketFilter wicketFilter)
-	{
-		this.wicketFilter = wicketFilter;
-	}
+    public void setWicketFilter(WicketFilter wicketFilter)
+    {
+        this.wicketFilter = wicketFilter;
+    }
 
-	private WicketFilter wicketFilter;
+    private WicketFilter wicketFilter;
 
-	@Override
-	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
-		RenderPageRequestHandler renderPageRequestHandler)
-	{
-		return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler);
-	}
+    @Override
+    public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
+            RenderPageRequestHandler renderPageRequestHandler)
+    {
+        return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler);
+    }
 
-	public static WebApplication get()
-	{
-		return (WebApplication)Application.get();
-	}
+    public static WebApplication get()
+    {
+        return (WebApplication)Application.get();
+    }
 }

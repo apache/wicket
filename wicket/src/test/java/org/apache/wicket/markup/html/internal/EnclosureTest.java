@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.tester.WicketTester;

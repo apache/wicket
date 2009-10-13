@@ -20,11 +20,11 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.util.tester.WicketTester;
 

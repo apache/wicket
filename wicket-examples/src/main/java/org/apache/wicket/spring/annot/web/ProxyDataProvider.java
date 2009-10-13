@@ -17,6 +17,7 @@
 package org.apache.wicket.spring.annot.web;
 
 import org.apache.wicket.model.IModel;
+
 import org.apache.wicket.spring.common.Contact;
 import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.web.ContactDataProvider;

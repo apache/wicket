@@ -747,7 +747,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 *      java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void setAttribute(Request request, String name, Serializable value)
+	public void setAttribute(Request request, String name, Object value)
 	{
 		// ignore all pages, they are stored through the pagemap
 		if (!(value instanceof Page))

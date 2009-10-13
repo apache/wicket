@@ -26,11 +26,11 @@ import org.apache.wicket.ng.request.component.RequestablePage;
  */
 public class MockPage extends MockComponent implements RequestablePage
 {
-
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	private int pageId;
-
+	
 	/**
 	 * Construct.
 	 * 
@@ -41,10 +41,9 @@ public class MockPage extends MockComponent implements RequestablePage
 		setPath("");
 	}
 
-
+	
 	/**
 	 * Construct.
-	 * 
 	 * @param pageId
 	 * @param pageVersion
 	 * @param pageMapName
@@ -53,10 +52,9 @@ public class MockPage extends MockComponent implements RequestablePage
 	{
 		setPageId(pageId);
 	}
-
+	
 	/**
 	 * Sets the page id
-	 * 
 	 * @param pageId
 	 * @return <code>this</code>
 	 */
@@ -65,7 +63,7 @@ public class MockPage extends MockComponent implements RequestablePage
 		this.pageId = pageId;
 		return this;
 	}
-
+	
 	@Override
 	public RequestablePage getPage()
 	{
@@ -75,22 +73,22 @@ public class MockPage extends MockComponent implements RequestablePage
 	public int getPageId()
 	{
 		return pageId;
-	}
-
-	private final PageParameters pageParameters = new PageParameters();
+	}	
+	
+	private PageParameters pageParameters = new PageParameters();
 
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
-	}
+	}		
 
 	private boolean bookmarkable;
-
+	
 	public boolean isBookmarkable()
 	{
 		return bookmarkable;
 	}
-
+	
 	/**
 	 * Sets the bookmarkable flags
 	 * 
@@ -104,7 +102,7 @@ public class MockPage extends MockComponent implements RequestablePage
 	}
 
 	private boolean stateless = false;
-
+	
 	/**
 	 * Sets the stateless flag
 	 * 
@@ -116,7 +114,7 @@ public class MockPage extends MockComponent implements RequestablePage
 		this.stateless = stateless;
 		return this;
 	}
-
+	
 	public boolean isPageStateless()
 	{
 		return stateless;
@@ -125,14 +123,14 @@ public class MockPage extends MockComponent implements RequestablePage
 	public void renderPage()
 	{
 	}
-
+	
 	private boolean createBookmarkable;
 
 	public boolean wasCreatedBookmarkable()
 	{
 		return createBookmarkable;
 	}
-
+	
 	/**
 	 * Sets the createdBookmarkable flag.
 	 * 
@@ -143,32 +141,23 @@ public class MockPage extends MockComponent implements RequestablePage
 	 */
 	public MockPage setCreatedBookmarkable(boolean createdBookmarkable)
 	{
-		createBookmarkable = createdBookmarkable;
+		this.createBookmarkable = createdBookmarkable;
 		return this;
 	}
 
 	private int renderCount;
-
+	
 	public int getRenderCount()
 	{
 		return renderCount;
 	}
-
+	
 	/**
 	 * Sets the render count
-	 * 
 	 * @param renderCount
 	 */
 	public void setRenderCount(int renderCount)
 	{
 		this.renderCount = renderCount;
-	}
-
-	/**
-	 * TODO javadoc
-	 */
-	public void setWasCreatedBookmarkable(boolean b)
-	{
-		createBookmarkable = b;
 	}
 }

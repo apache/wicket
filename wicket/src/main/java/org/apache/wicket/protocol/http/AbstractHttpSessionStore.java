@@ -17,10 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -98,13 +94,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 				Application application = Application.get(applicationKey);
 				if (application != null)
 				{
-					ISessionStore sessionStore = application.getSessionStore();
-					sessionStore.unbind(sessionId);
-
-					for (UnboundListener listener : sessionStore.getUnboundListeners())
-					{
-						listener.sessionUnbound(sessionId);
-					}
+					application.getSessionStore().unbind(sessionId);
 				}
 			}
 		}
@@ -338,26 +328,5 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 				" can only work with WebRequests");
 		}
 		return (WebRequest)request;
-	}
-
-	/** TODO javadoc */
-	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
-
-	/** TODO javadoc */
-	public void registerUnboundListener(UnboundListener listener)
-	{
-		unboundListeners.add(listener);
-	}
-
-	/** TODO javadoc */
-	public void unregisterUnboundListener(UnboundListener listener)
-	{
-		unboundListeners.remove(listener);
-	}
-
-	/** TODO javadoc */
-	public Collection<org.apache.wicket.session.ISessionStore.UnboundListener> getUnboundListeners()
-	{
-		return Collections.unmodifiableCollection(unboundListeners);
 	}
 }

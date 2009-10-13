@@ -18,10 +18,10 @@ package org.apache.wicket.request.target.coding;
 
 import java.io.OutputStream;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.Resource;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -91,8 +91,7 @@ public class IndexedSharedResourceCodingStrategyTest extends WicketTestCase
 		params.add("1", "param1");
 		params.put("test", new String[] { "testval1", "testval2" });
 		params.add("foo", "fooval");
-		final String url = cycle.urlFor(new ResourceReference(RESOURCE_NAME), params.toValueMap())
-			.toString();
+		final String url = cycle.urlFor(new ResourceReference(RESOURCE_NAME), params).toString();
 		assertEquals("test/param0/param1?test=testval1&test=testval2&foo=fooval", url);
 		tester.getServletRequest().setURL(URL_PREFIX + url);
 		tester.processRequestCycle(cycle);

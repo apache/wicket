@@ -18,11 +18,11 @@ package org.apache.wicket.examples.library;
 
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValueConversionException;
 

@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,39 +47,11 @@ import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.ParentResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
-import org.apache.wicket.ng.DefaultExceptionMapper;
-import org.apache.wicket.ng.MetaDataKey;
-import org.apache.wicket.ng.Page2;
-import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.page.PageManagerContext;
-import org.apache.wicket.ng.page.persistent.DataStore;
-import org.apache.wicket.ng.page.persistent.DefaultPageStore;
-import org.apache.wicket.ng.page.persistent.PageStore;
-import org.apache.wicket.ng.page.persistent.PersistentPageManager;
-import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
-import org.apache.wicket.ng.request.CompoundRequestMapper;
-import org.apache.wicket.ng.request.Request;
-import org.apache.wicket.ng.request.RequestMapper;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.cycle.RequestCycleContext;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.request.mapper.MapperContext;
-import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
-import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -94,7 +65,6 @@ import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.convert.ConverterLocator;
-import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.PropertyResolver;
@@ -141,7 +111,7 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.protocol.http.WebApplication
  * @author Jonathan Locke
  */
-public abstract class Application implements UnboundListener
+public abstract class Application
 {
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
@@ -162,6 +132,9 @@ public abstract class Application implements UnboundListener
 	 */
 	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(
 		1);
+
+	/** Thread local holder of the application object. */
+	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -186,7 +159,7 @@ public abstract class Application implements UnboundListener
 	 */
 	public static boolean exists()
 	{
-		return ThreadContext.getApplication() != null;
+		return current.get() != null;
 	}
 
 	/**
@@ -196,7 +169,7 @@ public abstract class Application implements UnboundListener
 	 */
 	public static Application get()
 	{
-		Application application = ThreadContext.getApplication();
+		final Application application = current.get();
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread " +
@@ -244,7 +217,7 @@ public abstract class Application implements UnboundListener
 		{
 			throw new IllegalArgumentException("Argument application can not be null");
 		}
-		ThreadContext.setApplication(this);
+		current.set(application);
 	}
 
 	/**
@@ -947,16 +920,8 @@ public abstract class Application implements UnboundListener
 		String applicationKey = getApplicationKey();
 		applicationKeyToApplication.put(applicationKey, this);
 
-		converterLocator = newConverterLocator();
-
 		sessionStore = newSessionStore();
-		sessionStore.registerUnboundListener(this);
-		pageManager = newPageManager();
-		pageManager.setContext(getPageManagerContext());
-		rootRequestMapper = newRequestHandlerEncoderRegistry();
-		resourceReferenceRegistry = newResourceReferenceRegistry();
-		pageFactory = newPageFactory();
-		registerDefaultEncoders();
+		converterLocator = newConverterLocator();
 	}
 
 	/**
@@ -1226,335 +1191,4 @@ public abstract class Application implements UnboundListener
 	{
 		return true;
 	}
-
-	/**
-	 * TODO javadoc
-	 * 
-	 * TODO WICKET NG REVIEW
-	 * 
-	 * */
-	public void sessionUnbound(String sessionId)
-	{
-		getPageManager().sessionExpired(sessionId);
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Page Manager
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	protected PageManager newPageManager()
-	{
-		int cacheSize = 40;
-		int fileChannelPoolCapacity = 50;
-		DataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
-		PageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
-		return new PersistentPageManager(getName(), pageStore);
-	}
-
-	private PageManager pageManager;
-
-	/**
-	 * Context for PageManager to interact with rest of Wicket
-	 */
-	private final PageManagerContext pageManagerContext = new PageManagerContext()
-	{
-		public void bind()
-		{
-			Session.get().bind();
-		}
-
-		private final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
-		{
-			private static final long serialVersionUID = 1L;
-		};
-
-		public Object getRequestData()
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			return requestCycle.getMetaData(requestCycleMetaDataKey);
-		}
-
-		public Serializable getSessionAttribute(String key)
-		{
-			return ThreadContext.getSession().getAttribute(key);
-		}
-
-		public String getSessionId()
-		{
-			return Session.get().getId();
-		}
-
-		public void setRequestData(Object data)
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			requestCycle.setMetaData(requestCycleMetaDataKey, data);
-		}
-
-		public void setSessionAttribute(String key, Serializable value)
-		{
-			Session.get().setAttribute(key, value);
-		}
-	};
-
-	/**
-	 * Returns the {@link PageManager} instance.
-	 * 
-	 * @return {@link PageManager} instance.
-	 */
-	public PageManager getPageManager()
-	{
-		return pageManager;
-	}
-
-	protected PageManagerContext getPageManagerContext()
-	{
-		return pageManagerContext;
-	}
-
-	/**
-	 * TODO WICKET NG MIGRATION - REVIEW
-	 * 
-	 * Register the default encoders - necessary for the application to work.
-	 */
-	protected void registerDefaultEncoders()
-	{
-
-	}
-
-	/**
-	 * TODO WICKET NG MIGRATION - REVIEW
-	 */
-	public final MapperContext getEncoderContext()
-	{
-		return encoderContext;
-	}
-
-	/**
-	 * TODO WICKET NG MIGRATION - REVIEW
-	 */
-	public void registerEncoder(RequestMapper encoder)
-	{
-		getRootRequestMapper().register(encoder);
-	}
-
-	private final MapperContext encoderContext = new MapperContext()
-	{
-		public String getBookmarkableIdentifier()
-		{
-			return "bookmarkable";
-		}
-
-		public String getNamespace()
-		{
-			return "wicket";
-		}
-
-		public String getPageIdentifier()
-		{
-			return "page";
-		}
-
-		public String getResourceIdentifier()
-		{
-			return "resource";
-		}
-
-		public ResourceReferenceRegistry getResourceReferenceRegistry()
-		{
-			return Application.this.getResourceReferenceRegistry();
-		}
-
-		public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-		{
-			return RequestListenerInterface.forName(interfaceName);
-		}
-
-		public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-		{
-			return listenerInterface.getName();
-		}
-
-		public RequestablePage newPageInstance(Class<? extends RequestablePage> pageClass,
-			PageParameters pageParameters)
-		{
-			if (pageParameters == null)
-			{
-				return getPageFactory().newPage(pageClass);
-			}
-			else
-			{
-				return getPageFactory().newPage(pageClass, pageParameters);
-			}
-		}
-
-		public RequestablePage getPageInstance(int pageId)
-		{
-			return Page2.get(pageId);
-		}
-
-		public Class<? extends RequestablePage> getHomePageClass()
-		{
-			return Application.this.getHomePage();
-		}
-	};
-	private CompoundRequestMapper rootRequestMapper;
-
-	/**
-	 * Override to create custom {@link ThreadsafeCompoundRequestMapper}.
-	 * 
-	 * @return new {@link ThreadsafeCompoundRequestMapper} instance
-	 */
-	protected CompoundRequestMapper newRequestHandlerEncoderRegistry()
-	{
-		return new ThreadsafeCompoundRequestMapper();
-	};
-
-	/**
-	 * returns the {@link ThreadsafeCompoundRequestMapper} for this application.
-	 * 
-	 * @return
-	 */
-	public final CompoundRequestMapper getRootRequestMapper()
-	{
-		return rootRequestMapper;
-	}
-
-	/**
-	 * Returns {@link PageFactory} for this application.
-	 * 
-	 * @return
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return pageFactory;
-	}
-
-	private IPageFactory pageFactory;
-
-	/**
-	 * Override to create custom {@link PageFactory}
-	 * 
-	 * @return new {@link PageFactory} instance.
-	 */
-	protected IPageFactory newPageFactory()
-	{
-		return new DefaultPageFactory();
-	}
-
-	private ResourceReferenceRegistry resourceReferenceRegistry;
-
-	/**
-	 * Override to create custom {@link ResourceReferenceRegistry}.
-	 * 
-	 * @return new {@link ResourceReferenceRegistry} instance.
-	 */
-	protected ResourceReferenceRegistry newResourceReferenceRegistry()
-	{
-		return new ResourceReferenceRegistry();
-	}
-
-	/**
-	 * Returns {@link ResourceReferenceRegistry} for this application.
-	 * 
-	 * @return
-	 */
-	public final ResourceReferenceRegistry getResourceReferenceRegistry()
-	{
-		return resourceReferenceRegistry;
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Page Rendering
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Returns the {@link RenderPageRequestHandlerDelegate} responsible for rendering the page.
-	 */
-	public abstract RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
-		RenderPageRequestHandler renderPageRequestHandler);
-
-	protected abstract Session newSession(RequestCycle requestCycle);
-
-
-	Session fetchCreateAndSetSession(RequestCycle requestCycle)
-	{
-		Checks.argumentNotNull(requestCycle, "requestCycle");
-
-		Session session = getSessionStore().lookup(requestCycle.getRequest());
-		if (session == null)
-		{
-			session = newSession(requestCycle);
-			ThreadContext.setSession(session);
-			getPageManager().newSessionCreated();
-		}
-		else
-		{
-			ThreadContext.setSession(session);
-		}
-		return session;
-	}
-
-	public final RequestCycle createRequestCycle(Request request, Response response)
-	{
-		// FIXME exception mapper should come from elsewhere
-		RequestCycleContext context = new RequestCycleContext(request, response,
-			getRootRequestMapper(), new DefaultExceptionMapper());
-
-		RequestCycle requestCycle = newRequestCycle(context);
-		requestCycle.register(new RequestCycle.DetachCallback()
-		{
-			public void onDetach(RequestCycle requestCycle)
-			{
-				getPageManager().commitRequest();
-			}
-		});
-		return requestCycle;
-	}
-
-	/**
-	 * Override this method to create custom Request Cycle instance.
-	 * 
-	 * @param context
-	 *            holds context necessary to instantiate a request cycle, such as the current
-	 *            request, response, and request mappers
-	 * @return
-	 */
-	protected RequestCycle newRequestCycle(RequestCycleContext context)
-	{
-
-		return new RequestCycle(context);
-	}
-
-	/**
-	 * Destroys the application.
-	 */
-	public void destroy()
-	{
-		try
-		{
-			pageManager.destroy();
-			sessionStore.destroy();
-		}
-		finally
-		{
-			applications.remove(name);
-		}
-	}
-
 }

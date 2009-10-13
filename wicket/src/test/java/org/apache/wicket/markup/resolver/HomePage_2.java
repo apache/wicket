@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Homepage

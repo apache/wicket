@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.devutils.inspector;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including the current session

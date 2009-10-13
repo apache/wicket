@@ -17,6 +17,7 @@
 package org.apache.wicket.spring.common.web;
 
 import org.apache.wicket.model.LoadableDetachableModel;
+
 import org.apache.wicket.spring.common.Contact;
 import org.apache.wicket.spring.common.ContactDao;
 

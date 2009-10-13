@@ -22,11 +22,11 @@ import java.util.Map;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IPageFactory;
+import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.util.lang.Generics;
 
 
@@ -38,21 +38,19 @@ import org.apache.wicket.util.lang.Generics;
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
- * @author Matej Knopp
- * @author Igor Vaynberg
  */
 public final class DefaultPageFactory implements IPageFactory
 {
 	/** Map of Constructors for Page subclasses */
-	private final Map<Class<? extends RequestablePage>, Constructor<? extends RequestablePage>> constructorForClass = Generics.newConcurrentHashMap();
+	private final Map<Class<? extends Page>, Constructor<? extends Page>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
 	 * @see IPageFactory#newPage(Class)
 	 */
-	public final <C extends RequestablePage> RequestablePage newPage(final Class<C> pageClass)
+	public final <C extends Page> Page newPage(final Class<C> pageClass)
 	{
 		// Try default constructor if one exists
-		Constructor<? extends RequestablePage> constructor = constructor(pageClass);
+		Constructor<? extends Page> constructor = constructor(pageClass);
 		if (constructor != null)
 		{
 			// return new Page()
@@ -74,8 +72,7 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
-	public final <C extends RequestablePage> RequestablePage newPage(final Class<C> pageClass,
-		PageParameters parameters)
+	public final <C extends Page> Page newPage(final Class<C> pageClass, PageParameters parameters)
 	{
 		// If no parameters are provided, try the default constructor first, than the PageParameter
 		// constructor with empty parameter list.
@@ -85,8 +82,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 
 		// If parameters not null, than try to get constructor that takes PageParameters
-		Constructor<? extends RequestablePage> constructor = constructor(pageClass,
-			PageParameters.class);
+		Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
 		if (constructor != null)
 		{
 			// return new Page(parameters)
@@ -115,8 +111,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends RequestablePage> Constructor<? extends RequestablePage> constructor(
-		final Class<C> pageClass)
+	private final <C extends Page> Constructor<? extends Page> constructor(final Class<C> pageClass)
 	{
 		try
 		{
@@ -143,11 +138,11 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends RequestablePage> Constructor<? extends RequestablePage> constructor(
+	private final <C extends Page> Constructor<? extends Page> constructor(
 		final Class<C> pageClass, final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor<? extends RequestablePage> constructor = constructorForClass.get(pageClass);
+		Constructor<? extends Page> constructor = constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -183,33 +178,19 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final RequestablePage createPage(
-		final Constructor<? extends RequestablePage> constructor, final PageParameters argument)
+	private final Page createPage(final Constructor<? extends Page> constructor,
+		final PageParameters argument)
 	{
-		final RequestablePage instance;
 		try
 		{
 			if (argument != null)
 			{
-				instance = constructor.newInstance(new Object[] { argument });
+				return constructor.newInstance(new Object[] { argument });
 			}
 			else
 			{
-				instance = constructor.newInstance();
+				return constructor.newInstance();
 			}
-
-			// the page might have not propagate page parameters from constructor. if that's the
-			// case
-			// we force the parameters
-			if (argument != null && instance.getPageParameters() != argument)
-			{
-				instance.getPageParameters().assign(argument);
-			}
-
-			instance.setWasCreatedBookmarkable(true);
-
-			return instance;
-
 		}
 		catch (InstantiationException e)
 		{
@@ -238,7 +219,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @param argument
 	 * @return description
 	 */
-	private String createDescription(Constructor<? extends RequestablePage> constructor,
+	private String createDescription(Constructor<? extends Page> constructor,
 		PageParameters argument)
 	{
 		if (argument != null)

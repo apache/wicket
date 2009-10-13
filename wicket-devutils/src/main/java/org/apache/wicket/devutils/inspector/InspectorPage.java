@@ -17,13 +17,13 @@
 package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.string.StringValueConversionException;
 

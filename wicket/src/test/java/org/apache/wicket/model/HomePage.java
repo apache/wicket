@@ -18,12 +18,12 @@ package org.apache.wicket.model;
 
 import java.io.Serializable;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.FormComponentFeedbackBorder;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator;
 
 /**

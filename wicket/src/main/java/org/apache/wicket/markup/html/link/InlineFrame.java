@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.util.string.Strings;
 
@@ -94,13 +94,11 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				if (params == null)
 				{
 					// Create page using page factory
-					// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
-					return (Page)Session.get().getPageFactory().newPage(c);
+					return Session.get().getPageFactory().newPage(c);
 				}
 				else
 				{
-					// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
-					return (Page)Session.get().getPageFactory().newPage(c, params);
+					return Session.get().getPageFactory().newPage(c, params);
 				}
 			}
 

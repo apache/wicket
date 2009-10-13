@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.util.tester;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Mock page for testing PageParameters handling in WicketTester.

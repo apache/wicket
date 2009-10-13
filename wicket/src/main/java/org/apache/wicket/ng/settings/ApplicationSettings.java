@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.settings;
 
-import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.ng.application.ClassResolver;
 
 public interface ApplicationSettings
 {
@@ -25,7 +25,7 @@ public interface ApplicationSettings
 	 * 
 	 * @return Default class resolver
 	 */
-	IClassResolver getClassResolver();
+	ClassResolver getClassResolver();
 
 	/**
 	 * Sets the default class resolver to use when finding classes and resources
@@ -33,5 +33,5 @@ public interface ApplicationSettings
 	 * @param defaultClassResolver
 	 *            The default class resolver
 	 */
-	void setClassResolver(final IClassResolver defaultClassResolver);
+	void setClassResolver(final ClassResolver defaultClassResolver);
 }

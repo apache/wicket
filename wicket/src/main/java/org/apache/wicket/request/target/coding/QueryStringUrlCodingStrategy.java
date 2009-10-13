@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageMap;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;

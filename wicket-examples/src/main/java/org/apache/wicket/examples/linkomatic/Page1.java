@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**

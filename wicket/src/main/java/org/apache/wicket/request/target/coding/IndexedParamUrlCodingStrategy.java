@@ -19,8 +19,8 @@ package org.apache.wicket.request.target.coding;
 import java.util.Map;
 
 import org.apache.wicket.PageMap;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
@@ -132,7 +132,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		PageParameters params = new PageParameters();
 		if (urlFragment == null)
 		{
-			return params.toValueMap();
+			return params;
 		}
 		if (urlFragment.startsWith("/"))
 		{
@@ -167,7 +167,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				}
 			}
 		}
-		return params.toValueMap();
+		return params;
 	}
 
 }

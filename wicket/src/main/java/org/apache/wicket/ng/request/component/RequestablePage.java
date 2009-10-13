@@ -28,50 +28,47 @@ import org.apache.wicket.ng.page.ManageablePage;
 public interface RequestablePage extends RequestableComponent, ManageablePage
 {
 
-	/**
-	 * Renders the page
-	 */
-	public void renderPage();
+    /**
+     * Renders the page
+     */
+    public void renderPage();
 
-	/**
-	 * Bookmarkable page can be instantiated using a bookmarkable URL.
-	 * 
-	 * @return Returns true if the page is bookmarkable.
-	 */
-	public boolean isBookmarkable();
+    /**
+     * Bookmarkable page can be instantiated using a bookmarkable URL.
+     * 
+     * @return Returns true if the page is bookmarkable.
+     */
+    public boolean isBookmarkable();
 
-	/**
-	 * Returns the number of times this page has been rendered. The number will be appended to
-	 * listener interface links in order to prevent invoking listeners from staled page version.
-	 * <p>
-	 * For example a same page might have been rendered in two separate tabs. Page render doesn't
-	 * change page id but it can modify component hierarchy. Listener interface links on such page
-	 * should only work in tab where the page was rendered most recently.
-	 * 
-	 * @return render count
-	 */
-	public int getRenderCount();
+    /**
+     * Returns the number of times this page has been rendered. The number will be appended to
+     * listener interface links in order to prevent invoking listeners from staled page version.
+     * <p>
+     * For example a same page might have been rendered in two separate tabs. Page render doesn't
+     * change page id but it can modify component hierarchy. Listener interface links on such page
+     * should only work in tab where the page was rendered most recently.
+     * 
+     * @return render count
+     */
+    public int getRenderCount();
 
-	/**
-	 * Returns whether the page instance was created by a bookmarkable URL. Non mounted pages have
-	 * to be created using bookmarkable URL in order to have hybrid URLs later. Otherwise it would
-	 * be a potential security risk.
-	 * 
-	 * @return <code>true</code> if this page has been created by a bookmarkable URL,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean wasCreatedBookmarkable();
+    /**
+     * Returns whether the page instance was created by a bookmarkable URL. Non mounted pages have
+     * to be created using bookmarkable URL in order to have hybrid URLs later. Otherwise it would
+     * be a potential security risk.
+     * 
+     * @return <code>true</code> if this page has been created by a bookmarkable URL,
+     *         <code>false</code> otherwise.
+     */
+    public boolean wasCreatedBookmarkable();
 
 
-	/**
-	 * Returns the {@link PageParameters} for the page. Each bookmarkable page instance should have
-	 * {@link PageParameters} associated with it. The page parameters are initialized from URL when
-	 * page is created and are updated on every page render request.
-	 * 
-	 * @return page parameters or <code>null</code>
-	 */
-	public PageParameters getPageParameters();
-
-	/** TODO javadoc */
-	public void setWasCreatedBookmarkable(boolean b);
+    /**
+     * Returns the {@link PageParameters} for the page. Each bookmarkable page instance should have
+     * {@link PageParameters} associated with it. The page parameters are initialized from URL when
+     * page is created and are updated on every page render request.
+     * 
+     * @return page parameters or <code>null</code>
+     */
+    public PageParameters getPageParameters();
 }

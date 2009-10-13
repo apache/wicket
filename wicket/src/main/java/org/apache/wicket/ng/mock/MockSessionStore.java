@@ -17,28 +17,23 @@
 package org.apache.wicket.ng.mock;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.apache.wicket.IPageMap;
-import org.apache.wicket.Page;
-import org.apache.wicket.Session;
+import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.request.Request;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.version.IPageVersionManager;
+import org.apache.wicket.ng.session.SessionStore;
 
 /**
  * Session store that holds one session.
  * 
  * @author Matej Knopp
  */
-public class MockSessionStore implements ISessionStore
+public class MockSessionStore implements SessionStore
 {
 
 	public MockSessionStore()
@@ -122,71 +117,5 @@ public class MockSessionStore implements ISessionStore
 	{
 		unboundListeners.remove(listener);
 	}
-
-	// EVERYTHING BELOW WAS AUTOMATICALLY STUBBED OUT////////////////////////////////
-
-	public void bind(org.apache.wicket.Request request, Session newSession)
-	{
-	}
-
-	public IPageMap createPageMap(String name)
-	{
-		return null;
-	}
-
-	public Serializable getAttribute(org.apache.wicket.Request request, String name)
-	{
-		return null;
-	}
-
-	public List<String> getAttributeNames(org.apache.wicket.Request request)
-	{
-		return null;
-	}
-
-	public String getSessionId(org.apache.wicket.Request request, boolean create)
-	{
-		return null;
-	}
-
-	public Collection<UnboundListener> getUnboundListeners()
-	{
-		return null;
-	}
-
-	public void invalidate(org.apache.wicket.Request request)
-	{
-	}
-
-	public Session lookup(org.apache.wicket.Request request)
-	{
-		return null;
-	}
-
-	public IPageVersionManager newVersionManager(Page page)
-	{
-		return null;
-	}
-
-	public void onBeginRequest(org.apache.wicket.Request request)
-	{
-	}
-
-	public void onEndRequest(org.apache.wicket.Request request)
-	{
-	}
-
-	public void removeAttribute(org.apache.wicket.Request request, String name)
-	{
-	}
-
-	public void setAttribute(org.apache.wicket.Request request, String name, Serializable value)
-	{
-	}
-
-	public void unbind(String sessionId)
-	{
-	}
-
 
 }

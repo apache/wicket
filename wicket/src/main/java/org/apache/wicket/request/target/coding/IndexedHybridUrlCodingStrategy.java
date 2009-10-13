@@ -18,8 +18,8 @@ package org.apache.wicket.request.target.coding;
 
 import java.util.Map;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
@@ -87,7 +87,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 		PageParameters params = new PageParameters();
 		if (urlFragment == null)
 		{
-			return params.toValueMap();
+			return params;
 		}
 		if (urlFragment.startsWith("/"))
 		{
@@ -115,7 +115,7 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 				}
 			}
 		}
-		return params.toValueMap();
+		return params;
 	}
 
 }

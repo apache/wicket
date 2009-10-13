@@ -19,9 +19,9 @@ package org.apache.wicket.session;
 import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**

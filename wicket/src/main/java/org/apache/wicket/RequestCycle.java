@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -891,7 +890,7 @@ public abstract class RequestCycle
 			}
 			else
 			{
-				pageParameters = new PageParameters(pageParameters);
+				pageParameters = (PageParameters)pageParameters.clone();
 			}
 
 			if (params != null)
@@ -1487,7 +1486,7 @@ public abstract class RequestCycle
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public final void setPageParameters(PageParameters parameters)
+	final void setPageParameters(PageParameters parameters)
 	{
 		if (currentStep == RESOLVE_TARGET)
 		{

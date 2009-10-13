@@ -35,9 +35,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
@@ -595,15 +595,13 @@ public class MockWebApplication
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
-						// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
-						newLastRenderedPage = (Page)application.getSessionSettings()
+						newLastRenderedPage = application.getSessionSettings()
 							.getPageFactory()
 							.newPage(pageClass);
 					}
 					else
 					{
-						// FIXME NG MIGRATION, REQUESTABLEPAGE->PAGE
-						newLastRenderedPage = (Page)application.getSessionSettings()
+						newLastRenderedPage = application.getSessionSettings()
 							.getPageFactory()
 							.newPage(pageClass, parameters);
 					}
@@ -764,6 +762,4 @@ public class MockWebApplication
 	{
 		this.createAjaxRequest = createAjaxRequest;
 	}
-
-
 }

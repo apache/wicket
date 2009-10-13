@@ -19,7 +19,6 @@ package org.apache.wicket;
 import junit.framework.TestCase;
 
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**

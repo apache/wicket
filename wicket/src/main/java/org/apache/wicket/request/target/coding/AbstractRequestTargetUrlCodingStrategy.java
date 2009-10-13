@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -110,24 +109,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			}
 		}
 	}
-
-	/**
-	 * Encodes PageParameters into a url fragment and append that to the provided url buffer.
-	 * 
-	 * @param url
-	 *            url so far
-	 * 
-	 * @param parameters
-	 *            Map object to be encoded
-	 * 
-	 * @deprecated NG MIGRATION
-	 */
-	@Deprecated
-	protected void appendParameters(AppendingStringBuffer url, PageParameters parameters)
-	{
-		appendParameters(url, parameters.getNamedParametersMap());
-	}
-
 
 	private void appendValue(AppendingStringBuffer url, String key, String value)
 	{

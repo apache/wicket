@@ -17,10 +17,10 @@
 package org.apache.wicket.request.target.coding;
 
 import org.apache.wicket.IResourceListener;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

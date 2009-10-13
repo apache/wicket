@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;

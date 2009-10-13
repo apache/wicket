@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;

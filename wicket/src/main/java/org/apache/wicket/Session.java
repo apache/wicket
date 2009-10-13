@@ -33,7 +33,6 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
-import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.protocol.http.IgnoreAjaxRequestException;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
@@ -162,6 +161,9 @@ public abstract class Session implements IClusterable
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
+	/** Thread-local current session. */
+	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
+
 	/** A store for dirty objects for one request */
 	private static final ThreadLocal<List<IClusterable>> dirtyObjects = new ThreadLocal<List<IClusterable>>();
 
@@ -187,7 +189,7 @@ public abstract class Session implements IClusterable
 	 */
 	public static boolean exists()
 	{
-		return ThreadContext.getSession() != null;
+		return current.get() != null;
 	}
 
 	/**
@@ -244,7 +246,7 @@ public abstract class Session implements IClusterable
 	 */
 	public static Session get()
 	{
-		Session session = ThreadContext.getSession();
+		Session session = current.get();
 		if (session == null)
 		{
 			session = findOrCreate();
@@ -267,7 +269,7 @@ public abstract class Session implements IClusterable
 			throw new IllegalArgumentException("Argument session can not be null");
 		}
 
-		ThreadContext.setSession(session);
+		current.set(session);
 
 		// execute any attach logic now
 		session.attach();
@@ -281,7 +283,7 @@ public abstract class Session implements IClusterable
 	 */
 	public static void unset()
 	{
-		ThreadContext.setSession(null);
+		current.set(null);
 	}
 
 	/** A number to generate names for auto create pagemaps */
@@ -340,7 +342,7 @@ public abstract class Session implements IClusterable
 	 * instance).
 	 * </p>
 	 */
-	private transient Map<String, Serializable> temporarySessionAttributes;
+	private transient Map<String, Object> temporarySessionAttributes;
 
 	/** A linked list for last used pagemap queue */
 	private final LinkedList/* <IPageMap> */<IPageMap> usedPageMaps = new LinkedList<IPageMap>();
@@ -398,7 +400,7 @@ public abstract class Session implements IClusterable
 
 			if (temporarySessionAttributes != null)
 			{
-				for (Entry<String, Serializable> entry : temporarySessionAttributes.entrySet())
+				for (Entry<String, Object> entry : temporarySessionAttributes.entrySet())
 				{
 					store.setAttribute(request, String.valueOf(entry.getKey()), entry.getValue());
 				}
@@ -1258,7 +1260,7 @@ public abstract class Session implements IClusterable
 	 * @param value
 	 *            The value of the attribute
 	 */
-	protected final void setAttribute(String name, Serializable value)
+	protected final void setAttribute(String name, Object value)
 	{
 		if (!isTemporary())
 		{
@@ -1297,7 +1299,7 @@ public abstract class Session implements IClusterable
 			// session instance gets shared across threads
 			if (temporarySessionAttributes == null)
 			{
-				temporarySessionAttributes = new HashMap<String, Serializable>(3);
+				temporarySessionAttributes = new HashMap<String, Object>(3);
 			}
 			temporarySessionAttributes.put(name, value);
 		}
@@ -1394,7 +1396,7 @@ public abstract class Session implements IClusterable
 		List<IClusterable> dirtyObjects = Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 
-		Map<String, Serializable> tempMap = new HashMap<String, Serializable>();
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
@@ -1402,7 +1404,7 @@ public abstract class Session implements IClusterable
 			for (final Iterator<IClusterable> iterator = dirtyObjects.iterator(); iterator.hasNext();)
 			{
 				String attribute = null;
-				IClusterable object = iterator.next();
+				Object object = iterator.next();
 				if (object instanceof Page)
 				{
 					final Page page = (Page)object;
@@ -1435,7 +1437,7 @@ public abstract class Session implements IClusterable
 		// in case we have dirty attributes, set them to session
 		if (tempMap.isEmpty() == false)
 		{
-			for (Entry<String, Serializable> entry : tempMap.entrySet())
+			for (Entry<String, Object> entry : tempMap.entrySet())
 			{
 				setAttribute(entry.getKey(), entry.getValue());
 			}

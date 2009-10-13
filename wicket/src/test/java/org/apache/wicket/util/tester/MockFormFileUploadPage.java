@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.io.Serializable;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -25,7 +26,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 
 /**

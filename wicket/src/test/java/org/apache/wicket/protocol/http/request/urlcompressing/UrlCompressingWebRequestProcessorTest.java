@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http.request.urlcompressing;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;

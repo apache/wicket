@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.tester.WicketTester;
