@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandler
 import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
 import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
 import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
-import org.apache.wicket.ng.session.SessionStore;
+import org.apache.wicket.session.ISessionStore;
 
 public class MockApplication extends Application
 {
@@ -68,7 +68,7 @@ public class MockApplication extends Application
 	}
 
 	@Override
-	protected SessionStore newSessionStore()
+	public ISessionStore newSessionStore()
 	{
 		return new MockSessionStore();
 	}

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 public class ThreadContext

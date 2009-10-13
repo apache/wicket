@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -27,6 +28,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,9 +37,15 @@ import org.apache.wicket.Session;
  * {@link javax.servlet.http.HttpSession} to store its attributes.
  * 
  * @author Eelco Hillenius
+ * @author Matej Knopp
+ * @author Igor Vaynberg
  */
 public class HttpSessionStore extends AbstractHttpSessionStore
 {
+
+	/** log. */
+	private static Logger logger = LoggerFactory.getLogger(HttpSessionStore.class);
+
 	/**
 	 * Construct.
 	 * 
@@ -57,16 +66,16 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.Request,
-	 *      java.lang.String)
+	 * @{inheritDoc
 	 */
-	public Object getAttribute(Request request, String name)
+	public Serializable getAttribute(Request request, String name)
 	{
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
+			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(webRequest) +
+				name);
 		}
 		return null;
 	}
@@ -129,7 +138,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 * @see org.apache.wicket.session.ISessionStore#setAttribute(Request,java.lang.String,
 	 *      java.lang.Object)
 	 */
-	public void setAttribute(Request request, String name, Object value)
+	public void setAttribute(Request request, String name, Serializable value)
 	{
 		// ignore call if the session was marked invalid
 		if (!isSessionValid())
@@ -190,4 +199,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		return true; // we simply don't know, so play safe and rely on
 		// servlet container's code to check availability
 	}
+
+
 }

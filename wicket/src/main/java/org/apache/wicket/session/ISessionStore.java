@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.session;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -32,6 +34,7 @@ import org.apache.wicket.version.IPageVersionManager;
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * @author Matej Knopp
  */
 public interface ISessionStore
 {
@@ -44,7 +47,7 @@ public interface ISessionStore
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	Object getAttribute(Request request, final String name);
+	Serializable getAttribute(Request request, final String name);
 
 	/**
 	 * @param request
@@ -83,7 +86,7 @@ public interface ISessionStore
 	 * @param value
 	 *            the value of the attribute
 	 */
-	void setAttribute(Request request, String name, Object value);
+	void setAttribute(Request request, String name, Serializable value);
 
 	/**
 	 * Get the session id for the provided request. If create is false and the creation of the
@@ -165,4 +168,33 @@ public interface ISessionStore
 	 * Called when the WebApplication is destroyed.
 	 */
 	void destroy();
+
+	/**
+	 * Listener invoked when session is unbound.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public interface UnboundListener
+	{
+		public void sessionUnbound(String sessionId);
+	};
+
+	/**
+	 * Registers listener invoked when session is unbound.
+	 * 
+	 * @param listener
+	 */
+	public void registerUnboundListener(UnboundListener listener);
+
+	/**
+	 * Unregisters listener invoked when session is unbound.
+	 * 
+	 * @param listener
+	 */
+	public void unregisterUnboundListener(UnboundListener listener);
+
+	/**
+	 * @return immutable collection of unbound listeners
+	 */
+	public Collection<UnboundListener> getUnboundListeners();
 }

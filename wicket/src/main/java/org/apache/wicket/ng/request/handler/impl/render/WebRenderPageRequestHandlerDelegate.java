@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.handler.impl.render;
 
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.Session;
+import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.RequestablePage;
@@ -66,12 +66,12 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 
 	protected String getSessionId()
 	{
-		return Session.get().getId();
+		return ThreadContext.getSession().getId();
 	}
 
 	protected boolean isSessionTemporary()
 	{
-		return Session.get().isTemporary();
+		return ThreadContext.getSession().isTemporary();
 	}
 
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
