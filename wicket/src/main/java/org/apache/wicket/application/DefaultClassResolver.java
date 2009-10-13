@@ -109,6 +109,10 @@ public final class DefaultClassResolver implements IClassResolver
 						loader = DefaultClassResolver.class.getClassLoader();
 					}
 					clazz = loader.loadClass(classname);
+					if (clazz == null)
+					{
+						throw new ClassNotFoundException(classname);
+					}
 				}
 				classes.put(classname, new WeakReference<Class<?>>(clazz));
 			}
