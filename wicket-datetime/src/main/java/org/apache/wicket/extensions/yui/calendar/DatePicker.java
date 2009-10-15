@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.yui.calendar;
 
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -112,14 +111,16 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * &quot;selected&quot; property.
 	 */
 	// See wicket-1988: SimpleDateFormat is not thread safe. Do not use static final
-	public final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
+	// See wicket-2525: SimpleDateFormat consumes a lot of memory
+	public static String FORMAT_DATE = "MM/dd/yyyy";
 
 	/**
 	 * For specifying which page (month/year) to show in the calendar, use this format for the date.
 	 * This is to be used together with the property &quot;pagedate&quot;
 	 */
 	// See wicket-1988: SimpleDateFormat is not thread safe. Do not use static final
-	public final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
+	// See wicket-2525: SimpleDateFormat consumes a lot of memory
+	public static String FORMAT_PAGEDATE = "MM/yyyy";
 
 	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
 
@@ -402,8 +403,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		if (modelObject instanceof Date)
 		{
 			Date date = (Date)modelObject;
-			widgetProperties.put("selected", FORMAT_DATE.format(date));
-			widgetProperties.put("pagedate", FORMAT_PAGEDATE.format(date));
+			widgetProperties.put("selected", new SimpleDateFormat(FORMAT_DATE).format(date));
+			widgetProperties.put("pagedate", new SimpleDateFormat(FORMAT_PAGEDATE).format(date));
 		}
 	}
 
@@ -753,7 +754,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		return component.isEnabledInHierarchy();
 	}
 
-
+	/**
+	 * 
+	 * @param map
+	 * @param calendarInit
+	 */
 	private void appendMapping(Map<String, ? > map, StringBuffer calendarInit)
 	{
 		boolean first = true;
