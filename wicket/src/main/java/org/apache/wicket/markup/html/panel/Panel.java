@@ -59,7 +59,7 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class Panel extends WebMarkupContainerWithAssociatedMarkup
+public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 

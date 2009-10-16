@@ -21,6 +21,7 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
@@ -86,7 +87,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
 		DummyPage p = new DummyPage();
-		Panel panel = new Panel("panel");
+		Panel panel = new EmptyPanel("panel");
 		p.add(panel);
 		DummyComponent c = new DummyComponent("hello", application);
 		panel.add(c);

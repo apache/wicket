@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -47,7 +48,7 @@ public class TestPage extends WebPage
 		Form form2 = new TestForm("form2");
 		add(form2);
 
-		Panel panel1 = new Panel("panel1");
+		Panel panel1 = new EmptyPanel("panel1");
 		form2.add(panel1);
 		panel1.add(new MyTextField("text3", "input-3"));
 		panel1.add(new MyTextField("text4", "input-4"));
