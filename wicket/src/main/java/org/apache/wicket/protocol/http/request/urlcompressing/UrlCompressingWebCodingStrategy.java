@@ -103,7 +103,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add version
-		final int versionNumber = component.getPage().getCurrentVersionNumber();
+		final int versionNumber = 0;
 		if (!rli.getRecordsPageVersion())
 		{
 			url.append(Page.LATEST_VERSION);
@@ -143,6 +143,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 
+	@Override
 	protected CharSequence encode(RequestCycle requestCycle,
 		IBookmarkablePageRequestTarget requestTarget)
 	{
@@ -152,7 +153,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		{
 			BookmarkableListenerInterfaceRequestTarget t = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
 			Page page = t.getPage();
-			int version = page.getCurrentVersionNumber();
+			int version = 0;
 			String componentPath = t.getComponentPath();
 			String interfaceName = t.getInterfaceName();
 			String pageMapName = t.getPageMapName();

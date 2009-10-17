@@ -23,12 +23,9 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.version.IPageVersionManager;
-import org.apache.wicket.version.undo.NoopPageVersionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,14 +223,6 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 			return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
 		}
 		return null;
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#newVersionManager(Page)
-	 */
-	public IPageVersionManager newVersionManager(Page page)
-	{
-		return new NoopPageVersionManager(page);
 	}
 
 	/**

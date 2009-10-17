@@ -77,9 +77,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		RequestListenerInterface listenerInterface)
 	{
 		this(pageMapName, pageClass, pageParameters, component.getPath(),
-			listenerInterface.getName(), component.getPage().getCurrentVersionNumber());
+			listenerInterface.getName(), 0);
 
-		int version = component.getPage().getCurrentVersionNumber();
+		int version = 0;
 		setPage(component.getPage());
 
 		// add the wicket:interface param to the params.

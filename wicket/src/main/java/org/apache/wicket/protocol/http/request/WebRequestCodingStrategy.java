@@ -945,7 +945,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add version
-		final int versionNumber = component.getPage().getCurrentVersionNumber();
+		final int versionNumber = 0;
 		if (!rli.getRecordsPageVersion())
 		{
 			url.append(Page.LATEST_VERSION);

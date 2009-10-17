@@ -184,8 +184,10 @@ class SerializedPagesCache
 			this.sessionId = sessionId;
 			pageId = page.getNumericId();
 			pageMapName = page.getPageMapName();
-			versionNumber = page.getCurrentVersionNumber();
-			ajaxVersionNumber = page.getAjaxVersionNumber();
+			// TODO WICKET-NG below version numbers were replaced by zeroes because this class is
+			// going away
+			versionNumber = 0;
+			ajaxVersionNumber = 0;
 			this.pages = new ArrayList<SerializedPage>(pages);
 			this.page = new WeakReference<Object>(page);
 		}

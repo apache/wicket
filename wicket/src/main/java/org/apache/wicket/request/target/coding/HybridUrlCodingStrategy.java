@@ -375,8 +375,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
-			return new PageInfo(new Integer(page.getNumericId()), new Integer(
-				page.getCurrentVersionNumber()), page.getPageMapName());
+			return new PageInfo(new Integer(page.getNumericId()), 0, page.getPageMapName());
 		}
 		else
 		{

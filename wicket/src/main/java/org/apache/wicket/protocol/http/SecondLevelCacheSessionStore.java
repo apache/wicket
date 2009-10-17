@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -34,8 +33,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
-import org.apache.wicket.version.IPageVersionManager;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -258,8 +255,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		public boolean containsPage(int id, int versionNumber)
 		{
 			Page lastPage = this.lastPage instanceof Page ? (Page)this.lastPage : null;
-			if (lastPage != null && lastPage.getNumericId() == id &&
-				lastPage.getCurrentVersionNumber() == versionNumber)
+			if (lastPage != null && lastPage.getNumericId() == id)
 			{
 				return true;
 			}
@@ -295,8 +291,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				if (getLastPage() != null && getLastPage().getNumericId() == id)
 				{
-					page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
-						: getLastPage();
+					page = getLastPage();
 					if (page != null)
 					{
 						// ask the page store if it is ready saving the page.
@@ -428,220 +423,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 	}
 
-	/**
-	 * version manager for this session store.
-	 */
-	private static final class SecondLevelCachePageVersionManager implements IPageVersionManager
-	{
-		private static final long serialVersionUID = 1L;
-
-		private short currentVersionNumber;
-
-		private short currentAjaxVersionNumber;
-
-		private short lastAjaxVersionNumber;
-
-		private final Page page;
-
-		private transient boolean versionStarted;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param page
-		 */
-		public SecondLevelCachePageVersionManager(Page page)
-		{
-			this.page = page;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#beginVersion(boolean)
-		 */
-		public void beginVersion(boolean mergeVersion)
-		{
-			// this is an hack.. when object is read in. It must ignore the
-			// first version bump.
-			if (versionStarted)
-			{
-				return;
-			}
-
-			versionStarted = true;
-			if (!mergeVersion)
-			{
-				// TODO: Skip existing versions! (Ask pagestore for last
-				// version)
-				currentVersionNumber++;
-				lastAjaxVersionNumber = currentAjaxVersionNumber;
-				currentAjaxVersionNumber = 0;
-			}
-			else
-			{
-				if (RequestCycle.get().getRequest() instanceof WebRequest &&
-					((WebRequest)RequestCycle.get().getRequest()).isAjax())
-				{
-					currentAjaxVersionNumber++;
-				}
-			}
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#componentAdded(org.apache.wicket.Component)
-		 */
-		public void componentAdded(Component component)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#componentModelChanging(org.apache.wicket.Component)
-		 */
-		public void componentModelChanging(Component component)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#componentRemoved(org.apache.wicket.Component)
-		 */
-		public void componentRemoved(Component component)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#componentStateChanging(org.apache.wicket.version.undo.Change)
-		 */
-		public void componentStateChanging(Change change)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#endVersion(boolean)
-		 */
-		public void endVersion(boolean mergeVersion)
-		{
-			versionStarted = false;
-			String sessionId = page.getSession().getId();
-			if (sessionId != null)
-			{
-				page.getSession().touch(page);
-			}
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#expireOldestVersion()
-		 */
-		public void expireOldestVersion()
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#getAjaxVersionNumber()
-		 */
-		public int getAjaxVersionNumber()
-		{
-			return currentAjaxVersionNumber;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#getCurrentVersionNumber()
-		 */
-		public int getCurrentVersionNumber()
-		{
-			return currentVersionNumber;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#getVersion(int)
-		 */
-		public Page getVersion(int versionNumber)
-		{
-			if (currentVersionNumber == versionNumber)
-			{
-				return page;
-			}
-			return null;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#getVersions()
-		 */
-		public int getVersions()
-		{
-			return 0;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#ignoreVersionMerge()
-		 */
-		public void ignoreVersionMerge()
-		{
-			currentVersionNumber++;
-			lastAjaxVersionNumber = currentAjaxVersionNumber;
-			currentAjaxVersionNumber = 0;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.IPageVersionManager#rollbackPage(int)
-		 */
-		public Page rollbackPage(int numberOfVersions)
-		{
-			String sessionId = page.getSession().getId();
-			if (sessionId != null)
-			{
-				int versionNumber = currentVersionNumber;
-				int ajaxNumber = currentAjaxVersionNumber;
-				if (versionStarted)
-				{
-					versionNumber--;
-					ajaxNumber--;
-				}
-
-				IPageStore store = ((SecondLevelCacheSessionStore)Application.get()
-					.getSessionStore()).getStore();
-				// if the number of versions to rollback can be done inside the
-				// current page version.
-				if (ajaxNumber >= numberOfVersions)
-				{
-					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
-						versionNumber, ajaxNumber - numberOfVersions);
-				}
-				else
-				{
-					// else go one page version down.
-					versionNumber--;
-					// then calculate the previous ajax version by looking at
-					// the last ajax number of the previous version.
-					ajaxNumber = lastAjaxVersionNumber - (numberOfVersions - ajaxNumber);
-					if (ajaxNumber < 0)
-					{
-						// currently it is not supported to jump over 2
-						// pages....
-						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
-						return null;
-					}
-					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
-						versionNumber, ajaxNumber);
-				}
-			}
-
-			return null;
-		}
-
-		private void readObject(java.io.ObjectInputStream s) throws IOException,
-			ClassNotFoundException
-		{
-			s.defaultReadObject();
-			// this is an hack.. when object is read in. It must ignore the
-			// first version bump.
-
-			// (matej_k) for now, I'm commenting it out. It causes serious
-			// trouble with back
-			// button, where new versions are not created as they should be
-			// johan promised to look at it soon
-
-			// versionStarted = true;
-		}
-	}
 
 	private static MetaDataKey<Map<String, IntHashMap<Page>>> USED_PAGES = new MetaDataKey<Map<String, IntHashMap<Page>>>()
 	{
@@ -731,15 +512,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	public IPageStore getStore()
 	{
 		return pageStore;
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.HttpSessionStore#newVersionManager(org.apache.wicket.Page)
-	 */
-	@Override
-	public IPageVersionManager newVersionManager(Page page)
-	{
-		return new SecondLevelCachePageVersionManager(page);
 	}
 
 	/**

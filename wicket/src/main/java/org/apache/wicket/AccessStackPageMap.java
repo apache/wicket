@@ -245,7 +245,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 			access(entry, versionNumber);
 
 			// Get the version of the page requested from the page
-			final Page version = page.getVersion(versionNumber);
+			final Page version = page;
 
 
 			// Is the requested version available?
@@ -347,17 +347,6 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 					{
 						// If there's more than one version
 						Page topPage = (Page)top;
-						if (topPage.getVersions() > 1)
-						{
-							// Remove version the top access version (-1)
-							topPage.getVersion(topAccess.getVersion() - 1);
-						}
-						else if (topPage.getNumericId() != access.id &&
-							topPage.getCurrentVersionNumber() != access.version)
-						{
-							// Remove whole page
-							remove(topPage);
-						}
 					}
 					else if (top != null)
 					{
@@ -442,7 +431,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	{
 		if (entry instanceof Page)
 		{
-			return ((Page)entry).getCurrentVersionNumber();
+			return 0;
 		}
 
 		// If entry is not a page, it cannot have versions because the Page

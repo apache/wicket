@@ -43,7 +43,6 @@ import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.version.IPageVersionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -218,9 +217,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * urlFor
 	 */
 	private transient Boolean stateless = null;
-
-	/** Version manager for this page */
-	private IPageVersionManager versionManager;
 
 	/** The page parameters object hat constructed this page */
 	private PageParameters parameters;
@@ -434,25 +430,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Expire the oldest version of this page
-	 */
-	public final void expireOldestVersion()
-	{
-		if (versionManager != null)
-		{
-			versionManager.expireOldestVersion();
-		}
-	}
-
-	/**
-	 * @return The current ajax version number of this page.
-	 */
-	public final int getAjaxVersionNumber()
-	{
-		return versionManager == null ? 0 : versionManager.getAjaxVersionNumber();
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Get a page unique number, which will be increased with each call.
@@ -462,16 +439,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final short getAutoIndex()
 	{
 		return autoIndex++;
-	}
-
-	/**
-	 * @return The current version number of this page. If the page has been changed once, the
-	 *         return value will be 1. If the page has not yet been revised, the version returned
-	 *         will be 0, indicating that the page is still in its original state.
-	 */
-	public final int getCurrentVersionNumber()
-	{
-		return versionManager == null ? 0 : versionManager.getCurrentVersionNumber();
 	}
 
 	/**
@@ -555,86 +522,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Override this method to implement a custom way of producing a version of a Page when it
-	 * cannot be found in the Session.
-	 * 
-	 * @param versionNumber
-	 *            The version desired
-	 * @return A Page object with the component/model hierarchy that was attached to this page at
-	 *         the time represented by the requested version.
-	 */
-	public Page getVersion(final int versionNumber)
-	{
-		// If we're still the original Page and that's what's desired
-		if (versionManager == null)
-		{
-			if (versionNumber == 0 || versionNumber == LATEST_VERSION)
-			{
-				return this;
-			}
-			else
-			{
-				log.info("No version manager available to retrieve requested versionNumber " +
-					versionNumber);
-				return null;
-			}
-		}
-		else
-		{
-			// Save original change tracking state
-			final boolean originalTrackChanges = getFlag(FLAG_TRACK_CHANGES);
-
-			try
-			{
-				// While the version manager is potentially playing around with
-				// the Page, it may change the page in order to undo changes and
-				// we don't want change tracking going on while its doing this.
-				setFlag(FLAG_TRACK_CHANGES, false);
-
-				// Get page of desired version
-				final Page page;
-				if (versionNumber != LATEST_VERSION)
-				{
-					page = versionManager.getVersion(versionNumber);
-				}
-				else
-				{
-					page = versionManager.getVersion(getCurrentVersionNumber());
-				}
-
-				// If we went all the way back to the original page
-				if (page != null && page.getCurrentVersionNumber() == 0 &&
-					page.getAjaxVersionNumber() == 0)
-				{
-					// remove version info
-					page.versionManager = null;
-				}
-
-				return page;
-			}
-			finally
-			{
-				// Restore change tracking state
-				setFlag(FLAG_TRACK_CHANGES, originalTrackChanges);
-			}
-		}
-	}
-
-	/**
-	 * @return Number of versions of this page
-	 */
-	public final int getVersions()
-	{
-		return versionManager == null ? 1 : versionManager.getVersions() + 1;
-	}
-
-	/**
 	 * @return This page's component hierarchy as a string
 	 */
 	public final String hierarchyAsString()
 	{
 		final StringBuffer buffer = new StringBuffer();
-		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
+		buffer.append("Page " + getId());
 		visitChildren(new IVisitor<Component>()
 		{
 			public Object component(Component component)
@@ -650,27 +543,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 		return buffer.toString();
-	}
-
-	/**
-	 * Call this method when the current (ajax) request shouldn't merge the changes that are
-	 * happening to the page with the previous version.
-	 * 
-	 * This is for example needed when you want to redirect to this page in an ajax request and then
-	 * you do want to version normally..
-	 * 
-	 * This method doesn't do anything if the getRequest().mergeVersion doesn't return true.
-	 */
-	public final void ignoreVersionMerge()
-	{
-		if (getRequest().mergeVersion())
-		{
-			mayTrackChangesFor(this, null);
-			if (versionManager != null)
-			{
-				versionManager.ignoreVersionMerge();
-			}
-		}
 	}
 
 	/**
@@ -910,27 +782,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * This returns a page instance that is rollbacked the number of versions that is specified
-	 * compared to the current page.
-	 * 
-	 * This is a rollback including ajax versions.
-	 * 
-	 * @param numberOfVersions
-	 *            to rollback
-	 * @return rollbacked page instance
-	 */
-	public final Page rollbackPage(int numberOfVersions)
-	{
-		Page page = this;
-		if (versionManager != null)
-		{
-			page = versionManager.rollbackPage(numberOfVersions);
-		}
-		getSession().touch(page);
-		return page;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Set the id for this Page. This method is called by PageMap when a Page is added because the
@@ -984,17 +835,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	public String toString()
 	{
-		if (versionManager != null)
-		{
-			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-				versionManager.getCurrentVersionNumber() + ", ajax = " +
-				versionManager.getAjaxVersionNumber() + "]";
-		}
-		else
-		{
-			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-				0 + "]";
-		}
+		return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " + 0 +
+			"]";
 	}
 
 	/**
@@ -1104,6 +946,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
+	 * TODO WICKET-NG review if we need this
 	 */
 	private final void endVersion()
 	{
@@ -1118,12 +961,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			// Reset boolean for next request
 			setFlag(FLAG_NEW_VERSION, false);
-
-			// We're done with this version
-			if (versionManager != null)
-			{
-				versionManager.endVersion(getRequest().mergeVersion());
-			}
 
 			// Evict any page version(s) as need be
 			getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
@@ -1222,15 +1059,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				// we are tracking changes... do we need to start new version?
 				if (!getFlag(FLAG_NEW_VERSION))
 				{
-					// if we have no version manager
-					if (versionManager == null)
-					{
-						// then install a new version manager
-						versionManager = getSession().getSessionStore().newVersionManager(this);
-					}
-
-					// start a new version
-					versionManager.beginVersion(getRequest().mergeVersion());
+					// TODO WICKET-NG do we need to do anything here? or this method at all?
 					setFlag(FLAG_NEW_VERSION, true);
 				}
 
@@ -1475,10 +1304,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final void componentAdded(final Component component)
 	{
 		dirty();
-		if (mayTrackChangesFor(component, component.getParent()))
-		{
-			versionManager.componentAdded(component);
-		}
 	}
 
 	/**
@@ -1490,15 +1315,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final void componentModelChanging(final Component component)
 	{
 		dirty();
-		if (mayTrackChangesFor(component, null))
-		{
-			// If it is an inhertiable model then don't call model changing
-			// on the version manager.
-			if (!component.getFlag(FLAG_INHERITABLE_MODEL))
-			{
-				versionManager.componentModelChanging(component);
-			}
-		}
 	}
 
 	/**
@@ -1510,10 +1326,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	final void componentRemoved(final Component component)
 	{
 		dirty();
-		if (mayTrackChangesFor(component, component.getParent()))
-		{
-			versionManager.componentRemoved(component);
-		}
 	}
 
 	/**
@@ -1575,7 +1387,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public PageReference getPageReference()
 	{
 		setStatelessHint(false);
-		return new PageReference(pageMapName, numericId, getCurrentVersionNumber());
+		// TODO WICKET-NG will reference need page version/render count? for now we always send zero
+		return new PageReference(pageMapName, numericId, 0);
 	}
 
 	/**

@@ -1213,7 +1213,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		else
 		{
-			int version = component.getPage().getCurrentVersionNumber();
+			int version = 0;
 			Class<?> clazz = null;
 			if (component instanceof IRedirectListener)
 			{

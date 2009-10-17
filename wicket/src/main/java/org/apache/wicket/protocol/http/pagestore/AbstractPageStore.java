@@ -84,8 +84,10 @@ public abstract class AbstractPageStore implements IPageStore
 		{
 			pageId = page.getNumericId();
 			pageMapName = page.getPageMapName();
-			versionNumber = page.getCurrentVersionNumber();
-			ajaxVersionNumber = page.getAjaxVersionNumber();
+			// TODO WICKET-NG below version numbers were replaced by zeroes because this pagestore
+			// will soon be replaced
+			versionNumber = 0;
+			ajaxVersionNumber = 0;
 		}
 
 		/**
@@ -235,10 +237,6 @@ public abstract class AbstractPageStore implements IPageStore
 			if (entry != null)
 			{
 				page = entry.getPage();
-				if (versionNumber != -1)
-				{
-					page = page.getVersion(versionNumber);
-				}
 			}
 		}
 		finally

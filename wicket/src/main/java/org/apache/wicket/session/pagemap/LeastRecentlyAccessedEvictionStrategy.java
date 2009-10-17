@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.session.pagemap;
 
-import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.IPageMap;
-import org.apache.wicket.Page;
-import org.apache.wicket.Session;
 
 /**
  * A simple eviction strategy that evicts the least recently accessed page version from the given
@@ -54,51 +51,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final IPageMap pageMap)
 	{
-		if (pageMap instanceof AccessStackPageMap)
-		{
-			synchronized (Session.get())
-			{
-				AccessStackPageMap accessPM = (AccessStackPageMap)pageMap;
-				// Do we need to evict under this strategy?
-				if (accessPM.getVersions() > maxVersions)
-				{
-					// Remove oldest entry from access stack
-					final AccessStackPageMap.Access oldestAccess = accessPM.getAccessStack()
-						.remove(0);
-					final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
-
-					// If entry is a page (cannot be null if we're evicting)
-					if (oldestEntry instanceof Page)
-					{
-						Page page = (Page)oldestEntry;
-
-						// If there is more than one version of this page
-						if (page.getVersions() > 1)
-						{
-							// expire the oldest version
-							page.expireOldestVersion();
-						}
-						else
-						{
-							// expire whole page
-							accessPM.removeEntry(page);
-						}
-					}
-					else
-					{
-						// If oldestEntry is not an instance of Page, then it is
-						// some
-						// custom, user-defined IPageMapEntry class and cannot
-						// contain
-						// versioning information, so we just remove the entry.
-						if (oldestEntry != null)
-						{
-							accessPM.removeEntry(oldestEntry);
-						}
-					}
-				}
-			}
-		}
+		// TODO WICKET-NG this method was replaced with a noop because ipagemap will soon be removed
 	}
 
 	/**

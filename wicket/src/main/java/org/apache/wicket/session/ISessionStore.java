@@ -21,10 +21,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.IPageMap;
-import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
-import org.apache.wicket.version.IPageVersionManager;
 
 
 /**
@@ -153,13 +151,6 @@ public interface ISessionStore
 	 * @return The pagemap instance
 	 */
 	IPageMap createPageMap(String name);
-
-	/**
-	 * @param page
-	 *            The page for which this version manager must be created
-	 * @return A instance of a IPageVersionManager that the page will use.
-	 */
-	IPageVersionManager newVersionManager(Page page);
 
 	/**
 	 * Called when the WebApplication is destroyed.

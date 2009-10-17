@@ -89,8 +89,7 @@ public class TestFilePageStore implements IPageStore
 
 		SessionPageKey(String sessionId, Page page)
 		{
-			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(),
-				page.getAjaxVersionNumber(), page.getPageMapName(), page.getClass());
+			this(sessionId, page.getNumericId(), 0, 0, page.getPageMapName(), page.getClass());
 		}
 
 		<T extends Page> SessionPageKey(String sessionId, int id, int versionNumber,
@@ -172,14 +171,13 @@ public class TestFilePageStore implements IPageStore
 				}
 				long t2 = System.currentTimeMillis();
 				Page page = (Page)Objects.byteArrayToObject(pageData);
-				page = page.getVersion(versionNumber);
 				if (page != null && log.isDebugEnabled())
 				{
 					long t3 = System.currentTimeMillis();
 					log.debug("restoring page " + page.getClass() + "[" + page.getNumericId() +
-						"," + page.getCurrentVersionNumber() + "] size: " + pageData.length +
-						" for session " + sessionId + " took " + (t2 - t1) +
-						" miliseconds to read in and " + (t3 - t2) + " miliseconds to deserialize");
+						"," + 0 + "] size: " + pageData.length + " for session " + sessionId +
+						" took " + (t2 - t1) + " miliseconds to read in and " + (t3 - t2) +
+						" miliseconds to deserialize");
 				}
 				final Page ret = page;
 				return ret;
