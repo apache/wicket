@@ -26,7 +26,6 @@ import org.apache.wicket.model.util.WildcardListModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -175,7 +174,8 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<T> model, final IModel<? extends List<? extends E>> choices)
+	public AbstractChoice(final String id, IModel<T> model,
+		final IModel<? extends List<? extends E>> choices)
 	{
 		this(id, model, choices, new ChoiceRenderer<E>());
 	}
@@ -230,7 +230,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		{
 			if (isVersioned())
 			{
-				addStateChange(new ChoicesListChange());
+				addStateChange();
 			}
 		}
 		this.choices = wrap(choices);
@@ -250,7 +250,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		{
 			if (isVersioned())
 			{
-				addStateChange(new ChoicesListChange());
+				addStateChange();
 			}
 		}
 		this.choices = new WildcardListModel<E>(choices);
@@ -444,44 +444,5 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		return false;
 	}
 
-	/**
-	 * Change object to represent the change of the choices property
-	 * 
-	 * @author ivaynberg
-	 */
-	private class ChoicesListChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
 
-		private final IModel<? extends List<? extends E>> oldChoices;
-
-		/**
-		 * Construct.
-		 */
-		public ChoicesListChange()
-		{
-			oldChoices = choices;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			choices = oldChoices;
-		}
-
-		/**
-		 * Make debugging easier
-		 * 
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices +
-				"]";
-		}
-	}
 }

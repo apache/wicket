@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * A form button.
@@ -130,25 +129,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
 		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-
-				boolean formerValue = Button.this.defaultFormProcessing;
-
-				@Override
-				public void undo()
-				{
-					Button.this.defaultFormProcessing = formerValue;
-				}
-
-				@Override
-				public String toString()
-				{
-					return "DefaultFormProcessingChange[component: " + getPath() +
-						", default processing: " + formerValue + "]";
-				}
-			});
+			addStateChange();
 		}
 
 		this.defaultFormProcessing = defaultFormProcessing;

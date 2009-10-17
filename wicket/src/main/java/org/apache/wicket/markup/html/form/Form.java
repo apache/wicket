@@ -53,7 +53,6 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.validation.IValidatorAddListener;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -454,7 +453,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				"Tried to remove form validator that was not previously added. "
 					+ "Make sure your validator's equals() implementation is sufficient");
 		}
-		addStateChange(new FormValidatorRemovedChange(removed));
+		addStateChange();
 	}
 
 	private final int formValidators_indexOf(IFormValidator validator)
@@ -2005,34 +2004,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		});
 	}
 
-	/**
-	 * Change object to keep track of form validator removals
-	 * 
-	 * @author Igor Vaynberg (ivaynberg at apache dot org)
-	 */
-	private class FormValidatorRemovedChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IFormValidator removed;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param removed
-		 */
-		public FormValidatorRemovedChange(final IFormValidator removed)
-		{
-			super();
-			this.removed = removed;
-		}
-
-		@Override
-		public void undo()
-		{
-			add(removed);
-		}
-	}
 
 	/**
 	 * Allows to customize input names of form components inside this form.

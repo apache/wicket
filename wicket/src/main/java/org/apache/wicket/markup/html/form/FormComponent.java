@@ -52,7 +52,6 @@ import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.ValidationError;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -301,26 +300,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 	}
 
-	/**
-	 * Change object to capture the required flag change
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class RequiredStateChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final boolean required = isRequired();
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setRequired(required);
-		}
-	}
 
 	/**
 	 * Adapter that makes this component appear as {@link IValidatable}
@@ -1075,7 +1054,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		if (required != isRequired())
 		{
-			addStateChange(new RequiredStateChange());
+			addStateChange();
 		}
 		setFlag(FLAG_REQUIRED, required);
 		return this;

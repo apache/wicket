@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MicroMap;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * A navigation for a PageableListView that holds links to other pages of the PageableListView.
@@ -116,45 +115,6 @@ public class PagingNavigation extends Loop
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Undo change for navigation start index. Makes certain that back button works with paging in
-	 * the navigator.
-	 */
-	private final class StartIndexChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final int startIndex;
-
-		/**
-		 * Constructor, remembers the startIndex.
-		 * 
-		 * @param startIndex
-		 *            the startIndex to remember.
-		 */
-		private StartIndexChange(int startIndex)
-		{
-			this.startIndex = startIndex;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public final void undo()
-		{
-			PagingNavigation.this.startIndex = startIndex;
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "StartIndexChange[component: " + getPath() + ", prefix: " + startIndex + "]";
-		}
-	}
 
 	/** The PageableListView this navigation is navigating. */
 	protected IPageable pageable;
@@ -412,7 +372,7 @@ public class PagingNavigation extends Loop
 			modelChanging();
 
 			// Tell the ListView what the new start index shall be
-			addStateChange(new StartIndexChange(startIndex));
+			addStateChange();
 			startIndex = firstListItem;
 
 			setIterations(Math.min(viewSize, pageable.getPageCount()));

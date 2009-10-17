@@ -37,7 +37,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -674,32 +673,7 @@ public abstract class MarkupContainer extends Component
 	{
 		if (children != null)
 		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-
-				final Object removedChildren = children;
-
-				@Override
-				public String toString()
-				{
-					return "RemoveAllChange[component: " + getPath() + ", removed Children: " +
-						removedChildren + "]";
-				}
-
-				@Override
-				public void undo()
-				{
-					children = removedChildren;
-					int size = children_size();
-					for (int i = 0; i < size; i++)
-					{
-						// Get next child
-						final Component child = children_get(i);
-						child.setParent(MarkupContainer.this);
-					}
-				}
-			});
+			addStateChange();
 
 			// Loop through child components
 			int size = children_size();

@@ -21,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.PrependingStringBuffer;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * Abstract class for links that are capable of submitting a form.
@@ -109,25 +108,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
 		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-
-				boolean formerValue = AbstractSubmitLink.this.defaultFormProcessing;
-
-				@Override
-				public void undo()
-				{
-					AbstractSubmitLink.this.defaultFormProcessing = formerValue;
-				}
-
-				@Override
-				public String toString()
-				{
-					return "DefaultFormProcessingChange[component: " + getPath() +
-						", default processing: " + formerValue + "]";
-				}
-			});
+			addStateChange();
 		}
 
 		this.defaultFormProcessing = defaultFormProcessing;

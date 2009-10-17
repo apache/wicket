@@ -27,7 +27,6 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -267,19 +266,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
-					addStateChange(new Change()
-					{
-						private static final long serialVersionUID = 1L;
-
-						final int oldIndex = index;
-
-						@Override
-						public void undo()
-						{
-							Collections.swap(getList(), oldIndex + 1, oldIndex);
-						}
-
-					});
+					addStateChange();
 
 					// Swap list items and invalidate listView
 					Collections.swap(getList(), index, index + 1);
@@ -327,19 +314,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				if (index != -1)
 				{
 
-					addStateChange(new Change()
-					{
-						private static final long serialVersionUID = 1L;
-
-						final int oldIndex = index;
-
-						@Override
-						public void undo()
-						{
-							Collections.swap(getList(), oldIndex - 1, oldIndex);
-						}
-
-					});
+					addStateChange();
 
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
@@ -383,20 +358,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					final int oldIndex = getList().indexOf(item.getModelObject());
-					final T removedObject = item.getModelObject();
-
-					@SuppressWarnings("unchecked")
-					@Override
-					public void undo()
-					{
-						((List<T>)getList()).add(oldIndex, removedObject);
-					}
-				});
+				addStateChange();
 
 				item.modelChanging();
 

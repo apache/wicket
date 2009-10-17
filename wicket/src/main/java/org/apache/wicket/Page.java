@@ -44,7 +44,6 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.version.IPageVersionManager;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1522,13 +1521,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 * @param change
 	 */
-	final void componentStateChanging(final Component component, Change change)
+	final void componentStateChanging(final Component component)
 	{
 		dirty();
-		if (mayTrackChangesFor(component, null))
-		{
-			versionManager.componentStateChanging(change);
-		}
 	}
 
 	/**

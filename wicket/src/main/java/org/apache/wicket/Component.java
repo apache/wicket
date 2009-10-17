@@ -52,7 +52,6 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -199,46 +198,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Component implements IClusterable, IConverterLocator
 {
-	/**
-	 * Change record of a model.
-	 */
-	public class ComponentModelChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** Former model. */
-		private final IModel<?> model;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param model
-		 */
-		public ComponentModelChange(IModel<?> model)
-		{
-			super();
-			this.model = model;
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return getClass().getSimpleName() + "[component: " + getPath() + ",model:" + model +
-				"]";
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setDefaultModel(model);
-		}
-	}
 
 	/**
 	 * Generic component visitor interface for component traversals.
@@ -274,174 +233,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		 *         the generic non-null value STOP_TRAVERSAL can be used.
 		 */
 		public Object component(T component);
-	}
-
-	/**
-	 * Change object for undoing addition of behavior
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class AddedBehaviorChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IBehavior behavior;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param behavior
-		 */
-		public AddedBehaviorChange(IBehavior behavior)
-		{
-			this.behavior = behavior;
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			removeBehavior(behavior);
-		}
-	}
-
-	/**
-	 * Change object for undoing removal of behavior
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class RemovedBehaviorChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IBehavior behavior;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param behavior
-		 */
-		public RemovedBehaviorChange(IBehavior behavior)
-		{
-			this.behavior = behavior;
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			addBehavior(behavior);
-		}
-	}
-
-	/**
-	 * A enabled change operation.
-	 */
-	protected final static class EnabledChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** Subject. */
-		private final Component component;
-
-		/** Former value. */
-		private final boolean enabled;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param component
-		 */
-		EnabledChange(final Component component)
-		{
-			this.component = component;
-			enabled = component.getFlag(FLAG_ENABLED);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return getClass().getSimpleName() + "[component: " + component.getPath() +
-				",enabled: " + enabled + "]";
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			component.setEnabled(enabled);
-		}
-	}
-
-	/**
-	 * A visibility change operation.
-	 */
-	protected final static class VisibilityChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** Subject. */
-		private final Component component;
-
-		/** Former value. */
-		private final boolean visible;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param component
-		 */
-		VisibilityChange(final Component component)
-		{
-			this.component = component;
-			visible = component.getFlag(FLAG_VISIBLE);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return getClass().getSimpleName() + "[component: " + component.getPath() +
-				",visible: " + visible + "]";
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			component.setVisible(visible);
-		}
 	}
 
 	/** Log. */
@@ -964,7 +755,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			if (!behavior.isTemporary())
 			{
-				addStateChange(new AddedBehaviorChange(behavior));
+				addStateChange();
 			}
 
 			// Give handler the opportunity to bind this component
@@ -2267,7 +2058,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			if (!behavior.isTemporary())
 			{
-				addStateChange(new RemovedBehaviorChange(behavior));
+				addStateChange();
 			}
 		}
 		else
@@ -2763,7 +2554,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				final Page page = findPage();
 				if (page != null)
 				{
-					addStateChange(new EnabledChange(this));
+					addStateChange();
 				}
 			}
 
@@ -2914,7 +2705,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			if (wrappedModel != null)
 			{
-				addStateChange(new ComponentModelChange(wrappedModel));
+				addStateChange();
 			}
 
 			setModelImpl(wrap(model));
@@ -3146,7 +2937,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (visible != getFlag(FLAG_VISIBLE))
 		{
 			// record component's visibility change
-			addStateChange(new VisibilityChange(this));
+			addStateChange();
 
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
@@ -3389,18 +3180,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Adds state change to page.
+	 * TODO WICKET-NG rename to something more useful - like componentChanged(), this method used to
+	 * be called with a Change object
 	 * 
-	 * @param change
-	 *            The change
+	 * Adds state change to page.
 	 */
-	protected final void addStateChange(final Change change)
+	protected final void addStateChange()
 	{
 		checkHierarchyChange(this);
 		final Page page = findPage();
 		if (page != null)
 		{
-			page.componentStateChanging(this, change);
+			page.componentStateChanging(this);
 		}
 	}
 

@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.list;
 
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * A very simple Item. Usually it is used as based class for more advanced Items.
@@ -110,23 +109,7 @@ public class LoopItem extends AbstractItem
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					final int oldIndex = LoopItem.this.index;
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void undo()
-					{
-						LoopItem.this.index = oldIndex;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "IndexChange[component: " + getPath() + ", index: " + oldIndex + "]";
-					}
-				});
+				addStateChange();
 			}
 			this.index = index;
 		}

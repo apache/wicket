@@ -21,7 +21,6 @@ import java.util.Iterator;
 import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -232,25 +231,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					private final IItemReuseStrategy old = itemReuseStrategy;
-
-					@Override
-					public void undo()
-					{
-						itemReuseStrategy = old;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " +
-							old + "]";
-					}
-				});
+				addStateChange();
 			}
 			itemReuseStrategy = strategy;
 		}

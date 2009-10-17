@@ -26,7 +26,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -64,75 +63,6 @@ import org.apache.wicket.version.undo.Change;
 public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	/** suffix change record. */
-	private class SuffixChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		final String prevSuffix;
-
-		SuffixChange(String prevSuffix)
-		{
-			this.prevSuffix = prevSuffix;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setSuffix(prevSuffix);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "SuffixChange[component: " + getPath() + ", suffix: " + prevSuffix + "]";
-		}
-	}
-
-	/**
-	 * Prefix change record.
-	 */
-	private class PrefixChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final String prevPrefix;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param prevSuffix
-		 */
-		PrefixChange(String prevSuffix)
-		{
-			prevPrefix = prevSuffix;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setPrefix(prevPrefix);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "PrefixChange[component: " + getPath() + ", prefix: " + prevPrefix + "]";
-		}
-	}
 
 	private String prefix = "";
 	private String suffix = "<br/>\n";
@@ -317,7 +247,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		final Page page = findPage();
 		if (page != null)
 		{
-			addStateChange(new PrefixChange(this.prefix));
+			addStateChange();
 		}
 
 		this.prefix = prefix;
@@ -343,7 +273,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		final Page page = findPage();
 		if (page != null)
 		{
-			addStateChange(new SuffixChange(this.suffix));
+			addStateChange();
 		}
 
 		this.suffix = suffix;

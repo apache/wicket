@@ -23,7 +23,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -101,25 +100,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					final int old = columns;
-
-					@Override
-					public void undo()
-					{
-						columns = old;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "GridViewColumnsChange[component: " + getPath() +
-							", removed columns: " + old + "]";
-					}
-				});
+				addStateChange();
 			}
 			columns = cols;
 		}
@@ -153,25 +134,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					final int old = GridView.this.rows;
-
-					@Override
-					public void undo()
-					{
-						GridView.this.rows = old;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "GridViewRowsChange[component: " + getPath() + ", removed rows: " +
-							old + "]";
-					}
-				});
+				addStateChange();
 			}
 			this.rows = rows;
 		}

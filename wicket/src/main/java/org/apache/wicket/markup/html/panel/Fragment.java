@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * Usually you either have a markup file or a xml tag with wicket:id="myComponent" to associate
@@ -120,18 +119,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		}
 		if (!Objects.equal(this.markupId, markupId))
 		{
-			addStateChange(new Change()
-			{
-				private static final long serialVersionUID = 1L;
-				private final String oldMarkupId = Fragment.this.markupId;
-
-				@Override
-				public void undo()
-				{
-					Fragment.this.markupId = oldMarkupId;
-				}
-
-			});
+			addStateChange();
 		}
 		this.markupId = markupId;
 	}

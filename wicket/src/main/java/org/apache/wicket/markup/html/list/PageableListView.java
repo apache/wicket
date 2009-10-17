@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -52,7 +51,8 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(final String id, final IModel<? extends List<? extends T>> model, int rowsPerPage)
+	public PageableListView(final String id, final IModel<? extends List<? extends T>> model,
+		int rowsPerPage)
 	{
 		super(id, model);
 		this.rowsPerPage = rowsPerPage;
@@ -125,7 +125,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 			rowsPerPage = 0;
 		}
 
-		addStateChange(new RowsPerPageChange(this.rowsPerPage));
+		addStateChange();
 		this.rowsPerPage = rowsPerPage;
 	}
 
@@ -163,7 +163,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 			currentPage = pageCount - 1;
 		}
 
-		addStateChange(new CurrentPageChange(this.currentPage));
+		addStateChange();
 		this.currentPage = currentPage;
 	}
 
@@ -197,86 +197,6 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	{
 		throw new UnsupportedOperationException(
 			"You must not use setViewSize() with PageableListView");
-	}
-
-	/**
-	 * Records the changing of the current page.
-	 */
-	private class CurrentPageChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the former 'current' page. */
-		private final int currentPage;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param currentPage
-		 *            the former 'current' page
-		 */
-		CurrentPageChange(int currentPage)
-		{
-			this.currentPage = currentPage;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setCurrentPage(currentPage);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "CurrentPageChange[currentPage: " + currentPage + "]";
-		}
-	}
-
-	/**
-	 * Records the changing of the number of rows per page.
-	 */
-	private class RowsPerPageChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the former number of rows per page. */
-		private final int rowsPerPage;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param rowsPerPage
-		 *            the former number of rows per page
-		 */
-		RowsPerPageChange(int rowsPerPage)
-		{
-			this.rowsPerPage = rowsPerPage;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			setRowsPerPage(rowsPerPage);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "RowsPerPageChange[component: " + getPath() + ", prefix: " + rowsPerPage + "]";
-		}
 	}
 
 }

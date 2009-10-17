@@ -24,7 +24,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -77,31 +76,6 @@ import org.apache.wicket.version.undo.Change;
  */
 public abstract class Link<T> extends AbstractLink implements ILinkListener
 {
-	/** Change record for when an anchor is changed. */
-	private final class AnchorChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the old anchor. */
-		private final Component anchor;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param anchor
-		 */
-		public AnchorChange(Component anchor)
-		{
-			this.anchor = anchor;
-		}
-
-		@Override
-		public final void undo()
-		{
-			Link.this.anchor = anchor;
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -238,7 +212,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 	 */
 	public Link<T> setAnchor(Component anchor)
 	{
-		addStateChange(new AnchorChange(this.anchor));
+		addStateChange();
 		this.anchor = anchor;
 		return this;
 	}

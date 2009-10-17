@@ -22,7 +22,6 @@ import java.util.NoSuchElementException;
 
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -183,25 +182,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					final int old = itemsPerPage;
-
-					@Override
-					public void undo()
-					{
-						itemsPerPage = old;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " +
-							old + "]";
-					}
-				});
+				addStateChange();
 			}
 		}
 
@@ -295,25 +276,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		{
 			if (isVersioned())
 			{
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					private final int old = currentPage;
-
-					@Override
-					public void undo()
-					{
-						currentPage = old;
-					}
-
-					@Override
-					public String toString()
-					{
-						return "CurrentPageChange[component: " + getPath() + ", currentPage: " +
-							old + "]";
-					}
-				});
+				addStateChange();
 
 			}
 		}
