@@ -111,7 +111,8 @@ import org.apache.wicket.util.string.Strings;
  * AjaxLink or AjaxButton) that shows it.
  * <p>
  * If you want to use form in modal window component make sure that you put the modal window itself
- * in another form (nesting forms is legal in Wicket).
+ * in another form (nesting forms is legal in Wicket) and that the form on modal window is submitted
+ * before the window get closed.
  * 
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
