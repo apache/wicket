@@ -1492,14 +1492,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Retrieves id by which this component is represented within the markup. This is either the id
-	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
-	 * the markup, or an automatically generated id - in that order.
+	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, [id attribute defined in
+	 * the markup, - not yet working in 1.4] or an automatically generated id - in that order.
 	 * <p>
 	 * If no id is set and <code>createIfDoesNotExist</code> is false, this method will return null.
 	 * Otherwise it will generate an id value which by default will be unique in the page. This is
 	 * the preferred way as there is no chance of id collision.
-	 * <p>
-	 * 
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
@@ -1568,16 +1566,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Retrieves id by which this component is represented within the markup. This is either the id
-	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
-	 * the markup, or an automatically generated id - in that order.
-	 * <p>
-	 * If no explicit id is set this function will generate an id value that will be unique in the
-	 * page. This is the preferred way as there is no chance of id collision.
-	 * <p>
-	 * Note: This method should only be called after the component or its parent have been added to
-	 * the page.
+	 * Calls {@link #getMarkupId(boolean)} with 'true'.
 	 * 
+	 * @see #getMarkupId(boolean)
 	 * @return markup id of the component
 	 */
 	public String getMarkupId()
