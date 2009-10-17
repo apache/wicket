@@ -17,13 +17,12 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 /**
- * An renderer that assumes that assist objects are {@link String}s. Great for quickly generating a
+ * An renderer that calls object.toString() to get the text value. Great for quickly generating a
  * list of assists.
  * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRenderer<Object>
 {
@@ -53,5 +52,4 @@ public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRe
 	{
 		return object.toString();
 	}
-
 }
