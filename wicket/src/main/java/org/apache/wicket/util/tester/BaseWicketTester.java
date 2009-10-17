@@ -51,6 +51,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.IFormVisitorParticipant;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -1334,7 +1335,7 @@ public class BaseWicketTester extends MockWebApplication
 					!formComponent.getClass().isAssignableFrom(Button.class) &&
 					formComponent.isVisible())
 				{
-					if (!((formComponent instanceof Button) && (component instanceof Button)) ||
+					if (!((formComponent instanceof IFormSubmittingComponent) && (component instanceof IFormSubmittingComponent)) ||
 						(component == formComponent))
 					{
 						String name = formComponent.getInputName();
