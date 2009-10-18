@@ -118,7 +118,7 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testVisibilityOfChildren() throws Exception
 	{
-		// render with enclosure initally visible
+		// render with enclosure initially visible
 		tester.startPage(EnclosurePage_6.class);
 		String doc = tester.getServletResponse().getDocument();
 		assertTrue(doc.contains("content1"));

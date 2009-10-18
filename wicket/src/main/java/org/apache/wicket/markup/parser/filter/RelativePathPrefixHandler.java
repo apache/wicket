@@ -24,7 +24,6 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -153,23 +152,12 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
 				container.getPage().getAutoIndex();
 
-			final IMarkupFragment markup = markupStream.getMarkupFragment();
-
 			// we do not want to mess with the hierarchy, so the container has to be
 			// transparent as it may have wicket components inside. for example a raw anchor tag
 			// that contains a label.
 			final Component wc = new WebMarkupContainer(id)
 			{
 				private static final long serialVersionUID = 1L;
-
-				/**
-				 * @see org.apache.wicket.Component#getMarkup()
-				 */
-				@Override
-				public IMarkupFragment getMarkup()
-				{
-					return markup;
-				}
 
 				@Override
 				public boolean isTransparentResolver()
@@ -178,6 +166,7 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 				}
 			};
 
+			wc.setMarkup(markupStream.getMarkupFragment());
 			container.autoAdd(wc, markupStream);
 			return true;
 		}

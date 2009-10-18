@@ -109,6 +109,9 @@ public abstract class AbstractLink extends WebMarkupContainer
 		return this;
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -157,7 +160,8 @@ public abstract class AbstractLink extends WebMarkupContainer
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
+		boolean beforeAfter = (!isLinkEnabled() && getBeforeDisabledLink() != null);
+		if (beforeAfter)
 		{
 			getResponse().write(getBeforeDisabledLink());
 		}
@@ -166,7 +170,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 		renderComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
-		if (!isLinkEnabled() && getAfterDisabledLink() != null)
+		if (beforeAfter)
 		{
 			getResponse().write(getAfterDisabledLink());
 		}

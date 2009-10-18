@@ -23,7 +23,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -214,8 +213,6 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 				final String id = tag.getId() + container.getPage().getAutoIndex();
 				tag.setId(id);
 
-				final IMarkupFragment markup = markupStream.getMarkupFragment();
-
 				final Component component = new WebMarkupContainer(id)
 				{
 					private static final long serialVersionUID = 1L;
@@ -228,17 +225,9 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 					{
 						return true;
 					}
-
-					/**
-					 * @see org.apache.wicket.Component#getMarkup()
-					 */
-					@Override
-					public IMarkupFragment getMarkup()
-					{
-						return markup;
-					}
 				};
 
+				component.setMarkup(markupStream.getMarkupFragment());
 				container.autoAdd(component, markupStream);
 
 				// Yes, we handled the tag

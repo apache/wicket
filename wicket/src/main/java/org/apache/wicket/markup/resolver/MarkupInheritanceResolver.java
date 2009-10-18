@@ -65,14 +65,14 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(id), markupStream);
+				container.autoAdd(new MarkupInheritanceContainer(id), markupStream);
 				return true;
 			}
 
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(id), markupStream);
+				container.autoAdd(new MarkupInheritanceContainer(id), markupStream);
 				return true;
 			}
 		}
@@ -83,14 +83,14 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	/**
 	 * This is a WebMarkupContainer, except that it is transparent for it child components.
 	 */
-	private static class TransparentWebMarkupContainer extends WebMarkupContainer
+	private static class MarkupInheritanceContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * @param id
 		 */
-		public TransparentWebMarkupContainer(final String id)
+		public MarkupInheritanceContainer(final String id)
 		{
 			super(id);
 		}

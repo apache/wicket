@@ -255,24 +255,14 @@ public abstract class MarkupContainer extends Component
 			children_remove(index);
 		}
 		add(component);
-		component.prepareForRender();
-		try
-		{
-			if (markupStream == null)
-			{
-				// Allow currently invisible components to be re-rendered as well
-				if (component.getParent() != null)
-				{
-					markupStream = component.findMarkupStream();
-				}
-			}
 
-			component.render(markupStream);
-		}
-		finally
+		component.render();
+
+		if (markupStream != null)
 		{
-			component.afterRender();
+			markupStream.skipComponent();
 		}
+
 		return true;
 	}
 

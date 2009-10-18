@@ -26,7 +26,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
@@ -140,9 +139,8 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
-				MessageContainer label = new MessageContainer(id, messageKey,
-					markupStream.getMarkupFragment());
-
+				MessageContainer label = new MessageContainer(id, messageKey);
+				label.setMarkup(markupStream.getMarkupFragment());
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());
@@ -179,8 +177,6 @@ public class WicketMessageResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final IMarkupFragment markupFragment;
-
 		/**
 		 * Construct.
 		 * 
@@ -188,13 +184,10 @@ public class WicketMessageResolver implements IComponentResolver
 		 * @param messageKey
 		 * @param markupFragment
 		 */
-		public MessageContainer(final String id, final String messageKey,
-			final IMarkupFragment markupFragment)
+		public MessageContainer(final String id, final String messageKey)
 		{
 			// The message key becomes the model
 			super(id, new Model<String>(messageKey));
-
-			this.markupFragment = markupFragment;
 
 			setEscapeModelStrings(false);
 		}
@@ -413,15 +406,6 @@ public class WicketMessageResolver implements IComponentResolver
 				tag.setType(XmlTag.OPEN);
 			}
 			super.onComponentTag(tag);
-		}
-
-		/**
-		 * @see org.apache.wicket.Component#getMarkup()
-		 */
-		@Override
-		public IMarkupFragment getMarkup()
-		{
-			return markupFragment;
 		}
 	}
 }

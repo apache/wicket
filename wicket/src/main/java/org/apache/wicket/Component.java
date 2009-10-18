@@ -465,6 +465,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	int generatedMarkupId = -1;
 
+	/** Must only be used by auto components */
+	private transient IMarkupFragment markup;
+
 	/**
 	 * The object that holds the component state.
 	 * <p>
@@ -704,6 +707,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public IMarkupFragment getMarkup()
 	{
+		if (markup != null)
+		{
+			return markup;
+		}
+
 		if (parent == null)
 		{
 			throw new MarkupException(
@@ -711,6 +719,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 					toString());
 		}
 		return parent.getMarkup(this);
+	}
+
+	/**
+	 * Set the markup for the component. Note that the component's markup variable is transient and
+	 * thus must only be used for one render cycle. E.g. auto-component are using it.
+	 * 
+	 * @param markup
+	 */
+	public final void setMarkup(final IMarkupFragment markup)
+	{
+		this.markup = markup;
 	}
 
 	/**
@@ -2139,7 +2158,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			// Invoke prepareForRender only if this is the root component to be rendered
 			MarkupContainer parent = getParent();
-			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false))
+			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false) || isAuto())
 			{
 				prepareForRender();
 			}

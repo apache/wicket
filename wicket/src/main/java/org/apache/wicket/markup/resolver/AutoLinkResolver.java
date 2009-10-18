@@ -28,6 +28,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -773,6 +774,9 @@ public final class AutoLinkResolver implements IComponentResolver
 			// resolving the link and hence the 2nd render will fail.
 			final Component link = resolveAutomaticLink(container,
 				WicketLinkTagHandler.AUTOLINK_ID, tag);
+
+			IMarkupFragment markup = markupStream.getMarkupFragment();
+			link.setMarkup(markup);
 
 			// Add the link to the container
 			container.autoAdd(link, markupStream);
