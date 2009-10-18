@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.apache.wicket.util.lang.Classes;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -76,7 +77,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		try
 		{
 
-			Class< ? > clazz = Class.forName(data[0]);
+			Class< ? > clazz = Classes.resolveClass(data[0]);
 			if (argIndex < 0)
 			{
 				final Field field = clazz.getDeclaredField(data[1]);
@@ -87,7 +88,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 				Class< ? >[] paramTypes = new Class[data.length - 2];
 				for (int i = 2; i < data.length; i++)
 				{
-					paramTypes[i - 2] = Class.forName(data[i]);
+					paramTypes[i - 2] = Classes.resolveClass(data[i]);
 				}
 				final Method method = clazz.getDeclaredMethod(data[1], paramTypes);
 				type = method.getGenericParameterTypes()[argIndex];
