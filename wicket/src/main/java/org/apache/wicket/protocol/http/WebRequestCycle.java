@@ -163,7 +163,7 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(redirectResponse);
 
 				// render the page into the buffer
-				page.renderPage();
+				page.render();
 
 				// re-assign the original response
 				setResponse(currentResponse);

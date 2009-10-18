@@ -690,98 +690,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 */
-	public final void renderPage()
-	{
-		// first try to check if the page can be rendered:
-		if (!isActionAuthorized(RENDER))
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Page not allowed to render: " + this);
-			}
-			throw new UnauthorizedActionException(this, Component.RENDER);
-		}
-
-		// Make sure it is really empty
-		renderedComponents = null;
-
-		// if the page is stateless, reset the flag so that it is tested again
-		if (Boolean.TRUE.equals(stateless))
-		{
-			stateless = null;
-		}
-
-		try
-		{
-			prepareForRender();
-		}
-		catch (RuntimeException e)
-		{
-			// if an exception is thrown then we have to call after render
-			// else the components could be in a wrong state (rendering)
-			try
-			{
-				afterRender();
-			}
-			catch (RuntimeException e2)
-			{
-				// ignore this one could be a result off.
-			}
-			throw e;
-		}
-
-
-		// Handle request by rendering page
-		try
-		{
-			render(null);
-		}
-		finally
-		{
-			afterRender();
-		}
-
-		// Check rendering if it happened fully
-		checkRendering(this);
-
-		// clean up debug meta data if component check is on
-		if (Application.get().getDebugSettings().getComponentUseCheck())
-		{
-			visitChildren(new IVisitor<Component>()
-			{
-				public Object component(Component component)
-				{
-					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
-					component.setMetaData(Component.ADDED_AT_KEY, null);
-					return CONTINUE_TRAVERSAL;
-				}
-			});
-		}
-
-		if (!isPageStateless())
-		{
-			// trigger creation of the actual session in case it was deferred
-			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
-			// Add/touch the response page in the session (its pagemap).
-			getSession().touch(this);
-		}
-
-		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
-		{
-			Class<?> klass = getClass();
-			while (klass.isAnonymousClass())
-			{
-				klass = klass.getSuperclass();
-			}
-			getResponse().write("<!-- Page Class ");
-			getResponse().write(klass.getName());
-			getResponse().write(" -->\n");
-		}
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Set the id for this Page. This method is called by PageMap when a Page is added because the
@@ -1248,13 +1156,80 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onBeforeRender()
 	{
+		// first try to check if the page can be rendered:
+		if (!isActionAuthorized(RENDER))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Page not allowed to render: " + this);
+			}
+			throw new UnauthorizedActionException(this, Component.RENDER);
+		}
+
+		// Make sure it is really empty
+		renderedComponents = null;
+
+		// if the page is stateless, reset the flag so that it is tested again
+		if (Boolean.TRUE.equals(stateless))
+		{
+			stateless = null;
+		}
+
 		super.onBeforeRender();
+
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended
 		// for links rendered before first stateful component
 		if (getSession().isTemporary() && !peekPageStateless())
 		{
 			getSession().bind();
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onAfterRender()
+	 */
+	@Override
+	protected void onAfterRender()
+	{
+		super.onAfterRender();
+
+		// Check rendering if it happened fully
+		checkRendering(this);
+
+		// clean up debug meta data if component check is on
+		if (Application.get().getDebugSettings().getComponentUseCheck())
+		{
+			visitChildren(new IVisitor<Component>()
+			{
+				public Object component(Component component)
+				{
+					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
+					component.setMetaData(Component.ADDED_AT_KEY, null);
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
+
+		if (!isPageStateless())
+		{
+			// trigger creation of the actual session in case it was deferred
+			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
+
+			// Add/touch the response page in the session (its pagemap).
+			getSession().touch(this);
+		}
+
+		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+		{
+			Class<?> klass = getClass();
+			while (klass.isAnonymousClass())
+			{
+				klass = klass.getSuperclass();
+			}
+			getResponse().write("<!-- Page Class ");
+			getResponse().write(klass.getName());
+			getResponse().write(" -->\n");
 		}
 	}
 

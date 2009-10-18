@@ -72,7 +72,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			else
 			{
 				// Render the component
-				component.renderComponent();
+				component.render();
 			}
 		}
 		finally

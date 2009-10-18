@@ -60,7 +60,7 @@ public class PageRequestTarget implements IPageRequestTarget
 		else
 		{
 			// Let page render itself
-			page.renderPage();
+			page.render();
 		}
 	}
 

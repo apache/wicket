@@ -2129,21 +2129,51 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Performs a render of this component as part of a Page level render process.
-	 * <p>
-	 * For component level re-render (e.g. AJAX) please call {@link #renderComponent()}. Though
-	 * render() does seem to work, it will fail for panel children.
+	 * Render the Component.
 	 */
 	public final void render()
 	{
-		// Allow currently invisible components to be re-rendered as well
-		MarkupStream markupStream = null;
-		if (getParent() != null)
+		RuntimeException exception = null;
+
+		try
 		{
-			markupStream = findMarkupStream();
+			// Invoke prepareForRender only if this is the root component to be rendered
+			MarkupContainer parent = getParent();
+			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false))
+			{
+				prepareForRender();
+			}
+
+			// Do the render
+			render(null);
+		}
+		catch (final RuntimeException ex)
+		{
+			// Remember it as the originating exception
+			exception = ex;
+		}
+		finally
+		{
+			try
+			{
+				// Cleanup
+				afterRender();
+			}
+			catch (RuntimeException ex2)
+			{
+				// Only remember it if not already another exception happened
+				if (exception == null)
+				{
+					exception = ex2;
+				}
+			}
 		}
 
-		render(markupStream);
+		// Re-throw if needed
+		if (exception != null)
+		{
+			throw exception;
+		}
 	}
 
 	/**
@@ -2156,23 +2186,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void render(MarkupStream markupStream)
 	{
+		// Remove/Cleanup when migrating to MarkupFragments. Only needed as long as rendering is
+		// based on MarkupStream
 		if (getApplication().getMarkupFragmentEnabled())
 		{
 			// Step 1: Make sure there is a markup available for the Component
 			IMarkupFragment markup = getMarkup();
 			if (!(this instanceof Page) && (markup == null))
 			{
-				throw new IllegalArgumentException("jdo: Markup not found: " + toString());
+				throw new IllegalArgumentException("MarkupFragment not found: " + toString() +
+					". Please see Application.getMarkupFragmentEnabled() as well.");
 			}
 
 			// Step 2: A markup stream based on the markup should yield the same result.
-			if (markupStream != null)
+			if ((markupStream != null) || !(this instanceof Page))
 			{
 				MarkupStream ms = new MarkupStream(markup);
 
 				// We need to skip the component in the original markup stream to avoid
 				// exceptions later on.
-				markupStream.skipComponent();
+				if (markupStream != null)
+				{
+					markupStream.skipComponent();
+				}
 
 				// We want to use the new markup stream
 				markupStream = ms;
@@ -2289,48 +2325,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Page.renderPage() is used to render a whole page. With AJAX however it must be possible to
-	 * render any one component contained in a page. That is what this method is for.
-	 * <p>
-	 * Note: it is not necessary that the page has previously been rendered. But the component must
-	 * have been added (directly or indirectly) to a container with an associated markup file (Page,
-	 * Panel or Border).
-	 */
-	public final void renderComponent()
-	{
-		// If this Component is a Page
-		if (this instanceof Page)
-		{
-			// Render as Page, with all the special logic that entails
-			((Page)this).renderPage();
-		}
-		else
-		{
-			// Save the parent's markup stream to re-assign it at the end
-			MarkupContainer parent = getParent();
-			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = locateMarkupStream();
-
-			try
-			{
-				// Make sure that while rendering the markup stream is found
-				parent.setMarkupStream(markupStream);
-
-				prepareForRender();
-
-				// Render the component and all its children
-				render(markupStream);
-			}
-			finally
-			{
-				// Make sure the original markup stream is back in place
-				parent.setMarkupStream(originalMarkupStream);
-				afterRender();
-			}
-		}
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * <p>
 	 * Renders the component at the current position in the given markup stream. The method
@@ -2342,6 +2336,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
+		if (markupStream == null)
+		{
+			throw new NullPointerException(
+				"Parameter 'markupStream' must not be null. Component: " + toString());
+		}
+
 		markupIndex = markupStream.getCurrentIndex();
 
 		// Get mutable copy of next tag

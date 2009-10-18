@@ -88,7 +88,7 @@ public class PageReferenceRequestTarget implements IRequestTarget
 		else
 		{
 			// Let page render itself
-			page.renderPage();
+			page.render();
 		}
 	}
 

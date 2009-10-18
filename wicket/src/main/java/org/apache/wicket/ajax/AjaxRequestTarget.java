@@ -812,7 +812,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		try
 		{
-			component.renderComponent();
+			component.render();
 		}
 		catch (RuntimeException e)
 		{

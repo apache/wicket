@@ -239,7 +239,7 @@ public abstract class MarkupContainer extends Component
 	 *            stream to be used to render the component.
 	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component component, final MarkupStream markupStream)
+	public final boolean autoAdd(final Component component, MarkupStream markupStream)
 	{
 		if (component == null)
 		{
@@ -260,12 +260,14 @@ public abstract class MarkupContainer extends Component
 		{
 			if (markupStream == null)
 			{
-				component.render();
+				// Allow currently invisible components to be re-rendered as well
+				if (component.getParent() != null)
+				{
+					markupStream = component.findMarkupStream();
+				}
 			}
-			else
-			{
-				component.render(markupStream);
-			}
+
+			component.render(markupStream);
 		}
 		finally
 		{
@@ -1561,6 +1563,11 @@ public abstract class MarkupContainer extends Component
 	@Override
 	protected final MarkupStream findMarkupStream()
 	{
+		if (getApplication().getMarkupFragmentEnabled())
+		{
+			return new MarkupStream(getMarkup());
+		}
+
 		// Start here
 		MarkupContainer c = this;
 

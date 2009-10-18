@@ -259,7 +259,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			else
 			{
 				// Let the page render itself
-				getPage(requestCycle).renderPage();
+				getPage(requestCycle).render();
 			}
 		}
 	}

@@ -174,7 +174,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		else
 		{
 			// else render the page directly
-			page.renderPage();
+			page.render();
 		}
 	}
 
