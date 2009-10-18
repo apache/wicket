@@ -63,6 +63,8 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean showCompleteListOnFocusGain = false;
 
+	private int throttleDelay = 300;
+
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
@@ -87,6 +89,29 @@ public final class AutoCompleteSettings implements IClusterable
 	{
 		this.preselect = preselect;
 		return this;
+	}
+
+	/**
+	 * set the throttle delay how long the browser will wait before sending a request to the browser
+	 * after the user released a key.
+	 * 
+	 * @param throttleDelay
+	 *            The delay in milliseconds.
+	 */
+	public void setThrottleDelay(int throttleDelay)
+	{
+		this.throttleDelay = throttleDelay;
+	}
+
+	/**
+	 * get the throttle delay how long the browser will wait before sending a request to the browser
+	 * after the user released a key.
+	 * 
+	 * @return the throttle delay in milliseconds (default 300)
+	 */
+	public int getThrottleDelay()
+	{
+		return throttleDelay;
 	}
 
 	/**
