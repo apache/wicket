@@ -160,8 +160,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		boolean beforeAfter = (!isLinkEnabled() && getBeforeDisabledLink() != null);
-		if (beforeAfter)
+		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
 		{
 			getResponse().write(getBeforeDisabledLink());
 		}
@@ -170,7 +169,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 		renderComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
-		if (beforeAfter)
+		if (!isLinkEnabled() && getAfterDisabledLink() != null)
 		{
 			getResponse().write(getAfterDisabledLink());
 		}
