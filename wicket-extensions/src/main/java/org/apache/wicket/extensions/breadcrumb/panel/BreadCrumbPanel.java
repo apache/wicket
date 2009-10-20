@@ -22,18 +22,17 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
- * A panel that participates with a {@link IBreadCrumbModel bread crumb model}. The idea is that
- * you would have a dialog-like component that is much like a wizard, but more decoupled. A typical
+ * A panel that participates with a {@link IBreadCrumbModel bread crumb model}. The idea is that you
+ * would have a dialog-like component that is much like a wizard, but more decoupled. A typical
  * setup is that you have a panel, where the content is dynamic but hierarchical in nature, and that
  * there are links on the panel that <i>take you deeper into the hierarchy<i>
  * 
  * <p>
- * An example of using {@link BreadCrumbPanel bread crumb panels} and
- * {@link BreadCrumbLink bread crumb links}:
+ * An example of using {@link BreadCrumbPanel bread crumb panels} and {@link BreadCrumbLink bread
+ * crumb links}:
  * 
  * <pre>
  * add(new BreadCrumbLink(&quot;myLink&quot;, breadCrumbModel)
@@ -117,9 +116,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 
 	/**
 	 * Activates the provided participant, which typically has the effect of replacing this current
-	 * panel with the one provided - as the participant typically would be a
-	 * {@link BreadCrumbPanel bread crumb panel} - and updating the bread crumb model of this panel,
-	 * pushing the bread crumb for the given participant on top.
+	 * panel with the one provided - as the participant typically would be a {@link BreadCrumbPanel
+	 * bread crumb panel} - and updating the bread crumb model of this panel, pushing the bread
+	 * crumb for the given participant on top.
 	 * 
 	 * @param participant
 	 *            The participant to set as the active one
@@ -135,16 +134,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 		}
 
 		// add back button support
-		addStateChange(new Change()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void undo()
-			{
-				breadCrumbModel.setActive(active);
-			}
-		});
+		addStateChange();
 
 		// set the bread crumb panel as the active one
 		breadCrumbModel.setActive(participant);

@@ -21,8 +21,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * A component that represents a sort header. When the link is clicked it will toggle the state of a
@@ -125,8 +123,7 @@ public class OrderByLink extends Link
 		if (isVersioned())
 		{
 			// version the old state
-			Change change = new SortStateChange();
-			addStateChange(change);
+			addStateChange();
 		}
 
 		ISortState state = stateLocator.getSortState();
@@ -143,31 +140,6 @@ public class OrderByLink extends Link
 		state.setPropertySortOrder(property, newDir);
 
 		return this;
-	}
-
-	private final class SortStateChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final ISortState old = (ISortState)Objects.cloneModel(stateLocator.getSortState());
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			stateLocator.setSortState(old);
-		}
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "[StateOrderChange old=" + old.toString() + "]";
-		}
 	}
 
 

@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * Base page for component demo pages.
@@ -97,17 +96,7 @@ public class BasePage extends ExamplePage
 	 */
 	public void setSelected(Contact selected)
 	{
-		addStateChange(new Change()
-		{
-			private final Contact old = BasePage.this.selected;
-
-			@Override
-			public void undo()
-			{
-				BasePage.this.selected = old;
-
-			}
-		});
+		addStateChange();
 		this.selected = selected;
 	}
 }

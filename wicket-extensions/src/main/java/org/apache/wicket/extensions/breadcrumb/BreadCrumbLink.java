@@ -18,15 +18,13 @@ package org.apache.wicket.extensions.breadcrumb;
 
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
- * A link that when clicked will set the the active
- * {@link IBreadCrumbParticipant bread crumb participant} to the one that is returned by
- * {@link #getParticipant(String)}. It is used internally by
- * {@link BreadCrumbBar the the bread crumb bar component}, and you can use it for rendering links
- * e.g. with {@link BreadCrumbPanel bread crumb panel components}.
+ * A link that when clicked will set the the active {@link IBreadCrumbParticipant bread crumb
+ * participant} to the one that is returned by {@link #getParticipant(String)}. It is used
+ * internally by {@link BreadCrumbBar the the bread crumb bar component}, and you can use it for
+ * rendering links e.g. with {@link BreadCrumbPanel bread crumb panel components}.
  * 
  * <p>
  * When clicked, it registers a change for backbutton support.
@@ -66,23 +64,14 @@ public abstract class BreadCrumbLink extends Link<Void>
 		if (active == null)
 		{
 			throw new IllegalStateException("The model has no active bread crumb. Before using " +
-					this + ", you have to have at least one bread crumb in the model");
+				this + ", you have to have at least one bread crumb in the model");
 		}
 
 		// get the participant to set as active
 		final IBreadCrumbParticipant participant = getParticipant(active.getComponent().getId());
 
 		// add back button support
-		addStateChange(new Change()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void undo()
-			{
-				breadCrumbModel.setActive(active);
-			}
-		});
+		addStateChange();
 
 		// set the next participant as the active one
 		breadCrumbModel.setActive(participant);

@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.version.undo.Change;
 
 /**
  * A panel where you can lazy load another panel. This can be used if you have a panel/component
@@ -117,10 +116,6 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 */
 	private void setState(byte state)
 	{
-		if (this.state != state)
-		{
-			addStateChange(new StateChange(this.state));
-		}
 		this.state = state;
 	}
 
@@ -144,32 +139,4 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
 	}
 
-	/**
-	 * 
-	 */
-	private final class StateChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final byte state;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param state
-		 */
-		public StateChange(byte state)
-		{
-			this.state = state;
-		}
-
-		/**
-		 * @see org.apache.wicket.version.undo.Change#undo()
-		 */
-		@Override
-		public void undo()
-		{
-			AjaxLazyLoadPanel.this.state = state;
-		}
-	}
 }

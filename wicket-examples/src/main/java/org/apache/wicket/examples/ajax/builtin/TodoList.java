@@ -420,7 +420,7 @@ public class TodoList extends BasePage
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				setResponsePage(getPage().rollbackPage(1));
+				setResponsePage(getPage());
 			}
 		});
 		// add the add container for the todo items.

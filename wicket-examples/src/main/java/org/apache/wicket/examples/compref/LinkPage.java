@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -79,15 +78,7 @@ public class LinkPage extends WicketExamplePage
 			{
 				final int count = count1.clicks;
 				count2.clicks++;
-				addStateChange(new Change()
-				{
-					@Override
-					public void undo()
-					{
-						// revert
-						count2.clicks = count;
-					}
-				});
+				addStateChange();
 			}
 		};
 		add(linkWithStateChange);

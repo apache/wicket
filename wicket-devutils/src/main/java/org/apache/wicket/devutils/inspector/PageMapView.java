@@ -104,7 +104,7 @@ public final class PageMapView extends DevUtilsPanel
 					Page page = (Page)entry;
 					page.detachModels();
 					size = page.getSizeInBytes();
-					versions = page.getVersions();
+					versions = 0; // WICKET-NG
 				}
 				else
 				{

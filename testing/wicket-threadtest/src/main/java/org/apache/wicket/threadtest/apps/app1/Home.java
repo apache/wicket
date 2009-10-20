@@ -59,7 +59,6 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
 import org.apache.wicket.validation.validator.MinimumValidator;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.apache.wicket.version.undo.Change;
 
 /**
  */
@@ -362,15 +361,7 @@ public class Home extends WebPage
 			public void onClick()
 			{
 				i++;
-				addStateChange(new Change()
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void undo()
-					{
-					}
-				});
+				addStateChange();
 			}
 		});
 
