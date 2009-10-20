@@ -140,7 +140,6 @@ public class WicketMessageResolver implements IComponentResolver
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
 				MessageContainer label = new MessageContainer(id, messageKey);
-				label.setMarkup(markupStream.getMarkupFragment());
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());

@@ -166,7 +166,6 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 				}
 			};
 
-			wc.setMarkup(markupStream.getMarkupFragment());
 			container.autoAdd(wc, markupStream);
 			return true;
 		}

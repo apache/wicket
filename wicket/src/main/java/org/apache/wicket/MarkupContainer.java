@@ -246,9 +246,20 @@ public abstract class MarkupContainer extends Component
 			throw new IllegalArgumentException("argument component may not be null");
 		}
 
-		/* Replace strategy */
+		// Replace strategy
 		component.setAuto(true);
 
+		if (markupStream != null)
+		{
+			component.setMarkup(markupStream.getMarkupFragment());
+		}
+
+		// Add the child to the parent.
+
+		// Arguably child.setParent() can be used as well. It connects the child to the parent and
+		// that's all what most auto-components need. Unfortunately child.onDetach() will not / can
+		// not be invoked, since the parent doesn't known its one of his children. Hence we need to
+		// properly add it.
 		int index = children_indexOf(component);
 		if (index >= 0)
 		{
@@ -256,6 +267,7 @@ public abstract class MarkupContainer extends Component
 		}
 		add(component);
 
+		// Render the child
 		component.render();
 
 		if (markupStream != null)

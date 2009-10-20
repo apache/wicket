@@ -50,7 +50,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	{
 		if ("test".equals(tag.getId()))
 		{
-			autoAdd(new Label("test", "TEST")
+			Label label = new Label("test", "TEST")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -60,7 +60,9 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 					onDetachWasCalledOnAutoAddedComponent = true;
 					super.onDetach();
 				}
-			}, markupStream);
+			};
+
+			autoAdd(label, markupStream);
 			return true;
 		}
 		return false;

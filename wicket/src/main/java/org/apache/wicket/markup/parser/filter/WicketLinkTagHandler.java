@@ -227,7 +227,6 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 					}
 				};
 
-				component.setMarkup(markupStream.getMarkupFragment());
 				container.autoAdd(component, markupStream);
 
 				// Yes, we handled the tag

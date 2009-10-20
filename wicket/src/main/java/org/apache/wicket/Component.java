@@ -198,7 +198,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Component implements IClusterable, IConverterLocator
 {
-
 	/**
 	 * Generic component visitor interface for component traversals.
 	 * 
@@ -727,7 +726,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @param markup
 	 */
-	public final void setMarkup(final IMarkupFragment markup)
+	final void setMarkup(final IMarkupFragment markup)
 	{
 		this.markup = markup;
 	}
@@ -1563,7 +1562,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (page == null)
 		{
 			// Give up with a nice exception
-			throw new IllegalStateException("No Page found for component " + this);
+			throw new WicketRuntimeException("No Page found for component " + this);
 		}
 
 		return page;
@@ -2449,8 +2448,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void rendered()
 	{
-		// Tell the page that the component rendered
-		getPage().componentRendered(this);
+		Page page = findPage();
+		if (page != null)
+		{
+			// Tell the page that the component rendered
+			page.componentRendered(this);
+		}
+		else
+		{
+			log.error("Component is not connected to a Page. Cannot register the component as being rendered. Component: " +
+				toString());
+		}
 	}
 
 	/**
@@ -4052,7 +4060,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Sets the parent of a component.
+	 * THIS IS A WICKET INTERNAL API. DO NOT USE IT.
+	 * 
+	 * Sets the parent of a component. Typically what you really want is parent.add(child).
+	 * <p/>
+	 * Note that calling setParent() and not parent.add() will connect the child to the parent, but
+	 * the parent will not know the child. This might not be a problem in some cases, but e.g.
+	 * child.onDetach() will not be invoked (since the parent doesn't know it is his child).
 	 * 
 	 * @param parent
 	 *            The parent container

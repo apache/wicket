@@ -166,14 +166,15 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 			{
 				id = wicketId.toString();
 			}
+
 			if (id == null)
 			{
 				id = "enclosure-" + container.getPage().getAutoIndex();
 				tag.setId(id);
 				tag.setModified(true);
 			}
-			final Enclosure enclosure = new Enclosure(id,
-				tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+
+			Enclosure enclosure = new Enclosure(id, tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
 			container.autoAdd(enclosure, markupStream);
 
 			// Yes, we handled the tag

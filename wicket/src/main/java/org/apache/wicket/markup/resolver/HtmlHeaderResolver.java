@@ -77,7 +77,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// input the <head> from 'contributors'.
 			WebMarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
 				container.getPage().getAutoIndex());
-			header.setMarkup(markupStream.getMarkupFragment());
 			container.autoAdd(header, markupStream);
 
 			// Yes, we handled the tag
@@ -111,9 +110,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 					}
 				};
 
-				header2.setMarkup(markupStream.getMarkupFragment());
 				header2.setRenderBodyOnly(true);
-
 				header.add(header2);
 
 				container.autoAdd(header, markupStream);
@@ -135,7 +132,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 						return true;
 					}
 				};
-				header.setMarkup(markupStream.getMarkupFragment());
+
 				header.setRenderBodyOnly(true);
 
 				try

@@ -32,6 +32,7 @@ import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -229,7 +230,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			 */
 			public Object component(Component component)
 			{
-				if (component.isVisible())
+				if (component.isVisibleInHierarchy())
 				{
 					component.renderHead(container);
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -335,6 +336,12 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	@Override
 	public IMarkupFragment getMarkup()
 	{
+		if (getParent() == null)
+		{
+			throw new WicketRuntimeException(
+				"Bug: The Wicket internal instance of HtmlHeaderContainer is not connected to a parent");
+		}
+
 		// Get the page markup
 		IMarkupFragment markup = getPage().getMarkup();
 		if (markup == null)
