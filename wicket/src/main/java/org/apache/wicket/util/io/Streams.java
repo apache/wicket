@@ -17,6 +17,7 @@
 package org.apache.wicket.util.io;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,6 +45,7 @@ import org.xml.sax.SAXParseException;
  * Utilities methods for working with input and output streams.
  * 
  * @author Jonathan Locke
+ * @author Igor Vaynberg
  */
 public final class Streams
 {
@@ -52,6 +54,22 @@ public final class Streams
 		+ "<!ATTLIST properties" + " version CDATA #FIXED \"1.0\">"
 		+ "<!ELEMENT comment (#PCDATA) >" + "<!ELEMENT entry (#PCDATA) >" + "<!ATTLIST entry "
 		+ " key CDATA #REQUIRED>";
+
+	/**
+	 * Closes a closeable. Guards against null closables.
+	 * 
+	 * @param closeable
+	 *            closeable to close
+	 * @throws IOException
+	 *             when close fails
+	 */
+	public static void close(Closeable closeable) throws IOException
+	{
+		if (closeable != null)
+		{
+			closeable.close();
+		}
+	}
 
 
 	/**

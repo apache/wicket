@@ -19,14 +19,12 @@ package org.apache.wicket.util.resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.JarURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
+ * @author Igor Vaynberg
  */
 public class UrlResourceStream extends AbstractResourceStream
 	implements
@@ -74,61 +73,36 @@ public class UrlResourceStream extends AbstractResourceStream
 	 */
 	public UrlResourceStream(final URL url)
 	{
-		// Save URL
+		// save the url
 		this.url = url;
+
+		// retrieve the content type and length
 		URLConnection connection = null;
 		try
 		{
 			connection = url.openConnection();
 			contentLength = connection.getContentLength();
 			contentType = connection.getContentType();
-			lastModified = connection.getLastModified();
-			try
-			{
-				file = new File(new URI(url.toExternalForm()));
-			}
-			catch (Exception ex)
-			{
-				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
-					"), falling back to the inputstream for polling");
-			}
-			if (file != null && !file.exists())
-			{
-				file = null;
-			}
 		}
 		catch (IOException ex)
 		{
-			// It should be impossible to get here or the original URL
-			// couldn't have been constructed. But we re-throw with details
-			// anyway.
-			final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
-				"Invalid URL parameter " + url);
-			illegalArgumentException.initCause(ex);
-			throw illegalArgumentException;
+			throw new IllegalArgumentException("Invalid URL parameter " + url, ex);
 		}
 		finally
 		{
-			// if applicable, disconnect
-			if (connection != null)
-			{
-				if (connection instanceof HttpURLConnection)
-				{
-					((HttpURLConnection)connection).disconnect();
-				}
-				else
-				{
-					try
-					{
-						connection.getInputStream().close();
-					}
-					catch (Exception ex)
-					{
-						// ignore
-					}
-				}
-			}
+			Connections.closeQuietly(connection);
 		}
+
+		try
+		{
+			file = Connections.findFile(url);
+		}
+		catch (Exception e)
+		{
+			log.debug("cannot convert url: " + url + " to file (" + e.getMessage() +
+				"), falling back to the inputstream for polling");
+		}
+
 	}
 
 	/**
@@ -221,13 +195,15 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		if (file != null)
 		{
-			// In case the file has been removed by now
+			// in case the file has been removed by now
 			if (file.exists() == false)
 			{
 				return null;
 			}
 
 			long lastModified = file.lastModified();
+
+			// if last modified changed update content length and last modified date
 			if (lastModified != this.lastModified)
 			{
 				this.lastModified = lastModified;
@@ -236,38 +212,18 @@ public class UrlResourceStream extends AbstractResourceStream
 		}
 		else
 		{
-			URLConnection urlConnection = null;
-			boolean close = false;
 			try
 			{
-				urlConnection = url.openConnection();
-				long lastModified = this.lastModified;
-				if (urlConnection instanceof JarURLConnection)
-				{
-					JarURLConnection jarUrlConnection = (JarURLConnection)urlConnection;
-					URL jarFileUrl = jarUrlConnection.getJarFileURL();
-					URLConnection jarFileConnection = jarFileUrl.openConnection();
-					try
-					{
-						lastModified = jarFileConnection.getLastModified();
-					}
-					finally
-					{
-						jarFileConnection.getInputStream().close();
-					}
-				}
-				else
-				{
-					close = true;
-					lastModified = urlConnection.getLastModified();
-				}
+				long lastModified = Connections.getLastModified(url);
 
-				// update the last modified time.
+				// if last modified changed update content length and last modified date
 				if (lastModified != this.lastModified)
 				{
 					this.lastModified = lastModified;
-					close = true;
-					contentLength = urlConnection.getContentLength();
+
+					URLConnection connection = url.openConnection();
+					contentLength = connection.getContentLength();
+					Connections.close(connection);
 				}
 			}
 			catch (IOException e)
@@ -284,31 +240,10 @@ public class UrlResourceStream extends AbstractResourceStream
 					log.warn("getLastModified for " + url + " failed: " + e.getMessage());
 				}
 
-				// Allow modification watcher to detect the problem
+				// allow modification watcher to detect the problem
 				return null;
 			}
-			finally
-			{
-				// if applicable, disconnect
-				if (urlConnection != null)
-				{
-					if (urlConnection instanceof HttpURLConnection)
-					{
-						((HttpURLConnection)urlConnection).disconnect();
-					}
-					else if (close)
-					{
-						try
-						{
-							urlConnection.getInputStream().close();
-						}
-						catch (Exception ex)
-						{
-							// ignore
-						}
-					}
-				}
-			}
+
 		}
 		return Time.milliseconds(lastModified);
 	}
