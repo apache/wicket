@@ -151,8 +151,8 @@ public final class XmlPullParser implements IXmlPullParser
 			pos = input.find("</", pos + 1);
 			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= input.size()))
 			{
-				throw new ParseException(skipUntilText + " tag not closed (line " +
-					input.getLineNumber() + ", column " + input.getColumnNumber() + ")", startIndex);
+				throw new ParseException(
+					skipUntilText + " tag not closed" + getLineAndColumnText(), startIndex);
 			}
 
 			lastPos = pos + 2;
@@ -167,12 +167,20 @@ public final class XmlPullParser implements IXmlPullParser
 		lastPos = input.find('>', lastPos + tagNameLen);
 		if (lastPos == -1)
 		{
-			throw new ParseException("Script tag not closed (line " + input.getLineNumber() +
-				", column " + input.getColumnNumber() + ")", startIndex);
+			throw new ParseException("Script tag not closed" + getLineAndColumnText(), startIndex);
 		}
 
 		// Reset the state variable
 		skipUntilText = null;
+	}
+
+	/**
+	 * 
+	 * @return line and column number
+	 */
+	private String getLineAndColumnText()
+	{
+		return " (line " + input.getLineNumber() + ", column " + input.getColumnNumber() + ")";
 	}
 
 	/**
@@ -221,7 +229,7 @@ public final class XmlPullParser implements IXmlPullParser
 		int closeBracketIndex = input.find('>', openBracketIndex + 1);
 		if (closeBracketIndex == -1)
 		{
-			throw new ParseException("No matching close bracket at position " + openBracketIndex,
+			throw new ParseException("No matching close bracket at" + getLineAndColumnText(),
 				input.getPosition());
 		}
 
@@ -232,7 +240,7 @@ public final class XmlPullParser implements IXmlPullParser
 		String tagText = lastText.subSequence(1, lastText.length() - 1).toString();
 		if (tagText.length() == 0)
 		{
-			throw new ParseException("Found empty tag: '<>' at position " + openBracketIndex,
+			throw new ParseException("Found empty tag: '<>' at" + getLineAndColumnText(),
 				input.getPosition());
 		}
 
@@ -303,8 +311,7 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 		else
 		{
-			throw new ParseException("Malformed tag (line " + input.getLineNumber() + ", column " +
-				input.getColumnNumber() + ")", openBracketIndex);
+			throw new ParseException("Malformed tag" + getLineAndColumnText(), openBracketIndex);
 		}
 	}
 
@@ -329,8 +336,8 @@ public final class XmlPullParser implements IXmlPullParser
 			int pos = input.find("-->", openBracketIndex + 1);
 			if (pos == -1)
 			{
-				throw new ParseException("Unclosed comment beginning at line:" +
-					input.getLineNumber() + " column:" + input.getColumnNumber(), openBracketIndex);
+				throw new ParseException("Unclosed comment beginning at" + getLineAndColumnText(),
+					openBracketIndex);
 			}
 
 			pos += 3;
@@ -378,9 +385,8 @@ public final class XmlPullParser implements IXmlPullParser
 
 					if (closeBracketIndex == -1)
 					{
-						throw new ParseException("No matching close bracket at line:" +
-							input.getLineNumber() + " column:" + input.getColumnNumber(),
-							input.getPosition());
+						throw new ParseException("No matching close bracket at" +
+							getLineAndColumnText(), input.getPosition());
 					}
 
 					// Get the tagtext between open and close brackets
@@ -654,8 +660,8 @@ public final class XmlPullParser implements IXmlPullParser
 				// Put the attribute in the attributes hash
 				if (null != ((TagAttributes)tag.getAttributes()).putInternal(key, value))
 				{
-					throw new ParseException("Same attribute found twice: " + key,
-						input.getPosition());
+					throw new ParseException("Same attribute found twice: " + key +
+						getLineAndColumnText(), input.getPosition());
 				}
 
 				// The input has to match exactly (no left over junk after

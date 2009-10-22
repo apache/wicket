@@ -20,6 +20,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 
 
@@ -60,8 +61,7 @@ public final class WicketRemoveTagHandler extends BaseMarkupFilter
 		// remove tag must not be open-close tags
 		if (tag.isOpenClose())
 		{
-			throw new ParseException("Wicket remove tag must not be an open-close tag: " +
-				tag.toUserDebugString(), tag.getPos());
+			throw new WicketParseException("Wicket remove tag must not be an open-close tag:", tag);
 		}
 
 		// Find the corresponding close tag and remove all tags in between
@@ -85,12 +85,11 @@ public final class WicketRemoveTagHandler extends BaseMarkupFilter
 				return tag;
 			}
 
-			throw new ParseException(
-				"Markup remove regions must not contain Wicket component tags. tag: " +
-					closeTag.toUserDebugString(), closeTag.getPos());
+			throw new WicketParseException(
+				"Markup remove regions must not contain Wicket component tags:", closeTag);
 		}
 
-		throw new ParseException("Did not find close tag for markup remove region. Open tag: " +
-			tag.toUserDebugString(), tag.getPos());
+		throw new WicketParseException(
+			"Did not find close tag for markup remove region. Open tag:", tag);
 	}
 }

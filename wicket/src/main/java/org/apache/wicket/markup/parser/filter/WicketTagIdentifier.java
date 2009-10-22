@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -98,9 +99,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			if (!isWellKnown(xmlTag))
 			{
 				// give up
-				throw new ParseException("Unknown tag name with Wicket namespace: '" +
+				throw new WicketParseException("Unknown tag name with Wicket namespace: '" +
 					xmlTag.getName() +
-					"'. Might be you haven't installed the appropriate resolver?", tag.getPos());
+					"'. Might be you haven't installed the appropriate resolver?", tag);
 			}
 		}
 		else
@@ -115,9 +116,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		{
 			if (value.trim().length() == 0)
 			{
-				throw new ParseException(
+				throw new WicketParseException(
 					"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
-					tag.getPos());
+					tag);
 			}
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(value);

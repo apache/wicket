@@ -616,7 +616,7 @@ public class XmlTag extends MarkupElement
 	@Override
 	public String toUserDebugString()
 	{
-		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
+		return " '" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
 	}
 
 	/**

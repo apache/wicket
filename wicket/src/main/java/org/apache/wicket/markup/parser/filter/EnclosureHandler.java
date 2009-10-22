@@ -23,6 +23,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.resolver.IComponentResolver;
@@ -96,8 +97,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 			{
 				if (stack == null)
 				{
-					throw new ParseException("Missing open tag for Enclosure: " + tag.toString(),
-						tag.getPos());
+					throw new WicketParseException("Missing open tag for Enclosure:", tag);
 				}
 
 				// Remove the open tag from the stack
@@ -119,8 +119,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 			}
 			else
 			{
-				throw new ParseException("Open-close tag not allowed for Enclosure: " +
-					tag.toString(), tag.getPos());
+				throw new WicketParseException("Open-close tag not allowed for Enclosure:", tag);
 			}
 		}
 		// Are we inside a wicket:enclosure tag?
@@ -137,9 +136,8 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 				// isVisible() to => Exception
 				if (childId != null)
 				{
-					throw new ParseException(
-						"Use <wicket:enclosure child='xxx'> to name the child component",
-						tag.getPos());
+					throw new WicketParseException(
+						"Use <wicket:enclosure child='xxx'> to name the child component:", tag);
 				}
 				// Remember the child id. The open tag will be updated
 				// once the close tag is found. See above.
