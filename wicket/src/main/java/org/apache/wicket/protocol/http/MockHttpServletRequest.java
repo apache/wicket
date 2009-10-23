@@ -538,22 +538,20 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Locale getLocale()
 	{
-		final String header = getHeader("Accept-Language");
-		if (header == null)
-		{
-			return Locale.getDefault();
-		}
+		return getLocales().nextElement();
+	}
 
-		final String[] firstLocale = header.split(",");
-		if (firstLocale.length < 1)
-		{
-			return Locale.getDefault();
-		}
-
-		final String[] bits = firstLocale[0].split("-");
+	/**
+	 * 
+	 * @param value
+	 * @return locale
+	 */
+	private Locale getLocale(final String value)
+	{
+		final String[] bits = value.split("-");
 		if (bits.length < 1)
 		{
-			return Locale.getDefault();
+			return null;
 		}
 
 		final String language = bits[0].toLowerCase();
@@ -575,8 +573,26 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Enumeration<Locale> getLocales()
 	{
-		List<Locale> list = new ArrayList<Locale>(1);
-		list.add(getLocale());
+		List<Locale> list = new ArrayList<Locale>();
+		final String header = getHeader("Accept-Language");
+		if (header != null)
+		{
+			final String[] locales = header.split(",");
+			for (String value : locales)
+			{
+				Locale locale = getLocale(value);
+				if (locale != null)
+				{
+					list.add(locale);
+				}
+			}
+		}
+
+		if (list.size() == 0)
+		{
+			list.add(Locale.getDefault());
+		}
+
 		return Collections.enumeration(list);
 	}
 
