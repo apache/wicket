@@ -49,5 +49,4 @@ class AutoMarkupLabel extends WebComponent
 	{
 		replaceComponentTagBody(markupStream, openTag, markup);
 	}
-
 }

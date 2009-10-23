@@ -34,7 +34,6 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -189,29 +188,24 @@ public abstract class AbstractTree extends Panel
 		}
 
 		/**
-		 * @see org.apache.wicket.MarkupContainer#onRender(org.apache.wicket.markup.MarkupStream)
+		 * @see org.apache.wicket.MarkupContainer#onRender()
 		 */
 		@Override
-		protected void onRender(final MarkupStream markupStream)
+		protected void onRender()
 		{
 			// is this root and tree is in rootless mode?
 			if (this == rootItem && isRootLess() == true)
 			{
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
-				String tagName = ((ComponentTag)markupStream.get()).getName();
-				getResponse().write(
-					"<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() + "\"></" +
-						tagName + ">");
-				markupStream.skipComponent();
+				String tagName = ((ComponentTag)getMarkup().get(0)).getName();
+				getResponse().write("<", tagName, " style=\"display:none\" id=\"", getMarkupId(),
+					"\"></", tagName, ">");
 			}
 			else
 			{
-				// remember current index
-				final int index = markupStream.getCurrentIndex();
-
 				// render the item
-				super.onRender(markupStream);
+				super.onRender();
 
 				// should we also render children (ajax response)
 				if (isRenderChildren())
@@ -221,10 +215,8 @@ public abstract class AbstractTree extends Panel
 					{
 						public void visitItem(TreeItem item)
 						{
-							// rewind markupStream
-							markupStream.setCurrentIndex(index);
 							// render child
-							item.onRender(markupStream);
+							item.onRender();
 
 							// go through the behaviors and invoke IBehavior.afterRender
 							List<IBehavior> behaviors = item.getBehaviors();
@@ -234,11 +226,14 @@ public abstract class AbstractTree extends Panel
 							}
 						}
 					});
-					//
 				}
 			}
 		}
 
+		/**
+		 * 
+		 * @return model object
+		 */
 		public Object getModelObject()
 		{
 			return getDefaultModelObject();
@@ -380,24 +375,11 @@ public abstract class AbstractTree extends Panel
 		}
 
 		/**
-		 * renders the tree items, making sure that items are rendered in the order they should be
-		 * 
-		 * @param markupStream
+		 * @see org.apache.wicket.MarkupContainer#onRender()
 		 */
 		@Override
-		protected void onRender(final MarkupStream markupStream)
+		protected void onRender()
 		{
-			// Save position in markup stream
-			final int markupStart = markupStream.getCurrentIndex();
-
-			// have we rendered at least one item?
-			final class Rendered
-			{
-				boolean rendered = false;
-			}
-			;
-			final Rendered rendered = new Rendered();
-
 			// is there a root item? (non-empty tree)
 			if (rootItem != null)
 			{
@@ -405,24 +387,13 @@ public abstract class AbstractTree extends Panel
 				{
 					public void visitItem(TreeItem item)
 					{
-						// rewind markup stream
-						markupStream.setCurrentIndex(markupStart);
-
 						// render component
-						item.render(markupStream);
-
-						rendered.rendered = true;
+						item.render();
 					}
 				};
 
 				// visit item and it's children
 				visitItemAndChildren(rootItem, callback);
-			}
-
-			if (rendered.rendered == false)
-			{
-				// tree is empty, just move the markupStream
-				markupStream.skipComponent();
 			}
 		}
 	}

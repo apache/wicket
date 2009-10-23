@@ -239,6 +239,26 @@ public abstract class Response
 	public abstract void write(final CharSequence string);
 
 	/**
+	 * Writes the given strings to the Response subclass output destination.
+	 * 
+	 * @param string
+	 *            The string to write
+	 * @param strings
+	 *            All remaining strings
+	 */
+	public void write(final CharSequence string, final CharSequence... strings)
+	{
+		write(string);
+		if (strings != null)
+		{
+			for (CharSequence value : strings)
+			{
+				write(value);
+			}
+		}
+	}
+
+	/**
 	 * Either throws the exception wrapped as {@link WicketRuntimeException} or silently ignores it.
 	 * This method should ignore IO related exceptions like connection reset by peer or broken pipe.
 	 * 

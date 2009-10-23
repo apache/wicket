@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -83,10 +82,8 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 *            The markup stream
 	 */
 	@Override
-	protected final void onRender(final MarkupStream markupStream)
+	protected final void onRender()
 	{
-		final int markupStart = markupStream.getCurrentIndex();
-
 		Iterator<? extends Component> it = renderIterator();
 		if (it.hasNext())
 		{
@@ -97,14 +94,9 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 				{
 					throw new IllegalStateException("the render iterator returned null for a child");
 				}
-				markupStream.setCurrentIndex(markupStart);
 				renderChild(child);
 			}
 			while (it.hasNext());
-		}
-		else
-		{
-			markupStream.skipComponent();
 		}
 	}
 
@@ -117,7 +109,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 */
 	protected void renderChild(final Component child)
 	{
-		child.render(getMarkupStream());
+		child.render();
 	}
 
 	/**

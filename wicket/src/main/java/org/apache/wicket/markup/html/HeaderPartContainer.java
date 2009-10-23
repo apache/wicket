@@ -70,12 +70,11 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		// The tag must be resolved against the panel and not against the
-		// page
+		// The tag must be resolved against the panel and not against the page
 		Component component = this.container.get(tag.getId());
 		if (component != null)
 		{
-			component.render(markupStream);
+			component.render();
 			return true;
 		}
 

@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -53,12 +52,11 @@ public class WebComponent extends Component
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.Component#onRender(org.apache.wicket.markup.MarkupStream)
+	 * @see org.apache.wicket.Component#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
-		renderComponent(markupStream);
+		renderComponent();
 	}
 }

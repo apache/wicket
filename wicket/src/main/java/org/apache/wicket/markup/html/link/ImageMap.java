@@ -17,13 +17,12 @@
 package org.apache.wicket.markup.html.link;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
@@ -346,15 +345,13 @@ public final class ImageMap extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders this component.
-	 * 
-	 * @see org.apache.wicket.Component#onRender(MarkupStream)
+	 * @see org.apache.wicket.MarkupContainer#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
 		// Get mutable copy of next tag
-		final ComponentTag tag = markupStream.getTag().mutable();
+		final ComponentTag tag = ((ComponentTag)getMarkup().get(0)).mutable();
 
 		// Must be an img tag
 		checkComponentTag(tag, "img");
@@ -364,16 +361,14 @@ public final class ImageMap extends WebMarkupContainer
 
 		// Write out the tag
 		renderComponentTag(tag);
-		markupStream.next();
 
 		// Write out the image map
-		final StringBuffer imageMap = new StringBuffer();
+		final AppendingStringBuffer imageMap = new AppendingStringBuffer(150);
 
 		imageMap.append("\n<map name=\"").append(getPath()).append("\"> ");
 
-		for (Iterator<ShapeLink> iterator = shapeLinks.iterator(); iterator.hasNext();)
+		for (ShapeLink shapeLink : shapeLinks)
 		{
-			final ShapeLink shapeLink = iterator.next();
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
 

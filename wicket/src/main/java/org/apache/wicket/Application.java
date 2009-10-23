@@ -1180,15 +1180,4 @@ public abstract class Application
 			}
 		}
 	}
-
-	/**
-	 * TODO To be removed before we release 1.5. By default IMarkupFragment is enabled. In case it
-	 * cases to much problems, you may disable by subclassing this method and returning false.
-	 * 
-	 * @return true, if IMarkupFragment resp. getMarkup() shall be enabled.
-	 */
-	public boolean getMarkupFragmentEnabled()
-	{
-		return true;
-	}
 }

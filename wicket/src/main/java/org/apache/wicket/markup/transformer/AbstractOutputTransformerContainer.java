@@ -125,10 +125,10 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onRender(MarkupStream)
+	 * @see org.apache.wicket.Component#onRender()
 	 */
 	@Override
-	protected final void onRender(final MarkupStream markupStream)
+	protected final void onRender()
 	{
 		if (transformBodyOnly == false)
 		{
@@ -137,13 +137,13 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 				public void run()
 				{
 					// Invoke default execution
-					AbstractOutputTransformerContainer.super.onRender(markupStream);
+					AbstractOutputTransformerContainer.super.onRender();
 				}
 			});
 		}
 		else
 		{
-			super.onRender(markupStream);
+			super.onRender();
 		}
 	}
 

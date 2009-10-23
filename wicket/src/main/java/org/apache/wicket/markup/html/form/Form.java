@@ -1777,10 +1777,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onRender(MarkupStream)
+	 * @see org.apache.wicket.Component#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
 		// Force multi-part on if any child form component is multi-part
 		visitFormComponents(new FormComponent.AbstractVisitor()
@@ -1795,7 +1795,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			}
 		});
 
-		super.onRender(markupStream);
+		super.onRender();
 	}
 
 	/**

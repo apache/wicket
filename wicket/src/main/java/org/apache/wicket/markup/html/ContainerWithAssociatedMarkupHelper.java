@@ -148,14 +148,12 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
 			{
 				// found <wicket:head>
-				// create a unique id for the HtmlHeaderContainer to be
-				// created
+				// create a unique id for the HtmlHeaderContainer to be created
 				final String headerId = "_" + Classes.simpleName(markupClass) +
 					(container.getVariation() == null ? "" : container.getVariation()) + "Header" +
 					index;
 
-				// Create the header container and associate the markup with
-				// it
+				// Create the header container and associate the markup with it
 				String scope = wTag.getAttributes().getString(
 					markupStream.getWicketNamespace() + ":scope");
 				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(

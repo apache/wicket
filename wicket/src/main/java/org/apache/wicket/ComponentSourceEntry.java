@@ -85,7 +85,6 @@ abstract class ComponentSourceEntry implements IClusterable
 
 			buffer.append(' ');
 		}
-		buffer.append(component.markupIndex);
 
 		if (component instanceof MarkupContainer &&
 			((MarkupContainer)component).iterator().hasNext())
@@ -256,7 +255,6 @@ abstract class ComponentSourceEntry implements IClusterable
 			{
 				component.setMarkupIdImpl(markupId);
 			}
-			component.markupIndex = (short)markupIndex;
 		}
 		return component instanceof MarkupContainer ? (MarkupContainer)component : null;
 	}

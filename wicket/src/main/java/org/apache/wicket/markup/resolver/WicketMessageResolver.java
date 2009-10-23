@@ -193,6 +193,30 @@ public class WicketMessageResolver implements IComponentResolver
 
 		/**
 		 * 
+		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+		 */
+		@Override
+		public boolean isTransparentResolver()
+		{
+			return true;
+		}
+
+		/**
+		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+		 */
+		@Override
+		protected void onComponentTag(final ComponentTag tag)
+		{
+			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
+			if (tag.isOpenClose())
+			{
+				tag.setType(XmlTag.OPEN);
+			}
+			super.onComponentTag(tag);
+		}
+
+		/**
+		 * 
 		 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 		 *      org.apache.wicket.markup.ComponentTag)
 		 */
@@ -211,7 +235,6 @@ public class WicketMessageResolver implements IComponentResolver
 			}
 			else
 			{
-				// TODO Doesn't localizer already throw an exception?!?!
 				if (isThrowExceptionIfPropertyNotFound() == true)
 				{
 					throw new WicketRuntimeException("Property '" + key +
@@ -219,7 +242,7 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 
 				log.warn("No value found for wicket:message tag with key: {}", key);
-				renderComponentTagBody(markupStream, openTag);
+				super.onComponentTagBody(markupStream, openTag);
 			}
 		}
 
@@ -363,7 +386,8 @@ public class WicketMessageResolver implements IComponentResolver
 							Component component = getParent().get(id);
 							if (component != null)
 							{
-								component.render(markupStream);
+								component.render();
+								markupStream.skipComponent();
 							}
 							childTags.put(id, response.getBuffer());
 						}
@@ -381,30 +405,6 @@ public class WicketMessageResolver implements IComponentResolver
 			}
 
 			return childTags;
-		}
-
-		/**
-		 * 
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public boolean isTransparentResolver()
-		{
-			return true;
-		}
-
-		/**
-		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-		 */
-		@Override
-		protected void onComponentTag(final ComponentTag tag)
-		{
-			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
-			if (tag.isOpenClose())
-			{
-				tag.setType(XmlTag.OPEN);
-			}
-			super.onComponentTag(tag);
 		}
 	}
 }

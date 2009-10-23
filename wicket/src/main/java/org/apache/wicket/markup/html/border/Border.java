@@ -318,7 +318,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 					rendering = true;
 					try
 					{
-						body.render(markupStream);
+						body.render();
 					}
 					finally
 					{

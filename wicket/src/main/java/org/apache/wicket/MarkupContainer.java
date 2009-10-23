@@ -30,6 +30,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -269,12 +270,6 @@ public abstract class MarkupContainer extends Component
 
 		// Render the child
 		component.render();
-
-		if (markupStream != null)
-		{
-			markupStream.skipComponent();
-		}
-
 		return true;
 	}
 
@@ -713,10 +708,8 @@ public abstract class MarkupContainer extends Component
 	{
 		// Get markup associated with Border or Panel component
 		final MarkupStream originalMarkupStream = getMarkupStream();
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
+		final MarkupStream associatedMarkupStream = new MarkupStream(getMarkup(null));
 
-		// skip until the targetted tag is found
-		associatedMarkupStream.skipUntil(openTagName);
 		setMarkupStream(associatedMarkupStream);
 
 		// Get open tag in associated markup of border component
@@ -727,9 +720,8 @@ public abstract class MarkupContainer extends Component
 				exceptionMessage);
 		}
 
-		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
-
 		// Check for required open tag name
+		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
 		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
@@ -815,9 +807,6 @@ public abstract class MarkupContainer extends Component
 
 			// then add the other one.
 			addedComponent(child);
-
-			// The position of the associated markup remains the same
-			child.markupIndex = replaced.markupIndex;
 
 			// The generated markup id remains the same
 			child.setMarkupIdImpl(replaced.getMarkupIdImpl());
@@ -1495,7 +1484,7 @@ public abstract class MarkupContainer extends Component
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
 
-		// If it a tag like <wicket..> or <span wicket:id="..." >
+		// If it's a tag like <wicket..> or <span wicket:id="..." >
 		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
 		{
 			// Get element as tag
@@ -1510,7 +1499,7 @@ public abstract class MarkupContainer extends Component
 			// Failed to find it?
 			if (component != null)
 			{
-				component.render(markupStream);
+				component.render();
 			}
 			else
 			{
@@ -1552,42 +1541,7 @@ public abstract class MarkupContainer extends Component
 				log.debug("Rendering raw markup");
 			}
 			getResponse().write(element.toCharSequence());
-			markupStream.next();
 		}
-	}
-
-	/**
-	 * Get the markup stream for this component.
-	 * 
-	 * @return The markup stream for this component, or if it doesn't have one, the markup stream
-	 *         for the nearest parent which does have one
-	 */
-	@Override
-	protected final MarkupStream findMarkupStream()
-	{
-		if (getApplication().getMarkupFragmentEnabled())
-		{
-			return new MarkupStream(getMarkup());
-		}
-
-		// Start here
-		MarkupContainer c = this;
-
-		// Walk up hierarchy until markup found
-		while (c.getMarkupStream() == null)
-		{
-			// Check parent
-			c = c.getParent();
-
-			// Are we at the top of the hierarchy?
-			if (c == null)
-			{
-				// Failed to find markup stream
-				throw new WicketRuntimeException(exceptionMessage("No markup found"));
-			}
-		}
-
-		return c.getMarkupStream();
 	}
 
 	/**
@@ -1606,36 +1560,12 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Renders this component. This implementation just calls renderComponent.
-	 * 
-	 * @param markupStream
+	 * @see org.apache.wicket.Component#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
-		renderComponent(markupStream);
-	}
-
-	/**
-	 * Renders this component and all sub-components using the given markup stream.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	protected void renderAll(final MarkupStream markupStream)
-	{
-		// Loop through the markup in this container
-		while (markupStream.hasMore())
-		{
-			// Element rendering is responsible for advancing markup stream!
-			final int index = markupStream.getCurrentIndex();
-			renderNext(markupStream);
-			if (index == markupStream.getCurrentIndex())
-			{
-				markupStream.throwMarkupException("Component at markup stream index " + index +
-					" failed to advance the markup stream");
-			}
-		}
+		renderComponent();
 	}
 
 	/**
@@ -1648,14 +1578,13 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag
 	 */
-	protected final void renderComponentTagBody(final MarkupStream markupStream,
+	private final void renderComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
 		if ((markupStream != null) && (markupStream.getCurrentIndex() > 0))
 		{
-			// If the original tag has been changed from open-close to open-body-close,
-			// than historically renderComponentTagBody gets called, but actually
-			// it shouldn't do anything since there is no body for that tag.
+			// If the original tag has been changed from open-close to open-body-close, than we are
+			// done. Other components, e.g. BorderBody, rely on this method being called.
 			ComponentTag origOpenTag = (ComponentTag)markupStream.get(markupStream.getCurrentIndex() - 1);
 			if (origOpenTag.isOpenClose())
 			{
@@ -1670,20 +1599,52 @@ public abstract class MarkupContainer extends Component
 			// Tags like <p> do not require a close tag, but they may have.
 			render = !openTag.hasNoCloseTag();
 		}
+
 		if (render == true)
 		{
-			// Loop through the markup in this container
-			while (markupStream.hasMore() && !markupStream.get().closes(openTag))
+			renderAll(markupStream, openTag);
+		}
+	}
+
+	/**
+	 * Loop through the markup in this container
+	 * 
+	 * @param markupStream
+	 * @param openTag
+	 */
+	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		while (markupStream.hasMore())
+		{
+			// In case of Page we need to render the whole file. For all other components just what
+			// is in between the open and the close tag.
+			if ((openTag != null) && markupStream.get().closes(openTag))
 			{
-				// Render markup element. Doing so must advance the markup
-				// stream
-				final int index = markupStream.getCurrentIndex();
-				renderNext(markupStream);
-				if (index == markupStream.getCurrentIndex())
-				{
-					markupStream.throwMarkupException("Markup element at index " + index +
-						" failed to advance the markup stream");
-				}
+				break;
+			}
+
+			// Remember where we are
+			final int index = markupStream.getCurrentIndex();
+
+			// Render the markup element
+			renderNext(markupStream);
+
+			// Go back to where we were and move the markup stream forward to whatever the next
+			// element is.
+			markupStream.setCurrentIndex(index);
+			MarkupElement elem = markupStream.get();
+			if (elem instanceof RawMarkup)
+			{
+				markupStream.next();
+			}
+			else if (!markupStream.getTag().isClose())
+			{
+				markupStream.skipComponent();
+			}
+			else
+			{
+				throw new WicketRuntimeException("Ups. This should never happen. " +
+					markupStream.toString());
 			}
 		}
 	}

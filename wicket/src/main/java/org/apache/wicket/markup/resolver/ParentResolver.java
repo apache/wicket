@@ -59,7 +59,7 @@ public class ParentResolver implements IComponentResolver
 				Component component = parent.get(tag.getId());
 				if (component != null)
 				{
-					component.render(markupStream);
+					component.render();
 					return true;
 				}
 			}

@@ -166,7 +166,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 		}
 
 		// Render the body of the link
-		renderComponentTagBody(markupStream, openTag);
+		super.onComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
 		if (!isLinkEnabled() && getAfterDisabledLink() != null)

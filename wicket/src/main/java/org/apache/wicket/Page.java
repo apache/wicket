@@ -31,8 +31,10 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -1086,15 +1088,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		response.setContentType("text/" + getMarkupType() + "; charset=" + encoding);
 
 		// Write out an xml declaration if the markup stream and settings allow
-		final MarkupStream markupStream = findMarkupStream();
-		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
+		final IMarkupFragment markup = getMarkup();
+		if ((markup != null) && (markup.getMarkupResourceStream().getXmlDeclaration() != null) &&
 			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
 			// Gwyn - Wed, 21 May 2008 12:23:41
 			// If the xml declaration in the markup used double-quotes, use them in the output too
 			// Whether it should be or not, sometimes it's significant...
-			final String quoteChar = (markupStream.getXmlDeclaration().indexOf('\"') == -1) ? "'"
-				: "\"";
+			final String quoteChar = (markup.getMarkupResourceStream().getXmlDeclaration().indexOf(
+				'\"') == -1) ? "'" : "\"";
 
 			response.write("<?xml version=");
 			response.write(quoteChar);
@@ -1252,22 +1254,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Renders this container to the given response object.
-	 * 
-	 * @param markupStream
+	 * @see org.apache.wicket.MarkupContainer#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
-		// Set page's associated markup stream
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
-		setMarkupStream(associatedMarkupStream);
-
 		// Configure response object with locale and content type
 		configureResponse();
 
-		// Render markup
-		renderAll(associatedMarkupStream);
+		// Loop through the markup in this container
+		MarkupStream markupStream = new MarkupStream(getMarkup());
+		renderAll(markupStream, null);
 	}
 
 	/**

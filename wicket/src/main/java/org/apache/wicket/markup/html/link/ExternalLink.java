@@ -229,7 +229,6 @@ public class ExternalLink extends AbstractLink
 			getResponse().write(getBeforeDisabledLink());
 		}
 
-
 		if ((label != null) && (label.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
@@ -237,7 +236,7 @@ public class ExternalLink extends AbstractLink
 		}
 		else
 		{
-			renderComponentTagBody(markupStream, openTag);
+			super.onComponentTagBody(markupStream, openTag);
 		}
 
 		// Draw anything after the body?
@@ -245,7 +244,6 @@ public class ExternalLink extends AbstractLink
 		{
 			getResponse().write(getAfterDisabledLink());
 		}
-
 	}
 
 	/**

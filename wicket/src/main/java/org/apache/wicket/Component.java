@@ -34,7 +34,9 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -452,12 +454,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private MarkupContainer parent;
 
 	/**
-	 * I really dislike it, but for now we need it. Reason: due to transparent containers and
-	 * IComponentResolver there is guaranteed 1:1 mapping between component and markup
-	 */
-	int markupIndex = -1;
-
-	/**
 	 * Instead of remembering the whole markupId, we just remember the number for this component so
 	 * we can "reconstruct" the markupId on demand. While this could be part of {@link #data},
 	 * profiling showed that having it as separate property consumes less memory.
@@ -717,7 +713,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 				"Can not determine Markup. Component is not yet connected to a parent. " +
 					toString());
 		}
-		return parent.getMarkup(this);
+
+		markup = parent.getMarkup(this);
+		return markup;
 	}
 
 	/**
@@ -2163,7 +2161,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 
 			// Do the render
-			render(null);
+			render_();
 		}
 		catch (final RuntimeException ex)
 		{
@@ -2196,59 +2194,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Performs a render of this component as part of a Page level render process.
-	 * <p>
-	 * For component level re-render (e.g. AJAX) please call {@link #renderComponent(MarkupStream)}.
-	 * Though render() does seem to work, it will fail for panel children.
-	 * 
-	 * @param markupStream
 	 */
-	public final void render(MarkupStream markupStream)
+	private final void render_()
 	{
-		// Remove/Cleanup when migrating to MarkupFragments. Only needed as long as rendering is
-		// based on MarkupStream
-		if (getApplication().getMarkupFragmentEnabled())
+		// Step 1: Make sure there is a markup available for the Component
+		IMarkupFragment markup = getMarkup();
+		if (markup == null)
 		{
-			// Step 1: Make sure there is a markup available for the Component
-			IMarkupFragment markup = getMarkup();
-			if (!(this instanceof Page) && (markup == null))
-			{
-				throw new IllegalArgumentException("MarkupFragment not found: " + toString() +
-					". Please see Application.getMarkupFragmentEnabled() as well.");
-			}
-
-			// Step 2: A markup stream based on the markup should yield the same result.
-			if ((markupStream != null) || !(this instanceof Page))
-			{
-				MarkupStream ms = new MarkupStream(markup);
-
-				// We need to skip the component in the original markup stream to avoid
-				// exceptions later on.
-				if (markupStream != null)
-				{
-					markupStream.skipComponent();
-				}
-
-				// We want to use the new markup stream
-				markupStream = ms;
-			}
+			throw new MarkupNotFoundException("Markup not found for Component: " + toString());
 		}
 
-		// We need to know the index before we do the visibility check.
-		// Otherwise we wouldn't know the markup index for invisible components
-		if (markupStream != null)
-		{
-			markupIndex = markupStream.getCurrentIndex();
-		}
+		// Step 2: A markup stream based on the markup should yield the same result.
+		// We want to use the new markup stream
+		MarkupStream markupStream = new MarkupStream(markup);
+		setMarkupStream(markupStream);
 
 		markRendering(true);
 
-		setMarkupStream(markupStream);
-
-		if (markupStream != null)
+		MarkupElement elem = markup.get(0);
+		if (elem instanceof ComponentTag)
 		{
 			// Guarantee that the markupStream is set and determineVisibility not yet tested
 			// See WICKET-2049
-			markupStream.getTag().onBeforeRender(this, markupStream);
+			((ComponentTag)elem).onBeforeRender(this, markupStream);
 		}
 
 		// Determine if component is visible using it's authorization status
@@ -2266,7 +2234,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			try
 			{
 				notifyBehaviorsComponentBeforeRender();
-				onRender(markupStream);
+				onRender();
 				notifyBehaviorsComponentRendered();
 
 				// Component has been rendered
@@ -2274,25 +2242,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			catch (RuntimeException ex)
 			{
-				// Call each behaviors onException() to allow the
-				// behavior to clean up
-				for (IBehavior behavior : getBehaviors())
-				{
-					if (isBehaviorAccepted(behavior))
-					{
-						try
-						{
-							behavior.exception(this, ex);
-						}
-						catch (Throwable ex2)
-						{
-							log.error("Error while cleaning up after exception", ex2);
-						}
-					}
-				}
-
-				// Re-throw the exception
-				throw ex;
+				onException(ex);
 			}
 
 			if (log.isDebugEnabled())
@@ -2300,16 +2250,43 @@ public abstract class Component implements IClusterable, IConverterLocator
 				log.debug("End render " + this);
 			}
 		}
-		// markupStream is null when rendering a page
-		else if (markupStream != null)
+		// elem is null when rendering a page
+		else if ((elem != null) && (elem instanceof ComponentTag))
 		{
 			if (getFlag(FLAG_PLACEHOLDER))
 			{
-				final ComponentTag tag = markupStream.getTag();
-				renderPlaceholderTag(tag, getResponse());
+				renderPlaceholderTag((ComponentTag)elem, getResponse());
 			}
-			markupStream.skipComponent();
 		}
+	}
+
+	/**
+	 * Called when a runtime exception is caught during the render process
+	 * 
+	 * @param ex
+	 *            The exception caught.
+	 */
+	private void onException(final RuntimeException ex)
+	{
+		// Call each behaviors onException() to allow the
+		// behavior to clean up
+		for (IBehavior behavior : getBehaviors())
+		{
+			if (isBehaviorAccepted(behavior))
+			{
+				try
+				{
+					behavior.exception(this, ex);
+				}
+				catch (Throwable ex2)
+				{
+					log.error("Error while cleaning up after exception", ex2);
+				}
+			}
+		}
+
+		// Re-throw the exception
+		throw ex;
 	}
 
 	/**
@@ -2352,15 +2329,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	public final void renderComponent(final MarkupStream markupStream)
+	public final void renderComponent()
 	{
-		if (markupStream == null)
+		final IMarkupFragment markup = getMarkup();
+		if (markup == null)
 		{
-			throw new NullPointerException(
-				"Parameter 'markupStream' must not be null. Component: " + toString());
+			throw new MarkupException("Markup not found. Component: " + toString());
 		}
 
-		markupIndex = markupStream.getCurrentIndex();
+		final MarkupStream markupStream = new MarkupStream(markup);
 
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
@@ -2391,8 +2368,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			markupStream.next();
 
-			// Render the body only if open-body-close. Do not render if
-			// open-close.
+			// Render the body only if open-body-close. Do not render if open-close.
 			if (tag.isOpen())
 			{
 				// Render the body
@@ -2406,25 +2382,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 				{
 					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
 				}
-				else
+				else if (getRenderBodyOnly() == false)
 				{
-					// If a open-close tag has been modified to be
-					// open-body-close than a synthetic close tag must be
-					// rendered.
-					if (getRenderBodyOnly() == false)
+					if (needToRenderTag(openTag))
 					{
-						final boolean ajaxRequest = getRequest() instanceof WebRequest &&
-							((WebRequest)getRequest()).isAjax();
-
-						final boolean stripWicketTags = ajaxRequest ||
-							Application.get().getMarkupSettings().getStripWicketTags();
-
-						if (!(openTag instanceof WicketTag) || !stripWicketTags)
-						{
-							// Close the manually opened tag. And since the
-							// user might have changed the tag name ...
-							getResponse().write(tag.syntheticCloseTagString());
-						}
+						// Close the manually opened tag. And since the user might have changed the
+						// tag name ...
+						getResponse().write(tag.syntheticCloseTagString());
 					}
 				}
 			}
@@ -2437,6 +2401,24 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
+	}
+
+	/**
+	 * 
+	 * @param openTag
+	 * @return true, if the tag shall be rendered
+	 */
+	private boolean needToRenderTag(final ComponentTag openTag)
+	{
+		// If a open-close tag has been modified to be open-body-close than a
+		// synthetic close tag must be rendered.
+		boolean renderTag = (openTag == null ? false : !(openTag instanceof WicketTag));
+		if (renderTag == false)
+		{
+			renderTag = !((getRequest() instanceof WebRequest) && ((WebRequest)getRequest()).isAjax());
+			renderTag &= !getApplication().getMarkupSettings().getStripWicketTags();
+		}
+		return renderTag;
 	}
 
 	/**
@@ -3321,16 +3303,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return The markup stream for this component. Since a Component cannot have a markup stream,
 	 *         we ask this component's parent to search for it.
+	 * @TODO can be removed in 1.5
 	 */
-	protected MarkupStream findMarkupStream()
+	protected final MarkupStream findMarkupStream()
 	{
-		if (parent == null)
-		{
-			throw new IllegalStateException("Cannot find markupstream for " + this +
-				" as there is no parent");
-		}
-
-		return parent.findMarkupStream();
+		return new MarkupStream(getMarkup());
 	}
 
 	/**
@@ -3554,11 +3531,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected MarkupStream locateMarkupStream()
 	{
-		if (getApplication().getMarkupFragmentEnabled())
-		{
-			return new MarkupStream(getMarkup());
-		}
-		return new MarkupFragmentFinder().find(this);
+		return new MarkupStream(getMarkup());
 	}
 
 	/**
@@ -3682,11 +3655,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Implementation that renders this component.
-	 * 
-	 * @since Wicket 1.2
-	 * @param markupStream
 	 */
-	protected abstract void onRender(final MarkupStream markupStream);
+	protected abstract void onRender();
 
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might be referenced by
@@ -3698,13 +3668,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
-		final boolean ajaxRequest = getRequest() instanceof WebRequest &&
-			((WebRequest)getRequest()).isAjax();
-
-		final boolean stripWicketTags = ajaxRequest ||
-			Application.get().getMarkupSettings().getStripWicketTags();
-
-		if (!(tag instanceof WicketTag) || !stripWicketTags)
+		if (needToRenderTag(tag))
 		{
 			// Apply behavior modifiers
 			List<IBehavior> behaviors = getBehaviors();
@@ -3739,7 +3703,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 
 			// Write the tag
-			tag.writeOutput(getResponse(), stripWicketTags, findMarkupStream().getWicketNamespace());
+			tag.writeOutput(getResponse(), !needToRenderTag(null),
+				getMarkup().getMarkupResourceStream().getWicketNamespace());
 		}
 	}
 
@@ -3991,11 +3956,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            the markup stream
 	 * @param openTag
 	 *            the tag to render
-	 * @param renderTagOnly
+	 * @param renderBodyOnly
 	 *            if true, the tag will not be written to the output
 	 */
 	final void renderClosingComponentTag(final MarkupStream markupStream,
-		final ComponentTag openTag, final boolean renderTagOnly)
+		final ComponentTag openTag, final boolean renderBodyOnly)
 	{
 		// Tag should be open tag and not openclose tag
 		if (openTag.isOpen())
@@ -4003,32 +3968,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// If we found a close tag and it closes the open tag, we're good
 			if (markupStream.atCloseTag() && markupStream.getTag().closes(openTag))
 			{
-				// Get the close tag from the stream
-				ComponentTag closeTag = markupStream.getTag();
-
-				// If the open tag had its id changed
-				if (openTag.getNameChanged())
-				{
-					// change the id of the close tag
-					closeTag = closeTag.mutable();
-					closeTag.setName(openTag.getName());
-					closeTag.setNamespace(openTag.getNamespace());
-				}
-
 				// Render the close tag
-				if (renderTagOnly == false)
+				if (renderBodyOnly == false)
 				{
+					// Get the close tag from the stream
+					ComponentTag closeTag = markupStream.getTag();
+
+					// If the open tag had its id changed
+					if (openTag.getNameChanged())
+					{
+						// change the id of the close tag
+						closeTag = closeTag.mutable();
+						closeTag.setName(openTag.getName());
+						closeTag.setNamespace(openTag.getNamespace());
+					}
+
 					renderComponentTag(closeTag);
 				}
-				markupStream.next();
 			}
-			else
+			else if (openTag.requiresCloseTag())
 			{
-				if (openTag.requiresCloseTag())
-				{
-					// Missing close tag
-					markupStream.throwMarkupException("Expected close tag for " + openTag);
-				}
+				// Missing close tag. Some tags, e.g. <p> are handled like <p/> by most browsers and
+				// thus will not throw an exception.
+				markupStream.throwMarkupException("Expected close tag for " + openTag);
 			}
 		}
 	}

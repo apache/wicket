@@ -162,6 +162,6 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	protected void renderItem(final LoopItem item)
 	{
-		item.render(getMarkupStream());
+		item.render();
 	}
 }

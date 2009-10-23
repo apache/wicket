@@ -217,7 +217,7 @@ public class MarkupFragment implements IMarkupFragment
 	/**
 	 * @return The parent markup. Null if that is a a markup file.
 	 */
-	public final IMarkupFragment getParentMarkup()
+	private final IMarkupFragment getParentMarkup()
 	{
 		return markup;
 	}
@@ -228,7 +228,7 @@ public class MarkupFragment implements IMarkupFragment
 	public final Markup getRootMarkup()
 	{
 		IMarkupFragment markup = getParentMarkup();
-		while ((markup != null) && ((markup instanceof Markup) == false))
+		while ((markup != null) && !(markup instanceof Markup))
 		{
 			markup = ((MarkupFragment)markup).getParentMarkup();
 		}

@@ -20,6 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupNotFoundException;
 
 
 /**
@@ -72,12 +73,11 @@ public class PanelTest extends WicketTestCase
 		{
 			executeTest(PanelPage_2.class, "Dummy.html");
 		}
-		catch (MarkupException mex)
+		catch (MarkupNotFoundException mex)
 		{
 			hit = true;
 
-			assertNotNull(mex.getMarkupStream());
-			assertTrue(mex.getMessage().indexOf("has to contain part '<wicket:panel>'") != -1);
+			assertTrue(mex.getMessage().indexOf("Expected to find <wicket:panel>") != -1);
 			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
