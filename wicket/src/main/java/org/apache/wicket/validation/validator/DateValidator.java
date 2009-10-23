@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.validation.validator;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -35,10 +36,6 @@ import org.apache.wicket.validation.IValidatable;
  */
 public abstract class DateValidator extends AbstractValidator<Date>
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -66,7 +63,24 @@ public abstract class DateValidator extends AbstractValidator<Date>
 	 */
 	public static DateValidator range(Date minimum, Date maximum)
 	{
-		return new RangeValidator(minimum, maximum);
+		return new RangeValidator(minimum, maximum, null);
+	}
+
+	/**
+	 * @see #range(Date, Date)
+	 * 
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return the requested <code>DateValidator</code>
+	 */
+	public static DateValidator range(Date minimum, Date maximum, String format)
+	{
+		return new RangeValidator(minimum, maximum, format);
 	}
 
 	/**
@@ -91,7 +105,22 @@ public abstract class DateValidator extends AbstractValidator<Date>
 	 */
 	public static DateValidator minimum(Date minimum)
 	{
-		return new MinimumValidator(minimum);
+		return new MinimumValidator(minimum, null);
+	}
+
+	/**
+	 * @see #minimum(Date)
+	 * 
+	 * @param minimum
+	 *            the minimum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return the requested <code>DateValidator</code>
+	 */
+	public static DateValidator minimum(Date minimum, String format)
+	{
+		return new MinimumValidator(minimum, format);
 	}
 
 	/**
@@ -115,29 +144,58 @@ public abstract class DateValidator extends AbstractValidator<Date>
 	 */
 	public static DateValidator maximum(Date maximum)
 	{
-		return new MaximumValidator(maximum);
+		return new MaximumValidator(maximum, null);
 	}
 
+	/**
+	 * @see #maximum(Date)
+	 * 
+	 * @param maximum
+	 *            the maximum <code>Date</code>
+	 * @param format
+	 *            The format string used to format the date with SimpleDateFormat
+	 * 
+	 * @return the requested <code>DateValidator</code>
+	 */
+	public static DateValidator maximum(Date maximum, String format)
+	{
+		return new MaximumValidator(maximum, format);
+	}
 
+	/**
+	 * 
+	 */
 	private static class RangeValidator extends DateValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final Date minimum;
 		private final Date maximum;
+		private final String format;
 
-		private RangeValidator(Date minimum, Date maximum)
+		private RangeValidator(Date minimum, Date maximum, String format)
 		{
 			this.minimum = minimum;
 			this.maximum = maximum;
-
+			this.format = format;
 		}
 
 		@Override
 		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("minimum", minimum);
-			map.put("maximum", maximum);
+			if (format == null)
+			{
+				map.put("minimum", minimum);
+				map.put("maximum", maximum);
+				map.put("inputdate", validatable.getValue());
+			}
+			else
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				map.put("minimum", sdf.format(minimum));
+				map.put("maximum", sdf.format(maximum));
+				map.put("inputdate", sdf.format(validatable.getValue()));
+			}
 			return map;
 		}
 
@@ -158,26 +216,36 @@ public abstract class DateValidator extends AbstractValidator<Date>
 			{
 				error(validatable);
 			}
-
 		}
-
 	}
 
 	private static class MinimumValidator extends DateValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final Date minimum;
+		private final String format;
 
-		private MinimumValidator(Date minimum)
+		private MinimumValidator(Date minimum, String format)
 		{
 			this.minimum = minimum;
+			this.format = format;
 		}
 
 		@Override
 		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("minimum", minimum);
+			if (format == null)
+			{
+				map.put("minimum", minimum);
+				map.put("inputdate", validatable.getValue());
+			}
+			else
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				map.put("minimum", sdf.format(minimum));
+				map.put("inputdate", sdf.format(validatable.getValue()));
+			}
 			return map;
 		}
 
@@ -187,7 +255,6 @@ public abstract class DateValidator extends AbstractValidator<Date>
 			return "DateValidator.minimum";
 		}
 
-
 		@Override
 		protected void onValidate(IValidatable<Date> validatable)
 		{
@@ -196,26 +263,36 @@ public abstract class DateValidator extends AbstractValidator<Date>
 			{
 				error(validatable);
 			}
-
 		}
-
 	}
 
 	private static class MaximumValidator extends DateValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final Date maximum;
+		private final String format;
 
-		private MaximumValidator(Date maximum)
+		private MaximumValidator(Date maximum, String format)
 		{
 			this.maximum = maximum;
+			this.format = format;
 		}
 
 		@Override
 		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("maximum", maximum);
+			if (format == null)
+			{
+				map.put("maximum", maximum);
+				map.put("inputdate", validatable.getValue());
+			}
+			else
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				map.put("maximum", sdf.format(maximum));
+				map.put("inputdate", sdf.format(validatable.getValue()));
+			}
 			return map;
 		}
 
@@ -225,7 +302,6 @@ public abstract class DateValidator extends AbstractValidator<Date>
 			return "DateValidator.maximum";
 		}
 
-
 		@Override
 		protected void onValidate(IValidatable<Date> validatable)
 		{
@@ -234,8 +310,6 @@ public abstract class DateValidator extends AbstractValidator<Date>
 			{
 				error(validatable);
 			}
-
 		}
-
 	}
 }

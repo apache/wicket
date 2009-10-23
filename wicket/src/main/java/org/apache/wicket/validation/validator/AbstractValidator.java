@@ -36,7 +36,6 @@ import org.apache.wicket.validation.ValidationError;
  * returns <code>null</code>. Validators that wish to validate the <code>null</code> value need to
  * override {@link #validateOnNullValue()} and return <code>true</code>.
  * 
- * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
