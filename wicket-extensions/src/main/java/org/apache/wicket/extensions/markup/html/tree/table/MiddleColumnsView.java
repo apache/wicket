@@ -29,7 +29,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.response.NullResponse;
 
@@ -52,7 +51,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 	private final List<IRenderable> renderables = new ArrayList<IRenderable>();
 
-	private boolean treeHasLeftColumn;
+	private final boolean treeHasLeftColumn;
 
 	/**
 	 * Constructor.
@@ -189,20 +188,13 @@ final class MiddleColumnsView extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders all columns.
-	 * 
-	 * @param markupStream
-	 *            The markup stream of this component
+	 * @see org.apache.wicket.MarkupContainer#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
-		final int markupStart = markupStream.getCurrentIndex();
 		Response response = RequestCycle.get().getResponse();
 		double widths[] = computeColumnWidths();
-
-		boolean rendered = false; // has been at least one column (component,
-		// not renderable) rendered?
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setMaximumFractionDigits(0);
@@ -226,9 +218,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 			if (component != null) // is there a component for current column?
 			{
 				// render the component
-				markupStream.setCurrentIndex(markupStart);
-				component.render(markupStream);
-				rendered = true;
+				component.render();
 			}
 			else if (renderable != null) // no component - try to render
 			// renderable
@@ -260,20 +250,11 @@ final class MiddleColumnsView extends WebMarkupContainer
 					if (components.get(i) != null)
 					{
 						Response old = RequestCycle.get().setResponse(NullResponse.getInstance());
-						markupStream.setCurrentIndex(markupStart);
-						(components.get(i)).render(markupStream);
+						(components.get(i)).render();
 						RequestCycle.get().setResponse(old);
-						rendered = true;
 					}
-
 				}
 			}
-		}
-
-		// if no component was rendered just advance in the markup stream
-		if (rendered == false)
-		{
-			markupStream.skipComponent();
 		}
 	}
 }

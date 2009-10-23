@@ -26,7 +26,6 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 
@@ -97,20 +96,15 @@ final class SideColumnsView extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders the columns.
-	 * 
-	 * @param markupStream
-	 *            The markup stream of this component
+	 * @see org.apache.wicket.MarkupContainer#onRender()
 	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onRender()
 	{
-		final int markupStart = markupStream.getCurrentIndex();
 		Response response = RequestCycle.get().getResponse();
 
 		boolean firstLeft = true; // whether there was no left column rendered
 		// yet
-		boolean rendered = false;
 
 		for (int i = 0; i < columns.size(); ++i)
 		{
@@ -134,9 +128,7 @@ final class SideColumnsView extends WebMarkupContainer
 
 			if (component != null)
 			{
-				markupStream.setCurrentIndex(markupStart);
-				component.render(markupStream);
-				rendered = true;
+				component.render();
 			}
 			else if (renderable != null)
 			{
@@ -149,12 +141,6 @@ final class SideColumnsView extends WebMarkupContainer
 			}
 
 			response.write("</span></span>\n");
-		}
-
-		// if no component was rendered just advance in the markup stream
-		if (rendered == false)
-		{
-			markupStream.skipComponent();
 		}
 	}
 

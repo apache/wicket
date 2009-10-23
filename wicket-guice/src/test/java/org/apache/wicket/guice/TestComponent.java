@@ -19,7 +19,6 @@ package org.apache.wicket.guice;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.MarkupStream;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -152,7 +151,7 @@ public class TestComponent extends Component
 	}
 
 	@Override
-	protected void onRender(MarkupStream markupStream)
+	protected void onRender()
 	{
 		// Do nothing.
 	}
