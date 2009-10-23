@@ -37,7 +37,6 @@ import org.apache.wicket.validation.ValidationError;
  * returns <code>null</code>. Validators that wish to validate the <code>null</code> value need to
  * override {@link #validateOnNullValue()} and return <code>true</code>.
  * 
- * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
@@ -200,7 +199,7 @@ public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>
 	 */
 	protected Map<String, Object> variablesMap(IValidatable<T> validatable)
 	{
-		final Map<String, Object> resourceModel = new HashMap<String, Object>(1);
+		final Map<String, Object> resourceModel = new HashMap<String, Object>();
 		return resourceModel;
 	}
 
