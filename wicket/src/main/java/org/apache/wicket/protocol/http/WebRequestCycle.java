@@ -24,6 +24,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.Session;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -273,7 +274,7 @@ public class WebRequestCycle extends RequestCycle
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
 				String url = "/" + getRequest().getURL();
-				throw new RestartResponseException(new BrowserInfoPage(url));
+				throw new RestartResponseException(newBrowserInfoPage(url));
 			}
 			// if we get here, the redirect already has been done; clear
 			// the meta data entry; we don't need it any longer is the client
@@ -281,6 +282,20 @@ public class WebRequestCycle extends RequestCycle
 			session.setMetaData(BROWSER_WAS_POLLED_KEY, (Boolean)null);
 		}
 		return new WebClientInfo(this);
+	}
+
+	/**
+	 * Override this method if you want to use a custom page for gathering the client's browser
+	 * information.<br/>
+	 * The easiest way is just to extend {@link BrowserInfoPage} and provide your own markup file
+	 * 
+	 * @param url
+	 *            the url to redirect to when the browser info is handled
+	 * @return the {@link WebPage} which should be used while gathering browser info
+	 */
+	protected WebPage newBrowserInfoPage(String url)
+	{
+		return new BrowserInfoPage(url);
 	}
 
 	/**
@@ -301,9 +316,11 @@ public class WebRequestCycle extends RequestCycle
 		}
 	}
 
+	/**
+	 * 
+	 */
 	void unset()
 	{
 		set(null);
 	}
-
 }
