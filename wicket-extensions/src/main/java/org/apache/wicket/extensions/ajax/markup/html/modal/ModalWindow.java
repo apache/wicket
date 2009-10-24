@@ -811,16 +811,24 @@ public class ModalWindow extends Panel
 	@Override
 	protected void onBeforeRender()
 	{
-		// if user is refreshing whole page, the window will not be shown
-		if (getWebRequest().isAjax() == false)
-		{
-			shown = false;
-		}
+		shown = makeContentVisible();
 
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 
 		super.onBeforeRender();
+	}
+
+	/**
+	 * You may subclass this method in case you don't want to show up the window on normal page
+	 * refresh.
+	 * 
+	 * @return true, if the window shall be shown
+	 */
+	protected boolean makeContentVisible()
+	{
+		// if user is refreshing whole page, the window will not be shown
+		return getWebRequest().isAjax();
 	}
 
 	/**
