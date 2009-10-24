@@ -3357,16 +3357,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Traverses all parent components of the given class in this container, calling the visitor's
 	 * visit method at each one.
 	 * 
-	 * @param <C>
-	 * 
 	 * @param c
 	 *            Class
 	 * @param visitor
 	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
-	public final <C extends Component> Object visitParents(final Class<C> c,
-		final IVisitor<Component> visitor)
+	public final Object visitParents(final Class<?> c, final IVisitor<Component> visitor)
 	{
 		// Start here
 		Component current = getParent();
