@@ -64,52 +64,63 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
 	@Override
-	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
+	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style)
 	{
 		if (clazz == null)
 		{
 			return null;
 		}
-
-		String packageName = clazz.getPackage().getName();
-		packageName = packageName.replace('.', '/');
-
 		// Load the properties associated with the path
 		IPropertiesFactory propertiesFactory = Application.get()
 			.getResourceSettings()
 			.getPropertiesFactory();
 
-		while (packageName.length() > 0)
+		while (true)
 		{
-			// Create the base path
-			String path = packageName + "/" + filename;
+			String packageName = clazz.getPackage().getName();
+			packageName = packageName.replace('.', '/');
 
-			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
-			while (iter.hasNext())
+			while (packageName.length() > 0)
 			{
-				String newPath = iter.next();
+				// Create the base path
+				String path = packageName + "/" + filename;
 
-				final Properties props = propertiesFactory.load(clazz, newPath);
-				if (props != null)
+				// Iterator over all the combinations
+				ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, null);
+				while (iter.hasNext())
 				{
-					// Lookup the value
-					String value = props.getString(key);
-					if (value != null)
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Found resource from: " + props + "; key: " + key);
-						}
+					String newPath = iter.next();
 
-						return value;
+					final Properties props = propertiesFactory.load(clazz, newPath);
+					if (props != null)
+					{
+						// Lookup the value
+						String value = props.getString(key);
+						if (value != null)
+						{
+							if (log.isDebugEnabled())
+							{
+								log.debug("Found resource from: " + props + "; key: " + key);
+							}
+
+							return value;
+						}
 					}
 				}
+
+				// Didn't find the key yet, continue searching if possible
+				packageName = Strings.beforeLast(packageName, '/');
 			}
 
-			// Didn't find the key yet, continue searching if possible
-			packageName = Strings.beforeLast(packageName, '/');
+			// Move to the next superclass
+			clazz = clazz.getSuperclass();
+
+			if (clazz == null)
+			{
+				// nothing more to search, done
+				break;
+			}
 		}
 
 		// not found
