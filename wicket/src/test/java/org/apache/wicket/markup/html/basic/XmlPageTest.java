@@ -19,7 +19,9 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
+import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.PropertiesFactory;
+import org.apache.wicket.resource.XmlFilePropertiesLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +90,7 @@ public class XmlPageTest extends WicketTestCase
 			super(application);
 
 			getPropertiesLoaders().clear();
-			getPropertiesLoaders().add(new PropertiesFilePropertiesLoader());
+			getPropertiesLoaders().add(new IsoPropertiesFilePropertiesLoader("properties"));
 			getPropertiesLoaders().add(new XmlFilePropertiesLoader("xmlProperties"));
 		}
 	}

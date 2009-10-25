@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
+import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.PropertiesFactory;
 
 /**
@@ -81,7 +82,7 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 			super(application);
 
 			getPropertiesLoaders().clear();
-			getPropertiesLoaders().add(new PropertiesFilePropertiesLoader());
+			getPropertiesLoaders().add(new IsoPropertiesFilePropertiesLoader("properties"));
 		}
 	}
 }
