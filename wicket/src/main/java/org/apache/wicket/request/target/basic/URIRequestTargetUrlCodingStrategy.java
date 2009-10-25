@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
@@ -97,16 +96,6 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
 		PageParameters pageParameters = target.getPageParameters();
-		String pagemap = target.getPageMapName();
-		if (pagemap != null)
-		{
-			if (pageParameters == null)
-			{
-				pageParameters = new PageParameters();
-			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP,
-				WebRequestCodingStrategy.encodePageMapName(pagemap));
-		}
 		appendParameters(url, pageParameters);
 		return url;
 	}

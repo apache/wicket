@@ -362,14 +362,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
 		{
 			BookmarkablePageRequestTarget target = (BookmarkablePageRequestTarget)requestTarget;
-			if (target.getPageMapName() != null)
-			{
-				return new PageInfo(null, null, target.getPageMapName());
-			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 		else if (requestTarget instanceof ListenerInterfaceRequestTarget)
 		{
@@ -871,7 +864,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			final Class<? extends Page> pageClass, final PageParameters pageParameters,
 			final int originalUrlTrailingSlashesCount, final boolean redirect)
 		{
-			super(pageMapName, pageClass, pageParameters);
+			super(pageClass, pageParameters);
 			this.originalUrlTrailingSlashesCount = originalUrlTrailingSlashesCount;
 			this.redirect = redirect;
 		}

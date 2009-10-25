@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -351,12 +350,6 @@ public class RequestLogger implements IRequestLogger
 			Page page = (Page)value;
 			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
-		else if (value instanceof IPageMap)
-		{
-			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap removed, name: " +
-				(map.getName() == null ? "DEFAULT" : map.getName()));
-		}
 		else if (value instanceof WebSession)
 		{
 			rd.addEntry("Session removed");
@@ -377,12 +370,6 @@ public class RequestLogger implements IRequestLogger
 		{
 			Page page = (Page)value;
 			rd.addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
-		}
-		else if (value instanceof IPageMap)
-		{
-			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap updated, name: " +
-				(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else if (value instanceof Session)
 		{
@@ -409,12 +396,6 @@ public class RequestLogger implements IRequestLogger
 		{
 			Page page = (Page)value;
 			rd.addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
-		}
-		else if (value instanceof IPageMap)
-		{
-			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap created, name: " +
-				(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else
 		{

@@ -748,7 +748,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final Application application = Application.get();
 
 		// Find pagemap name
-		String pageMapName = requestTarget.getPageMapName();
+		String pageMapName = null;
 		if (pageMapName == null)
 		{
 			IRequestTarget currentTarget = requestCycle.getRequestTarget();

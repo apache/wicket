@@ -120,7 +120,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, parameters);
+			return new BookmarkablePageRequestTarget(bookmarkablePageClass, parameters);
 		}
 	}
 
@@ -140,11 +140,6 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
 
 		PageParameters pageParameters = target.getPageParameters();
-		if (target.getPageMapName() != null)
-		{
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP,
-				WebRequestCodingStrategy.encodePageMapName(target.getPageMapName()));
-		}
 
 		appendParameters(url, pageParameters);
 		return url;

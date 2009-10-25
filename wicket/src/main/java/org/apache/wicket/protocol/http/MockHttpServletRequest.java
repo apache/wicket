@@ -46,7 +46,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
@@ -1219,12 +1218,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToComponent(final Component component)
 	{
-		final IPageMap pageMap = component.getPage().getPageMap();
-		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
+
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class<? extends Page> clazz = ((BookmarkablePageLink<?>)component).getPageClass();
-			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
+			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
 				':' + clazz.getName());
 		}
 		else
@@ -1259,7 +1257,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			}
 
 			// manually create the url using default strategy and format
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, ':' +
 				component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
 				Classes.simpleName(clazz) + "::");
 
@@ -1306,7 +1304,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			if (component.isStateless() && component.getPage().isBookmarkable())
 			{
 				parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-					pageMapName + ':' + component.getPage().getClass().getName());
+					':' + component.getPage().getClass().getName());
 			}
 		}
 	}

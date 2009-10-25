@@ -156,7 +156,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 			int version = 0;
 			String componentPath = t.getComponentPath();
 			String interfaceName = t.getInterfaceName();
-			String pageMapName = t.getPageMapName();
+			String pageMapName = null;
 
 			// add the wicket:interface param to the params.
 			// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth

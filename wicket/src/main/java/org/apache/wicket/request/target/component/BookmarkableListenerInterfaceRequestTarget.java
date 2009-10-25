@@ -55,7 +55,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		Class<? extends Page> pageClass, PageParameters pageParameters, String componentPath,
 		String interfaceName, int versionNumber)
 	{
-		super(pageMapName, pageClass, pageParameters);
+		super(pageClass, pageParameters);
 		this.componentPath = componentPath;
 		this.interfaceName = interfaceName;
 	}
@@ -116,7 +116,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		Page page = getPage();
 		if (page == null)
 		{
-			page = Session.get().getPage(getPageMapName(), componentPath, -1);
+			page = Session.get().getPage(null, componentPath, -1);
 			if (page != null && page.getClass() == getPageClass())
 			{
 				setPage(page);

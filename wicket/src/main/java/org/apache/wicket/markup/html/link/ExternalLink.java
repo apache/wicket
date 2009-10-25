@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -196,15 +195,6 @@ public class ExternalLink extends AbstractLink
 						// or generate an onclick JS handler directly
 						tag.put("onclick", "window.location.href='" + url + "';return false;");
 					}
-				}
-			}
-
-			if (popupSettings != null)
-			{
-				IPageMap popupPageMap = popupSettings.getPageMap(this);
-				if (popupPageMap != null && popupPageMap.getName() != null)
-				{
-					tag.put("target", popupPageMap.getName());
 				}
 			}
 		}

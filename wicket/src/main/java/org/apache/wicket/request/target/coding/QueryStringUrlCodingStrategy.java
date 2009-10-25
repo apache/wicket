@@ -144,8 +144,8 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName,
-				(Class)bookmarkablePageClassRef.get(), parameters);
+			return new BookmarkablePageRequestTarget((Class)bookmarkablePageClassRef.get(),
+				parameters);
 		}
 	}
 

@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
@@ -45,11 +43,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this inline frame will be created in.
-	 */
-	private final String pageMapName;
-
-	/**
 	 * Constructs an inline frame that instantiates the given Page class when the content of the
 	 * inline frame is requested. The instantiated Page is used to render a response to the user.
 	 * 
@@ -62,9 +55,9 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param c
 	 *            Page class
 	 */
-	public <C extends Page> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c)
+	public <C extends Page> InlineFrame(final String id, final Class<C> c)
 	{
-		this(id, pageMap, c, null);
+		this(id, c, null);
 	}
 
 	/**
@@ -82,10 +75,10 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param params
 	 *            Page parameters
 	 */
-	public <C extends Page> InlineFrame(final String id, final IPageMap pageMap, final Class<C> c,
+	public <C extends Page> InlineFrame(final String id, final Class<C> c,
 		final PageParameters params)
 	{
-		this(id, pageMap, new IPageLink()
+		this(id, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -126,7 +119,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public InlineFrame(final String id, final Page page)
 	{
-		this(id, page.getPageMap(), new IPageLink()
+		this(id, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -153,18 +146,13 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageMap
-	 *            the pagemap where the page of the inline frame must be in
 	 * @param pageLink
 	 *            An implementation of IPageLink which will create the page to be contained in the
 	 *            inline frame if and when the content is requested
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, IPageLink pageLink)
+	public InlineFrame(final String id, IPageLink pageLink)
 	{
 		super(id);
-
-		pageMapName = pageMap.getName();
-
 		this.pageLink = pageLink;
 	}
 
@@ -208,10 +196,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		String oldPageMapName = parameters.getPageMapName();
 		try
 		{
-			if (pageMapName != null)
-			{
-				RequestCycle.get().getRequest().getRequestParameters().setPageMapName(pageMapName);
-			}
 			setResponsePage(pageLink.getPage());
 		}
 		finally
@@ -220,15 +204,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		}
 	}
 
-	/**
-	 * Returns the pageMap.
-	 * 
-	 * @return pageMap
-	 */
-	public final IPageMap getPageMap()
-	{
-		return PageMap.forName(pageMapName);
-	}
 
 	@Override
 	protected boolean getStatelessHint()

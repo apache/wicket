@@ -149,8 +149,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-						session.createAutoPageMapName(), current.getPageClass(),
-						current.getPageParameters());
+						current.getPageClass(), current.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else

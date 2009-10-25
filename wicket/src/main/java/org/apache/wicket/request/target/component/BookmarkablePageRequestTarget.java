@@ -50,9 +50,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * */
 	private final WeakReference<Class<? extends Page>> pageClassRef;
 
-	/** optional page map name. */
-	private final String pageMapName;
-
 	/** optional page parameters. */
 	private final PageParameters pageParameters;
 
@@ -66,39 +63,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public <C extends Page> BookmarkablePageRequestTarget(Class<C> pageClass)
 	{
-		this(null, pageClass);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageClass
-	 *            the class of the page
-	 * @param pageParameters
-	 *            optional page parameters
-	 */
-	public <C extends Page> BookmarkablePageRequestTarget(Class<C> pageClass,
-		PageParameters pageParameters)
-	{
-		this(null, pageClass, pageParameters);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageMapName
-	 *            optional page map name
-	 * 
-	 * @param pageClass
-	 *            the class of the page
-	 */
-	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass)
-	{
-		this(pageMapName, pageClass, null);
+		this(pageClass, null);
 	}
 
 	/**
@@ -114,7 +79,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public <C extends Page> BookmarkablePageRequestTarget(String pageMapName, Class<C> pageClass,
+	public <C extends Page> BookmarkablePageRequestTarget(Class<C> pageClass,
 		PageParameters pageParameters)
 	{
 		if (pageClass == null)
@@ -129,7 +94,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 		pageClassRef = new WeakReference<Class<? extends Page>>(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
-		this.pageMapName = pageMapName;
 	}
 
 	/**
@@ -155,18 +119,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			BookmarkablePageRequestTarget that = (BookmarkablePageRequestTarget)obj;
 			if (getPageClass().equals(that.getPageClass()))
 			{
-				boolean mapMatch = false;
-
-				if (pageMapName != null)
-				{
-					mapMatch = (that.pageMapName != null && pageMapName.equals(that.pageMapName));
-				}
-				else
-				{
-					mapMatch = (that.pageMapName == null);
-				}
-
-				equal = mapMatch;
+				equal = true;
 			}
 		}
 		return equal;
@@ -194,13 +147,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		return pageClassRef.get();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageMapName()
-	 */
-	public final String getPageMapName()
-	{
-		return pageMapName;
-	}
 
 	/**
 	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageParameters()
@@ -218,7 +164,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		int result = "BookmarkablePageRequestTarget".hashCode();
 		result += getPageClass().hashCode();
-		result += pageMapName != null ? pageMapName.hashCode() : 0;
 		return 17 * result;
 	}
 
@@ -322,5 +267,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 		return page;
 	}
+
 
 }

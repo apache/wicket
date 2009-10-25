@@ -116,7 +116,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		// otherwise process as a normal bookmark page request
 		else
 		{
-			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
+			return new BookmarkablePageRequestTarget(
 				(Class<? extends Page>)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
@@ -136,16 +136,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
 		PageParameters pageParameters = target.getPageParameters();
-		String pagemap = pageMapName != null ? pageMapName : target.getPageMapName();
-		if (pagemap != null)
-		{
-			if (pageParameters == null)
-			{
-				pageParameters = new PageParameters();
-			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP,
-				WebRequestCodingStrategy.encodePageMapName(pagemap));
-		}
+
 		appendParameters(url, pageParameters);
 		return url;
 	}
@@ -160,14 +151,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 			if (((Class<? extends Page>)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
 			{
-				if (pageMapName == null)
-				{
-					return true;
-				}
-				else
-				{
-					return pageMapName.equals(target.getPageMapName());
-				}
+				return true;
 			}
 		}
 		return false;

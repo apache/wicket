@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IPageMap;
-import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,11 +93,6 @@ public class PopupSettings implements IClusterable
 	private String windowName = null;
 
 	/**
-	 * The pagemap name where the page that will be created by this popuplink will be created in.
-	 */
-	private String pageMapName;
-
-	/**
 	 * Construct. If you are not using these popup settings with an external link - in which case we
 	 * don't need to know about a page map - you should use one of the constructors with a
 	 * {@link PageMap} argument. Typically, you should put any popup in a separate page map as
@@ -126,21 +118,17 @@ public class PopupSettings implements IClusterable
 	/**
 	 * Construct.
 	 * 
-	 * @param pagemap
-	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
-	 *            separate page map as Wicket holds references to a limited number of pages/
-	 *            versions only. If you don't put your popup in a separate page map, the user might
-	 *            get page expired exceptions when getting back to the main window again.
+	 * @param windowName
 	 */
-	public PopupSettings(IPageMap pagemap)
+	public PopupSettings(String windowName)
 	{
-		this(pagemap, 0);
+		this(windowName, 0);
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param pagemap
+	 * @param windowName
 	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
 	 *            separate page map as Wicket holds references to a limited number of pages/
 	 *            versions only. If you don't put your popup in a separate page map, the user might
@@ -148,14 +136,10 @@ public class PopupSettings implements IClusterable
 	 * @param displayFlags
 	 *            Display flags
 	 */
-	public PopupSettings(IPageMap pagemap, final int displayFlags)
+	public PopupSettings(String windowName, final int displayFlags)
 	{
 		this.displayFlags = displayFlags;
-		if (pagemap != null)
-		{
-			pageMapName = pagemap.getName();
-			windowName = pageMapName;
-		}
+		this.windowName = windowName;
 	}
 
 	/**
@@ -292,13 +276,6 @@ public class PopupSettings implements IClusterable
 		if (popupWindowName != null)
 		{
 			windowName = popupWindowName;
-			if (pageMapName != null && (!pageMapName.equals(popupWindowName)))
-			{
-				log.warn("the page map and window name should be the same. The page map was " +
-					pageMapName + ", and the requested window name is " + popupWindowName +
-					"; changing the page map to " + popupWindowName);
-			}
-			pageMapName = popupWindowName;
 		}
 		return this;
 	}
@@ -311,37 +288,5 @@ public class PopupSettings implements IClusterable
 	private String flagToString(final int flag)
 	{
 		return (displayFlags & flag) != 0 ? "yes" : "no";
-	}
-
-	/**
-	 * Gets the pagemap where the popup page must be created in.
-	 * 
-	 * @param callee
-	 *            Calling component
-	 * @return The pagemap where the popup page must be created in
-	 */
-	public IPageMap getPageMap(Component callee)
-	{
-		if (pageMapName != null)
-		{
-			return PageMap.forName(pageMapName);
-		}
-		else
-		{
-			if (callee == null)
-			{
-				throw new IllegalArgumentException(
-					"when the page map is not set, argument callee may not be null");
-			}
-			Page page = callee.getPage();
-			if (page == null)
-			{
-				throw new IllegalStateException(callee +
-					" is not yet set on a page; if you want to use this method " +
-					"without a page map being set, argument callee must be not null " +
-					"and added to a page");
-			}
-			return page.getPageMap();
-		}
 	}
 }

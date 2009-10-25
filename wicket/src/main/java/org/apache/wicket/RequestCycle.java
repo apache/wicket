@@ -685,7 +685,7 @@ public abstract class RequestCycle
 		}
 		else if (target instanceof IBookmarkablePageRequestTarget)
 		{
-			return ((IBookmarkablePageRequestTarget)target).getPageMapName();
+			return PageMap.DEFAULT_NAME;
 		}
 		else
 		{
@@ -708,22 +708,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Sets the page class with optionally the page parameters as the render target of this request.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageClass
-	 *            The page class to render as a response
-	 * @param pageParameters
-	 *            The page parameters that gets appended to the bookmarkable url,
-	 */
-	public final <C extends Page> void setResponsePage(final Class<C> pageClass,
-		final PageParameters pageParameters)
-	{
-		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
-	}
-
-	/**
 	 * Sets the page class with optionally the page parameters and page map name as the render
 	 * target of this request.
 	 * 
@@ -737,10 +721,9 @@ public abstract class RequestCycle
 	 *            The pagemap in which the response page should be created
 	 */
 	public final <C extends Page> void setResponsePage(final Class<C> pageClass,
-		final PageParameters pageParameters, final String pageMapName)
+		final PageParameters pageParameters)
 	{
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
-			pageParameters);
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
 		setRequestTarget(target);
 	}
 
@@ -798,25 +781,6 @@ public abstract class RequestCycle
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this, requestTarget);
 		urlForNewWindowEncoding = false;
 		return url;
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a given set of page
-	 * parameters. Since the URL which is returned contains all information necessary to instantiate
-	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
-		final PageParameters parameters)
-	{
-		return urlFor(null, pageClass, parameters);
 	}
 
 	/**
@@ -970,19 +934,16 @@ public abstract class RequestCycle
 	 * 
 	 * @param <C>
 	 * 
-	 * @param pageMap
-	 *            Pagemap to use. If null is passed the default page map will be used
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final <C extends Page> CharSequence urlFor(final IPageMap pageMap,
-		final Class<C> pageClass, final PageParameters parameters)
+	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
+		final PageParameters parameters)
 	{
-		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
-			? PageMap.DEFAULT_NAME : pageMap.getName(), pageClass, parameters);
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, parameters);
 		return encodeUrlFor(target);
 	}
 

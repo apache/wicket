@@ -19,12 +19,8 @@ package org.apache.wicket.markup.html.link;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Classes;
 
@@ -43,7 +39,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 	private final String pageClassName;
 
 	/** Any page map for this link */
-	private String pageMapName = null;
+	private final String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
 	protected MiniMap<String, Object> parameters;
@@ -145,21 +141,6 @@ public class BookmarkablePageLink<T> extends Link<T>
 	}
 
 	/**
-	 * @return Page map for this link
-	 */
-	public final IPageMap getPageMap()
-	{
-		if (pageMapName != null)
-		{
-			return PageMap.forName(pageMapName);
-		}
-		else
-		{
-			return getPage().getPageMap();
-		}
-	}
-
-	/**
 	 * Whether this link refers to the given page.
 	 * 
 	 * @param page
@@ -189,21 +170,6 @@ public class BookmarkablePageLink<T> extends Link<T>
 	{
 		// Bookmarkable links do not have a click handler.
 		// Instead they are dispatched by the request handling servlet.
-	}
-
-	/**
-	 * @param pageMap
-	 *            The pagemap for this link's destination
-	 * @return This
-	 */
-	public final BookmarkablePageLink<T> setPageMap(final IPageMap pageMap)
-	{
-		if (pageMap != null)
-		{
-			pageMapName = pageMap.getName();
-			add(new AttributeModifier("target", true, new Model<String>(pageMapName)));
-		}
-		return this;
 	}
 
 	/**
@@ -267,13 +233,6 @@ public class BookmarkablePageLink<T> extends Link<T>
 
 		PageParameters parameters = getPageParameters();
 
-		if (getPopupSettings() != null)
-		{
-			return urlFor(getPopupSettings().getPageMap(this), getPageClass(), parameters);
-		}
-		else
-		{
-			return urlFor(getPageMap(), getPageClass(), parameters);
-		}
+		return urlFor(getPageClass(), parameters);
 	}
 }

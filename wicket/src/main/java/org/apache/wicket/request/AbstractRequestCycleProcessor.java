@@ -277,8 +277,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			}
 			else
 			{
-				return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
-					pageClass, params);
+				return new BookmarkablePageRequestTarget(pageClass, params);
 			}
 		}
 		catch (RuntimeException e)

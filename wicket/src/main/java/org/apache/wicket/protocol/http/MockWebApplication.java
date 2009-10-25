@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -420,15 +419,7 @@ public class MockWebApplication
 				if (currentTarget instanceof IPageRequestTarget)
 				{
 					Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-					final IPageMap pageMap = currentPage.getPageMap();
-					if (pageMap.isDefault())
-					{
-						pageMapName = "";
-					}
-					else
-					{
-						pageMapName = pageMap.getName();
-					}
+					pageMapName = "";
 				}
 				else
 				{

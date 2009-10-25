@@ -3022,7 +3022,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
+		return getRequestCycle().urlFor(pageClass, parameters);
 	}
 
 	/**
@@ -3039,32 +3039,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final RequestListenerInterface listener)
 	{
 		return getRequestCycle().urlFor(this, behaviour, listener);
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a given set of page
-	 * parameters. Since the URL which is returned contains all information necessary to instantiate
-	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param <C>
-	 * 
-	 * 
-	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
-	 * 
-	 * @param pageMap
-	 *            Page map to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * 
-	 * 
-	 * @return Bookmarkable URL to page
-	 */
-	public final <C extends Page> CharSequence urlFor(final IPageMap pageMap,
-		final Class<C> pageClass, final PageParameters parameters)
-	{
-		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
 
 	/**
