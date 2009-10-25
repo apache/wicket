@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
@@ -39,8 +38,7 @@ public class BodyFrame extends WebPage
 	{
 		public CharSequence getObject()
 		{
-			return RequestCycle.get().urlFor(PageMap.forName(RIGHT_FRAME_NAME),
-				frameTarget.getFrameClass(), null);
+			return RequestCycle.get().urlFor(frameTarget.getFrameClass(), null);
 		}
 
 		public void setObject(final CharSequence object)

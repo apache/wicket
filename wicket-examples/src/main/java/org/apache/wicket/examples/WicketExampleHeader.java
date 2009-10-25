@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.PageMap;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.examples.source.SourcesPage;
@@ -65,11 +64,9 @@ public final class WicketExampleHeader extends Panel
 			SourcesPage.class, SourcesPage.generatePageParameters(page));
 		add(link);
 
-		PopupSettings settings = new PopupSettings(PageMap.forName("sources"),
-			PopupSettings.RESIZABLE);
+		PopupSettings settings = new PopupSettings("sources", PopupSettings.RESIZABLE);
 		settings.setWidth(800);
 		settings.setHeight(600);
-		settings.setWindowName("sources");
 		link.setPopupSettings(settings);
 	}
 }

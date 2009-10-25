@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.examples.linkomatic.Home;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -95,7 +94,6 @@ public class LeftFrame extends WebPage
 		add(new ChangeFramePageLink("linkToPage1", index, Page1.class));
 		add(new ChangeFramePageLink("linkToPage2", index, Page2.class));
 		BookmarkablePageLink link = new BookmarkablePageLink("directLink", Home.class);
-		link.setPageMap(PageMap.forName(BodyFrame.RIGHT_FRAME_NAME));
 		add(link);
 	}
 

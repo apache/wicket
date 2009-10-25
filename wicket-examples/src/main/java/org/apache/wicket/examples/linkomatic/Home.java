@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.linkomatic;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -118,8 +117,8 @@ public class Home extends WicketExamplePage
 			RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
-		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
-			500).setWidth(500);
+		PopupSettings popupSettings = new PopupSettings("popuppagemap").setHeight(500)
+			.setWidth(500);
 		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
