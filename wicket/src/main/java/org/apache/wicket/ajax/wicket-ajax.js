@@ -1116,7 +1116,7 @@ Wicket.Ajax.Call.prototype = {
 		
 		// reconfigure the form
 		form.target=iframe.name;
-		form.action=this.request.url;
+		form.action=this.request.url + "&wicket:ajax=true";
 		
 		// create submitting button element
 		if (submitButton!=null) {

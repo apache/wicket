@@ -128,6 +128,18 @@ public abstract class Request
 	 */
 	public abstract String getRelativePathPrefixToWicketHandler();
 
+
+	/**
+	 * Sets request parameters. Should only be used when one request is being created as a
+	 * replacement for another.
+	 * 
+	 * @param requestParameters
+	 */
+	public final void setRequestParameters(RequestParameters requestParameters)
+	{
+		this.requestParameters = requestParameters;
+	}
+
 	/**
 	 * Gets the request parameters object using the instance of {@link IRequestCodingStrategy} of
 	 * the provided request cycle processor.

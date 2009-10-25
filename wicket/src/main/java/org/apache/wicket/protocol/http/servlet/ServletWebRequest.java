@@ -77,6 +77,10 @@ public class ServletWebRequest extends WebRequest
 
 		ajax = false;
 		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+
+		if (Strings.isEmpty(ajaxHeader))
+			ajaxHeader = httpServletRequest.getParameter("wicket:ajax");
+
 		if (Strings.isEmpty(ajaxHeader) == false)
 		{
 			try
@@ -493,7 +497,10 @@ public class ServletWebRequest extends WebRequest
 	{
 		try
 		{
-			return new MultipartServletWebRequest(httpServletRequest, maxsize);
+			MultipartServletWebRequest multipart = new MultipartServletWebRequest(
+				httpServletRequest, maxsize);
+			multipart.setRequestParameters(getRequestParameters());
+			return multipart;
 		}
 		catch (FileUploadException e)
 		{
