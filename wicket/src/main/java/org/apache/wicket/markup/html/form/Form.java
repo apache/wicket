@@ -1634,7 +1634,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected boolean handleMultiPart()
 	{
-		if (isMultiPart() && !((WebRequest)getRequest()).isAjax())
+		if (isMultiPart())
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
