@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.injection.web;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.injection.ConfigurableInjector;
 
 /**
@@ -39,16 +41,19 @@ import org.apache.wicket.injection.ConfigurableInjector;
  * InjectorHolder.setInjector(new MockSpringInjector());
  * 
  * //from this point on InjectableWebPage and InjectablePanel
- * //will be injected using the MockSpringInjector 
+ * //will be injected using the MockSpringInjector
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * TODO shouldn't we move this class to org.apache.wicket.injection ?
+ *         TODO shouldn't we move this class to org.apache.wicket.injection ?
  */
 public class InjectorHolder
 {
-	private static ConfigurableInjector injector = null;
+	private static final MetaDataKey<ConfigurableInjector> INJECTOR_KEY = new MetaDataKey<ConfigurableInjector>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Gets an injector
@@ -59,12 +64,13 @@ public class InjectorHolder
 	 */
 	public static ConfigurableInjector getInjector()
 	{
+		ConfigurableInjector injector = Application.get().getMetaData(INJECTOR_KEY);
 		if (injector == null)
 		{
 			throw new IllegalStateException("InjectorHolder has not been assigned an injector. "
-					+ "Use InjectorHolder.setInjector() to assign an injector. "
-					+ "In most cases this should be done once inside "
-					+ "SpringWebApplication subclass's init() method.");
+				+ "Use InjectorHolder.setInjector() to assign an injector. "
+				+ "In most cases this should be done once inside "
+				+ "SpringWebApplication subclass's init() method.");
 		}
 		return injector;
 	}
@@ -79,7 +85,8 @@ public class InjectorHolder
 	 */
 	public static void setInjector(ConfigurableInjector newInjector)
 	{
-		injector = newInjector;
+		Application application = Application.get();
+		application.setMetaData(INJECTOR_KEY, newInjector);
 	}
 
 }

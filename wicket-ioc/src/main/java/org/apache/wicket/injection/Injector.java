@@ -18,7 +18,10 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Component;
@@ -39,10 +42,7 @@ public class Injector
 {
 	private static Injector instance = new Injector();
 
-	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying;
-	// hangs onto Class references.
-	// We need some way to clean out this hashmap when we're done.
-	private final ConcurrentHashMap<Class< ? >, Field[]> classToFields = new ConcurrentHashMap<Class< ? >, Field[]>();
+	private final Map<ClassLoader, ConcurrentHashMap<String, Field[]>> cache = Collections.synchronizedMap(new WeakHashMap<ClassLoader, ConcurrentHashMap<String, Field[]>>());
 
 	/**
 	 * @return static instance of ProxyInjector
@@ -63,7 +63,7 @@ public class Injector
 	 *            class to be tested for being a boundary class
 	 * @return true if the class is a boundary class, false otherwise
 	 */
-	protected boolean isBoundaryClass(Class< ? > clazz)
+	protected boolean isBoundaryClass(Class<?> clazz)
 	{
 		if (clazz.equals(WebPage.class) || clazz.equals(Page.class) || clazz.equals(Panel.class) ||
 			clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
@@ -83,12 +83,25 @@ public class Injector
 	 */
 	public Object inject(Object object, IFieldValueFactory factory)
 	{
-		Class< ? > clazz = object.getClass();
-		Field[] fields = classToFields.get(clazz);
+		final Class<?> clazz = object.getClass();
+
+		Field[] fields = null;
+
+		// try cache
+		ConcurrentHashMap<String, Field[]> container = cache.get(clazz.getClassLoader());
+		if (container != null)
+		{
+			fields = container.get(clazz.getName());
+		}
+
 		if (fields == null)
 		{
 			fields = findFields(clazz, factory);
-			classToFields.put(clazz, fields);
+
+			// write to cache
+			container = new ConcurrentHashMap<String, Field[]>();
+			container.put(clazz.getName(), fields);
+			cache.put(clazz.getClassLoader(), container);
 		}
 
 		for (int i = 0; i < fields.length; i++)
@@ -135,7 +148,7 @@ public class Injector
 	 * @param factory
 	 * @return an array of fields that can be injected using the given field value factory
 	 */
-	private Field[] findFields(Class< ? > clazz, IFieldValueFactory factory)
+	private Field[] findFields(Class<?> clazz, IFieldValueFactory factory)
 	{
 		List<Field> matched = new ArrayList<Field>();
 
