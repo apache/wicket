@@ -306,9 +306,7 @@ public class DataTable<T> extends Panel implements IPageable
 
 		// create a container item for the toolbar (required by repeating view)
 		WebMarkupContainer item = new ToolbarContainer(container.newChildId());
-		item.setRenderBodyOnly(true);
 		item.add(toolbar);
-
 		container.add(item);
 	}
 
