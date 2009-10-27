@@ -334,13 +334,15 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * Adds a component to the list of components to be rendered
+	 * Adds components to the list of components to be rendered
 	 * 
-	 * @param component
-	 *            component to be rendered
+	 * @param components
+	 *            components to be rendered
 	 */
-	public void addComponent(Component component)
+	public void addComponent(Component... components)
 	{
+		for (final Component component : components)
+		{
 		if (component == null)
 		{
 			throw new IllegalArgumentException("component cannot be null");
@@ -352,6 +354,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 					component.toString());
 		}
 		addComponent(component, component.getMarkupId());
+	}
 	}
 
 	/**

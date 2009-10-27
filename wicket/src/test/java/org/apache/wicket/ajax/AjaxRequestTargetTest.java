@@ -91,7 +91,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
-		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -179,5 +179,30 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		// THIS FAILS! even though the same sequence of clicks
 		// done in a browser does not cause the label to change
 		tester.assertLabel("msg", "onBeforeRender called");
+	}
+
+	/**
+	 * WICKET-2543
+	 */
+	public void testVarargsAddComponent()
+	{
+		tester.startPage(VarargsAddComponentPage.class);
+
+		for (int i = 0; i < VarargsAddComponentPage.NUMBER_OF_LABELS; i++)
+		{
+			final String labelMarkupId = "label" + i;
+			final String expectedContent = String.format(VarargsAddComponentPage.INITIAL_CONTENT, i);
+			tester.assertLabel(labelMarkupId, expectedContent);
+}
+
+		tester.clickLink("link");
+
+		for (int i = 0; i < VarargsAddComponentPage.NUMBER_OF_LABELS; i++)
+		{
+			final String labelMarkupId = "label" + i;
+			final String expectedContent = String.format(VarargsAddComponentPage.INITIAL_CONTENT, i) +
+				VarargsAddComponentPage.AJAX_APPENDED_SUFFIX;
+			tester.assertLabel(labelMarkupId, expectedContent);
+		}
 	}
 }
