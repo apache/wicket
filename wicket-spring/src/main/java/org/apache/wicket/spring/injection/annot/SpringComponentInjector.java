@@ -19,12 +19,13 @@ package org.apache.wicket.spring.injection.annot;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.application.IComponentInstantiationListener;
-import org.apache.wicket.injection.ComponentInjector;
-import org.apache.wicket.injection.web.InjectorHolder;
+import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.ISpringContextLocator;
@@ -32,20 +33,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * {@link IComponentInstantiationListener} that injects component properties annotated with {@link
- * SpringBean} annotations.
+ * {@link IComponentInstantiationListener} that injects component properties annotated with
+ * {@link SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
  * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code> Non-wicket
  * components such as {@link Session}, {@link Model}, and any other pojo can be injected by calling
- * <code>InjectorHolder.getInjector().inject(this)</code> in their constructor.
+ * <code>Injector.get().inject(this)</code> in their constructor.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>
  * 
  */
-public class SpringComponentInjector extends ComponentInjector
+public class SpringComponentInjector extends Injector implements IComponentInstantiationListener
 {
+	private final IFieldValueFactory fieldValueFactory;
 
 	/**
 	 * Metadata key used to store application context holder in application's metadata
@@ -59,11 +61,11 @@ public class SpringComponentInjector extends ComponentInjector
 
 	/**
 	 * Constructor used when spring application context is declared in the spring standard way and
-	 * can be located through {@link
-	 * WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
+	 * can be located through
+	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
-	 * 		wicket web application
+	 *            wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp)
 	{
@@ -77,9 +79,9 @@ public class SpringComponentInjector extends ComponentInjector
 	 * Constructor
 	 * 
 	 * @param webapp
-	 * 		wicket web application
+	 *            wicket web application
 	 * @param ctx
-	 * 		spring's application context
+	 *            spring's application context
 	 */
 	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
 	{
@@ -95,10 +97,23 @@ public class SpringComponentInjector extends ComponentInjector
 
 		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
-
-		// ... and create and register the annotation aware injector
-		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator()));
+		fieldValueFactory = new AnnotProxyFieldValueFactory(new ContextLocator());
+		bind(webapp);
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void inject(Object object)
+	{
+		inject(object, fieldValueFactory);
+	}
+
+	/** {@inheritDoc} */
+	public void onInstantiation(Component component)
+	{
+		inject(component);
+	}
+
 
 	/**
 	 * This is a holder for the application context. The reason we need a holder is that metadata
@@ -158,5 +173,6 @@ public class SpringComponentInjector extends ComponentInjector
 		}
 
 	}
+
 
 }

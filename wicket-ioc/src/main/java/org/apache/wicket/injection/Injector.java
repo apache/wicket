@@ -24,11 +24,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
@@ -38,40 +35,44 @@ import org.apache.wicket.markup.html.panel.Panel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class Injector
+public abstract class Injector
 {
-	private static Injector instance = new Injector();
+	private static final MetaDataKey<Injector> KEY = new MetaDataKey<Injector>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	private final Map<ClassLoader, ConcurrentHashMap<String, Field[]>> cache = Collections.synchronizedMap(new WeakHashMap<ClassLoader, ConcurrentHashMap<String, Field[]>>());
 
 	/**
-	 * @return static instance of ProxyInjector
+	 * Binds current instance of the injector to the Application. After this method is called this
+	 * instance of injector will be returned from subsequent calls to {@link #get()} whenever the
+	 * specified application object is active in the thread.
+	 * 
+	 * @param application
 	 */
-	public static Injector getInstance()
+	public void bind(Application application)
 	{
-		return instance;
+		application.setMetaData(KEY, this);
 	}
 
 	/**
-	 * When the initializer traverses the hierarchy of the specified object it will stop if it
-	 * encounters a boundary class.
-	 * 
-	 * By default, more common wicket classes are defined as boundaries so that the initializer does
-	 * not waste time traversing them.
-	 * 
-	 * @param clazz
-	 *            class to be tested for being a boundary class
-	 * @return true if the class is a boundary class, false otherwise
+	 * @return Injector associated with the application instance
 	 */
-	protected boolean isBoundaryClass(Class<?> clazz)
+	public static Injector get()
 	{
-		if (clazz.equals(WebPage.class) || clazz.equals(Page.class) || clazz.equals(Panel.class) ||
-			clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
-		{
-			return true;
-		}
-		return false;
+		return Application.get().getMetaData(KEY);
 	}
+
+	/**
+	 * Injects the specified object. This method is usually implemented by delegating to
+	 * {@link #inject(Object, IFieldValueFactory)} with some {@link IFieldValueFactory}
+	 * 
+	 * @param object
+	 * 
+	 * @see #inject(Object, IFieldValueFactory)
+	 */
+	public abstract void inject(Object object);
 
 	/**
 	 * traverse fields in the class hierarchy of the object and set their value with a locator
@@ -79,9 +80,8 @@ public class Injector
 	 * 
 	 * @param object
 	 * @param factory
-	 * @return Object that was injected - used for chaining
 	 */
-	public Object inject(Object object, IFieldValueFactory factory)
+	protected void inject(Object object, IFieldValueFactory factory)
 	{
 		final Class<?> clazz = object.getClass();
 
@@ -137,8 +137,6 @@ public class Injector
 					"] of type [" + object.getClass().getName() + "]", e);
 			}
 		}
-
-		return object;
 	}
 
 	/**
@@ -152,7 +150,7 @@ public class Injector
 	{
 		List<Field> matched = new ArrayList<Field>();
 
-		while (clazz != null && !isBoundaryClass(clazz))
+		while (clazz != null)
 		{
 			Field[] fields = clazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++)

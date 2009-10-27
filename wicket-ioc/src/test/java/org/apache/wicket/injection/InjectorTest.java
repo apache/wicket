@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.injection.util.InternalTestObject;
 import org.apache.wicket.injection.util.MockDependency;
 import org.apache.wicket.injection.util.TestObject;
 
@@ -49,6 +48,17 @@ public class InjectorTest extends TestCase
 
 	};
 
+	private static class TestInjector extends Injector
+	{
+
+		@Override
+		public void inject(Object object)
+		{
+			inject(object, factory);
+		}
+
+	}
+
 	/**
 	 * Test injection
 	 */
@@ -56,7 +66,7 @@ public class InjectorTest extends TestCase
 	{
 		TestObject testObject = new TestObject();
 
-		Injector.getInstance().inject(testObject, factory);
+		new TestInjector().inject(testObject, factory);
 
 		assertEquals(testObject.getDependency1().getMessage(), "inject");
 		assertEquals(testObject.getDependency2().getMessage(), "dont-inject");
@@ -64,29 +74,5 @@ public class InjectorTest extends TestCase
 		assertEquals(testObject.getDependency4().getMessage(), "inject");
 	}
 
-	/**
-	 * Test abort injection on boundary class
-	 */
-	public void testBreakOnBoundary()
-	{
-		Injector injector = new Injector()
-		{
-			@Override
-			protected boolean isBoundaryClass(Class< ? > clazz)
-			{
-				return clazz.equals(InternalTestObject.class);
-			}
-		};
-
-		TestObject testObject = new TestObject();
-
-		injector.inject(testObject, factory);
-
-		assertTrue(testObject.getDependency1() == null);
-		assertEquals(testObject.getDependency2().getMessage(), "dont-inject");
-		assertEquals(testObject.getDependency3().getMessage(), "dont-inject");
-		assertEquals(testObject.getDependency4().getMessage(), "inject");
-
-	}
 
 }
