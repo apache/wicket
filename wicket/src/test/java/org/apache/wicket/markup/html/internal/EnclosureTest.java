@@ -145,4 +145,13 @@ public class EnclosureTest extends WicketTestCase
 		tester = new WicketTester(EnclosurePage_7.class);
 		tester.startPage(EnclosurePage_7.class);
 	}
+
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	public void testRender8() throws Exception
+	{
+		executeTest(EnclosurePage_8.class, "EnclosurePageExpectedResult_8.html");
+	}
 }

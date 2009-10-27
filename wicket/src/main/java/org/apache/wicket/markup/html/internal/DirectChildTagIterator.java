@@ -45,7 +45,13 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 		this.markupStream = markupStream;
 		this.parent = parent;
 		originalIndex = markupStream.getCurrentIndex();
-		findNext();
+
+		while (!markupStream.atTag() && markupStream.hasMore())
+		{
+			markupStream.next();
+		}
+
+		next = markupStream.getTag();
 	}
 
 	/**
