@@ -524,7 +524,7 @@ public class BaseWicketTester extends MockWebApplication
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
-			Result.fail("Component not found: " + path);
+			return Result.fail("Component not found: " + path);
 		}
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
 			Classes.simpleName(expectedComponentClass),
