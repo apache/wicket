@@ -42,6 +42,15 @@ public abstract class MetaDataKey<T> implements IClusterable
 	}
 
 	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
