@@ -1129,7 +1129,7 @@ Wicket.Ajax.Call.prototype = {
 				btn.id=iframe.id+"-btn";
 				btn.value="1";
 			}
-		form.appendChild(btn);
+			form.appendChild(btn);
 		}
 		
 		//submit the form into the iframe, response will be handled by the onload callback
