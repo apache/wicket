@@ -353,8 +353,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (url != null)
 		{
 			String result = null;
-
-			if (!sharedResourceURL && portletRequest)
+			if (!UrlUtils.isRelative(url.toString()) || (!sharedResourceURL && portletRequest))
 			{
 				result = url.toString();
 			}
