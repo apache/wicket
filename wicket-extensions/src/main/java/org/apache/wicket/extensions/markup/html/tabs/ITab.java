@@ -37,11 +37,11 @@ public interface ITab extends IClusterable
 	IModel<String> getTitle();
 
 	/**
-	 * @param panelId
+	 * @param containerId
 	 *            returned panel MUST have this id
-	 * @return a Panel object that will be placed as the content panel
+	 * @return a container object that will be placed as the content of the tab
 	 */
-	WebMarkupContainerWithAssociatedMarkup getPanel(final String panelId);
+	WebMarkupContainerWithAssociatedMarkup getPanel(final String containerId);
 
 	/**
 	 * Returns whether this tab should be visible
