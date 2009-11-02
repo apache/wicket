@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.markup.html.tabs;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -41,7 +41,7 @@ public interface ITab extends IClusterable
 	 *            returned panel MUST have this id
 	 * @return a Panel object that will be placed as the content panel
 	 */
-	Panel getPanel(final String panelId);
+	WebMarkupContainerWithAssociatedMarkup getPanel(final String panelId);
 
 	/**
 	 * Returns whether this tab should be visible

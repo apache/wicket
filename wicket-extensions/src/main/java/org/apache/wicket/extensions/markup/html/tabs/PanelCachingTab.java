@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.tabs;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -32,7 +32,7 @@ public class PanelCachingTab implements ITab
 {
 	private static final long serialVersionUID = 1L;
 
-	private Panel panel;
+	private WebMarkupContainerWithAssociatedMarkup panel;
 	private final ITab delegate;
 
 	/**
@@ -57,7 +57,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public Panel getPanel(final String panelId)
+	public WebMarkupContainerWithAssociatedMarkup getPanel(final String panelId)
 	{
 		if (panel == null)
 		{
