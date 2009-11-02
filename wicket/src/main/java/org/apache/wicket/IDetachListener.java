@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.settings.IFrameworkSettings;
+
 /**
  * Listens to {@link Component#detach()} calls.
  * 
@@ -23,6 +25,8 @@ package org.apache.wicket;
  * the component is in a fully detached state when the listener is invoked.
  * 
  * @author igor.vaynberg
+ * 
+ * @see IFrameworkSettings#setDetachListener(IDetachListener)
  */
 public interface IDetachListener
 {
