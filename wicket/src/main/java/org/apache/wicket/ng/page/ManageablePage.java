@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ng.page;
 
-import org.apache.wicket.model.IDetachable;
 
-public interface ManageablePage extends IDetachable
+// TODO WICKET-NG: this iface used to extend IDetachable, however this causes problems because Page becomes IDetachable and some property models will cause an infinite loop trigging detach on the component again because it is their target object. In the future Component should indeed implement IDetachable, for now copied #detach into this iface directly.
+public interface ManageablePage /* extends IDetachable */
 {
 	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any stateful
@@ -34,6 +34,12 @@ public interface ManageablePage extends IDetachable
 	 * @return A unique identifier for this page map entry
 	 */
 	public int getPageId();
+
+	/**
+	 * Detaches model after use. This is generally used to null out transient references that can be
+	 * re-attached later.
+	 */
+	void detach();
 
 
 }

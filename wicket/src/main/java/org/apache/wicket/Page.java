@@ -31,13 +31,12 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.page.ManageablePage;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
@@ -120,7 +119,11 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
+public abstract class Page extends MarkupContainer
+	implements
+		IRedirectListener,
+		IPageMapEntry,
+		ManageablePage
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -1370,5 +1373,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public IMarkupFragment getMarkup()
 	{
 		return getAssociatedMarkup();
+	}
+
+	public int getPageId()
+	{
+		return numericId;
 	}
 }

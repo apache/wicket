@@ -1170,21 +1170,24 @@ public abstract class Session implements IClusterable
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	protected final Object getAttribute(final String name)
+	// TODO WICKET-NG made public for page manager, used to be protected, see if there is a way to
+	// revert
+	public final Serializable getAttribute(final String name)
 	{
+		// TODO WICKET-NG remove serializable casts, maps should be <string,serializable>
 		if (!isTemporary())
 		{
 			RequestCycle cycle = RequestCycle.get();
 			if (cycle != null)
 			{
-				return getSessionStore().getAttribute(cycle.getRequest(), name);
+				return (Serializable)getSessionStore().getAttribute(cycle.getRequest(), name);
 			}
 		}
 		else
 		{
 			if (temporarySessionAttributes != null)
 			{
-				return temporarySessionAttributes.get(name);
+				return (Serializable)temporarySessionAttributes.get(name);
 			}
 		}
 		return null;
@@ -1260,7 +1263,10 @@ public abstract class Session implements IClusterable
 	 * @param value
 	 *            The value of the attribute
 	 */
-	protected final void setAttribute(String name, Object value)
+	// TODO WICKET-NG made public for page manager, used to be protected, see if there is a way to
+	// revert
+
+	public final void setAttribute(String name, Serializable value)
 	{
 		if (!isTemporary())
 		{
@@ -1439,7 +1445,8 @@ public abstract class Session implements IClusterable
 		{
 			for (Entry<String, Object> entry : tempMap.entrySet())
 			{
-				setAttribute(entry.getKey(), entry.getValue());
+				// WICKET-NG this cast should not be necessary, map should be <string,serializable>
+				setAttribute(entry.getKey(), (Serializable)entry.getValue());
 			}
 		}
 

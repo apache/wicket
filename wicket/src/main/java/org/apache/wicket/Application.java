@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +48,13 @@ import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.ParentResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
+import org.apache.wicket.ng.page.PageManager;
+import org.apache.wicket.ng.page.PageManagerContext;
+import org.apache.wicket.ng.page.persistent.DataStore;
+import org.apache.wicket.ng.page.persistent.DefaultPageStore;
+import org.apache.wicket.ng.page.persistent.PageStore;
+import org.apache.wicket.ng.page.persistent.PersistentPageManager;
+import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -883,6 +891,10 @@ public abstract class Application
 		getMarkupSettings().getMarkupCache().shutdown();
 
 		onDestroy();
+
+		// release pagemanager
+		pageManager.destroy();
+
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 		Session.unset();
@@ -922,6 +934,10 @@ public abstract class Application
 
 		sessionStore = newSessionStore();
 		converterLocator = newConverterLocator();
+
+		// set up pagemanager
+		pageManager = newPageManager();
+		pageManager.setContext(getPageManagerContext());
 	}
 
 	/**
@@ -1180,4 +1196,99 @@ public abstract class Application
 			}
 		}
 	}
+
+
+	// ///////////////////////////////////////////////////////////////
+	// NG STUFF
+	//
+	// TODO WICKET-NG remove these comments
+	//
+	// ///////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Page Manager
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	protected PageManager newPageManager()
+	{
+		int cacheSize = 40;
+		int fileChannelPoolCapacity = 50;
+		DataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
+		PageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
+		return new PersistentPageManager(getName(), pageStore);
+	}
+
+	private PageManager pageManager;
+
+	/**
+	 * Context for PageManager to interact with rest of Wicket
+	 */
+	private final PageManagerContext pageManagerContext = new PageManagerContext()
+	{
+		public void bind()
+		{
+			Session.get().bind();
+		}
+
+		private final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
+		{
+			private static final long serialVersionUID = 1L;
+		};
+
+		public Object getRequestData()
+		{
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle == null)
+			{
+				throw new IllegalStateException("Not a request thread.");
+			}
+			return requestCycle.getMetaData(requestCycleMetaDataKey);
+		}
+
+		public Serializable getSessionAttribute(String key)
+		{
+			return Session.get().getAttribute(key);
+		}
+
+		public String getSessionId()
+		{
+			return Session.get().getId();
+		}
+
+		public void setRequestData(Object data)
+		{
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle == null)
+			{
+				throw new IllegalStateException("Not a request thread.");
+			}
+			requestCycle.setMetaData(requestCycleMetaDataKey, data);
+		}
+
+		public void setSessionAttribute(String key, Serializable value)
+		{
+			Session.get().setAttribute(key, value);
+		}
+	};
+
+	/**
+	 * Returns the {@link PageManager} instance.
+	 * 
+	 * @return {@link PageManager} instance.
+	 */
+	public PageManager getPageManager()
+	{
+		return pageManager;
+	}
+
+	protected PageManagerContext getPageManagerContext()
+	{
+		return pageManagerContext;
+	}
+
+
 }
