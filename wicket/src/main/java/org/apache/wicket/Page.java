@@ -457,10 +457,12 @@ public abstract class Page extends MarkupContainer
 
 	/**
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getNumericId()
+	 * @deprecated
 	 */
+	@Deprecated
 	public int getNumericId()
 	{
-		return numericId;
+		return getPageId();
 	}
 
 	/**
@@ -1375,6 +1377,9 @@ public abstract class Page extends MarkupContainer
 		return getAssociatedMarkup();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.page.ManageablePage#getPageId()
+	 */
 	public int getPageId()
 	{
 		return numericId;
