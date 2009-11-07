@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -139,6 +140,15 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 			}
 		}
 		super.onBeforeRender();
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+	 */
+	@Override
+	public IMarkupFragment getMarkup(final Component child)
+	{
+		return getMarkup();
 	}
 
 	/**
