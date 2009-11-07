@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
@@ -75,15 +74,5 @@ public class AbstractItem extends WebMarkupContainer
 	public AbstractItem(final int id)
 	{
 		this(Integer.toString(id));
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#getMarkup()
-	 */
-	@Override
-	public final IMarkupFragment getMarkup()
-	{
-		// The LoopItems markup is equal to the Loops markup
-		return getParent().getMarkup();
 	}
 }
