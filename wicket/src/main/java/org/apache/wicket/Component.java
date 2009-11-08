@@ -2157,7 +2157,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			MarkupContainer parent = getParent();
 			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false) || isAuto())
 			{
-				prepareForRender();
+				prepareForRender(true);
 			}
 
 			// Do the render

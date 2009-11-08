@@ -21,10 +21,15 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.EnclosureContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.response.NullResponse;
 import org.slf4j.Logger;
@@ -64,8 +69,15 @@ import org.slf4j.LoggerFactory;
  *    }
  * </pre>
  * 
+ * Please note that since a transparent auto-component is created for the tag, the markup and the
+ * component hierarchy will not be in sync which leads to subtle differences if your code relies on
+ * onBeforeRender() and validate() being called for the children inside the enclosure tag. E.g. it
+ * might happen that onBeforeRender() and validate() gets called on invisible components. In doubt,
+ * please fall back to {@link EnclosureContainer}.
+ * 
  * @see EnclosureResolver
  * @see EnclosureHandler
+ * @see EnclosureContainer
  * 
  * @author Juergen Donnerstag
  * @since 1.3
@@ -154,24 +166,38 @@ public class Enclosure extends WebMarkupContainer
 		// set the enclosure visibility
 		boolean visible = controller.determineVisibility();
 
-		if (visible)
-		{
-			super.onComponentTagBody(markupStream, openTag);
-		}
-		else
-		{
-			RequestCycle cycle = getRequestCycle();
-			Response response = cycle.getResponse();
-			try
-			{
-				cycle.setResponse(NullResponse.getInstance());
+		// We want to know which components are rendered inside the enclosure
+		final IComponentOnAfterRenderListener listener = new EnclosureListener(this);
 
+		try
+		{
+			// register the listener
+			getApplication().addComponentOnAfterRenderListener(listener);
+
+			if (visible)
+			{
 				super.onComponentTagBody(markupStream, openTag);
 			}
-			finally
+			else
 			{
-				cycle.setResponse(response);
+				RequestCycle cycle = getRequestCycle();
+				Response response = cycle.getResponse();
+				try
+				{
+					cycle.setResponse(NullResponse.getInstance());
+
+					super.onComponentTagBody(markupStream, openTag);
+				}
+				finally
+				{
+					cycle.setResponse(response);
+				}
 			}
+		}
+		finally
+		{
+			// make sure we remove the listener
+			getApplication().removeComponentOnAfterRenderListener(listener);
 		}
 	}
 
@@ -190,6 +216,36 @@ public class Enclosure extends WebMarkupContainer
 		{
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
+		}
+	}
+
+	/**
+	 * Enclosure will register this listener during the body render phase of the Enclosure
+	 */
+	private static class EnclosureListener implements IComponentOnAfterRenderListener
+	{
+		private final Enclosure enclosure;
+
+		private EnclosureListener(final Enclosure enclosure)
+		{
+			this.enclosure = enclosure;
+		}
+
+		/**
+		 * @see org.apache.wicket.application.IComponentOnBeforeRenderListener#onBeforeRender(org.apache.wicket.Component)
+		 */
+		public void onAfterRender(final Component component)
+		{
+			if (log.isWarnEnabled())
+			{
+				if ((component instanceof FormComponent) ||
+					(component instanceof IFormSubmittingComponent) || (component instanceof Form))
+				{
+					log.warn("Please note that onBeforeRender() and validate() might be called on invisible components inside an Enclosure. " +
+						"Please see EnclosureContainer for an alternative. Enclosure: " +
+						enclosure.toString());
+				}
+			}
 		}
 	}
 }
