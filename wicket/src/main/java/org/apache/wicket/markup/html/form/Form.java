@@ -594,11 +594,17 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 						if ((getRequest().getParameter(name) != null) ||
 							(getRequest().getParameter(name + ".x") != null))
 						{
-							if (!component.isVisible())
+							if (!component.isVisibleInHierarchy())
 							{
 								throw new WicketRuntimeException("Submit Button " +
 									submittingComponent.getInputName() + " (path=" +
 									component.getPageRelativePath() + ") is not visible");
+							}
+							if (!component.isEnabledInHierarchy())
+							{
+								throw new WicketRuntimeException("Submit Button " +
+									submittingComponent.getInputName() + " (path=" +
+									component.getPageRelativePath() + ") is not enabled");
 							}
 							return submittingComponent;
 						}
