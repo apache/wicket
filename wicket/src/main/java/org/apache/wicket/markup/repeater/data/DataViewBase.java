@@ -103,9 +103,10 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 		 */
 		public ModelIterator(IDataProvider<T> dataProvider, int offset, int count)
 		{
-			items = dataProvider.iterator(offset, count);
 			this.dataProvider = dataProvider;
 			max = count;
+
+			items = count > 0 ? dataProvider.iterator(offset, count) : null;
 		}
 
 		/**
@@ -121,7 +122,7 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 		 */
 		public boolean hasNext()
 		{
-			return items.hasNext() && (index < max);
+			return items != null && items.hasNext() && (index < max);
 		}
 
 		/**
