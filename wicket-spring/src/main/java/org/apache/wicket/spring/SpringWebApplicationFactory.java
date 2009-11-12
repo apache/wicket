@@ -71,6 +71,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * <p>
  * This factory is also capable of creating an additional application context (path to which is
  * specified via the {@code contextConfigLocation} filter param) and chaining it to the global one
+ * </p>
  * 
  * <pre>
  * &lt;filter&gt;
