@@ -156,6 +156,10 @@ public class MockWebApplication
 					public WebApplication createApplication(WicketFilter filter)
 					{
 						return application;
+					}
+
+					public void destroy()
+					{
 					};
 				};
 			}

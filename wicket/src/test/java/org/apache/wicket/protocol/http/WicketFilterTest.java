@@ -190,5 +190,9 @@ public class WicketFilterTest extends TestCase
 		{
 			return application;
 		}
+
+		public void destroy()
+		{
+		}
 	}
 }
