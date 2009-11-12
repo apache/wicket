@@ -118,7 +118,7 @@ public interface Resource extends Serializable
 		 * 
 		 * @return variation or <code>null</code>
 		 */
-		public String getVariant()
+		public String getVariation()
 		{
 			return variation;
 		}
