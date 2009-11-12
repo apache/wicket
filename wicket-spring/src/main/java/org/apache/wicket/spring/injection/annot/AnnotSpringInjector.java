@@ -35,16 +35,31 @@ public class AnnotSpringInjector extends ConfigurableInjector
 	 * Constructor
 	 * 
 	 * @param locator
-	 * 		spring context locator
+	 *            spring context locator
 	 */
 	public AnnotSpringInjector(ISpringContextLocator locator)
 	{
-		initFactory(locator);
+		this(locator, true);
 	}
 
-	private void initFactory(ISpringContextLocator locator)
+
+	/**
+	 * Constructor
+	 * 
+	 * @param locator
+	 *            spring context locator
+	 * @param wrapInProxies
+	 *            whether or not wicket should wrap dependencies with specialized proxies that can
+	 *            be safely serialized. in most cases this should be set to true.
+	 */
+	public AnnotSpringInjector(ISpringContextLocator locator, boolean wrapInProxies)
 	{
-		factory = new AnnotProxyFieldValueFactory(locator);
+		initFactory(locator, wrapInProxies);
+	}
+
+	private void initFactory(ISpringContextLocator locator, boolean wrapInProxies)
+	{
+		factory = new AnnotProxyFieldValueFactory(locator, wrapInProxies);
 	}
 
 	@Override

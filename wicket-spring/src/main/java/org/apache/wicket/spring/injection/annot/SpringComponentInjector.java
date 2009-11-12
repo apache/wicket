@@ -32,8 +32,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * {@link IComponentInstantiationListener} that injects component properties annotated with {@link
- * SpringBean} annotations.
+ * {@link IComponentInstantiationListener} that injects component properties annotated with
+ * {@link SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
  * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code> Non-wicket
@@ -59,29 +59,33 @@ public class SpringComponentInjector extends ComponentInjector
 
 	/**
 	 * Constructor used when spring application context is declared in the spring standard way and
-	 * can be located through {@link
-	 * WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
+	 * can be located through
+	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
-	 * 		wicket web application
+	 *            wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp)
 	{
 		// locate application context through spring's default location
 		// mechanism and pass it on to the proper constructor
 		this(webapp, WebApplicationContextUtils.getRequiredWebApplicationContext(webapp
-				.getServletContext()));
+				.getServletContext()), true);
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param webapp
-	 * 		wicket web application
+	 *            wicket web application
 	 * @param ctx
-	 * 		spring's application context
+	 *            spring's application context
+	 * @param wrapInProxies
+	 *            whether or not wicket should wrap dependencies with specialized proxies that can
+	 *            be safely serialized. in most cases this should be set to true.
 	 */
-	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
+	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx,
+			boolean wrapInProxies)
 	{
 		if (webapp == null)
 		{
@@ -97,7 +101,7 @@ public class SpringComponentInjector extends ComponentInjector
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
-		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator()));
+		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator(), wrapInProxies));
 	}
 
 	/**
