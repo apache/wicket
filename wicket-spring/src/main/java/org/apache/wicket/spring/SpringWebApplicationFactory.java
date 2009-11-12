@@ -95,6 +95,9 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 public class SpringWebApplicationFactory implements IWebApplicationFactory
 {
 
+	/** additional context created for this filter, if any */
+	private ConfigurableWebApplicationContext additionalContext;
+
 	/**
 	 * Returns location of context config that will be used to create an additional application
 	 * context for this application
@@ -129,11 +132,11 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 
 		if (getContextConfigLocation(filter) != null)
 		{
-			ac = createWebApplicationContext(ac, filter);
+			additionalContext = createWebApplicationContext(ac, filter);
 		}
 
 		String beanName = filter.getFilterConfig().getInitParameter("applicationBean");
-		return createApplication(ac, beanName);
+		return createApplication(additionalContext, beanName);
 	}
 
 	private WebApplication createApplication(ApplicationContext ac, String beanName)
@@ -177,8 +180,8 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	 * @return instance of additional application context
 	 * @throws BeansException
 	 */
-	protected final WebApplicationContext createWebApplicationContext(WebApplicationContext parent,
-			WicketFilter filter) throws BeansException
+	protected final ConfigurableWebApplicationContext createWebApplicationContext(
+			WebApplicationContext parent, WicketFilter filter) throws BeansException
 	{
 		ConfigurableWebApplicationContext wac = newApplicationContext();
 		wac.setParent(parent);
@@ -204,5 +207,14 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 			WicketFilter filter)
 	{
 		// noop
+	}
+
+	/** {@inheritDoc} */
+	public void destroy()
+	{
+		if (additionalContext != null)
+		{
+			additionalContext.close();
+		}
 	}
 }
