@@ -34,9 +34,10 @@ import org.apache.wicket.model.IModel;
  * 
  * <pre>
  * RepeatingView view = new RepeatingView(&quot;repeater&quot;);
- * view.add(new Label(&quot;1&quot;, &quot;hello&quot;));
- * view.add(new Label(&quot;2&quot;, &quot;goodbye&quot;));
- * view.add(new Label(&quot;3&quot;, &quot;good morning&quot;));
+ * view.add(new Label(view.newChildId(), &quot;hello&quot;));
+ * view.add(new Label(view.newChildId(), &quot;goodbye&quot;));
+ * view.add(new Label(view.newChildId(), &quot;good morning&quot;));
+ * add(view);
  * </pre>
  * 
  * </p>
@@ -63,7 +64,7 @@ import org.apache.wicket.model.IModel;
  * </pre>
  * 
  * and so this is the markup that is available to the direct children - the Label components. So as
- * each label renders it produces a line of the output that has the <code>li</code>tag.
+ * each label renders it produces a line of the output that has the <code>li</code> tag.
  * 
  * 
  * @author Igor Vaynberg ( ivaynberg )
