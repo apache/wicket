@@ -62,17 +62,32 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
+	private final boolean wrapInProxies;
+
 	/**
 	 * @param contextLocator
 	 *            spring context locator
 	 */
 	public AnnotProxyFieldValueFactory(ISpringContextLocator contextLocator)
 	{
+		this(contextLocator, true);
+	}
+
+	/**
+	 * @param contextLocator
+	 *            spring context locator
+	 * @param wrapInProxies
+	 *            whether or not wicket should wrap dependencies with specialized proxies that can
+	 *            be safely serialized. in most cases this should be set to true.
+	 */
+	public AnnotProxyFieldValueFactory(ISpringContextLocator contextLocator, boolean wrapInProxies)
+	{
 		if (contextLocator == null)
 		{
 			throw new IllegalArgumentException("[contextLocator] argument cannot be null");
 		}
 		this.contextLocator = contextLocator;
+		this.wrapInProxies = wrapInProxies;
 	}
 
 	/**
@@ -94,13 +109,22 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				return cachedValue;
 			}
 
-			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
+			final Object target;
+			if (wrapInProxies)
+			{
+				target = LazyInitProxyFactory.createProxy(field.getType(), locator);
+			}
+			else
+			{
+				target = locator.locateProxyTarget();
+			}
+
 			// only put the proxy into the cache if the bean is a singleton
 			if (locator.isSingletonBean())
 			{
-				cache.put(locator, proxy);
+				cache.put(locator, target);
 			}
-			return proxy;
+			return target;
 		}
 		return null;
 	}

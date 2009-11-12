@@ -85,6 +85,24 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 	 */
 	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
 	{
+		this(webapp, ctx, true);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param webapp
+	 *            wicket web application
+	 * @param ctx
+	 *            spring's application context
+	 * 
+	 * @param wrapInProxies
+	 *            whether or not wicket should wrap dependencies with specialized proxies that can
+	 *            be safely serialized. in most cases this should be set to true.
+	 */
+	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx,
+			boolean wrapInProxies)
+	{
 		if (webapp == null)
 		{
 			throw new IllegalArgumentException("Argument [[webapp]] cannot be null");
@@ -97,7 +115,7 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 
 		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
-		fieldValueFactory = new AnnotProxyFieldValueFactory(new ContextLocator());
+		fieldValueFactory = new AnnotProxyFieldValueFactory(new ContextLocator(), wrapInProxies);
 		bind(webapp);
 	}
 
