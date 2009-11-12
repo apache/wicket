@@ -68,8 +68,8 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	public RequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
-		if (url.getSegments().size() >= 4
-				&& urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		if (url.getSegments().size() >= 4 &&
+			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
 		{
 			String className = url.getSegments().get(2);
 			StringBuilder name = new StringBuilder();
@@ -85,21 +85,23 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReferenceAttributes attributes = getResourceReferenceAttributes(url);
 
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, url.getSegments().size(),
-					pageParametersEncoder);
+			PageParameters pageParameters = extractPageParameters(request,
+				url.getSegments().size(), pageParametersEncoder);
 
 			Class<?> scope = resolveClass(className);
 			if (scope != null)
 			{
-				ResourceReference res = getContext().getResourceReferenceRegistry().getResourceReference(scope,
-						name.toString(), attributes.locale, attributes.style, false);
+				ResourceReference res = getContext().getResourceReferenceRegistry()
+					.getResourceReference(scope, name.toString(), attributes.locale,
+						attributes.style, attributes.variation, false);
 				if (res != null)
 				{
 					Resource resource = res.getResource();
 					if (resource != null)
 					{
-						ResourceRequestHandler handler = new ResourceRequestHandler(resource, attributes.locale,
-								attributes.style, pageParameters);
+						ResourceRequestHandler handler = new ResourceRequestHandler(resource,
+							attributes.locale, attributes.style, attributes.variation,
+							pageParameters);
 						return handler;
 					}
 				}

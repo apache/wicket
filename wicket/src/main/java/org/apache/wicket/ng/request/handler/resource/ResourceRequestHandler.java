@@ -34,6 +34,7 @@ public class ResourceRequestHandler implements RequestHandler
 	private final Resource resource;
 	private final Locale locale;
 	private final String style;
+	private final String variation;
 	private final PageParameters pageParameters;
 
 	/**
@@ -42,9 +43,10 @@ public class ResourceRequestHandler implements RequestHandler
 	 * @param resource
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 * @param pageParameters
 	 */
-	public ResourceRequestHandler(Resource resource, Locale locale, String style,
+	public ResourceRequestHandler(Resource resource, Locale locale, String style, String variation,
 		PageParameters pageParameters)
 	{
 		Checks.argumentNotNull(resource, "resource");
@@ -52,6 +54,7 @@ public class ResourceRequestHandler implements RequestHandler
 		this.resource = resource;
 		this.locale = locale;
 		this.style = style;
+		this.variation = variation;
 		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
 	}
 
@@ -72,6 +75,14 @@ public class ResourceRequestHandler implements RequestHandler
 	}
 	
 	/**
+	 * @return variation
+	 */
+	public String getVariation()
+	{
+		return variation;
+	}
+
+	/**
 	 * @return page parameters
 	 */
 	public PageParameters getPageParameters()
@@ -90,7 +101,7 @@ public class ResourceRequestHandler implements RequestHandler
 	public void respond(RequestCycle requestCycle)
 	{
 		Resource.Attributes a = new Resource.Attributes(requestCycle.getRequest(),
-			requestCycle.getResponse(), locale, style, pageParameters);
+			requestCycle.getResponse(), locale, style, variation, pageParameters);
 		resource.respond(a);
 	}
 

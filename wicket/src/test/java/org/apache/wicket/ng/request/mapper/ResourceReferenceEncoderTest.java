@@ -57,6 +57,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource1, h.getResource());
         assertEquals(null, h.getLocale());
         assertEquals(null, h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -73,6 +74,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource1, h.getResource());
         assertEquals(Locale.ENGLISH, h.getLocale());
         assertEquals(null, h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -89,6 +91,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource1, h.getResource());
         assertEquals(null, h.getLocale());
         assertEquals(null, h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
         assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
@@ -106,6 +109,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource1, h.getResource());
         assertEquals(null, h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
         assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
@@ -123,6 +127,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource2, h.getResource());
         assertEquals(new Locale("en", "en"), h.getLocale());
         assertEquals(null, h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -139,6 +144,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource2, h.getResource());
         assertEquals(new Locale("en", "en"), h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -158,14 +164,14 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	 */
     public void testDecode4()
     {
-        Url url = Url
-                .parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2");
         RequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource2, h.getResource());
         assertEquals(new Locale("en", "en"), h.getLocale());
         assertEquals(null, h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
         assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
     }
@@ -182,6 +188,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource3, h.getResource());
         assertEquals(null, h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -198,6 +205,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource3, h.getResource());
         assertEquals(null, h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
         assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
@@ -216,6 +224,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource4, h.getResource());
         assertEquals(Locale.ENGLISH, h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
     }
@@ -242,12 +251,51 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
         assertEquals(resource4, h.getResource());
         assertEquals(Locale.ENGLISH, h.getLocale());
         assertEquals("style", h.getStyle());
+		assertEquals(null, h.getVariation());
         assertEquals(0, h.getPageParameters().getIndexedParamsCount());
         assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
         assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
     }
 
     /**
+	 * 
+	 */
+	public void testDecode9()
+	{
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
+			"/reference5?en--variation&p1=v1&p2=v2");
+		RequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertTrue(handler instanceof ResourceRequestHandler);
+		ResourceRequestHandler h = (ResourceRequestHandler)handler;
+		assertEquals(resource5, h.getResource());
+		assertEquals(Locale.ENGLISH, h.getLocale());
+		assertEquals("", h.getStyle());
+		assertEquals("variation", h.getVariation());
+		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
+		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
+		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+	}
+
+	/**
+	 * 
+	 */
+	public void testDecode10()
+	{
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
+			"/reference6?en-style-variation&p1=v1&p2=v2");
+		RequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertTrue(handler instanceof ResourceRequestHandler);
+		ResourceRequestHandler h = (ResourceRequestHandler)handler;
+		assertEquals(resource6, h.getResource());
+		assertEquals(Locale.ENGLISH, h.getLocale());
+		assertEquals("style", h.getStyle());
+		assertEquals("variation", h.getVariation());
+		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
+		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
+		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+	}
+
+	/**
 	 * 
 	 */
     public void testEncode1()
@@ -298,8 +346,8 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
                 parameters);
 
         Url url = encoder.mapHandler(handler);
-        assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2", url
-                .toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2",
+			url.toString());
     }
 
     /**
@@ -326,8 +374,8 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
                 parameters);
 
         Url url = encoder.mapHandler(handler);
-        assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2", url
-                .toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2",
+			url.toString());
     }
 
     /**
@@ -354,7 +402,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
                 parameters);
 
         Url url = encoder.mapHandler(handler);
-        assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2", url
-                .toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2",
+			url.toString());
     }
 }

@@ -36,8 +36,9 @@ public class ResourceReferenceRegistry
 		private final String name;
 		private final Locale locale;
 		private final String style;
+		private final String variation;
 
-		public Key(String scope, String name, Locale locale, String style)
+		public Key(String scope, String name, Locale locale, String style, String variation)
 		{
 			Checks.argumentNotNull(scope, "scope");
 			Checks.argumentNotNull(name, "name");
@@ -46,6 +47,7 @@ public class ResourceReferenceRegistry
 			this.name = name;
 			this.locale = locale;
 			this.style = style;
+			this.variation = variation;
 		}
 
 		@Override
@@ -63,17 +65,18 @@ public class ResourceReferenceRegistry
 			return Objects.equal(scope, that.scope) && //
 				Objects.equal(name, that.name) && //
 				Objects.equal(locale, that.locale) && //
-				Objects.equal(style, that.style);
+				Objects.equal(style, that.style) && //
+				Objects.equal(variation, that.variation);
 		}
 
 		@Override
 		public int hashCode()
 		{
-			return Objects.hashCode(scope, name, locale, style);
+			return Objects.hashCode(scope, name, locale, style, variation);
 		}
 	};
 
-	private Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
+	private final Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
 
 	/**
 	 * Registers the given {@link ResourceReference}.
@@ -85,7 +88,7 @@ public class ResourceReferenceRegistry
 		Checks.argumentNotNull(reference, "reference");
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
-			reference.getLocale(), reference.getStyle());
+			reference.getLocale(), reference.getStyle(), reference.getVariation());
 		map.put(key, reference);
 	}
 
@@ -99,14 +102,14 @@ public class ResourceReferenceRegistry
 		Checks.argumentNotNull(reference, "reference");
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
-			reference.getLocale(), reference.getStyle());
+			reference.getLocale(), reference.getStyle(), reference.getVariation());
 		map.remove(key);
 	}
 
 	protected ResourceReference getResourceReference(Class<?> scope, String name, Locale locale,
-			String style, boolean strict, boolean createIfNotFound)
+		String style, String variation, boolean strict, boolean createIfNotFound)
 		{
-			Key key = new Key(scope.getName(), name, locale, style);
+		Key key = new Key(scope.getName(), name, locale, style, variation);
 			ResourceReference res = map.get(key);
 			if (strict || res != null)
 			{
@@ -114,14 +117,34 @@ public class ResourceReferenceRegistry
 			}
 			else
 			{
-				res = getResourceReference(scope, name, locale, null, true, false);
+			res = getResourceReference(scope, name, locale, style, null, true, false);
 				if (res == null)
 				{
-					res = getResourceReference(scope, name, null, null, true, false);
+				res = getResourceReference(scope, name, locale, null, variation, true, false);
 				}
+			if (res == null)
+			{
+				res = getResourceReference(scope, name, locale, null, null, true, false);
+			}
+			if (res == null)
+			{
+				res = getResourceReference(scope, name, null, style, variation, true, false);
+			}
+			if (res == null)
+			{
+				res = getResourceReference(scope, name, null, style, null, true, false);
+			}
+			if (res == null)
+			{
+				res = getResourceReference(scope, name, null, null, variation, true, false);
+			}
+			if (res == null)
+			{
+				res = getResourceReference(scope, name, null, null, null, true, false);
+			}
 				if (res == null && createIfNotFound)
 				{
-					res = createDefaultResourceReference(scope, name, locale, style);
+				res = createDefaultResourceReference(scope, name, locale, style, variation);
 				}
 				return res;
 			}
@@ -138,28 +161,30 @@ public class ResourceReferenceRegistry
 	 *            mandatory parameter
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 * @param strict
-	 *            if <code>strict</code> is <code>true</code> only resources that match exactly
-	 *            are returned. Otherwise if there is no resource registered that is an exact
-	 *            match, also resources with <code>null</code> style and locale are tried. If
-	 *            still no resource is found, result of
+	 *            if <code>strict</code> is <code>true</code> only resources that match exactly are
+	 *            returned. Otherwise if there is no resource registered that is an exact match,
+	 *            also resources with <code>null</code> style and locale are tried. If still no
+	 *            resource is found, result of
 	 *            {@link #createDefaultResourceReference(Class, String, Locale, String)} is
 	 *            returned.
 	 * @return {@link ResourceReference} or <code>null</code>
 	 */
 	public ResourceReference getResourceReference(Class<?> scope, String name, Locale locale,
-		String style, boolean strict)
+		String style, String variation, boolean strict)
 	{
-		ResourceReference reference = getResourceReference(scope, name, locale, style, strict, false);
+		ResourceReference reference = getResourceReference(scope, name, locale, style, variation,
+			strict, false);
 		if (reference == null)
 		{
 			// TODO: Check the class static member for ResourceReferences and register those 
 		}
-		return getResourceReference(scope, name, locale, style, strict, true);
+		return reference;
 	}
 
 	protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
-		Locale locale, String style)
+		Locale locale, String style, String variation)
 	{
 		// override in superclass to e.g. return PackageResourceReference if there is one
 		return null;

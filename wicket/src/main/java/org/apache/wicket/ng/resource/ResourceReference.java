@@ -36,6 +36,7 @@ public abstract class ResourceReference implements Serializable
 	private final String name;
 	private final Locale locale;
 	private final String style;
+	private final String variation;
 
 	/**
 	 * Creates new {@link ResourceReference} instance.
@@ -46,8 +47,10 @@ public abstract class ResourceReference implements Serializable
 	 *            mandatory parameter
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 */
-	public ResourceReference(Class<?> scope, String name, Locale locale, String style)
+	public ResourceReference(Class<?> scope, String name, Locale locale, String style,
+		String variation)
 	{
 		Checks.argumentNotNull(scope, "scope");
 		Checks.argumentNotNull(name, "name");
@@ -56,6 +59,7 @@ public abstract class ResourceReference implements Serializable
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
+		this.variation = variation;
 	}
 
 	/**
@@ -90,6 +94,14 @@ public abstract class ResourceReference implements Serializable
 		return style;
 	}
 
+	/**
+	 * @return variation
+	 */
+	public String getVariation()
+	{
+		return variation;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -105,13 +117,14 @@ public abstract class ResourceReference implements Serializable
 		return Objects.equal(scope, that.scope) && //
 			Objects.equal(name, that.name) && //
 			Objects.equal(locale, that.locale) && //
-			Objects.equal(style, that.style);
+			Objects.equal(style, that.style) && //
+			Objects.equal(variation, that.variation);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(scope, name, locale, style);
+		return Objects.hashCode(scope, name, locale, style, variation);
 	}
 
 	/**

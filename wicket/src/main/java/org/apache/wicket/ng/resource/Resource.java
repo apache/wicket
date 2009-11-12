@@ -44,6 +44,7 @@ public interface Resource extends Serializable
 		private final Response response;
 		private final Locale locale;
 		private final String style;
+		private final String variation;
 		private final PageParameters parameters;
 
 		/**
@@ -54,10 +55,11 @@ public interface Resource extends Serializable
 		 * @param response
 		 * @param locale
 		 * @param style
+		 * @param variation
 		 * @param parameters
 		 */
 		public Attributes(Request request, Response response, Locale locale, String style,
-			PageParameters parameters)
+			String variation, PageParameters parameters)
 		{
 			Checks.argumentNotNull(request, "request");
 			Checks.argumentNotNull(response, "response");
@@ -67,6 +69,7 @@ public interface Resource extends Serializable
 			this.response = response;
 			this.locale = locale;
 			this.style = style;
+			this.variation = variation;
 			this.parameters = parameters;
 		}
 
@@ -108,6 +111,16 @@ public interface Resource extends Serializable
 		public String getStyle()
 		{
 			return style;
+		}
+
+		/**
+		 * If specified returns requested variation. The variation is optional.
+		 * 
+		 * @return variation or <code>null</code>
+		 */
+		public String getVariant()
+		{
+			return variation;
 		}
 
 		/**

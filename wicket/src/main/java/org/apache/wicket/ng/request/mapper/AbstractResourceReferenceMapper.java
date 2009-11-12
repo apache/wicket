@@ -35,11 +35,13 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 	{
 		protected Locale locale;
 		protected String style;
+		protected String variation;
 	};
 	
 	protected static String encodeResourceReferenceAttributes(ResourceReferenceAttributes attributes)
 	{
-		if (attributes == null || (attributes.locale == null && attributes.style == null))
+		if (attributes == null ||
+			(attributes.locale == null && attributes.style == null && attributes.variation == null))
 		{
 			return null;
 		}
@@ -55,6 +57,11 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 				res.append("-");
 				res.append(attributes.style);
 			}
+			if (!Strings.isEmpty(attributes.variation))
+			{
+				res.append("-");
+				res.append(attributes.variation);
+			}
 			return res.toString();
 		}
 	};
@@ -64,12 +71,17 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		ResourceReferenceAttributes res = new ResourceReferenceAttributes();		
 		if (!Strings.isEmpty(attributes))
 		{
-			String split[] = attributes.split("-", 2);
+			String split[] = attributes.split("-", 3);
 			res.locale = parseLocale(split[0]);
 			if (split.length == 2)
 			{
 				res.style = split[1];
 			}			
+			else if (split.length == 3)
+			{
+				res.style = split[1];
+				res.variation = split[2];
+		}
 		}
 		return res;
 	}
@@ -107,6 +119,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		ResourceReferenceAttributes attributes = new ResourceReferenceAttributes();
 		attributes.locale = reference.getLocale();
 		attributes.style = reference.getStyle();
+		attributes.variation = reference.getVariation();
 		String encoded = encodeResourceReferenceAttributes(attributes);
 		if (!Strings.isEmpty(encoded))
 		{
