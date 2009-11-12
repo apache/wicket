@@ -82,12 +82,9 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * Gets the url that references this handler.
 	 * 
 	 * @return the url that references this handler
+	 * @see #getCallbackUrl(boolean)
 	 */
-	/*
-	 * TODO 1.4 remove this and only keep the (boolean) variant. its a huge mess to have both
-	 * because both need to be overridable and you never know which one an intermediary subclass
-	 * overrides to add its behavior, or all subclasses must be made to override both :|
-	 */
+	@Deprecated // TODO 1.6 Remove
 	public CharSequence getCallbackUrl()
 	{
 		return getCallbackUrl(true);

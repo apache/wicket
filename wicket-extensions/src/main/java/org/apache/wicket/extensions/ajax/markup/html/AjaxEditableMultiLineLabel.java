@@ -167,10 +167,10 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				final String saveCall = "{wicketAjaxPost('" + getCallbackUrl() + "&save=true', " +
-					"wicketSerialize(this)); return true;}";
+				final String saveCall = "{wicketAjaxPost('" + getCallbackUrl(true) +
+					"&save=true', " + "wicketSerialize(this)); return true;}";
 
-				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
+				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl(true) +
 					"&save=false');this.onblur='';return false;}";
 
 				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +

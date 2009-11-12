@@ -207,10 +207,10 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
+				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl(true) +
 					"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
-				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
+				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl(true) +
 					"&save=false'); return false;}";
 
 				tag.put("onchange", saveCall);

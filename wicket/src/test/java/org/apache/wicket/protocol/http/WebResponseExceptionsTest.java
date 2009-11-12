@@ -81,7 +81,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.getWicketSession().invalidateNow();
 
 		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
+		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl(true)
 			.toString();
 		tester.getServletRequest().setURL(callbackUrl);
 

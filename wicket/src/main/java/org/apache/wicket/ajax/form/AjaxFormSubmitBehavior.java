@@ -114,7 +114,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	protected CharSequence getEventHandler()
 	{
 		final String formId = getForm().getMarkupId();
-		final CharSequence url = getCallbackUrl();
+		final CharSequence url = getCallbackUrl(true);
 
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
 			formId).append("', '").append(url).append("', ");

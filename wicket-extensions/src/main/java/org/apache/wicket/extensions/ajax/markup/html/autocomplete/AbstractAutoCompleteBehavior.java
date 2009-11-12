@@ -72,7 +72,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		}
 
 		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
-			getCallbackUrl(), constructSettingsJS(), indicatorId);
+			getCallbackUrl(true), constructSettingsJS(), indicatorId);
 		response.renderOnDomReadyJavascript(initJS);
 	}
 

@@ -2482,16 +2482,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * <code>this.getParent().replace(replacement)</code>
 	 * 
 	 * and provides a better context for errors.
+	 * <p>
+	 * Usage: <code>component = component.replaceWith(replacement);</code>
+	 * </p>
 	 * 
 	 * @since 1.2.1
 	 * 
 	 * @param replacement
 	 *            component to replace this one
-	 * 
-	 *            TODO 1.5 - this method should return <code>replacement</code> to facilitate easy
-	 *            chaning such as <code>component=component.replaceWith(newcomponent);</code>
+	 * @return the component which replaced this one
 	 */
-	public void replaceWith(Component replacement)
+	public Component replaceWith(Component replacement)
 	{
 		if (replacement == null)
 		{
@@ -2509,6 +2510,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				"This method can only be called on a component that has already been added to its parent.");
 		}
 		parent.replace(replacement);
+		return replacement;
 	}
 
 	/**
