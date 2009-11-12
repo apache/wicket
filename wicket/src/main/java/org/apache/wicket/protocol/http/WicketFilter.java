@@ -123,6 +123,9 @@ public class WicketFilter implements Filter
 	/** The Wicket Application associated with the Filter */
 	private WebApplication webApplication;
 
+	/** the factory used to create the web aplication instance */
+	private IWebApplicationFactory webApplicationFactory;
+
 	private boolean servletMode = false;
 
 	/**
@@ -175,6 +178,14 @@ public class WicketFilter implements Filter
 		{
 			webApplication.internalDestroy();
 			webApplication = null;
+		}
+
+		if (webApplicationFactory != null)
+		{
+			if (webApplicationFactory instanceof IDestroyableWebApplicationFactory)
+			{
+				((IDestroyableWebApplicationFactory)webApplicationFactory).destroy();
+			}
 		}
 	}
 
@@ -684,10 +695,10 @@ public class WicketFilter implements Filter
 				}
 			}
 
-			IWebApplicationFactory factory = getApplicationFactory();
+			webApplicationFactory = getApplicationFactory();
 
 			// Construct WebApplication subclass
-			webApplication = factory.createApplication(this);
+			webApplication = webApplicationFactory.createApplication(this);
 
 			// Set this WicketFilter as the filter for the web application
 			webApplication.setWicketFilter(this);
