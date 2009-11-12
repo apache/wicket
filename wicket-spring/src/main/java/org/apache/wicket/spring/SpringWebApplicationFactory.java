@@ -23,10 +23,13 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
  * Implementation of IWebApplicationFactory that pulls the WebApplication object out of spring
@@ -65,6 +68,24 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * &lt;/filter&gt;
  * </pre>
  * 
+ * <p>
+ * This factory is also capable of creating an additional application context (path to which is
+ * specified via the {@code contextConfigLocation} filter param) and chaining it to the global one
+ * 
+ * <pre>
+ * &lt;filter&gt;
+ *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
+ *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+ *     &lt;param-value&gt;classpath:com/myapplication/customers-app/context.xml&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ * &lt;/filter&gt;
+ * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Janne Hietam&auml;ki (jannehietamaki)
@@ -72,13 +93,43 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class SpringWebApplicationFactory implements IWebApplicationFactory
 {
+
+	/**
+	 * Returns location of context config that will be used to create an additional application
+	 * context for this application
+	 * 
+	 * @param filter
+	 * @return location of context config
+	 */
+	protected final String getContextConfigLocation(WicketFilter filter)
+	{
+		return filter.getFilterConfig().getInitParameter("contextConfigLocation");
+	}
+
+	/**
+	 * Factory method used to create a new instance of the additional application context, by
+	 * default an instance o {@link XmlWebApplicationContext} will be created.
+	 * 
+	 * @return application context instance
+	 */
+	protected ConfigurableWebApplicationContext newApplicationContext()
+	{
+		return new XmlWebApplicationContext();
+	}
+
 	/**
 	 * @see IWebApplicationFactory#createApplication(WicketFilter)
 	 */
 	public WebApplication createApplication(WicketFilter filter)
 	{
 		ServletContext sc = filter.getFilterConfig().getServletContext();
-		ApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
+
+		WebApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);
+
+		if (getContextConfigLocation(filter) != null)
+		{
+			ac = createWebApplicationContext(ac, filter);
+		}
 
 		String beanName = filter.getFilterConfig().getInitParameter("applicationBean");
 		return createApplication(ac, beanName);
@@ -112,5 +163,45 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 			}
 			return (WebApplication)beans.values().iterator().next();
 		}
+	}
+
+	/**
+	 * Creates and initializes a new {@link WebApplicationContext}, with the given context as the
+	 * parent. Based on the logic in {@link FrameworkServlet#createWebApplicationContext}
+	 * 
+	 * @param parent
+	 *            parent application context
+	 * @param filter
+	 *            wicket filter
+	 * @return instance of additional application context
+	 * @throws BeansException
+	 */
+	protected final WebApplicationContext createWebApplicationContext(WebApplicationContext parent,
+			WicketFilter filter) throws BeansException
+	{
+		ConfigurableWebApplicationContext wac = newApplicationContext();
+		wac.setParent(parent);
+		wac.setServletContext(filter.getFilterConfig().getServletContext());
+		wac.setConfigLocation(getContextConfigLocation(filter));
+
+		postProcessWebApplicationContext(wac, filter);
+		wac.refresh();
+
+		return wac;
+	}
+
+	/**
+	 * This is a hook for potential subclasses to perform additional processing on the context.
+	 * Based on the logic in {@link FrameworkServlet#postProcessWebApplicationContext}
+	 * 
+	 * @param wac
+	 *            additional application context
+	 * @param filter
+	 *            wicket filter
+	 */
+	protected void postProcessWebApplicationContext(ConfigurableWebApplicationContext wac,
+			WicketFilter filter)
+	{
+		// noop
 	}
 }
