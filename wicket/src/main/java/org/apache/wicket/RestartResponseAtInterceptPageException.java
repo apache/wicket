@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.RequestParameters;
 
 /**
  * Causes Wicket to interrupt current request processing and immediately redirect to an intercept
@@ -79,24 +78,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 */
 	private void redirectToInterceptPage(final Page interceptPage)
 	{
-		final Page requestPage = RequestCycle.get().getRequest().getPage();
-
-		/*
-		 * requestPage can be null if we throw the restart response exception before any page is
-		 * instantiated in user's session. if this happens we switch to the pagemap of the
-		 * interceptPage
-		 */
-		final IPageMap pageMap;
-		if (requestPage != null)
-		{
-			pageMap = requestPage.getPageMap();
-		}
-		else
-		{
-			pageMap = interceptPage.getPageMap();
-		}
-
-		pageMap.redirectToInterceptPage(interceptPage);
+		// TODO Wicket NG: Implement
+		RequestCycle.get().setResponsePage(interceptPage);
 	}
 
 	/**
@@ -110,24 +93,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 */
 	private <C extends Page> void redirectToInterceptPage(final Class<C> interceptPageClass)
 	{
-		final RequestCycle cycle = RequestCycle.get();
-		final Page requestPage = cycle.getRequest().getPage();
+		// TODO Wicket NG: Implement
+		RequestCycle.get().setResponsePage(interceptPageClass);
 
-		/*
-		 * requestPage can be null if we throw the restart response exception before any page is
-		 * instantiated in user's session. if this happens we switch to the pagemap of the request.
-		 */
-		final IPageMap pageMap;
-		if (requestPage != null)
-		{
-			pageMap = requestPage.getPageMap();
-		}
-		else
-		{
-			RequestParameters parameters = cycle.getRequest().getRequestParameters();
-			pageMap = PageMap.forName(parameters.getPageMapName());
-		}
-
-		pageMap.redirectToInterceptPage(interceptPageClass);
 	}
 }

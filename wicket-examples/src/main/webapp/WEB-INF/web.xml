@@ -385,6 +385,7 @@
 		</init-param>
 	</filter>
 
+<!-- 
 	<filter>
 		<filter-name>SpringExample</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -393,6 +394,8 @@
             <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
 		</init-param>
 	</filter>
+
+ -->
 
 	<filter>
 		<filter-name>GuiceApplication</filter-name>
@@ -688,12 +691,16 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+<!-- 
+
 	<filter-mapping>
 		<filter-name>SpringExample</filter-name>
         <url-pattern>/spring/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
+
+ -->
 
 	<filter-mapping>
 		<filter-name>GuiceApplication</filter-name>

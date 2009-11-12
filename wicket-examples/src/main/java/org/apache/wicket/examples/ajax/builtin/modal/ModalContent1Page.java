@@ -64,7 +64,6 @@ public class ModalContent1Page extends WebPage
 
 		final ModalWindow modal;
 		add(modal = new ModalWindow("modal"));
-		modal.setPageMapName("modal-2");
 
 		modal.setCookieName("modal window 2");
 

@@ -46,7 +46,6 @@ public class ModalWindowPage extends BasePage
 		final ModalWindow modal1;
 		add(modal1 = new ModalWindow("modal1"));
 
-		modal1.setPageMapName("modal-1");
 		modal1.setCookieName("modal-1");
 
 		modal1.setPageCreator(new ModalWindow.PageCreator()

@@ -18,11 +18,9 @@ package org.apache.wicket.extensions.ajax.markup.html.modal;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,7 +35,6 @@ import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -60,12 +57,8 @@ import org.apache.wicket.util.string.Strings;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(AjaxRequestTarget)})</code>. In case the content is another page, you can set
- * the desired pagemap name using <code>{@link #setPageMapName(String)}</code>. Setting pagemap is
- * only needed when wicket multiwindow support is on.
- * <p>
- * The window can be made visible from an ajax handler using
- * <code>{@link #show(AjaxRequestTarget)}</code>.
+ * <code>{@link #show(AjaxRequestTarget)})</code>. The window can be made visible from an ajax
+ * handler using <code>{@link #show(AjaxRequestTarget)}</code>.
  * <p>
  * To close the window there are multiple options. Static method
  * <code>{@link #close(AjaxRequestTarget)}</code> can be used to close the window from a handler of
@@ -133,8 +126,6 @@ public class ModalWindow extends Panel
 	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
 		"res/modal.css");
 
-	private boolean deletePageMap = false;
-
 	/** True while the ModalWindows is showing */
 	private boolean shown = false;
 
@@ -155,8 +146,6 @@ public class ModalWindow extends Panel
 	private String cookieName;
 	private IModel<String> title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
-
-	private String pageMapName = "modal-dialog-pagemap";
 
 	private PageCreator pageCreator = null;
 	private CloseButtonCallback closeButtonCallback = null;
@@ -273,29 +262,6 @@ public class ModalWindow extends Panel
 		return shown;
 	}
 
-	/**
-	 * Sets the name of the page ma for the content page. This makes only sense when the content is
-	 * a page, not a component and if wicket multiwindow support is turned on.
-	 * 
-	 * @param pageMapName
-	 *            Name of the page map
-	 * @return this
-	 */
-	public ModalWindow setPageMapName(final String pageMapName)
-	{
-		this.pageMapName = pageMapName;
-		return this;
-	}
-
-	/**
-	 * Returns the page map name.
-	 * 
-	 * @return The page map name.
-	 */
-	public String getPageMapName()
-	{
-		return pageMapName;
-	}
 
 	/**
 	 * Sets the <code>{@link PageCreator}</code> instance. The instance is only used when no custom
@@ -779,29 +745,7 @@ public class ModalWindow extends Panel
 		}
 		else
 		{
-			RequestParameters parameters = RequestCycle.get().getRequest().getRequestParameters();
-			String oldPageMapName = parameters.getPageMapName();
-
-			// if there is a pagemap name specified and multiwindow support is on
-			if (getPageMapName() != null)
-			{
-				// try to find out whether the pagemap already exists
-				Session session = Session.get();
-				if (session.pageMapForName(getPageMapName(), false) == null)
-				{
-					deletePageMap = true;
-				}
-				parameters.setPageMapName(getPageMapName());
-			}
-
-			try
-			{
-				return pageCreator.createPage();
-			}
-			finally
-			{
-				parameters.setPageMapName(oldPageMapName);
-			}
+			return pageCreator.createPage();
 		}
 	}
 
@@ -908,21 +852,6 @@ public class ModalWindow extends Panel
 		protected void respond(AjaxRequestTarget target)
 		{
 			shown = false;
-
-			// should we cleanup the pagemap?
-			if (deletePageMap == true)
-			{
-				// get the pagemap
-				Session session = Session.get();
-				IPageMap pageMap = session.pageMapForName(getPageMapName(), false);
-
-				// if there is any remove it
-				if (pageMap != null)
-				{
-					session.removePageMap(pageMap);
-					deletePageMap = false;
-				}
-			}
 
 			if (windowClosedCallback != null)
 			{
@@ -1053,11 +982,6 @@ public class ModalWindow extends Panel
 			RequestCycle.get().setUrlForNewWindowEncoding();
 
 			appendAssignment(buffer, "settings.src", RequestCycle.get().urlFor(page));
-
-			if (getPageMapName() != null)
-			{
-				appendAssignment(buffer, "settings.iframeName", getPageMapName());
-			}
 		}
 		else
 		{
@@ -1089,7 +1013,7 @@ public class ModalWindow extends Panel
 
 		// in case user is interested in window close callback or we have a pagemap to clean attach
 		// notification request
-		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null)
+		if (windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = getBehaviors(WindowClosedBehavior.class).get(0);
 			buffer.append("settings.onClose = function() { ");

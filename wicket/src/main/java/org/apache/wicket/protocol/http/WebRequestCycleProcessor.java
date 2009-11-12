@@ -18,17 +18,12 @@ package org.apache.wicket.protocol.http;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.AccessStackPageMap.Access;
 import org.apache.wicket.protocol.http.request.InvalidUrlException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -83,60 +78,6 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 				// marks whether or not we will be processing this request
 				int processRequest = 0; // 0 == process, 1 == page expired, 2 == not active page
 				// anymore
-				synchronized (requestCycle.getSession())
-				{
-					// we need to check if this request has been flagged as
-					// process-only-if-path-is-active and if so make sure this
-					// condition is met
-					if (requestParameters.isOnlyProcessIfPathActive())
-					{
-						// this request has indeed been flagged as
-						// process-only-if-path-is-active
-
-						Session session = Session.get();
-						IPageMap pageMap = session.pageMapForName(
-							requestParameters.getPageMapName(), false);
-						if (pageMap == null)
-						{
-							// requested pagemap no longer exists - ignore this
-							// request
-							processRequest = 1;
-						}
-						else if (pageMap instanceof AccessStackPageMap)
-						{
-							AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
-							if (accessStackPageMap.getAccessStack().size() > 0)
-							{
-								final Access access = accessStackPageMap.getAccessStack().peek();
-
-								final int pageId = Integer.parseInt(Strings.firstPathComponent(
-									requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
-
-								if (pageId != access.getId())
-								{
-									// the page is no longer the active page
-									// - ignore this request
-									processRequest = 2;
-								}
-								else
-								{
-									final int version = requestParameters.getVersionNumber();
-									if (version != Page.LATEST_VERSION &&
-										version != access.getVersion())
-									{
-										// version is no longer the active version -
-										// ignore this request
-										processRequest = 2;
-									}
-								}
-							}
-						}
-						else
-						{
-							// TODO also this should work..
-						}
-					}
-				}
 				if (processRequest == 0)
 				{
 					try

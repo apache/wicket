@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.PageMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

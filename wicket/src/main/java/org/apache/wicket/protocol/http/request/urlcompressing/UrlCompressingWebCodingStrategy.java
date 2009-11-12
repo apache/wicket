@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http.request.urlcompressing;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
@@ -78,12 +77,6 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		final Component component = requestTarget.getTarget();
 		final Page page = component.getPage();
 
-		// Add pagemap
-		final IPageMap pageMap = page.getPageMap();
-		if (!pageMap.isDefault())
-		{
-			url.append(pageMap.getName());
-		}
 		url.append(Component.PATH_SEPARATOR);
 
 		String listenerName = rli.getName();

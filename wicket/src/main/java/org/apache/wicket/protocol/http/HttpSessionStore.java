@@ -22,9 +22,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.Application;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 
@@ -46,14 +44,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	public HttpSessionStore(Application application)
 	{
 		super(application);
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#createPageMap(java.lang.String)
-	 */
-	public IPageMap createPageMap(String name)
-	{
-		return new AccessStackPageMap(name);
 	}
 
 	/**

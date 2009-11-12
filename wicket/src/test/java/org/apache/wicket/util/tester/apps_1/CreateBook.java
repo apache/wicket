@@ -70,16 +70,9 @@ public class CreateBook extends WebPage
 		@Override
 		public void onSubmit()
 		{
-			try
-			{
-				Page page = new SuccessPage();
-				page.info(getString("book.save.success", new Model<Book>(book)));
-				setResponsePage(page);
-			}
-			finally
-			{
-				getPage().getPageMap().remove(getPage());
-			}
+			Page page = new SuccessPage();
+			page.info(getString("book.save.success", new Model<Book>(book)));
+			setResponsePage(page);
 		}
 	}
 }

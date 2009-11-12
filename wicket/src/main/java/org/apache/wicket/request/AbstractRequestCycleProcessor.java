@@ -258,8 +258,9 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			{
 				// try to retrieve an existing page
 				final String componentPath = requestParameters.getComponentPath();
-				final Page page = session.getPage(requestParameters.getPageMapName(),
-					componentPath, requestParameters.getVersionNumber());
+				final String id = Strings.firstPathComponent(componentPath,
+					Component.PATH_SEPARATOR);
+				final Page page = (Page)session.getPageManager().getPage(Integer.valueOf(id));
 
 				if (page != null && page.getClass() == pageClass)
 				{
@@ -454,8 +455,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	{
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
-		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
-			requestParameters.getVersionNumber());
+		final String id = Strings.firstPathComponent(componentPath, Component.PATH_SEPARATOR);
+		final Page page = (Page)session.getPageManager().getPage(Integer.valueOf(id));
 
 		// Does page exist?
 		if (page != null)

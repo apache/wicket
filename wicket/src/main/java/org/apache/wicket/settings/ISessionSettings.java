@@ -17,7 +17,6 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.IPageFactory;
-import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 
 /**
  * Interface for session related settings
@@ -50,13 +49,6 @@ public interface ISessionSettings
 	IPageFactory getPageFactory();
 
 	/**
-	 * Gets the strategy for evicting pages from the page map.
-	 * 
-	 * @return the strategy for evicting pages from the page map
-	 */
-	IPageMapEvictionStrategy getPageMapEvictionStrategy();
-
-	/**
 	 * Sets maximum number of page maps allowed in this session
 	 * 
 	 * @param maxPageMaps
@@ -71,14 +63,6 @@ public interface ISessionSettings
 	 *            The default factory
 	 */
 	void setPageFactory(final IPageFactory pageFactory);
-
-	/**
-	 * Sets the strategy for evicting pages from the page map.
-	 * 
-	 * @param pageMapEvictionStrategy
-	 *            the strategy for evicting pages from the page map
-	 */
-	void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy);
 
 	/**
 	 * Sets whether the id of a page should be unique across the entire session. Default is true,

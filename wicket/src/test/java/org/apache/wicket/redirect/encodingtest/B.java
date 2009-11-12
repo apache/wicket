@@ -17,9 +17,7 @@
 package org.apache.wicket.redirect.encodingtest;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.PropertyModel;
 
 /**
  * Homepage
@@ -33,8 +31,9 @@ public class B extends WebPage
 	 */
 	public B()
 	{
-		add(new Label("interceptContinuationURL", new PropertyModel<String>(getPageMap(),
-			"interceptContinuationURL")));
+		// TODO NG
+// add(new Label("interceptContinuationURL", new PropertyModel<String>(getPageMap(),
+// "interceptContinuationURL")));
 
 		add(new Link<Void>("link")
 		{

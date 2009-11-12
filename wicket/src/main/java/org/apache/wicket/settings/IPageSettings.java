@@ -22,7 +22,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 
 
 /**

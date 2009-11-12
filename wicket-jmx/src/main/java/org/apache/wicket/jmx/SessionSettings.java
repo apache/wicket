@@ -52,14 +52,6 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageMapEvictionStrategy()
-	 */
-	public String getPageMapEvictionStrategy()
-	{
-		return Stringz.className(application.getSessionSettings().getPageMapEvictionStrategy());
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getSessionStore()
 	 */
 	public String getSessionStore()

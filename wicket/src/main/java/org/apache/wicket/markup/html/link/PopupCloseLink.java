@@ -65,9 +65,6 @@ public class PopupCloseLink<T> extends Link<T>
 	@Override
 	public void onClick()
 	{
-		// Remove the popup's page map from the session
-		getPage().getPageMap().remove();
-
 		// Web page closes window using javascript code in PopupCloseLink$1.html
 		setResponsePage(ClosePopupPage.class);
 	}

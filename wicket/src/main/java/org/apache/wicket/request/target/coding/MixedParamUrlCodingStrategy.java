@@ -23,7 +23,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -52,10 +51,10 @@ import org.slf4j.LoggerFactory;
  */
 public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
 {
-    private static Logger logger = LoggerFactory.getLogger(MixedParamUrlCodingStrategy.class);
+	private static Logger logger = LoggerFactory.getLogger(MixedParamUrlCodingStrategy.class);
 
-    private final String[] parameterNames;
-    private boolean ignoreUndeclaredParameters = true;
+	private final String[] parameterNames;
+	private boolean ignoreUndeclaredParameters = true;
 
 	/**
 	 * Construct.
@@ -91,21 +90,22 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	public <C extends Page> MixedParamUrlCodingStrategy(String mountPath,
 		Class<C> bookmarkablePageClass, String[] parameterNames)
 	{
-		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
+		super(mountPath, bookmarkablePageClass, "default");
 		this.parameterNames = parameterNames;
 	}
 
-    /**
-     * @param ignoreUndeclaredParameters true to ignore undeclared parameters in
-     *            the URL (still logged), false to throw an exception when this
-     *            happens (default is true)
-     * @return this
-     */
-    public MixedParamUrlCodingStrategy setIgnoreUndeclaredParameters(boolean ignoreUndeclaredParameters)
-    {
-        this.ignoreUndeclaredParameters = ignoreUndeclaredParameters;
-        return this;
-    }
+	/**
+	 * @param ignoreUndeclaredParameters
+	 *            true to ignore undeclared parameters in the URL (still logged), false to throw an
+	 *            exception when this happens (default is true)
+	 * @return this
+	 */
+	public MixedParamUrlCodingStrategy setIgnoreUndeclaredParameters(
+		boolean ignoreUndeclaredParameters)
+	{
+		this.ignoreUndeclaredParameters = ignoreUndeclaredParameters;
+		return this;
+	}
 
 	/**
 	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer,
@@ -156,7 +156,8 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			{
 				url.append(first ? '?' : '&');
 				final Object param = parameters.get(parameterName);
-				String value = param instanceof String[] ? ((String[])param)[0] : String.valueOf(param);
+				String value = param instanceof String[] ? ((String[])param)[0]
+					: String.valueOf(param);
 				url.append(urlEncodeQueryComponent(parameterName)).append("=").append(
 					urlEncodeQueryComponent(value));
 				first = false;
@@ -185,29 +186,37 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			String[] pathParts = urlPath.split("/");
 			if (pathParts.length > parameterNames.length)
 			{
-                // Some known causes of this situation:
-                // - user edits the URL manually
-                // - a javascript requests resources relative to the current page instead of to the web context
-                String msg = String.format("Found more URL path parts then expected, these will be ignored. Url: '%s', mountpath: '%s', urlPath: '%s', expected %d parameters was %d", getRequestUrl(), getMountPath(), urlPath, parameterNames.length, pathParts.length);
-                if (ignoreUndeclaredParameters) {
-                    logger.info(msg);
-                } else {
-                    throw new IllegalArgumentException(msg);
-                }
+				// Some known causes of this situation:
+				// - user edits the URL manually
+				// - a javascript requests resources relative to the current page instead of to the
+				// web context
+				String msg = String.format(
+					"Found more URL path parts then expected, these will be ignored. Url: '%s', mountpath: '%s', urlPath: '%s', expected %d parameters was %d",
+					getRequestUrl(), getMountPath(), urlPath, parameterNames.length,
+					pathParts.length);
+				if (ignoreUndeclaredParameters)
+				{
+					logger.info(msg);
+				}
+				else
+				{
+					throw new IllegalArgumentException(msg);
+				}
 			}
 
-            int actualParameterCount = Math.min(pathParts.length, parameterNames.length);
-            for (int i = 0; i < actualParameterCount; i++) {
-                params.put(parameterNames[i], urlDecodePathComponent(pathParts[i]));
-            }
+			int actualParameterCount = Math.min(pathParts.length, parameterNames.length);
+			for (int i = 0; i < actualParameterCount; i++)
+			{
+				params.put(parameterNames[i], urlDecodePathComponent(pathParts[i]));
+			}
 		}
 
 		return params;
 	}
 
-    private String getRequestUrl()
-    {
-        HttpServletRequest request = ((WebRequest) RequestCycle.get().getRequest()).getHttpServletRequest();
-        return request.getRequestURL().toString();
-    }
+	private String getRequestUrl()
+	{
+		HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+		return request.getRequestURL().toString();
+	}
 }

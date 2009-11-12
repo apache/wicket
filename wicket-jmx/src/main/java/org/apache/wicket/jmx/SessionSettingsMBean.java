@@ -39,13 +39,6 @@ public interface SessionSettingsMBean
 	String getPageFactory();
 
 	/**
-	 * Gets the strategy for evicting pages from the page map.
-	 * 
-	 * @return the strategy for evicting pages from the page map
-	 */
-	String getPageMapEvictionStrategy();
-
-	/**
 	 * Gets the session store implementation.
 	 * 
 	 * @return the session store implementation

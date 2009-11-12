@@ -26,22 +26,19 @@ public class PageReference implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String pageMapName;
-	private final int number;
-	private final int version;
+	private final int pageId;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param pageMapName
-	 * @param number
+	 * @param pageId
 	 * @param version
 	 */
-	PageReference(String pageMapName, int number, int version)
+	PageReference(int pageId)
 	{
-		this.pageMapName = pageMapName;
-		this.number = number;
-		this.version = version;
+		this.pageId = pageId;
+		;
 	}
 
 	/**
@@ -49,39 +46,17 @@ public class PageReference implements IClusterable
 	 */
 	public Page getPage()
 	{
-		return Session.get().getPage(pageMapName, Integer.toString(number), version);
+		return (Page)Session.get().getPageManager().getPage(pageId);
 	}
-
-	/**
-	 * Gets pageMapName.
-	 * 
-	 * @return pageMapName
-	 */
-	public String getPageMapName()
-	{
-		return pageMapName;
-	}
-
 
 	/**
 	 * Gets pageId.
 	 * 
 	 * @return pageId
 	 */
-	public int getPageNumber()
+	public int getPageId()
 	{
-		return number;
-	}
-
-
-	/**
-	 * Gets pageVersion.
-	 * 
-	 * @return pageVersion
-	 */
-	public int getPageVersion()
-	{
-		return version;
+		return pageId;
 	}
 
 
@@ -91,12 +66,7 @@ public class PageReference implements IClusterable
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + number;
-		result = prime * result + ((pageMapName == null) ? 0 : pageMapName.hashCode());
-		result = prime * result + version;
-		return result;
+		return pageId;
 	}
 
 	/**
@@ -118,26 +88,7 @@ public class PageReference implements IClusterable
 			return false;
 		}
 		PageReference other = (PageReference)obj;
-		if (number != other.number)
-		{
-			return false;
-		}
-		if (pageMapName == null)
-		{
-			if (other.pageMapName != null)
-			{
-				return false;
-			}
-		}
-		else if (!pageMapName.equals(other.pageMapName))
-		{
-			return false;
-		}
-		if (version != other.version)
-		{
-			return false;
-		}
-		return true;
+		return getPageId() == other.getPageId();
 	}
 
 

@@ -18,14 +18,10 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
-import org.apache.wicket.Session;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -35,11 +31,7 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressor;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
-import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.string.JavascriptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,71 +90,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		@Override
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
-			Response response = headResponse.getResponse();
-			final WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
-			final IRequestTarget target = cycle.getRequestTarget();
-
-			// we don't want to render this for stateless pages
-			if (webPage.isPageStateless())
-			{
-				return;
-			}
-
-			IPageMap pageMap = webPage.getPageMap();
-			String name = pageMap.getName();
-			if (name == null)
-			{
-				name = "wicket:default";
-			}
-			else
-			{
-				name = name.replace('"', '_');
-			}
-
-			Session session = Session.get();
-
-			Session.PageMapAccessMetaData meta = session.getMetaData(Session.PAGEMAP_ACCESS_MDK);
-			if (meta == null)
-			{
-				meta = new Session.PageMapAccessMetaData();
-				session.setMetaData(Session.PAGEMAP_ACCESS_MDK, meta);
-			}
-			boolean firstAccess = meta.add(pageMap);
-
-			if (firstAccess)
-			{
-				// this is the first access to the pagemap, set window.name
-				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
-				response.write("wicket-" + name);
-				response.write("\"; }");
-				JavascriptUtils.writeCloseTag(response);
-			}
-			else
-			{
-				// Here is our trickery to detect whether the current request
-				// was made in a new window/ tab, in which case it should go in
-				// a different page map so that we don't intermingle the history
-				// of those windows
-				CharSequence url = null;
-				if (target instanceof IBookmarkablePageRequestTarget)
-				{
-					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
-					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-						current.getPageClass(), current.getPageParameters());
-					url = cycle.urlFor(redirect);
-				}
-				else
-				{
-					url = webPage.urlFor(INewBrowserWindowListener.INTERFACE);
-				}
-				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
-					"wicket-" + name + "')) { window.location=\"");
-				response.write(url);
-				response.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
-				JavascriptUtils.writeCloseTag(response);
-			}
+			// TODO
+			// this is the place where page checked for current pagemap name and cloned itself when
+			// opened in new tab.
+			// This will have to be done differently - as implementation detail of PageManager
 		}
 	}
 
@@ -195,24 +126,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see Page#Page(org.apache.wicket.IPageMap)
-	 */
-	protected WebPage(final IPageMap pageMap)
-	{
-		super(pageMap);
-		commonInit();
-	}
-
-	/**
-	 * @see Page#Page(org.apache.wicket.IPageMap, org.apache.wicket.model.IModel)
-	 */
-	protected WebPage(final IPageMap pageMap, final IModel<?> model)
-	{
-		super(pageMap, model);
-		commonInit();
-	}
-
-	/**
 	 * Constructor which receives wrapped query string parameters for a request. Having this
 	 * constructor public means that your page is 'bookmarkable' and hence can be called/ created
 	 * from anywhere. For bookmarkable pages (as opposed to when you construct page instances
@@ -230,29 +143,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
-		commonInit();
-	}
-
-	/**
-	 * Constructor which receives wrapped query string parameters for a request. Having this
-	 * constructor public means that your page is 'bookmarkable' and hence can be called/ created
-	 * from anywhere. For bookmarkable pages (as opposed to when you construct page instances
-	 * yourself, this constructor will be used in preference to a no-arg constructor, if both exist.
-	 * Note that nothing is done with the page parameters argument. This constructor is provided so
-	 * that tools such as IDEs will include it their list of suggested constructors for derived
-	 * classes.
-	 * 
-	 * Please call this constructor (or the one without the pagemap) if you want to remember the
-	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
-	 * 
-	 * @param pageMap
-	 *            The pagemap where the webpage needs to be constructed in.
-	 * @param parameters
-	 *            Wrapped query string parameters.
-	 */
-	protected WebPage(final IPageMap pageMap, final PageParameters parameters)
-	{
-		super(pageMap, parameters);
 		commonInit();
 	}
 
@@ -302,19 +192,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	public void onNewBrowserWindow()
 	{
-		// if the browser reports a history of 0 then make a new webpage
-		WebPage clonedPage = this;
-		try
-		{
-			clonedPage = (WebPage)Objects.cloneObject(this);
-		}
-		catch (Exception e)
-		{
-			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
-		}
-		final IPageMap map = getSession().createAutoPageMap();
-		clonedPage.moveToPageMap(map);
-		setResponsePage(clonedPage);
+		// TODO: Needs to be implementation detail of PageManager
 	}
 
 	/**

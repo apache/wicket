@@ -247,17 +247,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			Page page;
 
-			if (Strings.isEmpty(pageMapName) && Application.exists() &&
-				Application.get().getSessionSettings().isPageIdUniquePerSession())
-			{
-				page = Session.get().getPage(pageId.intValue(),
-					pageVersion != null ? pageVersion.intValue() : 0);
-			}
-			else
-			{
-				page = Session.get().getPage(pageMapName, "" + pageId,
-					pageVersion != null ? pageVersion.intValue() : 0);
-			}
+			page = (Page)Session.get().getPageManager().getPage(pageId.intValue());
+
 
 			// check if the found page match the required class
 			if ((page != null) && page.getClass().equals(pageClassRef.get()))
@@ -368,7 +359,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
-			return new PageInfo(new Integer(page.getNumericId()), 0, page.getPageMapName());
+			return new PageInfo(new Integer(page.getPageId()), 0, "default");
 		}
 		else
 		{

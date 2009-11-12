@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.devutils;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.WebPage;
@@ -38,21 +37,6 @@ public class DevUtilsPage extends WebPage {
 
 	public DevUtilsPage(IModel<?> model) {
 		super(model);
-		init();
-	}
-
-	public DevUtilsPage(IPageMap pageMap, IModel<?> model) {
-		super(pageMap, model);
-		init();
-	}
-
-	public DevUtilsPage(IPageMap pageMap, PageParameters parameters) {
-		super(pageMap, parameters);
-		init();
-	}
-
-	public DevUtilsPage(IPageMap pageMap) {
-		super(pageMap);
 		init();
 	}
 

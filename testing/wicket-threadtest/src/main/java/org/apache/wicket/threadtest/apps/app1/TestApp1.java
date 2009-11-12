@@ -19,9 +19,8 @@ package org.apache.wicket.threadtest.apps.app1;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.ISessionStore;
 
 /**
@@ -69,7 +68,6 @@ public class TestApp1 extends WebApplication
 	@Override
 	protected ISessionStore newSessionStore()
 	{
-		return new SecondLevelCacheSessionStore(this, new DiskPageStore());
-		// return new HttpSessionStore();
+		return new HttpSessionStore(this);
 	}
 }

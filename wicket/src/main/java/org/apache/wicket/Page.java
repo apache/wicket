@@ -37,9 +37,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
@@ -119,11 +117,7 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer
-	implements
-		IRedirectListener,
-		IPageMapEntry,
-		ManageablePage
+public abstract class Page extends MarkupContainer implements IRedirectListener, ManageablePage
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -208,12 +202,6 @@ public abstract class Page extends MarkupContainer
 	/** Numeric version of this page's id */
 	private int numericId;
 
-	/** The PageMap within the session that this page is stored in */
-	private transient IPageMap pageMap;
-
-	/** Name of PageMap that this page is stored in */
-	private String pageMapName;
-
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set<Component> renderedComponents;
 
@@ -253,37 +241,6 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param pageMap
-	 *            The page map to put this page in
-	 */
-	protected Page(final IPageMap pageMap)
-	{
-		// A Page's id is not determined until setId is called when the Page is
-		// added to a PageMap in the Session.
-		super(null);
-		init(pageMap);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param pageMap
-	 *            the page map to put this page in
-	 * @param model
-	 *            See Component
-	 * @see Component#Component(String, IModel)
-	 */
-	protected Page(final IPageMap pageMap, final IModel<?> model)
-	{
-		// A Page's id is not determined until setId is called when the Page is
-		// added to a PageMap in the Session.
-		super(null, model);
-		init(pageMap);
-	}
-
-	/**
 	 * The {@link PageParameters} parameter will be stored in this page and then those parameters
 	 * will be used to create stateless links to this bookmarkable page.
 	 * 
@@ -296,23 +253,6 @@ public abstract class Page extends MarkupContainer
 		super(null);
 		this.parameters = parameters;
 		init();
-	}
-
-	/**
-	 * The {@link PageParameters} parameter will be stored in this page and then those parameters
-	 * will be used to create stateless links to this bookmarkable page.
-	 * 
-	 * @param pageMap
-	 *            the page map to put this page in
-	 * @param parameters
-	 *            externally passed parameters
-	 * @see PageParameters
-	 */
-	protected Page(final IPageMap pageMap, final PageParameters parameters)
-	{
-		super(null);
-		this.parameters = parameters;
-		init(pageMap);
 	}
 
 	/**
@@ -409,7 +349,7 @@ public abstract class Page extends MarkupContainer
 	 */
 	public final void dirty()
 	{
-		Session.get().dirtyPage(this);
+		// TODO: Increment page id here if manager supports versioning
 	}
 
 	/**
@@ -474,44 +414,11 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @return Returns the PageMap that this Page is stored in.
-	 */
-	public final IPageMap getPageMap()
-	{
-		// If the transient needs to be restored
-		if (pageMap == null)
-		{
-			// Look the page map up in the session
-			pageMap = PageMap.forName(pageMapName);
-		}
-		return pageMap;
-	}
-
-	/**
-	 * @return Get a page map entry for this page. By default, this is the page itself. But if you
-	 *         know of some way to compress the state for the page, you can return a custom
-	 *         implementation that produces the page on-the-fly.
-	 */
-	public IPageMapEntry getPageMapEntry()
-	{
-		return this;
-	}
-
-	/**
-	 * @return String The PageMap name
-	 */
-	public final String getPageMapName()
-	{
-		return pageMapName;
-	}
-
-	/**
 	 * @return Size of this page in bytes
 	 */
 	@Override
 	public final long getSizeInBytes()
 	{
-		pageMap = null;
 		return Objects.sizeof(this);
 	}
 
@@ -564,7 +471,7 @@ public abstract class Page extends MarkupContainer
 		{
 			try
 			{
-				if (getClass().getConstructor(new Class[] { }) != null)
+				if (getClass().getConstructor(new Class[] {}) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -878,25 +785,8 @@ public abstract class Page extends MarkupContainer
 			setFlag(FLAG_NEW_VERSION, false);
 
 			// Evict any page version(s) as need be
-			getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
+			// getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
 		}
-	}
-
-	/**
-	 * Initializes Page by adding it to the Session and initializing it.
-	 */
-	private final void init()
-	{
-		final RequestCycle cycle = getRequestCycle();
-		String pageMapName = null;
-		if (cycle != null)
-		{
-			RequestParameters parameters = getRequest().getRequestParameters();
-			pageMapName = parameters.getPageMapName();
-		}
-
-		final IPageMap pageMap = PageMap.forName(pageMapName);
-		init(pageMap);
 	}
 
 	/**
@@ -905,21 +795,11 @@ public abstract class Page extends MarkupContainer
 	 * @param pageMap
 	 *            The page map to put this page in.
 	 */
-	private final void init(final IPageMap pageMap)
+	private final void init()
 	{
 		if (isBookmarkable())
 		{
 			setStatelessHint(true);
-		}
-
-		// Set the page map
-		if (pageMap != null)
-		{
-			setPageMap(pageMap);
-		}
-		else
-		{
-			throw new IllegalStateException("PageMap cannot be null");
 		}
 
 		setNextAvailableId();
@@ -936,56 +816,9 @@ public abstract class Page extends MarkupContainer
 	 */
 	private void setNextAvailableId()
 	{
-		if (getApplication().getSessionSettings().isPageIdUniquePerSession())
-		{
-			setNumericId(getSession().nextPageId());
-		}
-		else
-		{
-			// Set the numeric id on this page
-			setNumericId(getPageMap().nextId());
-		}
+		setNumericId(getSession().nextPageId());
 	}
 
-	/**
-	 * For the given component, whether we may record changes.
-	 * 
-	 * @param component
-	 *            The component which is affected
-	 * @param parent
-	 * @return True if the change is okay to report
-	 */
-	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
-	{
-		// first call the method so that people can track dirty components
-		componentChanged(component, parent);
-		// Auto components do not participate in versioning since they are
-		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() || (parent == null && !component.isVersioned()) ||
-			(parent != null && !parent.isVersioned()))
-		{
-			return false;
-		}
-		else
-		{
-			// the component is versioned... are we tracking changes at all?
-			if (getFlag(FLAG_TRACK_CHANGES))
-			{
-				// we are tracking changes... do we need to start new version?
-				if (!getFlag(FLAG_NEW_VERSION))
-				{
-					// TODO WICKET-NG do we need to do anything here? or this method at all?
-					setFlag(FLAG_NEW_VERSION, true);
-				}
-
-				// return true as we are ready for versioning
-				return true;
-			}
-
-			// we are not tracking changes or the component not versioned
-			return false;
-		}
-	}
 
 	/**
 	 * This method will be called for all components that are changed on the page So also auto
@@ -1040,28 +873,6 @@ public abstract class Page extends MarkupContainer
 		else
 		{
 			return this;
-		}
-	}
-
-	/**
-	 * 
-	 * @param s
-	 * @throws IOException
-	 */
-	void writePageObject(java.io.ObjectOutputStream s) throws IOException
-	{
-		s.writeShort(numericId);
-		s.writeObject(pageMapName);
-
-		IPageSerializer ps = serializer.get();
-
-		if (ps != null)
-		{
-			ps.serializePage(this, s);
-		}
-		else
-		{
-			s.defaultWriteObject();
 		}
 	}
 
@@ -1140,21 +951,6 @@ public abstract class Page extends MarkupContainer
 		});
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
-	 * @param map
-	 */
-	protected final void moveToPageMap(IPageMap map)
-	{
-		// TODO post 1.2 shouldn't we remove this page from the pagemap/session
-		// if it would be in there?
-		// This should be done if the page was not cloned first, but shouldn't
-		// be done if it was cloned..
-		setPageMap(map);
-
-		setNextAvailableId();
-	}
 
 	/**
 	 * 
@@ -1224,7 +1020,7 @@ public abstract class Page extends MarkupContainer
 			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 
 			// Add/touch the response page in the session (its pagemap).
-			getSession().touch(this);
+			getSession().getPageManager().touchPage(this);
 		}
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
@@ -1315,19 +1111,6 @@ public abstract class Page extends MarkupContainer
 		dirty();
 	}
 
-	/**
-	 * @param pageMap
-	 *            Sets this page into the page map with the given name. If the page map does not yet
-	 *            exist, it is automatically created.
-	 */
-	final void setPageMap(final IPageMap pageMap)
-	{
-		// Save transient reference to pagemap
-		this.pageMap = pageMap;
-
-		// Save name for restoring transient
-		pageMapName = pageMap.getName();
-	}
 
 	/**
 	 * Set page stateless
@@ -1364,8 +1147,8 @@ public abstract class Page extends MarkupContainer
 	public PageReference getPageReference()
 	{
 		setStatelessHint(false);
-		// TODO WICKET-NG will reference need page version/render count? for now we always send zero
-		return new PageReference(pageMapName, numericId, 0);
+
+		return new PageReference(numericId);
 	}
 
 	/**

@@ -37,7 +37,7 @@ import com.google.inject.Stage;
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
@@ -68,7 +68,7 @@ import com.google.inject.Stage;
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.guice.GuiceWebApplicationFactory&lt;/param-value&gt;
@@ -174,5 +174,9 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		WebApplication app = injector.getInstance(WebApplication.class);
 		app.addComponentInstantiationListener(new GuiceComponentInjector(app, injector));
 		return app;
+	}
+
+	public void destroy()
+	{
 	}
 }

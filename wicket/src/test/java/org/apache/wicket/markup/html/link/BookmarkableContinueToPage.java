@@ -30,7 +30,8 @@ public class BookmarkableContinueToPage extends WebPage
 	 */
 	public BookmarkableContinueToPage()
 	{
-		getPageMap().continueToOriginalDestination();
+		// TODO NG
+		// getPageMap().continueToOriginalDestination();
 	}
 
 }

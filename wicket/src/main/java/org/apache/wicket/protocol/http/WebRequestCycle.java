@@ -253,7 +253,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Always touch the page again so that a redirect listener makes a page
 		// stateful and adds it to the pagemap
-		getSession().touch(page);
+		getSession().getPageManager().touchPage(page);
 
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
@@ -274,7 +274,7 @@ public class WebRequestCycle extends RequestCycle
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
 				String url = "/" + getRequest().getURL();
- 				throw new RestartResponseException(newBrowserInfoPage(url));
+				throw new RestartResponseException(newBrowserInfoPage(url));
 			}
 			// if we get here, the redirect already has been done; clear
 			// the meta data entry; we don't need it any longer is the client

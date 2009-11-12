@@ -59,7 +59,7 @@ public class IndexParamWithStatelessIFrameTest extends WicketTestCase
 		String doc = tester.getServletResponse().getDocument();
 		if (stateless == true)
 		{
-			tester.assertContains("src=\"test/wicket:interface/:0:frame::IResourceListener::\"");
+			tester.assertContains("src=\"test/wicket:interface/default:0:frame::IResourceListener::\"");
 		}
 		else
 		{

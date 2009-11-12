@@ -571,8 +571,9 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public Result ifContains(String pattern)
 	{
-		return isTrue("pattern '" + pattern + "' not found", getServletResponse().getDocument()
-			.matches("(?s).*" + pattern + ".*"));
+		return isTrue("pattern '" + pattern + "' not found in:\n" +
+			getServletResponse().getDocument(), getServletResponse().getDocument().matches(
+			"(?s).*" + pattern + ".*"));
 	}
 
 	/**

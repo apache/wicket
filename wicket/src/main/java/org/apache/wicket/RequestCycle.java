@@ -120,9 +120,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th>
- * <th align = "left">Interface</th>
- * <th align="left">Purpose</th>
+ * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -670,28 +668,6 @@ public abstract class RequestCycle
 		return orig;
 	}
 
-	/**
-	 * Attempts to return name of current page map
-	 * 
-	 * @return name of current page map or null if none
-	 */
-	private String getCurrentPageMap()
-	{
-		IRequestTarget target = RequestCycle.get().getRequestTarget();
-		if (target instanceof IPageRequestTarget)
-		{
-			Page page = ((IPageRequestTarget)target).getPage();
-			return page != null ? page.getPageMapName() : null;
-		}
-		else if (target instanceof IBookmarkablePageRequestTarget)
-		{
-			return PageMap.DEFAULT_NAME;
-		}
-		else
-		{
-			return null;
-		}
-	}
 
 	/**
 	 * Convenience method that sets page class as the response. This will generate a redirect to the
@@ -873,8 +849,8 @@ public abstract class RequestCycle
 				}
 			}
 
-			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
-				page.getClass(), pageParameters, component, listener);
+			target = new BookmarkableListenerInterfaceRequestTarget("default", page.getClass(),
+				pageParameters, component, listener);
 			return encodeUrlFor(target);
 		}
 		else
@@ -971,7 +947,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final Page page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
-		getSession().touch(((IPageRequestTarget)target).getPage());
+		getSession().getPageManager().touchPage(((IPageRequestTarget)target).getPage());
 		return encodeUrlFor(target);
 	}
 
@@ -1159,6 +1135,8 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during onEndRequest of the SessionStore", e);
 		}
+
+		getApplication().getPageManager().commitRequest();
 
 		// Release thread local resources
 		try

@@ -116,7 +116,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		Page page = getPage();
 		if (page == null)
 		{
-			page = Session.get().getPage(null, componentPath, -1);
+			final String id = Strings.firstPathComponent(componentPath, Component.PATH_SEPARATOR);
+			page = (Page)Session.get().getPageManager().getPage(Integer.valueOf(id));
 			if (page != null && page.getClass() == getPageClass())
 			{
 				setPage(page);

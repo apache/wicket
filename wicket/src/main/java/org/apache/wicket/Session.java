@@ -20,26 +20,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
-import org.apache.wicket.protocol.http.IgnoreAjaxRequestException;
+import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,50 +106,12 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Session implements IClusterable
 {
-	/**
-	 * Visitor interface for visiting page maps
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static interface IPageMapVisitor
-	{
-		/**
-		 * @param pageMap
-		 *            The page map
-		 */
-		public void pageMap(final IPageMap pageMap);
-	}
-
-	/**
-	 * meta data for recording map map access.
-	 */
-	public static final class PageMapAccessMetaData implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
-
-		Set<String> pageMapNames = new HashSet<String>(2);
-
-		/**
-		 * @param pagemap
-		 *            the pagemap to add as used.
-		 * @return the boolean if it was added (didn't already contain the pagemap)
-		 */
-		public boolean add(IPageMap pagemap)
-		{
-			return pageMapNames.add(pagemap.getName());
-		}
-	}
 
 	private static final long serialVersionUID = 1L;
 
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
-	/** meta data key for missing body tags logging. */
-	public static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
@@ -164,23 +119,11 @@ public abstract class Session implements IClusterable
 	/** Thread-local current session. */
 	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
 
-	/** A store for dirty objects for one request */
-	private static final ThreadLocal<List<IClusterable>> dirtyObjects = new ThreadLocal<List<IClusterable>>();
-
-	/** Attribute prefix for page maps stored in the session */
-	private static final String pageMapAttributePrefix = "m:";
-
-	/** A store for touched pages for one request */
-	private static final ThreadLocal<List<Page>> touchedPages = new ThreadLocal<List<Page>>();
-
-	/** Prefix for attributes holding page map entries */
-	static final String pageMapEntryAttributePrefix = "p:";
-
 	/** a sequence used for whenever something session-specific needs a unique value */
 	private int sequence = 1;
 
-	/** */
-	private int pageIdCounter = 0;
+	/** a sequence used for generating page IDs */
+	private int pageId = 0;
 
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
@@ -224,17 +167,22 @@ public abstract class Session implements IClusterable
 		ISessionStore sessionStore = application.getSessionStore();
 		Session session = sessionStore.lookup(request);
 
+		boolean created = false;
+
 		if (session == null)
 		{
 			// Create session using session factory
 			session = application.newSession(request, response);
-
-			dirtyObjects.set(null);
-			touchedPages.set(null);
+			created = true;
 		}
 
 		// set thread local
 		set(session);
+
+		if (created)
+		{
+			application.getPageManager().newSessionCreated();
+		}
 
 		return session;
 	}
@@ -286,9 +234,6 @@ public abstract class Session implements IClusterable
 		current.set(null);
 	}
 
-	/** A number to generate names for auto create pagemaps */
-	private int autoCreatePageMapCounter = 0;
-
 	/**
 	 * Cached instance of agent info which is typically designated by calling
 	 * {@link RequestCycle#newClientInfo()}.
@@ -309,17 +254,6 @@ public abstract class Session implements IClusterable
 
 	/** Application level meta data. */
 	private MetaDataEntry<?>[] metaData;
-
-	/**
-	 * We need to know both thread that keeps the pagemap lock and the RequestCycle
-	 */
-	private static class PageMapsUsedInRequestEntry
-	{
-		Thread thread;
-		RequestCycle requestCycle;
-	};
-
-	private transient Map<IPageMap, PageMapsUsedInRequestEntry> pageMapsUsedInRequest;
 
 	/** True, if session has been invalidated */
 	private transient boolean sessionInvalidated = false;
@@ -343,9 +277,6 @@ public abstract class Session implements IClusterable
 	 * </p>
 	 */
 	private transient Map<String, Object> temporarySessionAttributes;
-
-	/** A linked list for last used pagemap queue */
-	private final LinkedList/* <IPageMap> */<IPageMap> usedPageMaps = new LinkedList<IPageMap>();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -422,72 +353,7 @@ public abstract class Session implements IClusterable
 	 */
 	public final void clear()
 	{
-		visitPageMaps(new IPageMapVisitor()
-		{
-			public void pageMap(IPageMap pageMap)
-			{
-				pageMap.clear();
-			}
-		});
-	}
-
-	/**
-	 * Automatically creates a page map, giving it a session unique name.
-	 * 
-	 * @return Created PageMap
-	 */
-	public final IPageMap createAutoPageMap()
-	{
-		return newPageMap(createAutoPageMapName());
-	}
-
-	protected int currentCreateAutoPageMapCounter()
-	{
-		return autoCreatePageMapCounter;
-	}
-
-	protected void incrementCreateAutoPageMapCounter()
-	{
-		++autoCreatePageMapCounter;
-	}
-
-	/**
-	 * With this call you can create a pagemap name but not create the pagemap itself already. It
-	 * will give the first pagemap name where it couldn't find a current pagemap for.
-	 * 
-	 * It will return the same name if you call it 2 times in a row.
-	 * 
-	 * @return The created pagemap name
-	 */
-	public synchronized final String createAutoPageMapName()
-	{
-		String name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
-			getAutoPageMapNameSuffix();
-		IPageMap pm = pageMapForName(name, false);
-		while (pm != null)
-		{
-			incrementCreateAutoPageMapCounter();
-			name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
-				getAutoPageMapNameSuffix();
-			pm = pageMapForName(name, false);
-		}
-		return name;
-	}
-
-	/**
-	 * @return The prefixed string default "wicket-".
-	 */
-	protected String getAutoPageMapNamePrefix()
-	{
-		return "wicket-";
-	}
-
-	/**
-	 * @return The suffix default an empty string.
-	 */
-	protected String getAutoPageMapNameSuffix()
-	{
-		return "";
+		// TODO:
 	}
 
 	/**
@@ -544,14 +410,6 @@ public abstract class Session implements IClusterable
 			clientInfo = RequestCycle.get().newClientInfo();
 		}
 		return clientInfo;
-	}
-
-	/**
-	 * @return The default page map
-	 */
-	public final IPageMap getDefaultPageMap()
-	{
-		return pageMapForName(PageMap.DEFAULT_NAME, true);
 	}
 
 	/**
@@ -623,162 +481,6 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Returns the page with given id and versionNumber. It keeps asking pageMaps for given page
-	 * until it finds one that contains it.
-	 * 
-	 * @param pageId
-	 * @param versionNumber
-	 * @return The page of that pageid and version, null if not found
-	 */
-	public final Page getPage(final int pageId, final int versionNumber)
-	{
-		if (Application.get().getSessionSettings().isPageIdUniquePerSession() == false)
-		{
-			throw new IllegalStateException(
-				"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
-		}
-
-		List<IPageMap> pageMaps = getPageMaps();
-
-		for (IPageMap pageMap : pageMaps)
-		{
-			if (pageMap.containsPage(pageId, versionNumber))
-			{
-				return getPage(pageMap.getName(), "" + pageId, versionNumber);
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Get the page for the given path.
-	 * 
-	 * FIXME javadoc - where does it look? where does it get the page from?
-	 * 
-	 * @param pageMapName
-	 *            The name of the page map where the page is
-	 * @param componentPath
-	 *            Component path
-	 * @param versionNumber
-	 *            The version of the page required
-	 * @return The page based on the first path component (the page id), or null if the requested
-	 *         version of the page cannot be found.
-	 */
-	public final Page getPage(final String pageMapName, final String componentPath,
-		final int versionNumber)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Getting page [path = " + componentPath + ", versionNumber = " +
-				versionNumber + "]");
-		}
-
-		// Get page map by name, creating the default page map automatically
-		IPageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
-		if (pageMap != null)
-		{
-			synchronized (usedPageMaps) // get a lock so be sure that only one
-			// is made
-			{
-				if (pageMapsUsedInRequest == null)
-				{
-					pageMapsUsedInRequest = new HashMap<IPageMap, PageMapsUsedInRequestEntry>(3);
-				}
-			}
-			synchronized (pageMapsUsedInRequest)
-			{
-				long startTime = System.currentTimeMillis();
-
-				// TODO For now only use the setting. Might be extended with
-				// something overridable on request/ page/ request target level
-				// later
-				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
-
-				PageMapsUsedInRequestEntry entry = pageMapsUsedInRequest.get(pageMap);
-
-				// Get page entry for id and version
-				Thread t = entry != null ? entry.thread : null;
-				while (t != null && t != Thread.currentThread())
-				{
-					if (isCurrentRequestValid(entry.requestCycle) == false)
-					{
-						// we need to ignore this request. That's because it is
-						// an ajax request
-						// while regular page request is being processed
-						throw new IgnoreAjaxRequestException();
-					}
-
-					try
-					{
-						pageMapsUsedInRequest.wait(timeout.getMilliseconds());
-					}
-					catch (InterruptedException ex)
-					{
-						throw new WicketRuntimeException(ex);
-					}
-
-					entry = pageMapsUsedInRequest.get(pageMap);
-					t = entry != null ? entry.thread : null;
-
-					if (t != null && t != Thread.currentThread() &&
-						(startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
-					{
-						AppendingStringBuffer asb = new AppendingStringBuffer(100);
-						asb.append("After " + timeout + " the Pagemap " + pageMapName +
-							" is still locked by: " + t +
-							", giving up trying to get the page for path: " + componentPath);
-						// if it is still not the right thread..
-						// This either points to long running code (a report
-						// page?) or a deadlock or such
-						try
-						{
-							StackTraceElement[] stackTrace = t.getStackTrace();
-							asb.append("\n\tBegin of stack trace of " + t);
-							for (StackTraceElement stackTraceElement : stackTrace)
-							{
-								asb.append("\n\t");
-								asb.append(stackTraceElement);
-							}
-							asb.append("\n\tEnd of stack trace of " + t);
-						}
-						catch (Exception e)
-						{
-							// ignore
-						}
-						throw new WicketRuntimeException(asb.toString());
-					}
-				}
-
-				PageMapsUsedInRequestEntry newEntry = new PageMapsUsedInRequestEntry();
-				newEntry.thread = Thread.currentThread();
-				newEntry.requestCycle = RequestCycle.get();
-				pageMapsUsedInRequest.put(pageMap, newEntry);
-				final String id = Strings.firstPathComponent(componentPath,
-					Component.PATH_SEPARATOR);
-				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
-				if (page == null)
-				{
-					pageMapsUsedInRequest.remove(pageMap);
-					pageMapsUsedInRequest.notifyAll();
-				}
-				else
-				{
-					// attach the page now.
-					page.onPageAttached();
-					touch(page);
-				}
-				return page;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * @return The page factory for this session
 	 */
 	public final IPageFactory getPageFactory()
@@ -787,32 +489,12 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * @return A list of all PageMaps in this session.
-	 */
-	public final List<IPageMap> getPageMaps()
-	{
-		final List<IPageMap> list = new ArrayList<IPageMap>();
-		for (String attribute : getAttributeNames())
-		{
-			if (attribute.startsWith(pageMapAttributePrefix))
-			{
-				list.add((IPageMap)getAttribute(attribute));
-			}
-		}
-		return list;
-	}
-
-	/**
 	 * @return Size of this session, including all the pagemaps it contains
 	 */
 	public final long getSizeInBytes()
 	{
-		long size = Objects.sizeof(this);
-		for (IPageMap pageMap : getPageMaps())
-		{
-			size += pageMap.getSizeInBytes();
-		}
-		return size;
+		// TODO WICKET-NG
+		return -1;
 	}
 
 	/**
@@ -898,85 +580,6 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Creates a new page map with a given name
-	 * 
-	 * @param name
-	 *            The name for the new page map
-	 * @return The newly created page map
-	 */
-	public final IPageMap newPageMap(final String name)
-	{
-		// Check that session doesn't have too many page maps already, if so, evict
-		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		synchronized (usedPageMaps)
-		{
-			if (usedPageMaps.size() >= maxPageMaps)
-			{
-				IPageMap pm = usedPageMaps.getFirst();
-				pm.remove();
-			}
-		}
-
-		// Create new page map
-		final IPageMap pageMap = getSessionStore().createPageMap(name);
-		setAttribute(attributeForPageMapName(name), pageMap);
-		dirty();
-		return pageMap;
-	}
-
-	/**
-	 * Gets a page map for the given name, automatically creating it if need be.
-	 * 
-	 * @param pageMapName
-	 *            Name of page map, or null for default page map
-	 * @param autoCreate
-	 *            True if the page map should be automatically created if it does not exist
-	 * @return PageMap for name
-	 */
-	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
-	{
-		IPageMap pageMap = (IPageMap)getAttribute(attributeForPageMapName(pageMapName));
-		if (pageMap == null && autoCreate)
-		{
-			pageMap = newPageMap(pageMapName);
-		}
-		return pageMap;
-	}
-
-	/**
-	 * @param pageMap
-	 *            Page map to remove
-	 */
-	public final void removePageMap(final IPageMap pageMap)
-	{
-		PageMapAccessMetaData pagemapMetaData = getMetaData(PAGEMAP_ACCESS_MDK);
-		if (pagemapMetaData != null)
-		{
-			pagemapMetaData.pageMapNames.remove(pageMap.getName());
-		}
-
-		synchronized (usedPageMaps)
-		{
-			usedPageMaps.remove(pageMap);
-		}
-
-		removeAttribute(attributeForPageMapName(pageMap.getName()));
-		dirty();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Sets the application that this session is associated with.
-	 * 
-	 * @param application
-	 *            The application
-	 */
-	public final void setApplication(final Application application)
-	{
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets the client info object for this session. This will only work when
@@ -1043,66 +646,6 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * The page will be 'touched' in the session. If it wasn't added yet to the pagemap, it will be
-	 * added to the page map else it will set this page to the front.
-	 * 
-	 * If another page was removed because of this it will be cleaned up.
-	 * 
-	 * @param page
-	 */
-	public final void touch(Page page)
-	{
-		// store it in a list, so that the pages are really pushed
-		// to the pagemap when the session does it update/detaches.
-		// all the pages are then detached
-		List<Page> lst = touchedPages.get();
-		if (lst == null)
-		{
-			lst = new ArrayList<Page>();
-			touchedPages.set(lst);
-			lst.add(page);
-		}
-		else if (!lst.contains(page))
-		{
-			lst.add(page);
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * This method will remove a page that was previously added via touch()
-	 * 
-	 * @param page
-	 */
-	public final void untouch(Page page)
-	{
-		List<Page> lst = touchedPages.get();
-		if (lst != null)
-		{
-			lst.remove(page);
-		}
-	}
-
-	/**
-	 * @param visitor
-	 *            The visitor to call at each Page in this PageMap.
-	 */
-	public final void visitPageMaps(final IPageMapVisitor visitor)
-	{
-		for (final Iterator<String> iterator = getAttributeNames().iterator(); iterator.hasNext();)
-		{
-			final String attribute = iterator.next();
-			if (attribute.startsWith(pageMapAttributePrefix))
-			{
-				visitor.pageMap((IPageMap)getAttribute(attribute));
-			}
-		}
-	}
-
-	/**
 	 * Registers a warning feedback message for this session
 	 * 
 	 * @param message
@@ -1124,16 +667,6 @@ public abstract class Session implements IClusterable
 	{
 		getFeedbackMessages().add(null, message, level);
 		dirty();
-	}
-
-	/**
-	 * @param pageMapName
-	 *            Name of page map
-	 * @return Session attribute holding page map
-	 */
-	private final String attributeForPageMapName(final String pageMapName)
-	{
-		return pageMapAttributePrefix + pageMapName;
 	}
 
 	/**
@@ -1265,7 +798,6 @@ public abstract class Session implements IClusterable
 	 */
 	// TODO WICKET-NG made public for page manager, used to be protected, see if there is a way to
 	// revert
-
 	public final void setAttribute(String name, Serializable value)
 	{
 		if (!isTemporary())
@@ -1311,53 +843,6 @@ public abstract class Session implements IClusterable
 		}
 	}
 
-	/**
-	 * @param page
-	 *            The page to add to dirty objects list
-	 */
-	void dirtyPage(final Page page)
-	{
-		List<IClusterable> dirtyObjects = getDirtyObjectsList();
-		if (!dirtyObjects.contains(page))
-		{
-			dirtyObjects.add(page);
-		}
-	}
-
-	/**
-	 * @param map
-	 *            The page map to add to dirty objects list
-	 */
-	void dirtyPageMap(final IPageMap map)
-	{
-		if (!map.isDefault())
-		{
-			synchronized (usedPageMaps)
-			{
-				usedPageMaps.remove(map);
-				usedPageMaps.addLast(map);
-			}
-		}
-		List<IClusterable> dirtyObjects = getDirtyObjectsList();
-		if (!dirtyObjects.contains(map))
-		{
-			dirtyObjects.add(map);
-		}
-	}
-
-	/**
-	 * @return The current thread dirty objects list
-	 */
-	List<IClusterable> getDirtyObjectsList()
-	{
-		List<IClusterable> list = dirtyObjects.get();
-		if (list == null)
-		{
-			list = new ArrayList<IClusterable>(4);
-			dirtyObjects.set(list);
-		}
-		return list;
-	}
 
 	// TODO remove after deprecation release
 
@@ -1368,20 +853,6 @@ public abstract class Session implements IClusterable
 	 */
 	final void requestDetached()
 	{
-		List<Page> touchedPages = Session.touchedPages.get();
-		Session.touchedPages.set(null);
-		if (touchedPages != null)
-		{
-			for (int i = 0; i < touchedPages.size(); i++)
-			{
-				Page page = touchedPages.get(i);
-				// page must be detached before it gets stored
-				page.detach();
-				page.getPageMap().put(page);
-				dirty = true;
-			}
-		}
-
 		// If state is dirty
 		if (dirty)
 		{
@@ -1398,85 +869,6 @@ public abstract class Session implements IClusterable
 				log.debug("update: Session not dirty.");
 			}
 		}
-
-		List<IClusterable> dirtyObjects = Session.dirtyObjects.get();
-		Session.dirtyObjects.set(null);
-
-		Map<String, Object> tempMap = new HashMap<String, Object>();
-
-		// Go through all dirty entries, replicating any dirty objects
-		if (dirtyObjects != null)
-		{
-			for (final Iterator<IClusterable> iterator = dirtyObjects.iterator(); iterator.hasNext();)
-			{
-				String attribute = null;
-				Object object = iterator.next();
-				if (object instanceof Page)
-				{
-					final Page page = (Page)object;
-					if (page.isPageStateless())
-					{
-						// check, can it be that stateless pages where added to
-						// the session?
-						// and should be removed now?
-						continue;
-					}
-					attribute = page.getPageMap().attributeForId(page.getNumericId());
-					if (getAttribute(attribute) == null)
-					{
-						// page removed by another thread. don't add it again.
-						continue;
-					}
-					object = page.getPageMapEntry();
-				}
-				else if (object instanceof IPageMap)
-				{
-					attribute = attributeForPageMapName(((IPageMap)object).getName());
-				}
-
-				// we might override some attributes, so we use a temporary map
-				// and then just copy the last values to real sesssion
-				tempMap.put(attribute, object);
-			}
-		}
-
-		// in case we have dirty attributes, set them to session
-		if (tempMap.isEmpty() == false)
-		{
-			for (Entry<String, Object> entry : tempMap.entrySet())
-			{
-				// WICKET-NG this cast should not be necessary, map should be <string,serializable>
-				setAttribute(entry.getKey(), (Serializable)entry.getValue());
-			}
-		}
-
-		if (pageMapsUsedInRequest != null)
-		{
-			synchronized (pageMapsUsedInRequest)
-			{
-				Thread t = Thread.currentThread();
-				Iterator<Entry<IPageMap, PageMapsUsedInRequestEntry>> it = pageMapsUsedInRequest.entrySet()
-					.iterator();
-				while (it.hasNext())
-				{
-					Entry<IPageMap, PageMapsUsedInRequestEntry> entry = it.next();
-					if ((entry.getValue()).thread == t)
-					{
-						it.remove();
-					}
-				}
-				pageMapsUsedInRequest.notifyAll();
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @return the next page id
-	 */
-	synchronized protected int nextPageId()
-	{
-		return pageIdCounter++;
 	}
 
 	/**
@@ -1487,5 +879,16 @@ public abstract class Session implements IClusterable
 	public synchronized int nextSequenceValue()
 	{
 		return sequence++;
+	}
+
+	public synchronized int nextPageId()
+	{
+		return pageId++;
+	}
+
+	public PageManager getPageManager()
+	{
+		// TODO. Later page manager should be refactored to be session specific
+		return Application.get().getPageManager();
 	}
 }

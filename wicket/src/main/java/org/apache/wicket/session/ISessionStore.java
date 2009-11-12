@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 
@@ -145,12 +144,6 @@ public interface ISessionStore
 	 *            The request
 	 */
 	void onEndRequest(Request request);
-
-	/**
-	 * @param name
-	 * @return The pagemap instance
-	 */
-	IPageMap createPageMap(String name);
 
 	/**
 	 * Called when the WebApplication is destroyed.

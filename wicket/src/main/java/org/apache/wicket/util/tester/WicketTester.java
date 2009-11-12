@@ -35,10 +35,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
@@ -196,44 +194,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public static class NonPageCachingDummyWebApplication extends DummyWebApplication
 	{
-		@Override
-		protected ISessionStore newSessionStore()
-		{
-			return new SecondLevelCacheSessionStore(this, new IPageStore()
-			{
-				public void destroy()
-				{
-				}
 
-				public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
-					int ajaxVersionNumber)
-				{
-					return null;
-				}
-
-				public void pageAccessed(String sessionId, Page page)
-				{
-				}
-
-				public void removePage(String sessionId, String pagemap, int id)
-				{
-				}
-
-				public void storePage(String sessionId, Page page)
-				{
-				}
-
-				public void unbind(String sessionId)
-				{
-				}
-
-				public boolean containsPage(String sessionId, String pageMapName, int pageId,
-					int pageVersion)
-				{
-					return false;
-				}
-			});
-		}
 	}
 
 	/** log. */

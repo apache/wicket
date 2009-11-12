@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
@@ -98,7 +97,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 */
 	public QueryStringUrlCodingStrategy(final String mountPath, final Class bookmarkablePageClass)
 	{
-		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
+		super(mountPath, bookmarkablePageClass, "");
 	}
 
 	/**

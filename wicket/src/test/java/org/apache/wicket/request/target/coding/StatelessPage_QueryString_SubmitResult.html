@@ -1,15 +1,15 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Wicket Examples - stateless</title>
-		<link href="../../style.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="../../style.css"/>
 	</head>
 	<body>
 		<br />
-		<a href="../?wicket:bookmarkablePage=:org.apache.wicket.markup.html.autolink.Index" wicket:id="indexLink">go to index</a>
+		<a wicket:id="indexLink" href="../?wicket:bookmarkablePage=:org.apache.wicket.markup.html.autolink.Index">go to index</a>
 		
-		<form action="../stateless?wicket:interface=:1:statelessform::IFormSubmitListener::" wicket:id="statelessform" method="post" id="statelessform2"><div style="display:none"><input type="hidden" name="statelessform2_hf_0" id="statelessform2_hf_0" /></div>
-		<input value="test" type="text" wicket:id="textfield" name="textfield">
+		<form wicket:id="statelessform" id="statelessform2" method="post" action="../stateless?wicket:interface=default:1:statelessform::IFormSubmitListener::"><div style="display:none"><input type="hidden" name="statelessform2_hf_0" id="statelessform2_hf_0" /></div>
+		<input type="text" wicket:id="textfield" value="test" name="textfield">
 		<input type="submit"> 
 		</form>
 

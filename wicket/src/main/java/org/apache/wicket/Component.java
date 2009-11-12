@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -924,7 +923,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final boolean continueToOriginalDestination()
 	{
-		return getPage().getPageMap().continueToOriginalDestination();
+		// TODO WICKET-NG
+		return false;
+		// return getPage().getPageMap().continueToOriginalDestination();
 	}
 
 	/**
@@ -2039,7 +2040,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
-		getPage().getPageMap().redirectToInterceptPage(page);
+		// TODO WICKET-NG
+		// getPage().getPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -4076,40 +4078,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return isVisible() && isRenderAllowed() && isVisibilityAllowed();
 	}
 
-	/**
-	 * 
-	 * @param s
-	 * @throws IOException
-	 */
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
-	{
-		if (this instanceof Page)
-		{
-			((Page)this).writePageObject(s);
-		}
-		else
-		{
-			s.defaultWriteObject();
-		}
-	}
-
-	/**
-	 * 
-	 * @param s
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
-	{
-		if (this instanceof Page)
-		{
-			((Page)this).readPageObject(s);
-		}
-		else
-		{
-			s.defaultReadObject();
-		}
-	}
 
 	/**
 	 * Calculates enabled state of the component taking its hierarchy into account. A component is

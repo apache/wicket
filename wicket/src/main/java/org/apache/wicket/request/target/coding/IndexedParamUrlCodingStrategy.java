@@ -18,7 +18,6 @@ package org.apache.wicket.request.target.coding;
 
 import java.util.Map;
 
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
@@ -50,7 +49,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 */
 	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass)
 	{
-		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
+		super(mountPath, bookmarkablePageClass, "default");
 	}
 
 	/**

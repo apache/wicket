@@ -26,12 +26,10 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.PageReference;
 import org.apache.wicket.Request;
@@ -58,7 +56,6 @@ import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.request.target.component.PageReferenceRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -555,10 +552,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
-			// Extract any pagemap name
-			final String pageMapName = components[0];
-			parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME
-				: pageMapName);
 
 			// Extract bookmarkable page class name
 			final String pageClassName = components[1];
@@ -632,7 +625,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		// Set pagemap name
 		final String pageMapName = pathComponents[0];
-		parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME : pageMapName);
 
 		// Extract URL depth after last colon
 		final String urlDepthString = pathComponents[pathComponents.length - 1];
@@ -754,15 +746,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (currentTarget instanceof IPageRequestTarget)
 			{
 				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final IPageMap pageMap = currentPage.getPageMap();
-				if (pageMap.isDefault())
-				{
-					pageMapName = "";
-				}
-				else
-				{
-					pageMapName = pageMap.getName();
-				}
+				pageMapName = "";
 			}
 			else
 			{
@@ -880,18 +864,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		url.append('=');
 
 		// add pagemap
-		if (!Objects.equal(PageMap.DEFAULT_NAME, id.getPageMapName()))
-		{
-			url.append(id.getPageMapName());
-		}
 		url.append(Component.PATH_SEPARATOR);
 
 		// add page id
-		url.append(id.getPageNumber());
+		url.append(id.getPageId());
 		url.append(Component.PATH_SEPARATOR);
 
 		// add version
-		url.append(id.getPageVersion());
+		url.append(0);
 		url.append(Component.PATH_SEPARATOR);
 
 		// add listener interface (noop because we default to redirect listener which is default)
@@ -932,11 +912,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final Page page = component.getPage();
 
 		// Add pagemap
-		final IPageMap pageMap = page.getPageMap();
-		if (!pageMap.isDefault())
-		{
-			url.append(pageMap.getName());
-		}
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add path to component
@@ -1005,7 +980,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		// Touch the page once because it could be that it did go from stateless
 		// to stateful or it was a internally made page where just a url must
 		// be made for (frames)
-		Session.get().touch(page);
+
+		Session.get().getPageManager().touchPage(page);
 		return urlRedirect;
 	}
 

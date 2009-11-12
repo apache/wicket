@@ -17,7 +17,6 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -58,7 +57,8 @@ public final class WicketExampleHeader extends Panel
 			}
 		};
 		add(hideInPortlet);
-		hideInPortlet.add(new DebugBar("debug"));
+		// hideInPortlet.add(new DebugBar("debug"));
+		hideInPortlet.add(new WebMarkupContainer("debug"));
 		add(new Label("exampleTitle", exampleTitle));
 		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
 			SourcesPage.class, SourcesPage.generatePageParameters(page));

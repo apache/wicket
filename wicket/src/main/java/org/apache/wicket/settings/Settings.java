@@ -55,8 +55,6 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
-import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
-import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -213,10 +211,6 @@ public final class Settings
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
-
-	/** The eviction strategy. */
-	private IPageMapEvictionStrategy pageMapEvictionStrategy = new LeastRecentlyAccessedEvictionStrategy(
-		5);
 
 	/** The factory to be used for the property files */
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
@@ -622,14 +616,6 @@ public final class Settings
 	public IPageFactory getPageFactory()
 	{
 		return pageFactory;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.ISessionSettings#getPageMapEvictionStrategy()
-	 */
-	public IPageMapEvictionStrategy getPageMapEvictionStrategy()
-	{
-		return pageMapEvictionStrategy;
 	}
 
 	/**
@@ -1041,14 +1027,6 @@ public final class Settings
 	public void setPageFactory(final IPageFactory defaultPageFactory)
 	{
 		pageFactory = defaultPageFactory;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.ISessionSettings#setPageMapEvictionStrategy(org.apache.wicket.session.pagemap.IPageMapEvictionStrategy)
-	 */
-	public void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy)
-	{
-		this.pageMapEvictionStrategy = pageMapEvictionStrategy;
 	}
 
 	/**
