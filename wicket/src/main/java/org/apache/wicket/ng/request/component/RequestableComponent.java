@@ -63,7 +63,7 @@ public interface RequestableComponent extends IDetachable
 	 * Returns true if the listener interface method can be called on this component. Normally this
 	 * would check if component is enabled and visible in hierarchy.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the listener can be called, <code>false</code> otherwise.
 	 */
 	public boolean canCallListenerInterface();
 

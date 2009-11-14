@@ -400,6 +400,9 @@ public class PageParameters implements Serializable
 		return false;
 	}
 
+	/**
+	 * @return <code>true</code> if the parameters are empty, <code>false</code> otherwise.
+	 */
 	public boolean isEmpty()
 	{
 		return getIndexedParamsCount() == 0 && getNamedParameterKeys().isEmpty();
