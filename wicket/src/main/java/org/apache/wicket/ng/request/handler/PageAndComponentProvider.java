@@ -160,7 +160,7 @@ public class PageAndComponentProvider extends PageProvider
 	/**
 	 * Returns the component path.
 	 * 
-	 * @return
+	 * @return component path
 	 */
 	public String getComponentPath()
 	{

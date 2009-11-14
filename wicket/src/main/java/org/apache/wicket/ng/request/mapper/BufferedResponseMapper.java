@@ -34,6 +34,9 @@ import org.apache.wicket.ng.request.response.BufferedWebResponse;
 public class BufferedResponseMapper implements RequestMapper
 {
 
+	/**
+	 * Construct.
+	 */
 	public BufferedResponseMapper()
 	{
 	}

@@ -84,7 +84,8 @@ public class WicketFilter implements Filter
 	 * @return <code>true</code> if there is a trailing slash, <code>false</code> if redirect was
 	 *         necessary.
 	 */
-	private boolean checkForTrailingSlash(HttpServletRequest request, HttpServletResponse response, String filterPath)
+	private boolean checkForTrailingSlash(HttpServletRequest request, HttpServletResponse response,
+		String filterPath)
 	{
 		// current URI
 		String uri = Strings.stripJSessionId(request.getRequestURI());
@@ -120,13 +121,13 @@ public class WicketFilter implements Filter
 		return true;
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+		throws IOException, ServletException
 	{
 		try
 		{
-			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
 			String filterPath = getFilterPath(httpServletRequest);
 
@@ -139,7 +140,7 @@ public class WicketFilter implements Filter
 
 				RequestCycle requestCycle = webApplication.createRequestCycle(req, resp);
 
-				
+
 				if (!requestCycle.processRequestAndDetach())
 				{
 					chain.doFilter(request, response);
@@ -178,16 +179,17 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Try to find the specified factory class
-				final Class<?> factoryClass = Thread.currentThread().getContextClassLoader().loadClass(
-						appFactoryClassName);
+				final Class<?> factoryClass = Thread.currentThread()
+					.getContextClassLoader()
+					.loadClass(appFactoryClassName);
 
 				// Instantiate the factory
-				return (IWebApplicationFactory) factoryClass.newInstance();
+				return (IWebApplicationFactory)factoryClass.newInstance();
 			}
 			catch (ClassCastException e)
 			{
-				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
-						+ " must implement IWebApplicationFactory");
+				throw new WicketRuntimeException("Application factory class " +
+					appFactoryClassName + " must implement IWebApplicationFactory");
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -229,6 +231,9 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * @return filter config
+	 */
 	public FilterConfig getFilterConfig()
 	{
 		return filterConfig;
@@ -250,12 +255,14 @@ public class WicketFilter implements Filter
 			catch (SecurityException e)
 			{
 				// Swallow this at INFO.
-				log.info("Couldn't read web.xml to automatically pick up servlet/filter path: " + e.getMessage());
+				log.info("Couldn't read web.xml to automatically pick up servlet/filter path: " +
+					e.getMessage());
 			}
 			if (filterPath == null)
 			{
-				log.info("Unable to parse filter mapping web.xml for " + filterConfig.getFilterName() + ". "
-						+ "Configure with init-param " + FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+				log.info("Unable to parse filter mapping web.xml for " +
+					filterConfig.getFilterName() + ". " + "Configure with init-param " +
+					FILTER_MAPPING_PARAM + " if it is not \"/*\".");
 			}
 		}
 	};
@@ -263,7 +270,7 @@ public class WicketFilter implements Filter
 	private FilterConfig filterConfig;
 	private String filterPath;
 
-	private boolean servletMode = false;
+	private final boolean servletMode = false;
 
 	// private String getFilterPath(String filterName, InputStream is) throws ServletException
 	// {
@@ -462,8 +469,8 @@ public class WicketFilter implements Filter
 		}
 		else if (!result.startsWith("/") || !result.endsWith("/*"))
 		{
-			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM
-					+ " must start with \"/\" and end with \"/*\". It is: " + result);
+			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM +
+				" must start with \"/\" and end with \"/*\". It is: " + result);
 		}
 		return filterPath = stripWildcard(result);
 	}

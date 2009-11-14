@@ -109,8 +109,8 @@ public abstract class RequestHandlerStack
 
 	/**
 	 * Schedules the request handler to be executed after current request handler finishes. If there
-	 * is already another request handler scheduled it will be discarded and overwritten by the
-	 * new one. If {@link #replaceCurrentRequestHandler(RequestHandler)} or
+	 * is already another request handler scheduled it will be discarded and overwritten by the new
+	 * one. If {@link #replaceCurrentRequestHandler(RequestHandler)} or
 	 * {@link #replaceAllRequestHandlers(RequestHandler)} is invoked during current request handler
 	 * execution the scheduled handler will be also discarded.
 	 * 
@@ -119,7 +119,7 @@ public abstract class RequestHandlerStack
 	 */
 	public void scheduleRequestHandlerAfterCurrent(RequestHandler handler)
 	{
-		this.scheduledAfterCurrent = handler;
+		scheduledAfterCurrent = handler;
 	}
 
 	/**
@@ -130,10 +130,12 @@ public abstract class RequestHandlerStack
 	 * @param handler
 	 */
 	// FIXME
-	// Is this method really useful for anything? To execute request handler after current 
-	// #scheduleRequestHandlerAfterCurrent is better alternative because it doesn't terminate current 
+	// Is this method really useful for anything? To execute request handler after current
+	// #scheduleRequestHandlerAfterCurrent is better alternative because it doesn't terminate
+	// current
 	// request handler.
-	// To restart request processing #replaceAllRequestHandlers is better alternative because it unrolls
+	// To restart request processing #replaceAllRequestHandlers is better alternative because it
+	// unrolls
 	// entire stack and cancels all request handlers in stack
 	public void replaceCurrentRequestHandler(RequestHandler handler)
 	{
@@ -177,6 +179,12 @@ public abstract class RequestHandlerStack
 		private final boolean removeAll;
 		private final RequestHandler replacementRequestHandler;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param replacementRequestHandler
+		 * @param removeAll
+		 */
 		public ReplaceHandlerException(RequestHandler replacementRequestHandler, boolean removeAll)
 		{
 			this.replacementRequestHandler = replacementRequestHandler;

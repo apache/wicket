@@ -32,25 +32,44 @@ public abstract class RenderPageRequestHandlerDelegate
 {
 	private final RenderPageRequestHandler renderPageRequestHandler;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param renderPageRequestHandler
+	 */
 	public RenderPageRequestHandlerDelegate(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		this.renderPageRequestHandler = renderPageRequestHandler;
 	}
 
+	/**
+	 * @return page provider
+	 */
 	public PageProvider getPageProvider()
 	{
 		return renderPageRequestHandler.getPageProvider();
 	}
 
+	/**
+	 * @return redirect policy
+	 */
 	public RedirectPolicy getRedirectPolicy()
 	{
 		return renderPageRequestHandler.getRedirectPolicy();
 	}
 
+	/**
+	 * @return the request handler
+	 */
 	public RenderPageRequestHandler getRenderPageRequestHandler()
 	{
 		return renderPageRequestHandler;
 	}
 
+	/**
+	 * Render the response using give {@link RequestCycle}.
+	 * 
+	 * @param requestCycle
+	 */
 	public abstract void respond(RequestCycle requestCycle);
 }

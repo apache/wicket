@@ -23,6 +23,11 @@ import java.util.Set;
 import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
+/**
+ * Read only empty {@link RequestParameters}.
+ * 
+ * @author Matej Knopp
+ */
 public class EmptyRequestParameters implements RequestParameters
 {
 
@@ -30,7 +35,10 @@ public class EmptyRequestParameters implements RequestParameters
 	{
 	}
 
-	public static EmptyRequestParameters INSTANCE = new EmptyRequestParameters();
+	/**
+	 * Singleton instance.
+	 */
+	public static final EmptyRequestParameters INSTANCE = new EmptyRequestParameters();
 
 	public Set<String> getParameterNames()
 	{

@@ -38,6 +38,14 @@ public final class RequestCycleContext
 	private RequestMapper requestMapper;
 	private ExceptionMapper exceptionMapper;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param request
+	 * @param response
+	 * @param requestMapper
+	 * @param exceptionMapper
+	 */
 	public RequestCycleContext(Request request, Response response, RequestMapper requestMapper,
 		ExceptionMapper exceptionMapper)
 	{
@@ -47,43 +55,66 @@ public final class RequestCycleContext
 		this.exceptionMapper = exceptionMapper;
 	}
 
+	/**
+	 * @return request
+	 */
 	public Request getRequest()
 	{
 		return request;
 	}
 
+	/**
+	 * @return response
+	 */
 	public Response getResponse()
 	{
 		return response;
 	}
 
-
+	/**
+	 * @return requst mapper
+	 */
 	public RequestMapper getRequestMapper()
 	{
 		return requestMapper;
 	}
 
 
+	/**
+	 * @return exception mapper
+	 */
 	public ExceptionMapper getExceptionMapper()
 	{
 		return exceptionMapper;
 	}
 
+	/**
+	 * @param request
+	 */
 	public void setRequest(Request request)
 	{
 		this.request = request;
 	}
 
+	/**
+	 * @param response
+	 */
 	public void setResponse(Response response)
 	{
 		this.response = response;
 	}
 
+	/**
+	 * @param requestMapper
+	 */
 	public void setRequestMapper(RequestMapper requestMapper)
 	{
 		this.requestMapper = requestMapper;
 	}
 
+	/**
+	 * @param exceptionMapper
+	 */
 	public void setExceptionMapper(ExceptionMapper exceptionMapper)
 	{
 		this.exceptionMapper = exceptionMapper;

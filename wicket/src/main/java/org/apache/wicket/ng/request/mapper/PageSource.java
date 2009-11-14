@@ -19,6 +19,11 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestablePage;
 
+/**
+ * Interface for objects that are capable of getting and creating page instance.
+ * 
+ * @author Matej Knopp
+ */
 public interface PageSource
 {
 	/**

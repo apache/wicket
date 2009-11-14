@@ -76,7 +76,7 @@ public interface SessionStore
 	 *            the name of the attribute to remove
 	 */
 	void removeAttribute(Request request, String name);
-	
+
 	/**
 	 * Invalidates the session.
 	 * 
@@ -121,29 +121,34 @@ public interface SessionStore
 	 *            The new session
 	 */
 	void bind(Request request, Session newSession);
-	
+
 	/**
 	 * Called when the WebApplication is destroyed.
 	 */
 	void destroy();
-	
+
 	/**
 	 * Listener invoked when session is unbound.
-	 *  
+	 * 
 	 * @author Matej Knopp
 	 */
 	public interface UnboundListener
 	{
+		/**
+		 * Informs the listener that session with specifid id has been unbound.
+		 * 
+		 * @param sessionId
+		 */
 		public void sessionUnbound(String sessionId);
 	};
-	
+
 	/**
 	 * Registers listener invoked when session is unbound.
 	 * 
 	 * @param listener
 	 */
 	public void registerUnboundListener(UnboundListener listener);
-	
+
 	/**
 	 * Unregisters listener invoked when session is unbound.
 	 * 

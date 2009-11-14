@@ -50,7 +50,7 @@ public class ServletWebRequest extends WebRequest
 	private final HttpServletRequest httpServletRequest;
 
 	private final Url url;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -63,11 +63,11 @@ public class ServletWebRequest extends WebRequest
 	{
 		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
 		Checks.argumentNotNull(filterPrefix, "filterPrefix");
-		
-		this.url = getUrl(httpServletRequest, filterPrefix);
+
+		url = getUrl(httpServletRequest, filterPrefix);
 		this.httpServletRequest = httpServletRequest;
 	}
-	
+
 	private Url getUrl(HttpServletRequest request, String filterPrefix)
 	{
 		if (filterPrefix.length() > 0 && !filterPrefix.endsWith("/"))
@@ -76,15 +76,16 @@ public class ServletWebRequest extends WebRequest
 		}
 		StringBuilder url = new StringBuilder();
 		String uri = request.getRequestURI();
-		url.append(Strings.stripJSessionId(uri.substring(request.getContextPath().length() + filterPrefix.length() + 1)));		
-		
+		url.append(Strings.stripJSessionId(uri.substring(request.getContextPath().length() +
+			filterPrefix.length() + 1)));
+
 		String query = request.getQueryString();
 		if (!Strings.isEmpty(query))
 		{
 			url.append("?");
 			url.append(query);
 		}
-						
+
 		return Url.parse(Strings.stripJSessionId(url.toString()));
 	}
 
@@ -104,12 +105,13 @@ public class ServletWebRequest extends WebRequest
 		return httpServletRequest.getCookies();
 	}
 
-	
+
 	@Override
 	public Locale getLocale()
 	{
 		return httpServletRequest.getLocale();
 	}
+
 	@Override
 	public long getDateHeader(String name)
 	{
@@ -136,9 +138,9 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	private Map<String, List<StringValue>> postParameters = null;
-	
+
 	@SuppressWarnings("unchecked")
-	public Map<String, List<StringValue>> getPostParameters()
+	private Map<String, List<StringValue>> getPostParameters()
 	{
 		if (postParameters == null)
 		{
@@ -147,7 +149,7 @@ public class ServletWebRequest extends WebRequest
 			{
 				BufferedReader reader = getHttpServletRequest().getReader();
 				String value = Streams.readString(reader);
-				
+
 				if (!Strings.isEmpty(value))
 				{
 					Url url = Url.parse("?" + value);
@@ -165,7 +167,9 @@ public class ServletWebRequest extends WebRequest
 			}
 			catch (IOException e)
 			{
-				logger.warn("Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().", e);
+				logger.warn(
+					"Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().",
+					e);
 				for (String name : (List<String>)Collections.list(getHttpServletRequest().getParameterNames()))
 				{
 					List<StringValue> list = postParameters.get(name);
@@ -180,18 +184,18 @@ public class ServletWebRequest extends WebRequest
 					}
 				}
 			}
-			
+
 		}
 		return postParameters;
 	}
-	
-	private RequestParameters postRequestParameters = new RequestParameters()
+
+	private final RequestParameters postRequestParameters = new RequestParameters()
 	{
 		public Set<String> getParameterNames()
 		{
 			return Collections.unmodifiableSet(getPostParameters().keySet());
 		}
-		
+
 		public StringValue getParameterValue(String name)
 		{
 			List<StringValue> values = getPostParameters().get(name);
@@ -204,6 +208,7 @@ public class ServletWebRequest extends WebRequest
 				return values.iterator().next();
 			}
 		}
+
 		public List<StringValue> getParameterValues(String name)
 		{
 			List<StringValue> values = getPostParameters().get(name);
@@ -214,11 +219,11 @@ public class ServletWebRequest extends WebRequest
 			return values;
 		}
 	};
-	
+
 	@Override
 	public RequestParameters getPostRequestParameters()
 	{
-		return postRequestParameters; 
+		return postRequestParameters;
 	}
 
 	@Override

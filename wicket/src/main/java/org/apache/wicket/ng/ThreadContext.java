@@ -18,6 +18,11 @@ package org.apache.wicket.ng;
 
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 
+/**
+ * Holds thread local state for Wicket data.
+ * 
+ * @author Matej Knopp
+ */
 public class ThreadContext
 {
 	private ThreadContext()
@@ -44,47 +49,79 @@ public class ThreadContext
 		return context;
 	}
 
+	/**
+	 * @return {@link Application} bound to current thread
+	 */
 	public static Application getApplication()
 	{
 		ThreadContext context = get(false);
 		return context != null ? context.application : null;
 	}
 
+	/**
+	 * Binds the specified application to current thread.
+	 * 
+	 * @param application
+	 */
 	public static void setApplication(Application application)
 	{
 		ThreadContext context = get(true);
 		context.application = application;
 	}
 
+	/**
+	 * @return {@link RequestCycle} bound to current thrad
+	 */
 	public static RequestCycle getRequestCycle()
 	{
 		ThreadContext context = get(false);
 		return context != null ? context.requestCycle : null;
 	}
 
+	/**
+	 * Binds the {@link RequestCycle} to current thread.
+	 * 
+	 * @param requestCycle
+	 */
 	public static void setRequestCycle(RequestCycle requestCycle)
 	{
 		ThreadContext context = get(true);
 		context.requestCycle = requestCycle;
 	}
 
+	/**
+	 * @return {@link Session} bound to current thread
+	 */
 	public static Session getSession()
 	{
 		ThreadContext context = get(false);
 		return context != null ? context.session : null;
 	}
 
+	/**
+	 * Binds the session to current thread.
+	 * 
+	 * @param session
+	 */
 	public static void setSession(Session session)
 	{
 		ThreadContext context = get(true);
 		context.session = session;
 	}
 
+	/**
+	 * Cleans the thread local state.
+	 */
 	public static void detach()
 	{
 		threadLocal.remove();
 	}
 
+	/**
+	 * Cleans the {@link ThreadContext} and returns previous context.
+	 * 
+	 * @return old {@link ThreadContext}
+	 */
 	public static ThreadContext getAndClean()
 	{
 		ThreadContext value = threadLocal.get();
@@ -92,6 +129,12 @@ public class ThreadContext
 		return value;
 	}
 
+	/**
+	 * Restores the context
+	 * 
+	 * @param threadContext
+	 * @see #getAndClean()
+	 */
 	public static void restore(ThreadContext threadContext)
 	{
 		threadLocal.set(threadContext);

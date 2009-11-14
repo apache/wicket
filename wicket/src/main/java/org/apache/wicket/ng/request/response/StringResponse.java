@@ -16,11 +16,19 @@
  */
 package org.apache.wicket.ng.request.response;
 
+/**
+ * Simple text response.
+ * 
+ * @author Matej Knopp
+ */
 public class StringResponse extends Response
 {
 
 	private final StringBuilder builder = new StringBuilder();
 
+	/**
+	 * Construct.
+	 */
 	public StringResponse()
 	{
 	}

@@ -31,14 +31,27 @@ import org.apache.wicket.ng.settings.RequestCycleSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link RenderPageRequestHandlerDelegate} for web applications.
+ * 
+ * @author Matej Knopp
+ */
 public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandlerDelegate
 {
 
+	/**
+	 * Construct.
+	 * 
+	 * @param renderPageRequestHandler
+	 */
 	public WebRenderPageRequestHandlerDelegate(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		super(renderPageRequestHandler);
 	}
 
+	/**
+	 * @return page instance
+	 */
 	public RequestablePage getPage()
 	{
 		return getPageProvider().getPageInstance();

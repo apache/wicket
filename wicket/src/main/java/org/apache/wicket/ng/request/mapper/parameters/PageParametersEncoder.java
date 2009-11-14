@@ -38,11 +38,11 @@ public interface PageParametersEncoder
 	public Url encodePageParameters(PageParameters pageParameters);
 
 	/**
-	 * Decodes the given URL to {@link PageParameters}. The URL will have all
-	 * {@link RequestHandler} specified segments/parameters stripped.
+	 * Decodes the given URL to {@link PageParameters}. The URL will have all {@link RequestHandler}
+	 * specified segments/parameters stripped.
 	 * 
 	 * @param request
 	 * @return {@link PageParameters} instance
 	 */
-	public PageParameters decodePageParameters(Request requuest);
+	public PageParameters decodePageParameters(Request request);
 }

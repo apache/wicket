@@ -25,10 +25,20 @@ import java.util.Set;
 import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
+/**
+ * {@link RequestParameters} implementation that combines other {@link RequestParameters}s.
+ * 
+ * @author Matej Knopp
+ */
 public class CombinedRequestParametersAdapter implements RequestParameters
 {
 	private final RequestParameters parameters[];
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parameters
+	 */
 	public CombinedRequestParametersAdapter(RequestParameters... parameters)
 	{
 		if (parameters == null)

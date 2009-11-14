@@ -45,8 +45,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 	 * 
 	 * @author Matej Knopp
 	 */
-	public enum RedirectPolicy
-	{
+	public enum RedirectPolicy {
 		/**
 		 * Always redirect if current request URL is different than page URL.
 		 */
@@ -94,11 +93,17 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 		this.pageProvider = pageProvider;
 	}
 
+	/**
+	 * @return page provider
+	 */
 	public PageProvider getPageProvider()
 	{
 		return pageProvider;
 	}
-	
+
+	/**
+	 * @return redirect policy
+	 */
 	public RedirectPolicy getRedirectPolicy()
 	{
 		return redirectPolicy;
@@ -106,27 +111,28 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 
 	public Class<? extends RequestablePage> getPageClass()
 	{
-		return pageProvider.getPageClass();		
+		return pageProvider.getPageClass();
 	}
 
 	public PageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
-	
+
 	public void detach(RequestCycle requestCycle)
 	{
 		pageProvider.detach();
 	}
-	
+
 	public RequestablePage getPage()
 	{
 		return pageProvider.getPageInstance();
 	}
-	
+
 	public void respond(RequestCycle requestCycle)
 	{
-		RenderPageRequestHandlerDelegate delegate = Application.get().getRenderPageRequestHandlerDelegate(this);
+		RenderPageRequestHandlerDelegate delegate = Application.get()
+			.getRenderPageRequestHandlerDelegate(this);
 		delegate.respond(requestCycle);
 	}
 }

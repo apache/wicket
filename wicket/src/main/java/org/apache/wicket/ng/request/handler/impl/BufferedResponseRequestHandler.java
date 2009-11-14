@@ -21,10 +21,20 @@ import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.response.BufferedWebResponse;
 import org.apache.wicket.ng.request.response.WebResponse;
 
+/**
+ * Handler that renders a {@link BufferedWebResponse}.
+ * 
+ * @author Matej Knopp
+ */
 public class BufferedResponseRequestHandler implements RequestHandler
 {
 	private final BufferedWebResponse bufferedWebResponse;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param bufferedWebResponse
+	 */
 	public BufferedResponseRequestHandler(BufferedWebResponse bufferedWebResponse)
 	{
 		this.bufferedWebResponse = bufferedWebResponse;

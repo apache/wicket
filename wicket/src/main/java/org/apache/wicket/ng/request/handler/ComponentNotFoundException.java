@@ -18,24 +18,48 @@ package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.WicketRuntimeException;
 
+/**
+ * Exception thrown when component has not been found in hierarchy.
+ * 
+ * @author Matej Knopp
+ */
 public class ComponentNotFoundException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public ComponentNotFoundException()
 	{
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param message
+	 */
 	public ComponentNotFoundException(String message)
 	{
 		super(message);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param message
+	 * @param cause
+	 */
 	public ComponentNotFoundException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param cause
+	 */
 	public ComponentNotFoundException(Throwable cause)
 	{
 		super(cause);

@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.ng.request;
 
-
+/**
+ * Mapper that delegates the mapping to other {@link RequestMapper}s.
+ */
 public interface CompoundRequestMapper extends RequestMapper
 {
 
