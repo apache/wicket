@@ -472,7 +472,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// Find the child's markup
-		markup = markup.find(null, child.getId(), 0);
+		markup = markup.find(child.getId(), 0);
 		if (markup != null)
 		{
 			return markup;

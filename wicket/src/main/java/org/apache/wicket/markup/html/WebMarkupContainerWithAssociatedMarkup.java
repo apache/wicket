@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.OpenTagIterator;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IModel;
 
@@ -24,7 +27,6 @@ import org.apache.wicket.model.IModel;
  * WebMarkupContainer with it's own markup and possibly <wicket:head> tag.
  * 
  * @author Juergen Donnerstag
- * 
  */
 public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	implements
@@ -80,5 +82,36 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	public HeaderPartContainer newHeaderPartContainer(final String id, final String scope)
 	{
 		return new HeaderPartContainer(id, this, scope);
+	}
+
+	/**
+	 * Search the child's markup in the header section of the markup
+	 * 
+	 * @param markup
+	 * @param child
+	 * @return Null, if not found
+	 */
+	public IMarkupFragment findMarkupInAssociatedFileHeader(final IMarkupFragment markup,
+		final Component child)
+	{
+		IMarkupFragment childMarkup = null;
+		OpenTagIterator iter = new OpenTagIterator(markup);
+		while (iter.hasNext() && (childMarkup == null))
+		{
+			ComponentTag tag = iter.next();
+			if ((child != null) && "_header_".equals(tag.getId()))
+			{
+				childMarkup = iter.getMarkupFragment().find(child.getId(), 0);
+			}
+			else if ((child != null) && "_head".equals(tag.getId()))
+			{
+				if (tag.getMarkupClass() == null)
+				{
+					childMarkup = iter.getMarkupFragment().find(child.getId(), 0);
+				}
+			}
+		}
+
+		return childMarkup;
 	}
 }

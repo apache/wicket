@@ -414,15 +414,27 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return new MarkupFragment(markup, i);
 		}
 
+		IMarkupFragment childMarkup = null;
+
 		// Since we created the body component instance, identifying that we found it is easy.
 		if (child == body)
 		{
 			// Find the markup for the child component. Make sure you use the preset default value.
-			return markup.find(null, BODY_ID, i);
+			childMarkup = markup.find(BODY_ID, i);
+			if (childMarkup != null)
+			{
+				return childMarkup;
+			}
 		}
 
 		// Find the markup for the child component
-		return markup.find(null, child.getId(), i);
+		childMarkup = markup.find(child.getId(), i);
+		if (childMarkup != null)
+		{
+			return childMarkup;
+		}
+
+		return findMarkupInAssociatedFileHeader(markup, child);
 	}
 
 	/**
@@ -534,7 +546,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 				return markup;
 			}
 
-			return markup.find(null, child.getId(), 0);
+			return markup.find(child.getId(), 0);
 		}
 	}
 }

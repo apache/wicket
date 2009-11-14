@@ -27,8 +27,8 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -350,16 +350,32 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		}
 
 		// wicket id can be either "_header_" or "_head"
-		int index1 = markup.findComponentIndex(null, "_header_", 0);
-		int index2 = markup.findComponentIndex(null, "_head", 0);
-		if (((ComponentTag)markup.get(index2)).getMarkupClass() != null)
+
+		// Find the markup fragment
+		MarkupStream stream = new MarkupStream(markup);
+		while (stream.hasMore())
 		{
-			index2 = -1;
-		}
-		int index = (index1 == -1 ? index2 : (index2 == -1) ? index1 : Math.min(index1, index2));
-		if (index >= 0)
-		{
-			return new MarkupFragment(markup, index);
+			MarkupElement elem = stream.get();
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = stream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					if (tag.getId().equals("_header_"))
+					{
+						return stream.getMarkupFragment();
+					}
+					if (tag.getId().equals("_head"))
+					{
+						if (tag.getMarkupClass() == null)
+						{
+							return stream.getMarkupFragment();
+						}
+					}
+				}
+			}
+
+			stream.next();
 		}
 
 		return null;

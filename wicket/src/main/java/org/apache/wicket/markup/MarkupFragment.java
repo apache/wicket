@@ -17,6 +17,7 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Represents a portion of a markup file, but always spans a complete tag. E.g.
@@ -42,9 +43,6 @@ public class MarkupFragment implements IMarkupFragment
 
 	/** The size of the fragment (usually from open to close tag) */
 	private final int size;
-
-	/** the component id of the start tag */
-	private final String rootPath;
 
 	/**
 	 * Construct.
@@ -127,26 +125,6 @@ public class MarkupFragment implements IMarkupFragment
 		}
 
 		size = endIndex - startIndex + 1;
-
-		// @TODO Setting the rootPath depending on specific tags is really ugly, since there is
-		// no way for user to enhance it in case he creates its own wicket tag. It probably can
-		// be removed once we switch to the markup resolution process.
-		if (startTag instanceof WicketTag)
-		{
-			WicketTag tag = (WicketTag)startTag;
-			if (tag.isFragementTag() || tag.isContainerTag())
-			{
-				rootPath = startTag.getId();
-			}
-			else
-			{
-				rootPath = null;
-			}
-		}
-		else
-		{
-			rootPath = startTag.getId();
-		}
 	}
 
 	/**
@@ -168,18 +146,35 @@ public class MarkupFragment implements IMarkupFragment
 	 * @see org.apache.wicket.markup.IMarkupFragment#findComponentIndex(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public final int findComponentIndex(String path, final String id, final int startIndex)
+	public final int findComponentIndex(final String id, final int startIndex)
 	{
-		// Prepend rootPath to the 'path' parameter
-		path = (path == null ? rootPath : (rootPath == null ? path : rootPath + ":" + path));
-
-		// Search the markup
-		int index = markup.findComponentIndex(path, id, this.startIndex + startIndex) -
-			this.startIndex;
-
-		if ((index >= 0) && (index < size))
+		if (Strings.isEmpty(id))
 		{
-			return index;
+			throw new IllegalArgumentException("Parameter 'id' must not be null or empty");
+		}
+
+		MarkupStream stream = new MarkupStream(this);
+		stream.setCurrentIndex(Math.max(1, startIndex));
+		while (stream.hasMore())
+		{
+			MarkupElement elem = stream.get();
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = stream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					if (tag.getId().equals(id))
+					{
+						return stream.getCurrentIndex();
+					}
+					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
+					{
+						stream.skipToMatchingCloseTag(tag);
+					}
+				}
+			}
+
+			stream.next();
 		}
 
 		return -1;
@@ -188,9 +183,9 @@ public class MarkupFragment implements IMarkupFragment
 	/**
 	 * @see org.apache.wicket.markup.IMarkupFragment#find(java.lang.String, java.lang.String, int)
 	 */
-	public final IMarkupFragment find(final String path, final String id, final int startIndex)
+	public final IMarkupFragment find(final String id, final int startIndex)
 	{
-		int index = findComponentIndex(path, id, startIndex);
+		int index = findComponentIndex(id, startIndex);
 		if (index >= 0)
 		{
 			return new MarkupFragment(this, index);

@@ -70,9 +70,6 @@ public class ComponentTag extends MarkupElement
 	 */
 	private String id;
 
-	/** The component's path in the markup */
-	private String path;
-
 	/** True, if attributes have been modified or added */
 	private transient boolean modified = false;
 
@@ -434,7 +431,6 @@ public class ComponentTag extends MarkupElement
 	{
 		dest.id = id;
 		dest.setHasNoCloseTag(hasNoCloseTag);
-		dest.setPath(path);
 		dest.setAutoComponentTag(autoComponent);
 		if (markupClassRef != null)
 		{
@@ -740,27 +736,6 @@ public class ComponentTag extends MarkupElement
 	final boolean isModified()
 	{
 		return modified;
-	}
-
-	/**
-	 * Gets the component path of wicket elements
-	 * 
-	 * @return path
-	 */
-	public String getPath()
-	{
-		return path;
-	}
-
-	/**
-	 * Sets the component path of wicket elements
-	 * 
-	 * @param path
-	 *            path
-	 */
-	void setPath(final String path)
-	{
-		this.path = path;
 	}
 
 	/**

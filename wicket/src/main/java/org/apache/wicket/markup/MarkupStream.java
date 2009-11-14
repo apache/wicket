@@ -196,9 +196,9 @@ public class MarkupStream
 	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
-	public final int findComponentIndex(final String path, final String id)
+	public final int findComponentIndex(final String id)
 	{
-		return markup.findComponentIndex(path, id, 0);
+		return markup.findComponentIndex(id, 0);
 	}
 
 	/**
@@ -318,6 +318,29 @@ public class MarkupStream
 		if (++currentIndex < markup.size())
 		{
 			return current = get(currentIndex);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Note:
+	 * 
+	 * @return The next markup element in the stream
+	 */
+	public MarkupElement nextOpenTag()
+	{
+		while (next() != null)
+		{
+			MarkupElement elem = get();
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag)elem;
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					return current = get(currentIndex);
+				}
+			}
 		}
 
 		return null;

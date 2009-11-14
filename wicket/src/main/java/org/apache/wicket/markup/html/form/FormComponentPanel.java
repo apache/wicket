@@ -247,7 +247,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		}
 
 		// Find <wicket:panel>
-		int index = markup.findComponentIndex(null, "_panel", 0);
+		int index = markup.findComponentIndex("_panel", 0);
 		if (index == -1)
 		{
 			throw new MarkupException(
@@ -262,6 +262,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		}
 
 		// else, find the markup fragment for the child component
-		return markup.find(null, child.getId(), index);
+		return markup.find(child.getId(), index);
 	}
 }

@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
@@ -203,22 +204,35 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	private void renderFragment(final MarkupStream providerMarkupStream, final ComponentTag openTag)
 	{
-		// remember the current position in the markup. Will have to come back
-		// to it.
+		// remember the current position in the markup. Will have to come back to it.
 		int currentIndex = providerMarkupStream.getCurrentIndex();
 
 		// Find the markup fragment
-		int index = providerMarkupStream.findComponentIndex(null, markupId);
-		if (index == -1)
+		while (providerMarkupStream.hasMore())
+		{
+			MarkupElement elem = providerMarkupStream.get();
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = providerMarkupStream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					if (tag.getId().equals(markupId))
+					{
+						break;
+					}
+				}
+			}
+
+			providerMarkupStream.nextOpenTag();
+		}
+
+		if (providerMarkupStream.hasMore() == false)
 		{
 			throw new MarkupException("Markup of component class `" +
 				providerMarkupStream.getContainerClass().getName() +
 				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
 				toString());
 		}
-
-		// Set the markup stream position to where the fragment begins
-		providerMarkupStream.setCurrentIndex(index);
 
 		try
 		{
@@ -242,27 +256,6 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			// at the original component
 			providerMarkupStream.setCurrentIndex(currentIndex);
 		}
-	}
-
-	/**
-	 * Position the markup stream at the child component relative to the <b>provider</b> markup
-	 * 
-	 * @param path
-	 * @return The markup stream for the given component.
-	 */
-	public MarkupStream findComponentIndex(final String path)
-	{
-		MarkupStream markupStream = getAssociatedMarkupStream(true);
-		int index = markupStream.findComponentIndex(markupId, path);
-		if (index == -1)
-		{
-			throw new MarkupException("Markup of component class `" +
-				markupStream.getContainerClass().getName() +
-				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-				toString());
-		}
-		markupStream.setCurrentIndex(index);
-		return markupStream;
 	}
 
 	/**
@@ -365,13 +358,13 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			return null;
 		}
 
-		markup = markup.find(null, markupId, 0);
+		markup = markup.find(markupId, 0);
 
 		if (child == null)
 		{
 			return markup;
 		}
 
-		return markup.find(null, child.getId(), 0);
+		return markup.find(child.getId(), 0);
 	}
 }

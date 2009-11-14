@@ -156,7 +156,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		// Find <wicket:panel>
-		int index = markup.findComponentIndex(null, "_panel", 0);
+		int index = markup.findComponentIndex("_panel", 0);
 		if (index == -1)
 		{
 			throw new MarkupNotFoundException(
@@ -171,6 +171,12 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		// Find the markup for the child component
-		return markup.find(null, child.getId(), index);
+		IMarkupFragment childMarkup = markup.find(child.getId(), index);
+		if (childMarkup != null)
+		{
+			return childMarkup;
+		}
+
+		return findMarkupInAssociatedFileHeader(markup, child);
 	}
 }
