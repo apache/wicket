@@ -23,10 +23,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Facade for {@link DataStore} that does the actual saving in worker thread.
+ * 
+ * @author Matej Knopp
+ */
 public class AsynchronousDataStore implements DataStore
 {
 	private final DataStore dataStore;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param dataStore
+	 */
 	public AsynchronousDataStore(DataStore dataStore)
 	{
 		this.dataStore = dataStore;
