@@ -28,17 +28,27 @@ import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.protocol.http.WebRequest;
 import org.apache.wicket.ng.request.Url;
 
+/**
+ * Mutable mock {@link WebRequest}.
+ * 
+ * @author Matej Knopp
+ */
 public class MockWebRequest extends WebRequest
 {
 	private final Url url;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param url
+	 */
 	public MockWebRequest(Url url)
 	{
 		this.url = url;
 	}
 
 	@Override
-	public WebRequest requestWithUrl(Url url)
+	public MockWebRequest requestWithUrl(Url url)
 	{
 		return new MockWebRequest(url);
 	}
@@ -50,42 +60,18 @@ public class MockWebRequest extends WebRequest
 	}
 
 	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MockWebRequest other = (MockWebRequest)obj;
-		if (url == null)
-		{
-			if (other.url != null)
-				return false;
-		}
-		else if (!url.equals(other.url))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString()
 	{
-		return "MockRequest [url=" + url + "]";
+		return "MockWebRequest [url=" + url + "]";
 	}
 
 	private Cookie cookies[];
 
+	/**
+	 * Sets cookies for current request.
+	 * 
+	 * @param cookies
+	 */
 	public void setCookies(Cookie[] cookies)
 	{
 		this.cookies = cookies;
@@ -129,6 +115,24 @@ public class MockWebRequest extends WebRequest
 		values.add(value);
 	}
 
+	/**
+	 * Sets date header for given name.
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public void setDateHeader(String name, long value)
+	{
+		removeHeader(name);
+		addHeaderObject(name, value);
+	}
+
+	/**
+	 * Adds date header for given name.
+	 * 
+	 * @param name
+	 * @param value
+	 */
 	public void addDateHeader(String name, long value)
 	{
 		addHeaderObject(name, value);
@@ -141,13 +145,36 @@ public class MockWebRequest extends WebRequest
 		return (h == null || h.isEmpty()) ? null : h.get(0).toString();
 	}
 
+	/**
+	 * Sets header for given name.
+	 * 
+	 * @param name
+	 * @param value
+	 */
 	public void setHeader(String name, String value)
+	{
+		removeHeader(name);
+		addHeader(name, value);
+	}
+
+	/**
+	 * Adds header for given name.
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public void addHeader(String name, String value)
 	{
 		addHeaderObject(name, value);
 	}
 
 	private Locale locale = Locale.getDefault();
 
+	/**
+	 * Sets request locale.
+	 * 
+	 * @param locale
+	 */
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
@@ -177,8 +204,21 @@ public class MockWebRequest extends WebRequest
 		return res;
 	}
 
+	/**
+	 * Removes header with specified name.
+	 * 
+	 * @param header
+	 */
 	public void removeHeader(String header)
 	{
 		headers.remove(header);
+	}
+
+	private final MockRequestParameters postRequestParameters = new MockRequestParameters();
+
+	@Override
+	public MockRequestParameters getPostRequestParameters()
+	{
+		return postRequestParameters;
 	}
 }

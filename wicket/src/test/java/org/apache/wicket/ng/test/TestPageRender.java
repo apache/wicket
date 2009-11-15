@@ -23,15 +23,15 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.markup.html.link.Link;
 import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.mock.MockRequest;
 import org.apache.wicket.ng.mock.MockRequestCycle;
+import org.apache.wicket.ng.mock.MockWebRequest;
+import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
-import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.request.response.StringResponse;
+import org.apache.wicket.ng.settings.RequestCycleSettings.RenderStrategy;
 
 public class TestPageRender extends TestCase
 {
@@ -71,24 +71,25 @@ public class TestPageRender extends TestCase
 		app.setName("TestApplication1");
 		app.set(); // set it to ThreadContext
 		app.initApplication();
+		app.getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 
 		// Mount the test page
 		app.registerEncoder(new MountedMapper("first-test-page", Page1.class));
 
 		// Construct request for first-test-page
-		Request request = new MockRequest(Url.parse("first-test-page"));
-		Response response = new StringResponse();
+		Request request = new MockWebRequest(Url.parse("first-test-page"));
+		MockWebResponse response = new MockWebResponse();
 
 		// create and execute request cycle
 		MockRequestCycle cycle = (MockRequestCycle)app.createRequestCycle(request, response);
 		cycle.processRequestAndDetach();
 
 		System.out.println("Rendered:");
-		System.out.println(response);
+		System.out.println(response.getTextResponse());
 
 		// invoke listener on the page
-		request = new MockRequest(Url.parse("wicket/page?0-1.ILinkListener-link"));
-		response = new StringResponse();
+		request = new MockWebRequest(Url.parse("wicket/page?0-1.ILinkListener-link"));
+		response = new MockWebResponse();
 		cycle = (MockRequestCycle)app.createRequestCycle(request, response);
 		cycle.processRequestAndDetach();
 

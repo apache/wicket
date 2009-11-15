@@ -20,9 +20,19 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 
+/**
+ * Request cycle that allows to override {@link RequestHandler} resolving to force custom
+ * {@link RequestHandler}.
+ * 
+ * @author Matej Knopp
+ */
 public class MockRequestCycle extends RequestCycle
 {
-
+	/**
+	 * Construct.
+	 * 
+	 * @param context
+	 */
 	public MockRequestCycle(RequestCycleContext context)
 	{
 		super(context);
@@ -30,6 +40,11 @@ public class MockRequestCycle extends RequestCycle
 
 	private RequestHandler forcedRequestHandler;
 
+	/**
+	 * Forces the specified request handler to be resolved.
+	 * 
+	 * @param requestHandler
+	 */
 	public void forceRequestHandler(RequestHandler requestHandler)
 	{
 		forcedRequestHandler = requestHandler;

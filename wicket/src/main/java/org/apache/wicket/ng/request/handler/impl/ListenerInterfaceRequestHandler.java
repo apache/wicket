@@ -24,7 +24,7 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.ComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
@@ -123,7 +123,7 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 			// schedule page render after current request handler is done. this can be overridden during invocation of listener
 			// method (i.e. by calling RequestCycle#setResponsePage)
 			RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT : RedirectPolicy.AUTO_REDIRECT;
-			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(getPage()), policy));
+			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(getPage()), policy));
 
 			if (getBehaviorIndex() == null)
 			{

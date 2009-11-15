@@ -21,7 +21,7 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
@@ -66,7 +66,7 @@ public class PageInstanceMapper extends AbstractMapper
 
 				if (info.getComponentInfo() == null)
 				{
-					PageProvider provider = new PageProvider(info.getPageInfo().getPageId(), renderCount);
+					DefaultPageProvider provider = new DefaultPageProvider(info.getPageInfo().getPageId(), renderCount);
 					provider.setPageSource(getContext());
 					// render page					
 					return new RenderPageRequestHandler(provider);

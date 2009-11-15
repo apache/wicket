@@ -22,20 +22,20 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.util.lang.Checks;
 
 /**
- * Extension of {@link PageProvider} that is also capable of providing a Component belonging to the
+ * Extension of {@link DefaultPageProvider} that is also capable of providing a Component belonging to the
  * page.
  * 
- * @see PageProvider
+ * @see DefaultPageProvider
  * 
  * @author Matej Knopp
  */
-public class PageAndComponentProvider extends PageProvider
+public class PageAndComponentProvider extends DefaultPageProvider
 {
 	private RequestableComponent component;
 	private String componentPath;
 
 	/**
-	 * @see PageProvider#PageProvider(RequestablePage)
+	 * @see DefaultPageProvider#PageProvider(RequestablePage)
 	 * 
 	 * @param page
 	 * @param componentPath
@@ -47,7 +47,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(RequestablePage)
+	 * @see DefaultPageProvider#PageProvider(RequestablePage)
 	 * 
 	 * @param page
 	 * @param component
@@ -62,7 +62,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(Class, PageParameters)
+	 * @see DefaultPageProvider#PageProvider(Class, PageParameters)
 	 * 
 	 * @param pageClass
 	 * @param pageParameters
@@ -76,7 +76,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(Class)
+	 * @see DefaultPageProvider#PageProvider(Class)
 	 * 
 	 * @param pageClass
 	 * @param componentPath
@@ -88,7 +88,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, Integer)
+	 * @see DefaultPageProvider#PageProvider(int, Class, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -103,7 +103,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, PageParameters, Integer)
+	 * @see DefaultPageProvider#PageProvider(int, Class, PageParameters, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -119,7 +119,7 @@ public class PageAndComponentProvider extends PageProvider
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Integer)
+	 * @see DefaultPageProvider#PageProvider(int, Integer)
 	 * 
 	 * @param pageId
 	 * @param renderCount

@@ -35,7 +35,10 @@ import org.apache.wicket.ng.session.SessionStore;
  */
 public class MockSessionStore implements SessionStore
 {
-
+	/**
+	 * 
+	 * Construct.
+	 */
 	public MockSessionStore()
 	{
 

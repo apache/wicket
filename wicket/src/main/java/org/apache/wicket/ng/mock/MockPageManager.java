@@ -22,13 +22,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.ng.page.ManageablePage;
+import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.ng.page.PageManagerContext;
 import org.apache.wicket.ng.page.common.AbstractPageManager;
 import org.apache.wicket.ng.page.common.RequestAdapter;
 
+/**
+ * Simple {@link PageManager} used for testing.
+ * 
+ * @author Matej Knopp
+ */
 public class MockPageManager extends AbstractPageManager
 {
 
+	/**
+	 * Construct.
+	 */
 	public MockPageManager()
 	{
 	}

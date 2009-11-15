@@ -24,6 +24,7 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
@@ -244,7 +245,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	 */
     public void testEncode1()
     {
-        PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
+        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParameters());
         provider.setPageSource(context);
         RequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
@@ -261,7 +262,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");
         parameters.setNamedParameter("b", "c");
-        PageProvider provider = new PageProvider(MockPage.class, parameters);
+        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
         provider.setPageSource(context);
         RequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
@@ -279,7 +280,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         parameters.setNamedParameter("a", "b");
         parameters.setNamedParameter("b", "c");
 
-        PageProvider provider = new PageProvider(MockPage.class, parameters);
+        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
         provider.setPageSource(context);
         RequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
@@ -299,7 +300,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         page.getPageParameters().setNamedParameter("b", "c");
         page.setCreatedBookmarkable(true);
 
-        PageProvider provider = new PageProvider(page);
+        PageProvider provider = new DefaultPageProvider(page);
         RequestHandler handler = new RenderPageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
 
@@ -319,7 +320,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
         page.setCreatedBookmarkable(false);
 
-        PageProvider provider = new PageProvider(page);
+        PageProvider provider = new DefaultPageProvider(page);
         RequestHandler handler = new RenderPageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
 
@@ -393,7 +394,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         page.setCreatedBookmarkable(true);
         page.setPageStateless(true);
 
-        PageProvider provider = new PageProvider(page);
+        PageProvider provider = new DefaultPageProvider(page);
         RequestHandler handler = new RenderPageRequestHandler(provider);
 
         Url url = encoder.mapHandler(handler);

@@ -16,13 +16,25 @@
  */
 package org.apache.wicket.ng.mock;
 
+import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
+import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 
-public class MockRenderPageRequestHandlerDelegate extends RenderPageRequestHandlerDelegate
+/**
+ * Delegate subclass that intercepts the render to allow storing last rendered page instance.
+ * 
+ * @author Matej Knopp
+ */
+public abstract class MockRenderPageRequestHandlerDelegate extends
+	WebRenderPageRequestHandlerDelegate
 {
 
+	/**
+	 * Construct.
+	 * 
+	 * @param renderPageRequestHandler
+	 */
 	public MockRenderPageRequestHandlerDelegate(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		super(renderPageRequestHandler);
@@ -31,7 +43,9 @@ public class MockRenderPageRequestHandlerDelegate extends RenderPageRequestHandl
 	@Override
 	public void respond(RequestCycle requestCycle)
 	{
-		getPageProvider().getPageInstance().renderPage();
+		onPageRender(getPageProvider().getPageInstance());
+		super.respond(requestCycle);
 	}
 
+	protected abstract void onPageRender(RequestablePage page);
 }

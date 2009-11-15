@@ -16,30 +16,19 @@
  */
 package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.page.PageManager;
+import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
-import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
-import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.ng.session.SessionStore;
 
-public class MockApplication extends Application
+public class MockApplication extends WebApplication
 {
 
 	public MockApplication()
 	{
-	}
-
-	@Override
-	protected void registerDefaultEncoders()
-	{
-		registerEncoder(new PageInstanceMapper());
-		registerEncoder(new BookmarkableMapper());
-		registerEncoder(new ResourceReferenceMapper());
 	}
 
 	@Override
@@ -54,11 +43,30 @@ public class MockApplication extends Application
 		return new MockRequestCycle(context);
 	}
 
+	private RequestablePage lastRenderedPage;
+
+	public RequestablePage getLastRenderedPage()
+	{
+		return lastRenderedPage;
+	}
+
+	public void clearLastRenderedPage()
+	{
+		lastRenderedPage = null;
+	}
+
 	@Override
 	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
 		RenderPageRequestHandler renderPageRequestHandler)
 	{
-		return new MockRenderPageRequestHandlerDelegate(renderPageRequestHandler);
+		return new MockRenderPageRequestHandlerDelegate(renderPageRequestHandler)
+		{
+			@Override
+			protected void onPageRender(RequestablePage page)
+			{
+				lastRenderedPage = page;
+			}
+		};
 	}
 
 	@Override

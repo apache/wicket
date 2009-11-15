@@ -22,6 +22,7 @@ import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -181,7 +182,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     public void testEncode1()
     {
         MockPage page = new MockPage(15);
-        PageProvider provider = new PageProvider(page);
+        PageProvider provider = new DefaultPageProvider(page);
         RequestHandler handler = new RenderPageRequestHandler(provider);
 
         Url url = encoder.mapHandler(handler);
