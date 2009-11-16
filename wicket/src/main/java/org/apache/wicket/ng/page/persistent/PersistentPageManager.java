@@ -165,6 +165,8 @@ public class PersistentPageManager extends AbstractPageManager
 		{
 			s.defaultReadObject();
 
+			afterReadObject = new ArrayList<Object>();
+
 			List<Serializable> l = (List<Serializable>)s.readObject();
 
 			// convert to temporary state after deserialization (will need to be processed
@@ -173,8 +175,6 @@ public class PersistentPageManager extends AbstractPageManager
 			{
 				afterReadObject.add(getPageStore().restoreAfterSerialization(ser));
 			}
-
-			afterReadObject = new ArrayList<Object>();
 		}
 	};
 
