@@ -19,9 +19,11 @@ package org.apache.wicket.ng.mock;
 import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
+import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.session.SessionStore;
 
 public class MockApplication extends WebApplication
@@ -59,12 +61,13 @@ public class MockApplication extends WebApplication
 	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
 		RenderPageRequestHandler renderPageRequestHandler)
 	{
-		return new MockRenderPageRequestHandlerDelegate(renderPageRequestHandler)
+		return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler)
 		{
 			@Override
-			protected void onPageRender(RequestablePage page)
+			public void respond(RequestCycle requestCycle)
 			{
-				lastRenderedPage = page;
+				lastRenderedPage = getPageProvider().getPageInstance();
+				super.respond(requestCycle);
 			}
 		};
 	}

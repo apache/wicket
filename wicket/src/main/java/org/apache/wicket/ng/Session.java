@@ -42,7 +42,8 @@ public class Session implements Serializable
 
 	private Request getRequest()
 	{
-		return RequestCycle.get().getRequest();
+		RequestCycle cycle = RequestCycle.get();
+		return cycle != null ? cycle.getRequest() : null;
 	}
 
 	public void invalidateNow()

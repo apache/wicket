@@ -29,7 +29,11 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents the URL part after Wicket Filter.
+ * Represents the URL part <b>after Wicket Filter</b>. For example if Wicket Filter is mapped to
+ * <code>/app/*</code> then with URL <code>/app/my/url</code> the {@link Url} object would represent
+ * part <code>my/url</code>. If Wicket Filter is mapped to <code>/*</code> then with URL
+ * <code>/my/url</code> the {@link Url} object would represent <code>my/url</code> (without leading
+ * the slash).
  * <p>
  * URL consists of segments and query parameters.
  * <p>
@@ -46,8 +50,7 @@ import org.apache.wicket.util.string.Strings;
  *                                                an additional slash, i.e. //
  * </pre>
  * 
- * The Url class takes care of encoding and decoding of the segments and
- * parameters.
+ * The Url class takes care of encoding and decoding of the segments and parameters.
  * 
  * @author Matej Knopp
  * @author Igor Vaynberg
@@ -119,8 +122,7 @@ public final class Url implements Serializable
 	/**
 	 * Returns whether the URL is absolute.
 	 * 
-	 * @return <code>true</code> if URL is absolute, <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if URL is absolute, <code>false</code> otherwise.
 	 */
 	public boolean isAbsolute()
 	{
@@ -160,8 +162,7 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Convenience method that prepends <code>segments</code> to the segments
-	 * collection
+	 * Convenience method that prepends <code>segments</code> to the segments collection
 	 * 
 	 * @param newSegments
 	 */
@@ -172,8 +173,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Convenience method that removes all query parameters with given name and
-	 * adds new query parameter with specified name and value
+	 * Convenience method that removes all query parameters with given name and adds new query
+	 * parameter with specified name and value
 	 * 
 	 * @param name
 	 * @param value
@@ -189,8 +190,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Returns first query parameter with specified name or null if such query
-	 * parameter doesn't exist.
+	 * Returns first query parameter with specified name or null if such query parameter doesn't
+	 * exist.
 	 * 
 	 * @param name
 	 * @return query parameter or <code>null</code>
@@ -208,9 +209,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Returns the value of first query parameter with specified name. Note that
-	 * this method never returns <code>null</code>. Not even if the parameter
-	 * does not exist.
+	 * Returns the value of first query parameter with specified name. Note that this method never
+	 * returns <code>null</code>. Not even if the parameter does not exist.
 	 * 
 	 * @see StringValue#isNull()
 	 * 
@@ -241,9 +241,8 @@ public final class Url implements Serializable
 		private final String value;
 
 		/**
-		 * Creates new {@link QueryParameter} instance. The <code>name</code>
-		 * and <code>value</code> parameters must not be <code>null</code>,
-		 * though they can be empty strings.
+		 * Creates new {@link QueryParameter} instance. The <code>name</code> and <code>value</code>
+		 * parameters must not be <code>null</code>, though they can be empty strings.
 		 * 
 		 * @param name
 		 *            parameter name
@@ -291,8 +290,8 @@ public final class Url implements Serializable
 				return false;
 			}
 			QueryParameter rhs = (QueryParameter)obj;
-			return Objects.equal(getName(), rhs.getName())
-					&& Objects.equal(getValue(), rhs.getValue());
+			return Objects.equal(getName(), rhs.getName()) &&
+				Objects.equal(getValue(), rhs.getValue());
 		}
 
 		@Override
@@ -328,8 +327,8 @@ public final class Url implements Serializable
 		}
 		Url rhs = (Url)obj;
 
-		return getSegments().equals(rhs.getSegments())
-				&& getQueryParameters().equals(rhs.getQueryParameters());
+		return getSegments().equals(rhs.getSegments()) &&
+			getQueryParameters().equals(rhs.getQueryParameters());
 	}
 
 	@Override
@@ -481,4 +480,58 @@ public final class Url implements Serializable
 
 		return result;
 	};
+
+	private boolean isLastSegmentReal()
+	{
+		if (segments.isEmpty())
+		{
+			return false;
+		}
+		String last = segments.get(segments.size() - 1);
+		return last.length() > 0 && !".".equals(last) && !"..".equals(last);
+	}
+
+	private boolean isLastSegmentEmpty()
+	{
+		if (segments.isEmpty())
+		{
+			return false;
+		}
+		String last = segments.get(segments.size() - 1);
+		return last.length() == 0;
+	}
+
+	/**
+	 * Concatenate the specified segments; The segments can be relative - begin with "." or "..".
+	 * 
+	 * @param segments
+	 */
+	public void concatSegments(List<String> segments)
+	{
+		boolean checkedLastSegment = false;
+
+		for (String s : segments)
+		{
+			if (".".equals(s))
+			{
+				continue;
+			}
+			else if ("..".equals(s) && isLastSegmentReal())
+			{
+				this.segments.remove(this.segments.size() - 1);
+			}
+			else
+			{
+				if (!checkedLastSegment)
+				{
+					if (isLastSegmentReal() || isLastSegmentEmpty())
+					{
+						this.segments.remove(this.segments.size() - 1);
+					}
+					checkedLastSegment = true;
+				}
+				this.segments.add(s);
+			}
+		}
+	}
 }

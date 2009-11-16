@@ -125,7 +125,7 @@ public class UrlTest extends TestCase
 		checkSegments(url);
 		checkQueryParams(url, "a", "b");
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -136,7 +136,7 @@ public class UrlTest extends TestCase
 		checkSegments(url, "", "");
 		checkQueryParams(url);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -173,7 +173,7 @@ public class UrlTest extends TestCase
 		Url url = Url.parse(s);
 		assertEquals(url.toString(), s);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -183,7 +183,7 @@ public class UrlTest extends TestCase
 		Url url = Url.parse(s);
 		assertEquals(url.toString(), s);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -202,7 +202,7 @@ public class UrlTest extends TestCase
 		Url url = Url.parse("abc/efg");
 		assertFalse(url.isAbsolute());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -211,7 +211,7 @@ public class UrlTest extends TestCase
 		Url url = Url.parse("");
 		assertFalse(url.isAbsolute());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -220,7 +220,7 @@ public class UrlTest extends TestCase
 		Url url = Url.parse("/");
 		assertTrue(url.isAbsolute());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -230,4 +230,53 @@ public class UrlTest extends TestCase
 		assertTrue(url.isAbsolute());
 	}
 
+	/**
+	 * 
+	 */
+	public void testConcat1()
+	{
+		Url url = Url.parse("abc/efg");
+		url.concatSegments(Arrays.asList("xx", "yy"));
+		assertEquals(Url.parse("abc/xx/yy"), url);
+	}
+
+	/**
+	 * 
+	 */
+	public void testConcat2()
+	{
+		Url url = Url.parse("abc/efg");
+		url.concatSegments(Arrays.asList(".", "..", "xx", "yy"));
+		assertEquals(Url.parse("xx/yy"), url);
+	}
+
+	/**
+	 * 
+	 */
+	public void testConcat3()
+	{
+		Url url = Url.parse("abc/efg");
+		url.concatSegments(Arrays.asList("..", "..", "xx", "yy"));
+		assertEquals(Url.parse("xx/yy"), url);
+	}
+
+	/**
+	 * 
+	 */
+	public void testConcat4()
+	{
+		Url url = Url.parse("abc/efg");
+		url.concatSegments(Arrays.asList("..", "..", "..", "xx", "yy"));
+		assertEquals(Url.parse("../xx/yy"), url);
+	}
+
+	/**
+	 * 
+	 */
+	public void testConcat5()
+	{
+		Url url = Url.parse("abc/efg/");
+		url.concatSegments(Arrays.asList("xx", "yy"));
+		assertEquals(Url.parse("abc/efg/xx/yy"), url);
+	}
 }
