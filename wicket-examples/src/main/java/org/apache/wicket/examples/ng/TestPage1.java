@@ -2,6 +2,7 @@ package org.apache.wicket.examples.ng;
 
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.markup.html.link.Link;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 public class TestPage1 extends Page
@@ -96,6 +97,18 @@ public class TestPage1 extends Page
 		};
 		l5.setLabel("Link 5 - Go to Test Page 3 - Mounted");
 		add(l5);
+
+		Link l6 = new Link("l6")
+		{
+			public void onLinkClicked()
+			{
+				PageParameters params = new PageParameters();
+				params.setNamedParameter("color", "red");
+				RequestCycle.get().setResponsePage(TestPage4.class, params);
+			};
+		};
+		l6.setLabel("Link 6 - Goto Test Page 4 - stateless, with mounted parameters");
+		add(l6);
 	}
 
 	private boolean rendered = false;

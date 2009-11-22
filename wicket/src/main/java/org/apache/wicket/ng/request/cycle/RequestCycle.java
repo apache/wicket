@@ -392,8 +392,8 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	public void setResponsePage(RequestablePage page)
 	{
-		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(page),
-			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(
+			page), RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
 
 	/**
@@ -405,7 +405,7 @@ public class RequestCycle extends RequestHandlerStack
 	public void setResponsePage(Class<? extends RequestablePage> pageClass,
 		PageParameters parameters)
 	{
-		PageProvider provider = new DefaultPageProvider(pageClass);
+		PageProvider provider = new DefaultPageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}

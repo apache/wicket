@@ -19,6 +19,7 @@ public class NGApplication extends WebApplication
 	{
 		mount(new MountedMapper("first-test-page", TestPage1.class));
 		mount(new MountedMapper("third-test-page", TestPage3.class));
+		mount(new MountedMapper("/page4/${color}/display", TestPage4.class));
 
 		// load the interface
 		RequestListenerInterface i = ILinkListener.INTERFACE;

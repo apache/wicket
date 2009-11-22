@@ -259,7 +259,8 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 	 */
 	protected boolean enableRedirectForStatelessPage()
 	{
-		return false;
+		// TODO Make sure this is a sane default value (if not make it configurable)
+		return true;
 	}
 
 	private static Logger logger = LoggerFactory.getLogger(WebRenderPageRequestHandlerDelegate.class);
