@@ -226,9 +226,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
-	private final List<String> appendJavascripts = new ArrayList<String>();
+	private final List<CharSequence> appendJavascripts = new ArrayList<CharSequence>();
 
-	private final List<String> domReadyJavascripts = new ArrayList<String>();
+	private final List<CharSequence> domReadyJavascripts = new ArrayList<CharSequence>();
 
 	/**
 	 * Create a response for component body and javascript that will escape output to make it safe
@@ -246,7 +246,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	private final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
 	/** */
-	private final List<String> prependJavascripts = new ArrayList<String>();
+	private final List<CharSequence> prependJavascripts = new ArrayList<CharSequence>();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
@@ -343,18 +343,18 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		for (final Component component : components)
 		{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("component cannot be null");
+			if (component == null)
+			{
+				throw new IllegalArgumentException("component cannot be null");
+			}
+			if (component.getOutputMarkupId() == false)
+			{
+				throw new IllegalArgumentException(
+					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+						component.toString());
+			}
+			addComponent(component, component.getMarkupId());
 		}
-		if (component.getOutputMarkupId() == false)
-		{
-			throw new IllegalArgumentException(
-				"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-					component.toString());
-		}
-		addComponent(component, component.getMarkupId());
-	}
 	}
 
 	/**
@@ -428,7 +428,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * @param javascript
 	 */
-	public final void appendJavascript(String javascript)
+	public final void appendJavascript(CharSequence javascript)
 	{
 		if (javascript == null)
 		{
@@ -489,7 +489,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * @param javascript
 	 */
-	public final void prependJavascript(String javascript)
+	public final void prependJavascript(CharSequence javascript)
 	{
 		if (javascript == null)
 		{
@@ -572,10 +572,10 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		fireOnBeforeRespondListeners();
 
 		// normal behavior
-		Iterator<String> it = prependJavascripts.iterator();
+		Iterator<CharSequence> it = prependJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = it.next();
+			CharSequence js = it.next();
 			respondInvocation(response, js);
 		}
 
@@ -589,13 +589,13 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		it = domReadyJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = it.next();
+			CharSequence js = it.next();
 			respondInvocation(response, js);
 		}
 		it = appendJavascripts.iterator();
 		while (it.hasNext())
 		{
-			String js = it.next();
+			CharSequence js = it.next();
 			respondInvocation(response, js);
 		}
 
@@ -710,7 +710,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param str
 	 * @return encoded string
 	 */
-	protected String encode(String str)
+	protected String encode(CharSequence str)
 	{
 		if (str == null)
 		{
@@ -733,7 +733,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param str
 	 * @return true if string needs to be encoded, false otherwise
 	 */
-	protected boolean needsEncoding(String str)
+	protected boolean needsEncoding(CharSequence str)
 	{
 		/*
 		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at least 3 characters and
@@ -743,8 +743,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 * but this improvement will only work if we write first and encode later instead of working
 		 * on fragments sent to write
 		 */
-
-		return str.indexOf(']') >= 0;
+		// TODO: Would be nice not to have to call tostring here
+		return str.toString().indexOf(']') >= 0;
 	}
 
 	/**
@@ -1122,10 +1122,10 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * @param response
 	 * @param js
 	 */
-	private void respondInvocation(final Response response, final String js)
+	private void respondInvocation(final Response response, final CharSequence js)
 	{
 		boolean encoded = false;
-		String javascript = js;
+		CharSequence javascript = js;
 
 		// encode the response if needed
 		if (needsEncoding(js))

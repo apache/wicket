@@ -435,6 +435,22 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>WicketNGApplication</filter-name>
+		<filter-class>org.apache.wicket.ng.protocol.http.WicketFilter</filter-class>
+		<init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.ng.NGApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>WicketNGApplication</filter-name>
+        <url-pattern>/ng/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>WicketExamplesMenuApplication</filter-name>
         <url-pattern>/examples/*</url-pattern>
