@@ -115,7 +115,10 @@ public class DefaultPageProvider implements PageProvider
 		PageParameters pageParameters)
 	{
 		setPageClass(pageClass);
-		setPageParameters(pageParameters);
+		if (pageParameters != null)
+		{
+			setPageParameters(pageParameters);
+		}
 	}
 
 	/**
