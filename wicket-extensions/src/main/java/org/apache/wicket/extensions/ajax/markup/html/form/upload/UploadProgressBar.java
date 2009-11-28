@@ -101,7 +101,8 @@ public class UploadProgressBar extends Panel
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 
-		if (!(RequestCycle.get().getRequest() instanceof UploadWebRequest))
+		if (!(RequestCycle.get().getRequest() instanceof UploadWebRequest) &&
+			!(RequestCycle.get().getRequest() instanceof MultipartRequest))
 		{
 			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}

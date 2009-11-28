@@ -18,14 +18,11 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.upload.FileUploadException;
-
 
 /**
  * A request object that stores information about the current upload in session so it is accessible
@@ -37,20 +34,14 @@ import org.apache.wicket.util.upload.FileUploadException;
  * <code>
  * class MyApplication extends WebApplication {
  * ...
- *     @Override
- *     protected WebRequest newWebRequest(HttpServletRequest servletRequest) {
- *         return new UploadWebRequest(servletRequest);
- *     }
- * ...
- * }
- * </code>
+ * 
+ * @Override protected WebRequest newWebRequest(HttpServletRequest servletRequest) { return new
+ *           UploadWebRequest(servletRequest); } ... } </code>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class UploadWebRequest extends ServletWebRequest
 {
-
-
 	final HttpServletRequest req;
 
 	/**
@@ -67,6 +58,7 @@ public class UploadWebRequest extends ServletWebRequest
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
+	@Override
 	public WebRequest newMultipartWebRequest(Bytes maxsize)
 	{
 		try
@@ -79,77 +71,7 @@ public class UploadWebRequest extends ServletWebRequest
 		}
 	}
 
-	/**
-	 * Multipart request object that feeds the upload info into session
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 * 
-	 */
-	private static class MultipartRequest extends MultipartServletWebRequest
-	{
-		/**
-		 * @param req
-		 * @param maxSize
-		 * @throws FileUploadException
-		 */
-		public MultipartRequest(HttpServletRequest req, Bytes maxSize) throws FileUploadException
-		{
-			super(req, maxSize);
-			if (req == null)
-			{
-				throw new IllegalStateException("req cannot be null");
-			}
-		}
-
-		/**
-		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#wantUploadProgressUpdates()
-		 */
-		protected boolean wantUploadProgressUpdates()
-		{
-			return true;
-		}
-
-		/**
-		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadStarted(int)
-		 */
-		protected void onUploadStarted(int totalBytes)
-		{
-			UploadInfo info = new UploadInfo(totalBytes);
-
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-			setUploadInfo(request, info);
-		}
-
-		/**
-		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadUpdate(int,
-		 *      int)
-		 */
-		protected void onUploadUpdate(int bytesUploaded, int total)
-		{
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-			UploadInfo info = getUploadInfo(request);
-			if (info == null)
-			{
-				throw new IllegalStateException(
-					"could not find UploadInfo object in session which should have been set when uploaded started");
-			}
-			info.setBytesUploaded(bytesUploaded);
-
-			setUploadInfo(request, info);
-		}
-
-		/**
-		 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadCompleted()
-		 */
-		protected void onUploadCompleted()
-		{
-			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-			clearUploadInfo(request);
-		}
-	}
-
 	private static final String SESSION_KEY = UploadWebRequest.class.getName();
-
 
 	/**
 	 * Retrieves {@link UploadInfo} from session, null if not found
@@ -198,5 +120,4 @@ public class UploadWebRequest extends ServletWebRequest
 		}
 		req.getSession().removeAttribute(SESSION_KEY);
 	}
-
 }
