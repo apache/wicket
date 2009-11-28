@@ -34,7 +34,7 @@ public class ExternalLink extends AbstractLink
 	private static final long serialVersionUID = 1L;
 
 	/** this links' label. */
-	private final IModel<String> label;
+	private final IModel<?> label;
 
 	private boolean contextRelative = false;
 
@@ -85,7 +85,7 @@ public class ExternalLink extends AbstractLink
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(final String id, final IModel<String> href, final IModel<String> label)
+	public ExternalLink(final String id, final IModel<String> href, final IModel<?> label)
 	{
 		super(id);
 
@@ -139,7 +139,7 @@ public class ExternalLink extends AbstractLink
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 
@@ -211,7 +211,7 @@ public class ExternalLink extends AbstractLink
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
 		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
@@ -252,20 +252,17 @@ public class ExternalLink extends AbstractLink
 	 * @param contextRelative
 	 * @return This for chaining
 	 */
-	public ExternalLink setContextRelative(boolean contextRelative)
+	public ExternalLink setContextRelative(final boolean contextRelative)
 	{
 		this.contextRelative = contextRelative;
 		return this;
 	}
 
-
 	/**
 	 * @return label attribute
 	 */
-	public IModel<String> getLabel()
+	public IModel<?> getLabel()
 	{
 		return label;
 	}
-
-
 }
