@@ -239,12 +239,10 @@ public class Check<T> extends LabeledWebMarkupContainer
 			}
 		}
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		if (!isActionAuthorized(ENABLE) || !isEnabledInHierarchy() || !group.isEnabledInHierarchy())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
-
-
 	}
 
 	/**
@@ -259,7 +257,6 @@ public class Check<T> extends LabeledWebMarkupContainer
 		setLabelInternal(labelModel);
 		return this;
 	}
-
 
 	/**
 	 * Gets model
