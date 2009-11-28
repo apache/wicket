@@ -36,6 +36,9 @@ public class LibraryApplicationBorder extends Border
 	{
 		super(id);
 
-		addToBorder(new BoxBorder("boxBorder"));
+		Border boxBorder = new BoxBorder("boxBorder");
+		addToBorder(boxBorder);
+
+		boxBorder.addToBorderBody(getBodyContainer());
 	}
 }
