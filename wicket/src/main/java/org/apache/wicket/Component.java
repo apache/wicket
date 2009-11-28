@@ -2233,9 +2233,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks != null)
 			{
-				for (Component feedback : feedbacks)
+				for (int i = 0; i < feedbacks.size(); i++)
 				{
-					feedback.internalBeforeRender();
+					feedbacks.get(i).internalBeforeRender();
 				}
 			}
 			getRequestCycle().setMetaData(FEEDBACK_LIST, null);
