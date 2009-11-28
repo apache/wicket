@@ -3067,7 +3067,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Render a placeholder tag when the component is not visible. The tag is of form:
-	 * &lt;componenttag style="display:none;" id="componentid"/&gt;. This method will also call
+	 * &lt;componenttag style="display:none;" id="markupid"/&gt;. This method will also call
 	 * <code>setOutputMarkupId(true)</code>.
 	 * 
 	 * This is useful, for example, in ajax situations where the component starts out invisible and
