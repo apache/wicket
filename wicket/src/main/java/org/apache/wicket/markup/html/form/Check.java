@@ -229,22 +229,18 @@ public class Check<T> extends LabeledWebMarkupContainer
 			else
 			{
 				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
-				// form
-				// with an ActionURL or something
-				// NOTE: do not encode the url as that would give invalid
-				// JavaScript
+				// form with an ActionURL or something
+				// NOTE: do not encode the url as that would give invalid JavaScript
 				tag.put("onclick", "window.location.href='" + url +
 					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
 					"=' + this.value;");
 			}
 		}
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		if (!isActionAuthorized(ENABLE) || !isEnabledInHierarchy() || !group.isEnabledInHierarchy())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
-
-
 	}
 
 	/**
@@ -259,7 +255,6 @@ public class Check<T> extends LabeledWebMarkupContainer
 		setLabelInternal(labelModel);
 		return this;
 	}
-
 
 	/**
 	 * Gets model
@@ -310,5 +305,4 @@ public class Check<T> extends LabeledWebMarkupContainer
 		// because this component uses uuid field it cannot be stateless
 		return false;
 	}
-
 }
