@@ -109,4 +109,12 @@ public class HomePageTest extends TestCase
 		HomePage page = (HomePage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & HomePage.NORMAL) == HomePage.NORMAL);
 	}
+
+	public void test_2589() throws Exception
+	{
+		tester = new WicketTester();
+		tester.startPage(HomePage1.class);
+		tester.assertRenderedPage(HomePage1.class);
+		tester.assertResultPage(getClass(), "HomePage1_ExpectedResult.html");
+	}
 }
