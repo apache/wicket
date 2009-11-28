@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
@@ -41,17 +42,10 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// It must be <wicket:...>
@@ -63,36 +57,11 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			if (wicketTag.isExtendTag() || wicketTag.isChildTag())
 			{
 				String id = wicketTag.getId() + container.getPage().getAutoIndex();
-				container.autoAdd(new MarkupInheritanceContainer(id), markupStream);
-				return true;
+				return new TransparentWebMarkupContainer(id);
 			}
 		}
+
 		// We were not able to handle the componentId
-		return false;
-	}
-
-	/**
-	 * This is a WebMarkupContainer, except that it is transparent for it child components.
-	 */
-	private static class MarkupInheritanceContainer extends WebMarkupContainer
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @param id
-		 */
-		public MarkupInheritanceContainer(final String id)
-		{
-			super(id);
-		}
-
-		/**
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public boolean isTransparentResolver()
-		{
-			return true;
-		}
+		return null;
 	}
 }

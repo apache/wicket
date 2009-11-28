@@ -324,8 +324,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 			if (renderedComponents.add(component) == false)
 			{
-				throw new MarkupException("The component " + component +
-					" has the same wicket:id as another component already added at the same level");
+				throw new MarkupException(
+					"The component " +
+						component +
+						" was rendered already. You can render it only once during a render phase. Class relative path: " +
+						component.getClassRelativePath());
 			}
 			if (log.isDebugEnabled())
 			{
@@ -471,7 +474,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			try
 			{
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -734,16 +737,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 						Component sibling = iterator2.next();
 						if (!sibling.isVisible())
 						{
-							boolean isTransparentMarkupContainer = sibling instanceof MarkupContainer &&
-								((MarkupContainer)sibling).isTransparentResolver();
-							boolean isComponentResolver = sibling instanceof IComponentResolver;
-							if (isTransparentMarkupContainer || isComponentResolver)
+							if (sibling instanceof IComponentResolver)
 							{
 								// we found a transparent container that isn't visible
 								// then ignore this component and only do a debug statement here.
-								log.debug(
-									"Component {} wasn't rendered but most likely it has a transparent parent: {}",
-									component, sibling);
+								if (log.isDebugEnabled())
+								{
+									log.debug(
+										"Component {} wasn't rendered but most likely it has a transparent parent: {}",
+										component, sibling);
+								}
 								iterator.remove();
 								continue outerWhile;
 							}

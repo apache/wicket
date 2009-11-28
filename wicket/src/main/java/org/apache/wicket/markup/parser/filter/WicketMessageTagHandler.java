@@ -27,7 +27,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
 
@@ -159,7 +158,7 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs
 		if ((tag != null) && (tag.getId().startsWith(WICKET_MESSAGE_CONTAINER_ID)))
@@ -174,28 +173,11 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 			}
 			else
 			{
-				wc = new TransparentContainer(id);
+				wc = new TransparentWebMarkupContainer(id);
 			}
 
-			container.autoAdd(wc, markupStream);
-			return true;
+			return wc;
 		}
-		return false;
-	}
-
-	private static class TransparentContainer extends WebMarkupContainer
-	{
-		private static final long serialVersionUID = 1L;
-
-		public TransparentContainer(String id)
-		{
-			super(id);
-		}
-
-		@Override
-		public boolean isTransparentResolver()
-		{
-			return true;
-		}
+		return null;
 	}
 }

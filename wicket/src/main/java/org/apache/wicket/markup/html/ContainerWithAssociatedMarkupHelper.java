@@ -70,8 +70,6 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
-
-		// No associated markup => no header section
 		if (markupStream == null)
 		{
 			return;
@@ -97,11 +95,11 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
 					htmlContainer.autoAdd(headerPart, null);
+					headerPart.render();
 				}
 				else
 				{
-					// TODO Performance: I haven't found a more efficient
-					// solution yet.
+					// TODO Performance: I haven't found a more efficient solution yet.
 					// Already added but all the components in this header part
 					// must be touched (that they are rendered)
 					Response response = container.getRequestCycle().getResponse();
@@ -109,6 +107,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					{
 						container.getRequestCycle().setResponse(NullResponse.getInstance());
 						htmlContainer.autoAdd(headerPart, null);
+						headerPart.render();
 					}
 					finally
 					{

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -38,8 +39,8 @@ public interface IComponentResolver extends IClusterable
 	 *            The current markupStream
 	 * @param tag
 	 *            The current component tag while parsing the markup
-	 * @return True if component-id was handled by the resolver, false otherwise.
+	 * @return null, if not found
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag);
 }

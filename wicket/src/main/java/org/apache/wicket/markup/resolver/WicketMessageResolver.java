@@ -110,20 +110,10 @@ public class WicketMessageResolver implements IComponentResolver
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container and render it.
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * 
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
@@ -144,15 +134,12 @@ public class WicketMessageResolver implements IComponentResolver
 					.getMarkupSettings()
 					.getStripWicketTags());
 
-				container.autoAdd(label, markupStream);
-
-				// Yes, we handled the tag
-				return true;
+				return label;
 			}
 		}
 
 		// We were not able to handle the tag
-		return false;
+		return null;
 	}
 
 	/**
@@ -172,7 +159,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 * tags.
 	 * 
 	 */
-	private static class MessageContainer extends MarkupContainer
+	private static class MessageContainer extends MarkupContainer implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -192,13 +179,13 @@ public class WicketMessageResolver implements IComponentResolver
 		}
 
 		/**
-		 * 
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
-		@Override
-		public boolean isTransparentResolver()
+		public Component resolve(MarkupContainer container, MarkupStream markupStream,
+			ComponentTag tag)
 		{
-			return true;
+			return getParent().get(tag.getId());
 		}
 
 		/**

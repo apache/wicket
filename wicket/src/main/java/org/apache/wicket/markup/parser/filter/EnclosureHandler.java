@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -153,7 +154,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
@@ -172,14 +173,11 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 				tag.setModified(true);
 			}
 
-			Enclosure enclosure = new Enclosure(id, tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
-			container.autoAdd(enclosure, markupStream);
-
 			// Yes, we handled the tag
-			return true;
+			return new Enclosure(id, tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag
-		return false;
+		return null;
 	}
 }

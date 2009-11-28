@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,25 +73,21 @@ public class WicketContainerResolver implements IComponentResolver
 	}
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container and render it.
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * 
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		// this is only here so we register wicket:container tag, this resolver
-		// does not actually do anything special to the tag
-		return false;
-	}
+		if (tag instanceof WicketTag)
+		{
+			final WicketTag wTag = (WicketTag)tag;
 
+			// this is only here so we register wicket:container tag, this resolver
+			// does not actually do anything special to the tag
+			String id = wTag.getId() + container.getPage().getAutoIndex();
+			return new TransparentWebMarkupContainer(id);
+		}
+		return null;
+	}
 }

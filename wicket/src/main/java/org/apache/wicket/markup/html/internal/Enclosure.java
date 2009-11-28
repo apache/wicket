@@ -25,12 +25,12 @@ import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.EnclosureContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.response.NullResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @since 1.3
  */
-public class Enclosure extends WebMarkupContainer
+public class Enclosure extends TransparentWebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -114,15 +114,6 @@ public class Enclosure extends WebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-	 */
-	@Override
-	public boolean isTransparentResolver()
-	{
-		return true;
-	}
-
-	/**
 	 * Get the real parent container
 	 * 
 	 * @return enclosure's parent markup container
@@ -130,16 +121,9 @@ public class Enclosure extends WebMarkupContainer
 	private MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
-		while (parent != null)
+		while (parent.isAuto())
 		{
-			if (parent.isTransparentResolver())
-			{
-				parent = parent.getParent();
-			}
-			else
-			{
-				break;
-			}
+			parent = parent.getParent();
 		}
 
 		if (parent == null)

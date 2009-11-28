@@ -28,10 +28,10 @@ import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -162,9 +162,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 	/** */
 	private int beginOfBodyIndex;
-
-	/** true, if body is currently being rendered */
-	private transient boolean rendering;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -302,11 +299,11 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// make sure nested borders are resolved properly
-		if (rendering == false)
+		if (body.rendering == false)
 		{
 			// We are only interested in border body tags. The tag ID actually is irrelevant since
 			// always preset with the same default
@@ -315,21 +312,12 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 				WicketTag wtag = (WicketTag)tag;
 				if (wtag.isBodyTag())
 				{
-					rendering = true;
-					try
-					{
-						body.render();
-					}
-					finally
-					{
-						rendering = false;
-					}
-					return true;
+					return body;
 				}
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
@@ -440,15 +428,14 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends WebMarkupContainer
+	public class BorderBodyContainer extends TransparentWebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
 		/** remember the original status of the wicket:body tag */
 		private transient boolean wasOpenCloseTag = false;
 
-		/** More easily create a transparent resolver */
-		private boolean transparentResolver;
+		protected boolean rendering;
 
 		/**
 		 * Constructor
@@ -458,25 +445,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		public BorderBodyContainer(final String id)
 		{
 			super(id);
-		}
-
-		/**
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public final boolean isTransparentResolver()
-		{
-			return transparentResolver;
-		}
-
-		/**
-		 * Make the border body transparent
-		 * 
-		 * @param value
-		 */
-		public final void setTransparentResolver(final boolean value)
-		{
-			transparentResolver = value;
 		}
 
 		/**
@@ -518,6 +486,24 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			originalMarkupStream.setCurrentIndex(beginOfBodyIndex);
 
 			super.onComponentTagBody(originalMarkupStream, Border.this.openTag);
+		}
+
+		/**
+		 * @see org.apache.wicket.MarkupContainer#onRender()
+		 */
+		@Override
+		protected void onRender()
+		{
+			rendering = true;
+
+			try
+			{
+				super.onRender();
+			}
+			finally
+			{
+				rendering = false;
+			}
 		}
 
 		/**

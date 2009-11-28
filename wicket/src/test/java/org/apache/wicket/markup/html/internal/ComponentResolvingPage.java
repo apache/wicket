@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -45,7 +46,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if ("test".equals(tag.getId()))
@@ -62,9 +63,8 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 				}
 			};
 
-			autoAdd(label, markupStream);
-			return true;
+			return label;
 		}
-		return false;
+		return null;
 	}
 }

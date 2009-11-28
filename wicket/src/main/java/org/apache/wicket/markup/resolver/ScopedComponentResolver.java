@@ -97,7 +97,7 @@ public class ScopedComponentResolver implements IComponentResolver
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// Try to find the component with the parent component.
@@ -109,7 +109,7 @@ public class ScopedComponentResolver implements IComponentResolver
 			parent = parent.getParent();
 			if (parent == null)
 			{
-				return false;
+				return null;
 			}
 
 			final Component component = parent.get(id);
@@ -118,12 +118,11 @@ public class ScopedComponentResolver implements IComponentResolver
 				IScopedComponent sc = (IScopedComponent)component;
 				if (sc.isRenderableInSubContainers())
 				{
-					component.render();
-					return true;
+					return component;
 				}
 			}
 		}
 
-		return false;
+		return null;
 	}
 }

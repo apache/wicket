@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.resolver;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
 
@@ -54,20 +55,10 @@ public class HtmlHeaderResolver implements IComponentResolver
 	}
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container and render it.
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * 
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		// Only <head> component tags have the id == "_header"
@@ -75,12 +66,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
-			WebMarkupContainer header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
+			return newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
 				container.getPage().getAutoIndex());
-			container.autoAdd(header, markupStream);
-
-			// Yes, we handled the tag
-			return true;
 		}
 		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
 		{
@@ -98,22 +85,13 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// additional functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header2 = new WebMarkupContainer(
-					HtmlHeaderSectionHandler.HEADER_ID)
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public boolean isTransparentResolver()
-					{
-						return true;
-					}
-				};
+				WebMarkupContainer header2 = new TransparentWebMarkupContainer(
+					HtmlHeaderSectionHandler.HEADER_ID);
 
 				header2.setRenderBodyOnly(true);
 				header.add(header2);
 
-				container.autoAdd(header, markupStream);
+				return header;
 			}
 			else if (container instanceof HtmlHeaderContainer)
 			{
@@ -121,50 +99,24 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// additional functionality there are merely a means of surrounding
 				// relevant markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header = new WebMarkupContainer(
-					HtmlHeaderSectionHandler.HEADER_ID)
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public boolean isTransparentResolver()
-					{
-						return true;
-					}
-				};
-
+				WebMarkupContainer header = new TransparentWebMarkupContainer(
+					HtmlHeaderSectionHandler.HEADER_ID);
 				header.setRenderBodyOnly(true);
 
-				try
-				{
-					container.autoAdd(header, markupStream);
-				}
-				catch (IllegalArgumentException ex)
-				{
-					throw new WicketRuntimeException("If the root exception says something like "
-						+ "\"A child with id '_header' already exists\" "
-						+ "then you most likely forgot to override autoAdd() "
-						+ "in your bordered page component.", ex);
-				}
+				return header;
 			}
-			else
-			{
-				final Page page = container.getPage();
-				final String pageClassName = (page != null) ? page.getClass().getName() : "unknown";
-				final IResourceStream stream = markupStream.getResource();
-				final String streamName = (stream != null) ? stream.toString() : "unknown";
+			final Page page = container.getPage();
+			final String pageClassName = (page != null) ? page.getClass().getName() : "unknown";
+			final IResourceStream stream = markupStream.getResource();
+			final String streamName = (stream != null) ? stream.toString() : "unknown";
 
-				throw new MarkupException(
-					"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>. Error occured while rendering page: " +
-						pageClassName + " using markup stream: " + streamName);
-			}
-
-			// Yes, we handled the tag
-			return true;
+			throw new MarkupException(
+				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>. Error occured while rendering page: " +
+					pageClassName + " using markup stream: " + streamName);
 		}
 
 		// We were not able to handle the tag
-		return false;
+		return null;
 	}
 
 	/**

@@ -164,28 +164,6 @@ public abstract class MarkupContainer extends Component
 			return this;
 		}
 
-		MarkupContainer container = (MarkupContainer)visitChildren(MarkupContainer.class,
-			new IVisitor<MarkupContainer>()
-			{
-				public Object component(MarkupContainer container)
-				{
-					if (container.isTransparentResolver())
-					{
-						if (container.getId().equals(child.getId()))
-						{
-							return container;
-						}
-						return IVisitor.CONTINUE_TRAVERSAL;
-					}
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-				}
-			});
-
-		if (container != null)
-		{
-			return container;
-		}
-
 		return null;
 	}
 
@@ -268,8 +246,6 @@ public abstract class MarkupContainer extends Component
 		}
 		add(component);
 
-		// Render the child
-		component.render();
 		return true;
 	}
 
@@ -339,25 +315,16 @@ public abstract class MarkupContainer extends Component
 		// Get child by id
 		Component child = children_get(id);
 
-		// If the container is transparent, than ask its parent.
-		// ParentResolver does something quite similar, but because of <head>,
-		// <body>, <wicket:panel> etc. it is quite common to have transparent
-		// components. Hence, this is little short cut for a tiny performance
-		// optimization.
-		if ((child == null) && isTransparentResolver() && (getParent() != null))
-		{
-			child = getParent().get(path);
-		}
-
 		// Found child?
 		if (child != null)
 		{
-			final String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
+			String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
+
 			// Recurse on latter part of path
 			return child.get(path2);
 		}
 
-		return child;
+		return null;
 	}
 
 	/**
@@ -542,20 +509,6 @@ public abstract class MarkupContainer extends Component
 		// Add to map
 		addedComponent(child);
 		put(child);
-	}
-
-	/**
-	 * Some MarkupContainers (e.g. HtmlHeaderContainer) have to be transparent with respect to their
-	 * child components. A transparent container gets its children from its parent container.
-	 * <p>
-	 * 
-	 * @see org.apache.wicket.markup.resolver.ParentResolver
-	 * 
-	 * @return false. By default a MarkupContainer is not transparent.
-	 */
-	public boolean isTransparentResolver()
-	{
-		return false;
 	}
 
 	/**
@@ -1494,7 +1447,11 @@ public abstract class MarkupContainer extends Component
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
-			final Component component = get(id);
+			Component component = get(id);
+			if (component == null)
+			{
+				component = ComponentResolvers.resolve(this, markupStream, tag);
+			}
 
 			// Failed to find it?
 			if (component != null)
@@ -1503,11 +1460,6 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				if (ComponentResolvers.resolve(this, markupStream, tag))
-				{
-					return;
-				}
-
 				if (tag instanceof WicketTag)
 				{
 					if (((WicketTag)tag).isChildTag())

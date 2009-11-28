@@ -32,6 +32,8 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.response.StringResponse;
 
@@ -67,7 +69,7 @@ import org.apache.wicket.response.StringResponse;
  * 
  * @author Juergen Donnerstag
  */
-public class HtmlHeaderContainer extends WebMarkupContainer
+public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -238,15 +240,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
 		});
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-	 */
-	@Override
-	public boolean isTransparentResolver()
-	{
-		return true;
 	}
 
 	/**

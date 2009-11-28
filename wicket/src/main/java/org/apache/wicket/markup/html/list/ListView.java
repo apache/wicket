@@ -619,8 +619,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			{
 				final String id = Integer.toString(firstIndex + index);
 				index++;
-				Component c = get(id);
-				return c;
+				return get(id);
 			}
 		};
 	}

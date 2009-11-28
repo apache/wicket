@@ -44,11 +44,10 @@ public class ComponentResolvers
 	 * @param container
 	 * @param markupStream
 	 * @param tag
-	 * @return <code>true</code> if a component was resolved using one of tried resolvers,
-	 *         <code>false</code> otherwise.
+	 * @return <code>null</code> if a component was could not be found
 	 */
-	public static boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-		final ComponentTag tag)
+	public static Component resolve(final MarkupContainer container,
+		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// try to resolve using component hierarchy
 
@@ -57,9 +56,15 @@ public class ComponentResolvers
 		{
 			if (cursor instanceof IComponentResolver)
 			{
-				if (((IComponentResolver)cursor).resolve(container, markupStream, tag))
+				IComponentResolver resolver = (IComponentResolver)cursor;
+				Component component = resolver.resolve(container, markupStream, tag);
+				if (component != null)
 				{
-					return true;
+					if (component.getParent() == null)
+					{
+						container.autoAdd(component, markupStream);
+					}
+					return component;
 				}
 			}
 			cursor = cursor.getParent();
@@ -71,12 +76,14 @@ public class ComponentResolvers
 			.getPageSettings()
 			.getComponentResolvers())
 		{
-			if (resolver.resolve(container, markupStream, tag))
+			Component component = resolver.resolve(container, markupStream, tag);
+			if (component != null)
 			{
-				return true;
+				container.autoAdd(component, markupStream);
+				return component;
 			}
 		}
 
-		return false;
+		return null;
 	}
 }

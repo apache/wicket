@@ -68,18 +68,11 @@ public final class AutoComponentResolver implements IComponentResolver
 	private final Map<Component, MarkupContainer> nestedComponents = new HashMap<Component, MarkupContainer>();
 
 	/**
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-		final ComponentTag tag)
+	public final Component resolve(final MarkupContainer container,
+		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// It must be <wicket:...>
 		if (tag instanceof WicketTag)
@@ -102,18 +95,10 @@ public final class AutoComponentResolver implements IComponentResolver
 						nestedComponents.put(component, container);
 					}
 
-					try
-					{
-						// 2. Add it to the hierarchy and render it
-						container.autoAdd(component, markupStream);
-					}
-					finally
-					{
-						// 3. remove it from the stack
-						nestedComponents.remove(component);
-					}
+					// 3. remove it from the stack
+					nestedComponents.remove(component);
 
-					return true;
+					return component;
 				}
 			}
 		}
@@ -128,8 +113,7 @@ public final class AutoComponentResolver implements IComponentResolver
 				Component component = parent.get(tag.getId());
 				if (component != null)
 				{
-					component.render();
-					return true;
+					return component;
 				}
 
 				parent = parent.getParent();
@@ -141,7 +125,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 
 		// We were not able to handle the componentId
-		return false;
+		return null;
 	}
 
 	/**

@@ -133,6 +133,8 @@ public final class AutoLinkResolver implements IComponentResolver
 	 *            type of model object
 	 */
 	public final static class AutolinkBookmarkablePageLink<T> extends BookmarkablePageLink<T>
+		implements
+			IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -166,15 +168,6 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public boolean isTransparentResolver()
-		{
-			return true;
-		}
-
-		/**
 		 * 
 		 * @see org.apache.wicket.markup.html.link.BookmarkablePageLink#getURL()
 		 */
@@ -188,6 +181,16 @@ public final class AutoLinkResolver implements IComponentResolver
 			}
 
 			return url;
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+		 */
+		public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
+			ComponentTag tag)
+		{
+			return getParent().get(tag.getId());
 		}
 	}
 
@@ -486,6 +489,8 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * @author Juergen Donnerstag
 	 */
 	private final static class AutolinkExternalLink extends ExternalLink
+		implements
+			IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -501,12 +506,13 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
-		@Override
-		public boolean isTransparentResolver()
+		public Component resolve(MarkupContainer container, MarkupStream markupStream,
+			ComponentTag tag)
 		{
-			return true;
+			return getParent().get(tag.getId());
 		}
 	}
 
@@ -534,6 +540,8 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * and users wouldn't know where to add the component to.
 	 */
 	private final static class ResourceReferenceAutolink extends WebMarkupContainer
+		implements
+			IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -570,15 +578,6 @@ public final class AutoLinkResolver implements IComponentResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public boolean isTransparentResolver()
-		{
-			return true;
-		}
-
-		/**
 		 * Handles this link's tag.
 		 * 
 		 * @param tag
@@ -600,6 +599,16 @@ public final class AutoLinkResolver implements IComponentResolver
 				// generate the href attribute
 				tag.put(attribute, Strings.replaceAll(url, "&", "&amp;"));
 			}
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+		 */
+		public Component resolve(MarkupContainer container, MarkupStream markupStream,
+			ComponentTag tag)
+		{
+			return getParent().get(tag.getId());
 		}
 	}
 
@@ -750,21 +759,11 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Automatically creates a BookmarkablePageLink component.
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * 
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @param container
-	 *            The container parsing its markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-		final ComponentTag tag)
+	public final Component resolve(final MarkupContainer container,
+		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// Must be marked as autolink tag
 		if (tag.isAutolinkEnabled())
@@ -772,22 +771,19 @@ public final class AutoLinkResolver implements IComponentResolver
 			// Try to find the Page matching the href
 			// Note: to not use tag.getId() because it will be modified while
 			// resolving the link and hence the 2nd render will fail.
-			final Component link = resolveAutomaticLink(container,
-				WicketLinkTagHandler.AUTOLINK_ID, tag);
+			Component link = resolveAutomaticLink(container, WicketLinkTagHandler.AUTOLINK_ID, tag);
 
-			// Add the link to the container
-			container.autoAdd(link, markupStream);
 			if (log.isDebugEnabled())
 			{
 				log.debug("Added autolink " + link);
 			}
 
 			// Tell the container, we resolved the id
-			return true;
+			return link;
 		}
 
 		// We were not able to resolve the id
-		return false;
+		return null;
 	}
 
 	/**

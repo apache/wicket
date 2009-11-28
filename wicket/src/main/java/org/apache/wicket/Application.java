@@ -45,7 +45,6 @@ import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
-import org.apache.wicket.markup.resolver.ParentResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.ng.page.PageManager;
@@ -913,7 +912,6 @@ public abstract class Application
 		IPageSettings pageSettings = getPageSettings();
 
 		// Install default component resolvers
-		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());

@@ -26,7 +26,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -202,7 +201,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
 		if (tag instanceof WicketTag)
@@ -213,28 +212,11 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 				final String id = tag.getId() + container.getPage().getAutoIndex();
 				tag.setId(id);
 
-				final Component component = new WebMarkupContainer(id)
-				{
-					private static final long serialVersionUID = 1L;
-
-					/**
-					 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-					 */
-					@Override
-					public boolean isTransparentResolver()
-					{
-						return true;
-					}
-				};
-
-				container.autoAdd(component, markupStream);
-
-				// Yes, we handled the tag
-				return true;
+				return new TransparentWebMarkupContainer(id);
 			}
 		}
 
 		// We were not able to handle the tag
-		return false;
+		return null;
 	}
 }

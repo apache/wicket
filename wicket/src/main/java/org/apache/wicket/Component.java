@@ -3885,7 +3885,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * @return True if this component or any of its parents is in auto-add mode
 	 */
-	final boolean isAuto()
+	public final boolean isAuto()
 	{
 		// Search up hierarchy for FLAG_AUTO
 		for (Component current = this; current != null; current = current.getParent())
