@@ -188,20 +188,6 @@ public class MarkupStream
 	}
 
 	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @param id
-	 *            The component's id to search for
-	 * @return -1, if not found
-	 */
-	public final int findComponentIndex(final String id)
-	{
-		return markup.findComponentIndex(id, 0);
-	}
-
-	/**
 	 * @return The current markup element
 	 */
 	public MarkupElement get()

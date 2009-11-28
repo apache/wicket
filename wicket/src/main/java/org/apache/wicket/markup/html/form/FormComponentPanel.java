@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
 import org.apache.wicket.markup.html.HeaderPartContainer;
@@ -247,8 +246,8 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		}
 
 		// Find <wicket:panel>
-		int index = markup.findComponentIndex("_panel", 0);
-		if (index == -1)
+		IMarkupFragment panelMarkup = markup.find("_panel");
+		if (panelMarkup == null)
 		{
 			throw new MarkupException(
 				"Expected to find <wicket:panel> in associated markup file. Markup: " +
@@ -258,10 +257,10 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		// If child == null, return the markup starting with <wicket:panel>
 		if (child == null)
 		{
-			return new MarkupFragment(markup, index);
+			return panelMarkup;
 		}
 
 		// else, find the markup fragment for the child component
-		return markup.find(child.getId(), index);
+		return panelMarkup.find(child.getId());
 	}
 }

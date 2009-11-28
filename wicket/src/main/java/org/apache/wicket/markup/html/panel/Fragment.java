@@ -358,13 +358,13 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			return null;
 		}
 
-		markup = markup.find(markupId, 0);
+		markup = markup.find(markupId);
 
 		if (child == null)
 		{
 			return markup;
 		}
 
-		return markup.find(child.getId(), 0);
+		return markup.find(child.getId());
 	}
 }

@@ -146,6 +146,33 @@ public abstract class MarkupContainer extends Component
 				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
 					child.getId() + "' already exists"));
 			}
+
+			// Check if the markup is available after the child has been added to the parent
+			try
+			{
+				if ((getParent() != null) && (child.getMarkup() != null))
+				{
+					child.internalOnMarkupAttached();
+
+					// Tell all children of "component" as well
+					if (child instanceof MarkupContainer)
+					{
+						MarkupContainer container = (MarkupContainer)child;
+						container.visitChildren(new IVisitor<Component>()
+						{
+							public Object component(final Component component)
+							{
+								return component.internalOnMarkupAttached()
+									? CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER : CONTINUE_TRAVERSAL;
+							}
+						});
+					}
+				}
+			}
+			catch (WicketRuntimeException exception)
+			{
+				// ignore
+			}
 		}
 		return this;
 	}
@@ -439,7 +466,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// Find the child's markup
-		markup = markup.find(child.getId(), 0);
+		markup = markup.find(child.getId());
 		if (markup != null)
 		{
 			return markup;

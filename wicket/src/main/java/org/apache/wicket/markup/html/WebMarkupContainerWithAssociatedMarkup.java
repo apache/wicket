@@ -101,13 +101,13 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 			ComponentTag tag = iter.next();
 			if ((child != null) && "_header_".equals(tag.getId()))
 			{
-				childMarkup = iter.getMarkupFragment().find(child.getId(), 0);
+				childMarkup = iter.getMarkupFragment().find(child.getId());
 			}
 			else if ((child != null) && "_head".equals(tag.getId()))
 			{
 				if (tag.getMarkupClass() == null)
 				{
-					childMarkup = iter.getMarkupFragment().find(child.getId(), 0);
+					childMarkup = iter.getMarkupFragment().find(child.getId());
 				}
 			}
 		}

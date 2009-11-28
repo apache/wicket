@@ -61,24 +61,9 @@ public interface IMarkupFragment
 	 *            The component path expression
 	 * @param id
 	 *            The component's id to search for
-	 * @param startIndex
-	 *            Index to start searching
 	 * @return -1, if not found
 	 */
-	int findComponentIndex(final String id, final int startIndex);
-
-	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @param id
-	 *            The component's id to search for
-	 * @param startIndex
-	 *            Index to start searching
-	 * @return -1, if not found
-	 */
-	IMarkupFragment find(final String id, final int startIndex);
+	IMarkupFragment find(final String id);
 
 	/**
 	 * 

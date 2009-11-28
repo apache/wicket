@@ -382,8 +382,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		// Find <wicket:border>
-		int i;
-		for (i = 0; i < markup.size(); i++)
+		IMarkupFragment childMarkup = null;
+		for (int i = 0; i < markup.size(); i++)
 		{
 			MarkupElement elem = markup.get(i);
 			if (elem instanceof WicketTag)
@@ -391,6 +391,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 				WicketTag tag = (WicketTag)elem;
 				if (tag.isBorderTag())
 				{
+					childMarkup = new MarkupFragment(markup, i);
 					break;
 				}
 			}
@@ -399,16 +400,14 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// If child == null, return the markup fragment starting with the <wicket:border> tag
 		if (child == null)
 		{
-			return new MarkupFragment(markup, i);
+			return childMarkup;
 		}
-
-		IMarkupFragment childMarkup = null;
 
 		// Since we created the body component instance, identifying that we found it is easy.
 		if (child == body)
 		{
 			// Find the markup for the child component. Make sure you use the preset default value.
-			childMarkup = markup.find(BODY_ID, i);
+			childMarkup = childMarkup.find(BODY_ID);
 			if (childMarkup != null)
 			{
 				return childMarkup;
@@ -416,7 +415,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		// Find the markup for the child component
-		childMarkup = markup.find(child.getId(), i);
+		childMarkup = childMarkup.find(child.getId());
 		if (childMarkup != null)
 		{
 			return childMarkup;
@@ -532,7 +531,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 				return markup;
 			}
 
-			return markup.find(child.getId(), 0);
+			return markup.find(child.getId());
 		}
 	}
 }

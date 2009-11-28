@@ -80,7 +80,7 @@ public class InlinePanelPage_5 extends WebPage
 				return markup;
 			}
 
-			return markup.find(child.getId(), 0);
+			return markup.find(child.getId());
 		}
 	}
 }

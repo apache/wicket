@@ -394,9 +394,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
 	 */
-	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_RENDERING = 0x2000000;
+	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
+
+	private static final int FLAG_MARKUP_ATTACHED = 0x10000000;
 
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
@@ -715,6 +717,34 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		markup = parent.getMarkup(this);
 		return markup;
+	}
+
+	/**
+	 * Called when the component gets added to a parent
+	 * 
+	 * @return false, if it was called the first time
+	 */
+	final boolean internalOnMarkupAttached()
+	{
+		boolean rtn = getFlag(FLAG_MARKUP_ATTACHED);
+		if (rtn == false)
+		{
+			onMarkupAttached();
+		}
+		setFlag(FLAG_MARKUP_ATTACHED, true);
+		return rtn;
+	}
+
+	/**
+	 * Can be subclassed by any user to implement init-like logic which requires the markup to be
+	 * available
+	 */
+	protected void onMarkupAttached()
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("Markup available " + toString());
+		}
 	}
 
 	/**
