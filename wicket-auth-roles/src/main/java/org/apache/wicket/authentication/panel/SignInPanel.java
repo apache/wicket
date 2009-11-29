@@ -81,6 +81,9 @@ public class SignInPanel extends Panel
 			add(password = new PasswordTextField("password", new PropertyModel<String>(properties,
 				"password")));
 
+			username.setType(String.class);
+			password.setType(String.class);
+
 			// MarkupContainer row for remember me checkbox
 			final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
