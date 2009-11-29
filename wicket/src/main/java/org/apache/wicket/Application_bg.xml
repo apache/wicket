@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="Required">Полето '${label}' е задължително.</entry>
+	<entry key="IConverter">'${input}' не е валиден ${type}.</entry>
+	<entry key="RangeValidator">${input} трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="MinimumValidator">'${input}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="MaximumValidator">'${input}' трябва да бъде най-много ${maximum}.</entry>
+
+	<entry key="StringValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum} символа.</entry>
+	<entry key="StringValidator.minimum">'${input}' трябва да бъде поне ${minimum} символа.</entry>
+	<entry key="StringValidator.maximum">'${input}' трябва да бъде най-много ${maximum} символа.</entry>
+	<entry key="StringValidator.exact">'${input}' трябва да бъде точно ${exact} символа.</entry>
+
+	<entry key="DateValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="DateValidator.minimum">'${input}' не трябва да бъде преди ${minimum}.</entry>
+	<entry key="DateValidator.maximum">'${input}' не трябва да бъде след ${maximum}.</entry>
+
+	<entry key="NumberValidator.positive">'${input}' трябва да е положително число.</entry>
+	<entry key="NumberValidator.negative">'${input}' трябва да е отрицателно число.</entry>
+	<entry key="NumberValidator.range">'${input}' трябва да бъде между ${minimum} и ${maximum}.</entry>
+	<entry key="NumberValidator.minimum">'${input}' трябва да бъде най-малко ${minimum}.</entry>
+	<entry key="NumberValidator.maximum">'${input}' трябва да бъде най-много ${maximum}.</entry>
+
+	<entry key="PatternValidator">'${input}' не отговаря на шаблона '${pattern}'.</entry>
+	<entry key="EmailAddressValidator">'${input}' не е валиден адрес на електронна поща.</entry>
+	<entry key="CreditCardValidator">Номерът на кредитната карта не е валиден.</entry>
+	<entry key="UrlValidator">'${input}' не е валиден уеб адрес.</entry>
+
+	<entry key="EqualInputValidator">'${input0}' от ${label0} и '${input1}' от ${label1} трябва да бъдат еднакви.</entry>
+	<entry key="EqualPasswordInputValidator">${label0} и ${label1} трябва да съвпадат.</entry>
+
+	<entry key="null">Изберете едно</entry>
+	<entry key="nullValid"></entry>
+
+	<entry key="PagingNavigator.first">Към първата страница</entry>
+	<entry key="PagingNavigator.previous">Към предишната страница</entry>
+	<entry key="PagingNavigator.next">Към следващата страница</entry>
+	<entry key="PagingNavigator.last">Към последната страница</entry>
+	<entry key="PagingNavigation.page">Към страница ${page}</entry>
+</properties>
