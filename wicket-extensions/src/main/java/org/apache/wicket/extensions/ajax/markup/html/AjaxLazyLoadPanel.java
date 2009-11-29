@@ -85,7 +85,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			public void renderHead(IHeaderResponse response)
 			{
 				super.renderHead(response);
-				response.renderOnDomReadyJavascript(getCallbackScript().toString());
+				handleCallbackScript(response, getCallbackScript().toString());
 			}
 
 			@Override
@@ -94,6 +94,17 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				return state < 2;
 			}
 		});
+	}
+
+	/**
+	 * Allows subclasses to change the callback script if needed.
+	 * 
+	 * @param response
+	 * @param callbackScript
+	 */
+	protected void handleCallbackScript(final IHeaderResponse response, final String callbackScript)
+	{
+		response.renderOnDomReadyJavascript(callbackScript);
 	}
 
 	/**
