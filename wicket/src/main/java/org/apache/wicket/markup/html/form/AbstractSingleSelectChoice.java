@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
  * Abstract base class for single-select choices.
  * 
  * @author Jonathan Locke
- * @author Eelco Hillenius                          nm
+ * @author Eelco Hillenius nm
  * @author Johan Compagner
  * 
  * @param <T>
@@ -44,9 +44,9 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 
 	private static final String EMPTY_STRING = "";
 
-    /** whether or not null will be offered as a choice once
-     * a nonnull value is saved
-     */
+	/**
+	 * whether or not null will be offered as a choice once a nonnull value is saved
+	 */
 	private boolean nullValid = false;
 
 	/**
@@ -109,7 +109,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public AbstractSingleSelectChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
+	public AbstractSingleSelectChoice(String id, IModel<T> model,
+		IModel<? extends List<? extends T>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -123,7 +124,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	{
 		super(id, choices, renderer);
 	}
-
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
@@ -169,26 +169,22 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-     * Determines whether or not the null value should be included in the
-     * list of choices when the field's model value is nonnull, and whether or
-     * not the null_valid string property (e.g. "Choose One") should be
-     * displayed until a nonnull value is selected.
-     *
-     * If set to false, then "Choose One" will be displayed when the value is
-     * null. After a value is selected, and that change is propagated to the
-     * underlying model, the user will no longer see the "Choose One" option,
-     * and there will be no way to reselect null as the value.
-     *
-     * If set to true, the null string property (the empty string, by default)
-     * will always be displayed as an option, whether or not a nonnull value
-     * has ever been selected.
-     *
-     * Note that this setting has no effect on validation; in order to guarantee
-     * that a value will be specified on form validation, {@link #setRequired(boolean)}.
-     * This is because even if setNullValid() is called with false, the user
-     * can fail to provide a value simply by never activating
-     * (i.e. clicking on) the component.
-	 *
+	 * Determines whether or not the null value should be included in the list of choices when the
+	 * field's model value is nonnull, and whether or not the null_valid string property (e.g.
+	 * "Choose One") should be displayed until a nonnull value is selected.
+	 * 
+	 * If set to false, then "Choose One" will be displayed when the value is null. After a value is
+	 * selected, and that change is propagated to the underlying model, the user will no longer see
+	 * the "Choose One" option, and there will be no way to reselect null as the value.
+	 * 
+	 * If set to true, the null string property (the empty string, by default) will always be
+	 * displayed as an option, whether or not a nonnull value has ever been selected.
+	 * 
+	 * Note that this setting has no effect on validation; in order to guarantee that a value will
+	 * be specified on form validation, {@link #setRequired(boolean)}. This is because even if
+	 * setNullValid() is called with false, the user can fail to provide a value simply by never
+	 * activating (i.e. clicking on) the component.
+	 * 
 	 * @return <code>true</code> when the <code>null</code> value is allowed.
 	 */
 	public boolean isNullValid()
@@ -197,28 +193,24 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-     /**
-      * Determines whether or not the null value should be included in the
-      * list of choices when the field's model value is nonnull, and whether or
-      * not the null_valid string property (e.g. "Choose One") should be
-      * displayed until a nonnull value is selected.
-      *
-      * If set to false, then "Choose One" will be displayed when the value is
-      * null. After a value is selected, and that change is propagated to the
-      * underlying model, the user will no longer see the "Choose One" option,
-      * and there will be no way to reselect null as the value.
-      *
-      * If set to true, the null string property (the empty string, by default)
-      * will always be displayed as an option, whether or not a nonnull value
-      * has ever been selected.
-      *
-      * Note that this setting has no effect on validation; in order to guarantee
-      * that a value will be specified on form validation, {@link #setRequired(boolean)}.
-      * This is because even if setNullValid() is called with false, the user
-      * can fail to provide a value simply by never activating
-      * (i.e. clicking on) the component.
-      *
-	 * @param nullValid whether null is a valid value
+	 * /** Determines whether or not the null value should be included in the list of choices when
+	 * the field's model value is nonnull, and whether or not the null_valid string property (e.g.
+	 * "Choose One") should be displayed until a nonnull value is selected.
+	 * 
+	 * If set to false, then "Choose One" will be displayed when the value is null. After a value is
+	 * selected, and that change is propagated to the underlying model, the user will no longer see
+	 * the "Choose One" option, and there will be no way to reselect null as the value.
+	 * 
+	 * If set to true, the null string property (the empty string, by default) will always be
+	 * displayed as an option, whether or not a nonnull value has ever been selected.
+	 * 
+	 * Note that this setting has no effect on validation; in order to guarantee that a value will
+	 * be specified on form validation, {@link #setRequired(boolean)}. This is because even if
+	 * setNullValid() is called with false, the user can fail to provide a value simply by never
+	 * activating (i.e. clicking on) the component.
+	 * 
+	 * @param nullValid
+	 *            whether null is a valid value
 	 * @return this for chaining
 	 */
 	public AbstractSingleSelectChoice<T> setNullValid(boolean nullValid)
@@ -281,8 +273,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			String option = getLocalizer().getStringIgnoreSettings(getId() + ".nullValid", this,
-				null, null);
+			String option = getLocalizer().getStringIgnoreSettings(getNullValidKey(), this, null,
+				null);
 			if (Strings.isEmpty(option))
 			{
 				option = getLocalizer().getString("nullValid", this, "");
@@ -311,8 +303,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 				selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
-				String option = getLocalizer().getStringIgnoreSettings(getId() + ".null", this,
-					null, null);
+				String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null,
+					null);
 
 				if (Strings.isEmpty(option))
 				{
@@ -323,6 +315,26 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Return the localization key for nullValid value
+	 * 
+	 * @return getId() + ".nullValid"
+	 */
+	protected String getNullValidKey()
+	{
+		return getId() + ".nullValid";
+	}
+
+	/**
+	 * Return the localization key for null value
+	 * 
+	 * @return getId() + ".null"
+	 */
+	protected String getNullKey()
+	{
+		return getId() + ".null";
 	}
 
 	/**
