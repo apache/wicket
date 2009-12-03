@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+div.wicket-aa-container { 
+        border-width: 1px;
+        border-color: #cccccc;
+        border-style: solid;
+} 
+
 div.wicket-aa {
         font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
         font-size: 12px;
         background-color: white;
-        border-color: #cccccc;
-        border-width: 1px;
-        border-style: solid;
         padding: 2px;
-        margin: 1px 0 0 0;
         text-align:left;
 }
- 
+
 div.wicket-aa ul {
         list-style:none;
         padding: 2px;
