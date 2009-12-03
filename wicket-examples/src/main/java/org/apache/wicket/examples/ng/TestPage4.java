@@ -18,13 +18,13 @@ package org.apache.wicket.examples.ng;
 
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.markup.html.Label;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 
 public class TestPage4 extends Page
 {
 	private static final long serialVersionUID = 1L;
 
-	public TestPage4(PageParameters parameters)
+	public TestPage4(PageParametersNg parameters)
 	{
 		super(parameters);
 

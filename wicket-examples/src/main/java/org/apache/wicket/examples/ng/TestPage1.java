@@ -18,7 +18,7 @@ package org.apache.wicket.examples.ng;
 
 import org.apache.wicket.ng.Page;
 import org.apache.wicket.ng.markup.html.link.Link;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 public class TestPage1 extends Page
@@ -34,10 +34,10 @@ public class TestPage1 extends Page
 			public void onLinkClicked()
 			{
 				System.out.println("link 1 clicked");
-				getPageParameters().setNamedParameter("p1", "v1");
-				getPageParameters().setIndexedParameter(0, "indexed1");
-				getPageParameters().setIndexedParameter(1, "indexed2");
-				getPageParameters().setIndexedParameter(2, "indexed3");
+				getPageParametersNg().setNamedParameter("p1", "v1");
+				getPageParametersNg().setIndexedParameter(0, "indexed1");
+				getPageParametersNg().setIndexedParameter(1, "indexed2");
+				getPageParametersNg().setIndexedParameter(2, "indexed3");
 
 				// necessary on stateless page
 				if (getPage().isPageStateless())
@@ -55,8 +55,8 @@ public class TestPage1 extends Page
 			public void onLinkClicked()
 			{
 				System.out.println("link 2 clicked");
-				getPageParameters().removeNamedParameter("p1");
-				getPageParameters().clearIndexedParameters();
+				getPageParametersNg().removeNamedParameter("p1");
+				getPageParametersNg().clearIndexedParameters();
 
 				if (getPage().isPageStateless())
 					// necessary on stateless page
@@ -105,9 +105,9 @@ public class TestPage1 extends Page
 			{
 				System.out.println("link 5 clicked");
 				TestPage3 page = new TestPage3(TestPage1.this);
-				page.getPageParameters().setIndexedParameter(0, "i1");
-				page.getPageParameters().setIndexedParameter(1, "i2");
-				page.getPageParameters().setIndexedParameter(2, "i3");
+				page.getPageParametersNg().setIndexedParameter(0, "i1");
+				page.getPageParametersNg().setIndexedParameter(1, "i2");
+				page.getPageParametersNg().setIndexedParameter(2, "i3");
 				RequestCycle.get().setResponsePage(page);
 			}
 		};
@@ -118,7 +118,7 @@ public class TestPage1 extends Page
 		{
 			public void onLinkClicked()
 			{
-				PageParameters params = new PageParameters();
+				PageParametersNg params = new PageParametersNg();
 				params.setNamedParameter("color", "red");
 				RequestCycle.get().setResponsePage(TestPage4.class, params);
 			};
