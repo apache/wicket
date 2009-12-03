@@ -18,14 +18,12 @@ package org.apache.wicket;
 
 
 /**
- * A key to a piece of metadata associated with a Component at runtime. The key
- * contains type information that can be used to check the type of any metadata
- * value for the key when the value is set on the given Component. MetaDataKey
- * is abstract in order to force the creation of a subtype. That subtype is used
- * to test for identity when looking for the metadata because actual object
- * identity would suffer from problems under serialization. So, the correct way
- * to declare a MetaDataKey is like this: public static MetaDataKey ROLE = new
- * MetaDataKey(Role.class) { }
+ * A key to a piece of metadata associated with a Component at runtime. The key contains type
+ * information that can be used to check the type of any metadata value for the key when the value
+ * is set on the given Component. MetaDataKey is abstract in order to force the creation of a
+ * subtype. That subtype is used to test for identity when looking for the metadata because actual
+ * object identity would suffer from problems under serialization. So, the correct way to declare a
+ * MetaDataKey is like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
  * 
  * @author Jonathan Locke
  * 
@@ -64,7 +62,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 * @return The entry value
 	 */
 	@SuppressWarnings("unchecked")
-	T get(MetaDataEntry[] metaData)
+	public T get(MetaDataEntry[] metaData)
 	{
 		if (metaData != null)
 		{
@@ -87,7 +85,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	MetaDataEntry<?>[] set(MetaDataEntry<?>[] metaData, final Object object)
+	public MetaDataEntry<?>[] set(MetaDataEntry<?>[] metaData, final Object object)
 	{
 		boolean set = false;
 		if (metaData != null)

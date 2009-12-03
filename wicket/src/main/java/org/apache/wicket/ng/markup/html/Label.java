@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ng.markup.html;
 
-import org.apache.wicket.ng.Component;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+
+import org.apache.wicket.Component;
 
 public class Label extends Component
 {
@@ -30,9 +30,9 @@ public class Label extends Component
 		this.string = string;
 	}
 
+
 	@Override
-	public void renderComponent()
+	protected void onRender()
 	{
-		RequestCycle.get().getResponse().write(string);
 	}
 }

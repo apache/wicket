@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
@@ -102,7 +102,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 			Class<? extends RequestablePage> pageClass = getPageClass(className);
 
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, 3, pageParametersEncoder);
+			PageParametersNg pageParameters = extractPageParameters(request, 3, pageParametersEncoder);
 
 			return new UrlInfo(info, pageClass, pageParameters);
 		}

@@ -45,6 +45,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
@@ -197,7 +198,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements IClusterable, IConverterLocator
+public abstract class Component implements IClusterable, IConverterLocator, RequestableComponent
 {
 	/**
 	 * Generic component visitor interface for component traversals.
@@ -3876,7 +3877,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            Path to component
 	 * @return The component at the path
 	 */
-	Component get(final String path)
+	public Component get(final String path)
 	{
 		// Path to this component is an empty path
 		if (path.equals(""))
@@ -4133,5 +4134,23 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
 		}
 		return state;
+	}
+
+
+	/** TODO WICKET-NG javadoc */
+	public boolean canCallListenerInterface()
+	{
+		if (!isEnabled() || !determineVisibility())
+		{
+			return false;
+		}
+		else if (getParent() != null)
+		{
+			return getParent().canCallListenerInterface();
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

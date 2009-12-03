@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.StringValue;
  * 
  * @author Matej Knopp
  */
-public class PageParameters implements Serializable
+public class PageParametersNg implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class PageParameters implements Serializable
 	/**
 	 * Construct.
 	 */
-	public PageParameters()
+	public PageParametersNg()
 	{
 
 	}
@@ -56,7 +56,7 @@ public class PageParameters implements Serializable
 	 * 
 	 * @param copy
 	 */
-	public PageParameters(PageParameters copy)
+	public PageParametersNg(PageParametersNg copy)
 	{
 		Checks.argumentNotNull(copy, "copy");
 
@@ -316,7 +316,7 @@ public class PageParameters implements Serializable
 	 * 
 	 * @param other
 	 */
-	public void assign(PageParameters other)
+	public void assign(PageParametersNg other)
 	{
 		if (this != other)
 		{
@@ -333,12 +333,12 @@ public class PageParameters implements Serializable
 			return true;
 		}
 
-		if (obj instanceof PageParameters == false)
+		if (obj instanceof PageParametersNg == false)
 		{
 			return false;
 		}
 
-		PageParameters rhs = (PageParameters)obj;
+		PageParametersNg rhs = (PageParametersNg)obj;
 		if (!Objects.equal(indexedParameters, rhs.indexedParameters))
 		{
 			return false;
@@ -377,13 +377,13 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Compares two {@link PageParameters} objects.
+	 * Compares two {@link PageParametersNg} objects.
 	 * 
 	 * @param p1
 	 * @param p2
 	 * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
 	 */
-	public static boolean equals(PageParameters p1, PageParameters p2)
+	public static boolean equals(PageParametersNg p1, PageParametersNg p2)
 	{
 		if (Objects.equal(p1, p2))
 		{

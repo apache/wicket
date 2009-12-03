@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
@@ -112,7 +112,7 @@ public class TestMapperContext implements MapperContext
 
     int idCounter = 0;
 
-    public RequestablePage newPageInstance(Class< ? extends RequestablePage> pageClass, PageParameters pageParameters)
+    public RequestablePage newPageInstance(Class< ? extends RequestablePage> pageClass, PageParametersNg pageParameters)
     {
         try
         {
@@ -121,7 +121,7 @@ public class TestMapperContext implements MapperContext
             page.setPageId(++idCounter);
             page.setBookmarkable(true);
             page.setCreatedBookmarkable(true);
-            page.getPageParameters().assign(pageParameters);
+            page.getPageParametersNg().assign(pageParameters);
             return page;
         }
         catch (Exception e)

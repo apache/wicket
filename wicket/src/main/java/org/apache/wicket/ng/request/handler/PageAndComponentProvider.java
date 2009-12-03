@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.util.lang.Checks;
@@ -62,14 +62,14 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(Class, PageParameters)
+	 * @see DefaultPageProvider#PageProvider(Class, PageParametersNg)
 	 * 
 	 * @param pageClass
 	 * @param pageParameters
 	 * @param componentPath
 	 */
 	public PageAndComponentProvider(Class<? extends RequestablePage> pageClass,
-		PageParameters pageParameters, String componentPath)
+		PageParametersNg pageParameters, String componentPath)
 	{
 		super(pageClass, pageParameters);
 		setComponentPath(componentPath);
@@ -103,7 +103,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(int, Class, PageParameters, Integer)
+	 * @see DefaultPageProvider#PageProvider(int, Class, PageParametersNg, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -112,7 +112,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param componentPath
 	 */
 	public PageAndComponentProvider(int pageId, Class<? extends RequestablePage> pageClass,
-		PageParameters pageParameters, Integer renderCount, String componentPath)
+		PageParametersNg pageParameters, Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, pageParameters, renderCount);
 		setComponentPath(componentPath);

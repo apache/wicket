@@ -21,7 +21,7 @@ import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
@@ -193,7 +193,7 @@ public abstract class AbstractMapper implements RequestMapper
     }
 
     /**
-     * Extracts {@link PageParameters} from the URL using the given {@link PageParametersEncoder}.
+     * Extracts {@link PageParametersNg} from the URL using the given {@link PageParametersEncoder}.
      * 
      * @param request
      * @param segmentsToSkip
@@ -202,7 +202,7 @@ public abstract class AbstractMapper implements RequestMapper
      * @param encoder
      * @return PageParameters instance
      */
-    protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
+    protected PageParametersNg extractPageParameters(Request request, int segmentsToSkip,
             PageParametersEncoder encoder)
     {
         Checks.argumentNotNull(request, "request");
@@ -222,12 +222,12 @@ public abstract class AbstractMapper implements RequestMapper
             urlCopy.getQueryParameters().remove(0);
         }
 
-        PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
-        return decoded != null ? decoded : new PageParameters();
+        PageParametersNg decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
+        return decoded != null ? decoded : new PageParametersNg();
     }
 
     /**
-     * Encodes the given {@link PageParameters} to the URL using the given
+     * Encodes the given {@link PageParametersNg} to the URL using the given
      * {@link PageParametersEncoder}. The original URL object is unchanged.
      * 
      * @param url
@@ -235,7 +235,7 @@ public abstract class AbstractMapper implements RequestMapper
      * @param encoder
      * @return URL with encoded parameters
      */
-    protected Url encodePageParameters(Url url, PageParameters pageParameters,
+    protected Url encodePageParameters(Url url, PageParametersNg pageParameters,
             PageParametersEncoder encoder)
     {
         Checks.argumentNotNull(url, "url");
@@ -243,7 +243,7 @@ public abstract class AbstractMapper implements RequestMapper
 
         if (pageParameters == null)
         {
-            pageParameters = new PageParameters();
+            pageParameters = new PageParametersNg();
         }
 
         Url parametersUrl = encoder.encodePageParameters(pageParameters);

@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.handler.resource;
 import java.util.Locale;
 
 import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.Resource;
 import org.apache.wicket.util.lang.Checks;
@@ -35,7 +35,7 @@ public class ResourceRequestHandler implements RequestHandler
 	private final Locale locale;
 	private final String style;
 	private final String variation;
-	private final PageParameters pageParameters;
+	private final PageParametersNg pageParameters;
 
 	/**
 	 * Construct.
@@ -47,7 +47,7 @@ public class ResourceRequestHandler implements RequestHandler
 	 * @param pageParameters
 	 */
 	public ResourceRequestHandler(Resource resource, Locale locale, String style, String variation,
-		PageParameters pageParameters)
+		PageParametersNg pageParameters)
 	{
 		Checks.argumentNotNull(resource, "resource");
 
@@ -55,7 +55,7 @@ public class ResourceRequestHandler implements RequestHandler
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
-		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
+		this.pageParameters = pageParameters != null ? pageParameters : new PageParametersNg();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ResourceRequestHandler implements RequestHandler
 	/**
 	 * @return page parameters
 	 */
-	public PageParameters getPageParameters()
+	public PageParametersNg getPageParameters()
 	{
 		return pageParameters;
 	}

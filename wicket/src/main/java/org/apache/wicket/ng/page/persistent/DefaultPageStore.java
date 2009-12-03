@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.page.ManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;

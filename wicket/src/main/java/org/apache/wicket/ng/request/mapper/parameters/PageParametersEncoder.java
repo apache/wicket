@@ -19,30 +19,30 @@ package org.apache.wicket.ng.request.mapper.parameters;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 
 /**
- * Encoder that can encode and decode {@link PageParameters} to/from URL.
+ * Encoder that can encode and decode {@link PageParametersNg} to/from URL.
  * 
  * @author Matej Knopp
  */
 public interface PageParametersEncoder
 {
 	/**
-	 * Encode the given {@link PageParameters} instance into URL. The URL will be then merged with
+	 * Encode the given {@link PageParametersNg} instance into URL. The URL will be then merged with
 	 * the URL generated for {@link RequestHandler}.
 	 * 
 	 * @param pageParameters
 	 * @return Url generated from the page parameters
 	 */
-	public Url encodePageParameters(PageParameters pageParameters);
+	public Url encodePageParameters(PageParametersNg pageParameters);
 
 	/**
-	 * Decodes the given URL to {@link PageParameters}. The URL will have all {@link RequestHandler}
+	 * Decodes the given URL to {@link PageParametersNg}. The URL will have all {@link RequestHandler}
 	 * specified segments/parameters stripped.
 	 * 
 	 * @param request
-	 * @return {@link PageParameters} instance
+	 * @return {@link PageParametersNg} instance
 	 */
-	public PageParameters decodePageParameters(Request request);
+	public PageParametersNg decodePageParameters(Request request);
 }

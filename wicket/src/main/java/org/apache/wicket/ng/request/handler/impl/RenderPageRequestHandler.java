@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageClassRequestHandler;
@@ -114,7 +114,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 		return pageProvider.getPageClass();
 	}
 
-	public PageParameters getPageParameters()
+	public PageParametersNg getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}

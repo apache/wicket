@@ -54,6 +54,8 @@ import org.apache.wicket.ng.page.persistent.DefaultPageStore;
 import org.apache.wicket.ng.page.persistent.PageStore;
 import org.apache.wicket.ng.page.persistent.PersistentPageManager;
 import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
+import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -157,6 +159,10 @@ public abstract class Application
 
 	/** */
 	private List<IHeaderContributor> renderHeadListeners;
+
+
+	/** root mapper */
+	private RequestMapper rootRequestMapper;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -936,6 +942,9 @@ public abstract class Application
 		// set up pagemanager
 		pageManager = newPageManager();
 		pageManager.setContext(getPageManagerContext());
+
+		// set up default request mapper
+		setRootRequestMapper(new SystemMapper());
 	}
 
 	/**
@@ -1286,6 +1295,16 @@ public abstract class Application
 	protected PageManagerContext getPageManagerContext()
 	{
 		return pageManagerContext;
+	}
+
+	public RequestMapper getRootRequestMapper()
+	{
+		return rootRequestMapper;
+	}
+
+	public void setRootRequestMapper(RequestMapper rootRequestMapper)
+	{
+		this.rootRequestMapper = rootRequestMapper;
 	}
 
 

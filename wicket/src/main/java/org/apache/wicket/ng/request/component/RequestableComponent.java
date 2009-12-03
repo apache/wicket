@@ -18,6 +18,7 @@ package org.apache.wicket.ng.request.component;
 
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.model.IDetachable;
 
@@ -27,7 +28,7 @@ import org.apache.wicket.model.IDetachable;
  * 
  * @author Matej Knopp
  */
-public interface RequestableComponent extends IDetachable
+public interface RequestableComponent
 {
 	/**
 	 * Gets this component's path.
@@ -74,4 +75,32 @@ public interface RequestableComponent extends IDetachable
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
 	public List<IBehavior> getBehaviors();
+
+	/**
+	 * Detaches the component.
+	 * <p>
+	 * NOTE: this method is not inherited from {@link IDetachable} on purpose. in Wicket the
+	 * assumption for a long time has been that {@link Component}s do not implement
+	 * {@link IDetachable}; doing so may lead to some very nasty side-effects. Consider {@code
+	 * AbstractPropertyModel#detach()} which looks like this:
+	 * 
+	 * <pre>
+	 * public void detach()
+	 * {
+	 * 	// Detach nested object if it's a detachable
+	 * 	if (target instanceof IDetachable)
+	 * 	{
+	 * 		((IDetachable)target).detach();
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * If the model was constructed thusly, which is quiet common: {@code new PropertyModel(this,
+	 * "person")} and {@link Component} implemented {@link IDetachable} then calling @{code
+	 * model.detach()} will cause an infinite loop with the model trying to detach the component and
+	 * the component trying to detach the model.
+	 * 
+	 * </p>
+	 */
+	public void detach();
 }

@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.ng.page.PageManager;
@@ -32,7 +34,7 @@ import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.component.PageFactory;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
@@ -566,7 +568,7 @@ public abstract class Application implements UnboundListener
 		}
 
 		public RequestablePage newPageInstance(Class<? extends RequestablePage> pageClass,
-			PageParameters pageParameters)
+			PageParametersNg pageParameters)
 		{
 			if (pageParameters == null)
 			{
@@ -580,7 +582,7 @@ public abstract class Application implements UnboundListener
 
 		public RequestablePage getPageInstance(int pageId)
 		{
-			return Page.get(pageId);
+			return Page.getPage(pageId);
 		}
 
 		public Class<? extends RequestablePage> getHomePageClass()

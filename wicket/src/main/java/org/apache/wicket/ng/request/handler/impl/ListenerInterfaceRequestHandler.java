@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -86,7 +86,7 @@ public class ListenerInterfaceRequestHandler implements PageRequestHandler, Comp
 		return pageComponentProvider.getPageClass();
 	}
 
-	public PageParameters getPageParameters()
+	public PageParametersNg getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
 	}

@@ -21,7 +21,7 @@ import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestableComponent;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
@@ -76,8 +76,8 @@ public class MountedMapperTest extends AbstractEncoderTest
         assertTrue(handler instanceof RenderPageRequestHandler);
         RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-        assertEquals(0, page.getPageParameters().getIndexedParamsCount());
-        assertTrue(page.getPageParameters().getNamedParameterKeys().isEmpty());
+        assertEquals(0, page.getPageParametersNg().getIndexedParamsCount());
+        assertTrue(page.getPageParametersNg().getNamedParameterKeys().isEmpty());
     }
 
     /**
@@ -91,7 +91,7 @@ public class MountedMapperTest extends AbstractEncoderTest
         assertTrue(handler instanceof RenderPageRequestHandler);
         RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-        PageParameters p = page.getPageParameters();
+        PageParametersNg p = page.getPageParametersNg();
         assertEquals(1, p.getIndexedParamsCount());
         assertEquals("indexed1", p.getIndexedParameter(0).toString());
 
@@ -125,7 +125,7 @@ public class MountedMapperTest extends AbstractEncoderTest
         RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         checkPage(page, 15);
 
-        PageParameters p = page.getPageParameters();
+        PageParametersNg p = page.getPageParametersNg();
         assertEquals(2, p.getIndexedParamsCount());
         assertEquals("i1", p.getIndexedParameter(0).toString());
         assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -172,7 +172,7 @@ public class MountedMapperTest extends AbstractEncoderTest
         assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
         assertEquals("foo:bar", h.getComponent().getPath());
 
-        PageParameters p = page.getPageParameters();
+        PageParametersNg p = page.getPageParametersNg();
         assertEquals(2, p.getIndexedParamsCount());
         assertEquals("i1", p.getIndexedParameter(0).toString());
         assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -269,7 +269,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
     public void testEncode1()
     {
-        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParameters());
+        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParametersNg());
         provider.setPageSource(context);
         RequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
@@ -281,7 +281,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
     public void testEncode2()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "i1");
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");
@@ -298,7 +298,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
     public void testEncode3()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "i1");
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");
@@ -318,10 +318,10 @@ public class MountedMapperTest extends AbstractEncoderTest
     public void testEncode4()
     {
         MockPage page = new MockPage(15);
-        page.getPageParameters().setIndexedParameter(0, "i1");
-        page.getPageParameters().setIndexedParameter(1, "i2");
-        page.getPageParameters().setNamedParameter("a", "b");
-        page.getPageParameters().setNamedParameter("b", "c");
+        page.getPageParametersNg().setIndexedParameter(0, "i1");
+        page.getPageParametersNg().setIndexedParameter(1, "i2");
+        page.getPageParametersNg().setNamedParameter("a", "b");
+        page.getPageParametersNg().setNamedParameter("b", "c");
         page.setCreatedBookmarkable(true);
 
         PageProvider provider = new DefaultPageProvider(page);
@@ -337,10 +337,10 @@ public class MountedMapperTest extends AbstractEncoderTest
     public void testEncode5()
     {
         MockPage page = new MockPage(15);
-        page.getPageParameters().setIndexedParameter(0, "i1");
-        page.getPageParameters().setIndexedParameter(1, "i2");
-        page.getPageParameters().setNamedParameter("a", "b");
-        page.getPageParameters().setNamedParameter("b", "c");
+        page.getPageParametersNg().setIndexedParameter(0, "i1");
+        page.getPageParametersNg().setIndexedParameter(1, "i2");
+        page.getPageParametersNg().setNamedParameter("a", "b");
+        page.getPageParametersNg().setNamedParameter("b", "c");
 
         page.setCreatedBookmarkable(false);
 
@@ -361,10 +361,10 @@ public class MountedMapperTest extends AbstractEncoderTest
     public void testEncode6()
     {
         MockPage page = new MockPage(15);
-        page.getPageParameters().setIndexedParameter(0, "i1");
-        page.getPageParameters().setIndexedParameter(1, "i2");
-        page.getPageParameters().setNamedParameter("a", "b");
-        page.getPageParameters().setNamedParameter("b", "c");
+        page.getPageParametersNg().setIndexedParameter(0, "i1");
+        page.getPageParametersNg().setIndexedParameter(1, "i2");
+        page.getPageParametersNg().setNamedParameter("a", "b");
+        page.getPageParametersNg().setNamedParameter("b", "c");
         page.setRenderCount(4);
 
         // shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
@@ -388,10 +388,10 @@ public class MountedMapperTest extends AbstractEncoderTest
     public void testEncode7()
     {
         MockPage page = new MockPage(15);
-        page.getPageParameters().setIndexedParameter(0, "i1");
-        page.getPageParameters().setIndexedParameter(1, "i2");
-        page.getPageParameters().setNamedParameter("a", "b");
-        page.getPageParameters().setNamedParameter("b", "c");
+        page.getPageParametersNg().setIndexedParameter(0, "i1");
+        page.getPageParametersNg().setIndexedParameter(1, "i2");
+        page.getPageParametersNg().setNamedParameter("a", "b");
+        page.getPageParametersNg().setNamedParameter("b", "c");
         page.setRenderCount(5);
 
         // shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
@@ -476,10 +476,10 @@ public class MountedMapperTest extends AbstractEncoderTest
         assertTrue(handler instanceof RenderPageRequestHandler);
         RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-        assertEquals(0, page.getPageParameters().getIndexedParamsCount());
-        assertTrue(page.getPageParameters().getNamedParameterKeys().size() == 2);
-        assertEquals("p1", page.getPageParameters().getNamedParameter("param1").toString());
-        assertEquals("p2", page.getPageParameters().getNamedParameter("param2").toString());
+        assertEquals(0, page.getPageParametersNg().getIndexedParamsCount());
+        assertTrue(page.getPageParametersNg().getNamedParameterKeys().size() == 2);
+        assertEquals("p1", page.getPageParametersNg().getNamedParameter("param1").toString());
+        assertEquals("p2", page.getPageParametersNg().getNamedParameter("param2").toString());
     }
 
     /**
@@ -493,15 +493,15 @@ public class MountedMapperTest extends AbstractEncoderTest
         assertTrue(handler instanceof RenderPageRequestHandler);
         RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-        PageParameters p = page.getPageParameters();
+        PageParametersNg p = page.getPageParametersNg();
         assertEquals(1, p.getIndexedParamsCount());
         assertEquals("indexed1", p.getIndexedParameter(0).toString());
 
         assertEquals(4, p.getNamedParameterKeys().size());
         assertEquals("b", p.getNamedParameter("a").toString());
         assertEquals("c", p.getNamedParameter("b").toString());
-        assertEquals("p1", page.getPageParameters().getNamedParameter("param1").toString());
-        assertEquals("p2", page.getPageParameters().getNamedParameter("param2").toString());
+        assertEquals("p1", page.getPageParametersNg().getNamedParameter("param1").toString());
+        assertEquals("p2", page.getPageParametersNg().getNamedParameter("param2").toString());
     }
 
     /**
@@ -509,7 +509,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
     public void testPlaceholderEncode2()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "i1");
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");

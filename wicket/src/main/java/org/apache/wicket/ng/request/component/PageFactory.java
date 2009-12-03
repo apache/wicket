@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.component;
 
 import org.apache.wicket.IPageFactory;
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.WicketRuntimeException;
 
@@ -67,5 +67,6 @@ public interface PageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends RequestablePage> RequestablePage newPage(final Class<C> pageClass, final PageParameters parameters);
+	<C extends RequestablePage> RequestablePage newPage(final Class<C> pageClass,
+		final PageParametersNg parameters);
 }

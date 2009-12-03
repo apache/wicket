@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.ng.Component;
-import org.apache.wicket.ng.Page;
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.RequestHandler;

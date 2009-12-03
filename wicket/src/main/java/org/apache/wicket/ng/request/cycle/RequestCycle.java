@@ -19,14 +19,14 @@ package org.apache.wicket.ng.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.ng.MetaDataEntry;
-import org.apache.wicket.ng.MetaDataKey;
+import org.apache.wicket.MetaDataEntry;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
@@ -403,7 +403,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param parameters
 	 */
 	public void setResponsePage(Class<? extends RequestablePage> pageClass,
-		PageParameters parameters)
+		PageParametersNg parameters)
 	{
 		PageProvider provider = new DefaultPageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,

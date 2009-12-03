@@ -37,6 +37,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.page.ManageablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
@@ -117,7 +119,11 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, ManageablePage
+public abstract class Page extends MarkupContainer
+	implements
+		IRedirectListener,
+		ManageablePage,
+		RequestablePage
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -214,15 +220,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** The page parameters object hat constructed this page */
 	private PageParameters parameters;
 
+
+	/** Page parameters used to construct this page */
+	private final PageParametersNg pageParameters;
+
+	/** page render count TODO WICKET-NG more javadoc */
+	private int renderCount = 0;
+
+	/** TODO WICKET-NG JAVADOC */
+	// TODO WICKET-NG convert into a flag
+	private boolean wasCreatedBookmarkable;
+
 	/**
 	 * Constructor.
 	 */
 	protected Page()
 	{
-		// A Page's id is not determined until setId is called when the Page is
-		// added to a PageMap in the Session.
-		super(null);
-		init();
+		this(null, null);
 	}
 
 	/**
@@ -234,10 +248,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	protected Page(final IModel<?> model)
 	{
-		// A Page's id is not determined until setId is called when the Page is
-		// added to a PageMap in the Session.
-		super(null, model);
-		init();
+		this(null, model);
 	}
 
 	/**
@@ -247,11 +258,33 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param parameters
 	 *            externally passed parameters
 	 * @see PageParameters
+	 * @deprecated wicket-ng use PageParametersNg constructor
 	 */
+	@Deprecated
 	protected Page(final PageParameters parameters)
 	{
 		super(null);
 		this.parameters = parameters;
+		pageParameters = new PageParametersNg();
+		init();
+	}
+
+	public Page(final PageParametersNg parameters)
+	{
+		this(parameters, null);
+	}
+
+	private Page(final PageParametersNg parameters, IModel<?> model)
+	{
+		super(null, model);
+		if (parameters == null)
+		{ // TODO WICKET-NG is this necessary or can we keep the field as null to save space?
+			pageParameters = new PageParametersNg();
+		}
+		else
+		{
+			pageParameters = parameters;
+		}
 		init();
 	}
 
@@ -1170,4 +1203,46 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return numericId;
 	}
+
+	public PageParametersNg getPageParametersNg()
+	{
+		return pageParameters;
+	}
+
+	public int getRenderCount()
+	{
+		return renderCount;
+	}
+
+	@Override
+	public boolean canCallListenerInterface()
+	{
+		return true;
+	}
+
+	/** TODO WICKET-NG javadoc */
+	public final void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
+	{
+		this.wasCreatedBookmarkable = wasCreatedBookmarkable;
+	}
+
+	/** TODO WICKET-NG javadoc */
+	public final boolean wasCreatedBookmarkable()
+	{
+		return wasCreatedBookmarkable;
+	}
+
+	public void renderPage()
+	{
+		++renderCount;
+		render();
+	}
+
+	/** TODO WICKET-NG is this really needed? can we remove? */
+	public static Page getPage(int id)
+	{
+		Application app = Application.get();
+		return (Page)app.getPageManager().getPage(id);
+	}
+
 }

@@ -20,8 +20,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.request.component.PageFactory;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.util.lang.Generics;
 
@@ -56,10 +57,10 @@ public final class DefaultPageFactory implements PageFactory
 		catch (NoSuchMethodException e)
 		{
 			// a bit of a hack here..
-			Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+			Constructor<?> constructor = constructor(pageClass, PageParametersNg.class);
 			if (constructor != null)
 			{
-				return newPage(constructor, new PageParameters());
+				return newPage(constructor, new PageParametersNg());
 			}
 			else
 			{
@@ -70,13 +71,13 @@ public final class DefaultPageFactory implements PageFactory
 	}
 
 	/**
-	 * @see PageFactory#newPage(Class, PageParameters)
+	 * @see PageFactory#newPage(Class, PageParametersNg)
 	 */
 	public final <C extends RequestablePage> Page newPage(final Class<C> pageClass,
-		final PageParameters parameters)
+		final PageParametersNg parameters)
 	{
 		// Try to get constructor that takes PageParameters
-		Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+		Constructor<?> constructor = constructor(pageClass, PageParametersNg.class);
 
 		// If we got a PageParameters constructor
 		if (constructor != null)
@@ -102,7 +103,7 @@ public final class DefaultPageFactory implements PageFactory
 	 *         argument type.
 	 */
 	private final <C extends RequestablePage> Constructor<?> constructor(final Class<C> pageClass,
-		final Class<PageParameters> argumentType)
+		final Class<PageParametersNg> argumentType)
 	{
 		// Get constructor for page class from cache
 		Constructor<?> constructor = constructorForClass.get(pageClass);
@@ -170,13 +171,13 @@ public final class DefaultPageFactory implements PageFactory
 		}
 	}
 
-	private Page processPage(Page page, PageParameters pageParameters)
+	private Page processPage(Page page, PageParametersNg pageParameters)
 	{
 		// the page might have not propagate page parameters from constructor. if that's the case
 		// we force the parameters
-		if (pageParameters != null && page.getPageParameters() != pageParameters)
+		if (pageParameters != null && page.getPageParametersNg() != pageParameters)
 		{
-			page.getPageParameters().assign(pageParameters);
+			page.getPageParametersNg().assign(pageParameters);
 		}
 
 		page.setWasCreatedBookmarkable(true);

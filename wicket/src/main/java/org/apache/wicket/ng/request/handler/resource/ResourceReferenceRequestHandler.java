@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.handler.resource;
 
 import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Checks;
@@ -30,7 +30,7 @@ import org.apache.wicket.util.lang.Checks;
 public class ResourceReferenceRequestHandler implements RequestHandler
 {
 	private final ResourceReference resourceReference;
-	private final PageParameters pageParameters;
+	private final PageParametersNg pageParameters;
 	
 	/**
 	 * Construct.
@@ -38,7 +38,7 @@ public class ResourceReferenceRequestHandler implements RequestHandler
 	 * @param resourceReference
 	 * @param pageParameters
 	 */
-	public ResourceReferenceRequestHandler(ResourceReference resourceReference, PageParameters pageParameters)
+	public ResourceReferenceRequestHandler(ResourceReference resourceReference, PageParametersNg pageParameters)
 	{
 		Checks.argumentNotNull(resourceReference, "resourceReference");
 
@@ -57,7 +57,7 @@ public class ResourceReferenceRequestHandler implements RequestHandler
 	/**
 	 * @return page parameters
 	 */
-	public PageParameters getPageParameters()
+	public PageParametersNg getPageParameters()
 	{
 		return pageParameters;
 	}

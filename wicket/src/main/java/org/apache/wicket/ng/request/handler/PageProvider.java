@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.request.component.PageExpiredException;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.mapper.StalePageException;
 
@@ -45,11 +45,11 @@ public interface PageProvider
 	public abstract RequestablePage getPageInstance();
 
 	/**
-	 * Returns {@link PageParameters} of the page.
+	 * Returns {@link PageParametersNg} of the page.
 	 * 
 	 * @return page parameters
 	 */
-	public abstract PageParameters getPageParameters();
+	public abstract PageParametersNg getPageParameters();
 
 	/**
 	 * Returns class of the page.

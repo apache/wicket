@@ -24,7 +24,7 @@ package org.apache.wicket;
  * @param <T>
  *            The meta data key type
  */
-final class MetaDataEntry<T> implements IClusterable
+public final class MetaDataEntry<T> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

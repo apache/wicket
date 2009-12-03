@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.ng.markup.html.link;
 
-import org.apache.wicket.ng.Component;
+
+import org.apache.wicket.Component;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
@@ -58,8 +59,7 @@ public abstract class Link extends Component implements ILinkListener
 		return bookmarkable;
 	}
 
-	@Override
-	public void renderComponent()
+	public void renderComponent2()
 	{
 		Response response = RequestCycle.get().getResponse();
 		response.write("<p><a href=\"" + Strings.escapeMarkup(getURL()) + "\">" +

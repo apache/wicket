@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 
 /**
@@ -45,6 +45,6 @@ public interface PageSource
 	 * @return new page instance
 	 */
 	public RequestablePage newPageInstance(Class<? extends RequestablePage> pageClass,
-		PageParameters pageParameters);
+		PageParametersNg pageParameters);
 
 }

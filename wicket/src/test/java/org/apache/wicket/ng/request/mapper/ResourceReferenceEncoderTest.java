@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
 
@@ -311,7 +311,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	 */
     public void testEncode2()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "X");
         parameters.addNamedParameter("p1", "v1");
         parameters.addNamedParameter("p2", "v2");
@@ -338,7 +338,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	 */
     public void testEncode4()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "X");
         parameters.addNamedParameter("p1", "v1");
         parameters.addNamedParameter("p2", "v2");
@@ -366,7 +366,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	 */
     public void testEncode6()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "X");
         parameters.addNamedParameter("p1", "v1");
         parameters.addNamedParameter("p2", "v2");
@@ -394,7 +394,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	 */
     public void testEncode8()
     {
-        PageParameters parameters = new PageParameters();
+        PageParametersNg parameters = new PageParametersNg();
         parameters.setIndexedParameter(0, "X");
         parameters.addNamedParameter("p1", "v1");
         parameters.addNamedParameter("p2", "v2");

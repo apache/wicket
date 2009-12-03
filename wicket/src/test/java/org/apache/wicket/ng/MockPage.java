@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng;
 
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 
 /**
@@ -75,9 +75,9 @@ public class MockPage extends MockComponent implements RequestablePage
 		return pageId;
 	}	
 	
-	private PageParameters pageParameters = new PageParameters();
+	private PageParametersNg pageParameters = new PageParametersNg();
 
-	public PageParameters getPageParameters()
+	public PageParametersNg getPageParametersNg()
 	{
 		return pageParameters;
 	}		

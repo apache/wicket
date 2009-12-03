@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
@@ -85,7 +85,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReferenceAttributes attributes = getResourceReferenceAttributes(url);
 
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request,
+			PageParametersNg pageParameters = extractPageParameters(request,
 				url.getSegments().size(), pageParametersEncoder);
 
 			Class<?> scope = resolveClass(className);
@@ -136,10 +136,10 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				url.getSegments().add(name);
 			}
 			encodeResourceReferenceAttributes(url, reference);
-			PageParameters parameters = referenceRequestHandler.getPageParameters();
+			PageParametersNg parameters = referenceRequestHandler.getPageParameters();
 			if (parameters != null)
 			{
-				parameters = new PageParameters(parameters);
+				parameters = new PageParametersNg(parameters);
 				// need to remove indexed parameters otherwise the URL won't be able to decode
 				parameters.clearIndexedParameters();
 				url = encodePageParameters(url, parameters, pageParametersEncoder);

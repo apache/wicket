@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.markup.html.form;
 
-import org.apache.wicket.ng.Component;
+import org.apache.wicket.Component;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -40,8 +40,8 @@ public class Form extends Component implements IFormSubmitListener
 		System.out.println(r.getRequestParameters().getParameterValue("key1"));
 	}
 
-	@Override
-	public void renderComponent()
+
+	public void renderComponent2()
 	{
 		Response response = RequestCycle.get().getResponse();
 
@@ -78,5 +78,10 @@ public class Form extends Component implements IFormSubmitListener
 			handler = new ListenerInterfaceRequestHandler(provider, IFormSubmitListener.INTERFACE);
 		}
 		return RequestCycle.get().renderUrlFor(handler);
+	}
+
+	@Override
+	protected void onRender()
+	{
 	}
 }

@@ -20,7 +20,7 @@ import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
@@ -58,7 +58,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	protected static final class UrlInfo
 	{
 		private final PageComponentInfo pageComponentInfo;
-		private final PageParameters pageParameters;
+		private final PageParametersNg pageParameters;
 		private final Class<? extends RequestablePage> pageClass;
 
 		/**
@@ -72,7 +72,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		 *            optional parameter providing pageParameters
 		 */
 		public UrlInfo(PageComponentInfo pageComponentInfo, Class<? extends RequestablePage> pageClass,
-				PageParameters pageParameters)
+				PageParametersNg pageParameters)
 		{
 			Checks.argumentNotNull(pageClass, "pageClass");
 			
@@ -100,7 +100,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		/**
 		 * @return PageParameters instance (never <code>null</code>)
 		 */
-		public PageParameters getPageParameters()
+		public PageParametersNg getPageParameters()
 		{
 			return pageParameters;
 		}
@@ -140,7 +140,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 */
 	public abstract int getCompatibilityScore(Request request);
 	
-	private RequestHandler processBookmarkable(Class<? extends RequestablePage> pageClass, PageParameters pageParameters)
+	private RequestHandler processBookmarkable(Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageClass, pageParameters);
 		provider.setPageSource(getContext());
@@ -148,7 +148,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	}
 
 	private RequestHandler processHybrid(PageInfo pageInfo, Class<? extends RequestablePage> pageClass,
-			PageParameters pageParameters, Integer renderCount)
+			PageParametersNg pageParameters, Integer renderCount)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass, pageParameters,
 				renderCount);
@@ -157,7 +157,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	}
 
 	private RequestHandler processListener(PageComponentInfo pageComponentInfo, Class<? extends RequestablePage> pageClass,
-			PageParameters pageParameters)
+			PageParametersNg pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
@@ -191,7 +191,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		{
 			PageComponentInfo info = urlInfo.getPageComponentInfo();
 			Class<? extends RequestablePage> pageClass = urlInfo.getPageClass();
-			PageParameters pageParameters = urlInfo.getPageParameters();
+			PageParametersNg pageParameters = urlInfo.getPageParameters();
 
 			if (info == null || info.getPageInfo().getPageId() == null)
 			{

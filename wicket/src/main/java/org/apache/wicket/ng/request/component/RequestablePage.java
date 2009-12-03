@@ -64,11 +64,11 @@ public interface RequestablePage extends RequestableComponent, ManageablePage
 
 
     /**
-     * Returns the {@link PageParameters} for the page. Each bookmarkable page instance should have
-     * {@link PageParameters} associated with it. The page parameters are initialized from URL when
+     * Returns the {@link PageParametersNg} for the page. Each bookmarkable page instance should have
+     * {@link PageParametersNg} associated with it. The page parameters are initialized from URL when
      * page is created and are updated on every page render request.
      * 
      * @return page parameters or <code>null</code>
      */
-    public PageParameters getPageParameters();
+    public PageParametersNg getPageParametersNg();
 }
