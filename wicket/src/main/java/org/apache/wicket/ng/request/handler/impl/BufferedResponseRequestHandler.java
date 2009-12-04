@@ -18,8 +18,8 @@ package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.response.BufferedWebResponse;
-import org.apache.wicket.ng.request.response.WebResponse;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.WebResponse;
 
 /**
  * Handler that renders a {@link BufferedWebResponse}.

@@ -19,10 +19,10 @@ package org.apache.wicket.ng.resource;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
-import org.apache.wicket.ng.request.response.Response;
 import org.apache.wicket.util.lang.Checks;
 
 /**

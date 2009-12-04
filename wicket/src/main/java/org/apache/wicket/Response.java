@@ -239,6 +239,15 @@ public abstract class Response
 	public abstract void write(final CharSequence string);
 
 	/**
+	 * Writes the buffer to output.
+	 * 
+	 * @param array
+	 * @throws IllegalStateException
+	 *             if {@link #write(CharSequence)} has already been called on this instance
+	 */
+	public abstract void write(byte[] array);
+
+	/**
 	 * Writes the given strings to the Response subclass output destination.
 	 * 
 	 * @param string

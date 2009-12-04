@@ -184,7 +184,7 @@ public class WebResponse extends Response
 	 * @return True if this response is going to redirect the user agent
 	 */
 	@Override
-	public final boolean isRedirect()
+	public boolean isRedirect()
 	{
 		return redirect;
 	}
@@ -275,7 +275,7 @@ public class WebResponse extends Response
 	 *            The mime type
 	 */
 	@Override
-	public final void setContentType(final String mimeType)
+	public void setContentType(final String mimeType)
 	{
 		if (httpServletResponse != null)
 		{
@@ -327,6 +327,20 @@ public class WebResponse extends Response
 		if (httpServletResponse != null)
 		{
 			httpServletResponse.setLocale(locale);
+		}
+	}
+
+
+	@Override
+	public void write(byte[] array)
+	{
+		try
+		{
+			httpServletResponse.getOutputStream().write(array);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
 		}
 	}
 
@@ -432,6 +446,20 @@ public class WebResponse extends Response
 	}
 
 	/**
+	 * Convenience method for setting the content-disposition:in;ine header. This header is used if
+	 * the response should be shown embedded in browser window while having custom file name when
+	 * user saves the response. browser.
+	 * 
+	 * @param filename
+	 *            file name of the attachment
+	 */
+	public void setInlineHeader(String filename)
+	{
+		setHeader("Content-Disposition", "inline" +
+			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+	}
+
+	/**
 	 * Is the request, which matches this response an ajax request.
 	 * 
 	 * @return True if the request is an ajax request.
@@ -451,4 +479,16 @@ public class WebResponse extends Response
 	{
 		this.ajax = ajax;
 	}
+
+	/**
+	 * Sets the status code for this response.
+	 * 
+	 * @param sc
+	 *            status code
+	 */
+	public void setStatus(int sc)
+	{
+		httpServletResponse.setStatus(sc);
+	}
+
 }

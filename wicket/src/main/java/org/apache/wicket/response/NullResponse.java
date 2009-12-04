@@ -70,4 +70,9 @@ public class NullResponse extends Response
 			}
 		};
 	}
+
+	@Override
+	public void write(byte[] array)
+	{
+	}
 }

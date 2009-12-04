@@ -125,4 +125,17 @@ public final class FileResponse extends Response
 		}
 		return printWriter;
 	}
+
+	@Override
+	public void write(byte[] array)
+	{
+		try
+		{
+			out.write(array);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to write to file " + file, e);
+		}
+	}
 }

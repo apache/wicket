@@ -63,4 +63,10 @@ public class ConsoleResponse extends Response
 	{
 		return System.out;
 	}
+
+	@Override
+	public void write(byte[] array)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

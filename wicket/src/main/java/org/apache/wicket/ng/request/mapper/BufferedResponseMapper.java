@@ -24,7 +24,7 @@ import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.BufferedResponseRequestHandler;
-import org.apache.wicket.ng.request.response.BufferedWebResponse;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
 
 /**
  * Encoder that intercepts requests for which there is already stored buffer with rendered data.

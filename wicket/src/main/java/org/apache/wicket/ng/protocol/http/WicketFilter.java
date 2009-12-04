@@ -33,7 +33,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.response.ServletWebResponse;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WicketServlet;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -136,7 +136,7 @@ public class WicketFilter implements Filter
 			if (checkForTrailingSlash(httpServletRequest, httpServletResponse, filterPath))
 			{
 				ServletWebRequest req = new ServletWebRequest(httpServletRequest, filterPath);
-				ServletWebResponse resp = new ServletWebResponse(httpServletResponse);
+				WebResponse resp = new WebResponse(httpServletResponse);
 
 				RequestCycle requestCycle = webApplication.createRequestCycle(req, resp);
 

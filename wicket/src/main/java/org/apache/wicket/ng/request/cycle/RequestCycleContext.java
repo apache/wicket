@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.ng.request.cycle;
 
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestMapper;
-import org.apache.wicket.ng.request.response.Response;
+
 
 /**
  * Represents the context for the request cycle. This class is mainly a grouping parameter for the

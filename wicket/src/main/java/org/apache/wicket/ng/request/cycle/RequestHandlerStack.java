@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

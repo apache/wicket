@@ -86,4 +86,10 @@ public class StringResponse extends Response
 	{
 		throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
 	}
+
+	@Override
+	public void write(byte[] array)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

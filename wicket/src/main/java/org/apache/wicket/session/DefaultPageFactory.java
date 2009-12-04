@@ -27,6 +27,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.util.lang.Generics;
 
 
@@ -71,7 +73,9 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
+	 * @deprecated
 	 */
+	@Deprecated
 	public final <C extends Page> Page newPage(final Class<C> pageClass, PageParameters parameters)
 	{
 		// If no parameters are provided, try the default constructor first, than the PageParameter
@@ -179,7 +183,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             argument.
 	 */
 	private final Page createPage(final Constructor<? extends Page> constructor,
-		final PageParameters argument)
+		final Object argument)
 	{
 		try
 		{
@@ -219,8 +223,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @param argument
 	 * @return description
 	 */
-	private String createDescription(Constructor<? extends Page> constructor,
-		PageParameters argument)
+	private String createDescription(Constructor<? extends Page> constructor, Object argument)
 	{
 		if (argument != null)
 		{
@@ -231,5 +234,34 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			return "Can't instantiate page using constructor " + constructor;
 		}
+	}
+
+	public <C extends Page> RequestablePage newPage(Class<C> pageClass, PageParametersNg parameters)
+	{
+		// If no parameters are provided, try the default constructor first, than the PageParameter
+		// constructor with empty parameter list.
+		if (parameters == null)
+		{
+			return newPage(pageClass);
+		}
+
+		// If parameters not null, than try to get constructor that takes PageParameters
+		Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
+		if (constructor != null)
+		{
+			// return new Page(parameters)
+			return createPage(constructor, parameters);
+		}
+
+		// No constructor with PageParameters found. Try default constructor.
+		constructor = constructor(pageClass);
+		if (constructor != null)
+		{
+			// return new Page()
+			return createPage(constructor, null);
+		}
+
+		throw new WicketRuntimeException("Unable to create page from " + pageClass +
+			". Class does neither have a constructor with PageParameter nor a default constructor");
 	}
 }

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
@@ -31,7 +32,6 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.response.Response;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

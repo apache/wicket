@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng.request.handler.impl.render;
 
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.WebApplication;
@@ -24,10 +25,9 @@ import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
-import org.apache.wicket.ng.request.response.BufferedWebResponse;
-import org.apache.wicket.ng.request.response.Response;
-import org.apache.wicket.ng.request.response.WebResponse;
 import org.apache.wicket.ng.settings.RequestCycleSettings;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,9 +114,9 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		BufferedWebResponse response = new BufferedWebResponse()
 		{
 			@Override
-			public String encodeURL(String url)
+			public String encodeURL(CharSequence url)
 			{
-				return originalResponse.encodeURL(url);
+				return originalResponse.encodeURL(url).toString();
 			}
 		};
 
@@ -141,7 +141,7 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
-		response.sendRedirect(relativeUrl);
+		response.redirect(relativeUrl);
 	}
 
 	@Override

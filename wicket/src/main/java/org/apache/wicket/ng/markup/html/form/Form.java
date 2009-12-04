@@ -17,13 +17,13 @@
 package org.apache.wicket.ng.markup.html.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Response;
 import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
-import org.apache.wicket.ng.request.response.Response;
 
 public class Form extends Component implements IFormSubmitListener
 {

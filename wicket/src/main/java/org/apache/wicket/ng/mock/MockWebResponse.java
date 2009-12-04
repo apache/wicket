@@ -18,6 +18,7 @@ package org.apache.wicket.ng.mock;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,10 +29,10 @@ import java.util.Set;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.response.WebResponse;
+import org.apache.wicket.protocol.http.WebResponse;
 
 /**
- * Mocked {@link WebResponse}.
+ * Mocked {@link WebResponse2}.
  * 
  * @author Matej Knopp
  */
@@ -70,7 +71,7 @@ public class MockWebResponse extends WebResponse
 	private String redirectUrl;
 
 	@Override
-	public void sendRedirect(String url)
+	public void redirect(String url)
 	{
 		redirectUrl = url;
 	}
@@ -86,6 +87,7 @@ public class MockWebResponse extends WebResponse
 	/**
 	 * @return <code>true</code> if redirect URL was set, <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean isRedirect()
 	{
 		return redirectUrl != null;
@@ -205,9 +207,9 @@ public class MockWebResponse extends WebResponse
 	}
 
 	@Override
-	public String encodeURL(String url)
+	public String encodeURL(CharSequence url)
 	{
-		return url;
+		return url.toString();
 	}
 
 	private StringBuilder textResponse;
@@ -268,5 +270,11 @@ public class MockWebResponse extends WebResponse
 		{
 			return binaryResponse.toByteArray();
 		}
+	}
+
+	@Override
+	public OutputStream getOutputStream()
+	{
+		throw new UnsupportedOperationException();
 	}
 }
