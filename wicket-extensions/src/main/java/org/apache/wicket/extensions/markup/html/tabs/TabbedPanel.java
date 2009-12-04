@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.tabs;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -382,6 +383,11 @@ public class TabbedPanel extends Panel
 		if (tabsVisibilityCache == null)
 		{
 			tabsVisibilityCache = new Boolean[tabs.size()];
+		}
+
+		if (tabsVisibilityCache.length < tabIndex + 1)
+		{
+			tabsVisibilityCache = Arrays.copyOf(tabsVisibilityCache, tabIndex + 1);
 		}
 
 		if (tabsVisibilityCache.length > 0)
