@@ -140,7 +140,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		}
 
 		String beanName = filter.getFilterConfig().getInitParameter("applicationBean");
-		return createApplication(additionalContext, beanName);
+		return createApplication((additionalContext != null) ? additionalContext : ac, beanName);
 	}
 
 	private WebApplication createApplication(ApplicationContext ac, String beanName)
