@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The Model Object type
  */
-public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T>
+public abstract class LoadableDetachableModel<T> implements IModel<T>
 {
 	/**
 	 * 
@@ -90,7 +90,6 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
-	@Override
 	public void detach()
 	{
 		if (attached)
@@ -113,7 +112,6 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	@Override
 	public T getObject()
 	{
 		if (!attached)
@@ -176,4 +174,19 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	protected void onDetach()
 	{
 	}
+
+
+	/**
+	 * Manually loads the model with the specified object. Subsequent calls to {@link #getObject()}
+	 * will return {@code object} until {@link #detach()} is called.
+	 * 
+	 * @param object
+	 *            The object to set into the model
+	 */
+	public void setObject(final T object)
+	{
+		attached = true;
+		transientModelObject = object;
+	}
+
 }
