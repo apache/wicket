@@ -160,19 +160,16 @@ public class ModelToStringTest extends WicketTestCase
 	public void testLoadableDetachableModel()
 	{
 		LoadableDetachableModel<String> model = new MyLoadableDetachableModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]" +
-			":attached=false" + ":tempModelObject=[null]";
-		assertEquals(expected, model.toString());
+		assertTrue(model.toString().contains(":attached=false"));
+		assertTrue(model.toString().contains(":tempModelObject=[null]"));
 
 		model.getObject();
-		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=true" +
-			":tempModelObject=[foo]";
-		assertEquals(expected, model.toString());
+		assertTrue(model.toString().contains(":attached=true"));
+		assertTrue(model.toString().contains(":tempModelObject=[foo]"));
 
 		model.detach();
-		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=false" +
-			":tempModelObject=[null]";
-		assertEquals(expected, model.toString());
+		assertTrue(model.toString().contains(":attached=false"));
+		assertTrue(model.toString().contains(":tempModelObject=[null]"));
 	}
 
 
