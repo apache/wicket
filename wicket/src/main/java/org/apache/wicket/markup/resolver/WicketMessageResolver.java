@@ -376,6 +376,10 @@ public class WicketMessageResolver implements IComponentResolver
 								component.render();
 								markupStream.skipComponent();
 							}
+							else
+							{
+								markupStream.next();
+							}
 							childTags.put(id, response.getBuffer());
 						}
 						finally
