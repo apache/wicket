@@ -227,7 +227,9 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 			}
 			else
 			{
-				response.detectContentType(requestCycle, requestCycle.getRequest().getURL());
+				response.detectContentType(requestCycle, requestCycle.getRequest()
+					.getUrl()
+					.toString());
 			}
 		}
 

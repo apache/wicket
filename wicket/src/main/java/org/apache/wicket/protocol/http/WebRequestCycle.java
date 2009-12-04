@@ -273,7 +273,7 @@ public class WebRequestCycle extends RequestCycle
 				// we haven't done the redirect yet; record that we will be
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-				String url = "/" + getRequest().getURL();
+				String url = "/" + getRequest().getUrl();
 				throw new RestartResponseException(newBrowserInfoPage(url));
 			}
 			// if we get here, the redirect already has been done; clear

@@ -39,7 +39,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.request.IRequestCycleProcessor;
@@ -235,7 +235,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		private final Request realRequest;
 
-		private final String url;
+		private final Url url;
 
 		/**
 		 * Construct.
@@ -243,13 +243,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		 * @param realRequest
 		 * @param url
 		 */
-		public FormDispatchRequest(final Request realRequest, final String url)
+		public FormDispatchRequest(final Request realRequest, final Url url)
 		{
 			this.realRequest = realRequest;
 			this.url = realRequest.decodeURL(url);
-
-			String queryString = this.url.substring(this.url.indexOf("?") + 1);
-			RequestUtils.decodeUrlParameters(queryString, params);
+			this.url.putQueryParameters(params);
 		}
 
 		/**
@@ -316,10 +314,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 
 		/**
-		 * @see org.apache.wicket.Request#getURL()
+		 * @see org.apache.wicket.Request#getUrl()
 		 */
 		@Override
-		public String getURL()
+		public Url getUrl()
 		{
 			return url;
 		}
@@ -1157,7 +1155,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		RequestCycle rc = RequestCycle.get();
 		IRequestCycleProcessor processor = rc.getProcessor();
 		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
-			new FormDispatchRequest(rc.getRequest(), url));
+			new FormDispatchRequest(rc.getRequest(), Url.parse(url)));
 		IRequestTarget rt = processor.resolve(rc, requestParameters);
 		if (rt instanceof IListenerInterfaceRequestTarget)
 		{

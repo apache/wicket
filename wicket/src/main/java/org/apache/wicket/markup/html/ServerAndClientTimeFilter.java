@@ -77,7 +77,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 				JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		log.info(timeTaken + "ms server time taken for request " +
-			RequestCycle.get().getRequest().getURL() + " response size: " + responseBuffer.length());
+			RequestCycle.get().getRequest().getUrl() + " response size: " + responseBuffer.length());
 		return responseBuffer;
 	}
 }

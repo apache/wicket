@@ -26,6 +26,7 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
@@ -114,7 +115,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public RequestParameters decode(final Request request)
 	{
-		String url = request.decodeURL(request.getURL());
+		String url = request.decodeURL(request.getUrl()).toString();
 		String decodedQueryParams = decodeURL(url);
 		if (decodedQueryParams != null)
 		{
@@ -395,7 +396,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		private final Request request;
 
 		/** The new URL with the 'x' param decoded */
-		private final String url;
+		private final Url url;
 
 		/**
 		 * The new parameter map with the 'x' param removed and the 'new' one included
@@ -447,7 +448,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			{
 				urlBuf.append(url.substring(pos2));
 			}
-			this.url = urlBuf.toString();
+			this.url = Url.parse(urlBuf.toString());
 		}
 
 		/**
@@ -562,10 +563,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 
 		/**
-		 * @see org.apache.wicket.Request#getURL()
+		 * @see org.apache.wicket.Request#getUrl()
 		 */
 		@Override
-		public String getURL()
+		public Url getUrl()
 		{
 			return url;
 		}

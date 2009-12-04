@@ -36,6 +36,7 @@ import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.INewBrowserWindowListener;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
@@ -302,12 +303,12 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		// NOTE: we NEED to put the '/' in front as otherwise some versions
 		// of application servers (e.g. Jetty 5.1.x) will fail for requests
 		// like '/mysubdir/myfile.css'
-		String url = requestCycle.getRequest().getURL();
-		if ((url.length() > 0 && url.charAt(0) != '/') || url.length() == 0)
+		Url url = new Url(requestCycle.getRequest().getUrl());
+		if (!url.isAbsolute())
 		{
-			url = '/' + url;
+			url.makeAbsolute();
 		}
-		return new WebExternalResourceRequestTarget(url);
+		return new WebExternalResourceRequestTarget(url.toString());
 	}
 
 	/**
@@ -461,9 +462,6 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		// Does page exist?
 		if (page != null)
 		{
-			// Set page on request
-			requestCycle.getRequest().setPage(page);
-
 			// see whether this resolves to a component call or just the page
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)

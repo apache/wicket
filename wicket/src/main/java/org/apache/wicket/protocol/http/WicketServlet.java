@@ -169,7 +169,7 @@ public class WicketServlet extends HttpServlet
 		// The ServletWebRequest is created here to avoid code duplication. The getURL call doesn't
 		// depend on anything wicket specific
 		ServletWebRequest req = new ServletWebRequest(request);
-		String url = req.getURL();
+		String url = req.getUrl().toString();
 
 		// WICKET-2185: strip of query string
 		if (url.indexOf('?') != -1)

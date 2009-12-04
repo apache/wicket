@@ -23,10 +23,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
@@ -62,8 +61,6 @@ public class ServletWebRequest extends WebRequest
 
 	/** Marks this request as an ajax request. */
 	private boolean ajax;
-
-	private boolean forceNewVersion = false;
 
 	/**
 	 * Protected constructor.
@@ -382,10 +379,10 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * @see org.apache.wicket.Request#getURL()
+	 * @see org.apache.wicket.Request#getUrl()
 	 */
 	@Override
-	public String getURL()
+	public Url getUrl()
 	{
 		/*
 		 * Servlet 2.3 specification :
@@ -419,7 +416,7 @@ public class ServletWebRequest extends WebRequest
 			// Remove leading '/'
 			url = url.substring(1);
 		}
-		return url;
+		return Url.parse(url);
 	}
 
 	/**
@@ -455,39 +452,6 @@ public class ServletWebRequest extends WebRequest
 		this.ajax = ajax;
 	}
 
-	/**
-	 * This method by default calls isAjax(), wicket ajax request do have an header set. And for all
-	 * the ajax request the versioning should be merged with the previous one. And when it sees that
-	 * the current request is a redirect to page request the version will also be merged with the
-	 * previous one because refresh in the browser or redirects to a page shouldn't generate a new
-	 * version.
-	 * 
-	 * @see org.apache.wicket.Request#mergeVersion()
-	 */
-	@Override
-	public boolean mergeVersion()
-	{
-		if (forceNewVersion == true)
-		{
-			return false;
-		}
-		else
-		{
-			RequestListenerInterface intface = getRequestParameters().getInterface();
-			return isAjax() || intface == IRedirectListener.INTERFACE;
-		}
-	}
-
-	/**
-	 * Allows to create new versions even on AJAX request. This can come handly when the AJAX
-	 * response does a real redirect.
-	 * 
-	 * @param forceNewVersion
-	 */
-	public void setForceNewVersion(boolean forceNewVersion)
-	{
-		this.forceNewVersion = forceNewVersion;
-	}
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)

@@ -18,8 +18,10 @@ package org.apache.wicket.ng.request;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.ng.protocol.http.WicketURLDecoder;
 import org.apache.wicket.ng.protocol.http.WicketURLEncoder;
@@ -70,6 +72,11 @@ public final class Url implements Serializable
 	{
 	}
 
+	public Url(String string)
+	{
+
+	}
+
 	/**
 	 * Construct.
 	 * 
@@ -117,6 +124,31 @@ public final class Url implements Serializable
 	public List<QueryParameter> getQueryParameters()
 	{
 		return parameters;
+	}
+
+	/**
+	 * Populates the provided {@code params} map with query parameters
+	 * 
+	 * @deprecated the code should be using proper QuaryParameter oriented method, this is just to
+	 *             help ease migration
+	 */
+	@Deprecated
+	public void putQueryParameters(Map<String, String[]> params)
+	{
+		for (QueryParameter param : getQueryParameters())
+		{
+			String[] array = params.get(param.getName());
+			if (array == null)
+			{
+				array = new String[] { param.getValue() };
+			}
+			else
+			{
+				array = Arrays.copyOf(array, array.length + 1);
+				array[array.length - 1] = param.getValue();
+			}
+			params.put(param.getName(), array);
+		}
 	}
 
 	/**
@@ -533,5 +565,15 @@ public final class Url implements Serializable
 				this.segments.add(s);
 			}
 		}
+	}
+
+	public void makeAbsolute()
+	{
+		if (isAbsolute())
+		{
+			return;
+		}
+
+		segments.add(null);
 	}
 }

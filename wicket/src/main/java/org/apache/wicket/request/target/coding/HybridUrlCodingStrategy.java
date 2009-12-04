@@ -254,7 +254,6 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			if ((page != null) && page.getClass().equals(pageClassRef.get()))
 			{
 				requestParameters.setInterfaceName(IRedirectListener.INTERFACE.getName());
-				RequestCycle.get().getRequest().setPage(page);
 				return new PageRequestTarget(page);
 			}
 			else

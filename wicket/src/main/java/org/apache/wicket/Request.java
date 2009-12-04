@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
@@ -35,9 +36,6 @@ import org.apache.wicket.request.RequestParameters;
  */
 public abstract class Request
 {
-	/** Any Page decoded for this request */
-	private Page page;
-
 	/** the type safe request parameters object for this request. */
 	private RequestParameters requestParameters;
 
@@ -56,7 +54,7 @@ public abstract class Request
 	 *            The URL to decode
 	 * @return The decoded url
 	 */
-	public String decodeURL(final String url)
+	public Url decodeURL(final Url url)
 	{
 		return url;
 	}
@@ -65,14 +63,6 @@ public abstract class Request
 	 * @return The locale for this request
 	 */
 	public abstract Locale getLocale();
-
-	/**
-	 * @return Any Page for this request
-	 */
-	public Page getPage()
-	{
-		return page;
-	}
 
 	/**
 	 * Gets a given (query) parameter by name.
@@ -191,30 +181,7 @@ public abstract class Request
 	 * 
 	 * @return The relative request URL for local use
 	 */
-	public abstract String getURL();
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param page
-	 *            The Page for this request
-	 */
-	public void setPage(final Page page)
-	{
-		this.page = page;
-	}
-
-	/**
-	 * A request can say if the current request should generated a new version number. If this
-	 * returns true, then all the changes on a page that has versioning enabled is merged with the
-	 * latest version. Else it will just create a new version.
-	 * 
-	 * @return true if the version must be merged with the previous latest.
-	 */
-	public boolean mergeVersion()
-	{
-		return false;
-	}
+	public abstract Url getUrl();
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -222,7 +189,7 @@ public abstract class Request
 	@Override
 	public String toString()
 	{
-		return "Request[url=" + getURL() + "]";
+		return "Request[url=" + getUrl() + "]";
 	}
 
 	/**
