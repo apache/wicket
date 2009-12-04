@@ -17,6 +17,7 @@
 package org.apache.wicket.examples;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.wicket.examples.ajax.prototype.AjaxTest;
@@ -77,42 +78,34 @@ public final class AllTests extends TestSuite
 		return new JettyTestCaseDecorator(suite);
 	}
 
-	/**
-	 * Construct.
-	 */
 	public AllTests()
 	{
 		super();
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(Class<?> arg0)
+	public AllTests(Class<? extends TestCase> theClass, String name)
 	{
-		super(arg0);
+		super(theClass, name);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public AllTests(Class<?> arg0, String arg1)
+	public AllTests(Class<? extends TestCase> theClass)
 	{
-		super(arg0, arg1);
+		super(theClass);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(String arg0)
+	public AllTests(Class<? extends TestCase>[] classes, String name)
 	{
-		super(arg0);
+		super(classes, name);
 	}
+
+	public AllTests(Class<?>... classes)
+	{
+		super(classes);
+	}
+
+	public AllTests(String name)
+	{
+		super(name);
+	}
+
 }
