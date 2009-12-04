@@ -24,13 +24,7 @@ import org.apache.wicket.markup.html.JavascriptPackageResource;
 /**
  * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is specialized on
  * package resources. If you use this class, you have to pre-register the resources you want to
- * contribute. A shortcut for common cases is to call {@link #forCss(Class, String)} to contribute a
- * package css file or {@link #forJavaScript(Class, String)} to contribute a packaged javascript
- * file. For instance:
- * 
- * <pre>
- * add(HeaderContributor.forCss(MyPanel.class, &quot;mystyle.css&quot;));
- * </pre>
+ * contribute.
  * 
  * @author Eelco Hillenius
  * @author Matej Knopp
