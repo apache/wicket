@@ -23,7 +23,7 @@ import org.apache.wicket.util.string.UrlUtils;
 
 /**
  * Implementations of this interface are responsible for digesting the incoming request and creating
- * a suitable {@link org.apache.wicket.request.RequestParameters} object for it, as well as creating
+ * a suitable {@link org.apache.wicket.request.ObsoleteRequestParameters} object for it, as well as creating
  * url representations for request targets.
  * 
  * @author Eelco Hillenius
@@ -37,7 +37,7 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 *            the incoming request
 	 * @return a request parameters object that corresponds to the request
 	 */
-	RequestParameters decode(Request request);
+	ObsoleteRequestParameters decode(Request request);
 
 	/**
 	 * <p>

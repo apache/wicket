@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper.parameters;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
@@ -38,8 +38,8 @@ public interface PageParametersEncoder
 	public Url encodePageParameters(PageParametersNg pageParameters);
 
 	/**
-	 * Decodes the given URL to {@link PageParametersNg}. The URL will have all {@link RequestHandler}
-	 * specified segments/parameters stripped.
+	 * Decodes the given URL to {@link PageParametersNg}. The URL will have all
+	 * {@link RequestHandler} specified segments/parameters stripped.
 	 * 
 	 * @param request
 	 * @return {@link PageParametersNg} instance

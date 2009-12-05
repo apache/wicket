@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.session.SessionStore;
 

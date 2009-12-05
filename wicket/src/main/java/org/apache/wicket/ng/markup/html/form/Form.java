@@ -17,8 +17,8 @@
 package org.apache.wicket.ng.markup.html.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Request;
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;

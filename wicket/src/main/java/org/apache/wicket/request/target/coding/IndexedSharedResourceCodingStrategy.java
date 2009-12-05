@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -123,7 +123,7 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 		final AppendingStringBuffer url = new AppendingStringBuffer();
 		url.append(getMountPath());
 
-		final RequestParameters requestParameters = target.getRequestParameters();
+		final ObsoleteRequestParameters requestParameters = target.getRequestParameters();
 
 		Map<String, ?> params = requestParameters.getParameters();
 
@@ -212,9 +212,9 @@ public class IndexedSharedResourceCodingStrategy extends AbstractRequestTargetUr
 
 	/**
 	 * 
-	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget decode(final RequestParameters requestParameters)
+	public IRequestTarget decode(final ObsoleteRequestParameters requestParameters)
 	{
 		if (requestParameters == null)
 		{

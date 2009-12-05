@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import java.lang.ref.WeakReference;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
@@ -67,7 +67,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageParametersEncoder
 	 */
 	public MountedMapper(String mountPath, Class<? extends RequestablePage> pageClass,
-			PageParametersEncoder pageParametersEncoder)
+		PageParametersEncoder pageParametersEncoder)
 	{
 		Checks.argumentNotEmpty(mountPath, "mountPath");
 		Checks.argumentNotNull(pageClass, "pageClass");
@@ -75,7 +75,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 
 		this.pageParametersEncoder = pageParametersEncoder;
 		this.pageClass = new WeakReference<Class<? extends RequestablePage>>(pageClass);
-		this.mountSegments = getMountSegments(mountPath);
+		mountSegments = getMountSegments(mountPath);
 	}
 
 	/**
@@ -103,7 +103,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			return info;
 		}
 		// check if the URL is long enough and starts with the proper segments
-		else if (url.getSegments().size() >= mountSegments.length && urlStartsWith(url, mountSegments))
+		else if (url.getSegments().size() >= mountSegments.length &&
+			urlStartsWith(url, mountSegments))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
@@ -111,7 +112,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			Class<? extends RequestablePage> pageClass = this.pageClass.get();
 
 			// extract the PageParameters from URL if there are any
-			PageParametersNg pageParameters = extractPageParameters(request, mountSegments.length, pageParametersEncoder);
+			PageParametersNg pageParameters = extractPageParameters(request, mountSegments.length,
+				pageParametersEncoder);
 
 			// check if there are placeholders in mount segments
 			for (int i = 0; i < mountSegments.length; ++i)
@@ -201,6 +203,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		return false;
 	}
 
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		if (urlStartsWith(request.getUrl(), mountSegments))

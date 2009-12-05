@@ -18,7 +18,7 @@ package org.apache.wicket.request.target.component.listener;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 
 /**
@@ -48,5 +48,5 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 	 * 
 	 * @return The request parameters
 	 */
-	RequestParameters getRequestParameters();
+	ObsoleteRequestParameters getRequestParameters();
 }

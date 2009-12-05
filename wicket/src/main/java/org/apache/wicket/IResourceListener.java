@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.resource.ComponentResourceRequestTarget;
 
 /**
@@ -41,7 +41,7 @@ public interface IResourceListener extends IRequestListener
 	{
 		@Override
 		public IRequestTarget newRequestTarget(Page page, Component component,
-			RequestListenerInterface listener, RequestParameters requestParameters)
+			RequestListenerInterface listener, ObsoleteRequestParameters requestParameters)
 		{
 			return new ComponentResourceRequestTarget(page, component, listener);
 		}

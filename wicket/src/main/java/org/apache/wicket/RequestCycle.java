@@ -29,7 +29,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -180,7 +180,7 @@ public abstract class RequestCycle
 	/** Dispatching and handling of events. */
 	private static final int PROCESS_EVENTS = 3;
 
-	/** Resolving the {@link RequestParameters} object to a request target. */
+	/** Resolving the {@link ObsoleteRequestParameters} object to a request target. */
 	private static final int RESOLVE_TARGET = 2;
 
 	/** Responding using the currently set {@link IRequestTarget}. */
@@ -782,7 +782,7 @@ public abstract class RequestCycle
 			throw new IllegalArgumentException("Behavior " + this +
 				" was not registered with this component: " + component.toString());
 		}
-		RequestParameters params = new RequestParameters();
+		ObsoleteRequestParameters params = new ObsoleteRequestParameters();
 		params.setBehaviorId(String.valueOf(index));
 		if (request instanceof ServletWebRequest)
 		{
@@ -792,7 +792,7 @@ public abstract class RequestCycle
 			// AJAX requests: If we need to generate a URL within an AJAX
 			// request for another one, it needs to be at the same depth as the
 			// original AJAX request.
-			int urlDepth = swr.getRequestParameters().getUrlDepth();
+			int urlDepth = swr.getObsoleteRequestParameters().getUrlDepth();
 			params.setUrlDepth(urlDepth > -1 ? urlDepth : swr.getDepthRelativeToWicketHandler());
 		}
 
@@ -988,7 +988,7 @@ public abstract class RequestCycle
 	 */
 	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap parameters)
 	{
-		RequestParameters requestParameters = new RequestParameters();
+		ObsoleteRequestParameters requestParameters = new ObsoleteRequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
 		String name = resourceReference.getName();
 		if (getApplication().getResourceSettings().getAddLastModifiedTimeToResourceReferenceUrl() &&
@@ -1234,7 +1234,7 @@ public abstract class RequestCycle
 					// resolve the target of the request using the request
 					// parameters
 					final IRequestTarget target = processor.resolve(this,
-						request.getRequestParameters());
+						request.getObsoleteRequestParameters());
 
 					// has to result in a request target
 					if (target == null)

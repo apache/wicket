@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;

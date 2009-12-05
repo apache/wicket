@@ -235,7 +235,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 */
 	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
@@ -321,7 +321,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the home page as a request target
 	 */
 	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		Session session = requestCycle.getSession();
 		Application application = session.getApplication();
@@ -379,7 +379,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 */
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 		final Page page, final String componentPath, final String interfaceName,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		if (page == null)
 		{
@@ -452,7 +452,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the previously rendered page as a request target
 	 */
 	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
@@ -488,7 +488,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * @return the shared resource as a request target
 	 */
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		return new SharedResourceRequestTarget(requestParameters);
 	}

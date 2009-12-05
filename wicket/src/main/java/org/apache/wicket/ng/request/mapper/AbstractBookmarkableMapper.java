@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -71,11 +71,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		 * @param pageParameters
 		 *            optional parameter providing pageParameters
 		 */
-		public UrlInfo(PageComponentInfo pageComponentInfo, Class<? extends RequestablePage> pageClass,
-				PageParametersNg pageParameters)
+		public UrlInfo(PageComponentInfo pageComponentInfo,
+			Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
 		{
 			Checks.argumentNotNull(pageClass, "pageClass");
-			
+
 			this.pageComponentInfo = pageComponentInfo;
 			this.pageParameters = pageParameters != null ? pageParameters : null;
 			this.pageClass = pageClass;
@@ -134,54 +134,56 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 *         <code>false</code> otherwise.
 	 */
 	protected abstract boolean pageMustHaveBeenCreatedBookmarkable();
-	
+
 	/**
 	 * @see RequestMapper#getCompatibilityScore(Request)
 	 */
 	public abstract int getCompatibilityScore(Request request);
-	
-	private RequestHandler processBookmarkable(Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
+
+	private RequestHandler processBookmarkable(Class<? extends RequestablePage> pageClass,
+		PageParametersNg pageParameters)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageClass, pageParameters);
 		provider.setPageSource(getContext());
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private RequestHandler processHybrid(PageInfo pageInfo, Class<? extends RequestablePage> pageClass,
-			PageParametersNg pageParameters, Integer renderCount)
+	private RequestHandler processHybrid(PageInfo pageInfo,
+		Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters,
+		Integer renderCount)
 	{
-		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass, pageParameters,
-				renderCount);
+		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass,
+			pageParameters, renderCount);
 		provider.setPageSource(getContext());
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private RequestHandler processListener(PageComponentInfo pageComponentInfo, Class<? extends RequestablePage> pageClass,
-			PageParametersNg pageParameters)
+	private RequestHandler processListener(PageComponentInfo pageComponentInfo,
+		Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
 		Integer renderCount = componentInfo != null ? componentInfo.getRenderCount() : null;
 
-		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo
-				.getListenerInterface());
+		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 
 		if (listenerInterface != null)
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(), pageClass,
-					pageParameters, renderCount, componentInfo.getComponentPath());
+			PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(),
+				pageClass, pageParameters, renderCount, componentInfo.getComponentPath());
 
 			provider.setPageSource(getContext());
-			
-			return new ListenerInterfaceRequestHandler(provider, listenerInterface, componentInfo.getBehaviorIndex());	
+
+			return new ListenerInterfaceRequestHandler(provider, listenerInterface,
+				componentInfo.getBehaviorIndex());
 		}
 		else
 		{
 			logger.warn("Unknown listener interface '" + componentInfo.getListenerInterface() + "'");
 			return null;
-		}		
+		}
 	}
-	
+
 	public RequestHandler mapRequest(Request request)
 	{
 		UrlInfo urlInfo = parseRequest(request);
@@ -214,7 +216,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		}
 		return null;
 	}
-	
+
 	protected boolean checkPageClass(Class<? extends RequestablePage> pageClass)
 	{
 		return true;
@@ -225,7 +227,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		if (requestHandler instanceof BookmarkablePageRequestHandler)
 		{
 			// simple bookmarkable URL with no page instance information
-			BookmarkablePageRequestHandler handler = (BookmarkablePageRequestHandler) requestHandler;
+			BookmarkablePageRequestHandler handler = (BookmarkablePageRequestHandler)requestHandler;
 
 			if (!checkPageClass(handler.getPageClass()))
 			{
@@ -233,8 +235,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			}
 
 			PageInfo info = new PageInfo();
-			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(info, null), handler.getPageClass(), handler
-					.getPageParameters());
+			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(info, null),
+				handler.getPageClass(), handler.getPageParameters());
 
 			return buildUrl(urlInfo);
 		}
@@ -243,7 +245,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			// possibly hybrid URL - bookmarkable URL with page instance information
 			// but only allowed if the page was created by bookamarkable URL
 
-			RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+			RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 			RequestablePage page = handler.getPage();
 
 			if (!checkPageClass(page.getClass()))
@@ -258,9 +260,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 				{
 					info = new PageInfo(page);
 				}
-				PageComponentInfo pageComponentInfo = info != null ? new PageComponentInfo(info, null) : null;
+				PageComponentInfo pageComponentInfo = info != null ? new PageComponentInfo(info,
+					null) : null;
 
-				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(), handler.getPageParameters());
+				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
+					handler.getPageParameters());
 				return buildUrl(urlInfo);
 			}
 			else
@@ -272,7 +276,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
 		{
 			// listener interface URL with page class information
-			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler) requestHandler;
+			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
 			RequestablePage page = handler.getPage();
 
 			if (!checkPageClass(page.getClass()))
@@ -282,17 +286,17 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 
 			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(page.getRenderCount(),
-					requestListenerInterfaceToString(handler.getListenerInterface()), handler.getComponent().getPath(),
-					handler.getBehaviorIndex());
+				requestListenerInterfaceToString(handler.getListenerInterface()),
+				handler.getComponent().getPath(), handler.getBehaviorIndex());
 
-			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(pageInfo, componentInfo), page.getClass(), handler
-					.getPageParameters());
+			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(pageInfo, componentInfo),
+				page.getClass(), handler.getPageParameters());
 			return buildUrl(urlInfo);
 		}
 
 		return null;
-	}	
+	}
 
-	
+
 	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 }

@@ -29,7 +29,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.PageRequestTarget;
@@ -186,9 +186,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget decode(final RequestParameters requestParameters)
+	public IRequestTarget decode(final ObsoleteRequestParameters requestParameters)
 	{
 		String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
 

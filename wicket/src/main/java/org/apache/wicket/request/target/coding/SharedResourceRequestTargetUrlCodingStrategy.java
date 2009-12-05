@@ -17,7 +17,7 @@
 package org.apache.wicket.request.target.coding;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -48,9 +48,9 @@ public class SharedResourceRequestTargetUrlCodingStrategy extends
 	}
 
 	/**
-	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget decode(RequestParameters requestParameters)
+	public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
 			getMountPath().length());
@@ -76,7 +76,7 @@ public class SharedResourceRequestTargetUrlCodingStrategy extends
 		url.append(getMountPath());
 		final ISharedResourceRequestTarget target = (ISharedResourceRequestTarget)requestTarget;
 
-		RequestParameters requestParameters = target.getRequestParameters();
+		ObsoleteRequestParameters requestParameters = target.getRequestParameters();
 		appendParameters(url, requestParameters.getParameters());
 		return url;
 	}

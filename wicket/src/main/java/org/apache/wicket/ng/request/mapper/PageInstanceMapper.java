@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
@@ -62,30 +62,32 @@ public class PageInstanceMapper extends AbstractMapper
 			PageComponentInfo info = getPageComponentInfo(url);
 			if (info != null && info.getPageInfo().getPageId() != null)
 			{
-				Integer renderCount = info.getComponentInfo() != null ? info.getComponentInfo().getRenderCount() : null;
+				Integer renderCount = info.getComponentInfo() != null ? info.getComponentInfo()
+					.getRenderCount() : null;
 
 				if (info.getComponentInfo() == null)
 				{
-					DefaultPageProvider provider = new DefaultPageProvider(info.getPageInfo().getPageId(), renderCount);
+					DefaultPageProvider provider = new DefaultPageProvider(info.getPageInfo()
+						.getPageId(), renderCount);
 					provider.setPageSource(getContext());
-					// render page					
+					// render page
 					return new RenderPageRequestHandler(provider);
 				}
 				else
 				{
 					ComponentInfo componentInfo = info.getComponentInfo();
 
-					PageAndComponentProvider provider = new PageAndComponentProvider(info.getPageInfo()
-							.getPageId(), renderCount, componentInfo.getComponentPath());
+					PageAndComponentProvider provider = new PageAndComponentProvider(
+						info.getPageInfo().getPageId(), renderCount,
+						componentInfo.getComponentPath());
 
 					provider.setPageSource(getContext());
-					
-					// listener interface
-					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo
-							.getListenerInterface());
 
-					return new ListenerInterfaceRequestHandler(provider, listenerInterface, componentInfo
-							.getBehaviorIndex());
+					// listener interface
+					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
+
+					return new ListenerInterfaceRequestHandler(provider, listenerInterface,
+						componentInfo.getBehaviorIndex());
 				}
 			}
 		}
@@ -98,21 +100,22 @@ public class PageInstanceMapper extends AbstractMapper
 
 		if (requestHandler instanceof RenderPageRequestHandler)
 		{
-			RequestablePage page = ((RenderPageRequestHandler) requestHandler).getPage();
+			RequestablePage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
 			PageInfo i = new PageInfo(page);
 			info = new PageComponentInfo(i, null);
 		}
 		else if (requestHandler instanceof ListenerInterfaceRequestHandler)
 		{
-			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler) requestHandler;
+			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
 			RequestablePage page = handler.getPage();
 			String componentPath = handler.getComponent().getPath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
 			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(page.getRenderCount(),
-					requestListenerInterfaceToString(listenerInterface), componentPath, handler.getBehaviorIndex());
+				requestListenerInterfaceToString(listenerInterface), componentPath,
+				handler.getBehaviorIndex());
 			info = new PageComponentInfo(pageInfo, componentInfo);
 		}
 

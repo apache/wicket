@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper.mount;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 
 /**

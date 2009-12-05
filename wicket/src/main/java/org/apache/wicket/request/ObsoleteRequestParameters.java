@@ -38,9 +38,11 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
  * supported by default implementations.
  * </p>
  * 
+ * @deprecated wicket-ng
  * @author Eelco Hillenius
  */
-public class RequestParameters implements IClusterable
+@Deprecated
+public class ObsoleteRequestParameters implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -91,7 +93,7 @@ public class RequestParameters implements IClusterable
 	/**
 	 * Construct.
 	 */
-	public RequestParameters()
+	public ObsoleteRequestParameters()
 	{
 	}
 

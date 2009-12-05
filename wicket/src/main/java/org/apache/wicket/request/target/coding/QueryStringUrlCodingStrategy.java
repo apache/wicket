@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -128,7 +128,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	}
 
 	@Override
-	public IRequestTarget decode(RequestParameters requestParameters)
+	public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 	{
 		String pageMapName = requestParameters.getPageMapName();
 		final PageParameters parameters = new PageParameters(requestParameters.getParameters());

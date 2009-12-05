@@ -180,7 +180,7 @@ public abstract class Resource implements IResourceListener
 		{
 			return new ValueMap(RequestCycle.get()
 				.getRequest()
-				.getRequestParameters()
+				.getObsoleteRequestParameters()
 				.getParameters());
 		}
 		return (ValueMap)parameters.get();

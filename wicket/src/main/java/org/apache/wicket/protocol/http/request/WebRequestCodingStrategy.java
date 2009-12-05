@@ -46,7 +46,7 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
@@ -192,11 +192,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#decode(org.apache.wicket.Request)
 	 */
-	public final RequestParameters decode(final Request request)
+	public final ObsoleteRequestParameters decode(final Request request)
 	{
 		try
 		{
-			final RequestParameters parameters = new RequestParameters();
+			final ObsoleteRequestParameters parameters = new ObsoleteRequestParameters();
 			final String pathInfo = getRequestPath(request);
 			parameters.setPath(pathInfo);
 			parameters.setPageMapName(request.getParameter(PAGEMAP));
@@ -491,9 +491,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestCodingStrategy#targetForRequest(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.IRequestCodingStrategy#targetForRequest(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
+	public final IRequestTarget targetForRequest(ObsoleteRequestParameters requestParameters)
 	{
 		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters.getPath());
 		if (encoder == null)
@@ -540,7 +540,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *            the parameters object to set the found values on
 	 */
 	protected void addBookmarkablePageParameters(final Request request,
-		final RequestParameters parameters)
+		final ObsoleteRequestParameters parameters)
 	{
 		final String requestString = request.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
@@ -571,7 +571,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
-	protected void addInterfaceParameters(final Request request, final RequestParameters parameters)
+	protected void addInterfaceParameters(final Request request, final ObsoleteRequestParameters parameters)
 	{
 		addInterfaceParameters(request.getParameter(INTERFACE_PARAMETER_NAME), parameters);
 	}
@@ -588,7 +588,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *            parameters object to set the found parts in
 	 */
 	public static void addInterfaceParameters(final String interfaceParameter,
-		final RequestParameters parameters)
+		final ObsoleteRequestParameters parameters)
 	{
 		if (interfaceParameter == null)
 		{
@@ -672,7 +672,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
-	protected void addResourceParameters(Request request, RequestParameters parameters)
+	protected void addResourceParameters(Request request, ObsoleteRequestParameters parameters)
 	{
 		String pathInfo = request.getPath();
 		if (pathInfo != null && pathInfo.startsWith(RESOURCES_PATH_PREFIX))
@@ -719,7 +719,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a page class target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden to be
+	 * {@link #addBookmarkablePageParameters(Request, ObsoleteRequestParameters)} should be overridden to be
 	 * in sync with that behavior.
 	 * 
 	 * @param requestCycle
@@ -798,7 +798,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a shared resource target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden to be in sync
+	 * {@link #addResourceParameters(Request, ObsoleteRequestParameters)} should be overridden to be in sync
 	 * with that behavior.
 	 * 
 	 * @param requestCycle
@@ -887,7 +887,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a listener interface target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden to be in
+	 * {@link #addInterfaceParameters(Request, ObsoleteRequestParameters)} should be overridden to be in
 	 * sync with that behavior.
 	 * 
 	 * @param requestCycle
@@ -939,7 +939,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add behaviourId
-		RequestParameters params = requestTarget.getRequestParameters();
+		ObsoleteRequestParameters params = requestTarget.getRequestParameters();
 		if (params != null && params.getBehaviorId() != null)
 		{
 			url.append(params.getBehaviorId());
@@ -1237,7 +1237,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			super(path);
 		}
 
-		public IRequestTarget decode(RequestParameters requestParameters)
+		public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 		{
 			return null;
 		}

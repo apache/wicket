@@ -29,7 +29,7 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.basic.EmptyAjaxRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.Strings;
@@ -54,10 +54,10 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 
 	/**
 	 * @see org.apache.wicket.request.IRequestCycleProcessor#resolve(org.apache.wicket.RequestCycle,
-	 *      org.apache.wicket.request.RequestParameters)
+	 *      org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
 	public IRequestTarget resolve(final RequestCycle requestCycle,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		try
 		{

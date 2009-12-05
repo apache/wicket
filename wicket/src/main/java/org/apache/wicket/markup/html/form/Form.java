@@ -43,7 +43,7 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
@@ -1154,7 +1154,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		RequestCycle rc = RequestCycle.get();
 		IRequestCycleProcessor processor = rc.getProcessor();
-		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
+		final ObsoleteRequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
 			new FormDispatchRequest(rc.getRequest(), Url.parse(url)));
 		IRequestTarget rt = processor.resolve(rc, requestParameters);
 		if (rt instanceof IListenerInterfaceRequestTarget)

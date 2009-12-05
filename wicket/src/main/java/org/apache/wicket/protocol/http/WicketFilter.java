@@ -49,7 +49,7 @@ import org.apache.wicket.protocol.http.portlet.PortletServletRequestWrapper;
 import org.apache.wicket.protocol.http.portlet.PortletServletResponseWrapper;
 import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -1166,7 +1166,7 @@ public class WicketFilter implements Filter
 
 					// decode the parameters so that shared resource params are also decoded
 					// a request cycle is then needed. (see above)
-					RequestParameters rp = RequestCycle.get()
+					ObsoleteRequestParameters rp = RequestCycle.get()
 						.getProcessor()
 						.getRequestCodingStrategy()
 						.decode(request);

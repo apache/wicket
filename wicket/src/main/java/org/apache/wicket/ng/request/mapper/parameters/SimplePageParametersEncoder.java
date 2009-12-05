@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper.parameters;
 
 import java.util.List;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.request.component.PageParametersNg;
@@ -41,31 +41,31 @@ public class SimplePageParametersEncoder implements PageParametersEncoder
 	public PageParametersNg decodePageParameters(Request request)
 	{
 		PageParametersNg parameters = new PageParametersNg();
-		
+
 		int i = 0;
 		for (String s : request.getUrl().getSegments())
 		{
 			parameters.setIndexedParameter(i, s);
 			++i;
 		}
-		
+
 		for (QueryParameter p : request.getUrl().getQueryParameters())
 		{
 			parameters.addNamedParameter(p.getName(), p.getValue());
 		}
-		
+
 		return parameters;
 	}
 
 	public Url encodePageParameters(PageParametersNg pageParameters)
 	{
 		Url url = new Url();
-		
+
 		for (int i = 0; i < pageParameters.getIndexedParamsCount(); ++i)
 		{
 			url.getSegments().add(pageParameters.getIndexedParameter(i).toString());
 		}
-		
+
 		for (String key : pageParameters.getNamedParameterKeys())
 		{
 			List<StringValue> values = pageParameters.getNamedParameters(key);
@@ -78,7 +78,7 @@ public class SimplePageParametersEncoder implements PageParametersEncoder
 				}
 			}
 		}
-		
+
 		return url;
 	}
 

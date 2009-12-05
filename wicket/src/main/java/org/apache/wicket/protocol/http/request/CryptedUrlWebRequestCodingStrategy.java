@@ -32,7 +32,7 @@ import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
@@ -113,7 +113,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#decode(org.apache.wicket.Request)
 	 */
-	public RequestParameters decode(final Request request)
+	public ObsoleteRequestParameters decode(final Request request)
 	{
 		String url = request.decodeURL(request.getUrl()).toString();
 		String decodedQueryParams = decodeURL(url);
@@ -184,9 +184,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#targetForRequest(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#targetForRequest(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget targetForRequest(RequestParameters requestParameters)
+	public IRequestTarget targetForRequest(ObsoleteRequestParameters requestParameters)
 	{
 		return defaultStrategy.targetForRequest(requestParameters);
 	}

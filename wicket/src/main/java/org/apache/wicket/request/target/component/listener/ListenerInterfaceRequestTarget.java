@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 
 /**
  * Target that denotes a page instance and a call to a component on that page using a listener
@@ -59,7 +59,7 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	 *            the request parameters
 	 */
 	public ListenerInterfaceRequestTarget(final Page page, final Component component,
-		final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final ObsoleteRequestParameters requestParameters)
 	{
 		super(page, component, listener, requestParameters);
 	}

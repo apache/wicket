@@ -35,6 +35,7 @@ import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WicketServlet;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

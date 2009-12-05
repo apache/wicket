@@ -17,7 +17,7 @@
 package org.apache.wicket.request.target.coding;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 
 /**
  * Implementations of this interface know how to encode and decode request targets to/from a URL.
@@ -53,7 +53,7 @@ public interface IRequestTargetUrlCodingStrategy
 	 *            the request parameters
 	 * @return the decoded request target
 	 */
-	IRequestTarget decode(RequestParameters requestParameters);
+	IRequestTarget decode(ObsoleteRequestParameters requestParameters);
 
 	/**
 	 * Gets whether this mounter is applicable for the provided request target.

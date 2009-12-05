@@ -61,7 +61,7 @@ public interface IRequestTargetMounter
 	 *            the request parameters
 	 * @return the request target or null if nothing was mounted with the given request parameters
 	 */
-	IRequestTarget targetForRequest(RequestParameters requestParameters);
+	IRequestTarget targetForRequest(ObsoleteRequestParameters requestParameters);
 
 	/**
 	 * Unmounts a request target.

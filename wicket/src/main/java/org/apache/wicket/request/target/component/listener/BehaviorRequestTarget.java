@@ -25,7 +25,7 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 
 /**
  * Target that denotes a page instance and a call to a component on that page using an listener
@@ -64,7 +64,7 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 	 *            the request parameters
 	 */
 	public BehaviorRequestTarget(final Page page, final Component component,
-		final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final ObsoleteRequestParameters requestParameters)
 	{
 		super(page, component, listener, requestParameters);
 	}

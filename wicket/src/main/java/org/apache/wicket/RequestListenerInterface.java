@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
@@ -220,7 +220,7 @@ public class RequestListenerInterface
 	 * @return The request target
 	 */
 	public IRequestTarget newRequestTarget(final Page page, final Component component,
-		final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final ObsoleteRequestParameters requestParameters)
 	{
 		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);
 	}

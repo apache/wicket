@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.RequestMapper;
 import org.apache.wicket.ng.request.Url;

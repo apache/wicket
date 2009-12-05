@@ -21,7 +21,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
 import org.apache.wicket.protocol.https.SwitchProtocolRequestTarget.Protocol;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 
@@ -163,7 +163,7 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 
 	/** {@inheritDoc} */
 	@Override
-	public IRequestTarget resolve(RequestCycle rc, RequestParameters rp)
+	public IRequestTarget resolve(RequestCycle rc, ObsoleteRequestParameters rp)
 	{
 		// we need to persist the session before a redirect to https so the session lasts across
 		// both http and https calls.

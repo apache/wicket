@@ -19,10 +19,14 @@ package org.apache.wicket;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.parameter.CombinedRequestParametersAdapter;
+import org.apache.wicket.ng.request.parameter.EmptyRequestParameters;
+import org.apache.wicket.ng.request.parameter.UrlRequestParametersAdapter;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 
 
 /**
@@ -37,7 +41,7 @@ import org.apache.wicket.request.RequestParameters;
 public abstract class Request
 {
 	/** the type safe request parameters object for this request. */
-	private RequestParameters requestParameters;
+	private ObsoleteRequestParameters requestParameters;
 
 	/**
 	 * Construct.
@@ -124,8 +128,10 @@ public abstract class Request
 	 * replacement for another.
 	 * 
 	 * @param requestParameters
+	 * @deprecated wicket-ng
 	 */
-	public final void setRequestParameters(RequestParameters requestParameters)
+	@Deprecated
+	public final void setObsoleteRequestParameters(ObsoleteRequestParameters requestParameters)
 	{
 		this.requestParameters = requestParameters;
 	}
@@ -135,8 +141,10 @@ public abstract class Request
 	 * the provided request cycle processor.
 	 * 
 	 * @return the request parameters object
+	 * @deprecated wicket-ng
 	 */
-	public final RequestParameters getRequestParameters()
+	@Deprecated
+	public final ObsoleteRequestParameters getObsoleteRequestParameters()
 	{
 		// reused cached parameters
 		if (requestParameters != null)
@@ -163,7 +171,7 @@ public abstract class Request
 		{
 			// do set the parameters as it was parsed.
 			// else the error page will also error again (infinite loop)
-			requestParameters = new RequestParameters();
+			requestParameters = new ObsoleteRequestParameters();
 			throw re;
 		}
 
@@ -198,4 +206,104 @@ public abstract class Request
 	 * @return request query string
 	 */
 	public abstract String getQueryString();
+
+	/**
+	 * @return POST request parameters for this request.
+	 */
+	public RequestParameters getPostRequestParameters()
+	{
+		return EmptyRequestParameters.INSTANCE;
+	}
+
+	/**
+	 * @return GET request parameters for this request.
+	 */
+	public RequestParameters getGetRequestParameters()
+	{
+		return new UrlRequestParametersAdapter(getUrl());
+	}
+
+	/**
+	 * @return all request parameters for this request (both POST and GET parameters)
+	 */
+	public RequestParameters getRequestParameters()
+	{
+		return new CombinedRequestParametersAdapter(getGetRequestParameters(),
+			getPostRequestParameters());
+	}
+
+	/**
+	 * Returns request with specified URL and same POST parameters as this request.
+	 * 
+	 * @param url
+	 *            Url instance
+	 * @return request with specified URL.
+	 */
+	public Request requestWithUrl(final Url url)
+	{
+		final Request delegate = this;
+
+		return new Request()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public RequestParameters getPostRequestParameters()
+			{
+				return delegate.getPostRequestParameters();
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return delegate.getLocale();
+			}
+
+			@Override
+			public String getParameter(String key)
+			{
+				return delegate.getParameter(key);
+			}
+
+			@Override
+			public Map<String, String[]> getParameterMap()
+			{
+				return delegate.getParameterMap();
+			}
+
+			@Override
+			public String[] getParameters(String key)
+			{
+				return delegate.getParameters(key);
+			}
+
+			@Override
+			public String getPath()
+			{
+				return delegate.getPath();
+			}
+
+			@Override
+			public String getQueryString()
+			{
+				return delegate.getQueryString();
+			}
+
+			@Override
+			public String getRelativePathPrefixToContextRoot()
+			{
+				return delegate.getRelativePathPrefixToContextRoot();
+			}
+
+			@Override
+			public String getRelativePathPrefixToWicketHandler()
+			{
+				return delegate.getRelativePathPrefixToWicketHandler();
+			}
+		};
+	}
 }

@@ -21,7 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.IEventProcessor;
 import org.apache.wicket.request.target.component.PageRequestTarget;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -41,7 +41,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		IEventProcessor
 {
 	/** The request parameters. */
-	private final RequestParameters requestParameters;
+	private final ObsoleteRequestParameters requestParameters;
 
 	/** the target component. */
 	private final Component component;
@@ -79,7 +79,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 *            the request parameter
 	 */
 	public AbstractListenerInterfaceRequestTarget(final Page page, final Component component,
-		final RequestListenerInterface listener, final RequestParameters requestParameters)
+		final RequestListenerInterface listener, final ObsoleteRequestParameters requestParameters)
 	{
 		super(page);
 
@@ -135,7 +135,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	/**
 	 * @see org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestParameters()
 	 */
-	public final RequestParameters getRequestParameters()
+	public final ObsoleteRequestParameters getRequestParameters()
 	{
 		return requestParameters;
 	}

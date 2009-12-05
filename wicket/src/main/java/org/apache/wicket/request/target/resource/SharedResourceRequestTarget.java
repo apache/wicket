@@ -27,7 +27,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(SharedResourceRequestTarget.class);
 
-	private final RequestParameters requestParameters;
+	private final ObsoleteRequestParameters requestParameters;
 
 	/**
 	 * Construct.
@@ -52,7 +52,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 * @param requestParameters
 	 *            the request parameters
 	 */
-	public SharedResourceRequestTarget(RequestParameters requestParameters)
+	public SharedResourceRequestTarget(ObsoleteRequestParameters requestParameters)
 	{
 		this.requestParameters = requestParameters;
 		if (requestParameters == null)
@@ -91,7 +91,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	/**
 	 * @see org.apache.wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters()
 	 */
-	public final RequestParameters getRequestParameters()
+	public final ObsoleteRequestParameters getRequestParameters()
 	{
 		return requestParameters;
 	}

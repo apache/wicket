@@ -16,21 +16,34 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.request.RequestParameters;
 import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileUploadException;
@@ -62,14 +75,37 @@ public class ServletWebRequest extends WebRequest
 	/** Marks this request as an ajax request. */
 	private boolean ajax;
 
+	private final Url url;
+
 	/**
 	 * Protected constructor.
 	 * 
 	 * @param httpServletRequest
 	 *            The servlet request information
+	 * @deprecated use ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
 	 */
+	@Deprecated
 	public ServletWebRequest(final HttpServletRequest httpServletRequest)
 	{
+		this(httpServletRequest, null);
+
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param httpServletRequest
+	 * 
+	 * @param filterPrefix
+	 *            contentPath + filterPath, used to extract the actual {@link Url}
+	 */
+	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+	{
+		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
+		// TODO WICKET-NG reenable once sorted
+		// Checks.argumentNotNull(filterPrefix, "filterPrefix");
+
+		url = (filterPrefix != null) ? getUrl(httpServletRequest, filterPrefix) : null;
 		this.httpServletRequest = httpServletRequest;
 
 		ajax = false;
@@ -91,6 +127,7 @@ public class ServletWebRequest extends WebRequest
 			}
 		}
 	}
+
 
 	/**
 	 * Gets the wrapped http servlet request object.
@@ -271,7 +308,7 @@ public class ServletWebRequest extends WebRequest
 		// original page.
 		if (!portletRequest && isAjax())
 		{
-			for (int i = 0; i < getRequestParameters().getUrlDepth(); i++)
+			for (int i = 0; i < getObsoleteRequestParameters().getUrlDepth(); i++)
 			{
 				prepender.prepend("../");
 			}
@@ -341,7 +378,7 @@ public class ServletWebRequest extends WebRequest
 		if (depthRelativeToWicketHandler == -1)
 		{
 			int depth = 0;
-			int ajaxUrlDepth = isAjax() ? getRequestParameters().getUrlDepth() : -1;
+			int ajaxUrlDepth = isAjax() ? getObsoleteRequestParameters().getUrlDepth() : -1;
 			for (int i = 0; i < relativeUrl.length(); i++)
 			{
 				if (relativeUrl.charAt(i) == '?')
@@ -378,11 +415,28 @@ public class ServletWebRequest extends WebRequest
 		return relativePathPrefixToWicketHandler = prepender.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.Request#getUrl()
-	 */
+
 	@Override
 	public Url getUrl()
+	{
+		if (url != null)
+		{
+			return new Url(url);
+		}
+		else
+		{
+			return getUrlObsolete();
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.Request#getUrl()
+	 * @deprecated
+	 * 
+	 *             TODO WICKET-NG remove, kept here just for reference of how old url was parsed
+	 */
+	@Deprecated
+	public Url getUrlObsolete()
 	{
 		/*
 		 * Servlet 2.3 specification :
@@ -463,7 +517,7 @@ public class ServletWebRequest extends WebRequest
 		{
 			MultipartServletWebRequest multipart = new MultipartServletWebRequest(
 				httpServletRequest, maxsize);
-			multipart.setRequestParameters(getRequestParameters());
+			multipart.setObsoleteRequestParameters(getObsoleteRequestParameters());
 			return multipart;
 		}
 		catch (FileUploadException e)
@@ -486,13 +540,13 @@ public class ServletWebRequest extends WebRequest
 
 		if (wicketRedirectUrl != null)
 		{
-			previousUrlDepth = getRequestParameters().getUrlDepth();
+			previousUrlDepth = getObsoleteRequestParameters().getUrlDepth();
 
-			getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
+			getObsoleteRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
 		}
 		else
 		{
-			getRequestParameters().setUrlDepth(previousUrlDepth);
+			getObsoleteRequestParameters().setUrlDepth(previousUrlDepth);
 			getDepthRelativeToWicketHandler();
 		}
 
@@ -524,4 +578,147 @@ public class ServletWebRequest extends WebRequest
 			httpServletRequest.getServletPath() + ", pathTranslated = " +
 			httpServletRequest.getPathTranslated() + "]";
 	}
+
+	private Url getUrl(HttpServletRequest request, String filterPrefix)
+	{
+		if (filterPrefix.length() > 0 && !filterPrefix.endsWith("/"))
+		{
+			filterPrefix += "/";
+		}
+		StringBuilder url = new StringBuilder();
+		String uri = request.getRequestURI();
+		url.append(Strings.stripJSessionId(uri.substring(request.getContextPath().length() +
+			filterPrefix.length() + 1)));
+
+		String query = request.getQueryString();
+		if (!Strings.isEmpty(query))
+		{
+			url.append("?");
+			url.append(query);
+		}
+
+		return Url.parse(Strings.stripJSessionId(url.toString()));
+	}
+
+	@Override
+	public long getDateHeader(String name)
+	{
+		return httpServletRequest.getDateHeader(name);
+	}
+
+	@Override
+	public String getHeader(String name)
+	{
+		return httpServletRequest.getHeader(name);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getHeaders(String name)
+	{
+		List<String> result = new ArrayList<String>();
+		Enumeration<String> e = httpServletRequest.getHeaders(name);
+		while (e.hasMoreElements())
+		{
+			result.add(e.nextElement());
+		}
+		return Collections.unmodifiableList(result);
+	}
+
+	private Map<String, List<StringValue>> postParameters = null;
+
+	@SuppressWarnings("unchecked")
+	private Map<String, List<StringValue>> getPostParameters()
+	{
+		if (postParameters == null)
+		{
+			postParameters = new HashMap<String, List<StringValue>>();
+			try
+			{
+				BufferedReader reader = getHttpServletRequest().getReader();
+				String value = Streams.readString(reader);
+
+				if (!Strings.isEmpty(value))
+				{
+					Url url = Url.parse("?" + value);
+					for (QueryParameter q : url.getQueryParameters())
+					{
+						List<StringValue> list = postParameters.get(q.getName());
+						if (list == null)
+						{
+							list = new ArrayList<StringValue>();
+							postParameters.put(q.getName(), list);
+						}
+						list.add(StringValue.valueOf(q.getValue()));
+					}
+				}
+			}
+			catch (IOException e)
+			{
+				log.warn(
+					"Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().",
+					e);
+				for (String name : (List<String>)Collections.list(getHttpServletRequest().getParameterNames()))
+				{
+					List<StringValue> list = postParameters.get(name);
+					if (list == null)
+					{
+						list = new ArrayList<StringValue>();
+						postParameters.put(name, list);
+					}
+					for (String value : getHttpServletRequest().getParameterValues(name))
+					{
+						list.add(StringValue.valueOf(value));
+					}
+				}
+			}
+
+		}
+		return postParameters;
+	}
+
+	private final RequestParameters postRequestParameters = new RequestParameters()
+	{
+		public Set<String> getParameterNames()
+		{
+			return Collections.unmodifiableSet(getPostParameters().keySet());
+		}
+
+		public StringValue getParameterValue(String name)
+		{
+			List<StringValue> values = getPostParameters().get(name);
+			if (values == null || values.isEmpty())
+			{
+				return StringValue.valueOf((String)null);
+			}
+			else
+			{
+				return values.iterator().next();
+			}
+		}
+
+		public List<StringValue> getParameterValues(String name)
+		{
+			List<StringValue> values = getPostParameters().get(name);
+			if (values != null)
+			{
+				values = Collections.unmodifiableList(values);
+			}
+			return values;
+		}
+	};
+
+	@Override
+	public RequestParameters getPostRequestParameters()
+	{
+		return postRequestParameters;
+	}
+
+	@Override
+	public Cookie[] getCookies()
+	{
+		return httpServletRequest.getCookies();
+	}
+
+
 }

@@ -20,7 +20,7 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -59,9 +59,9 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget decode(RequestParameters requestParameters)
+	public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 	{
 		String remainder = requestParameters.getPath().substring(getMountPath().length());
 		final String parametersFragment;

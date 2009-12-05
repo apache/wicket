@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.RequestablePage;
@@ -61,7 +61,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	public BookmarkableMapper(PageParametersEncoder pageParametersEncoder)
 	{
 		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
-		
+
 		this.pageParametersEncoder = pageParametersEncoder;
 	}
 
@@ -102,19 +102,21 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 			Class<? extends RequestablePage> pageClass = getPageClass(className);
 
 			// extract the PageParameters from URL if there are any
-			PageParametersNg pageParameters = extractPageParameters(request, 3, pageParametersEncoder);
+			PageParametersNg pageParameters = extractPageParameters(request, 3,
+				pageParametersEncoder);
 
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
 		return true;
 	}
 
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		// always return 0 here so that the mounts have higher priority

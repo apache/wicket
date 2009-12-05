@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressor.ComponentAndInterface;
 import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.listener.RedirectPageRequestTarget;
 import org.apache.wicket.util.string.Strings;
 
@@ -66,12 +66,12 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 	/**
 	 * @see org.apache.wicket.request.AbstractRequestCycleProcessor#resolveListenerInterfaceTarget(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.Page, java.lang.String, java.lang.String,
-	 *      org.apache.wicket.request.RequestParameters)
+	 *      org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
 	@Override
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 		final Page page, final String componentPath, String interfaceName,
-		final RequestParameters requestParameters)
+		final ObsoleteRequestParameters requestParameters)
 	{
 		String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 			Component.PATH_SEPARATOR);

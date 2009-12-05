@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.parameter.UrlRequestParametersAdapter;
  * 
  * @author Matej Knopp
  */
-public abstract class Request
+public abstract class Request2
 {
 	/**
 	 * Returns the URL for this request. URL is relative to Wicket filter path.
@@ -55,7 +55,8 @@ public abstract class Request
 	 */
 	public RequestParameters getRequestParameters()
 	{
-		return new CombinedRequestParametersAdapter(getGetRequestParameters(), getPostRequestParameters());
+		return new CombinedRequestParametersAdapter(getGetRequestParameters(),
+			getPostRequestParameters());
 	}
 
 	/**
@@ -65,9 +66,9 @@ public abstract class Request
 	 *            Url instance
 	 * @return request with specified URL.
 	 */
-	public Request requestWithUrl(final Url url)
+	public Request2 requestWithUrl(final Url url)
 	{
-		return new Request()
+		return new Request2()
 		{
 			@Override
 			public Url getUrl()
@@ -78,7 +79,7 @@ public abstract class Request
 			@Override
 			public RequestParameters getPostRequestParameters()
 			{
-				return Request.this.getPostRequestParameters();
+				return Request2.this.getPostRequestParameters();
 			}
 		};
 	}

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.RequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
@@ -85,8 +85,8 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReferenceAttributes attributes = getResourceReferenceAttributes(url);
 
 			// extract the PageParameters from URL if there are any
-			PageParametersNg pageParameters = extractPageParameters(request,
-				url.getSegments().size(), pageParametersEncoder);
+			PageParametersNg pageParameters = extractPageParameters(request, url.getSegments()
+				.size(), pageParametersEncoder);
 
 			Class<?> scope = resolveClass(className);
 			if (scope != null)
@@ -124,7 +124,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	{
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
 		{
-			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler) requestHandler;
+			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
 			ResourceReference reference = referenceRequestHandler.getResourceReference();
 			Url url = new Url();
 			url.getSegments().add(getContext().getNamespace());

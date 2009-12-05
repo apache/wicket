@@ -25,7 +25,7 @@ import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
  * The request cycle processor is responsible for handling the steps of a request cycle. It's
  * methods are called in a pre-defined order:
  * <ul>
- * <li> {@link #resolve(RequestCycle, RequestParameters)} is called to get the request target. A
+ * <li> {@link #resolve(RequestCycle, ObsoleteRequestParameters)} is called to get the request target. A
  * request might refer to e.g. a bookmarkable page, a listener interface call on a component on a
  * previously rendered page, a shared resource or e.g. a non-wicket resource that resides in the web
  * application folder.</li>
@@ -55,7 +55,7 @@ public interface IRequestCycleProcessor
 	/**
 	 * Gets the object that is responsible for encoding request targets (like url's in links etc)
 	 * and decoding urls and request parameters etc into
-	 * {@link org.apache.wicket.request.RequestParameters} objects.
+	 * {@link org.apache.wicket.request.ObsoleteRequestParameters} objects.
 	 * 
 	 * @return the request encoder
 	 */
@@ -64,7 +64,7 @@ public interface IRequestCycleProcessor
 	/**
 	 * <p>
 	 * Resolves the request and returns the request target. Typically, the resolver uses the
-	 * {@link org.apache.wicket.request.RequestParameters} object that is passed in.
+	 * {@link org.apache.wicket.request.ObsoleteRequestParameters} object that is passed in.
 	 * </p>
 	 * <p>
 	 * Implementors of this method should be careful not to mix this code with event handling code;
@@ -78,12 +78,12 @@ public interface IRequestCycleProcessor
 	 *            {@link IRequestCodingStrategy}.
 	 * @return the request target; has to be non-null!
 	 */
-	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
+	IRequestTarget resolve(RequestCycle requestCycle, ObsoleteRequestParameters requestParameters);
 
 	/**
 	 * After a page is restored, this method is responsible for calling any event handling code
 	 * based on the request. For example, when a link is clicked,
-	 * {@link #resolve(RequestCycle, RequestParameters)} should return the page that that link
+	 * {@link #resolve(RequestCycle, ObsoleteRequestParameters)} should return the page that that link
 	 * resides on, and this method should call the
 	 * {@link org.apache.wicket.markup.html.link.ILinkListener} interface on that component.
 	 * 

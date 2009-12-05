@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,6 +25,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Request;
+import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 
 
@@ -145,4 +149,171 @@ public abstract class WebRequest extends Request
 	 * @return True if the ajax is an ajax request. False if it's not.
 	 */
 	public abstract boolean isAjax();
+
+	/**
+	 * Convenience method for retrieving If-Modified-Since header.
+	 * 
+	 * @return date representing the header or <code>null</code> if not set
+	 */
+	public final Date getIfModifiedSinceHeader()
+	{
+		final long header = getDateHeader("If-Modified-Since");
+		if (header >= 0)
+		{
+			return new Date(header);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the value of the specified request header as a <code>long</code> value that
+	 * represents a <code>Date</code> object. Use this method with headers that contain dates, such
+	 * as <code>If-Modified-Since</code>.
+	 * 
+	 * @param name
+	 * @return date value of request header
+	 */
+	public abstract long getDateHeader(String name);
+
+	/**
+	 * Returns all the values of the specified request header.
+	 * 
+	 * @param name
+	 * @return unmodifiable list of header values
+	 */
+	public abstract List<String> getHeaders(String name);
+
+	/**
+	 * Returns the value of the specified request header as a <code>String</code>
+	 * 
+	 * @param name
+	 * @return string value of request header
+	 */
+	public abstract String getHeader(String name);
+
+	/**
+	 * Returns request with specified URL and same POST parameters as this request.
+	 * 
+	 * @param url
+	 *            Url instance
+	 * @return request with specified URL.
+	 */
+	@Override
+	public WebRequest requestWithUrl(final Url url)
+	{
+		final WebRequest delegate = this;
+		return new WebRequest()
+		{
+			@Override
+			public Url getUrl()
+			{
+				return url;
+			}
+
+			@Override
+			public RequestParameters getPostRequestParameters()
+			{
+				return WebRequest.this.getPostRequestParameters();
+			}
+
+			@Override
+			public Cookie[] getCookies()
+			{
+				return WebRequest.this.getCookies();
+			}
+
+			@Override
+			public long getDateHeader(String name)
+			{
+				return WebRequest.this.getDateHeader(name);
+			}
+
+			@Override
+			public Locale getLocale()
+			{
+				return WebRequest.this.getLocale();
+			}
+
+			@Override
+			public String getHeader(String name)
+			{
+				return WebRequest.this.getHeader(name);
+			}
+
+			@Override
+			public List<String> getHeaders(String name)
+			{
+				return WebRequest.this.getHeaders(name);
+			}
+
+			@Override
+			public HttpServletRequest getHttpServletRequest()
+			{
+				return delegate.getHttpServletRequest();
+			}
+
+			@Override
+			public String getParameter(String key)
+			{
+				return delegate.getParameter(key);
+			}
+
+			@Override
+			public Map<String, String[]> getParameterMap()
+			{
+				return delegate.getParameterMap();
+			}
+
+			@Override
+			public String[] getParameters(String key)
+			{
+				return delegate.getParameters(key);
+			}
+
+			@Override
+			public String getServletPath()
+			{
+				return delegate.getServletPath();
+			}
+
+			@Override
+			public boolean isAjax()
+			{
+				return delegate.isAjax();
+			}
+
+			@Override
+			public WebRequest newMultipartWebRequest(Bytes maxSize)
+			{
+				return delegate.newMultipartWebRequest(maxSize);
+			}
+
+			@Override
+			public String getPath()
+			{
+				return delegate.getPath();
+			}
+
+			@Override
+			public String getQueryString()
+			{
+				return delegate.getQueryString();
+			}
+
+			@Override
+			public String getRelativePathPrefixToContextRoot()
+			{
+				return delegate.getRelativePathPrefixToContextRoot();
+			}
+
+			@Override
+			public String getRelativePathPrefixToWicketHandler()
+			{
+				return delegate.getRelativePathPrefixToWicketHandler();
+			}
+		};
+	}
 }

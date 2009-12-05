@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
@@ -60,7 +60,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 *            request parameters provided to the decode() method
 	 * @return the URI
 	 */
-	public PageParameters decodeParameters(RequestParameters requestParameters)
+	public PageParameters decodeParameters(ObsoleteRequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
 			getMountPath().length());
@@ -71,9 +71,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	/**
 	 * Does nothing
 	 * 
-	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
-	public IRequestTarget decode(RequestParameters requestParameters)
+	public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 	{
 		return null;
 	}
@@ -186,7 +186,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 
 	/**
 	 * Calls decodeParameters() and retrieves the <tt>uri</tt> parameter. If you need to access
-	 * multiple parameters in the request, call {@link #decodeParameters(RequestParameters)}
+	 * multiple parameters in the request, call {@link #decodeParameters(ObsoleteRequestParameters)}
 	 * directly.
 	 * 
 	 * <p>
@@ -197,7 +197,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 * @param requestParameters
 	 * @return
 	 */
-	protected String getURI(RequestParameters requestParameters)
+	protected String getURI(ObsoleteRequestParameters requestParameters)
 	{
 		return decodeParameters(requestParameters).getString(URI);
 	}

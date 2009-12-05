@@ -19,7 +19,7 @@ package org.apache.wicket.request.target.resource;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.SharedResources;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 
 /**
  * Target that denotes a shared {@link org.apache.wicket.Resource}, i.e a resource that doesn't need
@@ -40,7 +40,7 @@ public interface ISharedResourceRequestTarget extends IRequestTarget
 	 * 
 	 * @return the request parameters
 	 */
-	RequestParameters getRequestParameters();
+	ObsoleteRequestParameters getRequestParameters();
 
 	/**
 	 * @return The resource key for this SharedResource

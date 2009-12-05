@@ -177,7 +177,7 @@ public class UrlMountingTest extends TestCase
 			"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
-		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+		assertNull(ucs.decode(tester.getWicketRequest().getObsoleteRequestParameters()));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class UrlMountingTest extends TestCase
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point/TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
-		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+		assertNotNull(ucs.decode(tester.getWicketRequest().getObsoleteRequestParameters()));
 	}
 
 	/**

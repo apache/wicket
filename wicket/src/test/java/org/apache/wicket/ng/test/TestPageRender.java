@@ -19,13 +19,13 @@ package org.apache.wicket.ng.test;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockRequestCycle;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
-import org.apache.wicket.ng.request.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;

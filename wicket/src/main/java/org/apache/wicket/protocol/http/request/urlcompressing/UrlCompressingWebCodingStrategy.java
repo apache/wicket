@@ -24,7 +24,7 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
@@ -116,7 +116,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		url.append(Component.PATH_SEPARATOR);
 
 		// Add behaviourId
-		RequestParameters params = requestTarget.getRequestParameters();
+		ObsoleteRequestParameters params = requestTarget.getRequestParameters();
 		if (params != null && params.getBehaviorId() != null)
 		{
 			url.append(params.getBehaviorId());

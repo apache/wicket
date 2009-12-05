@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;
 
 /**
@@ -41,11 +41,11 @@ public interface IActivePageBehaviorListener extends IBehaviorListener
 		 * 
 		 * @see org.apache.wicket.RequestListenerInterface#newRequestTarget(org.apache.wicket.Page,
 		 *      org.apache.wicket.Component, org.apache.wicket.RequestListenerInterface,
-		 *      org.apache.wicket.request.RequestParameters)
+		 *      org.apache.wicket.request.ObsoleteRequestParameters)
 		 */
 		@Override
 		public IRequestTarget newRequestTarget(Page page, Component component,
-			RequestListenerInterface listener, RequestParameters requestParameters)
+			RequestListenerInterface listener, ObsoleteRequestParameters requestParameters)
 		{
 			return new BehaviorRequestTarget(page, component, listener, requestParameters);
 		}

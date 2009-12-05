@@ -27,11 +27,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.Session;
-import org.apache.wicket.ng.protocol.http.ServletWebRequest;
 import org.apache.wicket.ng.protocol.http.WebApplication;
-import org.apache.wicket.ng.request.Request;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.session.ISessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,10 @@ public class HttpSessionStore implements SessionStore
 	/**
 	 * Reacts on unbinding from the session by cleaning up the session related application data.
 	 */
-	protected static final class SessionBindingListener implements HttpSessionBindingListener, Serializable
+	protected static final class SessionBindingListener
+		implements
+			HttpSessionBindingListener,
+			Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -88,8 +91,8 @@ public class HttpSessionStore implements SessionStore
 		{
 			log.debug("Session unbound: " + sessionId);
 			Application application = Application.get(applicationKey);
-			HttpSessionStore sessionStore = (HttpSessionStore) application.getSessionStore();
-			
+			HttpSessionStore sessionStore = (HttpSessionStore)application.getSessionStore();
+
 			for (UnboundListener listener : sessionStore.unboundListeners)
 			{
 				listener.sessionUnbound(sessionId);
@@ -121,10 +124,10 @@ public class HttpSessionStore implements SessionStore
 		// sanity check
 		if (!(application instanceof WebApplication))
 		{
-			throw new IllegalStateException(getClass().getName()
-					+ " can only operate in the context of web applications");
+			throw new IllegalStateException(getClass().getName() +
+				" can only operate in the context of web applications");
 		}
-		this.application = (WebApplication) application;
+		this.application = (WebApplication)application;
 	}
 
 	protected HttpServletRequest getHttpServletRequest(Request request)
@@ -133,7 +136,7 @@ public class HttpSessionStore implements SessionStore
 		{
 			throw new IllegalArgumentException("Request must be HttpServletRequest");
 		}
-		ServletWebRequest servletWebRequest = (ServletWebRequest) request;
+		ServletWebRequest servletWebRequest = (ServletWebRequest)request;
 		return servletWebRequest.getHttpServletRequest();
 	}
 
@@ -150,19 +153,19 @@ public class HttpSessionStore implements SessionStore
 	public final void bind(Request request, Session newSession)
 	{
 		if (getAttribute(request, SESSION_ATTRIBUTE_NAME) != newSession)
-		{					
+		{
 			// call template method
 			onBind(request, newSession);
-	
+
 			HttpSession httpSession = getHttpSession(request, false);
-	
+
 			// register an unbinding listener for cleaning up
 			String applicationKey = application.getName();
-			httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey, new SessionBindingListener(
-					applicationKey, httpSession.getId()));
-	
+			httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
+				new SessionBindingListener(applicationKey, httpSession.getId()));
+
 			// register the session object itself
-			setAttribute(request, SESSION_ATTRIBUTE_NAME, newSession);			
+			setAttribute(request, SESSION_ATTRIBUTE_NAME, newSession);
 		}
 	}
 
@@ -175,7 +178,8 @@ public class HttpSessionStore implements SessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.ng.request.Request, boolean)
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.ng.request.Request,
+	 *      boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)
 	{
@@ -209,7 +213,7 @@ public class HttpSessionStore implements SessionStore
 		if (httpSession != null)
 		{
 			// tell the app server the session is no longer valid
-			httpSession.invalidate();			
+			httpSession.invalidate();
 		}
 	}
 
@@ -221,7 +225,7 @@ public class HttpSessionStore implements SessionStore
 		String sessionId = getSessionId(request, false);
 		if (sessionId != null)
 		{
-			return (Session) getAttribute(request, SESSION_ATTRIBUTE_NAME);
+			return (Session)getAttribute(request, SESSION_ATTRIBUTE_NAME);
 		}
 		return null;
 	}
@@ -264,7 +268,7 @@ public class HttpSessionStore implements SessionStore
 	private String getSessionAttributePrefix(final Request request)
 	{
 		return "wicket";
-		// TODO:		
+		// TODO:
 		// return application.getSessionAttributePrefix(request);
 	}
 
@@ -274,11 +278,11 @@ public class HttpSessionStore implements SessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			return (Serializable) httpSession.getAttribute(getSessionAttributePrefix(request) + name);
+			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(request) + name);
 		}
 		return null;
 	}
-	
+
 	public Set<String> getAttributeNames(Request request)
 	{
 		Set<String> list = new HashSet<String>();
@@ -301,23 +305,23 @@ public class HttpSessionStore implements SessionStore
 	}
 
 	public void removeAttribute(Request request, String name)
-	{		
+	{
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
 			String attributeName = getSessionAttributePrefix(request) + name;
 			// TODO: Request Logger
-//			IRequestLogger logger = application.getRequestLogger();
-//			if (logger != null)
-//			{
-//				Object value = httpSession.getAttribute(attributeName);
-//				if (value != null)
-//				{
-//					logger.objectRemoved(value);
-//				}
-//			}
+// IRequestLogger logger = application.getRequestLogger();
+// if (logger != null)
+// {
+// Object value = httpSession.getAttribute(attributeName);
+// if (value != null)
+// {
+// logger.objectRemoved(value);
+// }
+// }
 			httpSession.removeAttribute(attributeName);
-		}	
+		}
 	}
 
 	public void setAttribute(Request request, String name, Serializable value)
@@ -328,29 +332,29 @@ public class HttpSessionStore implements SessionStore
 		{
 			String attributeName = getSessionAttributePrefix(request) + name;
 			// TODO: RequestLogger
-//			IRequestLogger logger = application.getRequestLogger();
-//			if (logger != null)
-//			{
-//				if (httpSession.getAttribute(attributeName) == null)
-//				{
-//					logger.objectCreated(value);
-//				}
-//				else
-//				{
-//					logger.objectUpdated(value);
-//				}
-//			}
+// IRequestLogger logger = application.getRequestLogger();
+// if (logger != null)
+// {
+// if (httpSession.getAttribute(attributeName) == null)
+// {
+// logger.objectCreated(value);
+// }
+// else
+// {
+// logger.objectUpdated(value);
+// }
+// }
 			httpSession.setAttribute(attributeName, value);
 		}
 	}
 
-	private Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
-	
+	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
+
 	public void registerUnboundListener(UnboundListener listener)
 	{
 		unboundListeners.add(listener);
 	}
-	
+
 	public void unregisterUnboundListener(UnboundListener listener)
 	{
 		unboundListeners.remove(listener);

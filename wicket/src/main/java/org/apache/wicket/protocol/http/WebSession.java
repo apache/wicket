@@ -99,7 +99,7 @@ public class WebSession extends Session
 			return true;
 		}
 
-		if (IResourceListener.INTERFACE.equals(lockedRequest.getRequestParameters().getInterface()))
+		if (IResourceListener.INTERFACE.equals(lockedRequest.getObsoleteRequestParameters().getInterface()))
 		{
 			return true;
 		}
@@ -113,14 +113,14 @@ public class WebSession extends Session
 			return true;
 		}
 
-		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters()
+		String lockedPageId = Strings.firstPathComponent(lockedRequest.getObsoleteRequestParameters()
 			.getComponentPath(), Component.PATH_SEPARATOR);
 		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
-			.getRequestParameters()
+			.getObsoleteRequestParameters()
 			.getComponentPath(), Component.PATH_SEPARATOR);
 
-		int lockedVersion = lockedRequest.getRequestParameters().getVersionNumber();
-		int currentVersion = currentRequest.getRequestParameters().getVersionNumber();
+		int lockedVersion = lockedRequest.getObsoleteRequestParameters().getVersionNumber();
+		int currentVersion = currentRequest.getObsoleteRequestParameters().getVersionNumber();
 
 		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion)
 		{
