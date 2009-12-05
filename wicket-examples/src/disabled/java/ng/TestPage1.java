@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.examples.ng;
 
-import org.apache.wicket.ng.Page;
+
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.markup.html.link.Link;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;

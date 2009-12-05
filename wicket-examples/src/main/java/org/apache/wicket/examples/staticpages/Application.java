@@ -20,7 +20,7 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.basic.URIRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -55,7 +55,7 @@ public class Application extends WebApplication
 		mount(new URIRequestTargetUrlCodingStrategy("/docs")
 		{
 			@Override
-			public IRequestTarget decode(RequestParameters requestParameters)
+			public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
 				return new WebExternalResourceRequestTarget(path);
@@ -66,7 +66,7 @@ public class Application extends WebApplication
 		mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
 		{
 			@Override
-			public IRequestTarget decode(RequestParameters requestParameters)
+			public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
 				IResourceStream xslStream = new PackageResourceStream(Application.class,
