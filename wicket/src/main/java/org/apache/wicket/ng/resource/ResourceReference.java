@@ -25,6 +25,12 @@ import org.apache.wicket.util.lang.Objects;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
+ * <p>
+ * Even though resource reference is just a factory for resources, it still needs to be identified
+ * by a globally unique identifier, combination of <code>scope</code> and <code>name</code>. Those
+ * are used to generate URLs for resource references. <code>locale</code>, <code>style</code> and
+ * <code>variation</code> are optional fields to allow having specific references for individual
+ * locales, styles and variations.
  * 
  * @author Matej Knopp
  */
