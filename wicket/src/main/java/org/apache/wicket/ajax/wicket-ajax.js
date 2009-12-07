@@ -1069,30 +1069,47 @@ Wicket.Ajax.Call.prototype = {
 	    return this.request.post(body);
 	},
 
+
 	// If the form contains multipart content this function will post 
 	// the form using an iframe instead of the regular ajax call
 	// and bridge the output - transparently making this work  as if it was an ajax call
 	handleMultipart: function (form, submitButton) {
 		
+		var multipart=false;
+		
 		// find root form
 		if (form.tagName.toLowerCase() != "form") {
 			do {
+				// check if any inner forms are multipart
+				if (multipart==false&&Wicket!=undefined&&Wicket.Forms!=undefined) {
+					var meta=Wicket.Forms[form.id];
+					if (meta!=undefined) {
+						if (meta["multipart"]!=undefined) {
+							multipart=multipart||meta["multipart"];
+						}
+					}
+				}
 				form = form.parentNode;
 			} while(form.tagName.toLowerCase() != "form" && form.tagName.toLowerCase() != "body")
 		}	
 
+		
 		if (form.tagName.toLowerCase() != "form") {
 			// no form in the hierarchy, cant handle multipart
 			return false;
 		}
 		
-	 	if (form.enctype!="multipart/form-data") {
-	 		// not handled, return false
-	 		return false;
-	 	}
-			
+		multipart=multipart||form.enctype=="multipart/form-data";
+		
+		if (multipart==false) {
+			// nothing to handle
+			return false;
+		}
+		
 		var originalFormAction=form.action;
 		var originalFormTarget=form.target;
+		var originalFormMethod=form.method;
+		var originalFormEnctype=form.enctype;
 		
 		var iframeName="wicket-submit-"+(""+Math.random()).substr(2);
 		
@@ -1100,13 +1117,11 @@ Wicket.Ajax.Call.prototype = {
     		var iframe = document.createElement("<iframe name='"+iframeName+"' id='"+iframeName+"' src='about:blank'/>");
 		} catch (ex) {
 		    var iframe = document.createElement("iframe");
-		    iframe.name=iframeName;
+			iframe.name=iframeName;
 			iframe.id=iframe.name;
 			iframe.src="about:blank";
 		}
 		
-		//iframe.style.width="600px";
-		//iframe.style.height="300px";
 		iframe.style.display="none";
 		iframe.style.visibility="hidden";
 				
@@ -1117,6 +1132,8 @@ Wicket.Ajax.Call.prototype = {
 		// reconfigure the form
 		form.target=iframe.name;
 		form.action=this.request.url + "&wicket:ajax=true";
+		form.method="post";
+		form.enctype="multipart/form-data";
 		
 		// create submitting button element
 		if (submitButton!=null) {
@@ -1138,6 +1155,8 @@ Wicket.Ajax.Call.prototype = {
 		// handled, restore state and return true
 		form.action=originalFormAction;
 		form.target=originalFormTarget;
+		form.method=originalFormMethod;
+		form.enctype=originalFormEnctype;
 		
  		return true;
  	},
@@ -1145,7 +1164,11 @@ Wicket.Ajax.Call.prototype = {
  	// Completes the multipart ajax handling started via handleMultipart()
 	handleMultipartComplete: function (event) {
 		if (event==null) { event=window.event; }
-		if (event.target!=null) { var iframe=event.target; } else { var iframe=event.srcElement};
+		if (event.target!=null) {
+			var iframe=event.target;
+		} else {
+			var iframe=event.srcElement
+		};
 
 		var envelope=iframe.contentWindow.document;
 		if (envelope.XMLDocument!=null) { envelope=envelope.XMLDocument; }
@@ -1163,7 +1186,13 @@ Wicket.Ajax.Call.prototype = {
 			iframe.removeEventListener("load", this.handleMultipartComplete, false);
 		
 		// remove the iframe and button elements
-		setTimeout(function() { var e=document.getElementById(iframe.id+"-btn"); if (e!=null) { e.parentNode.removeChild(e); } iframe.parentNode.removeChild(iframe); }, 250);
+		setTimeout(function() {
+			var e=document.getElementById(iframe.id+"-btn");
+			if (e!=null) {
+				e.parentNode.removeChild(e);
+			}
+			iframe.parentNode.removeChild(iframe);
+		}, 250);
 	},
 	
 	// Processes the response

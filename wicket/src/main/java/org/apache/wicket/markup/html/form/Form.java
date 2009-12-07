@@ -36,6 +36,8 @@ import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.persistence.CookieValuePersister;
@@ -138,7 +140,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IHeaderContributor
 {
 	/**
 	 * Visitor used for validation
@@ -1847,8 +1849,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
+			// see renderhead for some non-root javascript markers
 		}
 	}
+
 
 	@Override
 	protected void renderPlaceholderTag(ComponentTag tag, Response response)
@@ -2331,5 +2335,30 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		}
 		return form;
 
+	}
+
+	/** {@inheritDoc} */
+	public void renderHead(IHeaderResponse response)
+	{
+		if (!isRootForm() && isMultiPart())
+		{
+			// register some metadata so we can later properly handle multipart ajax posts for
+			// embedded forms
+			registerJavascriptNamespaces(response);
+			response.renderJavascript("Wicket.Forms[\"" + getMarkupId() + "\"]={multipart:true};",
+				Form.class.getName() + "." + getMarkupId() + ".metadata");
+		}
+	}
+
+	/**
+	 * Produces javascript that registereds Wicket.Forms namespaces
+	 * 
+	 * @param response
+	 */
+	protected void registerJavascriptNamespaces(IHeaderResponse response)
+	{
+		response.renderJavascript(
+			"if (Wicket==undefined) { Wicket={}; } if (Wicket.Forms==undefined) { Wicket.Forms={}; }",
+			Form.class.getName());
 	}
 }
