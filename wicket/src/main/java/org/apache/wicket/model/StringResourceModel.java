@@ -682,5 +682,4 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		throw new UnsupportedOperationException();
 	}
-
 }

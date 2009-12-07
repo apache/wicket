@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import org.junit.Ignore;
+
 
 /**
  * 
  */
+@Ignore
 public class DatePickerTest // extends TestCase
 {
 	// Disabled until we fixed the issue that WicketTestCase or WicketTester is not available in

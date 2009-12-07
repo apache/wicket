@@ -1,54 +1,5 @@
 This file contains all changes done on the 1.4 version.
 
-Release Notes - Wicket - Version 1.4.4
-
-** Bug
-    * [WICKET-625] - Wicket doesn't clean up properly when hot-deploying; hangs onto Class references.
-    * [WICKET-2080] - InjectorHolder is broken when wicket-ioc.jar is shared between multiple web applications
-    * [WICKET-2317] - Deprecated JavaDoc for org.apache.wicket.behavior.HeaderContributor
-    * [WICKET-2419] - AjaxEditableMultiLineLabel doesn't handle huge text properly
-    * [WICKET-2491] - Ajax multipart broken on mounted pages
-    * [WICKET-2518] - Application_bg.properties property file is incorrectly encoded
-    * [WICKET-2519] - 1.4.2 enclosure problem
-    * [WICKET-2534] - File Handle Leak in URLResourceStream
-    * [WICKET-2545] - NullPointerException thrown from BaseWicketTester isComponent
-    * [WICKET-2546] - DataTable does not generate "thead" tag
-    * [WICKET-2548] - MetaDataKey does not meet hashCode() contract
-    * [WICKET-2550] - DatePicker introduces a bug regarding the back button support of the browser.
-    * [WICKET-2551] - Bug in WicketTester when submitting forms
-    * [WICKET-2552] - CreditCardValidator accepts invalid inputs
-    * [WICKET-2553] - Wicket-ajax.js: Javascript error on submitting of form with wicketSubmitFormById.
-    * [WICKET-2554] - WebRequestCodingStrategy assumes that a shared resource URL should always be relative to the Wicket handler
-    * [WICKET-2567] - Images and stylesheets leave open file handles
-    * [WICKET-2568] - Unnecessary method calls in IDataProvider
-    * [WICKET-2570] - Form submitting component is not checked for being enabled during submit
-    * [WICKET-2580] - Javadoc of Component#setOutputMarkupPlaceholderTag is wrong
-    * [WICKET-2582] - org.apache.wicket.markup.html.form.Check should call Component.isEnabledInHierarchy()
-    * [WICKET-2583] - Warnings flood if incorrect credentials endered on SignInPage
-    * [WICKET-2587] - UploadProgressBar producing warning log messages incorrectly
-    * [WICKET-2589] - FeedbackPanel in FormComponentFeedbackBorder throws ConcurrentModificationException
-    * [WICKET-2593] - wicket:message can cause infinite loop in render
-
-** Improvement
-    * [WICKET-12] - open Modal Window without AjaxRequestTarget
-    * [WICKET-2326] - Text on BrowserInfoPage should be customizable
-    * [WICKET-2364] - CLONE -Make LoadableDetachableModel writable
-    * [WICKET-2531] - Open DropDownChoice null value internationalization key
-    * [WICKET-2533] - Behavior for accepted locales should fit the HTTP Specification  
-    * [WICKET-2536] - Guice 2.0 and its maven2 repository groupId
-    * [WICKET-2539] - PackageStringResourceLoader does not look up to superclasses
-    * [WICKET-2540] - Date Validation - message formatting of the date
-    * [WICKET-2564] - Modify wicket-devutils DebugBar so it emits valid XHTML
-    * [WICKET-2573] - Allow applications to chose not to use CGLIB proxies for @SpringBean injections
-    * [WICKET-2575] - RepeatingView's Javadoc to include newChildId() and add()
-    * [WICKET-2578] - Polish resource files for wicket 1.4.3
-    * [WICKET-2581] - French translation of Wicket-auth resources
-    * [WICKET-2590] - AjaxLazyLoadPanel callback script rendering
-
-** New Feature
-    * [WICKET-1157] - Generic internationalization for Enums
-    * [WICKET-2572] - Add capability for SpringWebApplicationFactory to create its own application context
-
 Release Notes - Wicket - Version 1.4.3
 
 ** Bug
