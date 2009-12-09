@@ -18,11 +18,12 @@ if (typeof(Wicket) == "undefined") Wicket = { };
 
 Wicket.WUPB= {
 
-    Def : function(formid, statusid, barid, url) {
+    Def : function(formid, statusid, barid, url, fileid) {
         this.formid=formid;
         this.statusid=statusid;
         this.barid=barid;
         this.url=url;
+        this.fileid=fileid;
     },
     
  	get : function(id) {
@@ -30,14 +31,21 @@ Wicket.WUPB= {
 	},
 	
 	start : function(def) {
-		//Wicket.WUPB.get(def.formid).submit();
-		Wicket.WUPB.get(def.statusid).innerHTML='Upload starting...';
-	    Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width='0%';
-	    
-		Wicket.WUPB.get(def.statusid).style.display='block';
-	    Wicket.WUPB.get(def.barid).style.display='block';
-	    
-	    window.setTimeout(function() { Wicket.WUPB.ajax(def); }, 1000);
+		var displayprogress = true;
+		if (def.fileid) {
+			var fileupload = Wicket.WUPB.get(def.fileid);
+			displayprogress = fileupload && fileupload.value && fileupload.value != '';
+		}
+		if(displayprogress) {
+			//Wicket.WUPB.get(def.formid).submit();
+			Wicket.WUPB.get(def.statusid).innerHTML='Upload starting...';
+			Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width='0%';
+
+			Wicket.WUPB.get(def.statusid).style.display='block';
+			Wicket.WUPB.get(def.barid).style.display='block';
+
+			window.setTimeout(function() { Wicket.WUPB.ajax(def); }, 1000);
+		}
 	},
 	
 	ajax : function(def) {
