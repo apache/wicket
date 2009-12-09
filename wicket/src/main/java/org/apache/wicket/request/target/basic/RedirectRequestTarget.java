@@ -88,9 +88,10 @@ public class RedirectRequestTarget implements IRequestTarget
 					.getProcessor()
 					.getRequestCodingStrategy()
 					.rewriteStaticRelativeUrl(redirectUrl.substring(1));
-				if (location.startsWith("./") && location.length() > 2)
+				// IE does not understand "./" in a path, just "." is okay.
+				if (location.startsWith("./"))
 				{
-					location = location.substring(2);
+					location = location.length() == 2 ? "." : location.substring(2);
 				}
 				response.redirect(location);
 			}
