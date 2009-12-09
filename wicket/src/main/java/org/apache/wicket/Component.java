@@ -1345,7 +1345,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * @return component border assigned to this component, or null if none
+	 * @deprecated
 	 */
+	@Deprecated
 	public final IComponentBorder getComponentBorder()
 	{
 		return getMetaData(BORDER_KEY);
@@ -2775,7 +2777,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @param border
 	 *            component border to assign, or <code>null</code> to clear any previous
 	 * @return component for chaining
+	 * @deprecated
 	 */
+	@Deprecated
 	public final Component setComponentBorder(final IComponentBorder border)
 	{
 		if (!Objects.equal(getComponentBorder(), border))

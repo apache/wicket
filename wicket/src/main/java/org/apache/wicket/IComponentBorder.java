@@ -24,7 +24,9 @@ import org.apache.wicket.markup.html.border.MarkupComponentBorder;
  * @author jcompagner
  * 
  * @see MarkupComponentBorder
+ * @deprecated please use IBehavior instead
  */
+@Deprecated
 public interface IComponentBorder extends IClusterable
 {
 	/**
