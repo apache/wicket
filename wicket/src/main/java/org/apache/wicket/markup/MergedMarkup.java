@@ -63,6 +63,12 @@ public class MergedMarkup extends Markup
 
 		getMarkupResourceStream().setBaseMarkup(baseMarkup);
 
+		// Copy settings from derived markup
+		MarkupResourceStream baseResourceStream = baseMarkup.getMarkupResourceStream();
+		getMarkupResourceStream().setXmlDeclaration(baseResourceStream.getXmlDeclaration());
+		getMarkupResourceStream().setEncoding(baseResourceStream.getEncoding());
+		getMarkupResourceStream().setWicketNamespace(baseResourceStream.getWicketNamespace());
+
 		if (log.isDebugEnabled())
 		{
 			String derivedResource = Strings.afterLast(markup.getMarkupResourceStream()
