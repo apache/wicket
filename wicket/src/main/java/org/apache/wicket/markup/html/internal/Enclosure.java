@@ -169,7 +169,7 @@ public class Enclosure extends WebMarkupContainer
 		ensureAllChildrenPresent(container, markupStream, enclosureOpenTag);
 
 		Component controller = container.get(childId.toString());
-		checkChildComponent(controller);
+		checkChildComponent(controller, childId);
 
 		// set the enclosure visibility
 		setVisible(controller.determineVisibility());
@@ -213,14 +213,14 @@ public class Enclosure extends WebMarkupContainer
 		it.rewind();
 	}
 
-	private void checkChildComponent(Component controller)
+	private void checkChildComponent(Component child, CharSequence id)
 	{
-		if (controller == null)
+		if (child == null)
 		{
-			throw new WicketRuntimeException("Could not find child with id: " + childId +
+			throw new WicketRuntimeException("Could not find child with id: " + id +
 				" in the wicket:enclosure");
 		}
-		else if (controller == this)
+		else if (child == this)
 		{
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
@@ -259,7 +259,7 @@ public class Enclosure extends WebMarkupContainer
 					}.execute();
 
 					child = container.get(tag.getId());
-					checkChildComponent(child);
+					checkChildComponent(child, tag.getId());
 
 					if (buffer.length() > 0)
 					{
