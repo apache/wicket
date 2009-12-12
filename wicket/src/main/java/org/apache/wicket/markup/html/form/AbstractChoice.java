@@ -175,7 +175,8 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The collection of choices in the dropdown
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<T> model, final IModel<? extends List<? extends E>> choices)
+	public AbstractChoice(final String id, IModel<T> model,
+		final IModel<? extends List<? extends E>> choices)
 	{
 		this(id, model, choices, new ChoiceRenderer<E>());
 	}
@@ -429,7 +430,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	protected CharSequence escapeOptionHtml(String displayValue)
 	{
-		return Strings.escapeMarkup(displayValue, false, true);
+		return Strings.escapeMarkup(displayValue);
 	}
 
 	/**
