@@ -81,15 +81,16 @@ public class PagingNavigator extends Panel
 		return pageable;
 	}
 
-
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
-
 		if (get("first") == null)
 		{
 			// Get the navigation bar and add it to the hierarchy
-			pagingNavigation = newNavigation(pageable, labelProvider);
+			pagingNavigation = newNavigation("navigation", pageable, labelProvider);
 			add(pagingNavigation);
 
 			// Add additional page links
@@ -148,11 +149,30 @@ public class PagingNavigator extends Panel
 	 * @param labelProvider
 	 *            The label provider for the link text.
 	 * @return the navigation object
+	 * @deprecated
 	 */
+	@Deprecated
 	protected PagingNavigation newNavigation(final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return new PagingNavigation("navigation", pageable, labelProvider);
+		return newNavigation("navigation", pageable, labelProvider);
+	}
+
+	/**
+	 * Create a new PagingNavigation. May be subclassed to make us of specialized PagingNavigation.
+	 * 
+	 * @param id
+	 *            The id of the navigation component
+	 * @param pageable
+	 *            the pageable component
+	 * @param labelProvider
+	 *            The label provider for the link text.
+	 * @return the navigation object
+	 */
+	protected PagingNavigation newNavigation(final String id, final IPageable pageable,
+		final IPagingLabelProvider labelProvider)
+	{
+		return new PagingNavigation(id, pageable, labelProvider);
 	}
 
 	/**
