@@ -115,19 +115,15 @@ public class AjaxPagingNavigator extends PagingNavigator
 	}
 
 	/**
-	 * Create a new PagingNavigation. May be subclassed to make us of specialized PagingNavigation.
-	 * 
-	 * @param pageable
-	 *            the pageable component
-	 * @param labelProvider
-	 *            The label provider for the link text.
-	 * @return the navigation object
+	 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(java.lang.String,
+	 *      org.apache.wicket.markup.html.navigation.paging.IPageable,
+	 *      org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider)
 	 */
 	@Override
-	protected PagingNavigation newNavigation(final IPageable pageable,
+	protected PagingNavigation newNavigation(final String id, final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return new AjaxPagingNavigation("navigation", pageable, labelProvider);
+		return new AjaxPagingNavigation(id, pageable, labelProvider);
 	}
 
 	/**
