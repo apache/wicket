@@ -67,7 +67,7 @@ public class WebRequestEncoder
 		}
 		else
 		{
-			throw new IllegalArgumentException("PageParameters can only contain String or String[]");
+			addValue(key, value.toString());
 		}
 	}
 

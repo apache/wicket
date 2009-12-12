@@ -86,7 +86,6 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
 {
-
 	/**
 	 * Sole constructor.
 	 * 
@@ -171,5 +170,4 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		return parameters;
 
 	}
-
 }
