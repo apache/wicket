@@ -429,7 +429,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	protected CharSequence escapeOptionHtml(String displayValue)
 	{
-		return Strings.escapeMarkup(displayValue, false, true);
+		return Strings.escapeMarkup(displayValue);
 	}
 
 	/**
@@ -443,6 +443,4 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		return false;
 	}
-
-
 }
