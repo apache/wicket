@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.request.target.coding;
 
+import java.math.BigDecimal;
+
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,4 +51,20 @@ public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 		log.debug(path);
 		assertEquals("mount/point?a=1&a=2&b=1", path);
 	}
+
+	/**
+	 * 
+	 */
+	public void testNonStringParams()
+	{
+		final IRequestTargetUrlCodingStrategy strategy = new QueryStringUrlCodingStrategy("/foo",
+			WebPage.class);
+		final PageParameters params = new PageParameters();
+		params.put("param1", 1);
+		params.put("param2", new BigDecimal("2.0"));
+		final String actual = strategy.encode(
+			new BookmarkablePageRequestTarget(WebPage.class, params)).toString();
+		assertEquals("foo?param1=1&param2=2.0", actual);
+	}
+
 }
