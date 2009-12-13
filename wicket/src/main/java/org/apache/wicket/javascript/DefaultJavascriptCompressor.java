@@ -30,6 +30,6 @@ public class DefaultJavascriptCompressor implements IJavascriptCompressor
 	 */
 	public String compress(String original)
 	{
-		return JavascriptStripper.stripCommentsAndWhitespace(original);
+		return new JavascriptStripper().stripCommentsAndWhitespace(original);
 	}
 }

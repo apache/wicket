@@ -48,7 +48,7 @@ public class JavascriptStripper
 	/** Inside a regular expression */
 	private final static int REG_EXP = 7;
 
-	private static int getPrevCount(String s, int fromIndex, char c)
+	private int getPrevCount(String s, int fromIndex, char c)
 	{
 		int count = 0;
 		--fromIndex;
@@ -73,7 +73,7 @@ public class JavascriptStripper
 	 *            Source string
 	 * @return String with removed comments and whitespace
 	 */
-	public static String stripCommentsAndWhitespace(String original)
+	public String stripCommentsAndWhitespace(String original)
 	{
 		// let's be optimistic
 		AppendingStringBuffer result = new AppendingStringBuffer(original.length() / 2);
