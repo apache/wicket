@@ -573,20 +573,6 @@ public class CreditCardValidator extends AbstractValidator<String>
 	}
 
 	/**
-	 * Just used for debugging purposes.<br>
-	 * Due to re-branding (e.g. Switch was re-branded as Maestro in mid 2007) some rules might
-	 * overlap, but those overlappings are not considered. So it might happen, that a Switch-card is
-	 * identified as a Maestro. <br>
-	 * So you shouldn't rely on the name which is returned here.
-	 * 
-	 * @return the name of the credit card if it could be determined, else an empty string
-	 */
-	private String getCardName()
-	{
-		return (cardId > -1 && cardId < creditCardNames.length ? creditCardNames[cardId] : "");
-	}
-
-	/**
 	 * Calculates the checksum of a credit card number using the Luhn algorithm (the so-called
 	 * "mod 10" algorithm).
 	 * 

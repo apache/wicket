@@ -422,7 +422,6 @@ public class MockWebApplication
 				IRequestTarget currentTarget = cycle.getRequestTarget();
 				if (currentTarget instanceof IPageRequestTarget)
 				{
-					Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
 					pageMapName = "";
 				}
 				else

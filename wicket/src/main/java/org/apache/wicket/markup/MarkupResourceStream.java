@@ -75,18 +75,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	private String wicketId;
 
 	/**
-	 * Construct. Private by purpose.
-	 */
-	private MarkupResourceStream()
-	{
-		resourceStream = null;
-		markupClassName = null;
-		containerInfo = null;
-
-		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
-	}
-
-	/**
 	 * Construct.
 	 * 
 	 * @param resourceStream

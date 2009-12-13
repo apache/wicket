@@ -178,23 +178,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Find a child component. It may have been directly added to the container or to a transparent
-	 * child container. From a user's point of view, it was added to this container.
-	 * 
-	 * @param child
-	 * @return The container the child was actually added to. Null if not found.
-	 */
-	private MarkupContainer findChild(final Component child)
-	{
-		if (get(child.getId()) != null)
-		{
-			return this;
-		}
-
-		return null;
-	}
-
-	/**
 	 * Replaces a child component of this container with another or just adds it in case no child
 	 * with the same id existed yet.
 	 * 

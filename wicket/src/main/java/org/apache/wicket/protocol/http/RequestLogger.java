@@ -98,8 +98,6 @@ public class RequestLogger implements IRequestLogger
 
 	private final Map<String, SessionData> liveSessions;
 
-	private final ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
-
 	private final AtomicInteger active = new AtomicInteger();
 
 	/**

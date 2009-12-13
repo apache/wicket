@@ -135,11 +135,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			size = 0;
 		}
 
-		boolean contains(Object obj)
-		{
-			return lookup(obj) != -1;
-		}
-
 		/**
 		 * Looks up and returns handle associated with given object, or -1 if no mapping found.
 		 * 

@@ -98,7 +98,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/** log. */
-	private static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
+	private final static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
 
 	/** The web application for this store. Is never null. */
 	protected final WebApplication application;

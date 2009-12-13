@@ -31,9 +31,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
-import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.response.StringResponse;
 

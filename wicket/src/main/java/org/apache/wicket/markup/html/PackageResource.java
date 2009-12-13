@@ -16,12 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -263,27 +258,6 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		final Locale locale, final String style, final String variation)
 	{
 		return new PackageResource(scope, path, locale, style, variation);
-	}
-
-	/* removed in 2.0 */
-	private static void scanJarFile(Class<?> scope, Pattern pattern, boolean recurse,
-		final List<PackageResource> resources, String packageRef, JarFile jf)
-	{
-		Enumeration<JarEntry> enumeration = jf.entries();
-		while (enumeration.hasMoreElements())
-		{
-			JarEntry je = enumeration.nextElement();
-			String name = je.getName();
-			if (name.startsWith(packageRef))
-			{
-				name = name.substring(packageRef.length() + 1);
-				if (pattern.matcher(name).matches() && (recurse || (name.indexOf('/') == -1)))
-				{
-					// we add the entry as a package resource
-					resources.add(get(scope, name, null, null, null));
-				}
-			}
-		}
 	}
 
 	/** The path to the resource */
