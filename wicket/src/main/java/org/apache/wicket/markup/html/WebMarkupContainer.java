@@ -50,17 +50,6 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * Gets the markup type for this component.
-	 * 
-	 * @return Markup type of HTML
-	 */
-	@Override
-	public String getMarkupType()
-	{
-		return getPage().getMarkupType();
-	}
-
-	/**
 	 * A convenience method to return the WebPage. Same as getPage().
 	 * 
 	 * @return WebPage

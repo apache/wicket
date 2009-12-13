@@ -30,6 +30,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
@@ -359,7 +360,7 @@ public abstract class MarkupContainer extends Component
 			// throw exception since there is no associated markup
 			throw new MarkupNotFoundException(
 				"Markup of type '" +
-					getMarkupType() +
+					getMarkupType().getExtension() +
 					"' for component '" +
 					getClass().getName() +
 					"' not found." +
@@ -407,8 +408,8 @@ public abstract class MarkupContainer extends Component
 		{
 			// throw exception since there is no associated markup
 			throw new MarkupNotFoundException(
-				exceptionMessage("Markup of type '" + getMarkupType() + "' for component '" +
-					getClass().getName() + "' not found." +
+				exceptionMessage("Markup of type '" + getMarkupType().getExtension() +
+					"' for component '" + getClass().getName() + "' not found." +
 					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried"),
 				ex);
 		}
@@ -494,7 +495,7 @@ public abstract class MarkupContainer extends Component
 	 *         runtime). If there is no markup type for a component, null may be returned, but this
 	 *         means that no markup can be loaded for the class.
 	 */
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
 		return getPage().getMarkupType();
 	}

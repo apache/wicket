@@ -85,9 +85,9 @@ public class MarkupCacheTest extends TestCase
 		}
 
 		@Override
-		public String getMarkupType()
+		public MarkupType getMarkupType()
 		{
-			return "html";
+			return MarkupType.HTML_MARKUP_TYPE;
 		}
 	}
 }

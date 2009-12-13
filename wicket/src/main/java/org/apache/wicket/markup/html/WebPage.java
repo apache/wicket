@@ -23,6 +23,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -154,9 +155,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * @return Markup type for HTML
 	 */
 	@Override
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
-		return "html";
+		return MarkupType.HTML_MARKUP_TYPE;
 	}
 
 	/**

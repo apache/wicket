@@ -33,6 +33,7 @@ import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationSt
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -937,7 +938,7 @@ public abstract class Page extends MarkupContainer
 		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		response.setContentType("text/" + getMarkupType() + "; charset=" + encoding);
+		response.setContentType(getMarkupType().getMimeType() + "; charset=" + encoding);
 
 		// Write out an xml declaration if the markup stream and settings allow
 		final IMarkupFragment markup = getMarkup();
@@ -1169,7 +1170,7 @@ public abstract class Page extends MarkupContainer
 	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
 	 */
 	@Override
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
 		throw new UnsupportedOperationException(
 			"Page does not support markup. This error can happen if you have extended Page directly, instead extend WebPage");

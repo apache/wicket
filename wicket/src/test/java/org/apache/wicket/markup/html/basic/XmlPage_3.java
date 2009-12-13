@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -43,8 +44,8 @@ public class XmlPage_3 extends WebPage
 	 * @see org.apache.wicket.markup.html.WebPage#getMarkupType()
 	 */
 	@Override
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
-		return "xml";
+		return new MarkupType("xml", null);
 	}
 }

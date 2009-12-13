@@ -255,11 +255,11 @@ public class MarkupComponentBorder extends AbstractBehavior
 		String extension;
 		if (component instanceof MarkupContainer)
 		{
-			extension = ((MarkupContainer)component).getMarkupType();
+			extension = ((MarkupContainer)component).getMarkupType().getExtension();
 		}
 		else
 		{
-			extension = component.getParent().getMarkupType();
+			extension = component.getParent().getMarkupType().getExtension();
 		}
 		return extension;
 	}

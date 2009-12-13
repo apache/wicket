@@ -14,34 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.basic;
+package org.apache.wicket.markup;
 
-import org.apache.wicket.markup.MarkupType;
-import org.apache.wicket.markup.html.WebPage;
-
+import java.io.Serializable;
 
 /**
- * Mock page for testing.
  * 
  * @author Juergen Donnerstag
  */
-public class XmlPage_1 extends WebPage
+public class MarkupType implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	/** A HTML markup type for web pages */
+	public final static MarkupType HTML_MARKUP_TYPE = new MarkupType("html", "text/html");
+
+	private final String extension;
+
+	private final String mimeType;
+
 	/**
 	 * Construct.
+	 * 
+	 * @param extension
+	 *            associate markup file extension. "html" by default.
+	 * @param mimeType
 	 */
-	public XmlPage_1()
+	public MarkupType(final String extension, final String mimeType)
 	{
+		this.extension = extension;
+		this.mimeType = mimeType;
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.WebPage#getMarkupType()
+	 * Gets extension.
+	 * 
+	 * @return extension
 	 */
-	@Override
-	public MarkupType getMarkupType()
+	public final String getExtension()
 	{
-		return new MarkupType("xml", null);
+		return extension;
+	}
+
+	/**
+	 * Gets mimeType.
+	 * 
+	 * @return mimeType
+	 */
+	public final String getMimeType()
+	{
+		return mimeType;
 	}
 }

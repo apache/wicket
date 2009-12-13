@@ -18,6 +18,7 @@ package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -106,9 +107,9 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
 	 */
 	@Override
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
-		return "xsl";
+		return new MarkupType("xsl", null);
 	}
 
 	/**

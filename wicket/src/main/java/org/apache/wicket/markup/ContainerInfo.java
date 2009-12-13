@@ -45,7 +45,7 @@ public class ContainerInfo
 	public ContainerInfo(final MarkupContainer container)
 	{
 		this(container.getClass(), container.getLocale(), container.getStyle(),
-			container.getVariation(), container.getMarkupType());
+			container.getVariation(), container.getMarkupType().getExtension());
 	}
 
 	/**

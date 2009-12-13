@@ -72,7 +72,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 		String style = container.getStyle();
 		String variation = container.getVariation();
 		Locale locale = container.getLocale();
-		String ext = container.getMarkupType();
+		String ext = container.getMarkupType().getExtension();
 
 		// Markup is associated with the containers class. Walk up the class
 		// hierarchy up to MarkupContainer to find the containers markup
