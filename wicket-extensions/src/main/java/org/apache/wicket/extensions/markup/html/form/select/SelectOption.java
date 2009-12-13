@@ -78,8 +78,6 @@ public class SelectOption<T> extends WebMarkupContainer
 		// assign name and value
 		tag.put("value", getPath());
 
-		boolean isSelected = false;
-
 		if (select.isSelected(this))
 		{
 			tag.put("selected", "selected");
@@ -88,5 +86,4 @@ public class SelectOption<T> extends WebMarkupContainer
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
-
 }

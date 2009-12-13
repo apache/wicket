@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.behavior.CssHeaderContributor;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.model.IModel;
 
