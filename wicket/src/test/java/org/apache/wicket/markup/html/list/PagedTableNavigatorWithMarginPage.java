@@ -74,15 +74,14 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(java.lang.String,
-			 *      org.apache.wicket.markup.html.navigation.paging.IPageable,
+			 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(org.apache.wicket.markup.html.navigation.paging.IPageable,
 			 *      org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider)
 			 */
 			@Override
-			protected PagingNavigation newNavigation(final String id, IPageable pageable,
+			protected PagingNavigation newNavigation(IPageable pageable,
 				IPagingLabelProvider labelProvider)
 			{
-				PagingNavigation nav = new PagingNavigation(id, pageable);
+				PagingNavigation nav = new PagingNavigation(NAVIGATION_ID, pageable);
 				nav.setMargin(2);
 				if (nav.getViewSize() > 5)
 				{

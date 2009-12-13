@@ -34,6 +34,8 @@ public class PagingNavigator extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String NAVIGATION_ID = "navigation";
+
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
 	private PagingNavigation pagingNavigation;
 	private final IPageable pageable;
@@ -70,7 +72,6 @@ public class PagingNavigator extends Panel
 		this.labelProvider = labelProvider;
 	}
 
-
 	/**
 	 * {@link IPageable} this navigator is linked with
 	 * 
@@ -90,7 +91,7 @@ public class PagingNavigator extends Panel
 		if (get("first") == null)
 		{
 			// Get the navigation bar and add it to the hierarchy
-			pagingNavigation = newNavigation("navigation", pageable, labelProvider);
+			pagingNavigation = newNavigation(pageable, labelProvider);
 			add(pagingNavigation);
 
 			// Add additional page links
@@ -149,30 +150,11 @@ public class PagingNavigator extends Panel
 	 * @param labelProvider
 	 *            The label provider for the link text.
 	 * @return the navigation object
-	 * @deprecated
 	 */
-	@Deprecated
 	protected PagingNavigation newNavigation(final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return newNavigation("navigation", pageable, labelProvider);
-	}
-
-	/**
-	 * Create a new PagingNavigation. May be subclassed to make us of specialized PagingNavigation.
-	 * 
-	 * @param id
-	 *            The id of the navigation component
-	 * @param pageable
-	 *            the pageable component
-	 * @param labelProvider
-	 *            The label provider for the link text.
-	 * @return the navigation object
-	 */
-	protected PagingNavigation newNavigation(final String id, final IPageable pageable,
-		final IPagingLabelProvider labelProvider)
-	{
-		return new PagingNavigation(id, pageable, labelProvider);
+		return new PagingNavigation(NAVIGATION_ID, pageable, labelProvider);
 	}
 
 	/**
