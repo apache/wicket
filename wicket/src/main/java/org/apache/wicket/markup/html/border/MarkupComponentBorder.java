@@ -36,8 +36,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
- * This is a IComponentBorder implementation that can be used if you have markup that should be
- * around a component. It works just like {@link Border} so you have to have a <wicket:border>HTML
+ * This is a behavior implementation that can be used if you have markup that should be around a
+ * component. It works just like {@link Border} so you have to have a <wicket:border>HTML
  * before<wicket:body/>HTML after</wicket:border> in the html of your subclass.
  * 
  * @author jcompagner

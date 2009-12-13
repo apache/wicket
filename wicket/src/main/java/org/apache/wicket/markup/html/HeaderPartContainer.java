@@ -91,12 +91,5 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	public IMarkupFragment getMarkup()
 	{
 		return getMarkupStream().getMarkupFragment();
-// IMarkupFragment markup = container.getAssociatedMarkup();
-// if (markup == null)
-// {
-// return null;
-// }
-//
-// return markup.find(null, "_head", 0);
 	}
 }

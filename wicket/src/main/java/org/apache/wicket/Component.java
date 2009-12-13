@@ -2478,6 +2478,8 @@ public abstract class Component implements IClusterable, IConverterLocator, Requ
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
 	 * Print to the web response what ever the component wants to contribute to the head section.
 	 * Make sure that all attached behaviors are asked as well.
 	 * <p>
