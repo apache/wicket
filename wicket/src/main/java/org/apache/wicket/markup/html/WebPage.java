@@ -87,7 +87,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		/**
 		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 		 */
-		@Override
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
 			// TODO

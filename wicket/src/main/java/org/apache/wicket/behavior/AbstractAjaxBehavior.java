@@ -20,8 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
@@ -31,14 +29,10 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior extends AbstractBehavior
+public abstract class AbstractAjaxBehavior extends AbstractHeaderContributor
 	implements
-		IBehaviorListener,
-		IHeaderContributor
+		IBehaviorListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** the component that this handler is bound to. */
@@ -84,7 +78,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @return the url that references this handler
 	 * @see #getCallbackUrl(boolean)
 	 */
-	@Deprecated // TODO 1.6 Remove
+	@Deprecated
+	// TODO 1.6 Remove
 	public CharSequence getCallbackUrl()
 	{
 		return getCallbackUrl(true);
@@ -138,14 +133,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	public final void onRendered(final Component hostComponent)
 	{
 		onComponentRendered();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
-	 */
-	@Override
-	public void renderHead(final IHeaderResponse response)
-	{
 	}
 
 	/**

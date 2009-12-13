@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.behavior;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
@@ -29,9 +30,6 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	implements
 		IHeaderContributor
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -42,33 +40,27 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	}
 
 	/**
-	 * Gets the header contributors for this behavior.
-	 * 
-	 * @return the header contributors; may return null if there are none
-	 */
-	public abstract IHeaderContributor[] getHeaderContributors();
-
-	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
-	@Override
-	public final void renderHead(final IHeaderResponse response)
+	public abstract void renderHead(final IHeaderResponse response);
+
+	/**
+	 * 
+	 * @param location
+	 * @return relative path
+	 */
+	protected final String returnRelativePath(final String location)
 	{
-		IHeaderContributor[] contributors = getHeaderContributors();
-		// do nothing if we don't need to
-		if (contributors == null)
+		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
+		if (location.startsWith("http://") || location.startsWith("https://") ||
+			location.startsWith("/"))
 		{
-			return;
+			return location;
 		}
 
-		for (int i = 0; i < contributors.length; i++)
-		{
-			if (response.wasRendered(contributors[i]) == false)
-			{
-				contributors[i].renderHead(response);
-				response.markRendered(contributors[i]);
-			}
-		}
+		return RequestCycle.get()
+			.getProcessor()
+			.getRequestCodingStrategy()
+			.rewriteStaticRelativeUrl(location);
 	}
-
 }

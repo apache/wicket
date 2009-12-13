@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.behavior.CssHeaderContributor;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -42,6 +42,6 @@ public class HomePage_2 extends WebPage
 		add(new Label("message",
 			"If you see this message wicket is properly configured and running"));
 
-		add(CSSPackageResource.getHeaderContribution(HomePage_2.class, "main.css"));
+		add(new CssHeaderContributor(HomePage_2.class, "main.css"));
 	}
 }

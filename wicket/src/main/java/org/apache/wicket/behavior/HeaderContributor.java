@@ -17,25 +17,14 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
 
 /**
- * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is specialized on
- * package resources. If you use this class, you have to pre-register the resources you want to
- * contribute. A shortcut for common cases is to call {@link #forCss(Class, String)} to contribute a
- * package css file or {@link #forJavaScript(Class, String)} to contribute a packaged javascript
- * file. For instance:
- * 
- * <pre>
- * add(HeaderContributor.forCss(MyPanel.class, &quot;mystyle.css&quot;));
- * </pre>
+ * A bunch of static helper methods to add CSS and Javascript to the markup headers
  * 
  * @author Eelco Hillenius
  * @author Matej Knopp
  */
-public class HeaderContributor extends AbstractHeaderContributor
+public class HeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,9 +39,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class<?> scope, final String path)
+	public static final AbstractHeaderContributor forCss(final Class<?> scope, final String path)
 	{
-		return CSSPackageResource.getHeaderContribution(scope, path);
+		return new CssHeaderContributor(scope, path);
 	}
 
 	/**
@@ -68,10 +57,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class<?> scope, final String path,
+	public static final AbstractHeaderContributor forCss(final Class<?> scope, final String path,
 		final String media)
 	{
-		return CSSPackageResource.getHeaderContribution(scope, path, media);
+		return new CssHeaderContributor(scope, path, media);
 	}
 
 	/**
@@ -82,9 +71,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final ResourceReference reference)
+	public static final AbstractHeaderContributor forCss(final ResourceReference reference)
 	{
-		return CSSPackageResource.getHeaderContribution(reference);
+		return new CssReferenceHeaderContributor(reference);
 	}
 
 	/**
@@ -96,10 +85,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final ResourceReference reference,
+	public static final AbstractHeaderContributor forCss(final ResourceReference reference,
 		final String media)
 	{
-		return CSSPackageResource.getHeaderContribution(reference, media);
+		return new CssReferenceHeaderContributor(reference, media);
 	}
 
 	/**
@@ -116,9 +105,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The location of the css file.
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final String location)
+	public static final AbstractHeaderContributor forCss(final String location)
 	{
-		return CSSPackageResource.getHeaderContribution(location);
+		return new CssLocationHeaderContributor(location);
 	}
 
 	/**
@@ -137,9 +126,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final String location, final String media)
+	public static final AbstractHeaderContributor forCss(final String location, final String media)
 	{
-		return CSSPackageResource.getHeaderContribution(location, media);
+		return new CssLocationHeaderContributor(location, media);
 	}
 
 	/**
@@ -153,9 +142,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final Class<?> scope, final String path)
+	public static final AbstractHeaderContributor forJavaScript(final Class<?> scope,
+		final String path)
 	{
-		return JavascriptPackageResource.getHeaderContribution(scope, path);
+		return new JavascriptHeaderContributor(scope, path);
 	}
 
 	/**
@@ -166,9 +156,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final ResourceReference reference)
+	public static final AbstractHeaderContributor forJavaScript(final ResourceReference reference)
 	{
-		return JavascriptPackageResource.getHeaderContribution(reference);
+		return new JavascriptReferenceHeaderContributor(reference);
 	}
 
 	/**
@@ -185,37 +175,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The location of the java script file.
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final String location)
+	public static final AbstractHeaderContributor forJavaScript(final String location)
 	{
-		return JavascriptPackageResource.getHeaderContribution(location);
+		return new JavascriptLocationHeaderContributor(location);
 	}
 
 	/**
-	 * Resource reference to contribute.
+	 * No need to instantiate
 	 */
-	private IHeaderContributor headerContributor = null;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param headerContributor
-	 *            the header contributor
-	 */
-	public HeaderContributor(IHeaderContributor headerContributor)
+	private HeaderContributor()
 	{
-		if (headerContributor == null)
-		{
-			throw new IllegalArgumentException("header contributor may not be null");
-		}
-		this.headerContributor = headerContributor;
-	}
-
-	/**
-	 * @see org.apache.wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
-	 */
-	@Override
-	public final IHeaderContributor[] getHeaderContributors()
-	{
-		return new IHeaderContributor[] { headerContributor };
 	}
 }

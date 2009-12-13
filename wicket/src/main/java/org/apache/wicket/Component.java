@@ -39,6 +39,7 @@ import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -2491,18 +2492,28 @@ public abstract class Component implements IClusterable, IConverterLocator, Requ
 	{
 		if (isVisibleInHierarchy() && isRenderAllowed())
 		{
+			IHeaderResponse response = container.getHeaderResponse();
+
 			if (this instanceof IHeaderContributor)
 			{
-				((IHeaderContributor)this).renderHead(container.getHeaderResponse());
+				if (response.wasRendered(this) == false)
+				{
+					((IHeaderContributor)this).renderHead(container.getHeaderResponse());
+					response.markRendered(this);
+				}
 			}
 
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			for (IBehavior behavior : getBehaviors())
 			{
-				if (behavior instanceof IHeaderContributor && isBehaviorAccepted(behavior))
+				if ((behavior instanceof IHeaderContributor) && isBehaviorAccepted(behavior))
 				{
-					((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+					if (response.wasRendered(behavior) == false)
+					{
+						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+						response.markRendered(behavior);
+					}
 				}
 			}
 		}

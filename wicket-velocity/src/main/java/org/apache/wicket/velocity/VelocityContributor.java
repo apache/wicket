@@ -84,10 +84,9 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
-	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
 		if (null != s)

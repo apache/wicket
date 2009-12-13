@@ -22,7 +22,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.AbstractHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
@@ -38,9 +38,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
-public class AjaxIndicatorAppender extends AbstractBehavior
+public class AjaxIndicatorAppender extends AbstractHeaderContributor
 {
 	/**
 	 * Component instance this behavior is bound to
@@ -57,17 +56,14 @@ public class AjaxIndicatorAppender extends AbstractBehavior
 	 */
 	public AjaxIndicatorAppender()
 	{
-
 	}
 
 	/**
-	 * @see AbstractBehavior#renderHead(IHeaderResponse)
+	 * @see AbstractHeaderContributor#renderHead(IHeaderResponse)
 	 */
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		super.renderHead(response);
-
 		if (AjaxRequestTarget.get() != null)
 		{
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +
@@ -131,5 +127,4 @@ public class AjaxIndicatorAppender extends AbstractBehavior
 	{
 		this.component = component;
 	}
-
 }

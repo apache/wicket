@@ -32,9 +32,10 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.JavascriptReferenceHeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
@@ -1274,7 +1275,7 @@ public abstract class AbstractTree extends Panel
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(JavascriptPackageResource.getHeaderContribution(JAVASCRIPT));
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
 
 		checkModel();
 	}

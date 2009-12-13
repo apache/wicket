@@ -18,8 +18,6 @@ package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It is recommended to
@@ -29,7 +27,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
+public abstract class AbstractBehavior implements IBehavior
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -140,13 +138,6 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 		{
 			cleanup();
 		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
-	 */
-	public void renderHead(IHeaderResponse response)
-	{
 	}
 
 	/**

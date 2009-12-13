@@ -69,8 +69,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		super.renderHead(response);
-
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 
 		response.renderJavascriptReference(WicketEventReference.INSTANCE);

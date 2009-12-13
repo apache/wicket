@@ -213,7 +213,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
-	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		if (includeYUILibraries())

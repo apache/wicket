@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.behavior.CssLocationHeaderContributor;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -34,6 +34,6 @@ public class SimplePage_15 extends WebPage
 	 */
 	public SimplePage_15()
 	{
-		add(HeaderContributor.forCss("BasePage.css"));
+		add(new CssLocationHeaderContributor("BasePage.css"));
 	}
 }

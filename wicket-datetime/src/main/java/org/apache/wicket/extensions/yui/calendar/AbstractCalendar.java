@@ -23,7 +23,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.wicket.behavior.CssHeaderContributor;
 import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.behavior.JavascriptHeaderContributor;
 import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.WebComponent;

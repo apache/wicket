@@ -14,24 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.header;
+package org.apache.wicket.behavior;
 
-import org.apache.wicket.behavior.CssHeaderContributor;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * 
+ * @author Juergen Donnerstag
  */
-public class MyPage2 extends WebPage
+public class JavascriptReferenceHeaderContributor extends AbstractHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
+	private final ResourceReference reference;
+
 	/**
-	 * Creates a new instance of MyPage
+	 * Construct.
+	 * 
+	 * @param reference
 	 */
-	public MyPage2()
+	public JavascriptReferenceHeaderContributor(final ResourceReference reference)
 	{
-		// And it is not problem if historically it has been added. Wicket will render it just once
-		add(new CssHeaderContributor(this.getClass(), this.getClass().getSimpleName() + ".css"));
+		this.reference = reference;
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.AbstractHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 */
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderJavascriptReference(reference);
 	}
 }

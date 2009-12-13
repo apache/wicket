@@ -37,13 +37,13 @@ public class RatingsPage extends BasePage
 	 * Star image for no selected star
 	 */
 	public static final ResourceReference WICKETSTAR0 = new ResourceReference(RatingsPage.class,
-			"WicketStar0.png");
+		"WicketStar0.png");
 
 	/**
 	 * Star image for selected star
 	 */
 	public static final ResourceReference WICKETSTAR1 = new ResourceReference(RatingsPage.class,
-			"WicketStar1.png");
+		"WicketStar1.png");
 
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
@@ -168,24 +168,25 @@ public class RatingsPage extends BasePage
 	 */
 	public RatingsPage()
 	{
-		add(new RatingPanel("rating1", new PropertyModel<Integer>(rating1, "rating"), 5, new PropertyModel<Integer>(
-				rating1, "nrOfVotes"), true)
+		add(new RatingPanel("rating1", new PropertyModel<Integer>(rating1, "rating"), 5,
+			new PropertyModel<Integer>(rating1, "nrOfVotes"), true)
 		{
 			@Override
-			protected boolean onIsStarActive(int star)
+			public boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating1.isActive(star);
 			}
 
 			@Override
-			protected void onRated(int rating, AjaxRequestTarget target)
+			public void onRated(int rating, AjaxRequestTarget target)
 			{
 				RatingsPage.rating1.addRating(rating);
 			}
 		});
+
 		add(new RatingPanel("rating2", new PropertyModel<Integer>(rating2, "rating"),
-							new Model<Integer>(5), new PropertyModel<Integer>(rating2, "nrOfVotes"),
-							new PropertyModel<Boolean>(this, "hasVoted"), true)
+			new Model<Integer>(5), new PropertyModel<Integer>(rating2, "nrOfVotes"),
+			new PropertyModel<Boolean>(this, "hasVoted"), true)
 		{
 			@Override
 			protected String getActiveStarUrl(int iteration)
@@ -200,13 +201,13 @@ public class RatingsPage extends BasePage
 			}
 
 			@Override
-			protected boolean onIsStarActive(int star)
+			public boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating2.isActive(star);
 			}
 
 			@Override
-			protected void onRated(int rating, AjaxRequestTarget target)
+			public void onRated(int rating, AjaxRequestTarget target)
 			{
 				// make sure the user can't vote again
 				hasVoted = Boolean.TRUE;
