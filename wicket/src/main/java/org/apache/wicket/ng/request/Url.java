@@ -18,13 +18,13 @@ package org.apache.wicket.ng.request;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.ng.protocol.http.WicketURLDecoder;
 import org.apache.wicket.ng.protocol.http.WicketURLEncoder;
+import org.apache.wicket.util.lang.Arrays;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
