@@ -19,6 +19,7 @@ package org.apache.wicket.examples.compref;
 
 import java.util.List;
 
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -44,9 +45,9 @@ public class XmlPage extends WebPage
 	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
 	 */
 	@Override
-	public String getMarkupType()
+	public MarkupType getMarkupType()
 	{
-		return "xml";
+		return new MarkupType("xml", "text/xml");
 	}
 
 	/** list view for rendering person objects. */
