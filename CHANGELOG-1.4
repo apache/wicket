@@ -1,5 +1,27 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.5
+
+** Bug
+    * [WICKET-2598] - Some components still escape non-ASCII symbols by default
+    * [WICKET-2599] - Missing XML prolog in wicket-extensions panel htmls
+    * [WICKET-2600] - Redirect to home page still does not work (regression)
+    * [WICKET-2606] - Enclosure reports incorrect component id for missing components inside the enclosure
+    * [WICKET-2609] - EnumChoiceRenderer misbehaves with anonymous enum classes
+    * [WICKET-2613] - Content-Length Issue with 1.4.4
+    * [WICKET-2617] - ModalWindow can't be shown when it is rendered with ajax request
+    * [WICKET-2621] - Ajax buttons inside ModalWindows don't submit properly
+
+** Improvement
+    * [WICKET-1888] - FormComponents (and subclasses) should be able to provide their own resource bundles
+    * [WICKET-2247] - IndexedHybridUrlCodingStrategy constructor should accept a redirectOnBookmarkableRequest boolan
+    * [WICKET-2428] - AbstractSingleSelectChoice: custom resource key for null option
+    * [WICKET-2592] - Add support for arbitrary PageParameters values in QueryStringUrlCodingStrategy
+    * [WICKET-2597] - The PagingNavigator.newNavigation method does not provide a markup id of the element to create an navigation for
+    * [WICKET-2602] - Display upload progress bar only when a file is selected
+    * [WICKET-2603] - javadoc update
+    * [WICKET-2604] - Add another german Wicket book 
+
 Release Notes - Wicket - Version 1.4.4
 
 ** Bug
