@@ -828,7 +828,14 @@ public class ModalWindow extends Panel
 	protected boolean makeContentVisible()
 	{
 		// if user is refreshing whole page, the window will not be shown
-		return getWebRequest().isAjax();
+		if (getWebRequest().isAjax() == false)
+		{
+			return false;
+		}
+		else
+		{
+			return shown;
+		}
 	}
 
 	/**

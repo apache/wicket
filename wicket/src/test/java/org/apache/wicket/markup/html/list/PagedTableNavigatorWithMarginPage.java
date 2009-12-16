@@ -81,7 +81,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 			protected PagingNavigation newNavigation(IPageable pageable,
 				IPagingLabelProvider labelProvider)
 			{
-				PagingNavigation nav = new PagingNavigation("navigation", pageable);
+				PagingNavigation nav = new PagingNavigation(NAVIGATION_ID, pageable);
 				nav.setMargin(2);
 				if (nav.getViewSize() > 5)
 				{

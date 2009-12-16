@@ -24,6 +24,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
@@ -76,10 +77,32 @@ public class UploadProgressBar extends Panel
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor that will display the upload progress bar for every submit of the given form.
+	 * 
 	 * @param id
+	 *            component id (not null)
 	 * @param form
+	 *            form that will be submitted (not null)
 	 */
-	public UploadProgressBar(String id, final Form< ? > form)
+	public UploadProgressBar(String id, final Form<?> form)
+	{
+		this(id, form, null);
+	}
+
+	/**
+	 * Constructor that will display the upload progress bar for submissions of the given form, that
+	 * include a file upload in the given file upload field; i.e. if the user did not select a file
+	 * in the given file upload field, the progess bar is not displayed.
+	 * 
+	 * @param id
+	 *            component id (not null)
+	 * @param form
+	 *            form that is submitted (not null)
+	 * @param fileUploadField
+	 *            the file upload field to check for a file upload, or null to display the upload
+	 *            field for every submit of the given form
+	 */
+	public UploadProgressBar(String id, final Form<?> form, FileUploadField fileUploadField)
 	{
 		super(id);
 		setOutputMarkupId(true);
@@ -107,6 +130,9 @@ public class UploadProgressBar extends Panel
 			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}
 
+		final String fileUploadFieldMarkupId = fileUploadField == null ? ""
+			: fileUploadField.getMarkupId();
+
 		form.add(new AttributeModifier("onsubmit", true, new Model<String>()
 		{
 
@@ -120,7 +146,8 @@ public class UploadProgressBar extends Panel
 
 				return "var def=new Wicket.WUPB.Def('" + form.getMarkupId() + "', '" +
 					statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '" +
-					getPage().urlFor(ref) + "'); Wicket.WUPB.start(def);";
+					getPage().urlFor(ref) + "','" + fileUploadFieldMarkupId +
+					"'); Wicket.WUPB.start(def);";
 			}
 		}));
 	}

@@ -708,8 +708,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * In case you are using custom targets that are not part of the default target hierarchy, you
 	 * need to override this method, which will be called after the defaults have been tried. When
-	 * this doesn't provide a url either (returns null), an exception will be thrown by the encode
-	 * method saying that encoding could not be done.
+	 * this doesn't provide a url either (returns null), {@code null} will be returned by the encode
+	 * method.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle (for efficient access)

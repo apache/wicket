@@ -44,6 +44,22 @@ public class IndexedHybridUrlCodingStrategy extends HybridUrlCodingStrategy
 	{
 		super(mountPath, pageClass);
 	}
+	
+	/**
+	 * 
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClass
+	 * @param redirectOnBookmarkableRequest
+	 *            whether after hitting the page with URL in bookmarkable form it should be
+	 *            redirected to hybrid URL - needed for ajax to work properly after page refresh
+	 */
+	public IndexedHybridUrlCodingStrategy(String mountPath, Class pageClass,
+			boolean redirectOnBookmarkableRequest)
+	{
+		super(mountPath, pageClass, redirectOnBookmarkableRequest);
+	}
 
 	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)

@@ -428,14 +428,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 					display = getLocalizer().getString(label, this, label);
 				}
 
-				CharSequence escaped;
+				CharSequence escaped = display;
 				if (getEscapeModelStrings())
 				{
-					escaped = Strings.escapeMarkup(display, false, true);
-				}
-				else
-				{
-					escaped = display;
+					escaped = Strings.escapeMarkup(display);
 				}
 
 				buffer.append("<label for=\"");

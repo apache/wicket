@@ -513,14 +513,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
-				final CharSequence escaped;
+
+				CharSequence escaped = display;
 				if (getEscapeModelStrings())
 				{
 					escaped = Strings.escapeMarkup(display, false, true);
-				}
-				else
-				{
-					escaped = display;
 				}
 				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
 					"</label>");

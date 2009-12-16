@@ -14,33 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.markup.html.border.MarkupComponentBorder;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
- * This class gives you call backs to generate swing like borders.
+ * Tests {@link EnumChoiceRenderer}
  * 
- * @author jcompagner
- * 
- * @see MarkupComponentBorder
- * @deprecated please use IBehavior instead
+ * @author igor.vaynberg
  */
-@Deprecated
-public interface IComponentBorder extends IClusterable
+public class EnumChoiceRendererTest extends TestCase
 {
-	/**
-	 * Called before the component is rendered.
-	 * 
-	 * @param component
-	 */
-	public void renderBefore(Component component);
 
 	/**
-	 * Called after the component is renderd.
 	 * 
-	 * @param component
 	 */
-	public void renderAfter(Component component);
+	public void testResourceKeyGenerationForAnonymousEnums()
+	{
+		final EnumChoiceRenderer<TestEnum> renderer = new EnumChoiceRenderer<TestEnum>();
+		Assert.assertEquals("TestEnum.ANONYMOUS", renderer.resourceKey(TestEnum.ANONYMOUS));
+	}
+
+	/**
+	 * Enum for testing
+	 * 
+	 * @author igor.vaynberg
+	 */
+	public enum TestEnum {
+		/** an anonymous enum value */
+		ANONYMOUS {
+		// anonymous enum value
+		}
+	}
 
 }

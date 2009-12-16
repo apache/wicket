@@ -94,7 +94,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	 */
 	protected String resourceKey(T object)
 	{
-		return object.getClass().getSimpleName() + "." + object.name();
+		return object.getDeclaringClass().getSimpleName() + "." + object.name();
 	}
 
 	/**

@@ -676,4 +676,10 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		localizer = null;
 		locale = null;
 	}
+
+	@Override
+	public void setObject(String object)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

@@ -127,7 +127,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	protected PagingNavigation newNavigation(final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return new AjaxPagingNavigation("navigation", pageable, labelProvider);
+		return new AjaxPagingNavigation(NAVIGATION_ID, pageable, labelProvider);
 	}
 
 	/**

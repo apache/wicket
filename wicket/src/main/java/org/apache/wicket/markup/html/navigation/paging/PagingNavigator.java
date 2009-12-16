@@ -34,6 +34,8 @@ public class PagingNavigator extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String NAVIGATION_ID = "navigation";
+
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
 	private PagingNavigation pagingNavigation;
 	private final IPageable pageable;
@@ -70,7 +72,6 @@ public class PagingNavigator extends Panel
 		this.labelProvider = labelProvider;
 	}
 
-
 	/**
 	 * {@link IPageable} this navigator is linked with
 	 * 
@@ -81,11 +82,12 @@ public class PagingNavigator extends Panel
 		return pageable;
 	}
 
-
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
 	@Override
 	protected void onBeforeRender()
 	{
-
 		if (get("first") == null)
 		{
 			// Get the navigation bar and add it to the hierarchy
@@ -152,7 +154,7 @@ public class PagingNavigator extends Panel
 	protected PagingNavigation newNavigation(final IPageable pageable,
 		final IPagingLabelProvider labelProvider)
 	{
-		return new PagingNavigation("navigation", pageable, labelProvider);
+		return new PagingNavigation(NAVIGATION_ID, pageable, labelProvider);
 	}
 
 	/**
