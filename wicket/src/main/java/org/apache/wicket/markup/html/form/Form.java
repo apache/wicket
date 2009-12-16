@@ -385,7 +385,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	private Bytes maxSize = null;
 
 	/** True if the form has enctype of multipart/form-data */
-	private boolean multiPart = false;
+	private short multiPart = 0;
+
+	private static short MULTIPART_HARD = 0x01;
+	private static short MULTIPART_HINT = 0x02;
 
 	/**
 	 * Constructs a form with no validation.
@@ -1135,7 +1138,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	public void setMultiPart(boolean multiPart)
 	{
-		this.multiPart = multiPart;
+		if (multiPart)
+		{
+			this.multiPart |= MULTIPART_HARD;
+		}
+		else
+		{
+			this.multiPart &= ~MULTIPART_HARD;
+		}
 	}
 
 	/**
@@ -1603,7 +1613,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 	private boolean isMultiPart()
 	{
-		if (multiPart)
+		if (multiPart != 0)
 		{
 			return true;
 		}
@@ -1615,7 +1625,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 				public Object component(Form<?> form)
 				{
-					if (form.multiPart)
+					if (form.multiPart != 0)
 					{
 						anyEmbeddedMultipart[0] = true;
 						return STOP_TRAVERSAL;
@@ -1991,6 +2001,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
+		// clear multipart hint, it will be set if necessary by the visitor
+		this.multiPart &= ~MULTIPART_HINT;
+
 		// Force multi-part on if any child form component is multi-part
 		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
@@ -1999,7 +2012,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			{
 				if (formComponent.isVisible() && formComponent.isMultiPart())
 				{
-					setMultiPart(true);
+					multiPart |= MULTIPART_HINT;
 				}
 			}
 		});

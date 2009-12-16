@@ -193,9 +193,13 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			throw new IllegalStateException("Component " + getClass().getName() + " must have a " +
 				Form.class.getName() + " component above in the hierarchy");
 		}
-		form.setMultiPart(true);
 	}
 
+	@Override
+	public boolean isMultiPart()
+	{
+		return true;
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
