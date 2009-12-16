@@ -102,7 +102,7 @@ public class UploadProgressBar extends Panel
 	 *            the file upload field to check for a file upload, or null to display the upload
 	 *            field for every submit of the given form
 	 */
-	public UploadProgressBar(String id, final Form<?> form, final FileUploadField fileUploadField)
+	public UploadProgressBar(String id, final Form<?> form, FileUploadField fileUploadField)
 	{
 		super(id);
 		setOutputMarkupId(true);
@@ -130,6 +130,9 @@ public class UploadProgressBar extends Panel
 			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}
 
+		final String fileUploadFieldMarkupId = fileUploadField == null ? ""
+			: fileUploadField.getMarkupId();
+
 		form.add(new AttributeModifier("onsubmit", true, new Model<String>()
 		{
 
@@ -141,8 +144,6 @@ public class UploadProgressBar extends Panel
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 
-				String fileUploadFieldMarkupId = fileUploadField == null ? ""
-					: fileUploadField.getMarkupId();
 				return "var def=new Wicket.WUPB.Def('" + form.getMarkupId() + "', '" +
 					statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '" +
 					getPage().urlFor(ref) + "','" + fileUploadFieldMarkupId +
