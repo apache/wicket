@@ -378,8 +378,17 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
 
-	private static short MULTIPART_HARD = 0x01;
-	private static short MULTIPART_HINT = 0x02;
+	/**
+	 * A user has explicitly called {@link #setMultiPart(boolean)} with value {@code true}forcing it
+	 * to be true
+	 */
+	private static final short MULTIPART_HARD = 0x01;
+
+	/**
+	 * The form has discovered a multipart component before rendering and is marking itself as
+	 * multipart until next render
+	 */
+	private static final short MULTIPART_HINT = 0x02;
 
 	/**
 	 * Constructs a form with no validation.
