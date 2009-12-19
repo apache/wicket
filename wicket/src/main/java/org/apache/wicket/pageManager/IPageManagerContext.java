@@ -14,28 +14,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.request.handler;
+package org.apache.wicket.pageManager;
 
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import java.io.Serializable;
 
 /**
- * Request handler that works with page class.
+ * Context object for {@link IPageManager}. This decouples the {@link IPageManager} from request
+ * cycle and session.
  * 
  * @author Matej Knopp
  */
-public interface PageClassRequestHandler extends RequestHandler
+public interface IPageManagerContext
 {
 	/**
-	 * Returns the page class
 	 * 
-	 * @return page class
+	 * @param data
 	 */
-	public Class<? extends RequestablePage> getPageClass();
-	
+	void setRequestData(RequestAdapter data);
+
 	/**
-	 * @return page parameters
+	 * 
+	 * @return request data
 	 */
-	public PageParametersNg getPageParameters();
+	RequestAdapter getRequestData();
+
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	void setSessionAttribute(String key, Serializable value);
+
+	/**
+	 * 
+	 * @param key
+	 * @return The session attribute associate with the key
+	 */
+	Serializable getSessionAttribute(String key);
+
+	/**
+	 * 
+	 */
+	void bind();
+
+	/**
+	 * 
+	 * @return session id
+	 */
+	String getSessionId();
 }

@@ -18,10 +18,10 @@ package org.apache.wicket.ng.request.handler.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.resource.Resource;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -29,9 +29,9 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public class ResourceRequestHandler implements RequestHandler
+public class ResourceRequestHandler implements IRequestHandler
 {
-	private final Resource resource;
+	private final IResource resource;
 	private final Locale locale;
 	private final String style;
 	private final String variation;
@@ -46,7 +46,7 @@ public class ResourceRequestHandler implements RequestHandler
 	 * @param variation
 	 * @param pageParameters
 	 */
-	public ResourceRequestHandler(Resource resource, Locale locale, String style, String variation,
+	public ResourceRequestHandler(IResource resource, Locale locale, String style, String variation,
 		PageParametersNg pageParameters)
 	{
 		Checks.argumentNotNull(resource, "resource");
@@ -93,14 +93,14 @@ public class ResourceRequestHandler implements RequestHandler
 	/**
 	 * @return resource
 	 */
-	public Resource getResource()
+	public IResource getResource()
 	{
 		return resource;
 	}
 
 	public void respond(RequestCycle requestCycle)
 	{
-		Resource.Attributes a = new Resource.Attributes(requestCycle.getRequest(),
+		IResource.Attributes a = new IResource.Attributes(requestCycle.getRequest(),
 			requestCycle.getResponse(), locale, style, variation, pageParameters);
 		resource.respond(a);
 	}

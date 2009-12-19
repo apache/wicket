@@ -138,5 +138,5 @@ public abstract class ResourceReference implements Serializable
 	 * 
 	 * @return new resource instance
 	 */
-	public abstract Resource getResource();
+	public abstract IResource getResource();
 }

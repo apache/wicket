@@ -25,7 +25,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -214,7 +214,7 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public RequestParameters getPostRequestParameters()
+			public IRequestParameters getPostRequestParameters()
 			{
 				return WebRequest.this.getPostRequestParameters();
 			}

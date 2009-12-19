@@ -17,9 +17,9 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -54,7 +54,7 @@ public class PageInstanceMapper extends AbstractMapper
 	{
 	}
 
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
 		if (urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier()))
@@ -94,13 +94,13 @@ public class PageInstanceMapper extends AbstractMapper
 		return null;
 	}
 
-	public Url mapHandler(RequestHandler requestHandler)
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		PageComponentInfo info = null;
 
 		if (requestHandler instanceof RenderPageRequestHandler)
 		{
-			RequestablePage page = ((RenderPageRequestHandler)requestHandler).getPage();
+			IRequestablePage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
 			PageInfo i = new PageInfo(page);
 			info = new PageComponentInfo(i, null);
@@ -108,7 +108,7 @@ public class PageInstanceMapper extends AbstractMapper
 		else if (requestHandler instanceof ListenerInterfaceRequestHandler)
 		{
 			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
-			RequestablePage page = handler.getPage();
+			IRequestablePage page = handler.getPage();
 			String componentPath = handler.getComponent().getPath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 

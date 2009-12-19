@@ -16,39 +16,38 @@
  */
 package org.apache.wicket.ng;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.IPageFactory;
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.page.PageManagerContext;
-import org.apache.wicket.ng.page.persistent.DataStore;
 import org.apache.wicket.ng.page.persistent.DefaultPageStore;
-import org.apache.wicket.ng.page.persistent.PageStore;
+import org.apache.wicket.ng.page.persistent.IDataStore;
+import org.apache.wicket.ng.page.persistent.IPageStore;
 import org.apache.wicket.ng.page.persistent.PersistentPageManager;
 import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.request.mapper.MapperContext;
+import org.apache.wicket.ng.request.mapper.IMapperContext;
 import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
-import org.apache.wicket.ng.session.SessionStore;
-import org.apache.wicket.ng.session.SessionStore.UnboundListener;
-import org.apache.wicket.ng.settings.ApplicationSettings;
-import org.apache.wicket.ng.settings.RequestCycleSettings;
+import org.apache.wicket.ng.session.ISessionStore;
+import org.apache.wicket.ng.session.ISessionStore.UnboundListener;
+import org.apache.wicket.ng.settings.IApplicationSettings;
+import org.apache.wicket.ng.settings.IRequestCycleSettings;
+import org.apache.wicket.pageManager.DefaultPageManagerContext;
+import org.apache.wicket.pageManager.IPageManager;
+import org.apache.wicket.pageManager.IPageManagerContext;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.util.lang.Checks;
 
@@ -69,8 +68,7 @@ public abstract class Application implements UnboundListener
 	{
 		sessionStore = newSessionStore();
 		sessionStore.registerUnboundListener(this);
-		pageManager = newPageManager();
-		pageManager.setContext(getPageManagerContext());
+		pageManager = newPageManager(getPageManagerContext());
 		rootRequestMapper = newRequestHandlerEncoderRegistry();
 		resourceReferenceRegistry = newResourceReferenceRegistry();
 		pageFactory = newPageFactory();
@@ -206,7 +204,7 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// TODO - Do properly
-	private final RequestCycleSettings settings = new RequestCycleSettings()
+	private final IRequestCycleSettings settings = new IRequestCycleSettings()
 	{
 		private RenderStrategy strategy = RenderStrategy.REDIRECT_TO_BUFFER;
 		private String responseEncoding = "UTF-8";
@@ -233,7 +231,7 @@ public abstract class Application implements UnboundListener
 	};
 
 	// TODO: - Do properly
-	private final ApplicationSettings applicationSettings = new ApplicationSettings()
+	private final IApplicationSettings applicationSettings = new IApplicationSettings()
 	{
 		private IClassResolver resolver = new DefaultClassResolver();
 
@@ -248,12 +246,12 @@ public abstract class Application implements UnboundListener
 		}
 	};
 
-	public RequestCycleSettings getRequestCycleSettings()
+	public IRequestCycleSettings getRequestCycleSettings()
 	{
 		return settings;
 	}
 
-	public ApplicationSettings getApplicationSettings()
+	public IApplicationSettings getApplicationSettings()
 	{
 		return applicationSettings;
 	}
@@ -306,11 +304,11 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	protected abstract SessionStore newSessionStore();
+	protected abstract ISessionStore newSessionStore();
 
-	private SessionStore sessionStore;
+	private ISessionStore sessionStore;
 
-	public SessionStore getSessionStore()
+	public ISessionStore getSessionStore()
 	{
 		return sessionStore;
 	}
@@ -359,79 +357,36 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	protected PageManager newPageManager()
+	protected IPageManager newPageManager(IPageManagerContext context)
 	{
 		int cacheSize = 40;
 		int fileChannelPoolCapacity = 50;
-		DataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
-		PageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
-		return new PersistentPageManager(getName(), pageStore);
+		IDataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
+		IPageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
+		return new PersistentPageManager(getName(), pageStore, context);
 	}
 
-	private PageManager pageManager;
+	private IPageManager pageManager;
 
 	/**
 	 * Context for PageManager to interact with rest of Wicket
 	 */
-	private final PageManagerContext pageManagerContext = new PageManagerContext()
-	{
-		public void bind()
-		{
-			Session.get().bind();
-		}
-
-		private final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
-		{
-			private static final long serialVersionUID = 1L;
-		};
-
-		public Object getRequestData()
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			return requestCycle.getMetaData(requestCycleMetaDataKey);
-		}
-
-		public Serializable getSessionAttribute(String key)
-		{
-			return Session.get().getAttribute(key);
-		}
-
-		public String getSessionId()
-		{
-			return Session.get().getId();
-		}
-
-		public void setRequestData(Object data)
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			requestCycle.setMetaData(requestCycleMetaDataKey, data);
-		}
-
-		public void setSessionAttribute(String key, Serializable value)
-		{
-			Session.get().setAttribute(key, value);
-		}
-	};
+	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
 
 	/**
-	 * Returns the {@link PageManager} instance.
 	 * 
-	 * @return {@link PageManager} instance.
+	 * @return the page manager
 	 */
-	public PageManager getPageManager()
+	public IPageManager getPageManager()
 	{
 		return pageManager;
 	}
 
-	protected PageManagerContext getPageManagerContext()
+	/**
+	 * 
+	 * @return the page manager context
+	 */
+	protected IPageManagerContext getPageManagerContext()
 	{
 		return pageManagerContext;
 	}
@@ -463,7 +418,7 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class<? extends RequestablePage> getHomePage();
+	public abstract Class<? extends IRequestablePage> getHomePage();
 
 	private ThreadsafeCompoundRequestMapper rootRequestMapper;
 
@@ -531,7 +486,7 @@ public abstract class Application implements UnboundListener
 		return pageFactory;
 	}
 
-	private final MapperContext encoderContext = new MapperContext()
+	private final IMapperContext encoderContext = new IMapperContext()
 	{
 		public String getBookmarkableIdentifier()
 		{
@@ -568,7 +523,7 @@ public abstract class Application implements UnboundListener
 			return listenerInterface.getName();
 		}
 
-		public RequestablePage newPageInstance(Class<? extends RequestablePage> pageClass,
+		public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
 			PageParametersNg pageParameters)
 		{
 			if (pageParameters == null)
@@ -581,23 +536,23 @@ public abstract class Application implements UnboundListener
 			}
 		}
 
-		public RequestablePage getPageInstance(int pageId)
+		public IRequestablePage getPageInstance(int pageId)
 		{
 			return Page.getPage(pageId);
 		}
 
-		public Class<? extends RequestablePage> getHomePageClass()
+		public Class<? extends IRequestablePage> getHomePageClass()
 		{
 			return Application.this.getHomePage();
 		}
 	};
 
-	public final MapperContext getEncoderContext()
+	public final IMapperContext getEncoderContext()
 	{
 		return encoderContext;
 	}
 
-	public void registerEncoder(RequestMapper encoder)
+	public void registerEncoder(IRequestMapper encoder)
 	{
 		getRootRequestMapper().register(encoder);
 	}
@@ -607,6 +562,5 @@ public abstract class Application implements UnboundListener
 	 */
 	protected void registerDefaultEncoders()
 	{
-
 	}
 }

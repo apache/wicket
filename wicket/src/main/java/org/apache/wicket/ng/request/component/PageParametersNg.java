@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
@@ -34,13 +34,12 @@ import org.apache.wicket.util.string.StringValue;
  * named parameters. Indexed parameters are URL segments before the query string. Named parameters
  * are usually represented as query string params (i.e. ?arg1=var1&amp;arg2=val)
  * <p>
- * How those parameters are populated depends on the {@link RequestMapper}s
+ * How those parameters are populated depends on the {@link IRequestMapper}s
  * 
  * @author Matej Knopp
  */
 public class PageParametersNg implements Serializable
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -48,7 +47,6 @@ public class PageParametersNg implements Serializable
 	 */
 	public PageParametersNg()
 	{
-
 	}
 
 	/**
@@ -242,7 +240,7 @@ public class PageParametersNg implements Serializable
 	}
 
 	/**
-	 * Adds named parameter to a specified position. The {@link RequestMapper}s may or may not take
+	 * Adds named parameter to a specified position. The {@link IRequestMapper}s may or may not take
 	 * the order into account.
 	 * 
 	 * @param name
@@ -267,7 +265,7 @@ public class PageParametersNg implements Serializable
 	}
 
 	/**
-	 * Sets the named parameter on specified position. The {@link RequestMapper}s may or may not
+	 * Sets the named parameter on specified position. The {@link IRequestMapper}s may or may not
 	 * take the order into account.
 	 * 
 	 * @param name

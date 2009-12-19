@@ -19,9 +19,9 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
 
@@ -51,14 +51,14 @@ import org.apache.wicket.util.lang.Checks;
  */
 public class BookmarkableMapper extends AbstractBookmarkableMapper
 {
-	private final PageParametersEncoder pageParametersEncoder;
+	private final IPageParametersEncoder pageParametersEncoder;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param pageParametersEncoder
 	 */
-	public BookmarkableMapper(PageParametersEncoder pageParametersEncoder)
+	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
 	{
 		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
 
@@ -99,7 +99,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 
 			// load the page class
 			String className = url.getSegments().get(2);
-			Class<? extends RequestablePage> pageClass = getPageClass(className);
+			Class<? extends IRequestablePage> pageClass = getPageClass(className);
 
 			// extract the PageParameters from URL if there are any
 			PageParametersNg pageParameters = extractPageParameters(request, 3,

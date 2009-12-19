@@ -34,7 +34,7 @@ import org.apache.wicket.ng.Session;
  * @author Johan Compagner
  * @author Matej Knopp
  */
-public interface SessionStore
+public interface ISessionStore
 {
 	/**
 	 * Gets the attribute value with the given name

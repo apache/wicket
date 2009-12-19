@@ -287,7 +287,6 @@ public class WicketFilter implements Filter
 			}
 		}
 
-
 		if (isWicketRequest(relativePath))
 		{
 			Application previous = null;

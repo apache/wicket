@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 
 /**
- * Request cycle that allows to override {@link RequestHandler} resolving to force custom
- * {@link RequestHandler}.
+ * Request cycle that allows to override {@link IRequestHandler} resolving to force custom
+ * {@link IRequestHandler}.
  * 
  * @author Matej Knopp
  */
@@ -38,20 +38,20 @@ public class MockRequestCycle extends RequestCycle
 		super(context);
 	}
 
-	private RequestHandler forcedRequestHandler;
+	private IRequestHandler forcedRequestHandler;
 
 	/**
 	 * Forces the specified request handler to be resolved.
 	 * 
 	 * @param requestHandler
 	 */
-	public void forceRequestHandler(RequestHandler requestHandler)
+	public void forceRequestHandler(IRequestHandler requestHandler)
 	{
 		forcedRequestHandler = requestHandler;
 	}
 
 	@Override
-	protected RequestHandler resolveRequestHandler()
+	protected IRequestHandler resolveRequestHandler()
 	{
 		if (forcedRequestHandler != null)
 		{

@@ -17,8 +17,8 @@
 package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestableComponent;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -31,28 +31,28 @@ import org.apache.wicket.util.lang.Checks;
  */
 public class PageAndComponentProvider extends DefaultPageProvider
 {
-	private RequestableComponent component;
+	private IRequestableComponent component;
 	private String componentPath;
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(RequestablePage)
+	 * @see DefaultPageProvider#PageProvider(IRequestablePage)
 	 * 
 	 * @param page
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(RequestablePage page, String componentPath)
+	public PageAndComponentProvider(IRequestablePage page, String componentPath)
 	{
 		super(page);
 		setComponentPath(componentPath);
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(RequestablePage)
+	 * @see DefaultPageProvider#PageProvider(IRequestablePage)
 	 * 
 	 * @param page
 	 * @param component
 	 */
-	public PageAndComponentProvider(RequestablePage page, RequestableComponent component)
+	public PageAndComponentProvider(IRequestablePage page, IRequestableComponent component)
 	{
 		super(page);
 
@@ -68,7 +68,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param pageParameters
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(Class<? extends RequestablePage> pageClass,
+	public PageAndComponentProvider(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters, String componentPath)
 	{
 		super(pageClass, pageParameters);
@@ -81,7 +81,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param pageClass
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(Class<? extends RequestablePage> pageClass, String componentPath)
+	public PageAndComponentProvider(Class<? extends IRequestablePage> pageClass, String componentPath)
 	{
 		super(pageClass);
 		setComponentPath(componentPath);
@@ -95,7 +95,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Class<? extends RequestablePage> pageClass,
+	public PageAndComponentProvider(int pageId, Class<? extends IRequestablePage> pageClass,
 		Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, renderCount);
@@ -111,7 +111,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param renderCount
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(int pageId, Class<? extends RequestablePage> pageClass,
+	public PageAndComponentProvider(int pageId, Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters, Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, pageParameters, renderCount);
@@ -142,11 +142,11 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * 
 	 * @return component
 	 */
-	public RequestableComponent getComponent()
+	public IRequestableComponent getComponent()
 	{
 		if (component == null)
 		{
-			RequestablePage page = getPageInstance();
+			IRequestablePage page = getPageInstance();
 			component = page.get(componentPath);
 		}
 		if (component == null)

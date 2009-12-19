@@ -37,9 +37,9 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ng.page.ManageablePage;
+import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
@@ -123,8 +123,8 @@ import org.slf4j.LoggerFactory;
 public abstract class Page extends MarkupContainer
 	implements
 		IRedirectListener,
-		ManageablePage,
-		RequestablePage
+		IManageablePage,
+		IRequestablePage
 {
 	/**
 	 * You can set implementation of the interface in the {@link Page#serializer} then that
@@ -1198,7 +1198,7 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.page.ManageablePage#getPageId()
+	 * @see org.apache.wicket.ng.page.IManageablePage#getPageId()
 	 */
 	public int getPageId()
 	{
@@ -1210,11 +1210,17 @@ public abstract class Page extends MarkupContainer
 		return pageParameters;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.component.IRequestablePage#getRenderCount()
+	 */
 	public int getRenderCount()
 	{
 		return renderCount;
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#canCallListenerInterface()
+	 */
 	@Override
 	public boolean canCallListenerInterface()
 	{
@@ -1233,6 +1239,9 @@ public abstract class Page extends MarkupContainer
 		return wasCreatedBookmarkable;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.component.IRequestablePage#renderPage()
+	 */
 	public void renderPage()
 	{
 		++renderCount;
@@ -1242,8 +1251,11 @@ public abstract class Page extends MarkupContainer
 	/** TODO WICKET-NG is this really needed? can we remove? */
 	public static Page getPage(int id)
 	{
-		Application app = Application.get();
-		return (Page)app.getPageManager().getPage(id);
+		Session session = Session.get();
+		if (session == null)
+		{
+			return null;
+		}
+		return (Page)session.getPageManager().getPage(id);
 	}
-
 }

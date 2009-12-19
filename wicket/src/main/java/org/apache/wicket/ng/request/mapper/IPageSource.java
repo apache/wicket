@@ -17,14 +17,14 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 
 /**
  * Interface for objects that are capable of getting and creating page instance.
  * 
  * @author Matej Knopp
  */
-public interface PageSource
+public interface IPageSource
 {
 	/**
 	 * Returns existing page instance if the page exists.
@@ -32,11 +32,11 @@ public interface PageSource
 	 * @param pageId
 	 * @return page instance or <code>null</code> if the page does not exist.
 	 */
-	public RequestablePage getPageInstance(int pageId);
+	public IRequestablePage getPageInstance(int pageId);
 
 	/**
 	 * Creates new page instance of page with given class. The page should be marked as create
-	 * bookmarkable, so subsequent calls to {@link RequestablePage#wasCreatedBookmarkable()} must
+	 * bookmarkable, so subsequent calls to {@link IRequestablePage#wasCreatedBookmarkable()} must
 	 * return <code>true</code>
 	 * 
 	 * @param pageMapName
@@ -44,7 +44,7 @@ public interface PageSource
 	 * @param pageParameters
 	 * @return new page instance
 	 */
-	public RequestablePage newPageInstance(Class<? extends RequestablePage> pageClass,
+	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters);
 
 }

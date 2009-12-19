@@ -23,19 +23,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.ng.page.ManageablePage;
+import org.apache.wicket.ng.page.IManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 
-public class DefaultPageStore implements PageStore
+public class DefaultPageStore implements IPageStore
 {
 	private final String applicationName;
 
 	private final SerializedPagesCache serializedPagesCache;
 
-	private final DataStore pageDataStore;
+	private final IDataStore pageDataStore;
 
-	public DefaultPageStore(String applicationName, DataStore dataStore, int cacheSize)
+	public DefaultPageStore(String applicationName, IDataStore dataStore, int cacheSize)
 	{
 		Checks.argumentNotNull(applicationName, "applicationName");
 		Checks.argumentNotNull(dataStore, "DataStore");
@@ -75,7 +75,7 @@ public class DefaultPageStore implements PageStore
 		return applicationName;
 	}
 
-	public ManageablePage getPage(String sessionId, int id)
+	public IManageablePage getPage(String sessionId, int id)
 	{
 		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
 		if (fromCache != null)
@@ -102,7 +102,7 @@ public class DefaultPageStore implements PageStore
 		removePageData(sessionId, id);
 	}
 
-	public void storePage(String sessionId, ManageablePage page)
+	public void storePage(String sessionId, IManageablePage page)
 	{
 		SerializedPage serialized = serializePage(sessionId, page);
 		serializedPagesCache.storePage(serialized);
@@ -115,11 +115,11 @@ public class DefaultPageStore implements PageStore
 		serializedPagesCache.removePages(sessionId);
 	}
 
-	public ManageablePage convertToPage(Object object)
+	public IManageablePage convertToPage(Object object)
 	{
-		if (object instanceof ManageablePage)
+		if (object instanceof IManageablePage)
 		{
-			return (ManageablePage)object;
+			return (IManageablePage)object;
 		}
 		else if (object instanceof SerializedPage)
 		{
@@ -174,9 +174,9 @@ public class DefaultPageStore implements PageStore
 
 		SerializedPage result = null;
 
-		if (object instanceof ManageablePage)
+		if (object instanceof IManageablePage)
 		{
-			ManageablePage page = (ManageablePage)object;
+			IManageablePage page = (IManageablePage)object;
 			result = serializedPagesCache.getPage(sessionId, page.getPageId());
 			if (result == null)
 			{
@@ -296,7 +296,7 @@ public class DefaultPageStore implements PageStore
 		}
 	};
 
-	protected SerializedPage serializePage(String sessionId, ManageablePage page)
+	protected SerializedPage serializePage(String sessionId, IManageablePage page)
 	{
 		Checks.argumentNotNull(sessionId, "sessionId");
 		Checks.argumentNotNull(page, "page");
@@ -305,9 +305,9 @@ public class DefaultPageStore implements PageStore
 		return new SerializedPage(sessionId, page.getPageId(), data);
 	}
 
-	protected ManageablePage deserializePage(byte data[])
+	protected IManageablePage deserializePage(byte data[])
 	{
-		return (ManageablePage)Objects.byteArrayToObject(data);
+		return (IManageablePage)Objects.byteArrayToObject(data);
 	}
 
 	/**

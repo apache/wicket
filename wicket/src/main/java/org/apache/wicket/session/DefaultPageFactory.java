@@ -28,7 +28,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.util.lang.Generics;
 
 
@@ -236,7 +236,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	public <C extends Page> RequestablePage newPage(Class<C> pageClass, PageParametersNg parameters)
+	public <C extends Page> IRequestablePage newPage(Class<C> pageClass, PageParametersNg parameters)
 	{
 		// If no parameters are provided, try the default constructor first, than the PageParameter
 		// constructor with empty parameter list.

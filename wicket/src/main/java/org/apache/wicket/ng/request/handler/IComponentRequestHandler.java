@@ -14,28 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page;
+package org.apache.wicket.ng.request.handler;
 
-import java.io.Serializable;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
 
 /**
- * Context object for {@link PageManager}. This decouples the {@link PageManager} from request cycle
- * and session.
+ * Request handler that works with a component.
  * 
- * @author Matej Knopp
- * 
+ * @author Matje Knopp
  */
-public interface PageManagerContext
+public interface IComponentRequestHandler extends IRequestHandler
 {
-	public void setRequestData(Object data);
-
-	public Object getRequestData();
-
-	public void setSessionAttribute(String key, Serializable value);
-
-	public Serializable getSessionAttribute(String key);
-
-	public void bind();
-
-	public String getSessionId();
+	/**
+	 * Returns the component instance.
+	 * 
+	 * @return component instance
+	 */
+	public IRequestableComponent getComponent();
 }

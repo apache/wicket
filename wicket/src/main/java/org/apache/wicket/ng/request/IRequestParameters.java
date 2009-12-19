@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.StringValue;
  * 
  * @author Matej Knopp
  */
-public interface RequestParameters
+public interface IRequestParameters
 {
 	/**
 	 * Returns immutable set of all available parameter names.

@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.session.SessionStore;
+import org.apache.wicket.ng.session.ISessionStore;
 
 public class Session implements Serializable
 {
@@ -35,7 +35,7 @@ public class Session implements Serializable
 
 	}
 
-	protected SessionStore getSessionStore()
+	protected ISessionStore getSessionStore()
 	{
 		return Application.get().getSessionStore();
 	}

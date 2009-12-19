@@ -21,9 +21,9 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
 
@@ -53,11 +53,11 @@ import org.apache.wicket.util.lang.Checks;
  */
 public class MountedMapper extends AbstractBookmarkableMapper
 {
-	private final PageParametersEncoder pageParametersEncoder;
+	private final IPageParametersEncoder pageParametersEncoder;
 	private final String[] mountSegments;
 
 	/** bookmarkable page class. */
-	protected final WeakReference<Class<? extends RequestablePage>> pageClass;
+	protected final WeakReference<Class<? extends IRequestablePage>> pageClass;
 
 	/**
 	 * Construct.
@@ -66,15 +66,15 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageClass
 	 * @param pageParametersEncoder
 	 */
-	public MountedMapper(String mountPath, Class<? extends RequestablePage> pageClass,
-		PageParametersEncoder pageParametersEncoder)
+	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass,
+		IPageParametersEncoder pageParametersEncoder)
 	{
 		Checks.argumentNotEmpty(mountPath, "mountPath");
 		Checks.argumentNotNull(pageClass, "pageClass");
 		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.pageParametersEncoder = pageParametersEncoder;
-		this.pageClass = new WeakReference<Class<? extends RequestablePage>>(pageClass);
+		this.pageClass = new WeakReference<Class<? extends IRequestablePage>>(pageClass);
 		mountSegments = getMountSegments(mountPath);
 	}
 
@@ -84,7 +84,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param mountPath
 	 * @param pageClass
 	 */
-	public MountedMapper(String mountPath, Class<? extends RequestablePage> pageClass)
+	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass)
 	{
 		this(mountPath, pageClass, new SimplePageParametersEncoder());
 	}
@@ -109,7 +109,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
-			Class<? extends RequestablePage> pageClass = this.pageClass.get();
+			Class<? extends IRequestablePage> pageClass = this.pageClass.get();
 
 			// extract the PageParameters from URL if there are any
 			PageParametersNg pageParameters = extractPageParameters(request, mountSegments.length,
@@ -217,7 +217,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	}
 
 	@Override
-	protected boolean checkPageClass(Class<? extends RequestablePage> pageClass)
+	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		return pageClass.equals(this.pageClass.get());
 	}

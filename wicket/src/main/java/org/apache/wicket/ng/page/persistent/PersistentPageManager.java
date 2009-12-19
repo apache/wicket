@@ -23,20 +23,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.ng.page.PageManagerContext;
-import org.apache.wicket.ng.page.common.AbstractPageManager;
-import org.apache.wicket.ng.page.common.RequestAdapter;
+import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.pageManager.AbstractPageManager;
+import org.apache.wicket.pageManager.IPageManagerContext;
+import org.apache.wicket.pageManager.RequestAdapter;
 
 public class PersistentPageManager extends AbstractPageManager
 {
-	private final PageStore pageStore;
+	private final IPageStore pageStore;
 	private final String applicationName;
 
-	public PersistentPageManager(String applicationName, PageStore pageStore)
+	public PersistentPageManager(String applicationName, IPageStore pageStore,
+		IPageManagerContext context)
 	{
+		super(context);
+
 		this.applicationName = applicationName;
 		this.pageStore = pageStore;
+
 		managers.put(applicationName, this);
 	}
 
@@ -61,7 +65,7 @@ public class PersistentPageManager extends AbstractPageManager
 			this.sessionId = sessionId;
 		}
 
-		private PageStore getPageStore()
+		private IPageStore getPageStore()
 		{
 			PersistentPageManager manager = managers.get(applicationName);
 			if (manager == null)
@@ -77,11 +81,11 @@ public class PersistentPageManager extends AbstractPageManager
 		 * 
 		 * @param page
 		 */
-		private void addPage(ManageablePage page)
+		private void addPage(IManageablePage page)
 		{
 			if (page != null)
 			{
-				for (ManageablePage p : pages)
+				for (IManageablePage p : pages)
 				{
 					if (p.getPageId() == page.getPageId())
 					{
@@ -100,19 +104,19 @@ public class PersistentPageManager extends AbstractPageManager
 		{
 			if (pages == null)
 			{
-				pages = new ArrayList<ManageablePage>();
+				pages = new ArrayList<IManageablePage>();
 			}
 
 			for (Object o : afterReadObject)
 			{
-				ManageablePage page = getPageStore().convertToPage(o);
+				IManageablePage page = getPageStore().convertToPage(o);
 				addPage(page);
 			}
 
 			afterReadObject = null;
 		}
 
-		public synchronized ManageablePage getPage(int id)
+		public synchronized IManageablePage getPage(int id)
 		{
 			// check if pages are in deserialized state
 			if (afterReadObject != null && afterReadObject.isEmpty() == false)
@@ -123,7 +127,7 @@ public class PersistentPageManager extends AbstractPageManager
 			// try to find page with same id
 			if (pages != null)
 			{
-				for (ManageablePage page : pages)
+				for (IManageablePage page : pages)
 				{
 					if (page.getPageId() == id)
 					{
@@ -137,13 +141,13 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		// set the list of pages to remember after the request
-		public synchronized void setPages(List<ManageablePage> pages)
+		public synchronized void setPages(List<IManageablePage> pages)
 		{
-			this.pages = new ArrayList<ManageablePage>(pages);
+			this.pages = new ArrayList<IManageablePage>(pages);
 			afterReadObject = null;
 		}
 
-		private transient List<ManageablePage> pages;
+		private transient List<IManageablePage> pages;
 		private transient List<Object> afterReadObject;
 
 		private void writeObject(java.io.ObjectOutputStream s) throws IOException
@@ -152,7 +156,7 @@ public class PersistentPageManager extends AbstractPageManager
 
 			// prepare for serialization and store the pages
 			List<Serializable> l = new ArrayList<Serializable>();
-			for (ManageablePage p : pages)
+			for (IManageablePage p : pages)
 			{
 				l.add(getPageStore().prepareForSerialization(sessionId, p));
 			}
@@ -185,13 +189,13 @@ public class PersistentPageManager extends AbstractPageManager
 	 */
 	protected class PersitentRequestAdapter extends RequestAdapter
 	{
-		public PersitentRequestAdapter(PageManagerContext context)
+		public PersitentRequestAdapter(IPageManagerContext context)
 		{
 			super(context);
 		}
 
 		@Override
-		protected ManageablePage getPage(int id)
+		protected IManageablePage getPage(int id)
 		{
 			// try to get session entry for this session
 			SessionEntry entry = getSessionEntry(false);
@@ -238,13 +242,13 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		@Override
-		protected void storeTouchedPages(List<ManageablePage> touchedPages)
+		protected void storeTouchedPages(List<IManageablePage> touchedPages)
 		{
 			if (!touchedPages.isEmpty())
 			{
 				SessionEntry entry = getSessionEntry(true);
 				entry.setPages(touchedPages);
-				for (ManageablePage page : touchedPages)
+				for (IManageablePage page : touchedPages)
 				{
 					pageStore.storePage(getSessionId(), page);
 				}
@@ -253,7 +257,7 @@ public class PersistentPageManager extends AbstractPageManager
 	};
 
 	@Override
-	protected RequestAdapter newRequestAdapter(PageManagerContext context)
+	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
 	{
 		return new PersitentRequestAdapter(context);
 	}

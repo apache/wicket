@@ -17,23 +17,23 @@
 package org.apache.wicket.ng.request.mapper.mount;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 
 /**
- * Adapts a {@link RequestMapper} to be used as a {@link MountedRequestMapper}
+ * Adapts a {@link IRequestMapper} to be used as a {@link IMountedRequestMapper}
  * 
  * TODO javadoc
  * 
  * @author igor.vaynberg
  * 
  */
-class UnmountedMapperAdapter implements MountedRequestMapper
+class UnmountedMapperAdapter implements IMountedRequestMapper
 {
-	private final RequestMapper mapper;
+	private final IRequestMapper mapper;
 
-	public UnmountedMapperAdapter(RequestMapper mapper)
+	public UnmountedMapperAdapter(IRequestMapper mapper)
 	{
 		super();
 		this.mapper = mapper;
@@ -44,7 +44,7 @@ class UnmountedMapperAdapter implements MountedRequestMapper
 		return mapper.getCompatibilityScore(request);
 	}
 
-	public Mount mapHandler(RequestHandler requestHandler)
+	public Mount mapHandler(IRequestHandler requestHandler)
 	{
 		Url url = mapper.mapHandler(requestHandler);
 		if (url != null)
@@ -54,7 +54,7 @@ class UnmountedMapperAdapter implements MountedRequestMapper
 		return null;
 	}
 
-	public RequestHandler mapRequest(Request request, MountParameters mountParams)
+	public IRequestHandler mapRequest(Request request, MountParameters mountParams)
 	{
 		return mapper.mapRequest(request);
 	}

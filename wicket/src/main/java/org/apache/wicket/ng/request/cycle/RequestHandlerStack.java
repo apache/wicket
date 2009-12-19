@@ -21,12 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manages stack of {@link RequestHandler}s.
+ * Manages stack of {@link IRequestHandler}s.
  * 
  * @author Matej Knopp
  */
@@ -45,35 +45,35 @@ public abstract class RequestHandlerStack
 	}
 
 	// we need both Queue and List interfaces
-	private final LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
+	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<IRequestHandler>();
 
-	private final List<RequestHandler> inactiveRequestHandlers = new ArrayList<RequestHandler>();
+	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<IRequestHandler>();
 
-	private RequestHandler scheduledAfterCurrent = null;
+	private IRequestHandler scheduledAfterCurrent = null;
 
 	/**
-	 * Returns currently active {@link RequestHandler}.
+	 * Returns currently active {@link IRequestHandler}.
 	 * 
 	 * @return Active RequestHandler or <code>null</code> if no handler is active.
 	 */
-	public RequestHandler getActiveRequestHandler()
+	public IRequestHandler getActiveRequestHandler()
 	{
 		return requestHandlers.peek();
 	}
 
 	/**
-	 * Executes the specified {@link RequestHandler}. When the specified {@link RequestHandler}
-	 * finishes, the {@link RequestHandler} that invoked this method continues (unless the new
-	 * {@link RequestHandler} called {@link #replaceAllRequestHandlers(RequestHandler)}.
+	 * Executes the specified {@link IRequestHandler}. When the specified {@link IRequestHandler}
+	 * finishes, the {@link IRequestHandler} that invoked this method continues (unless the new
+	 * {@link IRequestHandler} called {@link #replaceAllRequestHandlers(IRequestHandler)}.
 	 * 
 	 * @param handler
 	 */
-	public void executeRequestHandler(RequestHandler handler)
+	public void executeRequestHandler(IRequestHandler handler)
 	{
 		final boolean first = requestHandlers.isEmpty();
 		requestHandlers.add(handler);
 
-		RequestHandler replacementHandler = null;
+		IRequestHandler replacementHandler = null;
 		Response originalResponse = response;
 		try
 		{
@@ -94,7 +94,7 @@ public abstract class RequestHandlerStack
 			inactiveRequestHandlers.add(handler);
 		}
 
-		RequestHandler scheduled = scheduledAfterCurrent;
+		IRequestHandler scheduled = scheduledAfterCurrent;
 		scheduledAfterCurrent = null;
 
 		if (replacementHandler != null)
@@ -110,21 +110,21 @@ public abstract class RequestHandlerStack
 	/**
 	 * Schedules the request handler to be executed after current request handler finishes. If there
 	 * is already another request handler scheduled it will be discarded and overwritten by the new
-	 * one. If {@link #replaceCurrentRequestHandler(RequestHandler)} or
-	 * {@link #replaceAllRequestHandlers(RequestHandler)} is invoked during current request handler
+	 * one. If {@link #replaceCurrentRequestHandler(IRequestHandler)} or
+	 * {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during current request handler
 	 * execution the scheduled handler will be also discarded.
 	 * 
 	 * @param handler
 	 *            handler to be executed after current request handler finishes
 	 */
-	public void scheduleRequestHandlerAfterCurrent(RequestHandler handler)
+	public void scheduleRequestHandlerAfterCurrent(IRequestHandler handler)
 	{
 		scheduledAfterCurrent = handler;
 	}
 
 	/**
-	 * Replaces the currently executed {@link RequestHandler} with new {@link RequestHandler}. The
-	 * currently executed {@link RequestHandler} is terminated and the new {@link RequestHandler} is
+	 * Replaces the currently executed {@link IRequestHandler} with new {@link IRequestHandler}. The
+	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler} is
 	 * executed.
 	 * 
 	 * @param handler
@@ -137,7 +137,7 @@ public abstract class RequestHandlerStack
 	// To restart request processing #replaceAllRequestHandlers is better alternative because it
 	// unrolls
 	// entire stack and cancels all request handlers in stack
-	public void replaceCurrentRequestHandler(RequestHandler handler)
+	public void replaceCurrentRequestHandler(IRequestHandler handler)
 	{
 		if (requestHandlers.isEmpty())
 		{
@@ -150,12 +150,12 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Removes the whole {@link RequestHandler} stack, terminates currently running
-	 * {@link RequestHandler} and executes the new {@link RequestHandler}.
+	 * Removes the whole {@link IRequestHandler} stack, terminates currently running
+	 * {@link IRequestHandler} and executes the new {@link IRequestHandler}.
 	 * 
 	 * @param handler
 	 */
-	public void replaceAllRequestHandlers(RequestHandler handler)
+	public void replaceAllRequestHandlers(IRequestHandler handler)
 	{
 		if (requestHandlers.isEmpty())
 		{
@@ -177,7 +177,7 @@ public abstract class RequestHandlerStack
 		private static final long serialVersionUID = 1L;
 
 		private final boolean removeAll;
-		private final RequestHandler replacementRequestHandler;
+		private final IRequestHandler replacementRequestHandler;
 
 		/**
 		 * Construct.
@@ -185,7 +185,7 @@ public abstract class RequestHandlerStack
 		 * @param replacementRequestHandler
 		 * @param removeAll
 		 */
-		public ReplaceHandlerException(RequestHandler replacementRequestHandler, boolean removeAll)
+		public ReplaceHandlerException(IRequestHandler replacementRequestHandler, boolean removeAll)
 		{
 			this.replacementRequestHandler = replacementRequestHandler;
 			this.removeAll = removeAll;
@@ -211,7 +211,7 @@ public abstract class RequestHandlerStack
 
 	/**
 	 * Replaces current {@link Response} with new {@link Response} instance. The original response
-	 * is always restored after the {@link RequestHandler#respond(RequestCycle)} method is finished.
+	 * is always restored after the {@link IRequestHandler#respond(RequestCycle)} method is finished.
 	 * 
 	 * @param response
 	 * @return Response being replaced.
@@ -226,7 +226,7 @@ public abstract class RequestHandlerStack
 	protected abstract RequestCycle getRequestCycle();
 
 	/**
-	 * Detaches all {@link RequestHandler}s.
+	 * Detaches all {@link IRequestHandler}s.
 	 */
 	public void detach()
 	{
@@ -239,7 +239,7 @@ public abstract class RequestHandlerStack
 			requestHandlers.clear();
 		}
 
-		for (RequestHandler handler : inactiveRequestHandlers)
+		for (IRequestHandler handler : inactiveRequestHandlers)
 		{
 			try
 			{

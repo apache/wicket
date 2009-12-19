@@ -19,7 +19,7 @@ package org.apache.wicket.ng.markup.html.link;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
@@ -68,7 +68,7 @@ public abstract class Link extends Component implements ILinkListener
 
 	private String getURL()
 	{
-		RequestHandler handler;
+		IRequestHandler handler;
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
 		if (isBookmarkable())
 		{

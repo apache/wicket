@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.ng;
 
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.cycle.ExceptionMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.cycle.IExceptionMapper;
 
-public class DefaultExceptionMapper implements ExceptionMapper
+public class DefaultExceptionMapper implements IExceptionMapper
 {
 
-	public RequestHandler map(Exception e)
+	public IRequestHandler map(Exception e)
 	{
 		// TODO
 		return null;

@@ -17,27 +17,27 @@
 package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageClassRequestHandler;
-import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.request.handler.PageRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageClassRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageProvider;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.util.lang.Checks;
 
 /**
- * {@link RequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
+ * {@link IRequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
  * flag and current request strategy the handler either just renders the page to the response, or
  * redirects to render the page. <code>REDIRECT_TO_BUFFER</code> strategy is also supported.
  * <p>
  * 
  * @author Matej Knopp
  */
-public class RenderPageRequestHandler implements PageRequestHandler, PageClassRequestHandler
+public class RenderPageRequestHandler implements IPageRequestHandler, IPageClassRequestHandler
 {
-	private final PageProvider pageProvider;
+	private final IPageProvider pageProvider;
 	private final RedirectPolicy redirectPolicy;
 
 	/**
@@ -73,7 +73,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 	 * 
 	 * @param pageProvider
 	 */
-	public RenderPageRequestHandler(PageProvider pageProvider)
+	public RenderPageRequestHandler(IPageProvider pageProvider)
 	{
 		this(pageProvider, RedirectPolicy.AUTO_REDIRECT);
 	}
@@ -84,7 +84,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 	 * @param pageProvider
 	 * @param redirectPolicy
 	 */
-	public RenderPageRequestHandler(PageProvider pageProvider, RedirectPolicy redirectPolicy)
+	public RenderPageRequestHandler(IPageProvider pageProvider, RedirectPolicy redirectPolicy)
 	{
 		Checks.argumentNotNull(pageProvider, "pageProvider");
 		Checks.argumentNotNull(redirectPolicy, "redirectPolicy");
@@ -96,7 +96,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 	/**
 	 * @return page provider
 	 */
-	public PageProvider getPageProvider()
+	public IPageProvider getPageProvider()
 	{
 		return pageProvider;
 	}
@@ -109,7 +109,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 		return redirectPolicy;
 	}
 
-	public Class<? extends RequestablePage> getPageClass()
+	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}
@@ -124,7 +124,7 @@ public class RenderPageRequestHandler implements PageRequestHandler, PageClassRe
 		pageProvider.detach();
 	}
 
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return pageProvider.getPageInstance();
 	}

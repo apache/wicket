@@ -16,34 +16,29 @@
  */
 package org.apache.wicket.ng.protocol.http;
 
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.ng.session.HttpSessionStore;
-import org.apache.wicket.ng.session.SessionStore;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.ng.session.ISessionStore;
 
 /**
  * 
  * @author Matej Knopp
- * 
  */
 public abstract class WebApplication extends Application
 {
-
 	public WebApplication()
 	{
-		super();
 	}
 
 	@Override
@@ -52,7 +47,7 @@ public abstract class WebApplication extends Application
 		registerEncoder(new SystemMapper());
 	}
 
-	public void mount(RequestMapper encoder)
+	public void mount(IRequestMapper encoder)
 	{
 		registerEncoder(encoder);
 	}
@@ -79,7 +74,7 @@ public abstract class WebApplication extends Application
 	}
 
 	@Override
-	protected SessionStore newSessionStore()
+	protected ISessionStore newSessionStore()
 	{
 		return new HttpSessionStore(this);
 	}

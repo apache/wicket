@@ -32,7 +32,6 @@ import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.session.ISessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +43,8 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Matej Knopp
  */
-public class HttpSessionStore implements SessionStore
+public class HttpSessionStore implements ISessionStore
 {
-
 	/**
 	 * Reacts on unbinding from the session by cleaning up the session related application data.
 	 */

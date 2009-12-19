@@ -17,23 +17,21 @@
 package org.apache.wicket.ng.request;
 
 /**
- * Mapper that delegates the mapping to other {@link RequestMapper}s.
+ * Mapper that delegates the mapping to other {@link IRequestMapper}s.
  */
-public interface CompoundRequestMapper extends RequestMapper
+public interface ICompoundRequestMapper extends IRequestMapper
 {
-
 	/**
-	 * Registers a {@link RequestMapper}
+	 * Registers a {@link IRequestMapper}
 	 * 
 	 * @param encoder
 	 */
-	void register(RequestMapper encoder);
+	void register(IRequestMapper encoder);
 
 	/**
-	 * Unregisters {@link RequestMapper}
+	 * Unregisters {@link IRequestMapper}
 	 * 
 	 * @param encoder
 	 */
-	void unregister(RequestMapper encoder);
-
+	void unregister(IRequestMapper encoder);
 }

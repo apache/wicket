@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.RequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +130,7 @@ public class RequestListenerInterface
 	 * @param component
 	 *            The component
 	 */
-	public final void invoke(final RequestableComponent component)
+	public final void invoke(final IRequestableComponent component)
 	{
 		if (!component.canCallListenerInterface())
 		{
@@ -175,7 +175,7 @@ public class RequestListenerInterface
 	 *            The component
 	 * @param behavior
 	 */
-	public final void invoke(final RequestableComponent component, final IBehavior behavior)
+	public final void invoke(final IRequestableComponent component, final IBehavior behavior)
 	{
 		if (!component.canCallListenerInterface())
 		{

@@ -19,23 +19,25 @@ package org.apache.wicket.ng.mock;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.page.PageManagerContext;
+import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.pageManager.IPageManager;
+import org.apache.wicket.pageManager.IPageManagerContext;
 
 /**
- * Simple {@link PageManager} used for testing.
+ * Simple {@link IPageManager} used for testing.
  * 
  * @author Matej Knopp
  */
-public class MockPageManager implements PageManager
+public class MockPageManager implements IPageManager
 {
-	private final Map<Integer, ManageablePage> pages = new HashMap<Integer, ManageablePage>();
+	private final Map<Integer, IManageablePage> pages = new HashMap<Integer, IManageablePage>();
 
 	/**
 	 * Construct.
+	 * 
+	 * @param context
 	 */
-	public MockPageManager()
+	public MockPageManager(IPageManagerContext context)
 	{
 	}
 
@@ -47,7 +49,7 @@ public class MockPageManager implements PageManager
 	{
 	}
 
-	public ManageablePage getPage(int id)
+	public IManageablePage getPage(int id)
 	{
 		return pages.get(id);
 	}
@@ -60,7 +62,7 @@ public class MockPageManager implements PageManager
 	{
 	}
 
-	public void setContext(PageManagerContext context)
+	public void setContext(IPageManagerContext context)
 	{
 	}
 
@@ -69,9 +71,16 @@ public class MockPageManager implements PageManager
 		return false;
 	}
 
-	public void touchPage(ManageablePage page)
+	public void touchPage(IManageablePage page)
 	{
 		pages.put(page.getPageId(), page);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageManager.IPageManager#getContext()
+	 */
+	public IPageManagerContext getContext()
+	{
+		return null;
+	}
 }

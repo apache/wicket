@@ -18,14 +18,14 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
@@ -35,9 +35,9 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractMapper implements RequestMapper
+public abstract class AbstractMapper implements IRequestMapper
 {
-	protected MapperContext getContext()
+	protected IMapperContext getContext()
 	{
 		return Application.get().getEncoderContext();
 	}
@@ -185,7 +185,7 @@ public abstract class AbstractMapper implements RequestMapper
 	 * @param name
 	 * @return class
 	 */
-	protected Class<? extends RequestablePage> getPageClass(String name)
+	protected Class<? extends IRequestablePage> getPageClass(String name)
 	{
 		Checks.argumentNotEmpty(name, "name");
 
@@ -193,17 +193,17 @@ public abstract class AbstractMapper implements RequestMapper
 	}
 
 	/**
-	 * Extracts {@link PageParametersNg} from the URL using the given {@link PageParametersEncoder}.
+	 * Extracts {@link PageParametersNg} from the URL using the given {@link IPageParametersEncoder}.
 	 * 
 	 * @param request
 	 * @param segmentsToSkip
 	 *            how many URL segments should be skipped because they "belong" to the
-	 *            {@link RequestMapper}
+	 *            {@link IRequestMapper}
 	 * @param encoder
 	 * @return PageParameters instance
 	 */
 	protected PageParametersNg extractPageParameters(Request request, int segmentsToSkip,
-		PageParametersEncoder encoder)
+		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(request, "request");
 		Checks.argumentNotNull(encoder, "encoder");
@@ -228,7 +228,7 @@ public abstract class AbstractMapper implements RequestMapper
 
 	/**
 	 * Encodes the given {@link PageParametersNg} to the URL using the given
-	 * {@link PageParametersEncoder}. The original URL object is unchanged.
+	 * {@link IPageParametersEncoder}. The original URL object is unchanged.
 	 * 
 	 * @param url
 	 * @param pageParameters
@@ -236,7 +236,7 @@ public abstract class AbstractMapper implements RequestMapper
 	 * @return URL with encoded parameters
 	 */
 	protected Url encodePageParameters(Url url, PageParametersNg pageParameters,
-		PageParametersEncoder encoder)
+		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(url, "url");
 		Checks.argumentNotNull(encoder, "encoder");

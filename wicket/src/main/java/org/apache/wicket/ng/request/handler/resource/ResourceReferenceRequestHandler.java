@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.handler.resource;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.ResourceReference;
@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public class ResourceReferenceRequestHandler implements RequestHandler
+public class ResourceReferenceRequestHandler implements IRequestHandler
 {
 	private final ResourceReference resourceReference;
 	private final PageParametersNg pageParameters;

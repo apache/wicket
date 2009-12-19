@@ -18,14 +18,14 @@ package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.PageExpiredException;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
-import org.apache.wicket.ng.request.mapper.PageSource;
+import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.mapper.IPageSource;
 import org.apache.wicket.ng.request.mapper.StalePageException;
+import org.apache.wicket.pageManager.IPageManager;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -33,24 +33,24 @@ import org.apache.wicket.util.lang.Checks;
  * to get existing or create new page instance. Requesting or creating page instance is deferred
  * until {@link #getPageInstance()} is called.
  * <p>
- * Purpose of this class is to reduce complexity of both {@link RequestMapper}s and
- * {@link RequestHandler}s. {@link RequestMapper} examines the URL, gathers all relevant information
+ * Purpose of this class is to reduce complexity of both {@link IRequestMapper}s and
+ * {@link IRequestHandler}s. {@link IRequestMapper} examines the URL, gathers all relevant information
  * about the page in the URL (combination of page id, page class, page parameters and render count),
- * creates {@link DefaultPageProvider} object and creates a {@link RequestHandler} instance that can
+ * creates {@link DefaultPageProvider} object and creates a {@link IRequestHandler} instance that can
  * use the {@link DefaultPageProvider} to access the page.
  * <p>
- * Apart from simplifying {@link RequestMapper}s and {@link RequestHandler}s
+ * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s
  * {@link DefaultPageProvider} also helps performance because creating or obtaining page from
- * {@link PageManager} is delayed until the {@link RequestHandler} actually requires the page.
+ * {@link IPageManager} is delayed until the {@link IRequestHandler} actually requires the page.
  * 
  * @author Matej Knopp
  */
-public class DefaultPageProvider implements PageProvider
+public class DefaultPageProvider implements IPageProvider
 {
 	private Integer renderCount;
-	private PageSource pageSource;
-	private RequestablePage pageInstance;
-	private Class<? extends RequestablePage> pageClass;
+	private IPageSource pageSource;
+	private IRequestablePage pageInstance;
+	private Class<? extends IRequestablePage> pageClass;
 	private Integer pageId;
 	private PageParametersNg pageParameters;
 
@@ -78,7 +78,7 @@ public class DefaultPageProvider implements PageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(int pageId, Class<? extends RequestablePage> pageClass,
+	public DefaultPageProvider(int pageId, Class<? extends IRequestablePage> pageClass,
 		Integer renderCount)
 	{
 		this(pageId, pageClass, new PageParametersNg(), renderCount);
@@ -95,7 +95,7 @@ public class DefaultPageProvider implements PageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(int pageId, Class<? extends RequestablePage> pageClass,
+	public DefaultPageProvider(int pageId, Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters, Integer renderCount)
 	{
 		this.pageId = pageId;
@@ -111,7 +111,7 @@ public class DefaultPageProvider implements PageProvider
 	 * @param pageClass
 	 * @param pageParameters
 	 */
-	public DefaultPageProvider(Class<? extends RequestablePage> pageClass,
+	public DefaultPageProvider(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters)
 	{
 		setPageClass(pageClass);
@@ -127,7 +127,7 @@ public class DefaultPageProvider implements PageProvider
 	 * 
 	 * @param pageClass
 	 */
-	public DefaultPageProvider(Class<? extends RequestablePage> pageClass)
+	public DefaultPageProvider(Class<? extends IRequestablePage> pageClass)
 	{
 		this(pageClass, new PageParametersNg());
 	}
@@ -138,7 +138,7 @@ public class DefaultPageProvider implements PageProvider
 	 * 
 	 * @param page
 	 */
-	public DefaultPageProvider(RequestablePage page)
+	public DefaultPageProvider(IRequestablePage page)
 	{
 		Checks.argumentNotNull(page, "page");
 
@@ -146,9 +146,9 @@ public class DefaultPageProvider implements PageProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.handler.PageProvider#getPageInstance()
+	 * @see org.apache.wicket.ng.request.handler.IPageProvider#getPageInstance()
 	 */
-	public RequestablePage getPageInstance()
+	public IRequestablePage getPageInstance()
 	{
 		if (pageInstance == null)
 		{
@@ -163,7 +163,7 @@ public class DefaultPageProvider implements PageProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.handler.PageProvider#getPageParameters()
+	 * @see org.apache.wicket.ng.request.handler.IPageProvider#getPageParameters()
 	 */
 	public PageParametersNg getPageParameters()
 	{
@@ -178,9 +178,9 @@ public class DefaultPageProvider implements PageProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.handler.PageProvider#getPageClass()
+	 * @see org.apache.wicket.ng.request.handler.IPageProvider#getPageClass()
 	 */
-	public Class<? extends RequestablePage> getPageClass()
+	public Class<? extends IRequestablePage> getPageClass()
 	{
 		if (pageClass != null)
 		{
@@ -197,7 +197,7 @@ public class DefaultPageProvider implements PageProvider
 		return false;
 	}
 
-	protected PageSource getPageSource()
+	protected IPageSource getPageSource()
 	{
 		if (pageSource != null)
 		{
@@ -214,11 +214,11 @@ public class DefaultPageProvider implements PageProvider
 		}
 	}
 
-	private RequestablePage getPageInstance(Integer pageId,
-		Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters,
+	private IRequestablePage getPageInstance(Integer pageId,
+		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
 		Integer renderCount)
 	{
-		RequestablePage page = null;
+		IRequestablePage page = null;
 
 		boolean freshCreated = false;
 
@@ -260,7 +260,7 @@ public class DefaultPageProvider implements PageProvider
 
 	/**
 	 * Detaches the page if it has been loaded (that means either
-	 * {@link #PageProvider(RequestablePage)} constructor has been used or
+	 * {@link #PageProvider(IRequestablePage)} constructor has been used or
 	 * {@link #getPageInstance()} has been called).
 	 */
 	public void detach()
@@ -273,17 +273,17 @@ public class DefaultPageProvider implements PageProvider
 
 	/**
 	 * If the {@link DefaultPageProvider} is used outside request thread (thread that does not have
-	 * application instance assigned) it is necessary to specify a {@link PageSource} instance so
+	 * application instance assigned) it is necessary to specify a {@link IPageSource} instance so
 	 * that {@link DefaultPageProvider} knows how to get a page instance.
 	 * 
 	 * @param pageSource
 	 */
-	public void setPageSource(PageSource pageSource)
+	public void setPageSource(IPageSource pageSource)
 	{
 		this.pageSource = pageSource;
 	}
 
-	private void setPageClass(Class<? extends RequestablePage> pageClass)
+	private void setPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		Checks.argumentNotNull(pageClass, "pageClass");
 

@@ -17,8 +17,8 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.wicket.ng.request.Url;
  * @author igor.vaynberg
  * 
  */
-public class SystemMapper implements RequestMapper
+public class SystemMapper implements IRequestMapper
 {
 	private final ThreadsafeCompoundRequestMapper mapper = new ThreadsafeCompoundRequestMapper();
 
@@ -49,13 +49,13 @@ public class SystemMapper implements RequestMapper
 	}
 
 	/** {@inheritDoc} */
-	public Url mapHandler(RequestHandler handler)
+	public Url mapHandler(IRequestHandler handler)
 	{
 		return mapper.mapHandler(handler);
 	}
 
 	/** {@inheritDoc} */
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		return mapper.mapRequest(request);
 	}

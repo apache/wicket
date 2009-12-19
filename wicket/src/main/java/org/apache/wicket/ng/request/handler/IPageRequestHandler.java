@@ -16,19 +16,19 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 
 /**
  * Request handler that works with a page instance.
  * 
  * @author Matej Knopp
  */
-public interface PageRequestHandler extends PageClassRequestHandler
+public interface IPageRequestHandler extends IPageClassRequestHandler
 {
 	/**
 	 * Returns the page
 	 * 
 	 * @return page instance
 	 */
-	public RequestablePage getPage();
+	public IRequestablePage getPage();
 }

@@ -22,24 +22,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
 /**
- * {@link RequestParameters} implementation that combines other {@link RequestParameters}s.
+ * {@link IRequestParameters} implementation that combines other {@link IRequestParameters}s.
  * 
  * @author Matej Knopp
  */
-public class CombinedRequestParametersAdapter implements RequestParameters
+public class CombinedRequestParametersAdapter implements IRequestParameters
 {
-	private final RequestParameters parameters[];
+	private final IRequestParameters parameters[];
 
 	/**
 	 * Construct.
 	 * 
 	 * @param parameters
 	 */
-	public CombinedRequestParametersAdapter(RequestParameters... parameters)
+	public CombinedRequestParametersAdapter(IRequestParameters... parameters)
 	{
 		if (parameters == null)
 		{
@@ -51,7 +51,7 @@ public class CombinedRequestParametersAdapter implements RequestParameters
 	public Set<String> getParameterNames()
 	{
 		Set<String> result = new HashSet<String>();
-		for (RequestParameters p : parameters)
+		for (IRequestParameters p : parameters)
 		{
 			result.addAll(p.getParameterNames());
 		}
@@ -60,7 +60,7 @@ public class CombinedRequestParametersAdapter implements RequestParameters
 
 	public StringValue getParameterValue(String name)
 	{
-		for (RequestParameters p : parameters)
+		for (IRequestParameters p : parameters)
 		{
 			StringValue value = p.getParameterValue(name);
 			if (!value.isNull())
@@ -74,7 +74,7 @@ public class CombinedRequestParametersAdapter implements RequestParameters
 	public List<StringValue> getParameterValues(String name)
 	{
 		List<StringValue> result = new ArrayList<StringValue>();
-		for (RequestParameters p : parameters)
+		for (IRequestParameters p : parameters)
 		{
 			List<StringValue> values = p.getParameterValues(name);
 			if (values != null)

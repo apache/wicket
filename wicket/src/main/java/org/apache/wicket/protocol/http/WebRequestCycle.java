@@ -315,10 +315,4 @@ public class WebRequestCycle extends RequestCycle
 			return super.isRedirect();
 		}
 	}
-
-	void unset()
-	{
-		set(null);
-	}
-
 }

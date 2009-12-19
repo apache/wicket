@@ -17,10 +17,10 @@
 package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageClassRequestHandler;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.IPageClassRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -29,16 +29,16 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public class BookmarkablePageRequestHandler implements PageClassRequestHandler
+public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 {
-	private final PageProvider pageProvider;
+	private final IPageProvider pageProvider;
   
 	/**
 	 * Construct.
 	 * 
 	 * @param pageProvider
 	 */
-	public BookmarkablePageRequestHandler(PageProvider pageProvider)
+	public BookmarkablePageRequestHandler(IPageProvider pageProvider)
 	{
 		
 		Checks.argumentNotNull(pageProvider, "pageProvider");
@@ -46,7 +46,7 @@ public class BookmarkablePageRequestHandler implements PageClassRequestHandler
 		this.pageProvider = pageProvider;
 	}
 
-	public Class<? extends RequestablePage> getPageClass()
+	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}

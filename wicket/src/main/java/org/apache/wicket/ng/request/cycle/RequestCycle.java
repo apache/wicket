@@ -24,13 +24,13 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
@@ -42,13 +42,13 @@ import org.slf4j.LoggerFactory;
  * <li>Resolve request handler
  * <li>Execute request handler
  * </ol>
- * During {@link RequestHandler} execution the handler can execute other {@link RequestHandler}s,
- * replace itself with another {@link RequestHandler} or replace all {@link RequestHandler}s on
- * stack with another {@link RequestHandler}.
+ * During {@link IRequestHandler} execution the handler can execute other {@link IRequestHandler}s,
+ * replace itself with another {@link IRequestHandler} or replace all {@link IRequestHandler}s on
+ * stack with another {@link IRequestHandler}.
  * 
- * @see #executeRequestHandler(RequestHandler)
- * @see #replaceCurrentRequestHandler(RequestHandler)
- * @see #replaceAllRequestHandlers(RequestHandler)
+ * @see #executeRequestHandler(IRequestHandler)
+ * @see #replaceCurrentRequestHandler(IRequestHandler)
+ * @see #replaceAllRequestHandlers(IRequestHandler)
  * 
  * @author Matej Knopp
  */
@@ -60,8 +60,8 @@ public class RequestCycle extends RequestHandlerStack
 
 	private final Response originalResponse;
 
-	private final RequestMapper requestMapper;
-	private final ExceptionMapper exceptionMapper;
+	private final IRequestMapper requestMapper;
+	private final IExceptionMapper exceptionMapper;
 
 	/**
 	 * Construct.
@@ -118,13 +118,13 @@ public class RequestCycle extends RequestHandlerStack
 	}
 
 	/**
-	 * Resolves current request to a {@link RequestHandler}.
+	 * Resolves current request to a {@link IRequestHandler}.
 	 * 
 	 * @return RequestHandler instance
 	 */
-	protected RequestHandler resolveRequestHandler()
+	protected IRequestHandler resolveRequestHandler()
 	{
-		RequestHandler handler = requestMapper.mapRequest(request);
+		IRequestHandler handler = requestMapper.mapRequest(request);
 		return handler;
 	}
 
@@ -148,7 +148,7 @@ public class RequestCycle extends RequestHandlerStack
 		try
 		{
 			set(this);
-			RequestHandler handler = resolveRequestHandler();
+			IRequestHandler handler = resolveRequestHandler();
 			if (handler != null)
 			{
 				executeRequestHandler(handler);
@@ -158,7 +158,7 @@ public class RequestCycle extends RequestHandlerStack
 		}
 		catch (Exception e)
 		{
-			RequestHandler handler = handleException(e);
+			IRequestHandler handler = handleException(e);
 			if (handler != null)
 			{
 				executeExceptionRequestHandler(handler, getExceptionRetryCount());
@@ -195,7 +195,7 @@ public class RequestCycle extends RequestHandlerStack
 		return result;
 	}
 
-	private void executeExceptionRequestHandler(RequestHandler handler, int retryCount)
+	private void executeExceptionRequestHandler(IRequestHandler handler, int retryCount)
 	{
 		try
 		{
@@ -205,7 +205,7 @@ public class RequestCycle extends RequestHandlerStack
 		{
 			if (retryCount > 0)
 			{
-				RequestHandler next = handleException(e);
+				IRequestHandler next = handleException(e);
 				if (handler != null)
 				{
 					executeExceptionRequestHandler(next, retryCount - 1);
@@ -217,12 +217,12 @@ public class RequestCycle extends RequestHandlerStack
 	}
 
 	/**
-	 * Return {@link RequestHandler} for the given exception.
+	 * Return {@link IRequestHandler} for the given exception.
 	 * 
 	 * @param e
 	 * @return RequestHandler instance
 	 */
-	protected RequestHandler handleException(Exception e)
+	protected IRequestHandler handleException(Exception e)
 	{
 		return exceptionMapper.map(e);
 	}
@@ -287,7 +287,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param handler
 	 * @return Url instance or <code>null</code>
 	 */
-	public Url urlFor(RequestHandler handler)
+	public Url urlFor(IRequestHandler handler)
 	{
 		return requestMapper.mapHandler(handler);
 	}
@@ -301,7 +301,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param handler
 	 * @return Url String or <code>null</code>
 	 */
-	public String renderUrlFor(RequestHandler handler)
+	public String renderUrlFor(IRequestHandler handler)
 	{
 		Url url = urlFor(handler);
 		if (url != null)
@@ -342,7 +342,7 @@ public class RequestCycle extends RequestHandlerStack
 
 	/**
 	 * Registers a callback to be invoked on {@link RequestCycle} detach. The callback will be
-	 * invoked after all {@link RequestHandler}s are detached.
+	 * invoked after all {@link IRequestHandler}s are detached.
 	 * 
 	 * @param detachCallback
 	 */
@@ -355,7 +355,7 @@ public class RequestCycle extends RequestHandlerStack
 
 	/**
 	 * Custom callback invoked on request cycle detach. Detach callbacks are invoked after all
-	 * {@link RequestHandler}s are detached.
+	 * {@link IRequestHandler}s are detached.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -390,7 +390,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * 
 	 * @param page
 	 */
-	public void setResponsePage(RequestablePage page)
+	public void setResponsePage(IRequestablePage page)
 	{
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(
 			page), RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
@@ -402,10 +402,10 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param pageClass
 	 * @param parameters
 	 */
-	public void setResponsePage(Class<? extends RequestablePage> pageClass,
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg parameters)
 	{
-		PageProvider provider = new DefaultPageProvider(pageClass, parameters);
+		IPageProvider provider = new DefaultPageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}

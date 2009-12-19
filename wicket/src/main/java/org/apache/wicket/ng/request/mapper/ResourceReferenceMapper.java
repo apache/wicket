@@ -17,14 +17,14 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
-import org.apache.wicket.ng.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
-import org.apache.wicket.ng.resource.Resource;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Classes;
 
@@ -45,14 +45,14 @@ import org.apache.wicket.util.lang.Classes;
  */
 public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
-	private final PageParametersEncoder pageParametersEncoder;
+	private final IPageParametersEncoder pageParametersEncoder;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param pageParametersEncoder
 	 */
-	public ResourceReferenceMapper(PageParametersEncoder pageParametersEncoder)
+	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder)
 	{
 		this.pageParametersEncoder = pageParametersEncoder;
 	}
@@ -65,7 +65,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		this(new SimplePageParametersEncoder());
 	}
 
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
 		if (url.getSegments().size() >= 4 &&
@@ -96,7 +96,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 						attributes.style, attributes.variation, false);
 				if (res != null)
 				{
-					Resource resource = res.getResource();
+					IResource resource = res.getResource();
 					if (resource != null)
 					{
 						ResourceRequestHandler handler = new ResourceRequestHandler(resource,
@@ -120,7 +120,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return scope.getName();
 	}
 
-	public Url mapHandler(RequestHandler requestHandler)
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
 		{

@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,14 +46,7 @@ import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.page.PageManagerContext;
-import org.apache.wicket.ng.page.persistent.DataStore;
-import org.apache.wicket.ng.page.persistent.DefaultPageStore;
-import org.apache.wicket.ng.page.persistent.PageStore;
-import org.apache.wicket.ng.page.persistent.PersistentPageManager;
-import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
@@ -160,9 +152,38 @@ public abstract class Application
 	/** */
 	private List<IHeaderContributor> renderHeadListeners;
 
-
 	/** root mapper */
-	private RequestMapper rootRequestMapper;
+	private IRequestMapper rootRequestMapper;
+
+	/** list of {@link IComponentInstantiationListener}s. */
+	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
+
+	/** The converter locator instance. */
+	private IConverterLocator converterLocator;
+
+	/** list of initializers. */
+	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
+
+	/** Application level meta data. */
+	private MetaDataEntry<?>[] metaData;
+
+	/** Name of application subclass. */
+	private final String name;
+
+	/** Request logger instance. */
+	private IRequestLogger requestLogger;
+
+	/** The session facade. */
+	private ISessionStore sessionStore;
+
+	/** Settings for this application. */
+	private Settings settings;
+
+	/** can the settings object be set/used. */
+	private boolean settingsAccessible;
+
+	/** Shared resources for this application */
+	private final SharedResources sharedResources;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -240,36 +261,6 @@ public abstract class Application
 	{
 		current.set(null);
 	}
-
-	/** list of {@link IComponentInstantiationListener}s. */
-	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
-
-	/** The converter locator instance. */
-	private IConverterLocator converterLocator;
-
-	/** list of initializers. */
-	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
-
-	/** Application level meta data. */
-	private MetaDataEntry<?>[] metaData;
-
-	/** Name of application subclass. */
-	private final String name;
-
-	/** Request logger instance. */
-	private IRequestLogger requestLogger;
-
-	/** The session facade. */
-	private ISessionStore sessionStore;
-
-	/** Settings for this application. */
-	private Settings settings;
-
-	/** can the settings object be set/used. */
-	private boolean settingsAccessible;
-
-	/** Shared resources for this application */
-	private final SharedResources sharedResources;
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
@@ -897,9 +888,6 @@ public abstract class Application
 
 		onDestroy();
 
-		// release pagemanager
-		pageManager.destroy();
-
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 		Session.unset();
@@ -938,10 +926,6 @@ public abstract class Application
 
 		sessionStore = newSessionStore();
 		converterLocator = newConverterLocator();
-
-		// set up pagemanager
-		pageManager = newPageManager();
-		pageManager.setContext(getPageManagerContext());
 
 		// set up default request mapper
 		setRootRequestMapper(new SystemMapper());
@@ -1204,108 +1188,21 @@ public abstract class Application
 		}
 	}
 
-
-	// ///////////////////////////////////////////////////////////////
-	// NG STUFF
-	//
-	// TODO WICKET-NG remove these comments
-	//
-	// ///////////////////////////////////////////////////////////////
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Page Manager
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	protected PageManager newPageManager()
-	{
-		int cacheSize = 40;
-		int fileChannelPoolCapacity = 50;
-		DataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
-		PageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
-		return new PersistentPageManager(getName(), pageStore);
-	}
-
-	private PageManager pageManager;
-
 	/**
-	 * Context for PageManager to interact with rest of Wicket
+	 * @return The root request mapper
 	 */
-	private final PageManagerContext pageManagerContext = new PageManagerContext()
-	{
-		public void bind()
-		{
-			Session.get().bind();
-		}
-
-		private final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
-		{
-			private static final long serialVersionUID = 1L;
-		};
-
-		public Object getRequestData()
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			return requestCycle.getMetaData(requestCycleMetaDataKey);
-		}
-
-		public Serializable getSessionAttribute(String key)
-		{
-			return Session.get().getAttribute(key);
-		}
-
-		public String getSessionId()
-		{
-			return Session.get().getId();
-		}
-
-		public void setRequestData(Object data)
-		{
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null)
-			{
-				throw new IllegalStateException("Not a request thread.");
-			}
-			requestCycle.setMetaData(requestCycleMetaDataKey, data);
-		}
-
-		public void setSessionAttribute(String key, Serializable value)
-		{
-			Session.get().setAttribute(key, value);
-		}
-	};
-
-	/**
-	 * Returns the {@link PageManager} instance.
-	 * 
-	 * @return {@link PageManager} instance.
-	 */
-	public PageManager getPageManager()
-	{
-		return pageManager;
-	}
-
-	protected PageManagerContext getPageManagerContext()
-	{
-		return pageManagerContext;
-	}
-
-	public RequestMapper getRootRequestMapper()
+	public final IRequestMapper getRootRequestMapper()
 	{
 		return rootRequestMapper;
 	}
 
-	public void setRootRequestMapper(RequestMapper rootRequestMapper)
+	/**
+	 * Sets the root request mapper
+	 * 
+	 * @param rootRequestMapper
+	 */
+	public final void setRootRequestMapper(final IRequestMapper rootRequestMapper)
 	{
 		this.rootRequestMapper = rootRequestMapper;
 	}
-
-
 }

@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.request.handler;
+package org.apache.wicket.ng.settings;
 
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.component.RequestableComponent;
+import org.apache.wicket.application.IClassResolver;
 
-/**
- * Request handler that works with a component.
- * 
- * @author Matje Knopp
- */
-public interface ComponentRequestHandler extends RequestHandler
+public interface IApplicationSettings
 {
 	/**
-	 * Returns the component instance.
+	 * Gets the default resolver to use when finding classes and resources
 	 * 
-	 * @return component instance
+	 * @return Default class resolver
 	 */
-	public RequestableComponent getComponent();
+	IClassResolver getClassResolver();
+
+	/**
+	 * Sets the default class resolver to use when finding classes and resources
+	 * 
+	 * @param defaultClassResolver
+	 *            The default class resolver
+	 */
+	void setClassResolver(final IClassResolver defaultClassResolver);
 }

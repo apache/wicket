@@ -30,10 +30,10 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public interface Resource extends Serializable
+public interface IResource extends Serializable
 {
 	/**
-	 * Attributes that are provided to resource in the {@link Resource#respond(Attributes)} method.
+	 * Attributes that are provided to resource in the {@link IResource#respond(Attributes)} method.
 	 * Attributes are set by the {@link ResourceRequestHandler}.
 	 * 
 	 * @author Matej Knopp

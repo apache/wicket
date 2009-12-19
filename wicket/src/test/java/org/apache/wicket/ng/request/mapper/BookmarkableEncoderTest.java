@@ -18,15 +18,15 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestableComponent;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.request.handler.PageRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageProvider;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -48,7 +48,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     private BookmarkableMapper encoder = new BookmarkableMapper()
     {
         @Override
-        protected MapperContext getContext()
+        protected IMapperContext getContext()
         {
             return context;
         }
@@ -62,10 +62,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     public void testDecode1()
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME);
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof RenderPageRequestHandler);
-        RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+        IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
         assertEquals(0, page.getPageParametersNg().getIndexedParamsCount());
         assertTrue(page.getPageParametersNg().getNamedParameterKeys().isEmpty());
@@ -77,10 +77,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     public void testDecode2()
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof RenderPageRequestHandler);
-        RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+        IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
 
         PageParametersNg p = page.getPageParametersNg();
@@ -98,10 +98,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     public void testDecode3()
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof RenderPageRequestHandler);
-        RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+        IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         checkPage(page, 15);
     }
 
@@ -111,10 +111,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     public void testDecode4()
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof RenderPageRequestHandler);
-        RequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+        IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         checkPage(page, 15);
 
         PageParametersNg p = page.getPageParametersNg();
@@ -133,13 +133,13 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     public void testDecode5()
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
-        RequestablePage page = h.getPage();
+        IRequestablePage page = h.getPage();
         checkPage(page, 15);
 
         assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
@@ -154,12 +154,12 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME +
                 "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
-        RequestablePage page = h.getPage();
+        IRequestablePage page = h.getPage();
         checkPage(page, 15);
 
         assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
@@ -182,13 +182,13 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME +
                 "?15-ILinkListener.4-foo-bar");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
-        RequestablePage page = h.getPage();
+        IRequestablePage page = h.getPage();
         checkPage(page, 15);
 
         assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
@@ -206,12 +206,12 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
         context.setNextPageRenderCount(5);
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 
-        RequestablePage page = h.getPage();
+        IRequestablePage page = h.getPage();
         assertEquals(page.getRenderCount(), 5);
     }
 
@@ -227,9 +227,9 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
         try
         {
-            RequestHandler handler = encoder.mapRequest(getRequest(url));
+            IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-            ((PageRequestHandler)handler).getPage();
+            ((IPageRequestHandler)handler).getPage();
 
             // should never get here
             assertFalse(true);
@@ -247,7 +247,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
     {
         DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParametersNg());
         provider.setPageSource(context);
-        RequestHandler handler = new BookmarkablePageRequestHandler(provider);
+        IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
         assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME, url.toString());
     }
@@ -264,7 +264,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         parameters.setNamedParameter("b", "c");
         DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
         provider.setPageSource(context);
-        RequestHandler handler = new BookmarkablePageRequestHandler(provider);
+        IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
         assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
     }
@@ -282,7 +282,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
         DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
         provider.setPageSource(context);
-        RequestHandler handler = new BookmarkablePageRequestHandler(provider);
+        IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
 
         assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
@@ -300,8 +300,8 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         page.getPageParametersNg().setNamedParameter("b", "c");
         page.setCreatedBookmarkable(true);
 
-        PageProvider provider = new DefaultPageProvider(page);
-        RequestHandler handler = new RenderPageRequestHandler(provider);
+        IPageProvider provider = new DefaultPageProvider(page);
+        IRequestHandler handler = new RenderPageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
 
         assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c", url.toString());
@@ -320,8 +320,8 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 
         page.setCreatedBookmarkable(false);
 
-        PageProvider provider = new DefaultPageProvider(page);
-        RequestHandler handler = new RenderPageRequestHandler(provider);
+        IPageProvider provider = new DefaultPageProvider(page);
+        IRequestHandler handler = new RenderPageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
 
         // never allow bookmarkable render url for page that has not been created by bookmarkable
@@ -345,10 +345,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         // as this explicitely says the url must be bookmarkable
         page.setCreatedBookmarkable(false);
 
-        RequestableComponent c = page.get("foo:bar");
+        IRequestableComponent c = page.get("foo:bar");
 
         PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-        RequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
+        IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
                 ILinkListener.INTERFACE);
 
         Url url = encoder.mapHandler(handler);
@@ -372,10 +372,10 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         // as this explicitely says the url must be bookmarkable
         page.setCreatedBookmarkable(false);
 
-        RequestableComponent c = page.get("foo:bar");
+        IRequestableComponent c = page.get("foo:bar");
 
         PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-        RequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
+        IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
                 ILinkListener.INTERFACE, 4);
 
         Url url = encoder.mapHandler(handler);
@@ -394,8 +394,8 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         page.setCreatedBookmarkable(true);
         page.setPageStateless(true);
 
-        PageProvider provider = new DefaultPageProvider(page);
-        RequestHandler handler = new RenderPageRequestHandler(provider);
+        IPageProvider provider = new DefaultPageProvider(page);
+        IRequestHandler handler = new RenderPageRequestHandler(provider);
 
         Url url = encoder.mapHandler(handler);
 

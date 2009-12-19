@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -677,7 +677,7 @@ public class ServletWebRequest extends WebRequest
 		return postParameters;
 	}
 
-	private final RequestParameters postRequestParameters = new RequestParameters()
+	private final IRequestParameters postRequestParameters = new IRequestParameters()
 	{
 		public Set<String> getParameterNames()
 		{
@@ -709,7 +709,7 @@ public class ServletWebRequest extends WebRequest
 	};
 
 	@Override
-	public RequestParameters getPostRequestParameters()
+	public IRequestParameters getPostRequestParameters()
 	{
 		return postRequestParameters;
 	}

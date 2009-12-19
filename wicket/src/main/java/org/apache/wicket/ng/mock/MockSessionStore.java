@@ -26,14 +26,14 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.Session;
-import org.apache.wicket.ng.session.SessionStore;
+import org.apache.wicket.ng.session.ISessionStore;
 
 /**
  * Session store that holds one session.
  * 
  * @author Matej Knopp
  */
-public class MockSessionStore implements SessionStore
+public class MockSessionStore implements ISessionStore
 {
 	/**
 	 * 

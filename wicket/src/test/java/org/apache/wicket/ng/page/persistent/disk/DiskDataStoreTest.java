@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 
 import org.apache.wicket.ng.page.persistent.AsynchronousDataStore;
-import org.apache.wicket.ng.page.persistent.DataStore;
+import org.apache.wicket.ng.page.persistent.IDataStore;
 import org.apache.wicket.util.lang.Checks;
 
 public class DiskDataStoreTest extends TestCase
@@ -155,7 +155,7 @@ public class DiskDataStoreTest extends TestCase
 
 	}
 
-	private DataStore dataStore;
+	private IDataStore dataStore;
 
 	private class SaveRunnable implements Runnable
 	{

@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.settings;
+package org.apache.wicket.ng.page.persistent;
 
-public interface RequestCycleSettings
+public interface IDataStore
 {
-	public enum RenderStrategy {
-		ONE_PASS_RENDER, REDIRECT_TO_BUFFER, REDIRECT_TO_RENDER
-	};
+	public byte[] getData(String sessionId, int id);
 
-	void setRenderStrategy(RenderStrategy renderStrategy);
+	public void removeData(String sessionId, int id);
 
-	RenderStrategy getRenderStrategy();
+	public void removeData(String sessionId);
 
-	String getResponseRequestEncoding();
+	public void storeData(String sessionId, int id, byte[] data);
 
-	void setResponseRequestEncoding(final String responseRequestEncoding);
+	public void destroy();
+
+	public boolean isReplicated();
 }

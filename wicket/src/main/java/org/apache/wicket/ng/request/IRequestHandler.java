@@ -27,7 +27,7 @@ import org.apache.wicket.ng.request.cycle.RequestCycle;
  * @author Eelco Hillenius
  * @author Matej Knopp
  */
-public interface RequestHandler
+public interface IRequestHandler
 {
 	/**
 	 * Generates a response.

@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 
 /**
@@ -110,7 +110,7 @@ public abstract class AbstractEncoderTest extends TestCase
 		};
 	}
 
-	protected void checkPage(RequestablePage page, int id)
+	protected void checkPage(IRequestablePage page, int id)
 	{
 		assertEquals(id, page.getPageId());
 	}

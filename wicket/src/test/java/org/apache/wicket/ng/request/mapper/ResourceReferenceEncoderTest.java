@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
@@ -39,7 +39,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     private final ResourceReferenceMapper encoder = new ResourceReferenceMapper()
     {
         @Override
-        protected MapperContext getContext()
+        protected IMapperContext getContext()
         {
             return context;
         }
@@ -51,7 +51,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode1()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource1, h.getResource());
@@ -68,7 +68,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode1A()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?en");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource1, h.getResource());
@@ -85,7 +85,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode2()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?p1=v1&p2=v2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource1, h.getResource());
@@ -103,7 +103,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode2A()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?-style&p1=v1&p2=v2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource1, h.getResource());
@@ -121,7 +121,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode3()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource2, h.getResource());
@@ -138,7 +138,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode3A()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN-style");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource2, h.getResource());
@@ -155,7 +155,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode3B()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertNull(handler);
     }
 
@@ -165,7 +165,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode4()
     {
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource2, h.getResource());
@@ -182,7 +182,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode5()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource3, h.getResource());
@@ -199,7 +199,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode6()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource3, h.getResource());
@@ -218,7 +218,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode7()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource4, h.getResource());
@@ -235,7 +235,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode7A()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?sk");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertNull(handler);
     }
 
@@ -245,7 +245,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
     public void testDecode8()
     {
         Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2");
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ResourceRequestHandler);
         ResourceRequestHandler h = (ResourceRequestHandler)handler;
         assertEquals(resource4, h.getResource());
@@ -264,7 +264,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
 			"/reference5?en--variation&p1=v1&p2=v2");
-		RequestHandler handler = encoder.mapRequest(getRequest(url));
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertTrue(handler instanceof ResourceRequestHandler);
 		ResourceRequestHandler h = (ResourceRequestHandler)handler;
 		assertEquals(resource5, h.getResource());
@@ -283,7 +283,7 @@ public class ResourceReferenceEncoderTest extends AbstractResourceReferenceEncod
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
 			"/reference6?en-style-variation&p1=v1&p2=v2");
-		RequestHandler handler = encoder.mapRequest(getRequest(url));
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertTrue(handler instanceof ResourceRequestHandler);
 		ResourceRequestHandler h = (ResourceRequestHandler)handler;
 		assertEquals(resource6, h.getResource());

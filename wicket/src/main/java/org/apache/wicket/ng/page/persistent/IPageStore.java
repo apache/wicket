@@ -18,9 +18,9 @@ package org.apache.wicket.ng.page.persistent;
 
 import java.io.Serializable;
 
-import org.apache.wicket.ng.page.ManageablePage;
+import org.apache.wicket.ng.page.IManageablePage;
 
-public interface PageStore
+public interface IPageStore
 {
 	/**
 	 * Destroy the store.
@@ -34,7 +34,7 @@ public interface PageStore
 	 * @param id
 	 * @return The page
 	 */
-	ManageablePage getPage(String sessionId, int id);
+	IManageablePage getPage(String sessionId, int id);
 
 	/**
 	 * Removes a page from the persistent layer.
@@ -53,7 +53,7 @@ public interface PageStore
 	 * @param sessionId
 	 * @param page
 	 */
-	void storePage(String sessionId, ManageablePage page);
+	void storePage(String sessionId, IManageablePage page);
 
 	/**
 	 * The pagestore should cleanup all the pages for that sessionid.
@@ -94,5 +94,5 @@ public interface PageStore
 	 * @param page
 	 * @return page
 	 */
-	public ManageablePage convertToPage(Object page);
+	public IManageablePage convertToPage(Object page);
 }

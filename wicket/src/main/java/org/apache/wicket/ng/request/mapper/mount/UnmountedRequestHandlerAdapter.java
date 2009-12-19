@@ -17,22 +17,22 @@
 package org.apache.wicket.ng.request.mapper.mount;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
 
 /**
- * Adapts a singleton {@link RequestHandler} instance to {@link MountedRequestMapper}
+ * Adapts a singleton {@link IRequestHandler} instance to {@link IMountedRequestMapper}
  * 
  * TODO javadoc
  * 
  * @author igor.vaynberg
  * 
  */
-class UnmountedRequestHandlerAdapter implements MountedRequestMapper
+class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 {
-	private final RequestHandler handler;
+	private final IRequestHandler handler;
 
-	public UnmountedRequestHandlerAdapter(RequestHandler handler)
+	public UnmountedRequestHandlerAdapter(IRequestHandler handler)
 	{
 		this.handler = handler;
 	}
@@ -42,7 +42,7 @@ class UnmountedRequestHandlerAdapter implements MountedRequestMapper
 		return 0;
 	}
 
-	public Mount mapHandler(RequestHandler requestHandler)
+	public Mount mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler.equals(handler))
 		{
@@ -51,7 +51,7 @@ class UnmountedRequestHandlerAdapter implements MountedRequestMapper
 		return null;
 	}
 
-	public RequestHandler mapRequest(Request request, MountParameters mountParams)
+	public IRequestHandler mapRequest(Request request, MountParameters mountParams)
 	{
 		return handler;
 	}

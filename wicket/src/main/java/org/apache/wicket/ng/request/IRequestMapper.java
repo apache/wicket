@@ -20,17 +20,17 @@ import org.apache.wicket.Request;
 
 
 /**
- * Encodes {@link RequestHandler}(s) into {@link Url}(s) and decodes {@link Request}(s) to
- * {@link RequestHandler}(s). For {@link RequestHandler}s and {@link Request}s the implementation
- * doesn't know the {@link #mapHandler(RequestHandler)} and {@link #mapRequest(Request)} methods
+ * Encodes {@link IRequestHandler}(s) into {@link Url}(s) and decodes {@link Request}(s) to
+ * {@link IRequestHandler}(s). For {@link IRequestHandler}s and {@link Request}s the implementation
+ * doesn't know the {@link #mapHandler(IRequestHandler)} and {@link #mapRequest(Request)} methods
  * must return <code>null</code>.
  * 
  * @author Matej Knopp
  */
-public interface RequestMapper
+public interface IRequestMapper
 {
 	/**
-	 * Returns {@link RequestHandler} for the request or <code>null</code> if the encoder does not
+	 * Returns {@link IRequestHandler} for the request or <code>null</code> if the encoder does not
 	 * recognize the URL.
 	 * 
 	 * @param request
@@ -38,7 +38,7 @@ public interface RequestMapper
 	 * 
 	 * @return RequestHandler instance or <code>null</code>
 	 */
-	RequestHandler mapRequest(Request request);
+	IRequestHandler mapRequest(Request request);
 
 	/**
 	 * Returns the score representing how compatible this request mapper is to processing the given
@@ -60,11 +60,11 @@ public interface RequestMapper
 	int getCompatibilityScore(Request request);
 
 	/**
-	 * Returns the {@link Url} for given {@link RequestHandler} or <code>null</code> if the encoder
+	 * Returns the {@link Url} for given {@link IRequestHandler} or <code>null</code> if the encoder
 	 * does not recognize the request handler.
 	 * 
 	 * @param requestHandler
 	 * @return Url instance or <code>null</code>.
 	 */
-	Url mapHandler(RequestHandler requestHandler);
+	Url mapHandler(IRequestHandler requestHandler);
 }

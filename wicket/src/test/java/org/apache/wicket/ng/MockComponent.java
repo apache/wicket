@@ -20,23 +20,23 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.ng.request.component.RequestableComponent;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Simple {@link RequestableComponent} implementation for testing purposes
+ * Simple {@link IRequestableComponent} implementation for testing purposes
  * 
  * @author Matej Knopp
  */
-public class MockComponent implements RequestableComponent
+public class MockComponent implements IRequestableComponent
 {
 
 	private static final long serialVersionUID = 1L;
 
 	private String markupId;
 	private String id;
-	private RequestablePage page;
+	private IRequestablePage page;
 	private String path;
 	
 	/**
@@ -46,7 +46,7 @@ public class MockComponent implements RequestableComponent
 	{
 	}
 	
-	public RequestableComponent get(String path)
+	public IRequestableComponent get(String path)
 	{
 		MockComponent c = new MockComponent();
 		if (Strings.isEmpty(getPath()))
@@ -96,7 +96,7 @@ public class MockComponent implements RequestableComponent
 		return markupId;
 	}
 
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return page;
 	}
@@ -107,7 +107,7 @@ public class MockComponent implements RequestableComponent
 	 * @param page
 	 * @return <code>this</code>
 	 */
-	public MockComponent setPage(RequestablePage page)
+	public MockComponent setPage(IRequestablePage page)
 	{
 		this.page = page;
 		return this;

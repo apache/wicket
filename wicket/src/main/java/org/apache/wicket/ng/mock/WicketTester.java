@@ -24,17 +24,17 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.settings.RequestCycleSettings.RenderStrategy;
+import org.apache.wicket.ng.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * Experimental implementation
@@ -90,9 +90,9 @@ public class WicketTester
 	 * 
 	 * @param forcedRequestHandler
 	 *            optional parameter to override parsing the request URL and force
-	 *            {@link RequestHandler}
+	 *            {@link IRequestHandler}
 	 */
-	public void processRequest(MockWebRequest request, RequestHandler forcedRequestHandler)
+	public void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
 	{
 		try
 		{
@@ -148,7 +148,7 @@ public class WicketTester
 	}
 
 	/**
-	 * Renders the page specified by given {@link PageProvider}. After render the page instance can
+	 * Renders the page specified by given {@link IPageProvider}. After render the page instance can
 	 * be retreived using {@link #getLastRenderedPage()} and the rendered document will be available
 	 * in {@link #getLastResponse()}.
 	 * 
@@ -157,17 +157,17 @@ public class WicketTester
 	 * 
 	 * @param pageProvider
 	 */
-	public void startPage(PageProvider pageProvider)
+	public void startPage(IPageProvider pageProvider)
 	{
 		MockWebRequest request = new MockWebRequest(new Url());
-		RequestHandler handler = new RenderPageRequestHandler(pageProvider);
+		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
 		processRequest(request, handler);
 	}
 
 	/**
 	 * Renders the page.
 	 * 
-	 * @see #startPage(PageProvider)
+	 * @see #startPage(IPageProvider)
 	 * 
 	 * @param page
 	 */
@@ -190,7 +190,7 @@ public class WicketTester
 	{
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		RequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component), listener);
 
 		Url url = urlFor(handler);
@@ -258,14 +258,14 @@ public class WicketTester
 	}
 
 	/**
-	 * Encodes the {@link RequestHandler} to {@link Url}. It should be safe to call this method
-	 * outside request thread as log as no registered {@link RequestMapper} requires a
+	 * Encodes the {@link IRequestHandler} to {@link Url}. It should be safe to call this method
+	 * outside request thread as log as no registered {@link IRequestMapper} requires a
 	 * {@link RequestCycle}.
 	 * 
 	 * @param handler
 	 * @return {@link Url} for handler.
 	 */
-	public Url urlFor(RequestHandler handler)
+	public Url urlFor(IRequestHandler handler)
 	{
 		return application.getRootRequestMapper().mapHandler(handler);
 	}

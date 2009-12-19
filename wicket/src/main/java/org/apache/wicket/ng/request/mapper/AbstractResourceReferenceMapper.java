@@ -30,14 +30,13 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 {
-
 	protected static class ResourceReferenceAttributes
 	{
 		protected Locale locale;
 		protected String style;
 		protected String variation;
 	};
-	
+
 	protected static String encodeResourceReferenceAttributes(ResourceReferenceAttributes attributes)
 	{
 		if (attributes == null ||
@@ -65,10 +64,10 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 			return res.toString();
 		}
 	};
-	
+
 	protected static ResourceReferenceAttributes decodeResourceReferenceAttributes(String attributes)
 	{
-		ResourceReferenceAttributes res = new ResourceReferenceAttributes();		
+		ResourceReferenceAttributes res = new ResourceReferenceAttributes();
 		if (!Strings.isEmpty(attributes))
 		{
 			String split[] = attributes.split("-", 3);
@@ -76,16 +75,16 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 			if (split.length == 2)
 			{
 				res.style = split[1];
-			}			
+			}
 			else if (split.length == 3)
 			{
 				res.style = split[1];
 				res.variation = split[2];
-		}
+			}
 		}
 		return res;
 	}
-	
+
 	private static Locale parseLocale(String locale)
 	{
 		if (Strings.isEmpty(locale))
@@ -105,15 +104,15 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 			}
 			else if (parts.length == 3)
 			{
-				return new Locale(parts[0], parts[1], parts[2]);	
+				return new Locale(parts[0], parts[1], parts[2]);
 			}
 			else
 			{
 				return null;
 			}
 		}
-	}	
-	
+	}
+
 	protected void encodeResourceReferenceAttributes(Url url, ResourceReference reference)
 	{
 		ResourceReferenceAttributes attributes = new ResourceReferenceAttributes();
@@ -126,7 +125,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 			url.getQueryParameters().add(new Url.QueryParameter(encoded, ""));
 		}
 	}
-	
+
 	protected ResourceReferenceAttributes getResourceReferenceAttributes(Url url)
 	{
 		if (url == null)

@@ -19,7 +19,7 @@ package org.apache.wicket;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.parameter.CombinedRequestParametersAdapter;
 import org.apache.wicket.ng.request.parameter.EmptyRequestParameters;
@@ -210,7 +210,7 @@ public abstract class Request
 	/**
 	 * @return POST request parameters for this request.
 	 */
-	public RequestParameters getPostRequestParameters()
+	public IRequestParameters getPostRequestParameters()
 	{
 		return EmptyRequestParameters.INSTANCE;
 	}
@@ -218,7 +218,7 @@ public abstract class Request
 	/**
 	 * @return GET request parameters for this request.
 	 */
-	public RequestParameters getGetRequestParameters()
+	public IRequestParameters getGetRequestParameters()
 	{
 		return new UrlRequestParametersAdapter(getUrl());
 	}
@@ -226,7 +226,7 @@ public abstract class Request
 	/**
 	 * @return all request parameters for this request (both POST and GET parameters)
 	 */
-	public RequestParameters getRequestParameters()
+	public IRequestParameters getRequestParameters()
 	{
 		return new CombinedRequestParametersAdapter(getGetRequestParameters(),
 			getPostRequestParameters());
@@ -252,7 +252,7 @@ public abstract class Request
 			}
 
 			@Override
-			public RequestParameters getPostRequestParameters()
+			public IRequestParameters getPostRequestParameters()
 			{
 				return delegate.getPostRequestParameters();
 			}

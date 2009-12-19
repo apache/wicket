@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.StringValue;
  * 
  * @author Matej Knopp
  */
-public class SimplePageParametersEncoder implements PageParametersEncoder
+public class SimplePageParametersEncoder implements IPageParametersEncoder
 {
 	/**
 	 * Construct.

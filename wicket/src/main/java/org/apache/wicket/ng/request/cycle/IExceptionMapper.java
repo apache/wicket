@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.ng.request.cycle;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 
 /**
- * Maps exception to {@link RequestHandler}.
+ * Maps exception to {@link IRequestHandler}.
  */
-public interface ExceptionMapper
+public interface IExceptionMapper
 {
 	/**
 	 * @param e
 	 * 
-	 * @return {@link RequestHandler} for given exception
+	 * @return {@link IRequestHandler} for given exception
 	 */
-	RequestHandler map(Exception e);
+	IRequestHandler map(Exception e);
 }

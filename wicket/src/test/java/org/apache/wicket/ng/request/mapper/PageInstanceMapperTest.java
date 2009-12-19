@@ -18,13 +18,13 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.RequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
-import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.request.handler.PageRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageProvider;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
@@ -46,7 +46,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     private PageInstanceMapper encoder = new PageInstanceMapper()
     {
         @Override
-        protected MapperContext getContext()
+        protected IMapperContext getContext()
         {
             return context;
         }
@@ -59,7 +59,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/page?4");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof RenderPageRequestHandler);
 
         RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
@@ -73,7 +73,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof RenderPageRequestHandler);
 
         RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
@@ -87,7 +87,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/page?4-ILinkListener-a-b-c");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
@@ -104,7 +104,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wickett/pagee?4-ILinkListener-a:b-c");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertNull(handler);
     }
 
@@ -115,7 +115,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/page?abc");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertNull(handler);
     }
 
@@ -126,7 +126,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     {
         Url url = Url.parse("wicket/page?4-ILinkListener.5-a-b-c");
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
@@ -145,7 +145,7 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
 
         context.setNextPageRenderCount(6);
 
-        RequestHandler handler = encoder.mapRequest(getRequest(url));
+        IRequestHandler handler = encoder.mapRequest(getRequest(url));
         assertTrue(handler instanceof ListenerInterfaceRequestHandler);
 
         ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
@@ -163,9 +163,9 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
 
         try
         {
-            RequestHandler handler = encoder.mapRequest(getRequest(url));
+            IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-            ((PageRequestHandler)handler).getPage();
+            ((IPageRequestHandler)handler).getPage();
 
             // should never get here
             assertFalse(true);
@@ -182,8 +182,8 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
     public void testEncode1()
     {
         MockPage page = new MockPage(15);
-        PageProvider provider = new DefaultPageProvider(page);
-        RequestHandler handler = new RenderPageRequestHandler(provider);
+        IPageProvider provider = new DefaultPageProvider(page);
+        IRequestHandler handler = new RenderPageRequestHandler(provider);
 
         Url url = encoder.mapHandler(handler);
         assertEquals("wicket/page?15", url.toString());
@@ -198,10 +198,10 @@ public class PageInstanceMapperTest extends AbstractEncoderTest
         MockPage page = new MockPage(15);
         page.setRenderCount(5);
 
-        RequestableComponent c = page.get("a:b:c");
+        IRequestableComponent c = page.get("a:b:c");
 
         PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-        RequestHandler handler = new ListenerInterfaceRequestHandler(provider,
+        IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
                 ILinkListener.INTERFACE);
 
         Url url = encoder.mapHandler(handler);

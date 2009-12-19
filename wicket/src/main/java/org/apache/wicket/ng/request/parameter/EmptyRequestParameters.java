@@ -20,15 +20,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
 /**
- * Read only empty {@link RequestParameters}.
+ * Read only empty {@link IRequestParameters}.
  * 
  * @author Matej Knopp
  */
-public class EmptyRequestParameters implements RequestParameters
+public class EmptyRequestParameters implements IRequestParameters
 {
 
 	private EmptyRequestParameters()

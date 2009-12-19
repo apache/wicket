@@ -46,7 +46,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.ng.request.component.RequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
@@ -199,7 +199,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements IClusterable, IConverterLocator, RequestableComponent
+public abstract class Component implements IClusterable, IConverterLocator, IRequestableComponent
 {
 	/**
 	 * Generic component visitor interface for component traversals.

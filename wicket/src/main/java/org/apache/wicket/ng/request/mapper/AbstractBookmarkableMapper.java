@@ -17,11 +17,11 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
@@ -59,7 +59,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	{
 		private final PageComponentInfo pageComponentInfo;
 		private final PageParametersNg pageParameters;
-		private final Class<? extends RequestablePage> pageClass;
+		private final Class<? extends IRequestablePage> pageClass;
 
 		/**
 		 * Construct.
@@ -72,7 +72,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		 *            optional parameter providing pageParameters
 		 */
 		public UrlInfo(PageComponentInfo pageComponentInfo,
-			Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
+			Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
 		{
 			Checks.argumentNotNull(pageClass, "pageClass");
 
@@ -92,7 +92,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		/**
 		 * @return page class
 		 */
-		public Class<? extends RequestablePage> getPageClass()
+		public Class<? extends IRequestablePage> getPageClass()
 		{
 			return pageClass;
 		}
@@ -136,11 +136,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	protected abstract boolean pageMustHaveBeenCreatedBookmarkable();
 
 	/**
-	 * @see RequestMapper#getCompatibilityScore(Request)
+	 * @see IRequestMapper#getCompatibilityScore(Request)
 	 */
 	public abstract int getCompatibilityScore(Request request);
 
-	private RequestHandler processBookmarkable(Class<? extends RequestablePage> pageClass,
+	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageClass, pageParameters);
@@ -148,8 +148,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private RequestHandler processHybrid(PageInfo pageInfo,
-		Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters,
+	private IRequestHandler processHybrid(PageInfo pageInfo,
+		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
 		Integer renderCount)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass,
@@ -158,8 +158,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private RequestHandler processListener(PageComponentInfo pageComponentInfo,
-		Class<? extends RequestablePage> pageClass, PageParametersNg pageParameters)
+	private IRequestHandler processListener(PageComponentInfo pageComponentInfo,
+		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
@@ -184,7 +184,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		}
 	}
 
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		UrlInfo urlInfo = parseRequest(request);
 
@@ -192,7 +192,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		if (urlInfo != null)
 		{
 			PageComponentInfo info = urlInfo.getPageComponentInfo();
-			Class<? extends RequestablePage> pageClass = urlInfo.getPageClass();
+			Class<? extends IRequestablePage> pageClass = urlInfo.getPageClass();
 			PageParametersNg pageParameters = urlInfo.getPageParameters();
 
 			if (info == null || info.getPageInfo().getPageId() == null)
@@ -217,12 +217,12 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return null;
 	}
 
-	protected boolean checkPageClass(Class<? extends RequestablePage> pageClass)
+	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		return true;
 	}
 
-	public Url mapHandler(RequestHandler requestHandler)
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof BookmarkablePageRequestHandler)
 		{
@@ -246,7 +246,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			// but only allowed if the page was created by bookamarkable URL
 
 			RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
-			RequestablePage page = handler.getPage();
+			IRequestablePage page = handler.getPage();
 
 			if (!checkPageClass(page.getClass()))
 			{
@@ -277,7 +277,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		{
 			// listener interface URL with page class information
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
-			RequestablePage page = handler.getPage();
+			IRequestablePage page = handler.getPage();
 
 			if (!checkPageClass(page.getClass()))
 			{

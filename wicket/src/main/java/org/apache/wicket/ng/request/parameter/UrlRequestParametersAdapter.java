@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.util.lang.Checks;
@@ -30,11 +30,11 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 
 /**
- * Utility class that expresses query parameters from {@link Url} as {@link RequestParameters}.
+ * Utility class that expresses query parameters from {@link Url} as {@link IRequestParameters}.
  * 
  * @author Matej Knopp
  */
-public class UrlRequestParametersAdapter implements RequestParameters
+public class UrlRequestParametersAdapter implements IRequestParameters
 {
 	private final Url url;
 

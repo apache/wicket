@@ -17,12 +17,12 @@
 package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestableComponent;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.ComponentRequestHandler;
+import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
-import org.apache.wicket.ng.request.handler.PageRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.util.lang.Checks;
 
@@ -34,8 +34,8 @@ import org.apache.wicket.util.lang.Checks;
  */
 public class BookmarkableListenerInterfaceRequestHandler
 	implements
-		PageRequestHandler,
-		ComponentRequestHandler
+		IPageRequestHandler,
+		IComponentRequestHandler
 {
 	private final PageAndComponentProvider pageComponentProvider;
 	private final RequestListenerInterface listenerInterface;
@@ -72,17 +72,17 @@ public class BookmarkableListenerInterfaceRequestHandler
 		this(pageComponentProvider, listenerInterface, null);
 	}
 
-	public RequestableComponent getComponent()
+	public IRequestableComponent getComponent()
 	{
 		return pageComponentProvider.getComponent();
 	}
 
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return pageComponentProvider.getPageInstance();
 	}
 
-	public Class<? extends RequestablePage> getPageClass()
+	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageComponentProvider.getPageClass();
 	}

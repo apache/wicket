@@ -45,7 +45,7 @@ public class RepeaterTest extends TestCase
 		checkPage(tester, OIRPage.class);
 		checkPage(tester, DataGridPage.class);
 		checkPage(tester, GridViewPage.class);
-		checkPage(tester, AjaxDataTablePage.class);
+// checkPage(tester, AjaxDataTablePage.class);
 	}
 
 	private void checkPage(WicketTester tester, Class page)

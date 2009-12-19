@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
@@ -25,7 +25,7 @@ import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
  * 
  * @author Matej Knopp
  */
-public interface MapperContext extends PageSource
+public interface IMapperContext extends IPageSource
 {
 	/**
 	 * @return the namespace for Wicket URLs.
@@ -73,5 +73,5 @@ public interface MapperContext extends PageSource
 	 * 
 	 * @return home page class
 	 */
-	public Class<? extends RequestablePage> getHomePageClass();
+	public Class<? extends IRequestablePage> getHomePageClass();
 }

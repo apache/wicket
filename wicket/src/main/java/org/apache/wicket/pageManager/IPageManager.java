@@ -14,42 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page;
+package org.apache.wicket.pageManager;
 
-
+import org.apache.wicket.ng.page.IManageablePage;
 
 /**
  * Page manager.
  * 
  * @author Matej Knopp
  */
-public interface PageManager
+public interface IPageManager
 {
 	/**
-	 * This method is guaranteed to be called before any other methods are invoked.
 	 * 
-	 * @param context
+	 * @return the page manager context
 	 */
-	public void setContext(PageManagerContext context);
-	
+	IPageManagerContext getContext();
+
 	/**
 	 * Retrieve page instance with given id.
 	 * 
 	 * @param id
 	 * @return page instance or <code>null</code>
 	 */
-	public ManageablePage getPage(int id);
+	public IManageablePage getPage(int id);
 
 	/**
 	 * Marks page as changed.
 	 * 
 	 * @param page
 	 */
-	public void touchPage(ManageablePage page);
+	public void touchPage(IManageablePage page);
 
 	/**
-	 * Returns whether this manager supports versioning. Managers that support versioning must
-	 * store page snapshots.
+	 * Returns whether this manager supports versioning. Managers that support versioning must store
+	 * page snapshots.
 	 * 
 	 * @return whether this page manager supports versioning
 	 */

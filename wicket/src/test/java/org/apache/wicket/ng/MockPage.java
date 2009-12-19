@@ -17,14 +17,14 @@
 package org.apache.wicket.ng;
 
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 
 /**
- * Simple {@link RequestablePage} implementation for testing purposes
+ * Simple {@link IRequestablePage} implementation for testing purposes
  * 
  * @author Matej Knopp
  */
-public class MockPage extends MockComponent implements RequestablePage
+public class MockPage extends MockComponent implements IRequestablePage
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -65,7 +65,7 @@ public class MockPage extends MockComponent implements RequestablePage
 	}
 	
 	@Override
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return this;
 	}
@@ -134,7 +134,7 @@ public class MockPage extends MockComponent implements RequestablePage
 	/**
 	 * Sets the createdBookmarkable flag.
 	 * 
-	 * @see RequestablePage#wasCreatedBookmarkable()
+	 * @see IRequestablePage#wasCreatedBookmarkable()
 	 * 
 	 * @param createdBookmarkable
 	 * @return <code>this</code>

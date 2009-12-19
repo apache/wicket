@@ -16,22 +16,17 @@
  */
 package org.apache.wicket.ng.settings;
 
-import org.apache.wicket.application.IClassResolver;
-
-public interface ApplicationSettings
+public interface IRequestCycleSettings
 {
-	/**
-	 * Gets the default resolver to use when finding classes and resources
-	 * 
-	 * @return Default class resolver
-	 */
-	IClassResolver getClassResolver();
+	public enum RenderStrategy {
+		ONE_PASS_RENDER, REDIRECT_TO_BUFFER, REDIRECT_TO_RENDER
+	};
 
-	/**
-	 * Sets the default class resolver to use when finding classes and resources
-	 * 
-	 * @param defaultClassResolver
-	 *            The default class resolver
-	 */
-	void setClassResolver(final IClassResolver defaultClassResolver);
+	void setRenderStrategy(RenderStrategy renderStrategy);
+
+	RenderStrategy getRenderStrategy();
+
+	String getResponseRequestEncoding();
+
+	void setResponseRequestEncoding(final String responseRequestEncoding);
 }

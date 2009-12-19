@@ -435,7 +435,7 @@
 		</init-param>
 	</filter>
 
-	<filter>
+	<!--  filter>
 		<filter-name>WicketNGApplication</filter-name>
 		<filter-class>org.apache.wicket.ng.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -449,7 +449,7 @@
         <url-pattern>/ng/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
+	</filter-mapping -->
 
 	<filter-mapping>
 		<filter-name>WicketExamplesMenuApplication</filter-name>

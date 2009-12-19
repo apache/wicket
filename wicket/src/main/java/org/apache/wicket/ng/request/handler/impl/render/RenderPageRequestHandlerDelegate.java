@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.handler.impl.render;
 
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
 
@@ -45,7 +45,7 @@ public abstract class RenderPageRequestHandlerDelegate
 	/**
 	 * @return page provider
 	 */
-	public PageProvider getPageProvider()
+	public IPageProvider getPageProvider()
 	{
 		return renderPageRequestHandler.getPageProvider();
 	}

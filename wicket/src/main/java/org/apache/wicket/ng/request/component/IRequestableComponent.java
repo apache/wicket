@@ -28,7 +28,7 @@ import org.apache.wicket.model.IDetachable;
  * 
  * @author Matej Knopp
  */
-public interface RequestableComponent
+public interface IRequestableComponent
 {
 	/**
 	 * Gets this component's path.
@@ -49,7 +49,7 @@ public interface RequestableComponent
 	 * 
 	 * @return page instance or <code>null</code>
 	 */
-	public RequestablePage getPage();
+	public IRequestablePage getPage();
 
 	/**
 	 * Gets the component at the given path.
@@ -58,7 +58,7 @@ public interface RequestableComponent
 	 *            Path to component
 	 * @return The component at the path
 	 */
-	public RequestableComponent get(String path);
+	public IRequestableComponent get(String path);
 
 	/**
 	 * Returns true if the listener interface method can be called on this component. Normally this

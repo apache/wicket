@@ -24,20 +24,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Facade for {@link DataStore} that does the actual saving in worker thread.
+ * Facade for {@link IDataStore} that does the actual saving in worker thread.
  * 
  * @author Matej Knopp
  */
-public class AsynchronousDataStore implements DataStore
+public class AsynchronousDataStore implements IDataStore
 {
-	private final DataStore dataStore;
+	private final IDataStore dataStore;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param dataStore
 	 */
-	public AsynchronousDataStore(DataStore dataStore)
+	public AsynchronousDataStore(IDataStore dataStore)
 	{
 		this.dataStore = dataStore;
 

@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.cycle;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 
 
 /**
@@ -36,8 +36,8 @@ public final class RequestCycleContext
 {
 	private Request request;
 	private Response response;
-	private RequestMapper requestMapper;
-	private ExceptionMapper exceptionMapper;
+	private IRequestMapper requestMapper;
+	private IExceptionMapper exceptionMapper;
 
 	/**
 	 * Construct.
@@ -47,8 +47,8 @@ public final class RequestCycleContext
 	 * @param requestMapper
 	 * @param exceptionMapper
 	 */
-	public RequestCycleContext(Request request, Response response, RequestMapper requestMapper,
-		ExceptionMapper exceptionMapper)
+	public RequestCycleContext(Request request, Response response, IRequestMapper requestMapper,
+		IExceptionMapper exceptionMapper)
 	{
 		this.request = request;
 		this.response = response;
@@ -75,7 +75,7 @@ public final class RequestCycleContext
 	/**
 	 * @return requst mapper
 	 */
-	public RequestMapper getRequestMapper()
+	public IRequestMapper getRequestMapper()
 	{
 		return requestMapper;
 	}
@@ -84,7 +84,7 @@ public final class RequestCycleContext
 	/**
 	 * @return exception mapper
 	 */
-	public ExceptionMapper getExceptionMapper()
+	public IExceptionMapper getExceptionMapper()
 	{
 		return exceptionMapper;
 	}
@@ -108,7 +108,7 @@ public final class RequestCycleContext
 	/**
 	 * @param requestMapper
 	 */
-	public void setRequestMapper(RequestMapper requestMapper)
+	public void setRequestMapper(IRequestMapper requestMapper)
 	{
 		this.requestMapper = requestMapper;
 	}
@@ -116,7 +116,7 @@ public final class RequestCycleContext
 	/**
 	 * @param exceptionMapper
 	 */
-	public void setExceptionMapper(ExceptionMapper exceptionMapper)
+	public void setExceptionMapper(IExceptionMapper exceptionMapper)
 	{
 		this.exceptionMapper = exceptionMapper;
 	}

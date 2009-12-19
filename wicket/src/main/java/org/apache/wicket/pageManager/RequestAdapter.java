@@ -14,26 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.common;
+package org.apache.wicket.pageManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.ng.page.ManageablePage;
-import org.apache.wicket.ng.page.PageManager;
-import org.apache.wicket.ng.page.PageManagerContext;
+import org.apache.wicket.ng.page.IManageablePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Request scoped helper class for {@link PageManager}.
+ * Request scoped helper class for {@link IPageManager}.
  * 
  * @author Matej Knopp
  */
 public abstract class RequestAdapter
 {
-	private final PageManagerContext context;
+	private static final Logger log = LoggerFactory.getLogger(RequestAdapter.class);
 
-	public RequestAdapter(PageManagerContext context)
+	private final IPageManagerContext context;
+
+	private final List<IManageablePage> touchedPages = new ArrayList<IManageablePage>();
+
+	private final List<IManageablePage> pages = new ArrayList<IManageablePage>();
+
+	/**
+	 * Construct.
+	 * 
+	 * @param context
+	 *            The page manager context
+	 */
+	public RequestAdapter(final IPageManagerContext context)
 	{
 		this.context = context;
 	}
@@ -45,14 +57,14 @@ public abstract class RequestAdapter
 	 * @param id
 	 * @return page instance or <code>null</code> if the page does not exist.
 	 */
-	protected abstract ManageablePage getPage(int id);
+	protected abstract IManageablePage getPage(int id);
 
 	/**
 	 * Store the list of pages.
 	 * 
 	 * @param touchedPages
 	 */
-	protected abstract void storeTouchedPages(List<ManageablePage> touchedPages);
+	protected abstract void storeTouchedPages(List<IManageablePage> touchedPages);
 
 	/**
 	 * Notification on new session being created.
@@ -61,44 +73,54 @@ public abstract class RequestAdapter
 
 	/**
 	 * Bind the session
+	 * 
+	 * @see IPageManagerContext#bind()
 	 */
 	protected void bind()
 	{
 		context.bind();
 	}
 
+	/**
+	 * @see IPageManagerContext#setSessionAttribute(String, Serializable)
+	 * 
+	 * @param key
+	 * @param value
+	 */
 	public void setSessionAttribute(String key, Serializable value)
 	{
 		context.setSessionAttribute(key, value);
 	}
 
-	public Serializable getSessionAttribute(String key)
+	/**
+	 * @see IPageManagerContext#getSessionAttribute(String)
+	 * 
+	 * @param key
+	 * @return the session attribute
+	 */
+	public Serializable getSessionAttribute(final String key)
 	{
 		return context.getSessionAttribute(key);
 	}
 
+	/**
+	 * @see IPageManagerContext#getSessionId()
+	 * 
+	 * @return session id
+	 */
 	public String getSessionId()
 	{
 		return context.getSessionId();
 	}
 
-	protected final ManageablePage getPageInternal(int id)
+	/**
+	 * 
+	 * @param id
+	 * @return null, if not found
+	 */
+	private IManageablePage findPage(final int id)
 	{
-		ManageablePage page = findPage(id);
-		if (page == null)
-		{
-			page = getPage(id);
-		}
-		if (page != null)
-		{
-			pages.add(page);
-		}
-		return page;
-	}
-
-	private ManageablePage findPage(int id)
-	{
-		for (ManageablePage page : pages)
+		for (IManageablePage page : pages)
 		{
 			if (page.getPageId() == id)
 			{
@@ -108,13 +130,18 @@ public abstract class RequestAdapter
 		return null;
 	}
 
-	protected void touch(ManageablePage page)
+	/**
+	 * 
+	 * @param page
+	 */
+	protected void touch(final IManageablePage page)
 	{
 		if (findPage(page.getPageId()) == null)
 		{
 			pages.add(page);
 		}
-		for (ManageablePage p : touchedPages)
+
+		for (IManageablePage p : touchedPages)
 		{
 			if (p.getPageId() == page.getPageId())
 			{
@@ -124,9 +151,12 @@ public abstract class RequestAdapter
 		touchedPages.add(page);
 	}
 
+	/**
+	 * 
+	 */
 	protected void commitRequest()
 	{
-		for (ManageablePage page : pages)
+		for (IManageablePage page : pages)
 		{
 			try
 			{
@@ -134,22 +164,27 @@ public abstract class RequestAdapter
 			}
 			catch (Exception e)
 			{
-				AbstractPageManager.logger.error("Error detaching page", e);
+				log.error("Error detaching page", e);
 			}
 		}
 
 		// store pages that are not stateless
-		List<ManageablePage> statefulPages = new ArrayList<ManageablePage>(touchedPages.size());
-		for (ManageablePage page : touchedPages)
+		if (touchedPages.isEmpty() == false)
 		{
-			if (!page.isPageStateless())
+			List<IManageablePage> statefulPages = new ArrayList<IManageablePage>(
+				touchedPages.size());
+			for (IManageablePage page : touchedPages)
 			{
-				statefulPages.add(page);
+				if (!page.isPageStateless())
+				{
+					statefulPages.add(page);
+				}
+			}
+
+			if (statefulPages.isEmpty() == false)
+			{
+				storeTouchedPages(statefulPages);
 			}
 		}
-		storeTouchedPages(statefulPages);
 	}
-
-	List<ManageablePage> touchedPages = new ArrayList<ManageablePage>();
-	List<ManageablePage> pages = new ArrayList<ManageablePage>();
 }

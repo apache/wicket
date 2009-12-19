@@ -16,15 +16,16 @@
  */
 package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.ng.page.PageManager;
 import org.apache.wicket.ng.protocol.http.WebApplication;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.session.SessionStore;
+import org.apache.wicket.ng.session.ISessionStore;
+import org.apache.wicket.pageManager.IPageManager;
+import org.apache.wicket.pageManager.IPageManagerContext;
 
 public class MockApplication extends WebApplication
 {
@@ -34,7 +35,7 @@ public class MockApplication extends WebApplication
 	}
 
 	@Override
-	public Class<? extends RequestablePage> getHomePage()
+	public Class<? extends IRequestablePage> getHomePage()
 	{
 		return null;
 	}
@@ -45,9 +46,9 @@ public class MockApplication extends WebApplication
 		return new MockRequestCycle(context);
 	}
 
-	private RequestablePage lastRenderedPage;
+	private IRequestablePage lastRenderedPage;
 
-	public RequestablePage getLastRenderedPage()
+	public IRequestablePage getLastRenderedPage()
 	{
 		return lastRenderedPage;
 	}
@@ -73,13 +74,13 @@ public class MockApplication extends WebApplication
 	}
 
 	@Override
-	protected PageManager newPageManager()
+	protected IPageManager newPageManager(IPageManagerContext context)
 	{
-		return new MockPageManager();
+		return new MockPageManager(context);
 	}
 
 	@Override
-	protected SessionStore newSessionStore()
+	protected ISessionStore newSessionStore()
 	{
 		return new MockSessionStore();
 	}

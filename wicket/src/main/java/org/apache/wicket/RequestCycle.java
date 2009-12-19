@@ -120,7 +120,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <table>
  * <tr>
- * <th align = "left">Class</th> <th align = "left">Interface</th> <th align="left">Purpose</th>
+ * <th align = "left">Class</th>
+ * <th align = "left">Interface</th>
+ * <th align="left">Purpose</th>
  * </tr>
  * <tr>
  * <td>Form</td>
@@ -1110,7 +1112,8 @@ public abstract class RequestCycle
 		{
 			try
 			{
-				((BufferedWebResponse)getResponse()).filter();
+				BufferedWebResponse response = (BufferedWebResponse)getResponse();
+				response.filter();
 			}
 			catch (RuntimeException re)
 			{
@@ -1136,7 +1139,11 @@ public abstract class RequestCycle
 			log.error("Exception occurred during onEndRequest of the SessionStore", e);
 		}
 
-		getApplication().getPageManager().commitRequest();
+		Session session = getSession();
+		if (session != null)
+		{
+			session.getPageManager().commitRequest();
+		}
 
 		// Release thread local resources
 		try
@@ -1520,5 +1527,13 @@ public abstract class RequestCycle
 	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
+	}
+
+	/**
+	 * 
+	 */
+	public void unset()
+	{
+		set(null);
 	}
 }

@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 
 /**
  * 
@@ -111,7 +111,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final RequestHandlerStack stack = newStack(originalResponse);
 
-		final RequestHandler handler3 = new RequestHandler()
+		final IRequestHandler handler3 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -124,7 +124,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler2 = new RequestHandler()
+		final IRequestHandler handler2 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -142,7 +142,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler1 = new RequestHandler()
+		final IRequestHandler handler1 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -188,7 +188,7 @@ public class RequestHandlerStackTest extends TestCase
 		final Response originalResponse = newResponse();
 		final RequestHandlerStack stack = newStack(originalResponse);
 
-		final RequestHandler handler4 = new RequestHandler()
+		final IRequestHandler handler4 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -205,7 +205,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler3 = new RequestHandler()
+		final IRequestHandler handler3 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -222,7 +222,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler2 = new RequestHandler()
+		final IRequestHandler handler2 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -239,7 +239,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		RequestHandler handler1 = new RequestHandler()
+		IRequestHandler handler1 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -285,7 +285,7 @@ public class RequestHandlerStackTest extends TestCase
 		final Response originalResponse = newResponse();
 		final RequestHandlerStack stack = newStack(originalResponse);
 
-		final RequestHandler handler4 = new RequestHandler()
+		final IRequestHandler handler4 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -300,7 +300,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler3 = new RequestHandler()
+		final IRequestHandler handler3 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -321,7 +321,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		final RequestHandler handler2 = new RequestHandler()
+		final IRequestHandler handler2 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{
@@ -337,7 +337,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 		};
 
-		RequestHandler handler1 = new RequestHandler()
+		IRequestHandler handler1 = new IRequestHandler()
 		{
 			public void respond(RequestCycle requestCycle)
 			{

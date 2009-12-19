@@ -19,14 +19,14 @@ package org.apache.wicket.ng.request.handler.impl.render;
 import org.apache.wicket.Response;
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.Session;
+import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
-import org.apache.wicket.ng.settings.RequestCycleSettings;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.ng.settings.IRequestCycleSettings;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandlerDelegate
 {
-
 	/**
 	 * Construct.
 	 * 
@@ -52,24 +51,24 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 	/**
 	 * @return page instance
 	 */
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return getPageProvider().getPageInstance();
 	}
 
 	private boolean isOnePassRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
 	}
 
 	private boolean isRedirectToRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
 	private boolean isRedirectToBuffer()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
 	private void renderPage()

@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.mapper.mount;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.request.IRequestHandler;
 
 /**
  * TODO javadoc, explain "parameters resolved from the mount"
@@ -25,10 +25,10 @@ import org.apache.wicket.ng.request.RequestHandler;
  * @author igor.vaynberg
  * 
  */
-public interface MountedRequestMapper
+public interface IMountedRequestMapper
 {
 	/**
-	 * Returns {@link RequestHandler} for the request or <code>null</code> if the encoder does not
+	 * Returns {@link IRequestHandler} for the request or <code>null</code> if the encoder does not
 	 * recognize the URL.
 	 * 
 	 * @param request
@@ -37,7 +37,7 @@ public interface MountedRequestMapper
 	 *            parameters resolved from the mount
 	 * @return RequestHandler instance or <code>null</code>
 	 */
-	RequestHandler mapRequest(Request request, MountParameters mountParams);
+	IRequestHandler mapRequest(Request request, MountParameters mountParams);
 
 	/**
 	 * Returns the score representing how compatible this request mapper is to processing the given
@@ -59,11 +59,11 @@ public interface MountedRequestMapper
 	int getCompatibilityScore(Request request);
 
 	/**
-	 * Returns the {@link Mount} for given {@link RequestHandler} or <code>null</code> if the
+	 * Returns the {@link Mount} for given {@link IRequestHandler} or <code>null</code> if the
 	 * encoder does not recognize the request handler.
 	 * 
 	 * @param requestHandler
 	 * @return Url instance or <code>null</code>.
 	 */
-	Mount mapHandler(RequestHandler requestHandler);
+	Mount mapHandler(IRequestHandler requestHandler);
 }

@@ -23,15 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.ng.request.RequestParameters;
+import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
 /**
- * Mutable mock implementation of {@link RequestParameters}.
+ * Mutable mock implementation of {@link IRequestParameters}.
  * 
  * @author Matej Knopp
  */
-public class MockRequestParameters implements RequestParameters
+public class MockRequestParameters implements IRequestParameters
 {
 	private final Map<String, List<StringValue>> parameters = new HashMap<String, List<StringValue>>();
 

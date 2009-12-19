@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.resource.Resource;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
@@ -34,7 +34,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 	{
 	}
 
-	protected final Resource resource1 = new Resource()
+	protected final IResource resource1 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 	
-	protected final Resource resource2 = new Resource()
+	protected final IResource resource2 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 	
-	protected final Resource resource3 = new Resource()
+	protected final IResource resource3 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -61,7 +61,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 	
-	protected final Resource resource4 = new Resource()
+	protected final IResource resource4 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -70,7 +70,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 	
-	protected final Resource resource5 = new Resource()
+	protected final IResource resource5 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -79,7 +79,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 
-	protected final Resource resource6 = new Resource()
+	protected final IResource resource6 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource1;
 		};
@@ -109,7 +109,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource2;
 		};
@@ -121,7 +121,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource3;
 		};
@@ -133,7 +133,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource4;
 		};
@@ -145,7 +145,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 	@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource5;
 		};
@@ -158,7 +158,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Resource getResource()
+		public IResource getResource()
 		{
 			return resource6;
 		};

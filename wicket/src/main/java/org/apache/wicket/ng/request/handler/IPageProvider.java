@@ -18,7 +18,7 @@ package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.request.component.PageExpiredException;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.mapper.StalePageException;
 
 
@@ -30,7 +30,7 @@ import org.apache.wicket.ng.request.mapper.StalePageException;
  * 
  * @author Matej Knopp
  */
-public interface PageProvider
+public interface IPageProvider
 {
 	/**
 	 * Returns page instance specified by the constructor.
@@ -42,7 +42,7 @@ public interface PageProvider
 	 * @throw {@link PageExpiredException} if the specified page could not have been found and the
 	 *        constructor used did not provide enough information to create new page instance
 	 */
-	public abstract RequestablePage getPageInstance();
+	public abstract IRequestablePage getPageInstance();
 
 	/**
 	 * Returns {@link PageParametersNg} of the page.
@@ -56,7 +56,7 @@ public interface PageProvider
 	 * 
 	 * @return page class
 	 */
-	public abstract Class<? extends RequestablePage> getPageClass();
+	public abstract Class<? extends IRequestablePage> getPageClass();
 
 	/**
 	 * Detaches the page if it has been loaded.

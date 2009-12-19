@@ -36,13 +36,13 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.page.persistent.DataStore;
+import org.apache.wicket.ng.page.persistent.IDataStore;
 import org.apache.wicket.ng.page.persistent.disk.PageWindowManager.PageWindow;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DiskDataStore implements DataStore
+public class DiskDataStore implements IDataStore
 {
 	private final String applicationName;
 	private final int maxSizePerPageSession;

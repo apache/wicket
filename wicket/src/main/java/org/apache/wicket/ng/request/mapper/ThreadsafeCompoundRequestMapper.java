@@ -22,20 +22,20 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.CompoundRequestMapper;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.ICompoundRequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 
 
 /**
- * Thread safe compound {@link RequestMapper}. The mappers are searched depending on their
- * compatibility score and the orders they were registered. If two or more {@link RequestMapper}s
+ * Thread safe compound {@link IRequestMapper}. The mappers are searched depending on their
+ * compatibility score and the orders they were registered. If two or more {@link IRequestMapper}s
  * have the same compatibility score, the last registered mapper has highest priority.
  * 
  * @author Matej Knopp
  */
-public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
+public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 {
 	/*
 	 * (non-Javadoc)
@@ -43,7 +43,7 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	 * @seeorg.apache.wicket.request.ICompoundRequestMapper#register(org.apache.wicket.request.
 	 * IRequestMapper)
 	 */
-	public void register(RequestMapper encoder)
+	public void register(IRequestMapper encoder)
 	{
 		mappers.add(0, encoder);
 	}
@@ -54,17 +54,17 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	 * @seeorg.apache.wicket.request.ICompoundRequestMapper#unregister(org.apache.wicket.request.
 	 * IRequestMapper)
 	 */
-	public void unregister(RequestMapper encoder)
+	public void unregister(IRequestMapper encoder)
 	{
 		mappers.remove(encoder);
 	}
 
 	private static class EncoderWithSegmentsCount implements Comparable<EncoderWithSegmentsCount>
 	{
-		private final RequestMapper mapper;
+		private final IRequestMapper mapper;
 		private final int compatibilityScore;
 
-		public EncoderWithSegmentsCount(RequestMapper encoder, int compatibilityScore)
+		public EncoderWithSegmentsCount(IRequestMapper encoder, int compatibilityScore)
 		{
 			mapper = encoder;
 			this.compatibilityScore = compatibilityScore;
@@ -75,15 +75,15 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 			return o.compatibilityScore - compatibilityScore;
 		}
 
-		public RequestMapper getMapper()
+		public IRequestMapper getMapper()
 		{
 			return mapper;
 		}
 	};
 
 	/**
-	 * Searches the registered {@link RequestMapper}s to find one that can decode the
-	 * {@link Request}. Each registered {@link RequestMapper} is asked to provide the matching
+	 * Searches the registered {@link IRequestMapper}s to find one that can decode the
+	 * {@link Request}. Each registered {@link IRequestMapper} is asked to provide the matching
 	 * segments count. Then the encoders are asked to decode the request in order depending on the
 	 * provided segments count.
 	 * <p>
@@ -93,12 +93,12 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	 * @return RequestHandler for the request or <code>null</code> if no encoder for the request is
 	 *         found.
 	 */
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		List<EncoderWithSegmentsCount> list = new ArrayList<EncoderWithSegmentsCount>(
 			mappers.size());
 
-		for (RequestMapper encoder : mappers)
+		for (IRequestMapper encoder : mappers)
 		{
 			list.add(new EncoderWithSegmentsCount(encoder, encoder.getCompatibilityScore(request)));
 		}
@@ -107,7 +107,7 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 
 		for (EncoderWithSegmentsCount encoder : list)
 		{
-			RequestHandler handler = encoder.getMapper().mapRequest(request);
+			IRequestHandler handler = encoder.getMapper().mapRequest(request);
 			if (handler != null)
 			{
 				return handler;
@@ -118,9 +118,9 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	}
 
 	/**
-	 * Searches the registered {@link RequestMapper}s to find one that can encode the
-	 * {@link RequestHandler}. Each registered {@link RequestMapper} is asked to encode the
-	 * {@link RequestHandler} until an encoder that can encode the {@link RequestHandler} is found
+	 * Searches the registered {@link IRequestMapper}s to find one that can encode the
+	 * {@link IRequestHandler}. Each registered {@link IRequestMapper} is asked to encode the
+	 * {@link IRequestHandler} until an encoder that can encode the {@link IRequestHandler} is found
 	 * or no more encoders are left.
 	 * <p>
 	 * The handlers are searched in reverse order as they have been registered. More recently
@@ -129,9 +129,9 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	 * @param handler
 	 * @return Url for the handler or <code>null</code> if no encoder for the handler is found.
 	 */
-	public Url mapHandler(RequestHandler handler)
+	public Url mapHandler(IRequestHandler handler)
 	{
-		for (RequestMapper encoder : mappers)
+		for (IRequestMapper encoder : mappers)
 		{
 			Url url = encoder.mapHandler(handler);
 			if (url != null)
@@ -142,7 +142,7 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 		return null;
 	}
 
-	private final List<RequestMapper> mappers = new CopyOnWriteArrayList<RequestMapper>();
+	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<IRequestMapper>();
 
 	/**
 	 * The scope of the compound mapper is the highest score of the registered mappers.
@@ -152,7 +152,7 @@ public class ThreadsafeCompoundRequestMapper implements CompoundRequestMapper
 	public int getCompatibilityScore(Request request)
 	{
 		int score = Integer.MIN_VALUE;
-		for (RequestMapper mapper : mappers)
+		for (IRequestMapper mapper : mappers)
 		{
 			score = Math.max(score, mapper.getCompatibilityScore(request));
 		}

@@ -18,22 +18,21 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.Session;
+import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
 import org.apache.wicket.ng.protocol.http.WebApplication;
-import org.apache.wicket.ng.request.RequestHandler;
-import org.apache.wicket.ng.request.RequestMapper;
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.BufferedResponseRequestHandler;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
 
 /**
  * Encoder that intercepts requests for which there is already stored buffer with rendered data.
  * 
  * @author Matej Knopp
  */
-public class BufferedResponseMapper implements RequestMapper
+public class BufferedResponseMapper implements IRequestMapper
 {
-
 	/**
 	 * Construct.
 	 */
@@ -81,7 +80,7 @@ public class BufferedResponseMapper implements RequestMapper
 		}
 	}
 
-	public RequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(Request request)
 	{
 		request = getRequest(request);
 
@@ -96,7 +95,7 @@ public class BufferedResponseMapper implements RequestMapper
 		}
 	}
 
-	public Url mapHandler(RequestHandler requestHandler)
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		return null;
 	}

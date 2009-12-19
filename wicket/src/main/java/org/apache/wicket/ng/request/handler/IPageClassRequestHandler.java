@@ -14,19 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent;
+package org.apache.wicket.ng.request.handler;
 
-public interface DataStore
+import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.IRequestablePage;
+
+/**
+ * Request handler that works with page class.
+ * 
+ * @author Matej Knopp
+ */
+public interface IPageClassRequestHandler extends IRequestHandler
 {
-	public byte[] getData(String sessionId, int id);
-
-	public void removeData(String sessionId, int id);
-
-	public void removeData(String sessionId);
-
-	public void storeData(String sessionId, int id, byte[] data);
-
-	public void destroy();
-
-	public boolean isReplicated();
+	/**
+	 * Returns the page class
+	 * 
+	 * @return page class
+	 */
+	public Class<? extends IRequestablePage> getPageClass();
+	
+	/**
+	 * @return page parameters
+	 */
+	public PageParametersNg getPageParameters();
 }

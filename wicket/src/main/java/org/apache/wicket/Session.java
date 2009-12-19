@@ -29,7 +29,14 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
-import org.apache.wicket.ng.page.PageManager;
+import org.apache.wicket.ng.page.persistent.DefaultPageStore;
+import org.apache.wicket.ng.page.persistent.IDataStore;
+import org.apache.wicket.ng.page.persistent.IPageStore;
+import org.apache.wicket.ng.page.persistent.PersistentPageManager;
+import org.apache.wicket.ng.page.persistent.disk.DiskDataStore;
+import org.apache.wicket.pageManager.DefaultPageManagerContext;
+import org.apache.wicket.pageManager.IPageManager;
+import org.apache.wicket.pageManager.IPageManagerContext;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
@@ -112,7 +119,6 @@ public abstract class Session implements IClusterable
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
-
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -124,6 +130,9 @@ public abstract class Session implements IClusterable
 
 	/** a sequence used for generating page IDs */
 	private int pageId = 0;
+
+	/** page manager */
+	private IPageManager pageManager;
 
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
@@ -181,7 +190,7 @@ public abstract class Session implements IClusterable
 
 		if (created)
 		{
-			application.getPageManager().newSessionCreated();
+			session.getPageManager().newSessionCreated();
 		}
 
 		return session;
@@ -537,6 +546,11 @@ public abstract class Session implements IClusterable
 	{
 		invalidate();
 		getSessionStore().invalidate(RequestCycle.get().getRequest());
+		if (pageManager != null)
+		{
+			pageManager.destroy();
+			pageManager = null;
+		}
 	}
 
 	/**
@@ -550,6 +564,12 @@ public abstract class Session implements IClusterable
 	public void replaceSession()
 	{
 		getSessionStore().invalidate(RequestCycle.get().getRequest());
+		if (pageManager != null)
+		{
+			pageManager.destroy();
+			pageManager = null;
+		}
+
 		bind();
 	}
 
@@ -881,14 +901,56 @@ public abstract class Session implements IClusterable
 		return sequence++;
 	}
 
+	/**
+	 * 
+	 * @return the next page id
+	 */
 	public synchronized int nextPageId()
 	{
 		return pageId++;
 	}
 
-	public PageManager getPageManager()
+	/**
+	 * Returns the {@link IPageManager} instance.
+	 * 
+	 * @see #newPageManager()
+	 * 
+	 * @return {@link IPageManager} instance.
+	 */
+	public final IPageManager getPageManager()
 	{
-		// TODO. Later page manager should be refactored to be session specific
-		return Application.get().getPageManager();
+		if (pageManager == null)
+		{
+			pageManager = newPageManager(new DefaultPageManagerContext());
+		}
+		return pageManager;
+	}
+
+	/**
+	 * Create a new page manager on each call. By default a PeristentPageManager with a new
+	 * DiskDataStore and new DefaultPageStore.
+	 * 
+	 * @see #getPageManager()
+	 * 
+	 * @param context
+	 *            the page manager context
+	 * @return a new page manager
+	 */
+	protected IPageManager newPageManager(final IPageManagerContext context)
+	{
+		String name = Application.get().getName();
+		int cacheSize = 40;
+		int fileChannelPoolCapacity = 50;
+		IDataStore dataStore = new DiskDataStore(name, 1000000, fileChannelPoolCapacity);
+		IPageStore pageStore = new DefaultPageStore(name, dataStore, cacheSize);
+		return new PersistentPageManager(name, pageStore, context);
+	}
+
+	/**
+	 * @return the page manager context
+	 */
+	protected final IPageManagerContext getPageManagerContext()
+	{
+		return getPageManager().getContext();
 	}
 }

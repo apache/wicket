@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ng.request.handler.impl;
 
-import org.apache.wicket.ng.request.RequestHandler;
+import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebResponse;
 
 /**
@@ -26,7 +26,7 @@ import org.apache.wicket.protocol.http.WebResponse;
  * 
  * @author Matej Knopp
  */
-public class BufferedResponseRequestHandler implements RequestHandler
+public class BufferedResponseRequestHandler implements IRequestHandler
 {
 	private final BufferedWebResponse bufferedWebResponse;
 

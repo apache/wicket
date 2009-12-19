@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 
 /**
  * Exception invoked when when stale link has been clicked. The page should then be rerendered
@@ -29,14 +29,14 @@ public class StalePageException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
-	private final RequestablePage page;
+	private final IRequestablePage page;
 
 	/**
 	 * 
 	 * Construct.
 	 * @param page
 	 */
-	public StalePageException(RequestablePage page)
+	public StalePageException(IRequestablePage page)
 	{
 		this.page = page;
 	}
@@ -45,7 +45,7 @@ public class StalePageException extends WicketRuntimeException
 	 * 
 	 * @return page instance
 	 */
-	public RequestablePage getPage()
+	public IRequestablePage getPage()
 	{
 		return page;
 	}

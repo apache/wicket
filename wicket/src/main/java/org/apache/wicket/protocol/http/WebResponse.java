@@ -330,7 +330,9 @@ public class WebResponse extends Response
 		}
 	}
 
-
+	/**
+	 * @see org.apache.wicket.Response#write(byte[])
+	 */
 	@Override
 	public void write(byte[] array)
 	{
@@ -490,5 +492,4 @@ public class WebResponse extends Response
 	{
 		httpServletResponse.setStatus(sc);
 	}
-
 }

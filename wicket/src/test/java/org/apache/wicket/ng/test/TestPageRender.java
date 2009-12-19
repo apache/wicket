@@ -30,7 +30,7 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
-import org.apache.wicket.ng.settings.RequestCycleSettings.RenderStrategy;
+import org.apache.wicket.ng.settings.IRequestCycleSettings.RenderStrategy;
 import org.junit.Ignore;
 
 /**

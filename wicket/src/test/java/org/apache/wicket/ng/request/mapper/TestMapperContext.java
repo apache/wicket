@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.component.RequestablePage;
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
@@ -28,7 +28,7 @@ import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
  * 
  * @author Matej Knopp
  */
-public class TestMapperContext implements MapperContext
+public class TestMapperContext implements IMapperContext
 {
 
     /**
@@ -100,7 +100,7 @@ public class TestMapperContext implements MapperContext
         this.nextPageRenderCount = nextPageRenderCount;
     }
 
-    public RequestablePage getPageInstance(int pageId)
+    public IRequestablePage getPageInstance(int pageId)
     {
         MockPage page = new MockPage();
         page.setPageId(pageId);
@@ -112,7 +112,7 @@ public class TestMapperContext implements MapperContext
 
     int idCounter = 0;
 
-    public RequestablePage newPageInstance(Class< ? extends RequestablePage> pageClass, PageParametersNg pageParameters)
+    public IRequestablePage newPageInstance(Class< ? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
     {
         try
         {
@@ -140,7 +140,7 @@ public class TestMapperContext implements MapperContext
         return listenerInterface.getName();
     }
 
-    public Class< ? extends RequestablePage> getHomePageClass()
+    public Class< ? extends IRequestablePage> getHomePageClass()
     {
         return MockPage.class;
     }
