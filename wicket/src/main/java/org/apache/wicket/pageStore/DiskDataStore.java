@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent.disk;
+package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +28,6 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,22 +35,40 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.page.persistent.IDataStore;
-import org.apache.wicket.ng.page.persistent.disk.PageWindowManager.PageWindow;
 import org.apache.wicket.ng.protocol.http.WebApplication;
+import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A data store implementation which stores the data on disk (in a file system)
+ */
 public class DiskDataStore implements IDataStore
 {
+	private static final Logger log = LoggerFactory.getLogger(DiskDataStore.class);
+
+	private static final String INDEX_FILE_NAME = "DiskDataStoreIndex";
+
 	private final String applicationName;
+
 	private final int maxSizePerPageSession;
+
 	private final FileChannelPool fileChannelPool;
+
 	private final File fileStoreFolder;
+
 	private final ConcurrentMap<String, SessionEntry> sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
-	public DiskDataStore(String applicationName, File fileStoreFolder, int maxSizePerSession,
-		int fileChannelPoolCapacity)
+	/**
+	 * Construct.
+	 * 
+	 * @param applicationName
+	 * @param fileStoreFolder
+	 * @param maxSizePerSession
+	 * @param fileChannelPoolCapacity
+	 */
+	public DiskDataStore(final String applicationName, final File fileStoreFolder,
+		final int maxSizePerSession, final int fileChannelPoolCapacity)
 	{
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
@@ -62,37 +79,55 @@ public class DiskDataStore implements IDataStore
 		loadIndex();
 	}
 
-	public DiskDataStore(String applicationName, int maxSizePerSession, int fileChannelPoolCapacity)
+	/**
+	 * Construct.
+	 * 
+	 * @param applicationName
+	 * @param maxSizePerSession
+	 * @param fileChannelPoolCapacity
+	 */
+	public DiskDataStore(final String applicationName, final int maxSizePerSession,
+		final int fileChannelPoolCapacity)
 	{
 		this(applicationName, getDefaultFileStoreFolder(), maxSizePerSession,
 			fileChannelPoolCapacity);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#destroy()
+	 */
 	public void destroy()
 	{
 		saveIndex();
 		fileChannelPool.destroy();
 	}
 
-	public byte[] getData(String sessionId, int id)
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
+	 */
+	public byte[] getData(final String sessionId, final int id)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
-		if (sessionEntry != null)
-		{
-			return sessionEntry.loadPage(id);
-		}
-		else
+		if (sessionEntry == null)
 		{
 			return null;
 		}
+
+		return sessionEntry.loadPage(id);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#isReplicated()
+	 */
 	public boolean isReplicated()
 	{
 		return false;
 	}
 
-	public void removeData(String sessionId, int id)
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
+	 */
+	public void removeData(final String sessionId, final int id)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
@@ -101,7 +136,10 @@ public class DiskDataStore implements IDataStore
 		}
 	}
 
-	public void removeData(String sessionId)
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
+	 */
+	public void removeData(final String sessionId)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
@@ -114,7 +152,10 @@ public class DiskDataStore implements IDataStore
 		}
 	}
 
-	public void storeData(String sessionId, int id, byte[] data)
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
+	 */
+	public void storeData(final String sessionId, final int id, final byte[] data)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
@@ -123,22 +164,27 @@ public class DiskDataStore implements IDataStore
 		}
 	}
 
-	private SessionEntry getSessionEntry(String sessionId, boolean create)
+	/**
+	 * 
+	 * @param sessionId
+	 * @param create
+	 * @return the session entry
+	 */
+	private SessionEntry getSessionEntry(final String sessionId, final boolean create)
 	{
 		if (!create)
 		{
 			return sessionEntryMap.get(sessionId);
 		}
-		else
-		{
-			SessionEntry entry = new SessionEntry(this, sessionId);
-			SessionEntry existing = sessionEntryMap.putIfAbsent(sessionId, entry);
-			return existing != null ? existing : entry;
-		}
+
+		SessionEntry entry = new SessionEntry(this, sessionId);
+		SessionEntry existing = sessionEntryMap.putIfAbsent(sessionId, entry);
+		return existing != null ? existing : entry;
 	}
 
-	private static final String INDEX_FILE_NAME = "DiskDataStoreIndex";
-
+	/**
+	 * Load the index
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadIndex()
 	{
@@ -154,11 +200,9 @@ public class DiskDataStore implements IDataStore
 				sessionEntryMap.clear();
 				sessionEntryMap.putAll(map);
 
-				for (Iterator<Entry<String, SessionEntry>> entries = sessionEntryMap.entrySet()
-					.iterator(); entries.hasNext();)
+				for (Entry<String, SessionEntry> entry : sessionEntryMap.entrySet())
 				{
 					// initialize the diskPageStore reference
-					Entry<String, SessionEntry> entry = entries.next();
 					SessionEntry sessionEntry = entry.getValue();
 					sessionEntry.diskDataStore = this;
 				}
@@ -172,6 +216,9 @@ public class DiskDataStore implements IDataStore
 		index.delete();
 	}
 
+	/**
+	 * 
+	 */
 	private void saveIndex()
 	{
 		File storeFolder = getStoreFolder();
@@ -202,7 +249,9 @@ public class DiskDataStore implements IDataStore
 		}
 	}
 
-
+	/**
+	 * 
+	 */
 	protected static class SessionEntry implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -224,7 +273,6 @@ public class DiskDataStore implements IDataStore
 			if (manager == null)
 			{
 				manager = new PageWindowManager(diskDataStore.maxSizePerPageSession);
-				;
 			}
 			return manager;
 		}
@@ -234,7 +282,6 @@ public class DiskDataStore implements IDataStore
 			if (fileName == null)
 			{
 				fileName = diskDataStore.getSessionFileName(sessionId, true);
-				;
 			}
 			return fileName;
 		}
@@ -250,7 +297,8 @@ public class DiskDataStore implements IDataStore
 		/**
 		 * Saves the serialized page to appropriate file.
 		 * 
-		 * @param page
+		 * @param pageId
+		 * @param data
 		 */
 		public synchronized void savePage(int pageId, byte data[])
 		{
@@ -385,6 +433,10 @@ public class DiskDataStore implements IDataStore
 		return new File(sessionFolder, "data").getAbsolutePath();
 	}
 
+	/**
+	 * 
+	 * @return folder
+	 */
 	private static File getDefaultFileStoreFolder()
 	{
 		File dir = null;
@@ -399,23 +451,24 @@ public class DiskDataStore implements IDataStore
 		{
 			return dir;
 		}
-		else
+
+		try
 		{
-			try
-			{
-				return File.createTempFile("file-prefix", null).getParentFile();
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
+			return File.createTempFile("file-prefix", null).getParentFile();
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
 		}
 	}
 
+	/**
+	 * 
+	 * @return folder
+	 */
 	private File getStoreFolder()
 	{
-		File storeFolder = new File(fileStoreFolder, applicationName + "-filestore");
-		return storeFolder;
+		return new File(fileStoreFolder, applicationName + "-filestore");
 	}
 
 	/**
@@ -426,7 +479,7 @@ public class DiskDataStore implements IDataStore
 	 * @param create
 	 * @return folder used to store session data
 	 */
-	protected File getSessionFolder(String sessionId, boolean create)
+	protected File getSessionFolder(String sessionId, final boolean create)
 	{
 		File storeFolder = getStoreFolder();
 
@@ -469,7 +522,4 @@ public class DiskDataStore implements IDataStore
 		}
 		log.error("Failed to make directory " + file);
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(DiskDataStore.class);
-
 }

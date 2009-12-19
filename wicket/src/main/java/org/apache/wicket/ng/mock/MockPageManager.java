@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.ng.page.IManageablePage;
-import org.apache.wicket.pageManager.IPageManager;
-import org.apache.wicket.pageManager.IPageManagerContext;
+import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.pageStore.IPageManagerContext;
 
 /**
  * Simple {@link IPageManager} used for testing.
@@ -77,7 +77,7 @@ public class MockPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageManager.IPageManager#getContext()
+	 * @see org.apache.wicket.pageStore.IPageManager#getContext()
 	 */
 	public IPageManagerContext getContext()
 	{

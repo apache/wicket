@@ -18,7 +18,8 @@ package org.apache.wicket.ng.page.persistent.disk;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.page.persistent.disk.PageWindowManager.PageWindow;
+import org.apache.wicket.pageStore.PageWindowManager;
+import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 
 /**
  * @author Matej Knopp

@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent;
+package org.apache.wicket.pageStore;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +26,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.ng.page.IManageablePage;
-import org.apache.wicket.pageManager.AbstractPageManager;
-import org.apache.wicket.pageManager.IPageManagerContext;
-import org.apache.wicket.pageManager.RequestAdapter;
 
+/**
+ * 
+ */
 public class PersistentPageManager extends AbstractPageManager
 {
+	private static Map<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
+
 	private final IPageStore pageStore;
+
 	private final String applicationName;
 
-	public PersistentPageManager(String applicationName, IPageStore pageStore,
-		IPageManagerContext context)
+	/**
+	 * Construct.
+	 * 
+	 * @param applicationName
+	 * @param pageStore
+	 * @param context
+	 */
+	public PersistentPageManager(final String applicationName, final IPageStore pageStore,
+		final IPageManagerContext context)
 	{
 		super(context);
 
@@ -43,8 +55,6 @@ public class PersistentPageManager extends AbstractPageManager
 
 		managers.put(applicationName, this);
 	}
-
-	private static Map<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
 
 	/**
 	 * Represents entry for single session. This is stored as session attribute and caches pages
@@ -57,14 +67,28 @@ public class PersistentPageManager extends AbstractPageManager
 		private static final long serialVersionUID = 1L;
 
 		private final String applicationName;
+
 		private final String sessionId;
 
+		private transient List<IManageablePage> pages;
+		private transient List<Object> afterReadObject;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param applicationName
+		 * @param sessionId
+		 */
 		public SessionEntry(String applicationName, String sessionId)
 		{
 			this.applicationName = applicationName;
 			this.sessionId = sessionId;
 		}
 
+		/**
+		 * 
+		 * @return page store
+		 */
 		private IPageStore getPageStore()
 		{
 			PersistentPageManager manager = managers.get(applicationName);
@@ -77,6 +101,23 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
+		 * 
+		 * @param id
+		 * @return null, if not found
+		 */
+		private IManageablePage findPage(int id)
+		{
+			for (IManageablePage p : pages)
+			{
+				if (p.getPageId() == id)
+				{
+					return p;
+				}
+			}
+			return null;
+		}
+
+		/**
 		 * Add the page to cached pages if page with same id is not already there
 		 * 
 		 * @param page
@@ -85,12 +126,9 @@ public class PersistentPageManager extends AbstractPageManager
 		{
 			if (page != null)
 			{
-				for (IManageablePage p : pages)
+				if (findPage(page.getPageId()) != null)
 				{
-					if (p.getPageId() == page.getPageId())
-					{
-						return;
-					}
+					return;
 				}
 			}
 			pages.add(page);
@@ -116,6 +154,11 @@ public class PersistentPageManager extends AbstractPageManager
 			afterReadObject = null;
 		}
 
+		/**
+		 * 
+		 * @param id
+		 * @return manageable page
+		 */
 		public synchronized IManageablePage getPage(int id)
 		{
 			// check if pages are in deserialized state
@@ -127,12 +170,10 @@ public class PersistentPageManager extends AbstractPageManager
 			// try to find page with same id
 			if (pages != null)
 			{
-				for (IManageablePage page : pages)
+				IManageablePage page = findPage(id);
+				if (page != null)
 				{
-					if (page.getPageId() == id)
-					{
-						return page;
-					}
+					return page;
 				}
 			}
 
@@ -140,17 +181,23 @@ public class PersistentPageManager extends AbstractPageManager
 			return getPageStore().getPage(sessionId, id);
 		}
 
-		// set the list of pages to remember after the request
-		public synchronized void setPages(List<IManageablePage> pages)
+		/**
+		 * set the list of pages to remember after the request
+		 * 
+		 * @param pages
+		 */
+		public synchronized void setPages(final List<IManageablePage> pages)
 		{
 			this.pages = new ArrayList<IManageablePage>(pages);
 			afterReadObject = null;
 		}
 
-		private transient List<IManageablePage> pages;
-		private transient List<Object> afterReadObject;
-
-		private void writeObject(java.io.ObjectOutputStream s) throws IOException
+		/**
+		 * 
+		 * @param s
+		 * @throws IOException
+		 */
+		private void writeObject(final ObjectOutputStream s) throws IOException
 		{
 			s.defaultWriteObject();
 
@@ -163,8 +210,14 @@ public class PersistentPageManager extends AbstractPageManager
 			s.writeObject(l);
 		}
 
+		/**
+		 * 
+		 * @param s
+		 * @throws IOException
+		 * @throws ClassNotFoundException
+		 */
 		@SuppressWarnings("unchecked")
-		private void readObject(java.io.ObjectInputStream s) throws IOException,
+		private void readObject(final ObjectInputStream s) throws IOException,
 			ClassNotFoundException
 		{
 			s.defaultReadObject();
@@ -180,7 +233,7 @@ public class PersistentPageManager extends AbstractPageManager
 				afterReadObject.add(getPageStore().restoreAfterSerialization(ser));
 			}
 		}
-	};
+	}
 
 	/**
 	 * {@link RequestAdapter} for {@link PersistentPageManager}
@@ -189,11 +242,21 @@ public class PersistentPageManager extends AbstractPageManager
 	 */
 	protected class PersitentRequestAdapter extends RequestAdapter
 	{
+		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
+
+		/**
+		 * Construct.
+		 * 
+		 * @param context
+		 */
 		public PersitentRequestAdapter(IPageManagerContext context)
 		{
 			super(context);
 		}
 
+		/**
+		 * @see org.apache.wicket.pageStore.RequestAdapter#getPage(int)
+		 */
 		@Override
 		protected IManageablePage getPage(int id)
 		{
@@ -210,8 +273,11 @@ public class PersistentPageManager extends AbstractPageManager
 			}
 		}
 
-		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
-
+		/**
+		 * 
+		 * @param create
+		 * @return Session Entry
+		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
 			SessionEntry entry = (SessionEntry)getSessionAttribute(ATTRIBUTE_NAME);
@@ -231,6 +297,9 @@ public class PersistentPageManager extends AbstractPageManager
 			return entry;
 		}
 
+		/**
+		 * @see org.apache.wicket.pageStore.RequestAdapter#newSessionCreated()
+		 */
 		@Override
 		protected void newSessionCreated()
 		{
@@ -241,8 +310,11 @@ public class PersistentPageManager extends AbstractPageManager
 			}
 		}
 
+		/**
+		 * @see org.apache.wicket.pageStore.RequestAdapter#storeTouchedPages(java.util.List)
+		 */
 		@Override
-		protected void storeTouchedPages(List<IManageablePage> touchedPages)
+		protected void storeTouchedPages(final List<IManageablePage> touchedPages)
 		{
 			if (!touchedPages.isEmpty())
 			{
@@ -254,29 +326,40 @@ public class PersistentPageManager extends AbstractPageManager
 				}
 			}
 		}
-	};
+	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.AbstractPageManager#newRequestAdapter(org.apache.wicket.pageStore.IPageManagerContext)
+	 */
 	@Override
 	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
 	{
 		return new PersitentRequestAdapter(context);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.AbstractPageManager#supportsVersioning()
+	 */
 	@Override
 	public boolean supportsVersioning()
 	{
 		return true;
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.AbstractPageManager#sessionExpired(java.lang.String)
+	 */
 	@Override
 	public void sessionExpired(String sessionId)
 	{
 		pageStore.unbind(sessionId);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IPageManager#destroy()
+	 */
 	public void destroy()
 	{
 		managers.remove(applicationName);
 	}
-
 }

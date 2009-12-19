@@ -25,7 +25,7 @@ import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.mapper.IPageSource;
 import org.apache.wicket.ng.request.mapper.StalePageException;
-import org.apache.wicket.pageManager.IPageManager;
+import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.util.lang.Checks;
 
 /**

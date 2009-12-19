@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent;
+package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
@@ -27,6 +27,10 @@ import org.apache.wicket.ng.page.IManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 
+/**
+ * Wicket's default page store
+ * 
+ */
 public class DefaultPageStore implements IPageStore
 {
 	private final String applicationName;
@@ -35,7 +39,15 @@ public class DefaultPageStore implements IPageStore
 
 	private final IDataStore pageDataStore;
 
-	public DefaultPageStore(String applicationName, IDataStore dataStore, int cacheSize)
+	/**
+	 * Construct.
+	 * 
+	 * @param applicationName
+	 * @param dataStore
+	 * @param cacheSize
+	 */
+	public DefaultPageStore(final String applicationName, final IDataStore dataStore,
+		final int cacheSize)
 	{
 		Checks.argumentNotNull(applicationName, "applicationName");
 		Checks.argumentNotNull(dataStore, "DataStore");
@@ -45,79 +57,122 @@ public class DefaultPageStore implements IPageStore
 		serializedPagesCache = new SerializedPagesCache(cacheSize);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#destroy()
+	 */
 	public void destroy()
 	{
 		pageDataStore.destroy();
 	}
 
-	protected byte[] getPageData(String sessionId, int pageId)
+	/**
+	 * 
+	 * @param sessionId
+	 * @param pageId
+	 * @return page data
+	 */
+	protected byte[] getPageData(final String sessionId, final int pageId)
 	{
 		return pageDataStore.getData(sessionId, pageId);
 	}
 
-	protected void removePageData(String sessionId, int pageId)
+	/**
+	 * 
+	 * @param sessionId
+	 * @param pageId
+	 */
+	protected void removePageData(final String sessionId, final int pageId)
 	{
 		pageDataStore.removeData(sessionId, pageId);
 	}
 
-	protected void removePageData(String sessionId)
+	/**
+	 * 
+	 * @param sessionId
+	 */
+	protected void removePageData(final String sessionId)
 	{
 		pageDataStore.removeData(sessionId);
 	}
 
-	protected void storePageData(String sessionId, int pageId, byte[] data)
+	/**
+	 * 
+	 * @param sessionId
+	 * @param pageId
+	 * @param data
+	 */
+	protected void storePageData(final String sessionId, final int pageId, final byte[] data)
 	{
 		pageDataStore.storeData(sessionId, pageId, data);
 	}
 
+	/**
+	 * 
+	 * @return application name
+	 */
 	public String getApplicationName()
 	{
 		return applicationName;
 	}
 
-	public IManageablePage getPage(String sessionId, int id)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#getPage(java.lang.String, int)
+	 */
+	public IManageablePage getPage(final String sessionId, final int id)
 	{
 		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
 		if (fromCache != null)
 		{
 			return deserializePage(fromCache.data);
 		}
-		else
+
+		byte[] data = getPageData(sessionId, id);
+		if (data != null)
 		{
-			byte[] data = getPageData(sessionId, id);
-			if (data != null)
-			{
-				return deserializePage(data);
-			}
-			else
-			{
-				return null;
-			}
+			return deserializePage(data);
 		}
+		return null;
 	}
 
-	public void removePage(String sessionId, int id)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#removePage(java.lang.String, int)
+	 */
+	public void removePage(final String sessionId, final int id)
 	{
 		serializedPagesCache.removePage(sessionId, id);
 		removePageData(sessionId, id);
 	}
 
-	public void storePage(String sessionId, IManageablePage page)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#storePage(java.lang.String,
+	 *      org.apache.wicket.ng.page.IManageablePage)
+	 */
+	public void storePage(final String sessionId, final IManageablePage page)
 	{
 		SerializedPage serialized = serializePage(sessionId, page);
 		serializedPagesCache.storePage(serialized);
 		storePageData(sessionId, serialized.getPageId(), serialized.getData());
 	}
 
-	public void unbind(String sessionId)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#unbind(java.lang.String)
+	 */
+	public void unbind(final String sessionId)
 	{
 		removePageData(sessionId);
 		serializedPagesCache.removePages(sessionId);
 	}
 
-	public IManageablePage convertToPage(Object object)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#convertToPage(java.lang.Object)
+	 */
+	public IManageablePage convertToPage(final Object object)
 	{
-		if (object instanceof IManageablePage)
+		if (object == null)
+		{
+			return null;
+		}
+		else if (object instanceof IManageablePage)
 		{
 			return (IManageablePage)object;
 		}
@@ -133,39 +188,36 @@ public class DefaultPageStore implements IPageStore
 			{
 				return deserializePage(data);
 			}
-			else
-			{
-				return null;
-			}
-		}
-		else if (object == null)
-		{
 			return null;
 		}
-		else
-		{
-			String type = object != null ? object.getClass().getName() : null;
-			throw new IllegalArgumentException("Unknown object type " + type);
-		}
+
+		String type = object != null ? object.getClass().getName() : null;
+		throw new IllegalArgumentException("Unknown object type " + type);
 	}
 
-	private SerializedPage restoreStrippedSerializedPage(SerializedPage serializedPage)
+	/**
+	 * 
+	 * @param serializedPage
+	 * @return
+	 */
+	private SerializedPage restoreStrippedSerializedPage(final SerializedPage serializedPage)
 	{
 		SerializedPage result = serializedPagesCache.getPage(serializedPage.getSessionId(),
 			serializedPage.getPageId());
-		if (result == null)
-		{
-			byte data[] = getPageData(serializedPage.getSessionId(), serializedPage.getPageId());
-			return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(),
-				data);
-		}
-		else
+		if (result != null)
 		{
 			return result;
 		}
+
+		byte data[] = getPageData(serializedPage.getSessionId(), serializedPage.getPageId());
+		return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(), data);
 	}
 
-	public Serializable prepareForSerialization(String sessionId, Object object)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#prepareForSerialization(java.lang.String,
+	 *      java.lang.Object)
+	 */
+	public Serializable prepareForSerialization(final String sessionId, final Object object)
 	{
 		if (pageDataStore.isReplicated())
 		{
@@ -201,20 +253,28 @@ public class DefaultPageStore implements IPageStore
 		{
 			return result;
 		}
-		else
-		{
-			return (Serializable)object;
-		}
+		return (Serializable)object;
 	}
 
+	/**
+	 * 
+	 * @return Always true for this implementation
+	 */
 	protected boolean storeAfterSessionReplication()
 	{
 		return true;
 	}
 
-	public Object restoreAfterSerialization(Serializable serializable)
+	/**
+	 * @see org.apache.wicket.pageStore.IPageStore#restoreAfterSerialization(java.io.Serializable)
+	 */
+	public Object restoreAfterSerialization(final Serializable serializable)
 	{
-		if (!storeAfterSessionReplication() || serializable instanceof Page)
+		if (serializable == null)
+		{
+			return null;
+		}
+		else if (!storeAfterSessionReplication() || serializable instanceof Page)
 		{
 			return serializable;
 		}
@@ -226,23 +286,16 @@ public class DefaultPageStore implements IPageStore
 				storePageData(page.getSessionId(), page.getPageId(), page.getData());
 				return new SerializedPage(page.getSessionId(), page.getPageId(), null);
 			}
-			else
-			{
-				return page;
-			}
-		}
-		else if (serializable == null)
-		{
-			return null;
-		}
-		else
-		{
-			String type = serializable != null ? serializable.getClass().getName() : null;
-			throw new IllegalArgumentException("Unknown object type " + type);
+			return page;
 		}
 
+		String type = serializable != null ? serializable.getClass().getName() : null;
+		throw new IllegalArgumentException("Unknown object type " + type);
 	}
 
+	/**
+	 * 
+	 */
 	protected static class SerializedPage implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -280,7 +333,7 @@ public class DefaultPageStore implements IPageStore
 			{
 				return true;
 			}
-			if (obj instanceof SerializedPage == false)
+			if ((obj instanceof SerializedPage) == false)
 			{
 				return false;
 			}
@@ -296,7 +349,13 @@ public class DefaultPageStore implements IPageStore
 		}
 	};
 
-	protected SerializedPage serializePage(String sessionId, IManageablePage page)
+	/**
+	 * 
+	 * @param sessionId
+	 * @param page
+	 * @return the serialized page information
+	 */
+	protected SerializedPage serializePage(final String sessionId, final IManageablePage page)
 	{
 		Checks.argumentNotNull(sessionId, "sessionId");
 		Checks.argumentNotNull(page, "page");
@@ -305,7 +364,12 @@ public class DefaultPageStore implements IPageStore
 		return new SerializedPage(sessionId, page.getPageId(), data);
 	}
 
-	protected IManageablePage deserializePage(byte data[])
+	/**
+	 * 
+	 * @param data
+	 * @return page data deserialized
+	 */
+	protected IManageablePage deserializePage(final byte data[])
 	{
 		return (IManageablePage)Objects.byteArrayToObject(data);
 	}
@@ -322,6 +386,10 @@ public class DefaultPageStore implements IPageStore
 	 */
 	class SerializedPagesCache
 	{
+		private final int size;
+
+		private final List<SoftReference<SerializedPage>> cache;
+
 		/**
 		 * Construct.
 		 * 
@@ -333,11 +401,13 @@ public class DefaultPageStore implements IPageStore
 			cache = new ArrayList<SoftReference<SerializedPage>>(size);
 		}
 
-		private final int size;
-
-		private final List<SoftReference<SerializedPage>> cache;
-
-		public SerializedPage removePage(String sessionId, int id)
+		/**
+		 * 
+		 * @param sessionId
+		 * @param id
+		 * @return
+		 */
+		public SerializedPage removePage(final String sessionId, final int id)
 		{
 			Checks.argumentNotNull(sessionId, "sessionId");
 
@@ -424,7 +494,6 @@ public class DefaultPageStore implements IPageStore
 		 */
 		void storePage(SerializedPage page)
 		{
-
 			SoftReference<SerializedPage> ref = new SoftReference<SerializedPage>(page);
 
 			if (size > 0)

@@ -18,9 +18,17 @@ package org.apache.wicket.util.lang;
 
 import org.apache.wicket.util.string.Strings;
 
+/**
+ * 
+ */
 public class Checks
 {
-	public static void argumentNotNull(Object argument, String name)
+	/**
+	 * 
+	 * @param argument
+	 * @param name
+	 */
+	public static void argumentNotNull(final Object argument, final String name)
 	{
 		if (argument == null)
 		{
@@ -28,7 +36,12 @@ public class Checks
 		}
 	}
 
-	public static void argumentNotEmpty(String argument, String name)
+	/**
+	 * 
+	 * @param argument
+	 * @param name
+	 */
+	public static void argumentNotEmpty(final String argument, final String name)
 	{
 		if (Strings.isEmpty(argument))
 		{

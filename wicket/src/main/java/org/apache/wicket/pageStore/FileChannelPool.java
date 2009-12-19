@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent.disk;
+package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,10 +50,16 @@ import org.slf4j.LoggerFactory;
  */
 public class FileChannelPool
 {
+	private static final Logger log = LoggerFactory.getLogger(FileChannelPool.class);
+
 	private final Map<String, FileChannel> nameToChannel = new HashMap<String, FileChannel>();
+
 	private final Map<FileChannel, String> channelToName = new HashMap<FileChannel, String>();
+
 	private final Map<FileChannel, Integer> channelToUseCount = new HashMap<FileChannel, Integer>();
+
 	private final LinkedList<FileChannel> idleChannels = new LinkedList<FileChannel>();
+
 	private final Set<FileChannel> channelsToDeleteOnReturn = new HashSet<FileChannel>();
 
 	private final int capacity;
@@ -73,8 +79,11 @@ public class FileChannelPool
 			throw new IllegalArgumentException("Capacity must be at least one.");
 		}
 
-		log.debug("Starting file channel pool with capacity of " + capacity + " channels");
-	};
+		if (log.isDebugEnabled())
+		{
+			log.debug("Starting file channel pool with capacity of " + capacity + " channels");
+		}
+	}
 
 	/**
 	 * Creates a new file channel with specified file name.
@@ -95,15 +104,13 @@ public class FileChannelPool
 
 		try
 		{
-			FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
-			return channel;
+			return new RandomAccessFile(file, "rw").getChannel();
 		}
 		catch (FileNotFoundException e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	/**
 	 * Tries to reduce (close) enough channels to have at least one channel free (so that there are
@@ -164,11 +171,9 @@ public class FileChannelPool
 	public synchronized FileChannel getFileChannel(String fileName, boolean createIfDoesNotExist)
 	{
 		FileChannel channel = nameToChannel.get(fileName);
-
 		if (channel == null)
 		{
 			channel = newFileChannel(fileName, createIfDoesNotExist);
-
 			if (channel != null)
 			{
 				// we need to create new channel
@@ -212,7 +217,6 @@ public class FileChannelPool
 	public synchronized void returnFileChannel(FileChannel channel)
 	{
 		Integer count = channelToUseCount.get(channel);
-
 		if (count == null || count.intValue() == 0)
 		{
 			throw new IllegalArgumentException("Trying to return unused channel");
@@ -240,6 +244,10 @@ public class FileChannelPool
 		}
 	}
 
+	/**
+	 * 
+	 * @param channel
+	 */
 	private void closeAndDelete(FileChannel channel)
 	{
 		channelsToDeleteOnReturn.remove(channel);
@@ -312,6 +320,4 @@ public class FileChannelPool
 			}
 		}
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(FileChannelPool.class);
 }

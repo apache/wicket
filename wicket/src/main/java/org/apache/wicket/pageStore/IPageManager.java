@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageManager;
+package org.apache.wicket.pageStore;
 
 import org.apache.wicket.ng.page.IManageablePage;
 

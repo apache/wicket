@@ -24,8 +24,8 @@ import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.session.ISessionStore;
-import org.apache.wicket.pageManager.IPageManager;
-import org.apache.wicket.pageManager.IPageManagerContext;
+import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.pageStore.IPageManagerContext;
 
 public class MockApplication extends WebApplication
 {

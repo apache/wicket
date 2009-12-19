@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageManager;
+package org.apache.wicket.pageStore;
 
 import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.page.IManageablePage;
@@ -57,13 +57,13 @@ public abstract class AbstractPageManager implements IPageManager
 
 	/**
 	 * 
-	 * @see org.apache.wicket.pageManager.IPageManager#supportsVersioning()
+	 * @see org.apache.wicket.pageStore.IPageManager#supportsVersioning()
 	 */
 	public abstract boolean supportsVersioning();
 
 	/**
 	 * 
-	 * @see org.apache.wicket.pageManager.IPageManager#sessionExpired(java.lang.String)
+	 * @see org.apache.wicket.pageStore.IPageManager#sessionExpired(java.lang.String)
 	 */
 	public abstract void sessionExpired(String sessionId);
 
@@ -92,7 +92,7 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageManager.IPageManager#commitRequest()
+	 * @see org.apache.wicket.pageStore.IPageManager#commitRequest()
 	 */
 	public void commitRequest()
 	{
@@ -100,7 +100,7 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageManager.IPageManager#getPage(int)
+	 * @see org.apache.wicket.pageStore.IPageManager#getPage(int)
 	 */
 	public IManageablePage getPage(int id)
 	{
@@ -113,7 +113,7 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageManager.IPageManager#newSessionCreated()
+	 * @see org.apache.wicket.pageStore.IPageManager#newSessionCreated()
 	 */
 	public void newSessionCreated()
 	{
@@ -121,7 +121,7 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageManager.IPageManager#touchPage(org.apache.wicket.ng.page.IManageablePage)
+	 * @see org.apache.wicket.pageStore.IPageManager#touchPage(org.apache.wicket.ng.page.IManageablePage)
 	 */
 	public void touchPage(IManageablePage page)
 	{

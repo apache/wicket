@@ -14,25 +14,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.markup.html;
+package org.apache.wicket.pageStore;
 
+import java.io.Serializable;
 
-import org.apache.wicket.Component;
-
-public class Label extends Component
+/**
+ * Context object for {@link IPageManager}. This decouples the {@link IPageManager} from request
+ * cycle and session.
+ * 
+ * @author Matej Knopp
+ */
+public interface IPageManagerContext
 {
-	private final String string;
+	/**
+	 * 
+	 * @param data
+	 */
+	void setRequestData(RequestAdapter data);
 
-	public Label(String id, String string)
-	{
-		super(id);
+	/**
+	 * 
+	 * @return request data
+	 */
+	RequestAdapter getRequestData();
 
-		this.string = string;
-	}
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	void setSessionAttribute(String key, Serializable value);
 
+	/**
+	 * 
+	 * @param key
+	 * @return The session attribute associate with the key
+	 */
+	Serializable getSessionAttribute(String key);
 
-	@Override
-	protected void onRender()
-	{
-	}
+	/**
+	 * 
+	 */
+	void bind();
+
+	/**
+	 * 
+	 * @return session id
+	 */
+	String getSessionId();
 }

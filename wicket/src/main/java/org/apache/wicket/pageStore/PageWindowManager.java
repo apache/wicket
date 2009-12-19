@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent.disk;
+package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,38 +44,58 @@ public class PageWindowManager implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
-		// id of page or -1 if the window is empty
+		/** id of page or -1 if the window is empty */
 		private int pageId;
 
-		// offset in the file where the serialized page data begins
+		/** offset in the file where the serialized page data begins */
 		private int filePartOffset;
 
-		// size of serialized page data
+		/** size of serialized page data */
 		private int filePartSize;
 	}
 
-	// list of PageWindowInternal objects
+	/** list of PageWindowInternal objects */
 	private final List<PageWindowInternal> windows = new ArrayList<PageWindowInternal>();
 
-	// map from page id to list of pagewindow indices (referring to the windows
-	// list) - to improve searching speed
-	// the index must be cleaned when the instances in the windows list
-	// change their indexes (e.g. items are shifted on page window removal)
+	/**
+	 * map from page id to list of pagewindow indices (referring to the windows list) - to improve
+	 * searching speed the index must be cleaned when the instances in the windows list change their
+	 * indexes (e.g. items are shifted on page window removal)
+	 */
 	private IntHashMap<Integer> idToWindowIndex = null;
 
+	/** index of last added page */
+	private int indexPointer = -1;
+
+	private int totalSize = 0;
+
+	private final int maxSize;
+
+	/**
+	 * 
+	 * @param pageId
+	 * @param windowIndex
+	 */
 	private void putWindowIndex(int pageId, int windowIndex)
 	{
 		if (idToWindowIndex != null && pageId != -1 && windowIndex != -1)
-		{		
+		{
 			idToWindowIndex.put(pageId, windowIndex);
 		}
 	}
 
+	/**
+	 * 
+	 * @param pageId
+	 */
 	private void removeWindowIndex(int pageId)
 	{
 		idToWindowIndex.remove(pageId);
 	}
 
+	/**
+	 * 
+	 */
 	private void rebuildIndices()
 	{
 		idToWindowIndex = null;
@@ -86,7 +106,6 @@ public class PageWindowManager implements Serializable
 			putWindowIndex(window.pageId, i);
 		}
 	}
-
 
 	/**
 	 * Returns the index of the given page in the {@link #windows} list.
@@ -103,13 +122,9 @@ public class PageWindowManager implements Serializable
 			rebuildIndices();
 		}
 
-		
-		Integer result = idToWindowIndex.get(pageId);		
-		return result != null ? result : -1;	
+		Integer result = idToWindowIndex.get(pageId);
+		return result != null ? result : -1;
 	}
-
-	// index of last added page
-	private int indexPointer = -1;
 
 	/**
 	 * Increments the {@link #indexPointer}. If the maximum file size has been reached, the
@@ -119,7 +134,7 @@ public class PageWindowManager implements Serializable
 	 */
 	private int incrementIndexPointer()
 	{
-		if (maxSize > 0 && totalSize >= maxSize && indexPointer == windows.size() - 1)
+		if ((maxSize > 0) && (totalSize >= maxSize) && (indexPointer == windows.size() - 1))
 		{
 			indexPointer = 0;
 		}
@@ -144,10 +159,7 @@ public class PageWindowManager implements Serializable
 			PageWindowInternal window = windows.get(index - 1);
 			return window.filePartOffset + window.filePartSize;
 		}
-		else
-		{
-			return 0;
-		}
+		return 0;
 	}
 
 	/**
@@ -229,6 +241,7 @@ public class PageWindowManager implements Serializable
 			{
 				mergeWindowWithNext(index);
 			}
+
 			// done merging - do we have enough room ?
 			if (window.filePartSize < size)
 			{
@@ -240,8 +253,7 @@ public class PageWindowManager implements Serializable
 			else
 			{
 				// yes, we might want to split the window, so that we don't lose
-				// space when
-				// the created window was too big
+				// space when the created window was too big
 				splitWindow(index, size);
 			}
 		}
@@ -283,7 +295,6 @@ public class PageWindowManager implements Serializable
 				adjustWindowSize(index, size);
 			}
 		}
-
 
 		return window;
 	}
@@ -382,10 +393,7 @@ public class PageWindowManager implements Serializable
 		{
 			return new PageWindow(windows.get(index));
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -418,7 +426,6 @@ public class PageWindowManager implements Serializable
 		}
 	}
 
-
 	/**
 	 * Returns last n saved page windows.
 	 * 
@@ -444,12 +451,10 @@ public class PageWindowManager implements Serializable
 			}
 
 			--currentIndex;
-
 			if (currentIndex == -1)
 			{
 				currentIndex = result.size() - 1;
 			}
-
 		}
 		while (result.size() < count && currentIndex != indexPointer);
 
@@ -477,8 +482,4 @@ public class PageWindowManager implements Serializable
 	{
 		return totalSize;
 	}
-
-	private int totalSize = 0;
-
-	private final int maxSize;
 }

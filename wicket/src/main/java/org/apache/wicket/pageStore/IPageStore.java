@@ -14,12 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.page.persistent;
+package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 
 import org.apache.wicket.ng.page.IManageablePage;
 
+/**
+ * Persist (read & write) Page data
+ * 
+ * @see IDataStore
+ */
 public interface IPageStore
 {
 	/**
@@ -62,13 +67,6 @@ public interface IPageStore
 	 */
 	void unbind(String sessionId);
 
-	/*
-	 * Some PageStores might want to preprocess page before serialization. For example if the
-	 * PageStore serializes page, it might cache the serialized data after the request. So when the
-	 * pagemap gets serialized (for session replication) in the request thread, the pagestore can
-	 * provide the already serialized data.
-	 */
-
 	/**
 	 * Process the page before the it gets serialized. The page can be either real page instance or
 	 * object returned by {@link #restoreAfterSerialization(Serializable)}.
@@ -77,7 +75,7 @@ public interface IPageStore
 	 * @param page
 	 * @return The Page itself or a SerializedContainer for that page
 	 */
-	public Serializable prepareForSerialization(String sessionId, Object page);
+	Serializable prepareForSerialization(String sessionId, Object page);
 
 	/**
 	 * This method should restore the serialized page to intermediate object that can be converted
@@ -87,12 +85,12 @@ public interface IPageStore
 	 * @param serializable
 	 * @return Page
 	 */
-	public Object restoreAfterSerialization(Serializable serializable);
+	Object restoreAfterSerialization(Serializable serializable);
 
 	/**
 	 * 
 	 * @param page
 	 * @return page
 	 */
-	public IManageablePage convertToPage(Object page);
+	IManageablePage convertToPage(Object page);
 }
