@@ -20,12 +20,12 @@ import org.apache.wicket.Page;
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
-import org.apache.wicket.ng.request.component.PageExpiredException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.mapper.IPageSource;
 import org.apache.wicket.ng.request.mapper.StalePageException;
 import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -34,10 +34,10 @@ import org.apache.wicket.util.lang.Checks;
  * until {@link #getPageInstance()} is called.
  * <p>
  * Purpose of this class is to reduce complexity of both {@link IRequestMapper}s and
- * {@link IRequestHandler}s. {@link IRequestMapper} examines the URL, gathers all relevant information
- * about the page in the URL (combination of page id, page class, page parameters and render count),
- * creates {@link DefaultPageProvider} object and creates a {@link IRequestHandler} instance that can
- * use the {@link DefaultPageProvider} to access the page.
+ * {@link IRequestHandler}s. {@link IRequestMapper} examines the URL, gathers all relevant
+ * information about the page in the URL (combination of page id, page class, page parameters and
+ * render count), creates {@link DefaultPageProvider} object and creates a {@link IRequestHandler}
+ * instance that can use the {@link DefaultPageProvider} to access the page.
  * <p>
  * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s
  * {@link DefaultPageProvider} also helps performance because creating or obtaining page from

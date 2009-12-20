@@ -23,6 +23,7 @@ import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.ng.request.IRequestMapper;

@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WicketServlet;

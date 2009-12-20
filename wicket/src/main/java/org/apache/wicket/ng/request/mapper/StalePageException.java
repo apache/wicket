@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 
 /**
- * Exception invoked when when stale link has been clicked. The page should then be rerendered
- * with an explanatory error message.
+ * Exception invoked when when stale link has been clicked. The page should then be rerendered with
+ * an explanatory error message.
  * 
  * @author Matej Knopp
  */
@@ -34,13 +34,14 @@ public class StalePageException extends WicketRuntimeException
 	/**
 	 * 
 	 * Construct.
+	 * 
 	 * @param page
 	 */
 	public StalePageException(IRequestablePage page)
 	{
 		this.page = page;
 	}
-	
+
 	/**
 	 * 
 	 * @return page instance

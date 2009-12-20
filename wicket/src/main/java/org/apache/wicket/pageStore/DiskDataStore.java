@@ -33,8 +33,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.slf4j.Logger;

@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.lang.Bytes;

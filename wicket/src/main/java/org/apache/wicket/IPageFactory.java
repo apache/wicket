@@ -16,9 +16,8 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 
 
 /**

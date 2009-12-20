@@ -23,8 +23,8 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.BitSet;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +46,7 @@ public class WicketURLEncoder
 	/**
 	 * encoder types
 	 */
-	public enum Type
-	{
+	public enum Type {
 		/**
 		 * query type
 		 */
@@ -175,24 +174,25 @@ public class WicketURLEncoder
 		// encoding type-specific
 		switch (type)
 		{
-		// this code consistent with java.net.URLEncoder version
-		case QUERY:
-			dontNeedEncoding.set(' '); /*
-										 * encoding a space to a + is done in the encode() method
-										 */
-			dontNeedEncoding.set('/'); // to allow direct passing of URL in query
-			dontNeedEncoding.set('?'); // to allow direct passing of URL in query
-			break;
+			// this code consistent with java.net.URLEncoder version
+			case QUERY :
+				dontNeedEncoding.set(' '); /*
+											 * encoding a space to a + is done in the encode()
+											 * method
+											 */
+				dontNeedEncoding.set('/'); // to allow direct passing of URL in query
+				dontNeedEncoding.set('?'); // to allow direct passing of URL in query
+				break;
 
-		// this added to deal with encoding a PATH component
-		case PATH:
-			// encode ' ' with a % instead of + in path portion
+			// this added to deal with encoding a PATH component
+			case PATH :
+				// encode ' ' with a % instead of + in path portion
 
-			// path component sub-delim values we do not need to escape
-			dontNeedEncoding.set('&');
-			dontNeedEncoding.set('=');
-			dontNeedEncoding.set('+');
-			break;
+				// path component sub-delim values we do not need to escape
+				dontNeedEncoding.set('&');
+				dontNeedEncoding.set('=');
+				dontNeedEncoding.set('+');
+				break;
 		}
 	}
 
@@ -217,7 +217,8 @@ public class WicketURLEncoder
 			log.warn("No current Application found - defaulting encoding to UTF-8");
 		}
 
-		return encode(s, app == null ? "UTF-8" : app.getRequestCycleSettings().getResponseRequestEncoding());
+		return encode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
+			.getResponseRequestEncoding());
 	}
 
 	/**
@@ -263,7 +264,7 @@ public class WicketURLEncoder
 					needToChange = true;
 				}
 				// System.out.println("Storing: " + c);
-				out.append((char) c);
+				out.append((char)c);
 				i++;
 			}
 			else

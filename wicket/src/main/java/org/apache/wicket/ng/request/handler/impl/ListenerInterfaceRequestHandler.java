@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.ng.request.handler.impl;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
-import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.util.lang.Checks;
@@ -35,7 +35,10 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public class ListenerInterfaceRequestHandler implements IPageRequestHandler, IComponentRequestHandler
+public class ListenerInterfaceRequestHandler
+	implements
+		IPageRequestHandler,
+		IComponentRequestHandler
 {
 	private final PageAndComponentProvider pageComponentProvider;
 	private final RequestListenerInterface listenerInterface;
@@ -58,7 +61,7 @@ public class ListenerInterfaceRequestHandler implements IPageRequestHandler, ICo
 		this.listenerInterface = listenerInterface;
 		this.behaviorIndex = behaviorIndex;
 	}
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -120,10 +123,13 @@ public class ListenerInterfaceRequestHandler implements IPageRequestHandler, ICo
 	{
 		if (getComponent().getPage() == getPage())
 		{
-			// schedule page render after current request handler is done. this can be overridden during invocation of listener
+			// schedule page render after current request handler is done. this can be overridden
+			// during invocation of listener
 			// method (i.e. by calling RequestCycle#setResponsePage)
-			RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT : RedirectPolicy.AUTO_REDIRECT;
-			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(getPage()), policy));
+			RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT
+				: RedirectPolicy.AUTO_REDIRECT;
+			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
+				new DefaultPageProvider(getPage()), policy));
 
 			if (getBehaviorIndex() == null)
 			{

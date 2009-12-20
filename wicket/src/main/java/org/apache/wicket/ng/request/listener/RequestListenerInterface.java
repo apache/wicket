@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.ng.WicketRuntimeException;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerException;
 import org.slf4j.Logger;
@@ -143,15 +143,17 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(component, new Object[] {});
+			method.invoke(component, new Object[] { });
 		}
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			// TODO: 
-			if (/*e.getTargetException() instanceof AbstractRestartResponseException ||
-				e.getTargetException() instanceof AuthorizationException ||*/
-				e.getTargetException() instanceof ReplaceHandlerException ||
+			// TODO:
+			if (/*
+				 * e.getTargetException() instanceof AbstractRestartResponseException ||
+				 * e.getTargetException() instanceof AuthorizationException ||
+				 */
+			e.getTargetException() instanceof ReplaceHandlerException ||
 				e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
@@ -165,7 +167,7 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
 				method.getDeclaringClass() + " targeted at component " + component +
 				" threw an exception", e);
-		}		
+		}
 	}
 
 	/**
@@ -188,15 +190,17 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(behavior, new Object[] {});
+			method.invoke(behavior, new Object[] { });
 		}
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
 			// TODO
-			if (/*e.getTargetException() instanceof AbstractRestartResponseException ||
-				e.getTargetException() instanceof AuthorizationException ||*/
-				e.getTargetException() instanceof WicketRuntimeException)
+			if (/*
+				 * e.getTargetException() instanceof AbstractRestartResponseException ||
+				 * e.getTargetException() instanceof AuthorizationException ||
+				 */
+			e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
@@ -209,7 +213,7 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
 				method.getDeclaringClass() + " targeted at behavior " + behavior +
 				" on component " + component + " threw an exception", e);
-		}		
+		}
 	}
 
 

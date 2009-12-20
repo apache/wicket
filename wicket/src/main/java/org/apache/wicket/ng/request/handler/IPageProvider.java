@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.request.component.PageExpiredException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.mapper.StalePageException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 
 
 /**

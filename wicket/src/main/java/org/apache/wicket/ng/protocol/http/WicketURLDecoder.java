@@ -18,8 +18,8 @@ package org.apache.wicket.ng.protocol.http;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +87,8 @@ public class WicketURLDecoder
 		{
 			log.warn("No current Application found - defaulting encoding to UTF-8");
 		}
-		return decode(s, app == null ? "UTF-8" : app.getRequestCycleSettings().getResponseRequestEncoding());
+		return decode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
+			.getResponseRequestEncoding());
 	}
 
 	/**
@@ -107,7 +108,8 @@ public class WicketURLDecoder
 
 		if (enc.length() == 0)
 		{
-			throw new WicketRuntimeException(new UnsupportedEncodingException("URLDecoder: empty string enc parameter"));
+			throw new WicketRuntimeException(new UnsupportedEncodingException(
+				"URLDecoder: empty string enc parameter"));
 		}
 
 		char c;
@@ -117,60 +119,63 @@ public class WicketURLDecoder
 			c = s.charAt(i);
 			switch (c)
 			{
-			case '+':
-				sb.append(decodePlus ? ' ' : '+');
-				i++;
-				needToChange = true;
-				break;
+				case '+' :
+					sb.append(decodePlus ? ' ' : '+');
+					i++;
+					needToChange = true;
+					break;
 
-			case '%':
-				/*
-				 * Starting with this instance of %, process all consecutive substrings of the form
-				 * %xy. Each substring %xy will yield a byte. Convert all consecutive bytes obtained
-				 * this way to whatever character(s) they represent in the provided encoding.
-				 */
-				try
-				{
-					// (numChars-i)/3 is an upper bound for the number
-					// of remaining bytes
-					if (bytes == null)
-						bytes = new byte[(numChars - i) / 3];
-					int pos = 0;
-
-					while (((i + 2) < numChars) && (c == '%'))
-					{
-						bytes[pos++] = (byte) Integer.parseInt(s.substring(i + 1, i + 3), 16);
-						i += 3;
-						if (i < numChars)
-							c = s.charAt(i);
-					}
-
-					// A trailing, incomplete byte encoding such as
-					// "%x" will cause an exception to be thrown
-					if ((i < numChars) && (c == '%'))
-						throw new IllegalArgumentException("URLDecoder: Incomplete trailing escape (%) pattern");
-
+				case '%' :
+					/*
+					 * Starting with this instance of %, process all consecutive substrings of the
+					 * form %xy. Each substring %xy will yield a byte. Convert all consecutive bytes
+					 * obtained this way to whatever character(s) they represent in the provided
+					 * encoding.
+					 */
 					try
 					{
-						sb.append(new String(bytes, 0, pos, enc));
-					}
-					catch (UnsupportedEncodingException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-				}
-				catch (NumberFormatException e)
-				{
-					throw new IllegalArgumentException("URLDecoder: Illegal hex characters in escape (%) pattern - "
-							+ e.getMessage());
-				}
-				needToChange = true;
-				break;
+						// (numChars-i)/3 is an upper bound for the number
+						// of remaining bytes
+						if (bytes == null)
+							bytes = new byte[(numChars - i) / 3];
+						int pos = 0;
 
-			default:
-				sb.append(c);
-				i++;
-				break;
+						while (((i + 2) < numChars) && (c == '%'))
+						{
+							bytes[pos++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
+							i += 3;
+							if (i < numChars)
+								c = s.charAt(i);
+						}
+
+						// A trailing, incomplete byte encoding such as
+						// "%x" will cause an exception to be thrown
+						if ((i < numChars) && (c == '%'))
+							throw new IllegalArgumentException(
+								"URLDecoder: Incomplete trailing escape (%) pattern");
+
+						try
+						{
+							sb.append(new String(bytes, 0, pos, enc));
+						}
+						catch (UnsupportedEncodingException e)
+						{
+							throw new WicketRuntimeException(e);
+						}
+					}
+					catch (NumberFormatException e)
+					{
+						throw new IllegalArgumentException(
+							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
+								e.getMessage());
+					}
+					needToChange = true;
+					break;
+
+				default :
+					sb.append(c);
+					i++;
+					break;
 			}
 		}
 

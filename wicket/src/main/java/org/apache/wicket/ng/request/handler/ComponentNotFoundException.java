@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Exception thrown when component has not been found in hierarchy.

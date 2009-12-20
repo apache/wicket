@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.MockPage;
-import org.apache.wicket.ng.WicketRuntimeException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
@@ -31,118 +31,119 @@ import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 public class TestMapperContext implements IMapperContext
 {
 
-    /**
-     * Construct.
-     */
-    public TestMapperContext()
-    {
-    }
+	/**
+	 * Construct.
+	 */
+	public TestMapperContext()
+	{
+	}
 
-    public String getBookmarkableIdentifier()
-    {
-        return "bookmarkable";
-    }
+	public String getBookmarkableIdentifier()
+	{
+		return "bookmarkable";
+	}
 
-    public String getNamespace()
-    {
-        return "wicket";
-    }
+	public String getNamespace()
+	{
+		return "wicket";
+	}
 
-    public String getPageIdentifier()
-    {
-        return "page";
-    }
+	public String getPageIdentifier()
+	{
+		return "page";
+	}
 
-    public String getResourceIdentifier()
-    {
-        return "resource";
-    }
+	public String getResourceIdentifier()
+	{
+		return "resource";
+	}
 
-    public ResourceReferenceRegistry getResourceReferenceRegistry()
-    {
-        return registry;
-    }
+	public ResourceReferenceRegistry getResourceReferenceRegistry()
+	{
+		return registry;
+	}
 
-    private ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
+	private final ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
 
-    private boolean bookmarkable = true;
+	private boolean bookmarkable = true;
 
-    /**
-     * Determines whether the newly created page will have bookarkable flag set
-     * 
-     * @param bookmarkable
-     */
-    public void setBookmarkable(boolean bookmarkable)
-    {
-        this.bookmarkable = bookmarkable;
-    }
+	/**
+	 * Determines whether the newly created page will have bookarkable flag set
+	 * 
+	 * @param bookmarkable
+	 */
+	public void setBookmarkable(boolean bookmarkable)
+	{
+		this.bookmarkable = bookmarkable;
+	}
 
-    private boolean createdBookmarkable = true;
+	private boolean createdBookmarkable = true;
 
-    /**
-     * Determines whether the newly created page will have createdBookmarkable flag set
-     * 
-     * @param createdBookmarkable
-     */
-    public void setCreatedBookmarkable(boolean createdBookmarkable)
-    {
-        this.createdBookmarkable = createdBookmarkable;
-    }
+	/**
+	 * Determines whether the newly created page will have createdBookmarkable flag set
+	 * 
+	 * @param createdBookmarkable
+	 */
+	public void setCreatedBookmarkable(boolean createdBookmarkable)
+	{
+		this.createdBookmarkable = createdBookmarkable;
+	}
 
-    private int nextPageRenderCount = 0;
+	private int nextPageRenderCount = 0;
 
-    /**
-     * 
-     * @param nextPageRenderCount
-     */
-    public void setNextPageRenderCount(int nextPageRenderCount)
-    {
-        this.nextPageRenderCount = nextPageRenderCount;
-    }
+	/**
+	 * 
+	 * @param nextPageRenderCount
+	 */
+	public void setNextPageRenderCount(int nextPageRenderCount)
+	{
+		this.nextPageRenderCount = nextPageRenderCount;
+	}
 
-    public IRequestablePage getPageInstance(int pageId)
-    {
-        MockPage page = new MockPage();
-        page.setPageId(pageId);
-        page.setBookmarkable(bookmarkable);
-        page.setCreatedBookmarkable(createdBookmarkable);
-        page.setRenderCount(nextPageRenderCount);
-        return page;
-    }
+	public IRequestablePage getPageInstance(int pageId)
+	{
+		MockPage page = new MockPage();
+		page.setPageId(pageId);
+		page.setBookmarkable(bookmarkable);
+		page.setCreatedBookmarkable(createdBookmarkable);
+		page.setRenderCount(nextPageRenderCount);
+		return page;
+	}
 
-    int idCounter = 0;
+	int idCounter = 0;
 
-    public IRequestablePage newPageInstance(Class< ? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
-    {
-        try
-        {
-            MockPage page;
-            page = (MockPage)pageClass.newInstance();
-            page.setPageId(++idCounter);
-            page.setBookmarkable(true);
-            page.setCreatedBookmarkable(true);
-            page.getPageParametersNg().assign(pageParameters);
-            return page;
-        }
-        catch (Exception e)
-        {
-            throw new WicketRuntimeException(e);
-        }
-    }
+	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
+		PageParametersNg pageParameters)
+	{
+		try
+		{
+			MockPage page;
+			page = (MockPage)pageClass.newInstance();
+			page.setPageId(++idCounter);
+			page.setBookmarkable(true);
+			page.setCreatedBookmarkable(true);
+			page.getPageParametersNg().assign(pageParameters);
+			return page;
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
 
-    public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-    {
-        return RequestListenerInterface.forName(interfaceName);
-    }
+	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
+	{
+		return RequestListenerInterface.forName(interfaceName);
+	}
 
-    public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-    {
-        return listenerInterface.getName();
-    }
+	public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
+	{
+		return listenerInterface.getName();
+	}
 
-    public Class< ? extends IRequestablePage> getHomePageClass()
-    {
-        return MockPage.class;
-    }
+	public Class<? extends IRequestablePage> getHomePageClass()
+	{
+		return MockPage.class;
+	}
 
 }

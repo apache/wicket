@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.protocol.http;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Thrown when the {@link org.apache.wicket.ng.protocol.http.IWebApplicationFactory} could not be

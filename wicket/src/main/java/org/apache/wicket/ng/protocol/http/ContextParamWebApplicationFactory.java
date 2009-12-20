@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.protocol.http;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Factory that creates application objects based on the class name specified in the

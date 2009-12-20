@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.pageStore;
 
-import org.apache.wicket.ng.WicketRuntimeException;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.page.IManageablePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
