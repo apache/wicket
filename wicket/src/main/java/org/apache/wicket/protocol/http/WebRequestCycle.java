@@ -133,7 +133,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Check if use serverside response for client side redirects
 		IRequestCycleSettings settings = application.getRequestCycleSettings();
-		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER) &&
+		if ((settings.getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER) &&
 			(application instanceof WebApplication) && !(getWebRequest().isAjax()))
 		{
 			// remember the current response

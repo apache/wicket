@@ -43,7 +43,7 @@ import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
@@ -225,8 +225,8 @@ public class MockWebApplication
 		// Create request cycle
 		createRequestCycle();
 
-		this.application.getRequestCycleSettings().setRenderStrategy(
-			IRequestCycleSettings.ONE_PASS_RENDER);
+		this.application.getRequestCycleSettings()
+			.setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 		// Don't buffer the response, as this can break ajax tests: see WICKET-1264
 		this.application.getRequestCycleSettings().setBufferResponse(false);
 		if (this.application.getResourceFinder() == null)

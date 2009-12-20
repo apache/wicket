@@ -34,7 +34,7 @@ import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
-import org.apache.wicket.ng.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * Experimental implementation

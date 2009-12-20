@@ -45,7 +45,7 @@ public class MarkupCacheTest extends TestCase
 			}
 		};
 		WicketTester tester = new WicketTester(application);
-		cache = new MarkupCache(application);
+		cache = new MarkupCache();
 
 		component = new MarkupCachingAssumingComponent("panel");
 		tester.startComponent(component);

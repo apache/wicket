@@ -26,8 +26,8 @@ import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
-import org.apache.wicket.ng.settings.IRequestCycleSettings;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,17 +58,17 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 
 	private boolean isOnePassRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
 	}
 
 	private boolean isRedirectToRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
 	private boolean isRedirectToBuffer()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
 	private void renderPage()

@@ -413,7 +413,7 @@ public class WicketFilter implements Filter
 			final WebRequest request = webApplication.newWebRequest(servletRequest);
 
 			// Are we using REDIRECT_TO_BUFFER?
-			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER)
 			{
 				// Try to see if there is a redirect stored
 				// try get an existing session

@@ -99,7 +99,8 @@ public class WebSession extends Session
 			return true;
 		}
 
-		if (IResourceListener.INTERFACE.equals(lockedRequest.getObsoleteRequestParameters().getInterface()))
+		if (IResourceListener.INTERFACE.equals(lockedRequest.getObsoleteRequestParameters()
+			.getInterface()))
 		{
 			return true;
 		}
@@ -113,8 +114,9 @@ public class WebSession extends Session
 			return true;
 		}
 
-		String lockedPageId = Strings.firstPathComponent(lockedRequest.getObsoleteRequestParameters()
-			.getComponentPath(), Component.PATH_SEPARATOR);
+		String lockedPageId = Strings.firstPathComponent(
+			lockedRequest.getObsoleteRequestParameters().getComponentPath(),
+			Component.PATH_SEPARATOR);
 		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
 			.getObsoleteRequestParameters()
 			.getComponentPath(), Component.PATH_SEPARATOR);
@@ -142,7 +144,7 @@ public class WebSession extends Session
 		// without further delay) or in case the redirect to render strategy is
 		// used, when we're doing the render request (isRedirect should return
 		// false in that case)
-		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER ||
+		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER ||
 			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
 			(!RequestCycle.get().isRedirect()))
 		{

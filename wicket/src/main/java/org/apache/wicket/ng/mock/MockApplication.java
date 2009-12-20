@@ -79,8 +79,11 @@ public class MockApplication extends WebApplication
 		return new MockPageManager(context);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.protocol.http.WebApplication#newSessionStore()
+	 */
 	@Override
-	protected ISessionStore newSessionStore()
+	public ISessionStore newSessionStore()
 	{
 		return new MockSessionStore();
 	}

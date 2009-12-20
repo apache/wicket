@@ -198,7 +198,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		// and see if we have to redirect the render part by default
 		IRequestCycleSettings.RenderStrategy strategy = application.getRequestCycleSettings()
 			.getRenderStrategy();
-		boolean issueRedirect = (strategy == IRequestCycleSettings.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.REDIRECT_TO_BUFFER);
+		boolean issueRedirect = (strategy == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
 
 		requestCycle.setRedirect(issueRedirect);
 	}

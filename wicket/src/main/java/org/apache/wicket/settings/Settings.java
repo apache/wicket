@@ -105,9 +105,6 @@ public final class Settings
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
 
-	/** The application */
-	private final Application application;
-
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
@@ -220,7 +217,7 @@ public final class Settings
 	 * way in how a logical request that consists of an 'action' and a 'render' part is handled, and
 	 * is mainly used to have a means to circumvent the 'refresh' problem.
 	 */
-	private IRequestCycleSettings.RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
+	private IRequestCycleSettings.RenderStrategy renderStrategy = RenderStrategy.REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = new Path();
@@ -337,12 +334,11 @@ public final class Settings
 	 * @param application
 	 *            The application that these settings are for
 	 */
-	public Settings(final Application application)
+	public Settings(final Object application)
 	{
-		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new PackageStringResourceLoader());
-		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
 		stringResourceLoaders.add(new ValidatorStringResourceLoader());
 	}
 
@@ -1260,7 +1256,7 @@ public final class Settings
 		if (markupCache == null)
 		{
 			// Construct markup cache for this application
-			markupCache = new MarkupCache(application);
+			markupCache = new MarkupCache();
 		}
 
 		return markupCache;

@@ -71,18 +71,13 @@ public class MarkupCache implements IMarkupCache
 	/** The markup loader used by MarkupCache */
 	private IMarkupLoader markupLoader;
 
-	/** The application object */
-	private final Application application;
-
 	/**
 	 * Constructor.
 	 * 
 	 * @param application
 	 */
-	public MarkupCache(Application application)
+	public MarkupCache()
 	{
-		this.application = application;
-
 		markupCache = newCacheImplementation();
 		markupKeyCache = newCacheImplementation();
 		if (markupCache == null)
@@ -175,7 +170,8 @@ public class MarkupCache implements IMarkupCache
 			// resources no longer in the cache. Note that you can not use
 			// Application.get() since removeMarkup() will be call from a
 			// ModificationWatcher thread which has no associated Application.
-			final IModificationWatcher watcher = application.getResourceSettings()
+			final IModificationWatcher watcher = Application.get()
+				.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{

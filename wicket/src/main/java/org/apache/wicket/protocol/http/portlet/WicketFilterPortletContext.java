@@ -32,6 +32,7 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * Handles Portlet specific filtering requirements.
@@ -79,7 +80,7 @@ public class WicketFilterPortletContext
 	{
 		// override render strategy to REDIRECT_TO_REDNER
 		webApplication.getRequestCycleSettings().setRenderStrategy(
-			IRequestCycleSettings.REDIRECT_TO_RENDER);
+			RenderStrategy.REDIRECT_TO_RENDER);
 		// Add response filter to remove extra HTML such as <body> etc as they are not appropriate
 		// for portlet environments
 		webApplication.getRequestCycleSettings()

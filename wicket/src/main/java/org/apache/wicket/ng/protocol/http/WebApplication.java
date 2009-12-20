@@ -67,14 +67,23 @@ public abstract class WebApplication extends Application
 		return storedResponses.remove(key);
 	}
 
+	/**
+	 * 
+	 * @param sessionId
+	 * @param url
+	 * @param response
+	 */
 	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
 	{
 		String key = sessionId + url.toString();
 		storedResponses.put(key, response);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.Application#newSessionStore()
+	 */
 	@Override
-	protected ISessionStore newSessionStore()
+	public ISessionStore newSessionStore()
 	{
 		return new HttpSessionStore(this);
 	}

@@ -36,7 +36,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testBufferedExceptionErrorPage()
 	{
 		tester.getApplication().getRequestCycleSettings().setRenderStrategy(
-			IRequestCycleSettings.REDIRECT_TO_BUFFER);
+			IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
 		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(
 			IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		testInternalErrorPage();

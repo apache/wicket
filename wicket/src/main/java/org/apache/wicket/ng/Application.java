@@ -24,8 +24,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.DefaultClassResolver;
-import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParametersNg;
@@ -39,8 +37,6 @@ import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 import org.apache.wicket.ng.session.ISessionStore;
 import org.apache.wicket.ng.session.ISessionStore.UnboundListener;
-import org.apache.wicket.ng.settings.IApplicationSettings;
-import org.apache.wicket.ng.settings.IRequestCycleSettings;
 import org.apache.wicket.pageStore.DefaultPageManagerContext;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
@@ -50,6 +46,9 @@ import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.PersistentPageManager;
 import org.apache.wicket.session.DefaultPageFactory;
+import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -205,47 +204,10 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// TODO - Do properly
-	private final IRequestCycleSettings settings = new IRequestCycleSettings()
-	{
-		private RenderStrategy strategy = RenderStrategy.REDIRECT_TO_BUFFER;
-		private String responseEncoding = "UTF-8";
-
-		public RenderStrategy getRenderStrategy()
-		{
-			return strategy;
-		}
-
-		public String getResponseRequestEncoding()
-		{
-			return responseEncoding;
-		}
-
-		public void setRenderStrategy(RenderStrategy renderStrategy)
-		{
-			strategy = renderStrategy;
-		}
-
-		public void setResponseRequestEncoding(String responseRequestEncoding)
-		{
-			responseEncoding = responseRequestEncoding;
-		}
-	};
+	private final IRequestCycleSettings settings = new Settings(this);
 
 	// TODO: - Do properly
-	private final IApplicationSettings applicationSettings = new IApplicationSettings()
-	{
-		private IClassResolver resolver = new DefaultClassResolver();
-
-		public IClassResolver getClassResolver()
-		{
-			return resolver;
-		}
-
-		public void setClassResolver(IClassResolver defaultClassResolver)
-		{
-			resolver = defaultClassResolver;
-		}
-	};
+	private final IApplicationSettings applicationSettings = new Settings(this);
 
 	public IRequestCycleSettings getRequestCycleSettings()
 	{

@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
-import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -79,75 +78,64 @@ import org.apache.wicket.util.time.Duration;
 public interface IRequestCycleSettings
 {
 	/**
-	 * Enumerated type for different ways of handling the render part of requests.
+	 * Enum type for different render strategies
 	 */
-	public static class RenderStrategy extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
+	public enum RenderStrategy {
+		/**
+		 * All logical parts of a request (the action and render part) are handled within the same
+		 * request. To enable a client side redirect for a request, users can set the 'redirect'
+		 * property of {@link RequestCycle}to true (getRequestCycle.setRedirect(true)), after which
+		 * the behavior will be like RenderStragegy 'REDIRECT_TO_RENDER'.
+		 * <p>
+		 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy, and doesn't have
+		 * some of the potential problems of it, it also does not solve the double submit problem.
+		 * It is however the best option to use when you want to do sophisticated (non-sticky
+		 * session) clustering.
+		 * </p>
+		 */
+		ONE_PASS_RENDER,
 
-		RenderStrategy(final String name)
-		{
-			super(name);
-		}
-	}
+		/**
+		 * All logical parts of a request (the action and render part) are handled within the same
+		 * request, but instead of streaming the render result to the browser directly, the result
+		 * is cached on the server. A client side redirect command is issued to the browser
+		 * specifically to render this request.
+		 */
+		REDIRECT_TO_BUFFER,
 
-	/**
-	 * All logical parts of a request (the action and render part) are handled within the same
-	 * request. To enable a client side redirect for a request, users can set the 'redirect'
-	 * property of {@link RequestCycle}to true (getRequestCycle.setRedirect(true)), after which the
-	 * behavior will be like RenderStragegy 'REDIRECT_TO_RENDER'.
-	 * <p>
-	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy, and doesn't have some
-	 * of the potential problems of it, it also does not solve the double submit problem. It is
-	 * however the best option to use when you want to do sophisticated (non-sticky session)
-	 * clustering.
-	 * </p>
-	 */
-	public static final IRequestCycleSettings.RenderStrategy ONE_PASS_RENDER = new IRequestCycleSettings.RenderStrategy(
-		"ONE_PASS_RENDER");
-
-	/**
-	 * All logical parts of a request (the action and render part) are handled within the same
-	 * request, but instead of streaming the render result to the browser directly, the result is
-	 * cached on the server. A client side redirect command is issued to the browser specifically to
-	 * render this request.
-	 */
-	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_BUFFER = new IRequestCycleSettings.RenderStrategy(
-		"REDIRECT_BUFFER");
-
-	/**
-	 * The render part of a request (opposed to the 'action part' which is either the construction
-	 * of a bookmarkable page or the execution of a IRequestListener handler) is handled by a
-	 * separate request by issuing a redirect request to the browser. This is commonly known as the
-	 * 'redirect after submit' pattern, though in our case, we use it for GET and POST requests
-	 * instead of just the POST requests. To cancel the client side redirect for a request, users
-	 * can set the 'redirect' property of {@link RequestCycle}to false
-	 * (getRequestCycle.setRedirect(false)).
-	 * <p>
-	 * This pattern solves the 'refresh' problem. While it is a common feature of browsers to
-	 * refresh/ reload a web page, this results in problems in many dynamic web applications. For
-	 * example, when you have a link with an event handler that e.g. deletes a row from a list, you
-	 * usually want to ignore refresh requests after that link is clicked on. By using this
-	 * strategy, the refresh request only results in the re-rendering of the page without executing
-	 * the event handler again.
-	 * </p>
-	 * <p>
-	 * Though it solves the refresh problem, it introduces potential problems, as the request that
-	 * is logically one, are actually two separate request. Not only is this less efficient, but
-	 * this also can mean that within the same request attachment/ detachment of models is done
-	 * twice (in case you use models in the bookmarkable page constructors and IRequestListener
-	 * handlers). If you use this strategy, you should be aware of this possibility, and should also
-	 * be aware that for one logical request, actually two instances of RequestCycle are created and
-	 * processed.
-	 * </p>
-	 * <p>
-	 * Also, even with this strategy set, it is ignored for
-	 * {@link BookmarkableListenerInterfaceRequestTarget}s, because otherwise they wouldn't be
-	 * bookmarkable.
-	 * </p>
-	 */
-	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_RENDER = new IRequestCycleSettings.RenderStrategy(
-		"CLIENT_SIDE_REDIRECT");
+		/**
+		 * The render part of a request (opposed to the 'action part' which is either the
+		 * construction of a bookmarkable page or the execution of a IRequestListener handler) is
+		 * handled by a separate request by issuing a redirect request to the browser. This is
+		 * commonly known as the 'redirect after submit' pattern, though in our case, we use it for
+		 * GET and POST requests instead of just the POST requests. To cancel the client side
+		 * redirect for a request, users can set the 'redirect' property of {@link RequestCycle}to
+		 * false (getRequestCycle.setRedirect(false)).
+		 * <p>
+		 * This pattern solves the 'refresh' problem. While it is a common feature of browsers to
+		 * refresh/ reload a web page, this results in problems in many dynamic web applications.
+		 * For example, when you have a link with an event handler that e.g. deletes a row from a
+		 * list, you usually want to ignore refresh requests after that link is clicked on. By using
+		 * this strategy, the refresh request only results in the re-rendering of the page without
+		 * executing the event handler again.
+		 * </p>
+		 * <p>
+		 * Though it solves the refresh problem, it introduces potential problems, as the request
+		 * that is logically one, are actually two separate request. Not only is this less
+		 * efficient, but this also can mean that within the same request attachment/ detachment of
+		 * models is done twice (in case you use models in the bookmarkable page constructors and
+		 * IRequestListener handlers). If you use this strategy, you should be aware of this
+		 * possibility, and should also be aware that for one logical request, actually two
+		 * instances of RequestCycle are created and processed.
+		 * </p>
+		 * <p>
+		 * Also, even with this strategy set, it is ignored for
+		 * {@link BookmarkableListenerInterfaceRequestTarget}s, because otherwise they wouldn't be
+		 * bookmarkable.
+		 * </p>
+		 */
+		REDIRECT_TO_RENDER
+	};
 
 	/**
 	 * Adds a response filter to the list. Filters are evaluated in the order they have been added.
