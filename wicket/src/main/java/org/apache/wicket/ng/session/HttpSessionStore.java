@@ -28,8 +28,8 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Request;
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.slf4j.Logger;
@@ -145,8 +145,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#bind(org.apache.wicket.ng.request.Request,
-	 *      org.apache.wicket.ng.Session)
+	 * @see org.apache.wicket.session.ISessionStore#bind(Request, Session)
 	 */
 	public final void bind(Request request, Session newSession)
 	{

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.session;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -41,7 +42,7 @@ public interface ISessionStore
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	Object getAttribute(Request request, final String name);
+	Serializable getAttribute(Request request, final String name);
 
 	/**
 	 * @param request
@@ -80,7 +81,7 @@ public interface ISessionStore
 	 * @param value
 	 *            the value of the attribute
 	 */
-	void setAttribute(Request request, String name, Object value);
+	void setAttribute(Request request, String name, Serializable value);
 
 	/**
 	 * Get the session id for the provided request. If create is false and the creation of the

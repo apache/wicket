@@ -23,6 +23,7 @@ import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.IRequestablePage;
@@ -45,6 +46,7 @@ import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.PersistentPageManager;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -291,7 +293,7 @@ public abstract class Application implements UnboundListener
 
 	protected Session newSession(RequestCycle requestCycle)
 	{
-		return new Session(requestCycle);
+		return new WebSession(requestCycle.getRequest());
 	}
 
 	Session fetchCreateAndSetSession(RequestCycle requestCycle)

@@ -17,8 +17,8 @@
 package org.apache.wicket.ng.request.handler.impl.render;
 
 import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.Session;
 import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Url;

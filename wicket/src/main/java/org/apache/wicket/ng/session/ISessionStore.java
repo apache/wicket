@@ -22,7 +22,7 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.Session;
+import org.apache.wicket.Session;
 
 
 /**

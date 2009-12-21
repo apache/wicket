@@ -17,7 +17,7 @@
 package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.Session;
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
 import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.IRequestHandler;

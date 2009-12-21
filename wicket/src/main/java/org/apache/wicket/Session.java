@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -113,7 +112,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Session implements IClusterable
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/** Logging object */
@@ -285,7 +283,7 @@ public abstract class Session implements IClusterable
 	 * instance).
 	 * </p>
 	 */
-	private transient Map<String, Object> temporarySessionAttributes;
+	private transient Map<String, Serializable> temporarySessionAttributes;
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -340,7 +338,7 @@ public abstract class Session implements IClusterable
 
 			if (temporarySessionAttributes != null)
 			{
-				for (Entry<String, Object> entry : temporarySessionAttributes.entrySet())
+				for (Map.Entry<String, Serializable> entry : temporarySessionAttributes.entrySet())
 				{
 					store.setAttribute(request, String.valueOf(entry.getKey()), entry.getValue());
 				}
@@ -535,7 +533,36 @@ public abstract class Session implements IClusterable
 	 */
 	public void invalidate()
 	{
+		if (sessionInvalidated == false)
+		{
+			RequestCycle.get().register(new RequestCycle.DetachCallback()
+			{
+				public void onDetach(final RequestCycle requestCycle)
+				{
+					destroy();
+				}
+			});
+		}
+
 		sessionInvalidated = true;
+	}
+
+	/**
+	 * Invalidate and remove session store and page manager
+	 */
+	private void destroy()
+	{
+		if (sessionStore != null)
+		{
+			sessionStore.invalidate(RequestCycle.get().getRequest());
+			sessionStore = null;
+		}
+
+		if (pageManager != null)
+		{
+			pageManager.destroy();
+			pageManager = null;
+		}
 	}
 
 	/**
@@ -545,12 +572,7 @@ public abstract class Session implements IClusterable
 	public void invalidateNow()
 	{
 		invalidate();
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-		if (pageManager != null)
-		{
-			pageManager.destroy();
-			pageManager = null;
-		}
+		destroy();
 	}
 
 	/**
@@ -563,13 +585,7 @@ public abstract class Session implements IClusterable
 	 */
 	public void replaceSession()
 	{
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-		if (pageManager != null)
-		{
-			pageManager.destroy();
-			pageManager = null;
-		}
-
+		destroy();
 		bind();
 	}
 
@@ -613,7 +629,6 @@ public abstract class Session implements IClusterable
 		this.clientInfo = clientInfo;
 		dirty();
 	}
-
 
 	/**
 	 * Set the locale for this session.
@@ -727,20 +742,19 @@ public abstract class Session implements IClusterable
 	// revert
 	public final Serializable getAttribute(final String name)
 	{
-		// TODO WICKET-NG remove serializable casts, maps should be <string,serializable>
 		if (!isTemporary())
 		{
 			RequestCycle cycle = RequestCycle.get();
 			if (cycle != null)
 			{
-				return (Serializable)getSessionStore().getAttribute(cycle.getRequest(), name);
+				return getSessionStore().getAttribute(cycle.getRequest(), name);
 			}
 		}
 		else
 		{
 			if (temporarySessionAttributes != null)
 			{
-				return (Serializable)temporarySessionAttributes.get(name);
+				return temporarySessionAttributes.get(name);
 			}
 		}
 		return null;
@@ -756,14 +770,16 @@ public abstract class Session implements IClusterable
 			RequestCycle cycle = RequestCycle.get();
 			if (cycle != null)
 			{
-				return getSessionStore().getAttributeNames(cycle.getRequest());
+				return Collections.unmodifiableList(getSessionStore().getAttributeNames(
+					cycle.getRequest()));
 			}
 		}
 		else
 		{
 			if (temporarySessionAttributes != null)
 			{
-				return new ArrayList<String>(temporarySessionAttributes.keySet());
+				return Collections.unmodifiableList(new ArrayList<String>(
+					temporarySessionAttributes.keySet()));
 			}
 		}
 		return Collections.emptyList();
@@ -857,12 +873,11 @@ public abstract class Session implements IClusterable
 			// session instance gets shared across threads
 			if (temporarySessionAttributes == null)
 			{
-				temporarySessionAttributes = new HashMap<String, Object>(3);
+				temporarySessionAttributes = new HashMap<String, Serializable>(3);
 			}
 			temporarySessionAttributes.put(name, value);
 		}
 	}
-
 
 	// TODO remove after deprecation release
 

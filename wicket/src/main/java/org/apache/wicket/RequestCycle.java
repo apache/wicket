@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -1535,5 +1536,36 @@ public abstract class RequestCycle
 	public void unset()
 	{
 		set(null);
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// NG Dummies
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * Custom callback invoked on request cycle detach. Detach callbacks are invoked after all
+	 * {@link IRequestHandler}s are detached.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public interface DetachCallback
+	{
+		/**
+		 * Invoked on request cycle detach.
+		 * 
+		 * @param requestCycle
+		 */
+		public void onDetach(RequestCycle requestCycle);
+	};
+
+
+	/**
+	 * Registers a callback to be invoked on {@link RequestCycle} detach. The callback will be
+	 * invoked after all {@link IRequestHandler}s are detached.
+	 * 
+	 * @param detachCallback
+	 */
+	public void register(DetachCallback detachCallback)
+	{
 	}
 }

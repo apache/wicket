@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,13 +51,14 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.Request,
 	 *      java.lang.String)
 	 */
-	public Object getAttribute(Request request, String name)
+	public Serializable getAttribute(Request request, String name)
 	{
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
+			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(webRequest) +
+				name);
 		}
 		return null;
 	}
@@ -119,7 +121,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 * @see org.apache.wicket.session.ISessionStore#setAttribute(Request,java.lang.String,
 	 *      java.lang.Object)
 	 */
-	public void setAttribute(Request request, String name, Object value)
+	public void setAttribute(Request request, String name, Serializable value)
 	{
 		// ignore call if the session was marked invalid
 		if (!isSessionValid())
