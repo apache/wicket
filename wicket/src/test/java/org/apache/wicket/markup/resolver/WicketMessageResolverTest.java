@@ -86,4 +86,20 @@ public class WicketMessageResolverTest extends WicketTestCase
 		}
 		assertTrue("Expected a WicketRuntimeException to happen", false);
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void test_5() throws Exception
+	{
+		executeTest(SimplePage_5.class, "SimplePageExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void test_6() throws Exception
+	{
+		executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");
+	}
 }
