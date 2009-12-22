@@ -1287,7 +1287,7 @@ public class BaseWicketTester extends MockWebApplication
 				if (!(formComponent instanceof RadioGroup) &&
 					!(formComponent instanceof CheckGroup) &&
 					!formComponent.getClass().isAssignableFrom(Button.class) &&
-					formComponent.isVisible())
+					formComponent.isVisible() && formComponent.isEnabledInHierarchy())
 				{
 					if (!((formComponent instanceof IFormSubmittingComponent) && (component instanceof IFormSubmittingComponent)) ||
 						(component == formComponent))
