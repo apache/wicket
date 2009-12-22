@@ -92,6 +92,10 @@ public final class Objects
 			}
 			catch (IOException e)
 			{
+				if (log.isWarnEnabled())
+				{
+					log.warn("Unable to determine object size: " + object.toString(), e);
+				}
 				return -1;
 			}
 		}
