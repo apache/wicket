@@ -19,9 +19,9 @@ package org.apache.wicket.resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 
 
@@ -56,6 +56,6 @@ public class DummyApplication extends WebApplication
 	@Override
 	protected ISessionStore newSessionStore()
 	{
-		return new HttpSessionStore(this);
+		return new HttpSessionStore();
 	}
 }

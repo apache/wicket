@@ -1131,15 +1131,6 @@ public abstract class RequestCycle
 			log.error("Exception occurred during onEndRequest", e);
 		}
 
-		try
-		{
-			getApplication().getSessionStore().onEndRequest(getRequest());
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest of the SessionStore", e);
-		}
-
 		Session session = getSession();
 		if (session != null)
 		{
@@ -1162,14 +1153,6 @@ public abstract class RequestCycle
 	 */
 	private void prepare()
 	{
-		try
-		{
-			getApplication().getSessionStore().onBeginRequest(getRequest());
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onBeginRequest of the SessionStore", e);
-		}
 		// Event callback
 		onBeginRequest();
 	}

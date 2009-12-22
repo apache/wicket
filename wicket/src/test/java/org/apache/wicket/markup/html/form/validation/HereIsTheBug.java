@@ -48,6 +48,8 @@ public class HereIsTheBug extends Panel
 
 	static class FormData implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		String _name;
 
 		public String getName()

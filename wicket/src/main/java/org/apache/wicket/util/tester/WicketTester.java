@@ -33,10 +33,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.protocol.http.HttpSessionStore;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
@@ -169,7 +170,7 @@ public class WicketTester extends BaseWicketTester
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes
 			// things slow.
-			return new HttpSessionStore(this);
+			return new HttpSessionStore();
 		}
 
 		/**
@@ -233,7 +234,7 @@ public class WicketTester extends BaseWicketTester
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
 				// makes things slow.
-				return new HttpSessionStore(this);
+				return new HttpSessionStore();
 			}
 
 			@Override

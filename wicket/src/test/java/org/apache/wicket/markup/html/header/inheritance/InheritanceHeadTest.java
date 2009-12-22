@@ -23,10 +23,10 @@ import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -97,7 +97,7 @@ public class InheritanceHeadTest extends WicketTestCase
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
 				// makes things slow.
-				return new HttpSessionStore(this);
+				return new HttpSessionStore();
 			}
 		});
 

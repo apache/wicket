@@ -26,8 +26,8 @@ import junit.framework.Assert;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 
 /**
@@ -90,7 +90,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
-				return new HttpSessionStore(this);
+				return new HttpSessionStore();
 			}
 
 		};

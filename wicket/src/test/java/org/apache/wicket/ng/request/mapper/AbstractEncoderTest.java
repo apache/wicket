@@ -32,7 +32,6 @@ import org.apache.wicket.ng.request.listener.RequestListenerInterface;
  */
 public abstract class AbstractEncoderTest extends TestCase
 {
-
 	/**
 	 * Construct.
 	 */
@@ -46,7 +45,6 @@ public abstract class AbstractEncoderTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		// inititalize the interface
-		@SuppressWarnings("unused")
 		RequestListenerInterface i = ILinkListener.INTERFACE;
 	}
 

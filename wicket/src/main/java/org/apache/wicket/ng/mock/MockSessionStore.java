@@ -17,8 +17,10 @@
 package org.apache.wicket.ng.mock;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -26,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.session.ISessionStore;
+import org.apache.wicket.session.ISessionStore;
 
 /**
  * Session store that holds one session.
@@ -36,12 +38,10 @@ import org.apache.wicket.ng.session.ISessionStore;
 public class MockSessionStore implements ISessionStore
 {
 	/**
-	 * 
 	 * Construct.
 	 */
 	public MockSessionStore()
 	{
-
 	}
 
 	private String sessionId;
@@ -63,9 +63,9 @@ public class MockSessionStore implements ISessionStore
 		return attributes.get(name);
 	}
 
-	public Set<String> getAttributeNames(Request request)
+	public List<String> getAttributeNames(Request request)
 	{
-		return Collections.unmodifiableSet(attributes.keySet());
+		return Collections.unmodifiableList(new ArrayList<String>(attributes.keySet()));
 	}
 
 	public String getSessionId(Request request, boolean create)
@@ -109,6 +109,14 @@ public class MockSessionStore implements ISessionStore
 	public void removeAttribute(Request request, String name)
 	{
 		attributes.remove(name);
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#getUnboundListener()
+	 */
+	public final Set<UnboundListener> getUnboundListener()
+	{
+		return Collections.unmodifiableSet(unboundListeners);
 	}
 
 	public void setAttribute(Request request, String name, Serializable value)

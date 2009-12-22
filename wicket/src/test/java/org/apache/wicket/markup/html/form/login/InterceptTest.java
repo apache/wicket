@@ -29,11 +29,11 @@ import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
@@ -212,7 +212,7 @@ public class InterceptTest extends TestCase
 		protected ISessionStore newSessionStore()
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes things slow.
-			return new HttpSessionStore(this);
+			return new HttpSessionStore();
 		}
 	}
 

@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.session;
+package org.apache.wicket.session;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -27,10 +29,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +47,292 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpSessionStore implements ISessionStore
 {
+	/** log. */
+	private static Logger log = LoggerFactory.getLogger(HttpSessionStore.class);
+
+	/** Name of session attribute under which this session is stored */
+	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/** */
+	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
+
 	/**
-	 * Reacts on unbinding from the session by cleaning up the session related application data.
+	 * Construct.
+	 */
+	public HttpSessionStore()
+	{
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @return The http servlet request
+	 */
+	protected final HttpServletRequest getHttpServletRequest(final Request request)
+	{
+		if ((request instanceof ServletWebRequest) == false)
+		{
+			throw new IllegalArgumentException("Request must be ServletWebRequest");
+		}
+		return ((ServletWebRequest)request).getHttpServletRequest();
+	}
+
+	/**
+	 * 
+	 * @see HttpServletRequest#getSession(boolean)
+	 * 
+	 * @param request
+	 *            A Wicket request object
+	 * @param create
+	 *            If true, a session will be create if not yet exists
+	 * @return The HttpSession associated with this request or null if create is false and the
+	 *         request has no valid session
+	 */
+	final HttpSession getHttpSession(final Request request, final boolean create)
+	{
+		return getHttpServletRequest(request).getSession(create);
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#bind(Request, Session)
+	 */
+	public final void bind(final Request request, final Session newSession)
+	{
+		if (getAttribute(request, SESSION_ATTRIBUTE_NAME) != newSession)
+		{
+			// call template method
+			onBind(request, newSession);
+
+			HttpSession httpSession = getHttpSession(request, false);
+
+			// register an unbinding listener for cleaning up
+			String applicationKey = Application.get().getName();
+			httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
+				new SessionBindingListener(applicationKey, httpSession.getId()));
+
+			// register the session object itself
+			setAttribute(request, SESSION_ATTRIBUTE_NAME, newSession);
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#destroy()
+	 */
+	public void destroy()
+	{
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.ng.request.Request,
+	 *      boolean)
+	 */
+	public final String getSessionId(final Request request, final boolean create)
+	{
+		String id = null;
+
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			id = httpSession.getId();
+		}
+		else if (create)
+		{
+			httpSession = getHttpSession(request, true);
+			id = httpSession.getId();
+
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if (logger != null)
+			{
+				logger.sessionCreated(id);
+			}
+		}
+		return id;
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#invalidate(Request)
+	 */
+	public final void invalidate(final Request request)
+	{
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			// tell the app server the session is no longer valid
+			httpSession.invalidate();
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.wicket.ng.request.Request)
+	 */
+	public final Session lookup(final Request request)
+	{
+		String sessionId = getSessionId(request, false);
+		if (sessionId != null)
+		{
+			return (Session)getAttribute(request, SESSION_ATTRIBUTE_NAME);
+		}
+		return null;
+	}
+
+	/**
+	 * Template method that is called when a session is being bound to the session store. It is
+	 * called <strong>before</strong> the session object itself is added to this store (which is
+	 * done by calling {@link ISessionStore#setAttribute(Request, String, Object)} with key
+	 * {@link Session#SESSION_ATTRIBUTE_NAME}.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param newSession
+	 *            The new session
+	 */
+	protected void onBind(final Request request, final Session newSession)
+	{
+	}
+
+	/**
+	 * Template method that is called when the session is being detached from the store, which
+	 * typically happens when the httpsession was invalidated.
+	 * 
+	 * @param sessionId
+	 *            The session id of the session that was invalidated.
+	 */
+	protected void onUnbind(final String sessionId)
+	{
+	}
+
+	/**
+	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
+	 * for this application instance.
+	 * 
+	 * @param request
+	 *            the request
+	 * 
+	 * @return the prefix for storing variables in the actual session
+	 */
+	private String getSessionAttributePrefix(final Request request)
+	{
+		return "wicket";
+		// TODO:
+		// return application.getSessionAttributePrefix(request);
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.Request,
+	 *      java.lang.String)
+	 */
+	public final Serializable getAttribute(final Request request, final String name)
+	{
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(request) + name);
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#getAttributeNames(org.apache.wicket.Request)
+	 */
+	public final List<String> getAttributeNames(final Request request)
+	{
+		List<String> list = new ArrayList<String>();
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			@SuppressWarnings("unchecked")
+			final Enumeration<String> names = httpSession.getAttributeNames();
+			final String prefix = getSessionAttributePrefix(request);
+			while (names.hasMoreElements())
+			{
+				final String name = names.nextElement();
+				if (name.startsWith(prefix))
+				{
+					list.add(name.substring(prefix.length()));
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#removeAttribute(org.apache.wicket.Request,
+	 *      java.lang.String)
+	 */
+	public final void removeAttribute(final Request request, final String name)
+	{
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			String attributeName = getSessionAttributePrefix(request) + name;
+
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if (logger != null)
+			{
+				Object value = httpSession.getAttribute(attributeName);
+				if (value != null)
+				{
+					logger.objectRemoved(value);
+				}
+			}
+			httpSession.removeAttribute(attributeName);
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#setAttribute(org.apache.wicket.Request,
+	 *      java.lang.String, java.io.Serializable)
+	 */
+	public final void setAttribute(final Request request, final String name,
+		final Serializable value)
+	{
+		// ignore call if the session was marked invalid
+		HttpSession httpSession = getHttpSession(request, false);
+		if (httpSession != null)
+		{
+			String attributeName = getSessionAttributePrefix(request) + name;
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if (logger != null)
+			{
+				if (httpSession.getAttribute(attributeName) == null)
+				{
+					logger.objectCreated(value);
+				}
+				else
+				{
+					logger.objectUpdated(value);
+				}
+			}
+			httpSession.setAttribute(attributeName, value);
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#registerUnboundListener(org.apache.wicket.session.ISessionStore.UnboundListener)
+	 */
+	public final void registerUnboundListener(final UnboundListener listener)
+	{
+		unboundListeners.add(listener);
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#unregisterUnboundListener(org.apache.wicket.session.ISessionStore.UnboundListener)
+	 */
+	public final void unregisterUnboundListener(final UnboundListener listener)
+	{
+		unboundListeners.remove(listener);
+	}
+
+	/**
+	 * @see org.apache.wicket.session.ISessionStore#getUnboundListener()
+	 */
+	public final Set<UnboundListener> getUnboundListener()
+	{
+		return Collections.unmodifiableSet(unboundListeners);
+	}
+
+	/**
+	 * Reacts on unbinding from the session by cleaning up the session related data.
 	 */
 	protected static final class SessionBindingListener
 		implements
@@ -69,7 +355,7 @@ public class HttpSessionStore implements ISessionStore
 		 * @param sessionId
 		 *            The session's id
 		 */
-		public SessionBindingListener(String applicationKey, String sessionId)
+		public SessionBindingListener(final String applicationKey, final String sessionId)
 		{
 			this.applicationKey = applicationKey;
 			this.sessionId = sessionId;
@@ -78,282 +364,35 @@ public class HttpSessionStore implements ISessionStore
 		/**
 		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
 		 */
-		public void valueBound(HttpSessionBindingEvent evg)
+		public void valueBound(final HttpSessionBindingEvent evg)
 		{
 		}
 
 		/**
 		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
 		 */
-		public void valueUnbound(HttpSessionBindingEvent evt)
+		public void valueUnbound(final HttpSessionBindingEvent evt)
 		{
-			log.debug("Session unbound: " + sessionId);
-			Application application = Application.get(applicationKey);
-			HttpSessionStore sessionStore = (HttpSessionStore)application.getSessionStore();
-
-			for (UnboundListener listener : sessionStore.unboundListeners)
+			if (log.isDebugEnabled())
 			{
-				listener.sessionUnbound(sessionId);
+				log.debug("Session unbound: " + sessionId);
 			}
-		}
-	}
 
-	/** Name of session attribute under which this session is stored */
-	public static final String SESSION_ATTRIBUTE_NAME = "session";
-
-	/** log. */
-	private static Logger log = LoggerFactory.getLogger(HttpSessionStore.class);
-
-	/** The web application for this store. Is never null. */
-	protected final WebApplication application;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param application
-	 *            The application to construct this store for
-	 */
-	public HttpSessionStore(Application application)
-	{
-		if (application == null)
-		{
-			throw new IllegalArgumentException("the application object must be provided");
-		}
-		// sanity check
-		if (!(application instanceof WebApplication))
-		{
-			throw new IllegalStateException(getClass().getName() +
-				" can only operate in the context of web applications");
-		}
-		this.application = (WebApplication)application;
-	}
-
-	protected HttpServletRequest getHttpServletRequest(Request request)
-	{
-		if (request instanceof ServletWebRequest == false)
-		{
-			throw new IllegalArgumentException("Request must be HttpServletRequest");
-		}
-		ServletWebRequest servletWebRequest = (ServletWebRequest)request;
-		return servletWebRequest.getHttpServletRequest();
-	}
-
-	HttpSession getHttpSession(Request request, boolean create)
-	{
-		HttpServletRequest httpServletRequest = getHttpServletRequest(request);
-		return httpServletRequest.getSession(create);
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#bind(Request, Session)
-	 */
-	public final void bind(Request request, Session newSession)
-	{
-		if (getAttribute(request, SESSION_ATTRIBUTE_NAME) != newSession)
-		{
-			// call template method
-			onBind(request, newSession);
-
-			HttpSession httpSession = getHttpSession(request, false);
-
-			// register an unbinding listener for cleaning up
-			String applicationKey = application.getName();
-			httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-				new SessionBindingListener(applicationKey, httpSession.getId()));
-
-			// register the session object itself
-			setAttribute(request, SESSION_ATTRIBUTE_NAME, newSession);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#destroy()
-	 */
-	public void destroy()
-	{
-		// nop
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.ng.request.Request,
-	 *      boolean)
-	 */
-	public final String getSessionId(Request request, boolean create)
-	{
-		String id = null;
-
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			id = httpSession.getId();
-		}
-		else if (create)
-		{
-			httpSession = getHttpSession(request, true);
-			id = httpSession.getId();
-			// TODO: RequestLogger
-			// IRequestLogger logger = application.getRequestLogger();
-			// if (logger != null)
-			// {
-			// logger.sessionCreated(id);
-			// }
-		}
-		return id;
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#invalidate(Request)
-	 */
-	public final void invalidate(Request request)
-	{
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			// tell the app server the session is no longer valid
-			httpSession.invalidate();
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.wicket.ng.request.Request)
-	 */
-	public Session lookup(Request request)
-	{
-		String sessionId = getSessionId(request, false);
-		if (sessionId != null)
-		{
-			return (Session)getAttribute(request, SESSION_ATTRIBUTE_NAME);
-		}
-		return null;
-	}
-
-	/**
-	 * Template method that is called when a session is being bound to the session store. It is
-	 * called <strong>before</strong> the session object itself is added to this store (which is
-	 * done by calling {@link ISessionStore#setAttribute(Request, String, Object)} with key
-	 * {@link Session#SESSION_ATTRIBUTE_NAME}.
-	 * 
-	 * @param request
-	 *            The request
-	 * @param newSession
-	 *            The new session
-	 */
-	protected void onBind(Request request, Session newSession)
-	{
-	}
-
-	/**
-	 * Template method that is called when the session is being detached from the store, which
-	 * typically happens when the httpsession was invalidated.
-	 * 
-	 * @param sessionId
-	 *            The session id of the session that was invalidated.
-	 */
-	protected void onUnbind(String sessionId)
-	{
-	}
-
-	/**
-	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
-	 * for this application instance.
-	 * 
-	 * @param request
-	 *            the request
-	 * 
-	 * @return the prefix for storing variables in the actual session
-	 */
-	private String getSessionAttributePrefix(final Request request)
-	{
-		return "wicket";
-		// TODO:
-		// return application.getSessionAttributePrefix(request);
-	}
-
-
-	public Serializable getAttribute(Request request, String name)
-	{
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(request) + name);
-		}
-		return null;
-	}
-
-	public Set<String> getAttributeNames(Request request)
-	{
-		Set<String> list = new HashSet<String>();
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			@SuppressWarnings("unchecked")
-			final Enumeration<String> names = httpSession.getAttributeNames();
-			final String prefix = getSessionAttributePrefix(request);
-			while (names.hasMoreElements())
+			Application application = Application.get(applicationKey);
+			if (application == null)
 			{
-				final String name = names.nextElement();
-				if (name.startsWith(prefix))
+				log.error("Wicket application with name '" + applicationKey + "' not found.");
+				return;
+			}
+
+			ISessionStore sessionStore = application.getSessionStore();
+			if (sessionStore != null)
+			{
+				for (UnboundListener listener : sessionStore.getUnboundListener())
 				{
-					list.add(name.substring(prefix.length()));
+					listener.sessionUnbound(sessionId);
 				}
 			}
 		}
-		return list;
-	}
-
-	public void removeAttribute(Request request, String name)
-	{
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			String attributeName = getSessionAttributePrefix(request) + name;
-			// TODO: Request Logger
-// IRequestLogger logger = application.getRequestLogger();
-// if (logger != null)
-// {
-// Object value = httpSession.getAttribute(attributeName);
-// if (value != null)
-// {
-// logger.objectRemoved(value);
-// }
-// }
-			httpSession.removeAttribute(attributeName);
-		}
-	}
-
-	public void setAttribute(Request request, String name, Serializable value)
-	{
-		// ignore call if the session was marked invalid
-		HttpSession httpSession = getHttpSession(request, false);
-		if (httpSession != null)
-		{
-			String attributeName = getSessionAttributePrefix(request) + name;
-			// TODO: RequestLogger
-// IRequestLogger logger = application.getRequestLogger();
-// if (logger != null)
-// {
-// if (httpSession.getAttribute(attributeName) == null)
-// {
-// logger.objectCreated(value);
-// }
-// else
-// {
-// logger.objectUpdated(value);
-// }
-// }
-			httpSession.setAttribute(attributeName, value);
-		}
-	}
-
-	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
-
-	public void registerUnboundListener(UnboundListener listener)
-	{
-		unboundListeners.add(listener);
-	}
-
-	public void unregisterUnboundListener(UnboundListener listener)
-	{
-		unboundListeners.remove(listener);
 	}
 }

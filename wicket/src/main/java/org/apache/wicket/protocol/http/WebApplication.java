@@ -44,6 +44,7 @@ import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlC
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileCleaner;
@@ -598,7 +599,7 @@ public abstract class WebApplication extends Application
 	@Override
 	protected ISessionStore newSessionStore()
 	{
-		return new HttpSessionStore(this);
+		return new HttpSessionStore();
 	}
 
 	/**

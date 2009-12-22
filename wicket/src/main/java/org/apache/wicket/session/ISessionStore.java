@@ -18,6 +18,7 @@ package org.apache.wicket.session;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,10 +27,13 @@ import org.apache.wicket.Session;
 
 
 /**
- * The actual store that is used by {@link org.apache.wicket.Session} to store its attributes.
+ * The actual store that is used by {@link org.apache.wicket.ng.Session} to store its attributes.
+ * <p>
+ * This class is intended for internal framework use.
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner
+ * @author Matej Knopp
  */
 public interface ISessionStore
 {
@@ -42,7 +46,7 @@ public interface ISessionStore
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	Serializable getAttribute(Request request, final String name);
+	Serializable getAttribute(Request request, String name);
 
 	/**
 	 * @param request
@@ -51,25 +55,6 @@ public interface ISessionStore
 	 * @return List of attributes for this session
 	 */
 	List<String> getAttributeNames(Request request);
-
-
-	/**
-	 * Invalidates the session.
-	 * 
-	 * @param request
-	 *            the current request
-	 */
-	void invalidate(Request request);
-
-	/**
-	 * Removes the attribute with the given name.
-	 * 
-	 * @param request
-	 *            the current request
-	 * @param name
-	 *            the name of the attribute to remove
-	 */
-	void removeAttribute(Request request, String name);
 
 	/**
 	 * Adds or replaces the attribute with the given name and value.
@@ -82,6 +67,24 @@ public interface ISessionStore
 	 *            the value of the attribute
 	 */
 	void setAttribute(Request request, String name, Serializable value);
+
+	/**
+	 * Removes the attribute with the given name.
+	 * 
+	 * @param request
+	 *            the current request
+	 * @param name
+	 *            the name of the attribute to remove
+	 */
+	void removeAttribute(Request request, String name);
+
+	/**
+	 * Invalidates the session.
+	 * 
+	 * @param request
+	 *            the current request
+	 */
+	void invalidate(Request request);
 
 	/**
 	 * Get the session id for the provided request. If create is false and the creation of the
@@ -121,33 +124,39 @@ public interface ISessionStore
 	void bind(Request request, Session newSession);
 
 	/**
-	 * Removes a session from this facade
-	 * 
-	 * @param sessionId
-	 *            The id of the session that must be unbound.
-	 */
-	void unbind(String sessionId);
-
-	/**
-	 * Called at the start of a request. It can be used for example to rebuild server state from the
-	 * client request.
-	 * 
-	 * @param request
-	 *            The request object
-	 */
-	void onBeginRequest(Request request);
-
-	/**
-	 * Called at the end of a request. It can be used for instance to release temporary server state
-	 * when using client state saving.
-	 * 
-	 * @param request
-	 *            The request
-	 */
-	void onEndRequest(Request request);
-
-	/**
 	 * Called when the WebApplication is destroyed.
 	 */
 	void destroy();
+
+	/**
+	 * Listener invoked when session is unbound.
+	 */
+	public interface UnboundListener
+	{
+		/**
+		 * Informs the listener that session with specifid id has been unbound.
+		 * 
+		 * @param sessionId
+		 */
+		void sessionUnbound(String sessionId);
+	};
+
+	/**
+	 * Registers listener invoked when session is unbound.
+	 * 
+	 * @param listener
+	 */
+	void registerUnboundListener(UnboundListener listener);
+
+	/**
+	 * Unregisters listener invoked when session is unbound.
+	 * 
+	 * @param listener
+	 */
+	void unregisterUnboundListener(UnboundListener listener);
+
+	/**
+	 * @return The list of reqistered unbound listeners
+	 */
+	Set<UnboundListener> getUnboundListener();
 }

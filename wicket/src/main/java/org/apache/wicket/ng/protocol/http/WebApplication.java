@@ -28,8 +28,8 @@ import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.mapper.SystemMapper;
-import org.apache.wicket.ng.session.HttpSessionStore;
-import org.apache.wicket.ng.session.ISessionStore;
+import org.apache.wicket.session.HttpSessionStore;
+import org.apache.wicket.session.ISessionStore;
 
 /**
  * 
@@ -85,7 +85,7 @@ public abstract class WebApplication extends Application
 	@Override
 	public ISessionStore newSessionStore()
 	{
-		return new HttpSessionStore(this);
+		return new HttpSessionStore();
 	}
 
 	/**

@@ -23,9 +23,9 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
 
@@ -57,7 +57,7 @@ public class GuiceInjectorTest extends TestCase
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
 				// makes things slow.
-				return new HttpSessionStore(this);
+				return new HttpSessionStore();
 			}
 		}, null);
 

@@ -59,11 +59,11 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
@@ -135,7 +135,7 @@ public class BaseWicketTester extends MockWebApplication
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes
 			// things slow.
-			return new HttpSessionStore(this);
+			return new HttpSessionStore();
 		}
 	}
 
@@ -180,7 +180,7 @@ public class BaseWicketTester extends MockWebApplication
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
 				// makes things slow.
-				return new HttpSessionStore(this);
+				return new HttpSessionStore();
 			}
 
 		}, null);
