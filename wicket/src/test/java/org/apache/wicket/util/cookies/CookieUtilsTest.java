@@ -129,12 +129,13 @@ public class CookieUtilsTest extends TestCase
 
 		// remove all cookies from mock response. Because I'll find the cookie to be removed in the
 		// request, the persister will create a "delete" cookie to remove the cookie on the client
-		// and add it to the response.
+		// and add it to the response. The already existing Cookie from the previous test gets
+		// removed from response since it is the same.
 		persister.remove(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
-		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form.input", (getResponseCookies(cycle).get(1)).getName());
-		assertEquals(0, (getResponseCookies(cycle).get(1)).getMaxAge());
+		assertEquals(1, getResponseCookies(cycle).size());
+		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals(0, (getResponseCookies(cycle).get(0)).getMaxAge());
 	}
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)

@@ -214,7 +214,27 @@ public class MockWebApplication
 			public void addCookie(Cookie cookie)
 			{
 				super.addCookie(cookie);
-				cookiesOfThisSession.add(cookie);
+
+				// remove any potential duplicates
+				cookiesOfThisSession.remove(cookie);
+
+				// if maxAge <= 0, than remove cookie from browser session
+				if (cookie.getMaxAge() > 0)
+				{
+					cookiesOfThisSession.add(cookie);
+				}
+				else
+				{
+					Iterator<Cookie> iter = cookiesOfThisSession.iterator();
+					while (iter.hasNext())
+					{
+						Cookie entry = iter.next();
+						if (cookie.getName().equals(entry.getName()))
+						{
+							iter.remove();
+						}
+					}
+				}
 			}
 		};
 

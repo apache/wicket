@@ -641,7 +641,9 @@ public class WicketTesterTest extends TestCase
 
 	public void testCookieIsFoundOnNextRequestWhenAddedToWicketResponse()
 	{
-		tester.getWicketResponse().addCookie(new Cookie("name", "value"));
+		Cookie cookie = new Cookie("name", "value");
+		cookie.setMaxAge(60);
+		tester.getWicketResponse().addCookie(cookie);
 		tester.setupRequestAndResponse();
 		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
 	}
