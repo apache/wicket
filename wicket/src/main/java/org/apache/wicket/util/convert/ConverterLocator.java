@@ -101,7 +101,7 @@ public class ConverterLocator implements IConverterLocator
 				else
 				{
 					throw new ConversionException("Could not convert value: " + value +
-						" to type: " + theType.getName() + "(Could not find compatible converter).").setSourceValue(value);
+						" to type: " + theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
 				}
 			}
 			catch (Exception e)

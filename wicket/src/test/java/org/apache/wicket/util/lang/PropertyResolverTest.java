@@ -610,4 +610,24 @@ public class PropertyResolverTest extends TestCase
 		String value = (String)PropertyResolver.getValue("testValue", new InnerVectorPOJO());
 		assertEquals("vector", value);
 	}
+
+	/**
+	 * 
+	 */
+	public void testDirectFieldSetWithDifferentTypeThanGetter()
+	{
+		final DirectFieldSetWithDifferentTypeThanGetter obj = new DirectFieldSetWithDifferentTypeThanGetter();
+		PropertyResolver.setValue("value", obj, 1, null);
+		assertEquals(1, obj.value);
+	}
+
+	private static class DirectFieldSetWithDifferentTypeThanGetter
+	{
+		private int value;
+
+		public String getValue()
+		{
+			return String.valueOf(value);
+		}
+	}
 }
