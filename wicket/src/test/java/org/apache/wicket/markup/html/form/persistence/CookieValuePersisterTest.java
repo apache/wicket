@@ -155,9 +155,9 @@ public class CookieValuePersisterTest extends TestCase
 		// the response.
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
-		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form.input", (getResponseCookies(cycle).get(1)).getName());
-		assertEquals(0, (getResponseCookies(cycle).get(1)).getMaxAge());
+		assertEquals(1, getResponseCookies(cycle).size());
+		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals(0, (getResponseCookies(cycle).get(0)).getMaxAge());
 	}
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
