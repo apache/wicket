@@ -119,17 +119,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		setType(Date.class);
 		PropertyModel<Date> dateFieldModel = new PropertyModel<Date>(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void configure(Map<String, Object> widgetProperties)
-			{
-				super.configure(widgetProperties);
-				DateTimeField.this.configure(widgetProperties);
-			}
-		});
+		dateField.add(newDatePicker());
 		add(hoursField = new TextField<Integer>("hours", new PropertyModel<Integer>(this, "hours"),
 				Integer.class));
 		hoursField.add(new HoursValidator());
@@ -494,5 +484,24 @@ public class DateTimeField extends FormComponentPanel<Date>
 				setRange(1, 12);
 			}
 		}
+	}
+
+	/**
+	 * The DatePicker that gets added to the DateTimeField component. Users may override this method
+	 * with a DatePicker of their choice.
+	 */
+	protected DatePicker newDatePicker()
+	{
+		return new DatePicker()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void configure(Map<String, Object> widgetProperties)
+			{
+				super.configure(widgetProperties);
+				DateTimeField.this.configure(widgetProperties);
+			}
+		};
 	}
 }
