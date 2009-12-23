@@ -30,9 +30,6 @@ import org.apache.wicket.protocol.http.WebSession;
  */
 public abstract class AuthenticatedWebSession extends WebSession
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -116,5 +113,19 @@ public abstract class AuthenticatedWebSession extends WebSession
 	public void signOut()
 	{
 		signedIn = false;
+	}
+
+	/**
+	 * Cookie based logins (remember me) may not rely on putting username and password into the
+	 * cookie but something else that safely identifies the user. This method is meant to support
+	 * these use cases.
+	 * 
+	 * @see #authenticate(String, String)
+	 * 
+	 * @param value
+	 */
+	public final void signIn(boolean value)
+	{
+		signedIn = value;
 	}
 }
