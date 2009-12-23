@@ -234,8 +234,7 @@ public class SignInPanel extends Panel
 		// original destination, otherwise to the Home page
 		if (!continueToOriginalDestination())
 		{
-			setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
-				getApplication().getHomePage()));
+			setResponsePage(getApplication().getHomePage());
 		}
 	}
 
