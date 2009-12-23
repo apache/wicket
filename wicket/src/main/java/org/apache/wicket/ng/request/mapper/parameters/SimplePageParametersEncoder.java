@@ -38,6 +38,9 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 	{
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder#decodePageParameters(org.apache.wicket.Request)
+	 */
 	public PageParametersNg decodePageParameters(Request request)
 	{
 		PageParametersNg parameters = new PageParametersNg();
@@ -57,6 +60,9 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 		return parameters;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.ng.request.component.PageParametersNg)
+	 */
 	public Url encodePageParameters(PageParametersNg pageParameters)
 	{
 		Url url = new Url();
@@ -81,5 +87,4 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 
 		return url;
 	}
-
 }

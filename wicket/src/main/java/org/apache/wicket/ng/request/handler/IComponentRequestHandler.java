@@ -31,5 +31,5 @@ public interface IComponentRequestHandler extends IRequestHandler
 	 * 
 	 * @return component instance
 	 */
-	public IRequestableComponent getComponent();
+	IRequestableComponent getComponent();
 }

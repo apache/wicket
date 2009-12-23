@@ -20,27 +20,29 @@ import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Encapsulates both page and component info.
- * Rendered in form of &lt;pageInfo&gt:&lt;componentInfo&gt;
+ * Encapsulates both page and component info. Rendered in form of
+ * &lt;pageInfo&gt:&lt;componentInfo&gt;
  * 
  * @author Matej Knopp
  */
 public class PageComponentInfo
 {
+	private static final char SEPARATOR = '-';
+
 	private final PageInfo pageInfo;
+
 	private final ComponentInfo componentInfo;
 
-	private static final char SEPARATOR = '-';
-	
 	/**
 	 * Construct.
+	 * 
 	 * @param pageInfo
 	 * @param componentInfo
 	 */
 	public PageComponentInfo(PageInfo pageInfo, ComponentInfo componentInfo)
 	{
 		Checks.argumentNotNull(pageInfo, "pageInfo");
-		
+
 		this.pageInfo = pageInfo;
 		this.componentInfo = componentInfo;
 	}
@@ -52,7 +54,7 @@ public class PageComponentInfo
 	{
 		return pageInfo;
 	}
-	
+
 	/**
 	 * @return component info instance or <code>null</code>
 	 */
@@ -60,7 +62,10 @@ public class PageComponentInfo
 	{
 		return componentInfo;
 	}
-	
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
@@ -68,16 +73,16 @@ public class PageComponentInfo
 		if (pageInfo != null)
 		{
 			result.append(pageInfo.toString());
-		}		
+		}
 		if (componentInfo != null)
 		{
 			result.append(SEPARATOR);
 			result.append(componentInfo);
 		}
-		
+
 		return result.toString();
 	}
-	
+
 	/**
 	 * Parses the given string
 	 * 
@@ -90,13 +95,13 @@ public class PageComponentInfo
 		{
 			return null;
 		}
-		
+
 		final PageInfo pageInfo;
 		final ComponentInfo componentInfo;
-		
+
 		int i = s.indexOf(SEPARATOR);
 		if (i == -1)
-		
+
 		{
 			pageInfo = PageInfo.parse(s);
 			componentInfo = null;
@@ -104,14 +109,14 @@ public class PageComponentInfo
 		else
 		{
 			pageInfo = PageInfo.parse(s.substring(0, i));
-			componentInfo = ComponentInfo.parse(s.substring(i + 1));	
+			componentInfo = ComponentInfo.parse(s.substring(i + 1));
 		}
-			
+
 		if (pageInfo == null)
 		{
 			return null;
 		}
-		
+
 		return new PageComponentInfo(pageInfo, componentInfo);
 	}
 }

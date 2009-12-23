@@ -41,7 +41,9 @@ public class ListenerInterfaceRequestHandler
 		IComponentRequestHandler
 {
 	private final PageAndComponentProvider pageComponentProvider;
+
 	private final RequestListenerInterface listenerInterface;
+
 	private final Integer behaviorIndex;
 
 	/**
@@ -74,26 +76,41 @@ public class ListenerInterfaceRequestHandler
 		this(pageComponentProvider, listenerInterface, null);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IComponentRequestHandler#getComponent()
+	 */
 	public IRequestableComponent getComponent()
 	{
 		return pageComponentProvider.getComponent();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageRequestHandler#getPage()
+	 */
 	public IRequestablePage getPage()
 	{
 		return pageComponentProvider.getPageInstance();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageClass()
+	 */
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageComponentProvider.getPageClass();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageParameters()
+	 */
 	public PageParametersNg getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void detach(RequestCycle requestCycle)
 	{
 		pageComponentProvider.detach();
@@ -119,7 +136,10 @@ public class ListenerInterfaceRequestHandler
 		return behaviorIndex;
 	}
 
-	public void respond(RequestCycle requestCycle)
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
+	public void respond(final RequestCycle requestCycle)
 	{
 		if (getComponent().getPage() == getPage())
 		{
@@ -155,5 +175,4 @@ public class ListenerInterfaceRequestHandler
 				" has been removed from page.");
 		}
 	}
-
 }

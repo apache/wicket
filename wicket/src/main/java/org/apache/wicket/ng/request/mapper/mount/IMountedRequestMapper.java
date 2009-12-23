@@ -23,7 +23,6 @@ import org.apache.wicket.ng.request.IRequestHandler;
  * TODO javadoc, explain "parameters resolved from the mount"
  * 
  * @author igor.vaynberg
- * 
  */
 public interface IMountedRequestMapper
 {

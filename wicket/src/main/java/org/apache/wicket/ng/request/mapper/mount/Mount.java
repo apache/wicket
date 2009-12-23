@@ -18,30 +18,49 @@ package org.apache.wicket.ng.request.mapper.mount;
 
 import org.apache.wicket.ng.request.Url;
 
+/**
+ * 
+ */
 public class Mount
 {
 	private final Url url;
+
 	private MountParameters mountParameters = new MountParameters();
 
+	/**
+	 * Construct.
+	 * 
+	 * @param url
+	 */
 	public Mount(Url url)
 	{
 		this.url = url;
 	}
 
+	/**
+	 * 
+	 * @param mountParameters
+	 */
 	public void setMountParameters(MountParameters mountParameters)
 	{
 		this.mountParameters = mountParameters;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public MountParameters getMountParameters()
 	{
 		return mountParameters;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Url getUrl()
 	{
 		return url;
 	}
-
-
 }

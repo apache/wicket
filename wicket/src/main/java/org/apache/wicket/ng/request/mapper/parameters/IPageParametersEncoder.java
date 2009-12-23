@@ -35,7 +35,7 @@ public interface IPageParametersEncoder
 	 * @param pageParameters
 	 * @return Url generated from the page parameters
 	 */
-	public Url encodePageParameters(PageParametersNg pageParameters);
+	Url encodePageParameters(PageParametersNg pageParameters);
 
 	/**
 	 * Decodes the given URL to {@link PageParametersNg}. The URL will have all
@@ -44,5 +44,5 @@ public interface IPageParametersEncoder
 	 * @param request
 	 * @return {@link PageParametersNg} instance
 	 */
-	public PageParametersNg decodePageParameters(Request request);
+	PageParametersNg decodePageParameters(Request request);
 }

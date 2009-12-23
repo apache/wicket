@@ -34,6 +34,12 @@ public class MountMapper extends AbstractMapper
 	private final String[] mountSegments;
 	private final IMountedRequestMapper mapper;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param mapper
+	 */
 	public MountMapper(String mountPath, IMountedRequestMapper mapper)
 	{
 		Checks.argumentNotEmpty(mountPath, "mountPath");
@@ -43,6 +49,12 @@ public class MountMapper extends AbstractMapper
 		this.mapper = mapper;
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param mapper
+	 */
 	public MountMapper(String mountPath, IRequestMapper mapper)
 	{
 		Checks.argumentNotEmpty(mountPath, "mountPath");
@@ -52,6 +64,12 @@ public class MountMapper extends AbstractMapper
 		this.mapper = new UnmountedMapperAdapter(mapper);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param handler
+	 */
 	public MountMapper(String mountPath, IRequestHandler handler)
 	{
 		Checks.argumentNotEmpty(mountPath, "mountPath");
@@ -61,6 +79,9 @@ public class MountMapper extends AbstractMapper
 		mapper = new UnmountedRequestHandlerAdapter(handler);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	public int getCompatibilityScore(Request request)
 	{
 		if (urlStartsWith(request.getUrl(), mountSegments))
@@ -73,6 +94,11 @@ public class MountMapper extends AbstractMapper
 		}
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private Request dismountRequest(Request request)
 	{
 		Url dismountedUrl = new Url(request.getUrl());
@@ -80,7 +106,9 @@ public class MountMapper extends AbstractMapper
 		return request.requestWithUrl(dismountedUrl);
 	}
 
-
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 */
 	public final IRequestHandler mapRequest(Request request)
 	{
 		final Url url = request.getUrl();
@@ -103,10 +131,12 @@ public class MountMapper extends AbstractMapper
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
 	public Url mapHandler(IRequestHandler handler)
 	{
 		Mount mount = mapper.mapHandler(handler);
-
 		if (mount == null)
 		{
 			return null;
@@ -136,6 +166,4 @@ public class MountMapper extends AbstractMapper
 
 		return mount.getUrl();
 	}
-
-
 }

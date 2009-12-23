@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ng.request.handler.impl;
 
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.ng.request.handler.IPageProvider;
@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.Checks;
 public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 {
 	private final IPageProvider pageProvider;
-  
+
 	/**
 	 * Construct.
 	 * 
@@ -40,30 +40,41 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	 */
 	public BookmarkablePageRequestHandler(IPageProvider pageProvider)
 	{
-		
+
 		Checks.argumentNotNull(pageProvider, "pageProvider");
-		
+
 		this.pageProvider = pageProvider;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageClass()
+	 */
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageParameters()
+	 */
 	public PageParametersNg getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void respond(RequestCycle requestCycle)
 	{
 		// not used as BookmarkablePageRequestHandler is only used when generating URLs.
 		// However URL will never be resolved to BookmarkablePageRequestTarget
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void detach(RequestCycle requestCycle)
 	{
 	}
-
 }

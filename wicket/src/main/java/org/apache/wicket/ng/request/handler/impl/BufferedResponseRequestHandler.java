@@ -40,14 +40,18 @@ public class BufferedResponseRequestHandler implements IRequestHandler
 		this.bufferedWebResponse = bufferedWebResponse;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void detach(RequestCycle requestCycle)
 	{
-
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void respond(RequestCycle requestCycle)
 	{
 		bufferedWebResponse.writeTo((WebResponse)requestCycle.getResponse());
 	}
-
 }

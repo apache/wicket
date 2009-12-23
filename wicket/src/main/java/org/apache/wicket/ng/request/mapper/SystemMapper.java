@@ -59,6 +59,4 @@ public class SystemMapper implements IRequestMapper
 	{
 		return mapper.mapRequest(request);
 	}
-
-
 }

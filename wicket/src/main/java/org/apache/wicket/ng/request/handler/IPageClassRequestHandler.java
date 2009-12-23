@@ -17,8 +17,8 @@
 package org.apache.wicket.ng.request.handler;
 
 import org.apache.wicket.ng.request.IRequestHandler;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 
 /**
  * Request handler that works with page class.
@@ -32,10 +32,10 @@ public interface IPageClassRequestHandler extends IRequestHandler
 	 * 
 	 * @return page class
 	 */
-	public Class<? extends IRequestablePage> getPageClass();
-	
+	Class<? extends IRequestablePage> getPageClass();
+
 	/**
 	 * @return page parameters
 	 */
-	public PageParametersNg getPageParameters();
+	PageParametersNg getPageParameters();
 }

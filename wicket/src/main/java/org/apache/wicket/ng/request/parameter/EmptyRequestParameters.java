@@ -30,29 +30,37 @@ import org.apache.wicket.util.string.StringValue;
  */
 public class EmptyRequestParameters implements IRequestParameters
 {
+	/** Singleton instance. */
+	public static final EmptyRequestParameters INSTANCE = new EmptyRequestParameters();
 
+	/**
+	 * Construct.
+	 */
 	private EmptyRequestParameters()
 	{
 	}
 
 	/**
-	 * Singleton instance.
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterNames()
 	 */
-	public static final EmptyRequestParameters INSTANCE = new EmptyRequestParameters();
-
 	public Set<String> getParameterNames()
 	{
 		return Collections.emptySet();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValue(java.lang.String)
+	 */
 	public StringValue getParameterValue(String name)
 	{
 		return StringValue.valueOf((String)null);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValues(java.lang.String)
+	 */
 	public List<StringValue> getParameterValues(String name)
 	{
 		return null;
 	}
-
 }

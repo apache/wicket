@@ -30,22 +30,24 @@ import org.apache.wicket.util.lang.Checks;
 public class ResourceReferenceRequestHandler implements IRequestHandler
 {
 	private final ResourceReference resourceReference;
+
 	private final PageParametersNg pageParameters;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 * @param resourceReference
 	 * @param pageParameters
 	 */
-	public ResourceReferenceRequestHandler(ResourceReference resourceReference, PageParametersNg pageParameters)
+	public ResourceReferenceRequestHandler(ResourceReference resourceReference,
+		PageParametersNg pageParameters)
 	{
 		Checks.argumentNotNull(resourceReference, "resourceReference");
 
 		this.resourceReference = resourceReference;
 		this.pageParameters = pageParameters;
 	}
-	
+
 	/**
 	 * @return resource reference
 	 */
@@ -53,7 +55,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 	{
 		return resourceReference;
 	}
-	
+
 	/**
 	 * @return page parameters
 	 */
@@ -62,12 +64,17 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 		return pageParameters;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void detach(RequestCycle requestCycle)
 	{
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void respond(RequestCycle requestCycle)
 	{
 	}
-
 }

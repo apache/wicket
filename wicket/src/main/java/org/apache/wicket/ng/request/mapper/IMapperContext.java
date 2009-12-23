@@ -30,48 +30,48 @@ public interface IMapperContext extends IPageSource
 	/**
 	 * @return the namespace for Wicket URLs.
 	 */
-	public String getNamespace();
-	
+	String getNamespace();
+
 	/**
 	 * @return identifier for non bookmarkable URLs
 	 */
-	public String getPageIdentifier();
-	
+	String getPageIdentifier();
+
 	/**
 	 * @return identifier for bookmarkable URLs
 	 */
-	public String getBookmarkableIdentifier();
-	
+	String getBookmarkableIdentifier();
+
 	/**
 	 * @return identifier for resources
 	 */
-	public String getResourceIdentifier();
-	
+	String getResourceIdentifier();
+
 	/**
 	 * @return {@link ResourceReferenceRegistry}
 	 */
-	public ResourceReferenceRegistry getResourceReferenceRegistry();
-	
+	ResourceReferenceRegistry getResourceReferenceRegistry();
+
 	/**
 	 * Returns the listener interface name as string.
 	 * 
 	 * @param listenerInterface
 	 * @return listener interface name as string
 	 */
-	public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface);
-	
+	String requestListenerInterfaceToString(RequestListenerInterface listenerInterface);
+
 	/**
 	 * Returns listener interface for the name
 	 * 
 	 * @param interfaceName
 	 * @return listener interface
 	 */
-	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName);
-	
+	RequestListenerInterface requestListenerInterfaceFromString(String interfaceName);
+
 	/**
 	 * Returns the home page class.
 	 * 
 	 * @return home page class
 	 */
-	public Class<? extends IRequestablePage> getHomePageClass();
+	Class<? extends IRequestablePage> getHomePageClass();
 }

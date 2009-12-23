@@ -66,15 +66,114 @@ public final class Url implements Serializable
 	private final List<QueryParameter> parameters = new ArrayList<QueryParameter>();
 
 	/**
+	 * 
+	 * @param qp
+	 * @return query paramaters
+	 */
+	private static QueryParameter parseQueryParameter(final String qp)
+	{
+		if (qp.indexOf('=') == -1)
+		{
+			return new QueryParameter(decodeParameter(qp), "");
+		}
+		String parts[] = Strings.split(qp, '=');
+		if (parts.length == 0)
+		{
+			return new QueryParameter("", "");
+		}
+		else if (parts.length == 1)
+		{
+			return new QueryParameter("", decodeParameter(parts[0]));
+		}
+		else
+		{
+			return new QueryParameter(decodeParameter(parts[0]), decodeParameter(parts[1]));
+		}
+	}
+
+	/**
+	 * Parses the given URL string.
+	 * 
+	 * @param url
+	 * @return Url object
+	 */
+	public static Url parse(String url)
+	{
+		Checks.argumentNotNull(url, "url");
+
+		Url result = new Url();
+
+		String segments;
+		String query;
+
+		int qIndex = url.indexOf('?');
+
+		if (qIndex == -1)
+		{
+			segments = url;
+			query = "";
+		}
+		else
+		{
+			segments = url.substring(0, qIndex);
+			query = url.substring(qIndex + 1);
+		}
+
+		if (segments.length() > 0)
+		{
+
+			boolean removeLast = false;
+			if (segments.endsWith("/"))
+			{
+				// we need to append something and remove it after splitting
+				// because otherwise the
+				// trailing slashes will be lost
+				segments += "/x";
+				removeLast = true;
+			}
+
+			String segmentArray[] = Strings.split(segments, '/');
+
+			if (removeLast)
+			{
+				segmentArray[segmentArray.length - 1] = null;
+			}
+
+			for (String s : segmentArray)
+			{
+				if (s != null)
+				{
+					result.segments.add(decodeSegment(s));
+				}
+			}
+		}
+
+		if (query.length() > 0)
+		{
+			String queryArray[] = Strings.split(query, '&');
+			for (String s : queryArray)
+			{
+				result.parameters.add(parseQueryParameter(s));
+			}
+		}
+
+		return result;
+	};
+
+	/**
 	 * Construct.
 	 */
 	public Url()
 	{
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param string
+	 */
 	public Url(String string)
 	{
-
 	}
 
 	/**
@@ -263,6 +362,187 @@ public final class Url implements Serializable
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj instanceof Url == false)
+		{
+			return false;
+		}
+		Url rhs = (Url)obj;
+
+		return getSegments().equals(rhs.getSegments()) &&
+			getQueryParameters().equals(rhs.getQueryParameters());
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(getSegments(), getQueryParameters());
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @return encoded segment
+	 */
+	private static String encodeSegment(String string)
+	{
+		return WicketURLEncoder.PATH_INSTANCE.encode(string);
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @return decoded segment
+	 */
+	private static String decodeSegment(String string)
+	{
+		return WicketURLDecoder.PATH_INSTANCE.decode(string);
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @return encoded parameter
+	 */
+	private static String encodeParameter(String string)
+	{
+		return WicketURLEncoder.QUERY_INSTANCE.encode(string);
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @return decoded parameter
+	 */
+	private static String decodeParameter(String string)
+	{
+		return WicketURLDecoder.QUERY_INSTANCE.decode(string);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (String s : getSegments())
+		{
+			if (!first)
+			{
+				result.append('/');
+			}
+			first = false;
+			result.append(encodeSegment(s));
+		}
+
+		first = true;
+
+		for (QueryParameter p : getQueryParameters())
+		{
+			if (first)
+			{
+				result.append("?");
+				first = false;
+			}
+			else
+			{
+				result.append("&");
+			}
+			result.append(p.toString());
+		}
+
+		return result.toString();
+	}
+
+	/**
+	 * 
+	 * @return true if last segment contains a name and not something like "." or "..".
+	 */
+	private boolean isLastSegmentReal()
+	{
+		if (segments.isEmpty())
+		{
+			return false;
+		}
+		String last = segments.get(segments.size() - 1);
+		return last.length() > 0 && !".".equals(last) && !"..".equals(last);
+	}
+
+	/**
+	 * 
+	 * @return true if last segment is empty
+	 */
+	private boolean isLastSegmentEmpty()
+	{
+		if (segments.isEmpty())
+		{
+			return false;
+		}
+		String last = segments.get(segments.size() - 1);
+		return last.length() == 0;
+	}
+
+	/**
+	 * Concatenate the specified segments; The segments can be relative - begin with "." or "..".
+	 * 
+	 * @param segments
+	 */
+	public void concatSegments(List<String> segments)
+	{
+		boolean checkedLastSegment = false;
+
+		for (String s : segments)
+		{
+			if (".".equals(s))
+			{
+				continue;
+			}
+			else if ("..".equals(s) && isLastSegmentReal())
+			{
+				this.segments.remove(this.segments.size() - 1);
+			}
+			else
+			{
+				if (!checkedLastSegment)
+				{
+					if (isLastSegmentReal() || isLastSegmentEmpty())
+					{
+						this.segments.remove(this.segments.size() - 1);
+					}
+					checkedLastSegment = true;
+				}
+				this.segments.add(s);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void makeAbsolute()
+	{
+		if (isAbsolute())
+		{
+			return;
+		}
+
+		segments.add(null);
+	}
+
+	/**
 	 * Represents a single query parameter
 	 * 
 	 * @author Matej Knopp
@@ -310,6 +590,9 @@ public final class Url implements Serializable
 			return value;
 		}
 
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -326,12 +609,18 @@ public final class Url implements Serializable
 				Objects.equal(getValue(), rhs.getValue());
 		}
 
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode()
 		{
 			return Objects.hashCode(getName(), getValue());
 		}
 
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -344,236 +633,5 @@ public final class Url implements Serializable
 			}
 			return result.toString();
 		}
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj instanceof Url == false)
-		{
-			return false;
-		}
-		Url rhs = (Url)obj;
-
-		return getSegments().equals(rhs.getSegments()) &&
-			getQueryParameters().equals(rhs.getQueryParameters());
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Objects.hashCode(getSegments(), getQueryParameters());
-	}
-
-	private static String encodeSegment(String string)
-	{
-		return WicketURLEncoder.PATH_INSTANCE.encode(string);
-	}
-
-	private static String decodeSegment(String string)
-	{
-		return WicketURLDecoder.PATH_INSTANCE.decode(string);
-	}
-
-	private static String encodeParameter(String string)
-	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(string);
-	}
-
-	private static String decodeParameter(String string)
-	{
-		return WicketURLDecoder.QUERY_INSTANCE.decode(string);
-	}
-
-	@Override
-	public String toString()
-	{
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		for (String s : getSegments())
-		{
-			if (!first)
-			{
-				result.append('/');
-			}
-			first = false;
-			result.append(encodeSegment(s));
-		}
-
-		first = true;
-
-		for (QueryParameter p : getQueryParameters())
-		{
-			if (first)
-			{
-				result.append("?");
-				first = false;
-			}
-			else
-			{
-				result.append("&");
-			}
-			result.append(p.toString());
-		}
-
-		return result.toString();
-	}
-
-	private static QueryParameter parseQueryParameter(String qp)
-	{
-		if (qp.indexOf('=') == -1)
-		{
-			return new QueryParameter(decodeParameter(qp), "");
-		}
-		String parts[] = Strings.split(qp, '=');
-		if (parts.length == 0)
-		{
-			return new QueryParameter("", "");
-		}
-		else if (parts.length == 1)
-		{
-			return new QueryParameter("", decodeParameter(parts[0]));
-		}
-		else
-		{
-			return new QueryParameter(decodeParameter(parts[0]), decodeParameter(parts[1]));
-		}
-	}
-
-	/**
-	 * Parses the given URL string.
-	 * 
-	 * @param url
-	 * @return Url object
-	 */
-	public static Url parse(String url)
-	{
-		Checks.argumentNotNull(url, "url");
-
-		Url result = new Url();
-
-		String segments;
-		String query;
-
-		int qIndex = url.indexOf('?');
-
-		if (qIndex == -1)
-		{
-			segments = url;
-			query = "";
-		}
-		else
-		{
-			segments = url.substring(0, qIndex);
-			query = url.substring(qIndex + 1);
-		}
-
-		if (segments.length() > 0)
-		{
-
-			boolean removeLast = false;
-			if (segments.endsWith("/"))
-			{
-				// we need to append something and remove it after splitting
-				// because otherwise the
-				// trailing slashes will be lost
-				segments += "/x";
-				removeLast = true;
-			}
-
-			String segmentArray[] = Strings.split(segments, '/');
-
-			if (removeLast)
-			{
-				segmentArray[segmentArray.length - 1] = null;
-			}
-
-			for (String s : segmentArray)
-			{
-				if (s != null)
-				{
-					result.segments.add(decodeSegment(s));
-				}
-			}
-		}
-
-		if (query.length() > 0)
-		{
-			String queryArray[] = Strings.split(query, '&');
-			for (String s : queryArray)
-			{
-				result.parameters.add(parseQueryParameter(s));
-			}
-		}
-
-		return result;
-	};
-
-	private boolean isLastSegmentReal()
-	{
-		if (segments.isEmpty())
-		{
-			return false;
-		}
-		String last = segments.get(segments.size() - 1);
-		return last.length() > 0 && !".".equals(last) && !"..".equals(last);
-	}
-
-	private boolean isLastSegmentEmpty()
-	{
-		if (segments.isEmpty())
-		{
-			return false;
-		}
-		String last = segments.get(segments.size() - 1);
-		return last.length() == 0;
-	}
-
-	/**
-	 * Concatenate the specified segments; The segments can be relative - begin with "." or "..".
-	 * 
-	 * @param segments
-	 */
-	public void concatSegments(List<String> segments)
-	{
-		boolean checkedLastSegment = false;
-
-		for (String s : segments)
-		{
-			if (".".equals(s))
-			{
-				continue;
-			}
-			else if ("..".equals(s) && isLastSegmentReal())
-			{
-				this.segments.remove(this.segments.size() - 1);
-			}
-			else
-			{
-				if (!checkedLastSegment)
-				{
-					if (isLastSegmentReal() || isLastSegmentEmpty())
-					{
-						this.segments.remove(this.segments.size() - 1);
-					}
-					checkedLastSegment = true;
-				}
-				this.segments.add(s);
-			}
-		}
-	}
-
-	public void makeAbsolute()
-	{
-		if (isAbsolute())
-		{
-			return;
-		}
-
-		segments.add(null);
 	}
 }

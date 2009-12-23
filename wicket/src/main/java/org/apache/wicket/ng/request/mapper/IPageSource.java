@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 
 /**
  * Interface for objects that are capable of getting and creating page instance.
@@ -32,7 +32,7 @@ public interface IPageSource
 	 * @param pageId
 	 * @return page instance or <code>null</code> if the page does not exist.
 	 */
-	public IRequestablePage getPageInstance(int pageId);
+	IRequestablePage getPageInstance(int pageId);
 
 	/**
 	 * Creates new page instance of page with given class. The page should be marked as create
@@ -44,7 +44,7 @@ public interface IPageSource
 	 * @param pageParameters
 	 * @return new page instance
 	 */
-	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
+	IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters);
 
 }

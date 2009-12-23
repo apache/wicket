@@ -20,8 +20,8 @@ import java.lang.ref.WeakReference;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
@@ -54,10 +54,11 @@ import org.apache.wicket.util.lang.Checks;
 public class MountedMapper extends AbstractBookmarkableMapper
 {
 	private final IPageParametersEncoder pageParametersEncoder;
+
 	private final String[] mountSegments;
 
 	/** bookmarkable page class. */
-	protected final WeakReference<Class<? extends IRequestablePage>> pageClass;
+	private final WeakReference<Class<? extends IRequestablePage>> pageClass;
 
 	/**
 	 * Construct.
@@ -89,6 +90,9 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		this(mountPath, pageClass, new SimplePageParametersEncoder());
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.Request)
+	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
@@ -134,11 +138,18 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected PageParametersNg newPageParameters()
 	{
 		return new PageParametersNg();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#buildUrl(org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper.UrlInfo)
+	 */
 	@Override
 	protected Url buildUrl(UrlInfo info)
 	{
@@ -197,12 +208,18 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		return true;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
+	 */
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
 		return false;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
@@ -216,6 +233,9 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#checkPageClass(java.lang.Class)
+	 */
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{

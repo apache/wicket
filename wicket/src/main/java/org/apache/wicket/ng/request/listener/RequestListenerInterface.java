@@ -29,7 +29,6 @@ import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerExce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Base class for request listener interfaces.
  * 
@@ -37,9 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RequestListenerInterface
 {
-	/** Map from name to request listener interface */
-	private static final Map<String, RequestListenerInterface> interfaces = Collections.synchronizedMap(new HashMap<String, RequestListenerInterface>());
-
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(RequestListenerInterface.class);
 
@@ -55,6 +51,9 @@ public class RequestListenerInterface
 	{
 		return interfaces.get(interfaceName);
 	}
+
+	/** Map from name to request listener interface */
+	private static final Map<String, RequestListenerInterface> interfaces = Collections.synchronizedMap(new HashMap<String, RequestListenerInterface>());
 
 	/** The listener interface method */
 	private Method method;
@@ -76,7 +75,6 @@ public class RequestListenerInterface
 			throw new IllegalArgumentException("Class " + listenerInterfaceClass +
 				" must extend IRequestListener");
 		}
-
 
 		// Get interface methods
 		final Method[] methods = listenerInterfaceClass.getMethods();
@@ -216,7 +214,6 @@ public class RequestListenerInterface
 		}
 	}
 
-
 	/**
 	 * Method to call to register this interface for use
 	 */
@@ -234,7 +231,6 @@ public class RequestListenerInterface
 	{
 		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
 	}
-
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -265,6 +261,9 @@ public class RequestListenerInterface
 		// Save this interface method by the non-qualified class name
 		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
 
-		log.info("registered listener interface " + this);
+		if (log.isInfoEnabled())
+		{
+			log.info("registered listener interface " + this);
+		}
 	}
 }

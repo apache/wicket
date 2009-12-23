@@ -42,25 +42,24 @@ public interface IPageProvider
 	 * @throw {@link PageExpiredException} if the specified page could not have been found and the
 	 *        constructor used did not provide enough information to create new page instance
 	 */
-	public abstract IRequestablePage getPageInstance();
+	IRequestablePage getPageInstance();
 
 	/**
 	 * Returns {@link PageParametersNg} of the page.
 	 * 
 	 * @return page parameters
 	 */
-	public abstract PageParametersNg getPageParameters();
+	PageParametersNg getPageParameters();
 
 	/**
 	 * Returns class of the page.
 	 * 
 	 * @return page class
 	 */
-	public abstract Class<? extends IRequestablePage> getPageClass();
+	Class<? extends IRequestablePage> getPageClass();
 
 	/**
 	 * Detaches the page if it has been loaded.
 	 */
-	public abstract void detach();
-
+	void detach();
 }

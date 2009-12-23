@@ -18,13 +18,12 @@ package org.apache.wicket.ng.request.handler.impl;
 
 import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.request.IRequestHandler;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -38,6 +37,7 @@ import org.apache.wicket.util.lang.Checks;
 public class RenderPageRequestHandler implements IPageRequestHandler, IPageClassRequestHandler
 {
 	private final IPageProvider pageProvider;
+
 	private final RedirectPolicy redirectPolicy;
 
 	/**
@@ -109,30 +109,43 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 		return redirectPolicy;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageClass()
+	 */
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageParameters()
+	 */
 	public PageParametersNg getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void detach(RequestCycle requestCycle)
 	{
 		pageProvider.detach();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.IPageRequestHandler#getPage()
+	 */
 	public IRequestablePage getPage()
 	{
 		return pageProvider.getPageInstance();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		RenderPageRequestHandlerDelegate delegate = Application.get()
-			.getRenderPageRequestHandlerDelegate(this);
-		delegate.respond(requestCycle);
+		Application.get().getRenderPageRequestHandlerDelegate(this).respond(requestCycle);
 	}
 }

@@ -50,6 +50,9 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 		this.url = url;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterNames()
+	 */
 	public Set<String> getParameterNames()
 	{
 		Set<String> result = new HashSet<String>();
@@ -60,11 +63,17 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 		return Collections.unmodifiableSet(result);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValue(java.lang.String)
+	 */
 	public StringValue getParameterValue(String name)
 	{
 		return url.getQueryParameterValue(name);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValues(java.lang.String)
+	 */
 	public List<StringValue> getParameterValues(String name)
 	{
 		List<StringValue> values = null;

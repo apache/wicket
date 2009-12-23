@@ -59,7 +59,7 @@ public class PageInfo
 	{
 		Checks.argumentNotNull(page, "page");
 
-		this.pageId = page.getPageId();
+		pageId = page.getPageId();
 	}
 
 	/**
@@ -116,4 +116,4 @@ public class PageInfo
 			}
 		}
 	}
-};
+}

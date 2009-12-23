@@ -18,8 +18,8 @@ package org.apache.wicket.ng.request.mapper;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
@@ -73,6 +73,9 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		this(new SimplePageParametersEncoder());
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#buildUrl(org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper.UrlInfo)
+	 */
 	@Override
 	protected Url buildUrl(UrlInfo info)
 	{
@@ -86,6 +89,9 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.Request)
+	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
@@ -110,17 +116,22 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
+	 */
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
 		return true;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		// always return 0 here so that the mounts have higher priority
 		return 0;
 	}
-
 }

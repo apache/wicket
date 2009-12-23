@@ -48,10 +48,15 @@ import org.apache.wicket.util.lang.Checks;
 public class DefaultPageProvider implements IPageProvider
 {
 	private Integer renderCount;
+
 	private IPageSource pageSource;
+
 	private IRequestablePage pageInstance;
+
 	private Class<? extends IRequestablePage> pageClass;
+
 	private Integer pageId;
+
 	private PageParametersNg pageParameters;
 
 	/**
@@ -62,7 +67,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(int pageId, Integer renderCount)
+	public DefaultPageProvider(final int pageId, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		this.renderCount = renderCount;
@@ -78,7 +83,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(int pageId, Class<? extends IRequestablePage> pageClass,
+	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
 		Integer renderCount)
 	{
 		this(pageId, pageClass, new PageParametersNg(), renderCount);
@@ -95,8 +100,8 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(int pageId, Class<? extends IRequestablePage> pageClass,
-		PageParametersNg pageParameters, Integer renderCount)
+	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
+		final PageParametersNg pageParameters, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		setPageClass(pageClass);
@@ -111,8 +116,8 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param pageClass
 	 * @param pageParameters
 	 */
-	public DefaultPageProvider(Class<? extends IRequestablePage> pageClass,
-		PageParametersNg pageParameters)
+	public DefaultPageProvider(final Class<? extends IRequestablePage> pageClass,
+		final PageParametersNg pageParameters)
 	{
 		setPageClass(pageClass);
 		if (pageParameters != null)
@@ -192,11 +197,19 @@ public class DefaultPageProvider implements IPageProvider
 		}
 	}
 
+	/**
+	 * 
+	 * @return always false
+	 */
 	protected boolean prepareForRenderNewPage()
 	{
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected IPageSource getPageSource()
 	{
 		if (pageSource != null)
@@ -214,6 +227,14 @@ public class DefaultPageProvider implements IPageProvider
 		}
 	}
 
+	/**
+	 * 
+	 * @param pageId
+	 * @param pageClass
+	 * @param pageParameters
+	 * @param renderCount
+	 * @return
+	 */
 	private IRequestablePage getPageInstance(Integer pageId,
 		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
 		Integer renderCount)
@@ -283,6 +304,10 @@ public class DefaultPageProvider implements IPageProvider
 		this.pageSource = pageSource;
 	}
 
+	/**
+	 * 
+	 * @param pageClass
+	 */
 	private void setPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		Checks.argumentNotNull(pageClass, "pageClass");
@@ -290,6 +315,10 @@ public class DefaultPageProvider implements IPageProvider
 		this.pageClass = pageClass;
 	}
 
+	/**
+	 * 
+	 * @param pageParameters
+	 */
 	private void setPageParameters(PageParametersNg pageParameters)
 	{
 		Checks.argumentNotNull(pageParameters, "pageParameters");
@@ -297,6 +326,9 @@ public class DefaultPageProvider implements IPageProvider
 		this.pageParameters = pageParameters;
 	}
 
+	/**
+	 * 
+	 */
 	private void touchPageInstance()
 	{
 		// If there is application accessible from current thread touch

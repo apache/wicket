@@ -50,6 +50,9 @@ public class ResourceReferenceRegistry
 			this.variation = variation;
 		}
 
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -69,6 +72,9 @@ public class ResourceReferenceRegistry
 				Objects.equal(variation, that.variation);
 		}
 
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode()
 		{
@@ -77,6 +83,13 @@ public class ResourceReferenceRegistry
 	};
 
 	private final Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
+
+	/**
+	 * Construct.
+	 */
+	public ResourceReferenceRegistry()
+	{
+	}
 
 	/**
 	 * Registers the given {@link ResourceReference}.
@@ -106,22 +119,33 @@ public class ResourceReferenceRegistry
 		map.remove(key);
 	}
 
+	/**
+	 * 
+	 * @param scope
+	 * @param name
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @param strict
+	 * @param createIfNotFound
+	 * @return
+	 */
 	protected ResourceReference getResourceReference(Class<?> scope, String name, Locale locale,
 		String style, String variation, boolean strict, boolean createIfNotFound)
-		{
+	{
 		Key key = new Key(scope.getName(), name, locale, style, variation);
-			ResourceReference res = map.get(key);
-			if (strict || res != null)
-			{
-				return res;
-			}
-			else
-			{
+		ResourceReference res = map.get(key);
+		if (strict || res != null)
+		{
+			return res;
+		}
+		else
+		{
 			res = getResourceReference(scope, name, locale, style, null, true, false);
-				if (res == null)
-				{
+			if (res == null)
+			{
 				res = getResourceReference(scope, name, locale, null, variation, true, false);
-				}
+			}
 			if (res == null)
 			{
 				res = getResourceReference(scope, name, locale, null, null, true, false);
@@ -142,14 +166,14 @@ public class ResourceReferenceRegistry
 			{
 				res = getResourceReference(scope, name, null, null, null, true, false);
 			}
-				if (res == null && createIfNotFound)
-				{
+			if (res == null && createIfNotFound)
+			{
 				res = createDefaultResourceReference(scope, name, locale, style, variation);
-				}
-				return res;
 			}
+			return res;
 		}
-	
+	}
+
 	/**
 	 * Looks up resource reference with specified attributes. If the reference is not found and
 	 * <code>strict</code> is set to <code>false</code>, result of
@@ -178,11 +202,20 @@ public class ResourceReferenceRegistry
 			strict, false);
 		if (reference == null)
 		{
-			// TODO: Check the class static member for ResourceReferences and register those 
+			// TODO: Check the class static member for ResourceReferences and register those
 		}
 		return reference;
 	}
 
+	/**
+	 * 
+	 * @param scope
+	 * @param name
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @return
+	 */
 	protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
 		Locale locale, String style, String variation)
 	{

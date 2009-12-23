@@ -40,11 +40,20 @@ public class BufferedResponseMapper implements IRequestMapper
 	{
 	}
 
+	/**
+	 * 
+	 * @return session id
+	 */
 	protected String getSessionId()
 	{
 		return Session.get().getId();
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
 	protected boolean hasBufferedResponse(Url url)
 	{
 		String sessionId = getSessionId();
@@ -58,11 +67,21 @@ public class BufferedResponseMapper implements IRequestMapper
 		}
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
 
+	/**
+	 * 
+	 * @param original
+	 * @return
+	 */
 	private Request getRequest(Request original)
 	{
 		// The buffers are stored under "real" URL which can be different
@@ -80,6 +99,9 @@ public class BufferedResponseMapper implements IRequestMapper
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 */
 	public IRequestHandler mapRequest(Request request)
 	{
 		request = getRequest(request);
@@ -95,11 +117,17 @@ public class BufferedResponseMapper implements IRequestMapper
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	public int getCompatibilityScore(Request request)
 	{
 		request = getRequest(request);
@@ -113,5 +141,4 @@ public class BufferedResponseMapper implements IRequestMapper
 			return 0;
 		}
 	}
-
 }

@@ -46,7 +46,6 @@ import org.apache.wicket.ng.request.mapper.info.PageInfo;
  */
 public class PageInstanceMapper extends AbstractMapper
 {
-
 	/**
 	 * Construct.
 	 */
@@ -54,6 +53,9 @@ public class PageInstanceMapper extends AbstractMapper
 	{
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 */
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
@@ -94,6 +96,9 @@ public class PageInstanceMapper extends AbstractMapper
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		PageComponentInfo info = null;
@@ -133,6 +138,9 @@ public class PageInstanceMapper extends AbstractMapper
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	public int getCompatibilityScore(Request request)
 	{
 		// always return 0 here so that the mounts have higher priority

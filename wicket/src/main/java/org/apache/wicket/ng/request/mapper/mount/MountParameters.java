@@ -28,27 +28,43 @@ import org.apache.wicket.util.string.StringValue;
  * TODO docs and unit test
  * 
  * @author igor.vaynberg
- * 
  */
 public class MountParameters
 {
 	private final Map<String, String> map = new HashMap<String, String>();
 
+	/**
+	 * 
+	 * @param parameterName
+	 * @return
+	 */
 	public final StringValue getValue(String parameterName)
 	{
 		return StringValue.valueOf(map.get(parameterName));
 	}
 
+	/**
+	 * 
+	 * @param parameterName
+	 * @param value
+	 */
 	public final void setValue(String parameterName, StringValue value)
 	{
 		map.put(parameterName, value.toString());
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public final Collection<String> getParameterNames()
 	{
 		return map.keySet();
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
@@ -58,6 +74,9 @@ public class MountParameters
 		return result;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -78,11 +97,12 @@ public class MountParameters
 		return true;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return "MountParameters [" + map + "]";
 	}
-
-
 }

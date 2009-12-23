@@ -40,7 +40,19 @@ import org.apache.wicket.util.string.StringValue;
  */
 public class PageParametersNg implements Serializable
 {
+	private static class Entry implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private String key;
+		private String value;
+	};
+
 	private static final long serialVersionUID = 1L;
+
+	private List<String> indexedParameters;
+
+	private List<Entry> namedParameters;
 
 	/**
 	 * Construct.
@@ -54,28 +66,20 @@ public class PageParametersNg implements Serializable
 	 * 
 	 * @param copy
 	 */
-	public PageParametersNg(PageParametersNg copy)
+	public PageParametersNg(final PageParametersNg copy)
 	{
 		Checks.argumentNotNull(copy, "copy");
 
 		if (copy.indexedParameters != null)
+		{
 			indexedParameters = new ArrayList<String>(copy.indexedParameters);
+		}
 
 		if (copy.namedParameters != null)
+		{
 			namedParameters = new ArrayList<Entry>(copy.namedParameters);
+		}
 	}
-
-	private List<String> indexedParameters = null;
-
-	private static class Entry implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String key;
-		private String value;
-	};
-
-	private List<Entry> namedParameters = null;
 
 	/**
 	 * @return count of indexed parameters
@@ -94,7 +98,9 @@ public class PageParametersNg implements Serializable
 	public void setIndexedParameter(int index, Object object)
 	{
 		if (indexedParameters == null)
+		{
 			indexedParameters = new ArrayList<String>(index);
+		}
 
 		for (int i = indexedParameters.size(); i <= index; ++i)
 		{
@@ -118,7 +124,7 @@ public class PageParametersNg implements Serializable
 			}
 		}
 		return StringValue.valueOf((String)null);
-	};
+	}
 
 	/**
 	 * Removes indexed parameter on given index
@@ -161,7 +167,7 @@ public class PageParametersNg implements Serializable
 	 * @param name
 	 * @return parameter value
 	 */
-	public StringValue getNamedParameter(String name)
+	public StringValue getNamedParameter(final String name)
 	{
 		Checks.argumentNotNull(name, "name");
 
@@ -184,7 +190,7 @@ public class PageParametersNg implements Serializable
 	 * @param name
 	 * @return list of parameter values
 	 */
-	public List<StringValue> getNamedParameters(String name)
+	public List<StringValue> getNamedParameters(final String name)
 	{
 		Checks.argumentNotNull(name, "name");
 
@@ -211,7 +217,7 @@ public class PageParametersNg implements Serializable
 	 * 
 	 * @param name
 	 */
-	public void removeNamedParameter(String name)
+	public void removeNamedParameter(final String name)
 	{
 		Checks.argumentNotNull(name, "name");
 
@@ -234,7 +240,7 @@ public class PageParametersNg implements Serializable
 	 * @param name
 	 * @param value
 	 */
-	public void addNamedParameter(String name, Object value)
+	public void addNamedParameter(final String name, final Object value)
 	{
 		addNamedParameter(name, value, -1);
 	}
@@ -247,21 +253,27 @@ public class PageParametersNg implements Serializable
 	 * @param value
 	 * @param index
 	 */
-	public void addNamedParameter(String name, Object value, int index)
+	public void addNamedParameter(final String name, final Object value, final int index)
 	{
 		Checks.argumentNotNull(name, "name");
 		Checks.argumentNotNull(value, "value");
 
 		if (namedParameters == null)
+		{
 			namedParameters = new ArrayList<Entry>(1);
+		}
 		Entry entry = new Entry();
 		entry.key = name;
 		entry.value = value.toString();
 
 		if (index == -1)
+		{
 			namedParameters.add(entry);
+		}
 		else
+		{
 			namedParameters.add(index, entry);
+		}
 	}
 
 	/**
@@ -323,6 +335,9 @@ public class PageParametersNg implements Serializable
 		}
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{

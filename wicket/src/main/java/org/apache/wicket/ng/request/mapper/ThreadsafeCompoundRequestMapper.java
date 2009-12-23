@@ -37,28 +37,9 @@ import org.apache.wicket.ng.request.Url;
  */
 public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 {
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @seeorg.apache.wicket.request.ICompoundRequestMapper#register(org.apache.wicket.request.
-	 * IRequestMapper)
 	 */
-	public void register(IRequestMapper encoder)
-	{
-		mappers.add(0, encoder);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.apache.wicket.request.ICompoundRequestMapper#unregister(org.apache.wicket.request.
-	 * IRequestMapper)
-	 */
-	public void unregister(IRequestMapper encoder)
-	{
-		mappers.remove(encoder);
-	}
-
 	private static class EncoderWithSegmentsCount implements Comparable<EncoderWithSegmentsCount>
 	{
 		private final IRequestMapper mapper;
@@ -79,7 +60,32 @@ public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 		{
 			return mapper;
 		}
-	};
+	}
+
+	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<IRequestMapper>();
+
+	/**
+	 * Construct.
+	 */
+	public ThreadsafeCompoundRequestMapper()
+	{
+	}
+
+	/**
+	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#register(org.apache.wicket.ng.request.IRequestMapper)
+	 */
+	public void register(IRequestMapper encoder)
+	{
+		mappers.add(0, encoder);
+	}
+
+	/**
+	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#unregister(org.apache.wicket.ng.request.IRequestMapper)
+	 */
+	public void unregister(IRequestMapper encoder)
+	{
+		mappers.remove(encoder);
+	}
 
 	/**
 	 * Searches the registered {@link IRequestMapper}s to find one that can decode the
@@ -142,8 +148,6 @@ public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 		return null;
 	}
 
-	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<IRequestMapper>();
-
 	/**
 	 * The scope of the compound mapper is the highest score of the registered mappers.
 	 * 
@@ -158,5 +162,4 @@ public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 		}
 		return score;
 	}
-
 }

@@ -65,6 +65,9 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		this(new SimplePageParametersEncoder());
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 */
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
@@ -110,16 +113,29 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	protected Class<?> resolveClass(String name)
 	{
 		return Classes.resolveClass(name);
 	}
 
+	/**
+	 * 
+	 * @param scope
+	 * @return
+	 */
 	protected String getClassName(Class<?> scope)
 	{
 		return scope.getName();
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
@@ -149,10 +165,12 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	public int getCompatibilityScore(Request request)
 	{
 		// always return 0 here so that the mounts have higher priority
 		return 0;
 	}
-
 }

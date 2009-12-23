@@ -33,7 +33,7 @@ public interface IRequestParameters
 	 * 
 	 * @return list of parameter names
 	 */
-	public Set<String> getParameterNames();
+	Set<String> getParameterNames();
 
 	/**
 	 * Returns single value for parameter with specified name. This method always returns non-null
@@ -45,7 +45,7 @@ public interface IRequestParameters
 	 *            parameter name
 	 * @return {@link StringValue} wrapping the actual value
 	 */
-	public StringValue getParameterValue(String name);
+	StringValue getParameterValue(String name);
 
 	/**
 	 * Returns list of values for parameter with specified name. If the parameter does not exist
@@ -56,5 +56,5 @@ public interface IRequestParameters
 	 * @return list of all values for given parameter or <code>null</code> if parameter does not
 	 *         exist
 	 */
-	public List<StringValue> getParameterValues(String name);
+	List<StringValue> getParameterValues(String name);
 }

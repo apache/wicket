@@ -27,23 +27,33 @@ import org.apache.wicket.ng.request.Url;
  * TODO javadoc
  * 
  * @author igor.vaynberg
- * 
  */
 class UnmountedMapperAdapter implements IMountedRequestMapper
 {
 	private final IRequestMapper mapper;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param mapper
+	 */
 	public UnmountedMapperAdapter(IRequestMapper mapper)
 	{
 		super();
 		this.mapper = mapper;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 */
 	public int getCompatibilityScore(Request request)
 	{
 		return mapper.getCompatibilityScore(request);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
 	public Mount mapHandler(IRequestHandler requestHandler)
 	{
 		Url url = mapper.mapHandler(requestHandler);
@@ -54,6 +64,10 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.Request,
+	 *      org.apache.wicket.ng.request.mapper.mount.MountParameters)
+	 */
 	public IRequestHandler mapRequest(Request request, MountParameters mountParams)
 	{
 		return mapper.mapRequest(request);

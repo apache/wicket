@@ -31,13 +31,56 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ComponentInfo
 {
+	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
+	private static final char SEPARATOR = '-';
+
+	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
+		"]]]]";
+
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 */
+	private static String encodeComponentPath(String path)
+	{
+		if (path != null)
+		{
+			path = path.replace("" + SEPARATOR, TMP_PLACEHOLDER);
+			path = path.replace(':', SEPARATOR);
+			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR + SEPARATOR);
+			return path;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 */
+	private static String decodeComponentPath(String path)
+	{
+		if (path != null)
+		{
+			path = path.replace("" + SEPARATOR + SEPARATOR, TMP_PLACEHOLDER);
+			path = path.replace(SEPARATOR, ':');
+			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR);
+			return path;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	private final String listenerInterface;
 	private final String componentPath;
 	private final Integer behaviorIndex;
 	private final Integer renderCount;
-
-	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
-	private static final char SEPARATOR = '-';
 
 	/**
 	 * Construct.
@@ -82,7 +125,7 @@ public class ComponentInfo
 	{
 		return behaviorIndex;
 	}
-	
+
 	/**
 	 * 
 	 * @return render count
@@ -92,50 +135,20 @@ public class ComponentInfo
 		return renderCount;
 	}
 
-	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
-		"]]]]";
-
-	private static String encodeComponentPath(String path)
-	{
-		if (path != null)
-		{
-			path = path.replace("" + SEPARATOR, TMP_PLACEHOLDER);
-			path = path.replace(':', SEPARATOR);
-			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR + SEPARATOR);
-			return path;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	private static String decodeComponentPath(String path)
-	{
-		if (path != null)
-		{
-			path = path.replace("" + SEPARATOR + SEPARATOR, TMP_PLACEHOLDER);
-			path = path.replace(SEPARATOR, ':');
-			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR);
-			return path;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
-		
+
 		if (renderCount != null)
 		{
 			result.append(renderCount);
 			result.append(BEHAVIOR_INDEX_SEPARATOR);
 		}
-		
+
 		result.append(listenerInterface);
 
 		if (behaviorIndex != null)
@@ -170,7 +183,7 @@ public class ComponentInfo
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Parses the given string.
 	 * 
@@ -204,7 +217,7 @@ public class ComponentInfo
 
 			Integer behaviorIndex = null;
 			Integer renderCount = null;
-			
+
 			String listenerParts[] = Strings.split(listenerInterface, BEHAVIOR_INDEX_SEPARATOR);
 			if (listenerParts.length == 2)
 			{
@@ -216,7 +229,7 @@ public class ComponentInfo
 				else if (isNumber(listenerParts[1]))
 				{
 					listenerInterface = listenerParts[0];
-					behaviorIndex = Integer.valueOf(listenerParts[1]);									
+					behaviorIndex = Integer.valueOf(listenerParts[1]);
 				}
 				else
 				{
@@ -241,5 +254,4 @@ public class ComponentInfo
 			return new ComponentInfo(renderCount, listenerInterface, componentPath, behaviorIndex);
 		}
 	}
-
 }

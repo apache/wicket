@@ -34,17 +34,19 @@ import org.apache.wicket.util.lang.Checks;
  */
 public class UrlRenderer
 {
+	private Url baseUrl;
+
 	/**
 	 * Construct.
 	 * 
 	 * @param base
 	 *            base Url. All generated Urls will be relative to this Url.
 	 */
-	public UrlRenderer(Url base)
+	public UrlRenderer(final Url base)
 	{
 		Checks.argumentNotNull(base, "base");
 
-		this.baseUrl = base;
+		baseUrl = base;
 	}
 
 	/**
@@ -53,12 +55,12 @@ public class UrlRenderer
 	 * @param base
 	 * @return original base Url
 	 */
-	public Url setBaseUrl(Url base)
+	public Url setBaseUrl(final Url base)
 	{
 		Checks.argumentNotNull(base, "base");
-		
-		Url original = this.baseUrl;
-		this.baseUrl = base;
+
+		Url original = baseUrl;
+		baseUrl = base;
 		return original;
 	}
 
@@ -72,15 +74,13 @@ public class UrlRenderer
 		return baseUrl;
 	}
 
-	private Url baseUrl;
-
 	/**
 	 * Renders the Url relative to currently set Base Url.
 	 * 
 	 * @param url
 	 * @return Url rendered as string
 	 */
-	public String renderUrl(Url url)
+	public String renderUrl(final Url url)
 	{
 		Checks.argumentNotNull(url, "url");
 
@@ -94,11 +94,11 @@ public class UrlRenderer
 			List<String> urlSegments = new ArrayList<String>(url.getSegments());
 
 			List<String> newSegments = new ArrayList<String>();
-			
+
 			int common = 0;
-			
+
 			String last = null;
-			
+
 			for (String s : baseUrlSegments)
 			{
 				if (!urlSegments.isEmpty() && s.equals(urlSegments.get(0)))
@@ -107,14 +107,14 @@ public class UrlRenderer
 					last = urlSegments.remove(0);
 				}
 			}
-			
+
 			// we want the new URL to have at least one segment (other than possible ../)
 			if (last != null && (urlSegments.isEmpty() || baseUrlSegments.size() == common))
 			{
 				--common;
 				urlSegments.add(0, last);
 			}
-			
+
 			for (int i = common + 1; i < baseUrlSegments.size(); ++i)
 			{
 				newSegments.add("..");

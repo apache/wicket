@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
  */
 public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandlerDelegate
 {
+	private static Logger logger = LoggerFactory.getLogger(WebRenderPageRequestHandlerDelegate.class);
+
 	/**
 	 * Construct.
 	 * 
@@ -56,41 +58,74 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		return getPageProvider().getPageInstance();
 	}
 
+	/**
+	 * 
+	 * @return true if render happens with one pass
+	 */
 	private boolean isOnePassRender()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean isRedirectToRender()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean isRedirectToBuffer()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
+	/**
+	 * 
+	 */
 	private void renderPage()
 	{
 		getPage().renderPage();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected String getSessionId()
 	{
 		return Session.get().getId();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	protected boolean isSessionTemporary()
 	{
 		return Session.get().isTemporary();
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @param response
+	 */
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
 	{
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
@@ -136,6 +171,11 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		}
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @param requestCycle
+	 */
 	private void redirectTo(Url url, RequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
@@ -143,6 +183,9 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		response.redirect(relativeUrl);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 */
 	@Override
 	public void respond(RequestCycle requestCycle)
 	{
@@ -261,6 +304,4 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		// TODO Make sure this is a sane default value (if not make it configurable)
 		return true;
 	}
-
-	private static Logger logger = LoggerFactory.getLogger(WebRenderPageRequestHandlerDelegate.class);
 }

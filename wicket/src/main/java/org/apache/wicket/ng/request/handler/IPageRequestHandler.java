@@ -30,5 +30,5 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * 
 	 * @return page instance
 	 */
-	public IRequestablePage getPage();
+	IRequestablePage getPage();
 }

@@ -35,8 +35,11 @@ import org.apache.wicket.ng.request.IRequestMapper;
 public final class RequestCycleContext
 {
 	private Request request;
+
 	private Response response;
+
 	private IRequestMapper requestMapper;
+
 	private IExceptionMapper exceptionMapper;
 
 	/**
@@ -120,6 +123,4 @@ public final class RequestCycleContext
 	{
 		this.exceptionMapper = exceptionMapper;
 	}
-
-
 }

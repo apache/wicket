@@ -48,6 +48,9 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 		this.parameters = parameters;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterNames()
+	 */
 	public Set<String> getParameterNames()
 	{
 		Set<String> result = new HashSet<String>();
@@ -58,6 +61,9 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 		return Collections.unmodifiableSet(result);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValue(java.lang.String)
+	 */
 	public StringValue getParameterValue(String name)
 	{
 		for (IRequestParameters p : parameters)
@@ -71,6 +77,9 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 		return StringValue.valueOf((String)null);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestParameters#getParameterValues(java.lang.String)
+	 */
 	public List<StringValue> getParameterValues(String name)
 	{
 		List<StringValue> result = new ArrayList<StringValue>();
@@ -98,5 +107,4 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 			return Collections.unmodifiableList(result);
 		}
 	}
-
 }

@@ -20,8 +20,8 @@ import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
@@ -43,12 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractBookmarkableMapper extends AbstractMapper
 {
-	/**
-	 * Construct.
-	 */
-	public AbstractBookmarkableMapper()
-	{
-	}
+	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 
 	/**
 	 * Represents information stored in URL.
@@ -107,6 +102,13 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	}
 
 	/**
+	 * Construct.
+	 */
+	public AbstractBookmarkableMapper()
+	{
+	}
+
+	/**
 	 * Parse the given request to an {@link UrlInfo} instance.
 	 * 
 	 * @param request
@@ -140,6 +142,12 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 */
 	public abstract int getCompatibilityScore(Request request);
 
+	/**
+	 * 
+	 * @param pageClass
+	 * @param pageParameters
+	 * @return
+	 */
 	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
 		PageParametersNg pageParameters)
 	{
@@ -148,6 +156,14 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
+	/**
+	 * 
+	 * @param pageInfo
+	 * @param pageClass
+	 * @param pageParameters
+	 * @param renderCount
+	 * @return
+	 */
 	private IRequestHandler processHybrid(PageInfo pageInfo,
 		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
 		Integer renderCount)
@@ -158,6 +174,13 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
+	/**
+	 * 
+	 * @param pageComponentInfo
+	 * @param pageClass
+	 * @param pageParameters
+	 * @return
+	 */
 	private IRequestHandler processListener(PageComponentInfo pageComponentInfo,
 		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
 	{
@@ -179,11 +202,18 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		}
 		else
 		{
-			logger.warn("Unknown listener interface '" + componentInfo.getListenerInterface() + "'");
+			if (logger.isWarnEnabled())
+			{
+				logger.warn("Unknown listener interface '" + componentInfo.getListenerInterface() +
+					"'");
+			}
 			return null;
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 */
 	public IRequestHandler mapRequest(Request request)
 	{
 		UrlInfo urlInfo = parseRequest(request);
@@ -217,12 +247,20 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param pageClass
+	 * @return
+	 */
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		return true;
 	}
 
-	public Url mapHandler(IRequestHandler requestHandler)
+	/**
+	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 */
+	public Url mapHandler(final IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof BookmarkablePageRequestHandler)
 		{
@@ -296,7 +334,4 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 
 		return null;
 	}
-
-
-	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 }

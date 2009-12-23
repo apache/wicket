@@ -21,8 +21,8 @@ import org.apache.wicket.ng.Application;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
@@ -37,6 +37,17 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractMapper implements IRequestMapper
 {
+	/**
+	 * Construct.
+	 */
+	public AbstractMapper()
+	{
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	protected IMapperContext getContext()
 	{
 		return Application.get().getEncoderContext();
@@ -193,7 +204,8 @@ public abstract class AbstractMapper implements IRequestMapper
 	}
 
 	/**
-	 * Extracts {@link PageParametersNg} from the URL using the given {@link IPageParametersEncoder}.
+	 * Extracts {@link PageParametersNg} from the URL using the given {@link IPageParametersEncoder}
+	 * .
 	 * 
 	 * @param request
 	 * @param segmentsToSkip
@@ -291,5 +303,4 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 		return res;
 	}
-
 }

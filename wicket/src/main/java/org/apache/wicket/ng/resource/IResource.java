@@ -136,12 +136,12 @@ public interface IResource extends Serializable
 		{
 			return parameters;
 		}
-	};
+	}
 
 	/**
 	 * Renders this resource to response using the provided attributes.
 	 * 
 	 * @param attributes
 	 */
-	public void respond(Attributes attributes);
+	void respond(Attributes attributes);
 }

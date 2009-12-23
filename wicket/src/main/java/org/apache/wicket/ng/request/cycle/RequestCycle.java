@@ -27,8 +27,8 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
@@ -54,14 +54,58 @@ import org.slf4j.LoggerFactory;
  */
 public class RequestCycle extends RequestHandlerStack
 {
-	private final Request request;
+	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
-	private UrlRenderer urlRenderer;
+	/**
+	 * Custom callback invoked on request cycle detach. Detach callbacks are invoked after all
+	 * {@link IRequestHandler}s are detached.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public interface DetachCallback
+	{
+		/**
+		 * Invoked on request cycle detach.
+		 * 
+		 * @param requestCycle
+		 */
+		public void onDetach(RequestCycle requestCycle);
+	};
+
+	/**
+	 * Returns request cycle associated with current thread.
+	 * 
+	 * @return request cycle instance or <code>null</code> if no request cycle is associated with
+	 *         current thread.
+	 */
+	public static RequestCycle get()
+	{
+		return ThreadContext.getRequestCycle();
+	}
+
+	/**
+	 * 
+	 * @param requestCycle
+	 */
+	private static void set(RequestCycle requestCycle)
+	{
+		ThreadContext.setRequestCycle(requestCycle);
+	}
+
+	private final Request request;
 
 	private final Response originalResponse;
 
 	private final IRequestMapper requestMapper;
+
 	private final IExceptionMapper exceptionMapper;
+
+	private final List<DetachCallback> detachCallbacks = new ArrayList<DetachCallback>();
+
+	private UrlRenderer urlRenderer;
+
+	/** MetaDataEntry array. */
+	private MetaDataEntry<?>[] metaData;
 
 	/**
 	 * Construct.
@@ -85,6 +129,10 @@ public class RequestCycle extends RequestHandlerStack
 		exceptionMapper = context.getExceptionMapper();
 	}
 
+	/**
+	 * 
+	 * @return a new url renderer
+	 */
 	protected UrlRenderer newUrlRenderer()
 	{
 		// All URLs will be rendered relative to current request (can be overriden afterwards)
@@ -195,7 +243,12 @@ public class RequestCycle extends RequestHandlerStack
 		return result;
 	}
 
-	private void executeExceptionRequestHandler(IRequestHandler handler, int retryCount)
+	/**
+	 * 
+	 * @param handler
+	 * @param retryCount
+	 */
+	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
 	{
 		try
 		{
@@ -222,7 +275,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param e
 	 * @return RequestHandler instance
 	 */
-	protected IRequestHandler handleException(Exception e)
+	protected IRequestHandler handleException(final Exception e)
 	{
 		return exceptionMapper.map(e);
 	}
@@ -235,14 +288,14 @@ public class RequestCycle extends RequestHandlerStack
 		return request;
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.cycle.RequestHandlerStack#getRequestCycle()
+	 */
 	@Override
 	protected RequestCycle getRequestCycle()
 	{
 		return this;
 	}
-
-	/** MetaDataEntry array. */
-	private MetaDataEntry<?>[] metaData;
 
 	/**
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
@@ -278,8 +331,6 @@ public class RequestCycle extends RequestHandlerStack
 		return key.get(metaData);
 	}
 
-	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
-
 	/**
 	 * Returns URL for the request handler or <code>null</code> if the handler couldn't have been
 	 * encoded.
@@ -314,6 +365,9 @@ public class RequestCycle extends RequestHandlerStack
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.cycle.RequestHandlerStack#detach()
+	 */
 	@Override
 	public void detach()
 	{
@@ -349,40 +403,6 @@ public class RequestCycle extends RequestHandlerStack
 	public void register(DetachCallback detachCallback)
 	{
 		detachCallbacks.add(detachCallback);
-	};
-
-	private final List<DetachCallback> detachCallbacks = new ArrayList<DetachCallback>();
-
-	/**
-	 * Custom callback invoked on request cycle detach. Detach callbacks are invoked after all
-	 * {@link IRequestHandler}s are detached.
-	 * 
-	 * @author Matej Knopp
-	 */
-	public interface DetachCallback
-	{
-		/**
-		 * Invoked on request cycle detach.
-		 * 
-		 * @param requestCycle
-		 */
-		public void onDetach(RequestCycle requestCycle);
-	};
-
-	/**
-	 * Returns request cycle associated with current thread.
-	 * 
-	 * @return request cycle instance or <code>null</code> if no request cycle is associated with
-	 *         current thread.
-	 */
-	public static RequestCycle get()
-	{
-		return ThreadContext.getRequestCycle();
-	}
-
-	private static void set(RequestCycle requestCycle)
-	{
-		ThreadContext.setRequestCycle(requestCycle);
 	}
 
 	/**

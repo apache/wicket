@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.util.lang.Checks;
 
 /**
- * Extension of {@link DefaultPageProvider} that is also capable of providing a Component belonging to the
- * page.
+ * Extension of {@link DefaultPageProvider} that is also capable of providing a Component belonging
+ * to the page.
  * 
  * @see DefaultPageProvider
  * 
@@ -32,6 +32,7 @@ import org.apache.wicket.util.lang.Checks;
 public class PageAndComponentProvider extends DefaultPageProvider
 {
 	private IRequestableComponent component;
+
 	private String componentPath;
 
 	/**
@@ -81,7 +82,8 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	 * @param pageClass
 	 * @param componentPath
 	 */
-	public PageAndComponentProvider(Class<? extends IRequestablePage> pageClass, String componentPath)
+	public PageAndComponentProvider(Class<? extends IRequestablePage> pageClass,
+		String componentPath)
 	{
 		super(pageClass);
 		setComponentPath(componentPath);
@@ -131,6 +133,9 @@ public class PageAndComponentProvider extends DefaultPageProvider
 		setComponentPath(componentPath);
 	}
 
+	/**
+	 * @see org.apache.wicket.ng.request.handler.DefaultPageProvider#prepareForRenderNewPage()
+	 */
 	@Override
 	protected boolean prepareForRenderNewPage()
 	{
@@ -174,6 +179,10 @@ public class PageAndComponentProvider extends DefaultPageProvider
 		}
 	}
 
+	/**
+	 * 
+	 * @param componentPath
+	 */
 	private void setComponentPath(String componentPath)
 	{
 		Checks.argumentNotNull(componentPath, "componentPath");

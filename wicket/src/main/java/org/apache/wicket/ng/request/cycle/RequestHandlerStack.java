@@ -32,6 +32,15 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class RequestHandlerStack
 {
+	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
+
+	// we need both Queue and List interfaces
+	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<IRequestHandler>();
+
+	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<IRequestHandler>();
+
+	private IRequestHandler scheduledAfterCurrent = null;
+
 	private Response response;
 
 	/**
@@ -44,12 +53,7 @@ public abstract class RequestHandlerStack
 		this.response = response;
 	}
 
-	// we need both Queue and List interfaces
-	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<IRequestHandler>();
-
-	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<IRequestHandler>();
-
-	private IRequestHandler scheduledAfterCurrent = null;
+	protected abstract RequestCycle getRequestCycle();
 
 	/**
 	 * Returns currently active {@link IRequestHandler}.
@@ -124,8 +128,8 @@ public abstract class RequestHandlerStack
 
 	/**
 	 * Replaces the currently executed {@link IRequestHandler} with new {@link IRequestHandler}. The
-	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler} is
-	 * executed.
+	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler}
+	 * is executed.
 	 * 
 	 * @param handler
 	 */
@@ -168,38 +172,6 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Exception to stop current request handler and execute a new one.
-	 * 
-	 * @author Matej Knopp
-	 */
-	public static class ReplaceHandlerException extends RuntimeException
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final boolean removeAll;
-		private final IRequestHandler replacementRequestHandler;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param replacementRequestHandler
-		 * @param removeAll
-		 */
-		public ReplaceHandlerException(IRequestHandler replacementRequestHandler, boolean removeAll)
-		{
-			this.replacementRequestHandler = replacementRequestHandler;
-			this.removeAll = removeAll;
-		}
-
-		@Override
-		public synchronized Throwable fillInStackTrace()
-		{
-			// don't do anything here
-			return null;
-		}
-	};
-
-	/**
 	 * Returns the active {@link Response}.
 	 * 
 	 * @return response object.
@@ -211,7 +183,8 @@ public abstract class RequestHandlerStack
 
 	/**
 	 * Replaces current {@link Response} with new {@link Response} instance. The original response
-	 * is always restored after the {@link IRequestHandler#respond(RequestCycle)} method is finished.
+	 * is always restored after the {@link IRequestHandler#respond(RequestCycle)} method is
+	 * finished.
 	 * 
 	 * @param response
 	 * @return Response being replaced.
@@ -222,8 +195,6 @@ public abstract class RequestHandlerStack
 		this.response = response;
 		return current;
 	}
-
-	protected abstract RequestCycle getRequestCycle();
 
 	/**
 	 * Detaches all {@link IRequestHandler}s.
@@ -252,5 +223,39 @@ public abstract class RequestHandlerStack
 		}
 	}
 
-	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
+	/**
+	 * Exception to stop current request handler and execute a new one.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static class ReplaceHandlerException extends RuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final boolean removeAll;
+
+		private final IRequestHandler replacementRequestHandler;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param replacementRequestHandler
+		 * @param removeAll
+		 */
+		public ReplaceHandlerException(IRequestHandler replacementRequestHandler, boolean removeAll)
+		{
+			this.replacementRequestHandler = replacementRequestHandler;
+			this.removeAll = removeAll;
+		}
+
+		/**
+		 * @see java.lang.Throwable#fillInStackTrace()
+		 */
+		@Override
+		public synchronized Throwable fillInStackTrace()
+		{
+			// don't do anything here
+			return null;
+		}
+	};
 }

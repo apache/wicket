@@ -64,5 +64,4 @@ public class ComponentNotFoundException extends WicketRuntimeException
 	{
 		super(cause);
 	}
-
 }

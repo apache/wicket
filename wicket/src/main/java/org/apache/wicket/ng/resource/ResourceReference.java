@@ -108,6 +108,9 @@ public abstract class ResourceReference implements Serializable
 		return variation;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -127,6 +130,9 @@ public abstract class ResourceReference implements Serializable
 			Objects.equal(variation, that.variation);
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
