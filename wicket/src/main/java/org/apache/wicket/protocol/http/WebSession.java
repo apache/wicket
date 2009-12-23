@@ -231,6 +231,20 @@ public class WebSession extends Session
 	}
 
 	/**
+	 * Cookie based logins (remember me) may not rely on putting username and password into the
+	 * cookie but something else that safely identifies the user. This method is meant to support
+	 * these use cases.
+	 * 
+	 * @see #authenticate(String, String)
+	 * 
+	 * @param value
+	 */
+	public final void signIn(boolean value)
+	{
+		signedIn = value;
+	}
+
+	/**
 	 * Note: You must subclass WebSession and implement your own. We didn't want to make it abstract
 	 * to force every application to implement it. Instead we throw an exception.
 	 * 
