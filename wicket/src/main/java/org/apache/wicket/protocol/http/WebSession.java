@@ -235,11 +235,14 @@ public class WebSession extends Session
 	 * cookie but something else that safely identifies the user. This method is meant to support
 	 * these use cases.
 	 * 
+	 * It is protected (and not public) to enforce that cookie based authentication gets implemented
+	 * in a subclass (like you need to subclass authenticate() for 'normal' authentication).
+	 * 
 	 * @see #authenticate(String, String)
 	 * 
 	 * @param value
 	 */
-	public final void signIn(boolean value)
+	protected final void signIn(boolean value)
 	{
 		signedIn = value;
 	}
