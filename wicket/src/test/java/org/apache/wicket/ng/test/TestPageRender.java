@@ -65,7 +65,7 @@ public class TestPageRender extends TestCase
 	public void testRender1()
 	{
 		// Store current ThreadContext
-		ThreadContext context = ThreadContext.getAndClean();
+		ThreadContext context = ThreadContext.detach();
 
 		// Create MockApplication
 		MockApplication app = new MockApplication();

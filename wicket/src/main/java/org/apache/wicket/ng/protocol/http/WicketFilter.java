@@ -65,15 +65,21 @@ import org.w3c.dom.NodeList;
  */
 public class WicketFilter implements Filter
 {
-	/**
-	 * The name of the root path parameter that specifies the root dir of the app.
-	 */
+	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
+
+	/** The name of the root path parameter that specifies the root dir of the app. */
 	public static final String FILTER_MAPPING_PARAM = "filterMappingUrlPattern";
 
-	/**
-	 * The name of the context parameter that specifies application factory class
-	 */
+	/** The name of the context parameter that specifies application factory class */
 	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
+
+	private WebApplication webApplication;
+
+	private FilterConfig filterConfig;
+
+	private String filterPath;
+
+	private final boolean servletMode = false;
 
 	/**
 	 * Checks if the request is for home page and lacks trailing slash. If necessary redirects to
@@ -122,6 +128,10 @@ public class WicketFilter implements Filter
 		return true;
 	}
 
+	/**
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException
 	{
@@ -141,7 +151,6 @@ public class WicketFilter implements Filter
 
 				RequestCycle requestCycle = webApplication.createRequestCycle(req, resp);
 
-
 				if (!requestCycle.processRequestAndDetach())
 				{
 					chain.doFilter(request, response);
@@ -153,8 +162,6 @@ public class WicketFilter implements Filter
 			ThreadContext.detach();
 		}
 	}
-
-	private WebApplication webApplication;
 
 	/**
 	 * Creates the web application factory instance.
@@ -211,6 +218,9 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
@@ -240,6 +250,9 @@ public class WicketFilter implements Filter
 		return filterConfig;
 	}
 
+	/**
+	 * 
+	 */
 	private void initFilterPath()
 	{
 		InputStream is = filterConfig.getServletContext().getResourceAsStream("/WEB-INF/web.xml");
@@ -268,114 +281,13 @@ public class WicketFilter implements Filter
 		}
 	};
 
-	private FilterConfig filterConfig;
-	private String filterPath;
-
-	private final boolean servletMode = false;
-
-	// private String getFilterPath(String filterName, InputStream is) throws ServletException
-	// {
-	// String prefix = servletMode ? "servlet" : "filter";
-	// String mapping = prefix + "-mapping";
-	// String name = prefix + "-name";
-	//
-	// // Filter mappings look like this:
-	// //
-	// // <filter-mapping> <filter-name>WicketFilter</filter-name>
-	// // <url-pattern>/*</url-pattern> <...> <filter-mapping>
-	// try
-	// {
-	// ArrayList<String> urlPatterns = new ArrayList<String>();
-	// XmlPullParser parser = new XmlPullParser();
-	// parser.parse(is);
-	//
-	// while (true)
-	// {
-	// XmlTag elem;
-	// do
-	// {
-	// elem = (XmlTag)parser.nextTag();
-	// }
-	// while (elem != null && (!(elem.getName().equals(mapping) && elem.isOpen())));
-	//
-	// if (elem == null)
-	// {
-	// break;
-	// }
-	//
-	// String encounteredFilterName = null, urlPattern = null;
-	//
-	// do
-	// {
-	// elem = (XmlTag)parser.nextTag();
-	// if (elem.isOpen())
-	// {
-	// parser.setPositionMarker();
-	// }
-	// else if (elem.isClose() && elem.getName().equals(name))
-	// {
-	// encounteredFilterName = parser.getInputFromPositionMarker(elem.getPos())
-	// .toString()
-	// .trim();
-	// }
-	// else if (elem.isClose() && elem.getName().equals("url-pattern"))
-	// {
-	// urlPattern = parser.getInputFromPositionMarker(elem.getPos())
-	// .toString()
-	// .trim();
-	// }
-	// }
-	// while (urlPattern == null || encounteredFilterName == null);
-	//
-	// if (filterName.equals(encounteredFilterName))
-	// {
-	// urlPatterns.add(urlPattern);
-	// }
-	// }
-	//
-	// String prefixUppered = Character.toUpperCase(prefix.charAt(0)) + prefix.substring(1);
-	//
-	// // By the time we get here, we have a list of urlPatterns we match
-	// // this filter against.
-	// // In all likelihood, we will only have one. If we have none, we
-	// // have an error.
-	// // If we have more than one, we pick the first one to use for any
-	// // 302 redirects that require absolute URLs.
-	// if (urlPatterns.size() == 0)
-	// {
-	// throw new IllegalArgumentException("Error initializing Wicket" + prefixUppered +
-	// " - you have no <" + mapping + "> element with a url-pattern that uses " +
-	// prefix + ": " + filterName);
-	// }
-	// String urlPattern = urlPatterns.get(0);
-	//
-	// // Check for leading '/' and trailing '*'.
-	// if (!urlPattern.startsWith("/") || !urlPattern.endsWith("*"))
-	// {
-	// throw new IllegalArgumentException("<" + mapping + "> for Wicket" + prefixUppered +
-	// " \"" + filterName + "\" must start with '/' and end with '*'.");
-	// }
-	//
-	// // Strip trailing '*' and keep leading '/'.
-	// return stripWildcard(urlPattern);
-	// }
-	// catch (IOException e)
-	// {
-	// throw new ServletException("Error finding <" + prefix + "> " + filterName +
-	// " in web.xml", e);
-	// }
-	// catch (ParseException e)
-	// {
-	// throw new ServletException("Error finding <" + prefix + "> " + filterName +
-	// " in web.xml", e);
-	// }
-	// catch (ResourceStreamNotFoundException e)
-	// {
-	// throw new ServletException("Error finding <" + prefix + "> " + filterName +
-	// " in web.xml", e);
-	// }
-	// }
-
+	/**
+	 * 
+	 * @param filterName
+	 * @param name
+	 * @param node
+	 * @return
+	 */
 	private String getFilterPath(String filterName, String name, Node node)
 	{
 		String foundUrlPattern = null;
@@ -403,6 +315,14 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * 
+	 * @param filterName
+	 * @param mapping
+	 * @param name
+	 * @param nodeList
+	 * @return
+	 */
 	private String getFilterPath(String filterName, String mapping, String name, NodeList nodeList)
 	{
 		for (int i = 0; i < nodeList.getLength(); ++i)
@@ -428,6 +348,13 @@ public class WicketFilter implements Filter
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param filterName
+	 * @param is
+	 * @return
+	 * @throws ServletException
+	 */
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -449,6 +376,11 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	protected String getFilterPath(HttpServletRequest request)
 	{
 		if (filterPath != null)
@@ -487,6 +419,9 @@ public class WicketFilter implements Filter
 		return result.substring(1, result.length() - 1);
 	}
 
+	/**
+	 * @see javax.servlet.Filter#destroy()
+	 */
 	public void destroy()
 	{
 		if (webApplication != null)
@@ -495,6 +430,4 @@ public class WicketFilter implements Filter
 			webApplication = null;
 		}
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
 }

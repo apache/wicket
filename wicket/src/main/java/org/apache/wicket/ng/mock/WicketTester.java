@@ -62,7 +62,7 @@ public class WicketTester
 	 */
 	public WicketTester()
 	{
-		oldThreadContext = ThreadContext.getAndClean();
+		oldThreadContext = ThreadContext.detach();
 
 		application = new MockApplication();
 		application.setName("WicketTesterApplication");

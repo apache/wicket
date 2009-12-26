@@ -26,11 +26,6 @@ import org.apache.wicket.ng.request.cycle.RequestCycle;
  */
 public class ThreadContext
 {
-	private ThreadContext()
-	{
-
-	}
-
 	private Application application;
 
 	private RequestCycle requestCycle;
@@ -39,6 +34,11 @@ public class ThreadContext
 
 	private static ThreadLocal<ThreadContext> threadLocal = new ThreadLocal<ThreadContext>();
 
+	/**
+	 * 
+	 * @param createIfDoesNotExist
+	 * @return
+	 */
 	private static ThreadContext get(boolean createIfDoesNotExist)
 	{
 		ThreadContext context = threadLocal.get();
@@ -111,19 +111,11 @@ public class ThreadContext
 	}
 
 	/**
-	 * Cleans the thread local state.
-	 */
-	public static void detach()
-	{
-		threadLocal.remove();
-	}
-
-	/**
 	 * Cleans the {@link ThreadContext} and returns previous context.
 	 * 
 	 * @return old {@link ThreadContext}
 	 */
-	public static ThreadContext getAndClean()
+	public static ThreadContext detach()
 	{
 		ThreadContext value = threadLocal.get();
 		threadLocal.remove();
@@ -134,10 +126,17 @@ public class ThreadContext
 	 * Restores the context
 	 * 
 	 * @param threadContext
-	 * @see #getAndClean()
+	 * @see #detach()
 	 */
 	public static void restore(ThreadContext threadContext)
 	{
 		threadLocal.set(threadContext);
+	}
+
+	/**
+	 * Construct.
+	 */
+	private ThreadContext()
+	{
 	}
 }

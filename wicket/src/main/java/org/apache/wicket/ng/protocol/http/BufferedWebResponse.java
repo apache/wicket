@@ -40,6 +40,33 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class BufferedWebResponse extends WebResponse
 {
+	private final List<CookieEntry> cookieEntries = new ArrayList<CookieEntry>();
+
+	private Long contentLength;
+
+	private String contentType;
+
+	private final Map<String, Long> dateHeaders = new HashMap<String, Long>();
+
+	private final Map<String, String> headers = new HashMap<String, String>();
+
+	private StringBuilder builder;
+
+	private ByteArrayOutputStream stream;
+
+	private String redirectUrl;
+
+	private Integer statusCode;
+
+	/**
+	 * 
+	 */
+	private static class CookieEntry
+	{
+		Cookie cookie;
+		boolean add;
+	}
+
 	/**
 	 * Construct.
 	 */
@@ -47,20 +74,19 @@ public class BufferedWebResponse extends WebResponse
 	{
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param httpServletResponse
+	 */
 	public BufferedWebResponse(HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
 
-
-	private static class CookieEntry
-	{
-		Cookie cookie;
-		boolean add;
-	}
-
-	private final List<CookieEntry> cookieEntries = new ArrayList<CookieEntry>();
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#addCookie(javax.servlet.http.Cookie)
+	 */
 	@Override
 	public void addCookie(Cookie cookie)
 	{
@@ -70,6 +96,9 @@ public class BufferedWebResponse extends WebResponse
 		cookieEntries.add(entry);
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#clearCookie(javax.servlet.http.Cookie)
+	 */
 	@Override
 	public void clearCookie(Cookie cookie)
 	{
@@ -79,41 +108,46 @@ public class BufferedWebResponse extends WebResponse
 		cookieEntries.add(entry);
 	}
 
-	private Long contentLength = null;
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#setContentLength(long)
+	 */
 	@Override
 	public void setContentLength(long length)
 	{
 		contentLength = length;
 	}
 
-	private String contentType = null;
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#setContentType(java.lang.String)
+	 */
 	@Override
 	public void setContentType(String mimeType)
 	{
 		contentType = mimeType;
 	}
 
-	private final Map<String, Long> dateHeaders = new HashMap<String, Long>();
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#setDateHeader(java.lang.String, long)
+	 */
 	@Override
 	public void setDateHeader(String name, long date)
 	{
 		dateHeaders.put(name, date);
 	}
 
-	private final Map<String, String> headers = new HashMap<String, String>();
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#setHeader(java.lang.String,
+	 *      java.lang.String)
+	 */
 	@Override
 	public void setHeader(String name, String value)
 	{
 		headers.put(name, value);
 	}
 
-	private StringBuilder builder;
-	private ByteArrayOutputStream stream;
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#write(java.lang.CharSequence)
+	 */
 	@Override
 	public void write(CharSequence sequence)
 	{
@@ -131,6 +165,9 @@ public class BufferedWebResponse extends WebResponse
 		builder.append(sequence);
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#write(byte[])
+	 */
 	@Override
 	public void write(byte[] array)
 	{
@@ -153,16 +190,18 @@ public class BufferedWebResponse extends WebResponse
 		}
 	}
 
-	private String redirectUrl = null;
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#redirect(java.lang.String)
+	 */
 	@Override
 	public void redirect(String url)
 	{
 		redirectUrl = url;
 	}
 
-	private Integer statusCode = null;
-
+	/**
+	 * @see org.apache.wicket.protocol.http.WebResponse#setStatus(int)
+	 */
 	@Override
 	public void setStatus(int sc)
 	{
@@ -265,5 +304,4 @@ public class BufferedWebResponse extends WebResponse
 				filter(new AppendingStringBuffer(builder.toString())).toString());
 		}
 	}
-
 }
