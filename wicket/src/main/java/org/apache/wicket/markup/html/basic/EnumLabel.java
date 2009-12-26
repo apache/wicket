@@ -104,7 +104,7 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 	 */
 	protected String resourceKey(T value)
 	{
-		return value.getClass().getSimpleName() + "." + value.name();
+		return value.getDeclaringClass().getSimpleName() + "." + value.name();
 	}
 
 	/**
