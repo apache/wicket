@@ -21,7 +21,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,12 +80,7 @@ public class WicketContainerResolver implements IComponentResolver
 	{
 		if (tag instanceof WicketTag)
 		{
-			final WicketTag wTag = (WicketTag)tag;
-
-			// this is only here so we register wicket:container tag, this resolver
-			// does not actually do anything special to the tag
-			String id = wTag.getId() + container.getPage().getAutoIndex();
-			return new TransparentWebMarkupContainer(id);
+			return container.get(tag.getId());
 		}
 		return null;
 	}

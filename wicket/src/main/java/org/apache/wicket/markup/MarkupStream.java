@@ -17,6 +17,7 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -61,6 +62,7 @@ public class MarkupStream
 	 */
 	public MarkupStream(final IMarkupFragment markup)
 	{
+		Checks.argumentNotNull(markup, "markup");
 		this.markup = markup;
 
 		if (markup.size() > 0)

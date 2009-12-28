@@ -751,6 +751,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			log.debug("Markup available " + toString());
 		}
 
+		// get the markup ID from the markup if available
 		markuIdFromMarkup = getMarkupIdFromMarkup();
 	}
 

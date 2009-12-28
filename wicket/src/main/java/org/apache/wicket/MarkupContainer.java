@@ -1462,6 +1462,10 @@ public abstract class MarkupContainer extends Component
 			if (component == null)
 			{
 				component = ComponentResolvers.resolve(this, markupStream, tag);
+				if ((component != null) && (component.getParent() == null))
+				{
+					autoAdd(component, markupStream);
+				}
 			}
 
 			// Failed to find it?
@@ -1976,6 +1980,61 @@ public abstract class MarkupContainer extends Component
 			Object tmp = list.childs[idx1];
 			list.childs[idx1] = list.childs[idx2];
 			list.childs[idx2] = tmp;
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onMarkupAttached()
+	 */
+	@Override
+	protected void onMarkupAttached()
+	{
+		super.onMarkupAttached();
+
+		// Automatically create components for <wicket:xxx> tag.
+		IMarkupFragment markup = getMarkup();
+		if ((markup != null) && (markup.size() > 1))
+		{
+			// Skip the first component tag which already belongs to 'this' container
+			MarkupStream stream = new MarkupStream(markup);
+			for (; stream.hasMore(); stream.next())
+			{
+				MarkupElement elem = stream.get();
+				if (elem instanceof ComponentTag)
+				{
+					stream.next();
+					break;
+				}
+			}
+
+			// Search for <wicket:xxx> in the remaining markup and try to resolve the component
+			for (; stream.hasMore(); stream.next())
+			{
+				MarkupElement elem = stream.get();
+				if (elem instanceof ComponentTag)
+				{
+					ComponentTag tag = (ComponentTag)elem;
+					if (tag.isOpen() || tag.isOpenClose())
+					{
+						if (elem instanceof WicketTag)
+						{
+							Component component = ComponentResolvers.resolve(this, stream, tag);
+							if ((component != null) && (component.getParent() == null))
+							{
+								// make sure we are able to get() the component during rendering
+								tag.setId(component.getId());
+
+								add(component);
+							}
+						}
+
+						if (tag.isOpen())
+						{
+							stream.skipToMatchingCloseTag(tag);
+						}
+					}
+				}
+			}
 		}
 	}
 }

@@ -60,10 +60,6 @@ public class ComponentResolvers
 				Component component = resolver.resolve(container, markupStream, tag);
 				if (component != null)
 				{
-					if (component.getParent() == null)
-					{
-						container.autoAdd(component, markupStream);
-					}
 					return component;
 				}
 			}
@@ -79,7 +75,6 @@ public class ComponentResolvers
 			Component component = resolver.resolve(container, markupStream, tag);
 			if (component != null)
 			{
-				container.autoAdd(component, markupStream);
 				return component;
 			}
 		}
