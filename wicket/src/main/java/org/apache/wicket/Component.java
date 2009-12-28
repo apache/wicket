@@ -466,6 +466,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/** Must only be used by auto components */
 	private transient IMarkupFragment markup;
 
+	/** 'id' attribute from the associated markup */
+	private transient String markuIdFromMarkup;
+
 	/**
 	 * The object that holds the component state.
 	 * <p>
@@ -747,6 +750,26 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		{
 			log.debug("Markup available " + toString());
 		}
+
+		markuIdFromMarkup = getMarkupIdFromMarkup();
+	}
+
+	/**
+	 * @return The 'id' attribute from the associated markup tag
+	 */
+	public final String getMarkupIdFromMarkup()
+	{
+		ComponentTag tag = getMarkupTag();
+		if (tag != null)
+		{
+			String id = tag.getAttribute("id");
+			if (Strings.isEmpty(id) == false)
+			{
+				return id.trim();
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -1260,6 +1283,28 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	}
 
 	/**
+	 * Get the first component tag in the associated markup
+	 * 
+	 * @return first component tag
+	 */
+	private final ComponentTag getMarkupTag()
+	{
+		IMarkupFragment markup = getMarkup();
+		if (markup != null)
+		{
+			for (int i = 0; i < markup.size(); i++)
+			{
+				MarkupElement elem = markup.get(i);
+				if (elem instanceof ComponentTag)
+				{
+					return (ComponentTag)elem;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
 	 * 
 	 * Get a copy of the markup's attributes which are associated with the component.
@@ -1273,10 +1318,14 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final ValueMap getMarkupAttributes()
 	{
-		MarkupStream markupStream = locateMarkupStream();
-		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
-		attrs.makeImmutable();
-		return attrs;
+		ComponentTag tag = getMarkupTag();
+		if (tag != null)
+		{
+			ValueMap attrs = new ValueMap(tag.getAttributes());
+			attrs.makeImmutable();
+			return attrs;
+		}
+		return ValueMap.EMPTY_MAP;
 	}
 
 	/**
@@ -1286,6 +1335,11 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final Object getMarkupIdImpl()
 	{
+		if (markuIdFromMarkup != null)
+		{
+			return markuIdFromMarkup;
+		}
+
 		if (generatedMarkupId != -1)
 		{
 			return new Integer(generatedMarkupId);
@@ -1336,7 +1390,6 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		Object storedMarkupId = getMarkupIdImpl();
-
 		if (storedMarkupId instanceof String)
 		{
 			return (String)storedMarkupId;
@@ -1355,12 +1408,6 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			setMarkupIdImpl(new Integer(generatedMarkupId));
 		}
 
-		// try to read from markup
-		// TODO getting the id from markup doesn't work everywhere yet.
-		// unfortunately, we have to drop this until we have a good solution
-		// for issue http://issues.apache.org/jira/browse/WICKET-694
-		// markupId = getMarkupAttributes().getString("id");
-
 		String markupIdPrefix = "id";
 		if (!Application.get().getConfigurationType().equals(Application.DEPLOYMENT))
 		{
@@ -1373,8 +1420,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		markupIdPostfix = RequestContext.get().encodeMarkupId(markupIdPostfix);
 
 		String markupId = markupIdPrefix + markupIdPostfix;
-		// make sure id is compliant with w3c requirements (starts with a
-		// letter)
+
+		// make sure id is compliant with w3c requirements (starts with a letter)
 		char c = markupId.charAt(0);
 		if (!Character.isLetter(c))
 		{
