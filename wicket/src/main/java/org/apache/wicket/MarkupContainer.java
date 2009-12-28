@@ -2021,9 +2021,12 @@ public abstract class MarkupContainer extends Component
 							Component component = ComponentResolvers.resolve(this, stream, tag);
 							if ((component != null) && (component.getParent() == null))
 							{
-								// make sure we are able to get() the component during rendering
-								tag.setId(component.getId());
-
+								if (component.getId().equals(tag.getId()) == false)
+								{
+									// make sure we are able to get() the component during rendering
+									tag.setId(component.getId());
+									tag.setModified(true);
+								}
 								add(component);
 							}
 						}
