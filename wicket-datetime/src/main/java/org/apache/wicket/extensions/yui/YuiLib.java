@@ -20,11 +20,14 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 
 /**
  * Use the {@link #load(IHeaderResponse)} method to initialize the YUI library using the YUI loader.
  * It is OK to call this multiple times.
+ * 
+ * By default the resource stream gets gzipped. You may disable it via
+ * Application.get().getResourceSettings().getDisableGZipCompression()
  * 
  * @author eelcohillenius
  */
@@ -57,7 +60,7 @@ public final class YuiLib implements IClusterable
 				sb.append("-min");
 			}
 			sb.append(".js");
-			YUILOADER = new JavascriptResourceReference(YuiLib.class, sb.toString());
+			YUILOADER = new CompressedResourceReference(YuiLib.class, sb.toString());
 		}
 		return YUILOADER;
 	}
