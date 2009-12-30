@@ -40,9 +40,9 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NavigationToolbar(final DataTable<?> table)
+	public NavigationToolbar(final String id, final DataTable<?> table)
 	{
-		super(table);
+		super(id, table);
 		this.table = table;
 
 		WebMarkupContainer span = new WebMarkupContainer("span");

@@ -41,9 +41,9 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(IModel<?> model, DataTable<?> table)
+	public AbstractToolbar(String id, IModel<?> model, DataTable<?> table)
 	{
-		super(DataTable.TOOLBAR_COMPONENT_ID, model);
+		super(id, model);
 		this.table = table;
 	}
 
@@ -53,9 +53,9 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(DataTable<?> table)
+	public AbstractToolbar(String id, DataTable<?> table)
 	{
-		super(DataTable.TOOLBAR_COMPONENT_ID);
+		super(id);
 		this.table = table;
 	}
 

@@ -200,5 +200,17 @@ public class NavigatorLabel extends Label
 			}
 			return (table.getCurrentPage() * table.getRowsPerPage()) + 1;
 		}
+
+		/**
+		 * @return "y" in "Showing x to y of z"
+		 */
+		public int getTo()
+		{
+			if (getOf() == 0)
+			{
+				return 0;
+			}
+			return Math.min(getOf(), getFrom() + table.getRowsPerPage() - 1);
+		}
 	}
 }

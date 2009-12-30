@@ -22,6 +22,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
@@ -103,11 +104,6 @@ public class DataTable<T> extends Panel implements IPageable
 			}
 		}
 	}
-
-	/**
-	 * The component id that toolbars must be created with in order to be added to the data table
-	 */
-	public static final String TOOLBAR_COMPONENT_ID = "toolbar";
 
 	private static final long serialVersionUID = 1L;
 
@@ -325,16 +321,7 @@ public class DataTable<T> extends Panel implements IPageable
 			throw new IllegalArgumentException("argument [toolbar] cannot be null");
 		}
 
-		if (!toolbar.getId().equals(TOOLBAR_COMPONENT_ID))
-		{
-			throw new IllegalArgumentException(
-				"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
-		}
-
-		// create a container item for the toolbar (required by repeating view)
-		WebMarkupContainer item = new ToolbarContainer(container.newChildId());
-		item.add(toolbar);
-		container.add(item);
+		container.add(toolbar);
 	}
 
 	/**
@@ -400,14 +387,15 @@ public class DataTable<T> extends Panel implements IPageable
 	}
 
 	/**
-	 * Acts as a container item for a single toolbar.
+	 * Acts as a repeater item with its container generated id. It essentially only forwards the
+	 * request to its (single) child component.
 	 * 
 	 * TODO 1.5 optimization: this can probably be removed and items can be added directly to the
 	 * toolbarcontainer
 	 * 
 	 * @author igor.vaynberg
 	 */
-	private final class ToolbarContainer extends AbstractItem
+	private static final class ToolbarContainer extends AbstractItem
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -427,6 +415,21 @@ public class DataTable<T> extends Panel implements IPageable
 		{
 			return ((Component)iterator().next()).isVisible();
 		}
+
+		@Override
+		protected void onRender()
+		{
+			get(0).render();
+		}
+
+		/**
+		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+		 */
+		@Override
+		public IMarkupFragment getMarkup(Component child)
+		{
+			return getMarkup();
+		}
 	}
 
 	/**
@@ -434,7 +437,7 @@ public class DataTable<T> extends Panel implements IPageable
 	 * 
 	 * @author igor.vaynberg
 	 */
-	private class ToolbarsContainer extends RepeatingView
+	private static class ToolbarsContainer extends RepeatingView
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -447,8 +450,5 @@ public class DataTable<T> extends Panel implements IPageable
 		{
 			super(id);
 		}
-
-
 	}
-
 }

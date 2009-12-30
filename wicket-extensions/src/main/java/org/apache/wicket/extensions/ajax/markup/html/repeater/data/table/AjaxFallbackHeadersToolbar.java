@@ -43,9 +43,10 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 * @param table
 	 * @param stateLocator
 	 */
-	public AjaxFallbackHeadersToolbar(DataTable<?> table, ISortStateLocator stateLocator)
+	public AjaxFallbackHeadersToolbar(final String id, DataTable<?> table,
+		ISortStateLocator stateLocator)
 	{
-		super(table, stateLocator);
+		super(id, table, stateLocator);
 		table.setOutputMarkupId(true);
 	}
 

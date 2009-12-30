@@ -439,9 +439,7 @@ public final class PropertyResolver
 							else
 							{
 								// We do not look for a public FIELD because
-								// that is
-								// not good
-								// programming with beans patterns
+								// that is not good programming with beans patterns
 								throw new WicketRuntimeException(
 									"No get method defined for class: " + clz + " expression: " +
 										exp);

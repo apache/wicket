@@ -34,7 +34,6 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 public class FilterToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
-	private static final String FILTER_COMPONENT_ID = "filter";
 
 	/**
 	 * Constructor
@@ -46,10 +45,10 @@ public class FilterToolbar extends AbstractToolbar
 	 * @param stateLocator
 	 *            locator responsible for finding object used to store filter's state
 	 */
-	public FilterToolbar(final DataTable<?> table, final FilterForm form,
+	public FilterToolbar(String id, final DataTable<?> table, final FilterForm form,
 		final IFilterStateLocator stateLocator)
 	{
-		super(table);
+		super(id, table);
 
 		if (table == null)
 		{
@@ -78,22 +77,22 @@ public class FilterToolbar extends AbstractToolbar
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
-				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
+				filter = filteredCol.getFilter(id, form);
 			}
 
 			if (filter == null)
 			{
-				filter = new NoFilter(FILTER_COMPONENT_ID);
+				filter = new NoFilter(id);
 			}
 			else
 			{
-				if (!filter.getId().equals(FILTER_COMPONENT_ID))
+				if (!filter.getId().equals(id))
 				{
 					throw new IllegalStateException(
 						"filter component returned  with an invalid component id. invalid component id [" +
 							filter.getId() +
 							"] required component id [" +
-							FILTER_COMPONENT_ID +
+							id +
 							"] generating column [" + col.toString() + "] ");
 				}
 			}

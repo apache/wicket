@@ -41,11 +41,10 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AjaxNavigationToolbar(final DataTable<?> table)
+	public AjaxNavigationToolbar(final String id, final DataTable<?> table)
 	{
-		super(table);
+		super(id, table);
 	}
-
 
 	/**
 	 * Factory method used to create the paging navigator that will be used by the datatable.
