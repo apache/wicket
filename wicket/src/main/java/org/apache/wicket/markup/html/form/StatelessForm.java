@@ -67,6 +67,9 @@ public class StatelessForm<T> extends Form<T>
 		super.process(submittingComponent);
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.Form#getStatelessHint()
+	 */
 	@Override
 	protected boolean getStatelessHint()
 	{
