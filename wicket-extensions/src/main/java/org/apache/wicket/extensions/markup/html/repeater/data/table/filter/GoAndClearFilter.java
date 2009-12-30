@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -32,7 +32,8 @@ public class GoAndClearFilter extends GoFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static final IModel<String> defaultClearModel = new Model<String>("clear");
+	private static final IModel<String> DEFAULT_CLEAR_MODEL = new ResourceModel("datatable.clear",
+		"clear");
 
 	private final Button clear;
 
@@ -50,7 +51,7 @@ public class GoAndClearFilter extends GoFilter
 	 */
 	public GoAndClearFilter(String id, FilterForm form)
 	{
-		this(id, form, defaultGoModel, defaultClearModel);
+		this(id, form, DEFAULT_GO_MODEL, DEFAULT_CLEAR_MODEL);
 	}
 
 	/**

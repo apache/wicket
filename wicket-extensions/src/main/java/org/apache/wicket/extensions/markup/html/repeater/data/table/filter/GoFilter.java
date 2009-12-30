@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * Filter component that generates a 'go' button that when pressed submits the filter form
@@ -31,7 +31,8 @@ public class GoFilter extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static final IModel<String> defaultGoModel = new Model<String>("filter");
+	protected static final IModel<String> DEFAULT_GO_MODEL = new ResourceModel("datatable.go",
+		"filter");
 
 	private final Button go;
 
@@ -45,7 +46,7 @@ public class GoFilter extends Panel
 	 */
 	public GoFilter(String id)
 	{
-		this(id, defaultGoModel);
+		this(id, DEFAULT_GO_MODEL);
 	}
 
 	/**
