@@ -1626,28 +1626,33 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			return true;
 		}
-		else
+
+		final boolean[] anyEmbeddedMultipart = new boolean[] { false };
+		visitChildren(Component.class, new IVisitor<Component>()
 		{
-			final boolean[] anyEmbeddedMultipart = new boolean[] { false };
-			visitChildren(Form.class, new IVisitor<Form<?>>()
+			public Object component(Component component)
 			{
-
-				public Object component(Form<?> form)
+				boolean isMultiPart = false;
+				if (component instanceof Form)
 				{
-					if (form.multiPart != 0)
-					{
-						anyEmbeddedMultipart[0] = true;
-						return STOP_TRAVERSAL;
-					}
-					else
-					{
-						return CONTINUE_TRAVERSAL;
-					}
+					Form<?> form = (Form<?>)component;
+					isMultiPart = (form.multiPart != 0);
 				}
+				else if (component instanceof FormComponent)
+				{
+					FormComponent<?> form = (FormComponent<?>)component;
+					isMultiPart = form.isMultiPart();
+				}
+				if (isMultiPart == true)
+				{
+					anyEmbeddedMultipart[0] = true;
+					return STOP_TRAVERSAL;
+				}
+				return CONTINUE_TRAVERSAL;
+			}
 
-			});
-			return anyEmbeddedMultipart[0];
-		}
+		});
+		return anyEmbeddedMultipart[0];
 	}
 
 	/**
