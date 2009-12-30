@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -112,9 +113,12 @@ public class DataTable<T> extends Panel implements IPageable
 
 	private final DataGridView<T> datagrid;
 
+	private final WebMarkupContainer body;
+
 	private final IColumn<?>[] columns;
 
 	private final RepeatingView topToolbars;
+
 	private final RepeatingView bottomToolbars;
 
 	/**
@@ -139,7 +143,7 @@ public class DataTable<T> extends Panel implements IPageable
 		}
 
 		this.columns = columns;
-
+		body = newBodyContainer("body");
 		datagrid = new DataGridView<T>("rows", columns, dataProvider)
 		{
 			private static final long serialVersionUID = 1L;
@@ -172,12 +176,34 @@ public class DataTable<T> extends Panel implements IPageable
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
-		add(datagrid);
-
+		body.add(datagrid);
+		add(body);
 		topToolbars = new ToolbarsContainer("topToolbars");
 		bottomToolbars = new ToolbarsContainer("bottomToolbars");
 		add(topToolbars);
 		add(bottomToolbars);
+	}
+
+	/**
+	 * Create the MarkupContainer for the <tbody> tag. Users may subclass it to provide their own
+	 * (modified) implementation.
+	 * 
+	 * @param id
+	 * @return A new markup container
+	 */
+	protected WebMarkupContainer newBodyContainer(final String id)
+	{
+		return new WebMarkupContainer(id);
+	}
+
+	/**
+	 * Set the 'class' attribute for the tbody tag.
+	 * 
+	 * @param cssStyle
+	 */
+	public final void setTableBodyCss(final String cssStyle)
+	{
+		body.add(new SimpleAttributeModifier("class", cssStyle));
 	}
 
 	/**
