@@ -69,17 +69,43 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 				name = tag.getNamespace() + ":" + tag.getName();
 			}
 
-			if (replaceForTags.contains(name.toLowerCase()))
+			if (contains(name))
 			{
-				tag.setType(XmlTag.OPEN);
-				tag.setModified(true);
-
-				next = new ComponentTag(tag.getName(), XmlTag.CLOSE);
-				next.setNamespace(tag.getNamespace());
-				next.setOpenTag(tag);
-				next.setModified(true);
+				if (onFound(tag))
+				{
+					next = new ComponentTag(tag.getName(), XmlTag.CLOSE);
+					next.setNamespace(tag.getNamespace());
+					next.setOpenTag(tag);
+					next.setModified(true);
+				}
 			}
 		}
 		return tag;
+	}
+
+	/**
+	 * Can be subclassed to do other things. E.g. instead of changing it you may simply want to log
+	 * a warning.
+	 * 
+	 * @param tag
+	 * @return Must be true to automatically create and add a close tag.
+	 */
+	protected boolean onFound(final ComponentTag tag)
+	{
+		tag.setType(XmlTag.OPEN);
+		tag.setModified(true);
+
+		return true;
+	}
+
+	/**
+	 * Allows subclasses to easily expand the list of tag which needs to be expanded.
+	 * 
+	 * @param name
+	 * @return true, if needs expansion
+	 */
+	protected boolean contains(final String name)
+	{
+		return replaceForTags.contains(name.toLowerCase());
 	}
 }
