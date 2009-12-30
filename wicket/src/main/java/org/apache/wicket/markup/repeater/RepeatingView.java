@@ -66,15 +66,10 @@ import org.apache.wicket.model.IModel;
  * and so this is the markup that is available to the direct children - the Label components. So as
  * each label renders it produces a line of the output that has the <code>li</code> tag.
  * 
- * 
  * @author Igor Vaynberg ( ivaynberg )
- * 
  */
 public class RepeatingView extends AbstractRepeater
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** Counter used for generating unique child component ids. */
