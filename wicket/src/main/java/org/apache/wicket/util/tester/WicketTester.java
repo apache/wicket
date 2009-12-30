@@ -28,6 +28,7 @@ import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -140,6 +141,13 @@ import org.slf4j.LoggerFactory;
  * constructor, which is very common for transferring model data, but cannot be instantiated by
  * reflection. Finally, we use <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" at the INFO level.
+ * 
+ * Many methods require a 'path' parameter. E.g. the page relative path can be obtained via
+ * {@link Component#getPageRelativePath()}. Since each Component has an ID/name, any Component can
+ * also be referenced by its ID {@link MarkupContainer#get(String)}. And since MarkupContainer's and
+ * its subclasses are containers which allow to add Components (in sync with the markup hierarchy),
+ * you may not only access direct childs but also subchilds like get("myPanel:myForm:myNameField")
+ * separating each ID with a ':'.
  * 
  * TODO General: Example usage of FormTester
  * 
