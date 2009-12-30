@@ -19,8 +19,8 @@ package org.apache.wicket.authentication.panel;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -57,7 +57,7 @@ public class SignInPanel extends Panel
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends Form<Void>
+	public final class SignInForm extends StatelessForm<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
