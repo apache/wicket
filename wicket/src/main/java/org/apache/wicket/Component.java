@@ -467,7 +467,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	private transient IMarkupFragment markup;
 
 	/** 'id' attribute from the associated markup */
-	private transient String markuIdFromMarkup;
+	private transient String markupIdFromMarkup;
 
 	/**
 	 * The object that holds the component state.
@@ -752,7 +752,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		}
 
 		// get the markup ID from the markup if available
-		markuIdFromMarkup = getMarkupIdFromMarkup();
+		markupIdFromMarkup = getMarkupIdFromMarkup();
 	}
 
 	/**
@@ -1336,9 +1336,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final Object getMarkupIdImpl()
 	{
-		if (markuIdFromMarkup != null)
+		if (markupIdFromMarkup != null)
 		{
-			return markuIdFromMarkup;
+			return markupIdFromMarkup;
 		}
 
 		if (generatedMarkupId != -1)
