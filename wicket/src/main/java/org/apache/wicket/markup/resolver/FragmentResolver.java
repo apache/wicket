@@ -40,10 +40,13 @@ public class FragmentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String FRAGMENT = "fragment";
+
 	static
 	{
 		// register "wicket:fragment"
-		WicketTagIdentifier.registerWellKnownTagName("fragment");
+		WicketTagIdentifier.registerWellKnownTagName(FRAGMENT);
 	}
 
 	/**
@@ -61,8 +64,7 @@ public class FragmentResolver implements IComponentResolver
 			// If <wicket:fragment ...>
 			if (wTag.isFragementTag())
 			{
-				String id = wTag.getId() + container.getPage().getAutoIndex();
-				return new WebComponent(id).setVisible(false);
+				return new WebComponent(wTag.getId()).setVisible(false);
 			}
 		}
 

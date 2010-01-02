@@ -21,7 +21,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
@@ -34,11 +34,17 @@ public class MarkupInheritanceResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String CHILD = "child";
+
+	/** */
+	public static final String EXTEND = "extend";
+
 	static
 	{
 		// register "wicket:extend" and "wicket:child"
-		WicketTagIdentifier.registerWellKnownTagName("extend");
-		WicketTagIdentifier.registerWellKnownTagName("child");
+		WicketTagIdentifier.registerWellKnownTagName(EXTEND);
+		WicketTagIdentifier.registerWellKnownTagName(CHILD);
 	}
 
 	/**

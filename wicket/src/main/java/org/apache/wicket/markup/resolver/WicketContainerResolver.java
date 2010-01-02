@@ -65,10 +65,13 @@ public class WicketContainerResolver implements IComponentResolver
 
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String CONTAINER = "container";
+
 	static
 	{
 		// register "wicket:container"
-		WicketTagIdentifier.registerWellKnownTagName("container");
+		WicketTagIdentifier.registerWellKnownTagName(CONTAINER);
 	}
 
 	/**

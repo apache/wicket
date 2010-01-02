@@ -27,14 +27,14 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
-import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * A border component has associated markup which is drawn and determines placement of markup and/or
@@ -135,8 +135,11 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
-	static final String BODY = "body";
-	static final String BORDER = "border";
+	/** */
+	public static final String BODY = "body";
+
+	/** */
+	public static final String BORDER = "border";
 
 	static
 	{
@@ -144,9 +147,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		WicketTagIdentifier.registerWellKnownTagName(BORDER);
 		WicketTagIdentifier.registerWellKnownTagName(BODY);
 	}
-
-	/** Must be the same as the id automatically assigned to <wicket:body> */
-	static final String BODY_ID = "_body";
 
 	/** The body component associated with <wicket:body> */
 	private final BorderBodyContainer body;
@@ -178,7 +178,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	{
 		super(id, model);
 
-		body = newBorderBodyContainer(id + BODY_ID);
+		body = newBorderBodyContainer(id + "_" + BODY);
 		addToBorder(body);
 	}
 
@@ -406,12 +406,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// Since we created the body component instance, identifying that we found it is easy.
 		if (child == body)
 		{
-			// Find the markup for the child component. Make sure you use the preset default value.
-			childMarkup = childMarkup.find(BODY_ID);
-			if (childMarkup != null)
-			{
-				return childMarkup;
-			}
+			return body.getMarkup();
 		}
 
 		// Find the markup for the child component
@@ -511,7 +506,54 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return getParent().getMarkup(new WebComponent(BODY_ID));
+			IMarkupFragment markup = findByName(getParent().getMarkup(null), BODY);
+			setMarkup(markup);
+			return markup;
+		}
+
+		/**
+		 * Search for &lt;wicket:'name' ...&gt; on the same level, but ignoring other "transparent"
+		 * tags such as &lt;wicket:enclosure&gt; etc.
+		 * 
+		 * @param markup
+		 * @param name
+		 * @return null, if not found
+		 */
+		private final IMarkupFragment findByName(final IMarkupFragment markup, final String name)
+		{
+			Checks.argumentNotEmpty(name, "name");
+
+			MarkupStream stream = new MarkupStream(markup);
+
+			// Skip any raw markup
+			stream.skipUntil(ComponentTag.class);
+
+			// Skip <wicket:border>
+			stream.next();
+
+			while (stream.skipUntil(ComponentTag.class))
+			{
+				ComponentTag tag = stream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					if (tag instanceof WicketTag)
+					{
+						WicketTag wtag = (WicketTag)tag;
+						if (wtag.isBodyTag())
+						{
+							return stream.getMarkupFragment();
+						}
+					}
+					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
+					{
+						stream.skipToMatchingCloseTag(tag);
+					}
+				}
+
+				stream.next();
+			}
+
+			return null;
 		}
 
 		/**

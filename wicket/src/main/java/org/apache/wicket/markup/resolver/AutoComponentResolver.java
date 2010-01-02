@@ -53,10 +53,12 @@ public final class AutoComponentResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String COMPONENT = "component";
+
 	static
 	{
 		// register "wicket:component"
-		WicketTagIdentifier.registerWellKnownTagName("component");
+		WicketTagIdentifier.registerWellKnownTagName(COMPONENT);
 	}
 
 	/**

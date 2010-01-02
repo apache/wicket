@@ -23,7 +23,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
@@ -163,7 +162,7 @@ public class MarkupFragmentTest extends WicketTestCase
 		markup = border.getBodyContainer().getMarkup(null);
 		compare(markup, "<span wicket:id=\"border\">test</span>");
 
-		markup = border.getBodyContainer().getParent().getMarkup(new WebComponent("_body"));
+		markup = border.getBodyContainer().getParent().getMarkup(border.getBodyContainer());
 		compare(markup, "<wicket:body/>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
@@ -195,7 +194,7 @@ public class MarkupFragmentTest extends WicketTestCase
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
 		// See explanation in BaseBorder.BorderBodyContainer.getMarkup()
-		markup = border.getBodyContainer().getParent().getMarkup(new WebComponent("_body"));
+		markup = border.getBodyContainer().getParent().getMarkup(border.getBodyContainer());
 		compare(markup, "<wicket:body>333</wicket:body>");
 
 		markup = border.getBodyContainer().getMarkup();

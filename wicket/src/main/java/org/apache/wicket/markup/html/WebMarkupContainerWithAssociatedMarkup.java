@@ -19,7 +19,9 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.OpenTagIterator;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.TagUtils;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IModel;
 
@@ -95,21 +97,31 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 		final Component child)
 	{
 		IMarkupFragment childMarkup = null;
-		OpenTagIterator iter = new OpenTagIterator(markup);
-		while (iter.hasNext() && (childMarkup == null))
+		MarkupStream stream = new MarkupStream(markup);
+		while (stream.skipUntil(ComponentTag.class) && (childMarkup == null))
 		{
-			ComponentTag tag = iter.next();
-			if ((child != null) && "_header_".equals(tag.getId()))
+			ComponentTag tag = stream.getTag();
+			if (tag instanceof WicketTag)
 			{
-				childMarkup = iter.getMarkupFragment().find(child.getId());
-			}
-			else if ((child != null) && "_head".equals(tag.getId()))
-			{
-				if (tag.getMarkupClass() == null)
+				WicketTag wtag = (WicketTag)tag;
+				if (wtag.isHeadTag())
 				{
-					childMarkup = iter.getMarkupFragment().find(child.getId());
+					if (tag.getMarkupClass() == null)
+					{
+						childMarkup = stream.getMarkupFragment().find(child.getId());
+					}
 				}
 			}
+			else if (TagUtils.isHeadTag(tag))
+			{
+				childMarkup = stream.getMarkupFragment().find(child.getId());
+			}
+
+			if (tag.isOpen() && !tag.hasNoCloseTag())
+			{
+				stream.skipToMatchingCloseTag(tag);
+			}
+			stream.next();
 		}
 
 		return childMarkup;

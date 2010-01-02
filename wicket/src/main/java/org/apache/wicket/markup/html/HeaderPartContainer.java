@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 
@@ -72,24 +71,5 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	{
 		// The tag must be resolved against the panel and not against the page
 		return this.container.get(tag.getId());
-	}
-
-	/**
-	 * @see #setMarkupStream(MarkupStream)
-	 * 
-	 * @param markupStream
-	 */
-	public final void setMyMarkupStream(final MarkupStream markupStream)
-	{
-		super.setMarkupStream(markupStream);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#getMarkup()
-	 */
-	@Override
-	public IMarkupFragment getMarkup()
-	{
-		return getMarkupStream().getMarkupFragment();
 	}
 }

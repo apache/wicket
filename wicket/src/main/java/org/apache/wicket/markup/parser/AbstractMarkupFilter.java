@@ -33,6 +33,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
+	private int count;
+
 	/**
 	 * Construct.
 	 */
@@ -80,5 +82,14 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	protected final ComponentTag nextComponentTag() throws ParseException
 	{
 		return (ComponentTag)getParent().nextTag();
+	}
+
+	/**
+	 * 
+	 * @return A unique count per instance
+	 */
+	protected int getCount()
+	{
+		return count++;
 	}
 }

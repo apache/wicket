@@ -28,6 +28,7 @@ import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -83,6 +84,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 		final String namespace = markup.getWicketNamespace();
 
+		// If the form <tag wicket:id = "value"> is used
+		final String wicketIdValue = xmlTag.getAttributes().getString(namespace + ":id");
+
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
 		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
@@ -90,10 +94,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			// It is <wicket:...>
 			tag = new WicketTag(xmlTag);
 
-			// Make it a Wicket component. Otherwise it would be RawMarkup
-			tag.setId("_" + tag.getName());
-			tag.setAutoComponentTag(true);
-			tag.setModified(true);
+			if (Strings.isEmpty(wicketIdValue))
+			{
+				// Make it a Wicket component. Otherwise it would be RawMarkup
+				tag.setId("_" + tag.getName() + getCount());
+				tag.setAutoComponentTag(true);
+				tag.setModified(true);
+			}
 
 			// If the tag is not a well-known wicket namespace tag
 			if (!isWellKnown(xmlTag))
@@ -110,18 +117,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			tag = new ComponentTag(xmlTag);
 		}
 
-		// If the form <tag wicket:id = "value"> is used
-		final String value = tag.getAttributes().getString(namespace + ":id");
-		if (value != null)
+		if (wicketIdValue != null)
 		{
-			if (value.trim().length() == 0)
+			if (wicketIdValue.trim().length() == 0)
 			{
 				throw new WicketParseException(
 					"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
 					tag);
 			}
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setId(value);
+			tag.setId(wicketIdValue);
 		}
 
 		return tag;
@@ -145,6 +150,11 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		}
 	}
 
+	/**
+	 * 
+	 * @param xmlTag
+	 * @return true, if name is known
+	 */
 	private boolean isWellKnown(final XmlTag xmlTag)
 	{
 		final Iterator<String> iterator = wellKnownTagNames.iterator();

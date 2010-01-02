@@ -28,11 +28,11 @@ import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -340,35 +340,35 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			throw new MarkupException("Unable to get page markup: " + getPage().toString());
 		}
 
-		// wicket id can be either "_header_" or "_head"
-
 		// Find the markup fragment
 		MarkupStream stream = new MarkupStream(markup);
-		while (stream.hasMore())
+		IMarkupFragment headerMarkup = null;
+		while (stream.skipUntil(ComponentTag.class) && (headerMarkup == null))
 		{
-			MarkupElement elem = stream.get();
-			if (elem instanceof ComponentTag)
+			ComponentTag tag = stream.getTag();
+			if (tag.isOpen() || tag.isOpenClose())
 			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
+				if (tag instanceof WicketTag)
 				{
-					if (tag.getId().equals("_header_"))
-					{
-						return stream.getMarkupFragment();
-					}
-					if (tag.getId().equals("_head"))
+					WicketTag wtag = (WicketTag)tag;
+					if (wtag.isHeadTag())
 					{
 						if (tag.getMarkupClass() == null)
 						{
-							return stream.getMarkupFragment();
+							headerMarkup = stream.getMarkupFragment();
 						}
 					}
+				}
+				else if (tag.getName().equalsIgnoreCase("head"))
+				{
+					headerMarkup = stream.getMarkupFragment();
 				}
 			}
 
 			stream.next();
 		}
 
-		return null;
+		setMarkup(headerMarkup);
+		return headerMarkup;
 	}
 }

@@ -49,13 +49,16 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String ENCLOSURE = "enclosure";
+
 	/** The child attribute */
 	public static final String CHILD_ATTRIBUTE = "child";
 
 	static
 	{
 		// register "wicket:enclosure"
-		WicketTagIdentifier.registerWellKnownTagName("enclosure");
+		WicketTagIdentifier.registerWellKnownTagName(ENCLOSURE);
 	}
 
 	/** Stack of <wicket:enclosure> tags */
@@ -159,22 +162,8 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 	{
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
-			CharSequence wicketId = tag.getString("wicket:id");
-			String id = null;
-			if (wicketId != null)
-			{
-				id = wicketId.toString();
-			}
-
-			if (id == null)
-			{
-				id = "enclosure-" + container.getPage().getAutoIndex();
-				tag.setId(id);
-				tag.setModified(true);
-			}
-
 			// Yes, we handled the tag
-			return new Enclosure(id, tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+			return new Enclosure(tag.getId(), tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag

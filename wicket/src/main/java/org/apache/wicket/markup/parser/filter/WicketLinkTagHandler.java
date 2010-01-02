@@ -26,6 +26,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -51,13 +52,16 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String LINK = "link";
+
 	/** The id of autolink components */
 	public static final String AUTOLINK_ID = "_autolink_";
 
 	static
 	{
 		// register "wicket:link"
-		WicketTagIdentifier.registerWellKnownTagName("link");
+		WicketTagIdentifier.registerWellKnownTagName(LINK);
 	}
 
 	/** Allow to have link regions within link regions */

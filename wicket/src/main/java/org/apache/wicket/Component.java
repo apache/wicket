@@ -863,11 +863,12 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 
 	/**
 	 * Set the markup for the component. Note that the component's markup variable is transient and
-	 * thus must only be used for one render cycle. E.g. auto-component are using it.
+	 * thus must only be used for one render cycle. E.g. auto-component are using it. You may also
+	 * it if you subclassed getMarkup().
 	 * 
 	 * @param markup
 	 */
-	final void setMarkup(final IMarkupFragment markup)
+	public final void setMarkup(final IMarkupFragment markup)
 	{
 		this.markup = markup;
 	}

@@ -96,10 +96,13 @@ public class WicketMessageResolver implements IComponentResolver
 
 	private static final Logger log = LoggerFactory.getLogger(WicketMessageResolver.class);
 
+	/** */
+	public static final String MESSAGE = "message";
+
 	static
 	{
 		// register "wicket:message"
-		WicketTagIdentifier.registerWellKnownTagName("message");
+		WicketTagIdentifier.registerWellKnownTagName(MESSAGE);
 	}
 
 	/**

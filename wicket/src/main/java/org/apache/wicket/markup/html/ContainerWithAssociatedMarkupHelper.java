@@ -155,9 +155,9 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// Create the header container and associate the markup with it
 				String scope = wTag.getAttributes().getString(
 					markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
+				HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
 					headerId, scope);
-				headerContainer.setMyMarkupStream(markupStream);
+				headerContainer.setMarkup(markupStream.getMarkupFragment());
 				headerContainer.setRenderBodyOnly(true);
 
 				// The container does have a header component

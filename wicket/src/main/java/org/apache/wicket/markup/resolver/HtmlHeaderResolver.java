@@ -23,11 +23,11 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import org.apache.wicket.markup.parser.filter.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
 
@@ -48,10 +48,13 @@ public class HtmlHeaderResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
+	public static final String HEAD = "head";
+
 	static
 	{
 		// register "wicket:head"
-		WicketTagIdentifier.registerWellKnownTagName("head");
+		WicketTagIdentifier.registerWellKnownTagName(HEAD);
 	}
 
 	/**

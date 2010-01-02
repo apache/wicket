@@ -33,10 +33,13 @@ import org.apache.wicket.markup.WicketTag;
  */
 public final class WicketRemoveTagHandler extends BaseMarkupFilter
 {
+	/** */
+	public static final String REMOVE = "remove";
+
 	static
 	{
 		// register "wicket:remove"
-		WicketTagIdentifier.registerWellKnownTagName("remove");
+		WicketTagIdentifier.registerWellKnownTagName(REMOVE);
 	}
 
 	/**
