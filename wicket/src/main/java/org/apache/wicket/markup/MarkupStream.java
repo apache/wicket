@@ -417,6 +417,26 @@ public class MarkupStream
 	}
 
 	/**
+	 * Skip until an element of type 'clazz' is found
+	 * 
+	 * @param clazz
+	 * @return true if found
+	 */
+	public boolean skipUntil(final Class<? extends MarkupElement> clazz)
+	{
+		while (hasMore())
+		{
+			if (clazz.isInstance(current))
+			{
+				return true;
+			}
+			next();
+		}
+
+		return false;
+	}
+
+	/**
 	 * Skips any markup at the current position until the wicket tag name is found.
 	 * 
 	 * @param wicketTagName

@@ -151,7 +151,13 @@ public abstract class MarkupContainer extends Component
 			// Check if the markup is available after the child has been added to the parent
 			try
 			{
-				if ((getParent() != null) && (child.getMarkup() != null))
+				// If not yet triggered, than do now (e.g. Pages)
+				if (getMarkup() != null)
+				{
+					internalOnMarkupAttached();
+				}
+
+				if (child.getMarkup() != null)
 				{
 					child.internalOnMarkupAttached();
 
@@ -1991,52 +1997,53 @@ public abstract class MarkupContainer extends Component
 	{
 		super.onMarkupAttached();
 
-		// Automatically create components for <wicket:xxx> tag.
+		// createAndAddComponentsForWicketTags();
+	}
+
+	/**
+	 * Automatically create components for <wicket:xxx> tag.
+	 */
+	private void createAndAddComponentsForWicketTags()
+	{
+		// Markup must be available
 		IMarkupFragment markup = getMarkup();
 		if ((markup != null) && (markup.size() > 1))
 		{
-			// Skip the first component tag which already belongs to 'this' container
 			MarkupStream stream = new MarkupStream(markup);
-			for (; stream.hasMore(); stream.next())
+
+			// Skip the first component tag which already belongs to 'this' container
+			if (stream.skipUntil(ComponentTag.class))
 			{
-				MarkupElement elem = stream.get();
-				if (elem instanceof ComponentTag)
-				{
-					stream.next();
-					break;
-				}
+				stream.next();
 			}
 
 			// Search for <wicket:xxx> in the remaining markup and try to resolve the component
-			for (; stream.hasMore(); stream.next())
+			while (stream.skipUntil(ComponentTag.class))
 			{
-				MarkupElement elem = stream.get();
-				if (elem instanceof ComponentTag)
+				ComponentTag tag = stream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
 				{
-					ComponentTag tag = (ComponentTag)elem;
-					if (tag.isOpen() || tag.isOpenClose())
+					if (tag instanceof WicketTag)
 					{
-						if (elem instanceof WicketTag)
+						Component component = ComponentResolvers.resolve(this, stream, tag);
+						if ((component != null) && (component.getParent() == null))
 						{
-							Component component = ComponentResolvers.resolve(this, stream, tag);
-							if ((component != null) && (component.getParent() == null))
+							if (component.getId().equals(tag.getId()) == false)
 							{
-								if (component.getId().equals(tag.getId()) == false)
-								{
-									// make sure we are able to get() the component during rendering
-									tag.setId(component.getId());
-									tag.setModified(true);
-								}
-								add(component);
+								// make sure we are able to get() the component during rendering
+								tag.setId(component.getId());
+								tag.setModified(true);
 							}
-						}
-
-						if (tag.isOpen())
-						{
-							stream.skipToMatchingCloseTag(tag);
+							add(component);
 						}
 					}
+
+					if (tag.isOpen())
+					{
+						stream.skipToMatchingCloseTag(tag);
+					}
 				}
+				stream.next();
 			}
 		}
 	}
