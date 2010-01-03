@@ -33,7 +33,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -319,7 +318,7 @@ public abstract class MarkupContainer extends Component
 	 * @return The component at the path
 	 */
 	@Override
-	public Component get(final String path)
+	public final Component get(final String path)
 	{
 		// Reference to this container
 		if (path == null || path.trim().equals(""))

@@ -2533,9 +2533,10 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		try
 		{
 			// Render open tag
+			boolean tagRendered = false;
 			if (getRenderBodyOnly() == false)
 			{
-				renderComponentTag(tag);
+				tagRendered = renderComponentTag(tag);
 			}
 			markupStream.next();
 
@@ -2544,25 +2545,17 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			{
 				// Render the body
 				onComponentTagBody(markupStream, tag);
+
+				// Render close tag
+				if ((tag.hasNoCloseTag() == false) && tagRendered)
+				{
+					// Close the tag.
+					getResponse().write(tag.syntheticCloseTagString());
+				}
 			}
 
-			// Render close tag
-			if (tag.isOpen())
-			{
-				if (openTag.isOpen())
-				{
-					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
-				}
-				else if (getRenderBodyOnly() == false)
-				{
-					if (needToRenderTag(openTag))
-					{
-						// Close the manually opened tag. And since the user might have changed the
-						// tag name ...
-						getResponse().write(tag.syntheticCloseTagString());
-					}
-				}
-			}
+			// make sure we moved the cursor to the end.
+			markupStream.next();
 		}
 		catch (RuntimeException re)
 		{
@@ -3821,8 +3814,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * 
 	 * @param tag
 	 *            The tag to write
+	 * @return true, if tag was rendered
 	 */
-	protected final void renderComponentTag(ComponentTag tag)
+	protected final boolean renderComponentTag(ComponentTag tag)
 	{
 		if (needToRenderTag(tag))
 		{
@@ -3861,7 +3855,11 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			// Write the tag
 			tag.writeOutput(getResponse(), !needToRenderTag(null),
 				getMarkup().getMarkupResourceStream().getWicketNamespace());
+
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
