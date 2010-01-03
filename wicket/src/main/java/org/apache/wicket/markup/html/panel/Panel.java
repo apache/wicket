@@ -24,7 +24,6 @@ import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
@@ -63,6 +62,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
+	/** */
 	public static final String PANEL = "panel";
 
 	static
@@ -72,7 +72,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/** If if tag was an open-close tag */
-	private boolean wasOpenCloseTag = false;
+	private transient boolean wasOpenCloseTag = false;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -133,18 +133,6 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Check the associated markup file for a wicket header tag
-	 * 
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	@Override
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
-	}
-
-	/**
 	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
 	 */
 	@Override
@@ -183,8 +171,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Search for &lt;wicket:'name' ...&gt; on the same level, but ignoring other "transparent" tags
-	 * such as &lt;wicket:enclosure&gt; etc.
+	 * Search for &lt;wicket:panel ...&gt; on the same level.
 	 * 
 	 * @param markup
 	 * @param name
@@ -207,10 +194,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 						return stream.getMarkupFragment();
 					}
 				}
-				if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
-				{
-					stream.skipToMatchingCloseTag(tag);
-				}
+				stream.skipToMatchingCloseTag(tag);
 			}
 
 			stream.next();

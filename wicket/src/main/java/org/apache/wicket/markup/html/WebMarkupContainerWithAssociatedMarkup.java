@@ -31,8 +31,6 @@ import org.apache.wicket.model.IModel;
  * @author Juergen Donnerstag
  */
 public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
-	implements
-		IHeaderPartContainerProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,6 +54,16 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	}
 
 	/**
+	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	@Override
+	public void renderHead(HtmlHeaderContainer container)
+	{
+		renderHeadFromAssociatedMarkupFile(container);
+		super.renderHead(container);
+	}
+
+	/**
 	 * Called by components like Panel and Border which have associated Markup and which may have a
 	 * &lt;wicket:head&gt; tag.
 	 * <p>
@@ -75,15 +83,6 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 		}
 
 		markupHelper.renderHeadFromAssociatedMarkupFile(container);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,
-	 *      java.lang.String)
-	 */
-	public HeaderPartContainer newHeaderPartContainer(final String id, final String scope)
-	{
-		return new HeaderPartContainer(id, this, scope);
 	}
 
 	/**

@@ -19,7 +19,6 @@ package org.apache.wicket.markup.parser.filter;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.Model;
 
 
@@ -51,18 +50,5 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
-	}
-
-	/**
-	 * This label renders its markup the normal way, and is still able to take and render the header
-	 * tag from an associated markup file.
-	 * 
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	@Override
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		this.renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
 	}
 }

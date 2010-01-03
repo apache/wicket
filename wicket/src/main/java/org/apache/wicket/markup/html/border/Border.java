@@ -29,7 +29,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
@@ -355,16 +354,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			"Markup for a border component must begin a tag like '<wicket:border>'");
 
 		markupStream.skipToMatchingCloseTag(openTag);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-	 */
-	@Override
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
 	}
 
 	/**

@@ -48,9 +48,9 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	/**
 	 * @param container
 	 */
-	public ContainerWithAssociatedMarkupHelper(final IHeaderPartContainerProvider container)
+	public ContainerWithAssociatedMarkupHelper(final WebMarkupContainer container)
 	{
-		this.container = (WebMarkupContainer)container;
+		this.container = container;
 	}
 
 	/**
@@ -155,8 +155,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// Create the header container and associate the markup with it
 				String scope = wTag.getAttributes().getString(
 					markupStream.getWicketNamespace() + ":scope");
-				HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)container).newHeaderPartContainer(
-					headerId, scope);
+				HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, container,
+					scope);
 				headerContainer.setMarkup(markupStream.getMarkupFragment());
 				headerContainer.setRenderBodyOnly(true);
 

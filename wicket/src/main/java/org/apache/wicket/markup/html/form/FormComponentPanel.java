@@ -23,8 +23,6 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
-import org.apache.wicket.markup.html.HeaderPartContainer;
-import org.apache.wicket.markup.html.IHeaderPartContainerProvider;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -119,8 +117,6 @@ import org.apache.wicket.model.IModel;
  *            The model object type
  */
 public abstract class FormComponentPanel<T> extends FormComponent<T>
-	implements
-		IHeaderPartContainerProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -166,15 +162,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,
-	 *      java.lang.String)
-	 */
-	public HeaderPartContainer newHeaderPartContainer(final String id, final String scope)
-	{
-		return new HeaderPartContainer(id, this, scope);
-	}
-
-	/**
 	 * Check the associated markup file for a wicket header tag
 	 * 
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
@@ -212,7 +199,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		// remove unapplicable attributes that might have been set by the call to super
 		tag.remove("name");
 		tag.remove("disabled");
-
 	}
 
 	/**

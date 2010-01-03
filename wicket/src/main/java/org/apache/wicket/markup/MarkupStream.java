@@ -493,6 +493,19 @@ public class MarkupStream
 	}
 
 	/**
+	 * Gets the attribute with 'name' for the tag at the current position
+	 * 
+	 * @param name
+	 * @param withWicketNamespace
+	 * @return null, if not found
+	 */
+	public final String getTagAttribute(final String name, final boolean withWicketNamespace)
+	{
+		String attr = (withWicketNamespace ? attr = getWicketNamespace() + ":" + name : name);
+		return getTag().getAttributes().getString(attr);
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message
