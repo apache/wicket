@@ -667,4 +667,11 @@ public abstract class WebApplication extends Application
 	{
 		ThreadContext.setApplication(this);
 	}
+
+	@Override
+	public String getMimeType(String fileName)
+	{
+		String mimeType = getServletContext().getMimeType(fileName);
+		return mimeType != null ? mimeType : super.getMimeType(fileName);
+	}
 }

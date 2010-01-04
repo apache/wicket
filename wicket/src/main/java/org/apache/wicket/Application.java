@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1472,4 +1473,14 @@ public abstract class Application implements UnboundListener
 		applicationKeyToApplication.put(name, this);
 	}
 
+	/**
+	 * Returns the mime type for given filename.
+	 * 
+	 * @param fileName
+	 * @return mime type
+	 */
+	public String getMimeType(String fileName)
+	{
+		return URLConnection.getFileNameMap().getContentTypeFor(fileName);
+	}
 }

@@ -63,7 +63,6 @@ public interface IResource extends Serializable
 		{
 			Checks.argumentNotNull(request, "request");
 			Checks.argumentNotNull(response, "response");
-			Checks.argumentNotNull(locale, "locale");
 
 			this.request = request;
 			this.response = response;
@@ -71,6 +70,17 @@ public interface IResource extends Serializable
 			this.style = style;
 			this.variation = variation;
 			this.parameters = parameters;
+		}
+
+		/**
+		 * Construct.
+		 * 
+		 * @param request
+		 * @param response
+		 */
+		public Attributes(Request request, Response response)
+		{
+			this(request, response, null, null, null, null);
 		}
 
 		/**
@@ -100,7 +110,7 @@ public interface IResource extends Serializable
 		 */
 		public Locale getLocale()
 		{
-			return locale;
+			return locale != null ? locale : request.getLocale();
 		}
 
 		/**

@@ -16,20 +16,11 @@
  */
 package org.apache.wicket.request.target.resource;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
-import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.ng.resource.ResourceStreamResource;
+import org.apache.wicket.ng.resource.IResource.Attributes;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.IResourceStreamWriter;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,14 +73,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
-		try
-		{
-			resourceStream.close();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Could not close resource stream", e);
-		}
+
 	}
 
 	/**
@@ -145,49 +129,13 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		// Get servlet response to use when responding with resource
-		final WebResponse response = (WebResponse)requestCycle.getResponse();
+		Attributes attributes = new Attributes(requestCycle.getRequest(),
+			requestCycle.getResponse());
 
-		configure(requestCycle, response, resourceStream);
+		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
+		resource.setFileName(fileName);
 
-		try
-		{
-			if (resourceStream instanceof IResourceStreamWriter)
-			{
-				((IResourceStreamWriter)resourceStream).write(response);
-			}
-			else
-			{
-				OutputStream s = new OutputStream()
-				{
-					@Override
-					public void write(int b) throws IOException
-					{
-						response.write(new byte[] { (byte)b });
-					}
-
-					@Override
-					public void write(byte[] b) throws IOException
-					{
-						response.write(b);
-					}
-
-				};
-				try
-				{
-					Streams.copy(resourceStream.getInputStream(), s);
-				}
-				catch (IOException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-			}
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			requestCycle.scheduleRequestHandlerAfterCurrent(new WebErrorCodeResponseHandler(
-				HttpServletResponse.SC_NOT_FOUND));
-		}
+		resource.respond(attributes);
 	}
 
 	/**
@@ -213,64 +161,4 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 			fileName + "]";
 	}
 
-	/**
-	 * Configures the response, default by setting the content type and length and content
-	 * disposition (in case the fileName property was set).
-	 * 
-	 * @param requestCycle
-	 * @param response
-	 *            the response
-	 * @param resourceStream
-	 *            the resource stream that will be rendered
-	 */
-	protected void configure(final RequestCycle requestCycle, final WebResponse response,
-		final IResourceStream resourceStream)
-	{
-		// TODO (NG) mime type
-
-// // Configure response with content type of resource, if available
-// String responseType = resourceStream.getContentType();
-// if (responseType != null)
-// {
-// if (responseType.toLowerCase().indexOf("text") != -1)
-// {
-// response.setContentType(responseType + "; charset=" +
-// response.getCharacterEncoding());
-// }
-// else
-// {
-// response.setContentType(responseType);
-// }
-//
-// }
-// else
-// {
-// // otherwise detect content-type automatically
-// if (getFileName() != null)
-// {
-// response.detectContentType(requestCycle, getFileName());
-// }
-// else
-// {
-// response.detectContentType(requestCycle, requestCycle.getRequest()
-// .getUrl()
-// .toString());
-// }
-// }
-
-		// WICKET-473 Allow IResourceStream.length() to return -1
-		long len = resourceStream.length();
-		if (len >= 0)
-		{
-			// and the content length
-			response.setContentLength(len);
-		}
-
-		// and content disposition if any
-		String file = getFileName();
-		if (file != null && (response instanceof WebResponse))
-		{
-			(response).setAttachmentHeader(file);
-		}
-	}
 }
