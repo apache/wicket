@@ -486,7 +486,7 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class<? extends IRequestablePage> getHomePage();
+	public abstract Class<? extends Page> getHomePage();
 
 	/**
 	 * @return Application's markup related settings
