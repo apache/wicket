@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 

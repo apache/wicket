@@ -103,4 +103,8 @@ public interface IRequestableComponent
 	 * </p>
 	 */
 	public void detach();
+
+	public boolean isVisibleInHierarchy();
+
+	public boolean isEnabledInHierarchy();
 }

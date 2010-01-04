@@ -16,15 +16,15 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
-import org.apache.wicket.ng.protocol.http.WebApplication;
-import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.BufferedResponseRequestHandler;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Encoder that intercepts requests for which there is already stored buffer with rendered data.

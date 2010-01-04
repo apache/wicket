@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.ICompoundRequestMapper;
-import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 

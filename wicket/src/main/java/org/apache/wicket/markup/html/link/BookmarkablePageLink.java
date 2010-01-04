@@ -16,12 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.util.collections.MiniMap;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -42,7 +38,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 	private final String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	protected MiniMap<String, Object> parameters;
+	protected PageParameters parameters;
 
 	/**
 	 * Constructor.
@@ -60,44 +56,14 @@ public class BookmarkablePageLink<T> extends Link<T>
 		this(id, pageClass, null);
 	}
 
-	private MiniMap<String, Object> pageParametersToMiniMap(PageParameters parameters)
-	{
-		if (parameters != null)
-		{
-			MiniMap<String, Object> map = new MiniMap<String, Object>(parameters,
-				parameters.keySet().size());
-			return map;
-		}
-		else
-		{
-			return null;
-		}
-
-	}
-
 	/**
 	 * @return page parameters
 	 */
 	public PageParameters getPageParameters()
 	{
-		PageParameters result = new PageParameters();
-		if (parameters != null)
-		{
-			for (Iterator<Entry<String, Object>> i = parameters.entrySet().iterator(); i.hasNext();)
-			{
-				Entry<String, Object> entry = i.next();
-				result.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return result;
+		return parameters;
 	}
 
-	private void setParameterImpl(String key, Object value)
-	{
-		PageParameters parameters = getPageParameters();
-		parameters.put(key, value);
-		this.parameters = pageParametersToMiniMap(parameters);
-	}
 
 	/**
 	 * Constructor.
@@ -116,7 +82,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 	{
 		super(id);
 
-		this.parameters = pageParametersToMiniMap(parameters);
+		this.parameters = parameters;
 
 		if (pageClass == null)
 		{
@@ -170,6 +136,15 @@ public class BookmarkablePageLink<T> extends Link<T>
 	{
 		// Bookmarkable links do not have a click handler.
 		// Instead they are dispatched by the request handling servlet.
+	}
+
+	private void setParameterImpl(String key, Object value)
+	{
+		if (parameters == null)
+		{
+			parameters = new PageParameters();
+		}
+		parameters.setNamedParameter(key, value);
 	}
 
 	/**

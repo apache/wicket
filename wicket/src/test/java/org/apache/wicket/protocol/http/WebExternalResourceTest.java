@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -77,7 +77,7 @@ public class WebExternalResourceTest extends WicketTestCase
 	public void testWebExternalResource() throws Exception
 	{
 		WebExternalResourceStream resource = new WebExternalResourceStream("/index.html");
-		ResourceStreamRequestTarget rt = new ResourceStreamRequestTarget(resource);
+		ResourceStreamRequestHandler rt = new ResourceStreamRequestHandler(resource);
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.setRequestTarget(rt);
 		tester.processRequestCycle(cycle);

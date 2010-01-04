@@ -18,10 +18,12 @@ package org.apache.wicket.util.crypt;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.Application;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on http session-specific
@@ -36,13 +38,14 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 {
 	public ICrypt newCrypt()
 	{
-		WebRequestCycle rc = (WebRequestCycle)RequestCycle.get();
+		RequestCycle rc = RequestCycle.get();
+		HttpServletRequest request = ((ServletWebRequest)rc.getRequest()).getHttpServletRequest();
 
 		// get http session, create if necessary
-		HttpSession session = rc.getWebRequest().getHttpServletRequest().getSession(true);
+		HttpSession session = request.getSession(true);
 
 		// retrieve or generate encryption key from session
-		final String keyAttr = rc.getApplication().getApplicationKey() + "." + getClass().getName();
+		final String keyAttr = Application.get().getApplicationKey() + "." + getClass().getName();
 		String key = (String)session.getAttribute(keyAttr);
 		if (key == null)
 		{

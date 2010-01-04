@@ -20,12 +20,12 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -293,7 +293,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		WebApplication app = (WebApplication)getComponent().getApplication();
 		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
-		RequestCycle.get().setRequestTarget(target);
+		RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
 		respond(target);
 	}
 

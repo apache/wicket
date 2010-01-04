@@ -16,18 +16,18 @@
  */
 package org.apache.wicket.ng.request.handler.impl;
 
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -103,7 +103,7 @@ public class ListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.ng.request.handler.IPageClassRequestHandler#getPageParameters()
 	 */
-	public PageParametersNg getPageParameters()
+	public PageParameters getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
 	}

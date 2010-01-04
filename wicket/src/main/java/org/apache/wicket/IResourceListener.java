@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.ObsoleteRequestParameters;
-import org.apache.wicket.request.target.resource.ComponentResourceRequestTarget;
 
 /**
  * Listens for requests regarding resources. Such resources are typically non-static in nature and
@@ -37,15 +35,7 @@ public interface IResourceListener extends IRequestListener
 {
 	/** Resource listener interface object */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-		IResourceListener.class)
-	{
-		@Override
-		public IRequestTarget newRequestTarget(Page page, Component component,
-			RequestListenerInterface listener, ObsoleteRequestParameters requestParameters)
-		{
-			return new ComponentResourceRequestTarget(page, component, listener);
-		}
-	};
+		IResourceListener.class);
 
 	/**
 	 * Called when a resource is requested.

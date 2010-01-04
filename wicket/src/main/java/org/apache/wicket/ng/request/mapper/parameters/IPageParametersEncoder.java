@@ -16,33 +16,33 @@
  */
 package org.apache.wicket.ng.request.mapper.parameters;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
- * Encoder that can encode and decode {@link PageParametersNg} to/from URL.
+ * Encoder that can encode and decode {@link PageParameters} to/from URL.
  * 
  * @author Matej Knopp
  */
 public interface IPageParametersEncoder
 {
 	/**
-	 * Encode the given {@link PageParametersNg} instance into URL. The URL will be then merged with
+	 * Encode the given {@link PageParameters} instance into URL. The URL will be then merged with
 	 * the URL generated for {@link IRequestHandler}.
 	 * 
 	 * @param pageParameters
 	 * @return Url generated from the page parameters
 	 */
-	Url encodePageParameters(PageParametersNg pageParameters);
+	Url encodePageParameters(PageParameters pageParameters);
 
 	/**
-	 * Decodes the given URL to {@link PageParametersNg}. The URL will have all
+	 * Decodes the given URL to {@link PageParameters}. The URL will have all
 	 * {@link IRequestHandler} specified segments/parameters stripped.
 	 * 
 	 * @param request
-	 * @return {@link PageParametersNg} instance
+	 * @return {@link PageParameters} instance
 	 */
-	PageParametersNg decodePageParameters(Request request);
+	PageParameters decodePageParameters(Request request);
 }

@@ -25,8 +25,8 @@ import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.io.Streams;
@@ -274,7 +274,7 @@ public class CompressedPackageResource extends PackageResource
 			return false;
 		}
 		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
-		String s = request.getHttpServletRequest().getHeader("Accept-Encoding");
+		String s = request.getHeader("Accept-Encoding");
 		if (s == null)
 		{
 			return false;

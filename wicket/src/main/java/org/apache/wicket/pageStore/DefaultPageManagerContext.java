@@ -19,8 +19,8 @@ package org.apache.wicket.pageStore;
 import java.io.Serializable;
 
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 /**
  * Wicket's default page manager context

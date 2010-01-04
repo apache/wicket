@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.IRequestHandler;
-import org.apache.wicket.ng.request.IRequestMapper;
-import org.apache.wicket.ng.request.Url;
 
 /**
  * Mapper that encapsulates mappers that are necessary for Wicket to function.
@@ -27,36 +23,16 @@ import org.apache.wicket.ng.request.Url;
  * @author igor.vaynberg
  * 
  */
-public class SystemMapper implements IRequestMapper
+public class SystemMapper extends ThreadsafeCompoundRequestMapper
 {
-	private final ThreadsafeCompoundRequestMapper mapper = new ThreadsafeCompoundRequestMapper();
-
 	/**
 	 * Constructor
 	 */
 	public SystemMapper()
 	{
-		mapper.register(new PageInstanceMapper());
-		mapper.register(new BookmarkableMapper());
-		mapper.register(new ResourceReferenceMapper());
-		mapper.register(new BufferedResponseMapper());
-	}
-
-	/** {@inheritDoc} */
-	public int getCompatibilityScore(Request request)
-	{
-		return mapper.getCompatibilityScore(request);
-	}
-
-	/** {@inheritDoc} */
-	public Url mapHandler(IRequestHandler handler)
-	{
-		return mapper.mapHandler(handler);
-	}
-
-	/** {@inheritDoc} */
-	public IRequestHandler mapRequest(Request request)
-	{
-		return mapper.mapRequest(request);
+		register(new PageInstanceMapper());
+		register(new BookmarkableMapper());
+		register(new ResourceReferenceMapper());
+		register(new BufferedResponseMapper());
 	}
 }

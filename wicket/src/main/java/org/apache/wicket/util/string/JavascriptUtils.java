@@ -113,7 +113,8 @@ public class JavascriptUtils
 		}
 		response.write("src=\"");
 		response.write(url);
-		response.println("\"></script>");
+		response.write("\"></script>");
+		response.write("\n");
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class JavascriptUtils
 	public static void writeCloseTag(final Response response)
 	{
 		response.write(SCRIPT_CONTENT_SUFFIX);
-		response.println("</script>\n");
+		response.write("</script>\n");
 
 	}
 
@@ -210,7 +211,7 @@ public class JavascriptUtils
 	 */
 	public void println(final CharSequence script)
 	{
-		response.println(script);
+		response.write(script);
 	}
 
 	/**

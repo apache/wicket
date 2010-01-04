@@ -16,15 +16,15 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.ComponentInfo;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.info.PageInfo;

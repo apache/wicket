@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.Application;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
@@ -204,8 +204,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	}
 
 	/**
-	 * Extracts {@link PageParametersNg} from the URL using the given {@link IPageParametersEncoder}
-	 * .
+	 * Extracts {@link PageParameters} from the URL using the given {@link IPageParametersEncoder} .
 	 * 
 	 * @param request
 	 * @param segmentsToSkip
@@ -214,7 +213,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 * @return PageParameters instance
 	 */
-	protected PageParametersNg extractPageParameters(Request request, int segmentsToSkip,
+	protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
 		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(request, "request");
@@ -234,12 +233,12 @@ public abstract class AbstractMapper implements IRequestMapper
 			urlCopy.getQueryParameters().remove(0);
 		}
 
-		PageParametersNg decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
-		return decoded != null ? decoded : new PageParametersNg();
+		PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
+		return decoded != null ? decoded : new PageParameters();
 	}
 
 	/**
-	 * Encodes the given {@link PageParametersNg} to the URL using the given
+	 * Encodes the given {@link PageParameters} to the URL using the given
 	 * {@link IPageParametersEncoder}. The original URL object is unchanged.
 	 * 
 	 * @param url
@@ -247,7 +246,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 * @return URL with encoded parameters
 	 */
-	protected Url encodePageParameters(Url url, PageParametersNg pageParameters,
+	protected Url encodePageParameters(Url url, PageParameters pageParameters,
 		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(url, "url");
@@ -255,7 +254,7 @@ public abstract class AbstractMapper implements IRequestMapper
 
 		if (pageParameters == null)
 		{
-			pageParameters = new PageParametersNg();
+			pageParameters = new PageParameters();
 		}
 
 		Url parametersUrl = encoder.encodePageParameters(pageParameters);

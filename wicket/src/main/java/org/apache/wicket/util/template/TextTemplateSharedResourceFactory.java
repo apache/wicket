@@ -21,11 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.SharedResources;
-import org.apache.wicket.util.resource.AbstractStringResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 
 /**
@@ -101,38 +97,44 @@ public class TextTemplateSharedResourceFactory
 	 */
 	public ResourceReference resourceReference(final Map<String, ?> variables)
 	{
-		final String uniqueName = sharedResourceName(variables);
-		final String templateValue = template.asString(variables);
-		final SharedResources sharedResources = Application.get().getSharedResources();
-		final Resource resource = sharedResources.get(uniqueName);
-		if (resource == null)
-		{
-			final Resource newResource = new Resource()
-			{
-				private static final long serialVersionUID = 1L;
+		// This really doesn't seem like a good idea - to provide this as shared (global) resource
 
-				/**
-				 * @see org.apache.wicket.Resource#getResourceStream()
-				 */
-				@Override
-				public IResourceStream getResourceStream()
-				{
-					return new AbstractStringResourceStream()
-					{
-						private static final long serialVersionUID = 1L;
+		// TODO (NG) - REALY?!
 
-						@Override
-						protected String getString()
-						{
-							return templateValue;
-						}
-
-					};
-				}
-			};
-			sharedResources.add(uniqueName, newResource);
-		}
-		return new ResourceReference(scopeRef.get(), uniqueName);
+		return null;
+//		
+// final String uniqueName = sharedResourceName(variables);
+// final String templateValue = template.asString(variables);
+// final SharedResources sharedResources = Application.get().getSharedResources();
+// final Resource resource = sharedResources.get(uniqueName);
+// if (resource == null)
+// {
+// final Resource newResource = new Resource()
+// {
+// private static final long serialVersionUID = 1L;
+//
+// /**
+// * @see org.apache.wicket.Resource#getResourceStream()
+// */
+// @Override
+// public IResourceStream getResourceStream()
+// {
+// return new AbstractStringResourceStream()
+// {
+// private static final long serialVersionUID = 1L;
+//
+// @Override
+// protected String getString()
+// {
+// return templateValue;
+// }
+//
+// };
+// }
+// };
+// sharedResources.add(uniqueName, newResource);
+// }
+// return new ResourceReference(scopeRef.get(), uniqueName);
 	}
 
 	/**

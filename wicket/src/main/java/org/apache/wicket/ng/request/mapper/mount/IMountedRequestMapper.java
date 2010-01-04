@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ng.request.mapper.mount;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.IRequestHandler;
 
 /**
  * TODO javadoc, explain "parameters resolved from the mount"

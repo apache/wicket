@@ -16,125 +16,260 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-
+import org.apache.wicket.util.lang.Checks;
 
 /**
- * Subclass of WebResponse which buffers output and any redirection.
+ * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
  * 
- * @author Jonathan Locke
+ * @see #writeTo(WebResponse)
+ * 
+ * @author Matej Knopp
  */
-public class BufferedWebResponse extends WebResponse
+public abstract class BufferedWebResponse extends WebResponse
 {
-	/** URL to redirect to when response is flushed, if any */
-	private String redirectURL;
-
-	/** Buffer to hold page */
-	private AppendingStringBuffer buffer = new AppendingStringBuffer(4096);
 
 	/**
-	 * Constructor for testing harness.
+	 * Construct.
 	 */
-	protected BufferedWebResponse()
+	public BufferedWebResponse()
 	{
 	}
 
-	/**
-	 * Package private constructor.
-	 * 
-	 * @param httpServletResponse
-	 *            The servlet response object
-	 */
-	public BufferedWebResponse(final HttpServletResponse httpServletResponse)
+	private static class CookieEntry
 	{
-		super(httpServletResponse);
+		Cookie cookie;
+		boolean add;
 	}
 
-	/**
-	 * Flushes the response buffer by doing a redirect or writing out the buffer. NOTE: The servlet
-	 * container will close the response output stream.
-	 */
+	private final List<CookieEntry> cookieEntries = new ArrayList<CookieEntry>();
+
 	@Override
-	public void close()
+	public void addCookie(Cookie cookie)
 	{
-		// If a redirection was specified
-		if (redirectURL != null)
+		CookieEntry entry = new CookieEntry();
+		entry.cookie = cookie;
+		entry.add = true;
+		cookieEntries.add(entry);
+	}
+
+	@Override
+	public void clearCookie(Cookie cookie)
+	{
+		CookieEntry entry = new CookieEntry();
+		entry.cookie = cookie;
+		entry.add = false;
+		cookieEntries.add(entry);
+	}
+
+	private Long contentLength = null;
+
+	@Override
+	public void setContentLength(long length)
+	{
+		contentLength = length;
+	}
+
+	private String contentType = null;
+
+	@Override
+	public void setContentType(String mimeType)
+	{
+		contentType = mimeType;
+	}
+
+	private final Map<String, Long> dateHeaders = new HashMap<String, Long>();
+
+	@Override
+	public void setDateHeader(String name, long date)
+	{
+		dateHeaders.put(name, date);
+	}
+
+	private final Map<String, String> headers = new HashMap<String, String>();
+
+	@Override
+	public void setHeader(String name, String value)
+	{
+		headers.put(name, value);
+	}
+
+	private StringBuilder builder;
+	private ByteArrayOutputStream stream;
+
+	@Override
+	public void write(CharSequence sequence)
+	{
+		if (stream != null)
 		{
-			// actually redirect
-			super.redirect(redirectURL);
+			throw new IllegalStateException(
+				"Can't call write(CharSequence) after write(byte[]) has been called.");
 		}
-		else
+
+		if (builder == null)
 		{
-			// Write the buffer to the response stream
-			if (buffer.length() != 0)
+			builder = new StringBuilder(4096);
+		}
+
+		builder.append(sequence);
+	}
+
+	@Override
+	public void write(byte[] array)
+	{
+		if (builder != null)
+		{
+			throw new IllegalStateException(
+				"Can't call write(byte[]) after write(CharSequence) has been called.");
+		}
+		if (stream == null)
+		{
+			stream = new ByteArrayOutputStream(array.length);
+		}
+		try
+		{
+			stream.write(array);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
+
+	private String redirectUrl = null;
+
+	@Override
+	public void sendRedirect(String url)
+	{
+		redirectUrl = url;
+	}
+
+	private Integer statusCode = null;
+
+	@Override
+	public void setStatus(int sc)
+	{
+		statusCode = sc;
+	}
+
+	static class Error
+	{
+		int sc;
+		String message;
+	}
+
+	private Error error = null;
+
+	@Override
+	public void sendError(int sc, String msg)
+	{
+		error = new Error();
+		error.sc = sc;
+		error.message = msg;
+	}
+
+	/**
+	 * Writes the content of the buffer to the specified response. Also sets the properties and and
+	 * headers.
+	 * 
+	 * @param response
+	 */
+	public void writeTo(final WebResponse response)
+	{
+		Checks.argumentNotNull(response, "response");
+
+		for (CookieEntry e : cookieEntries)
+		{
+			if (e.add)
 			{
-				super.write(buffer);
+				response.addCookie(e.cookie);
+			}
+			else
+			{
+				response.clearCookie(e.cookie);
+			}
+		}
+		if (contentLength != null)
+		{
+			response.setContentLength(contentLength);
+		}
+		if (contentType != null)
+		{
+			response.setContentType(contentType);
+		}
+		for (String s : dateHeaders.keySet())
+		{
+			response.setDateHeader(s, dateHeaders.get(s));
+		}
+		for (String s : headers.keySet())
+		{
+			response.setHeader(s, headers.get(s));
+		}
+		if (statusCode != null)
+		{
+			response.setStatus(statusCode);
+		}
+		if (error != null)
+		{
+			response.sendError(error.sc, error.message);
+		}
+		if (redirectUrl != null)
+		{
+			response.sendRedirect(redirectUrl);
+		}
+		if (builder != null)
+		{
+			response.write(builder);
+		}
+		else if (stream != null)
+		{
+			final boolean copied[] = { false };
+			try
+			{
+				// try to avoid copying the array
+				stream.writeTo(new OutputStream()
+				{
+					@Override
+					public void write(int b) throws IOException
+					{
+
+					}
+
+					@Override
+					public void write(byte[] b, int off, int len) throws IOException
+					{
+						if (off == 0 && len == b.length)
+						{
+							response.write(b);
+							copied[0] = true;
+						}
+					}
+				});
+			}
+			catch (IOException e1)
+			{
+				throw new WicketRuntimeException(e1);
+			}
+			if (copied[0] == false)
+			{
+				response.write(stream.toByteArray());
 			}
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Response#reset()
-	 */
 	@Override
-	public void reset()
+	public boolean isRedirect()
 	{
-		redirectURL = null;
-		buffer.clear();
-	}
-
-	/**
-	 * Saves url to redirect to when buffered response is flushed. Implementations should encode the
-	 * URL to make sure cookie-less operation is supported in case clients forgot.
-	 * 
-	 * @param url
-	 *            The URL to redirect to
-	 */
-	@Override
-	public final void redirect(final String url)
-	{
-		if (redirectURL != null)
-		{
-			throw new WicketRuntimeException("Already redirecting to '" + redirectURL +
-				"'. Cannot redirect more than once");
-		}
-		// encode to make sure no caller forgot this
-		redirectURL = encodeURL(url).toString();
-	}
-
-	/**
-	 * Writes string to response output.
-	 * 
-	 * @param string
-	 *            The string to write
-	 */
-	@Override
-	public void write(final CharSequence string)
-	{
-		buffer.append(string);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.
-	 */
-	public final void filter()
-	{
-		if (redirectURL == null && buffer.length() != 0)
-		{
-			buffer = filter(buffer);
-		}
-	}
-
-	/**
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return buffer.toString();
+		return redirectUrl != null;
 	}
 }

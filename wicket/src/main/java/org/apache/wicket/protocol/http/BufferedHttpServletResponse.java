@@ -32,7 +32,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.StringBufferWriter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -438,22 +437,6 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	{
 		isOpen();
 		return sbw.getStringBuffer().length();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.
-	 * 
-	 * @param response
-	 */
-	public final void filter(Response response)
-	{
-		isOpen();
-		AppendingStringBuffer buffer = sbw.getStringBuffer();
-		if (redirect == null && buffer.length() != 0)
-		{
-			buffer = response.filter(buffer);
-			sbw.setStringBuffer(buffer);
-		}
 	}
 
 	/**

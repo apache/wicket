@@ -19,21 +19,20 @@ package org.apache.wicket.markup.html.pages;
 import java.io.Serializable;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
+import org.apache.wicket.request.target.basic.RedirectRequestHandler;
 import org.apache.wicket.settings.IRequestCycleSettings;
-import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,14 +72,14 @@ public class BrowserInfoPage extends WebPage
 	 */
 	public BrowserInfoPage(PageParameters parameters)
 	{
-		String to = Strings.toString(parameters.get("cto"));
+		String to = parameters.getNamedParameter("cto").toString();
 		if (to == null)
 		{
 			throw new IllegalArgumentException("parameter cto must be provided!");
 		}
 		setContinueTo(to);
 		initComps();
-		WebRequestCycle requestCycle = (WebRequestCycle)getRequestCycle();
+		RequestCycle requestCycle = getRequestCycle();
 		WebSession session = (WebSession)getSession();
 		ClientInfo clientInfo = session.getClientInfo();
 		if (clientInfo == null)
@@ -134,9 +133,11 @@ public class BrowserInfoPage extends WebPage
 	{
 		WebComponent meta = new WebComponent("meta");
 		PageParameters parameters = new PageParameters();
-		parameters.put("cto", continueTo);
-		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
-			parameters));
+		parameters.setNamedParameter("cto", continueTo);
+
+		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new DefaultPageProvider(
+			BrowserInfoPage.class, parameters)));
+
 		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
 		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer("link");
@@ -163,7 +164,8 @@ public class BrowserInfoPage extends WebPage
 	protected final void continueToPrevious()
 	{
 		// continue to original destination
-		RequestCycle.get().setRequestTarget(new RedirectRequestTarget(continueTo));
+		RequestCycle.get().scheduleRequestHandlerAfterCurrent(
+			new RedirectRequestHandler(continueTo));
 	}
 
 	/**

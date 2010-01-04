@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.ng.request.cycle;
 
-import java.io.OutputStream;
-
 import junit.framework.TestCase;
 
 import org.apache.wicket.Response;
@@ -52,13 +50,7 @@ public class RequestHandlerStackTest extends TestCase
 			}
 
 			@Override
-			public CharSequence encodeURL(final CharSequence url)
-			{
-				return null;
-			}
-
-			@Override
-			public OutputStream getOutputStream()
+			public String encodeURL(CharSequence url)
 			{
 				return null;
 			}

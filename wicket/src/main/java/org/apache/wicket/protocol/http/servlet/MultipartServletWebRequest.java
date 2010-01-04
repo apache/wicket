@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 import org.apache.wicket.util.upload.FileItemFactory;
@@ -77,10 +79,10 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 * @throws FileUploadException
 	 *             Thrown if something goes wrong with upload
 	 */
-	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize)
+	public MultipartServletWebRequest(HttpServletRequest request, String filterPrefix, Bytes maxSize)
 		throws FileUploadException
 	{
-		this(request, maxSize, new DiskFileItemFactory());
+		this(request, filterPrefix, maxSize, new DiskFileItemFactory());
 	}
 
 	/**
@@ -96,10 +98,10 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 * @throws FileUploadException
 	 *             Thrown if something goes wrong with upload
 	 */
-	public MultipartServletWebRequest(HttpServletRequest request, Bytes maxSize,
-		FileItemFactory factory) throws FileUploadException
+	public MultipartServletWebRequest(HttpServletRequest request, String filterPrefix,
+		Bytes maxSize, FileItemFactory factory) throws FileUploadException
 	{
-		super(request);
+		super(request, filterPrefix);
 
 		if (maxSize == null)
 		{
@@ -241,32 +243,24 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 		return files.get(fieldName);
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebRequest#getParameter(java.lang.String)
-	 */
 	@Override
-	public String getParameter(final String key)
+	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		String[] val = (String[])parameters.get(key);
-		return (val == null) ? null : val[0];
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebRequest#getParameterMap()
-	 */
-	@Override
-	public Map getParameterMap()
-	{
-		return parameters;
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebRequest#getParameters(java.lang.String)
-	 */
-	@Override
-	public String[] getParameters(final String key)
-	{
-		return (String[])parameters.get(key);
+		Map<String, List<StringValue>> res = new HashMap<String, List<StringValue>>();
+		for (String key : parameters.keySet())
+		{
+			String[] val = (String[])parameters.get(key);
+			if (val != null && val.length > 0)
+			{
+				List<StringValue> items = new ArrayList<StringValue>();
+				for (String s : val)
+				{
+					items.add(StringValue.valueOf(s));
+				}
+				res.put(key, items);
+			}
+		}
+		return res;
 	}
 
 	/**

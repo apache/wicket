@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.pages;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 
 
 /**
@@ -45,8 +47,8 @@ public class AccessDeniedPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-			HttpServletResponse.SC_FORBIDDEN);
+		WebResponse response = (WebResponse)RequestCycle.get().getResponse();
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 	}
 
 	/**

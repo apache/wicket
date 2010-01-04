@@ -25,10 +25,9 @@ import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
@@ -196,7 +195,8 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeActionURL(CharSequence path, boolean forceActionURL)
 	{
-		if ((!forceActionURL && resourceRequest) || RequestCycle.get().isUrlForNewWindowEncoding())
+		// TODO: NG - solve properly
+		if ((!forceActionURL && resourceRequest) /* || RequestCycle.get().isUrlForNewWindowEncoding() */)
 		{
 			return encodeResourceURL(path);
 		}
@@ -262,7 +262,8 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeRenderURL(CharSequence path, boolean forceRenderURL)
 	{
-		if ((!forceRenderURL && resourceRequest) || RequestCycle.get().isUrlForNewWindowEncoding())
+		// TODO (NG) Solve properly
+		if ((!forceRenderURL && resourceRequest) /* || RequestCycle.get().isUrlForNewWindowEncoding() */)
 		{
 			return encodeResourceURL(path);
 		}
@@ -379,7 +380,7 @@ public class PortletRequestContext extends RequestContext
 	 */
 	protected String getQualifiedPath(CharSequence path)
 	{
-		HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+		HttpServletRequest request = ((ServletWebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
 		return request.getServletPath() + "/" + path;
 	}
 

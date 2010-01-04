@@ -20,13 +20,13 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
+import org.apache.wicket.request.target.basic.AbortRequestHandler;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
@@ -390,13 +390,14 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 				style + ", variation = " + variation + ", locale = " + locale + "]";
 			log.warn(msg);
 
-			if (RequestCycle.get() instanceof WebRequestCycle)
+			if (RequestCycle.get().getResponse() instanceof WebResponse)
 			{
-				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_NOT_FOUND, msg);
+				RequestCycle.get().replaceAllRequestHandlers(
+					new WebErrorCodeResponseHandler(HttpServletResponse.SC_NOT_FOUND, msg));
 			}
 			else
 			{
-				throw new AbortException();
+				RequestCycle.get().replaceAllRequestHandlers(new AbortRequestHandler());
 			}
 		}
 

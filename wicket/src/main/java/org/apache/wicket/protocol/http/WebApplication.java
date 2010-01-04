@@ -21,15 +21,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -38,20 +35,22 @@ import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.request.IRequestMapper;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
+import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
+import org.apache.wicket.ng.request.mapper.MountedMapper;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,9 +132,6 @@ public abstract class WebApplication extends Application
 	 */
 	private final ConcurrentHashMap<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = Generics.newConcurrentHashMap();
 
-	/** the default request cycle processor implementation. */
-	private IRequestCycleProcessor requestCycleProcessor;
-
 	/**
 	 * the prefix for storing variables in the actual session (typically {@link HttpSession} for
 	 * this application instance.
@@ -185,22 +181,6 @@ public abstract class WebApplication extends Application
 			"' is not set yet. Any code in your" +
 			" Application object that uses the wicketServlet/Filter instance should be put" +
 			" in the init() method instead of your constructor");
-	}
-
-	/**
-	 * Gets the default request cycle processor (with lazy initialization). This is the
-	 * {@link IRequestCycleProcessor} that will be used by {@link RequestCycle}s when custom
-	 * implementations of the request cycle do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	public final IRequestCycleProcessor getRequestCycleProcessor()
-	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = newRequestCycleProcessor();
-		}
-		return requestCycleProcessor;
 	}
 
 	/**
@@ -261,10 +241,10 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#logEventTarget(org.apache.wicket.IRequestTarget)
+	 * @see org.apache.wicket.Application#logEventTarget(org.apache.wicket.IRequestHandler)
 	 */
 	@Override
-	public void logEventTarget(IRequestTarget target)
+	public void logEventTarget(IRequestHandler target)
 	{
 		super.logEventTarget(target);
 		IRequestLogger rl = getRequestLogger();
@@ -275,10 +255,10 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#logResponseTarget(org.apache.wicket.IRequestTarget)
+	 * @see org.apache.wicket.Application#logResponseTarget(org.apache.wicket.IRequestHandler)
 	 */
 	@Override
-	public void logResponseTarget(IRequestTarget target)
+	public void logResponseTarget(IRequestHandler target)
 	{
 		super.logResponseTarget(target);
 		IRequestLogger rl = getRequestLogger();
@@ -291,36 +271,16 @@ public abstract class WebApplication extends Application
 	/**
 	 * Mounts an encoder at the given path.
 	 * 
-	 * @param encoder
+	 * @param mapper
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(IRequestTargetUrlCodingStrategy encoder)
+	public final void mount(IRequestMapper mapper)
 	{
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Encoder must be not null");
-		}
+		Checks.argumentNotNull(mapper, "mapper");
 
-		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
+		getRootRequestMapper().register(mapper);
 	}
 
-	/**
-	 * Mounts all bookmarkable pages at the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param packageName
-	 *            the name of the package for which all bookmarkable pages or sharedresources should
-	 *            be mounted
-	 */
-	public final void mount(final String path, final PackageName packageName)
-	{
-		if (packageName == null)
-		{
-			throw new IllegalArgumentException("PackageName cannot be null");
-		}
-		mount(new PackageRequestTargetUrlCodingStrategy(path, packageName));
-	}
 
 	/**
 	 * Mounts a bookmarkable page class to the given path.
@@ -336,40 +296,23 @@ public abstract class WebApplication extends Application
 	public final <T extends Page> void mountBookmarkablePage(final String path,
 		final Class<T> bookmarkablePageClass)
 	{
-		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass, null));
+		mount(new MountedMapper(path, bookmarkablePageClass));
 	}
 
-	/**
-	 * Mounts a bookmarkable page class to the given pagemap and path.
-	 * 
-	 * @param <T>
-	 *            type of page
-	 * 
-	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param pageMapName
-	 *            name of the pagemap this mount is for
-	 * @param bookmarkablePageClass
-	 *            the bookmarkable page class to mount
-	 */
-	public final <T extends Page> void mountBookmarkablePage(final String path,
-		final String pageMapName, final Class<T> bookmarkablePageClass)
-	{
-		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-			pageMapName));
-	}
 
 	/**
 	 * Mounts a shared resource class to the given path.
 	 * 
 	 * @param path
 	 *            the path to mount the resource class on
-	 * @param resourceKey
-	 *            the shared key of the resource being mounted
+	 * @param reference
+	 *            resource reference to be mounted
 	 */
-	public final void mountSharedResource(final String path, final String resourceKey)
+	public final void mountSharedResource(final String path, final ResourceReference reference)
 	{
-		mount(new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
+		getResourceReferenceRegistry().registerResourceReference(reference);
+		// TODO NG Implement mounted resources mapper
+		throw new UnsupportedOperationException("Implement Mapper");
 	}
 
 
@@ -384,17 +327,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void addIgnoreMountPath(String path)
 	{
-		getRequestCycleProcessor().getRequestCodingStrategy().addIgnoreMountPath(path);
-	}
-
-	/*
-	 * @see org.apache.wicket.Application#newRequestCycle(org.apache.wicket.Request,
-	 * org.apache.wicket.Response)
-	 */
-	@Override
-	public RequestCycle newRequestCycle(final Request request, final Response response)
-	{
-		return new WebRequestCycle(this, (WebRequest)request, (WebResponse)response);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -435,17 +368,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Unmounts whatever encoder is mounted at a given path.
-	 * 
-	 * @param path
-	 *            the path of the encoder to unmount
-	 */
-	public final void unmount(String path)
-	{
-		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
-	}
-
-	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g. because you want to read
 	 * an initParameter from web.xml or you want to read a resource from the servlet's context path,
 	 * you can override this method and provide custom initialization. This method is called right
@@ -461,7 +383,7 @@ public abstract class WebApplication extends Application
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
 	@Override
-	protected void internalDestroy()
+	public void internalDestroy()
 	{
 		// destroy the resource watcher
 		IModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher(false);
@@ -580,20 +502,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets a new request cycle processor for web requests. May be replaced by subclasses which wish
-	 * to use their own implementation of IRequestCycleProcessor.
-	 * 
-	 * NOTE this can't be moved to application as portlets use two different request cycle
-	 * processors, and hence have two different methods for them, depending on the kind of request.
-	 * 
-	 * @return IRequestCycleProcessor
-	 */
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new WebRequestCycleProcessor();
-	}
-
-	/**
 	 * @see org.apache.wicket.Application#newSessionStore()
 	 */
 	@Override
@@ -602,31 +510,6 @@ public abstract class WebApplication extends Application
 		return new HttpSessionStore();
 	}
 
-	/**
-	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscated URL which
-	 * has been encoded by an appropriate WebResponse.
-	 * 
-	 * @param servletRequest
-	 * @return a WebRequest object
-	 */
-	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
-	{
-		return new ServletWebRequest(servletRequest);
-	}
-
-	/**
-	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's default URL and
-	 * hide the details from the user. A appropriate WebRequest must be implemented and configured
-	 * to decode the encoded URL.
-	 * 
-	 * @param servletResponse
-	 * @return a WebResponse object
-	 */
-	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-	{
-		return (getRequestCycleSettings().getBufferResponse() ? new BufferedWebResponse(
-			servletResponse) : new WebResponse(servletResponse));
-	}
 
 	/**
 	 * Creates a new ajax request target used to control ajax responses
@@ -716,6 +599,33 @@ public abstract class WebApplication extends Application
 			+ "********************************************************************\n");
 	}
 
+	// TODO: Do this properly
+	private final Map<String, BufferedWebResponse> storedResponses = new ConcurrentHashMap<String, BufferedWebResponse>();
+
+	public boolean hasBufferedResponse(String sessionId, Url url)
+	{
+		String key = sessionId + url.toString();
+		return storedResponses.containsKey(key);
+	}
+
+	public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
+	{
+		String key = sessionId + url.toString();
+		return storedResponses.remove(key);
+	}
+
+	/**
+	 * 
+	 * @param sessionId
+	 * @param url
+	 * @param response
+	 */
+	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
+	{
+		String key = sessionId + url.toString();
+		storedResponses.put(key, response);
+	}
+
 	// TODO remove after deprecation release
 
 	/**
@@ -743,5 +653,18 @@ public abstract class WebApplication extends Application
 			return buffered;
 		}
 		return null;
+	}
+
+	@Override
+	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
+		RenderPageRequestHandler renderPageRequestHandler)
+	{
+		return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler);
+	}
+
+	@Override
+	public void set()
+	{
+		ThreadContext.setApplication(this);
 	}
 }

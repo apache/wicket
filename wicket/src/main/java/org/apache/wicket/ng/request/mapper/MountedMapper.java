@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
@@ -30,7 +30,7 @@ import org.apache.wicket.util.lang.Checks;
 /**
  * Encoder for mounted URL. The mount path can contain parameter placeholders, i.e.
  * <code>/mount/${foo}/path</code>. In that case the appropriate segment from the URL will be
- * accessible as named parameter "foo" in the {@link PageParametersNg}. Similarly when the URL is
+ * accessible as named parameter "foo" in the {@link PageParameters}. Similarly when the URL is
  * constructed, the second segment will contain the value of the "foo" named page parameter.
  * <p>
  * Decodes and encodes the following URLs:
@@ -116,7 +116,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			Class<? extends IRequestablePage> pageClass = this.pageClass.get();
 
 			// extract the PageParameters from URL if there are any
-			PageParametersNg pageParameters = extractPageParameters(request, mountSegments.length,
+			PageParameters pageParameters = extractPageParameters(request, mountSegments.length,
 				pageParametersEncoder);
 
 			// check if there are placeholders in mount segments
@@ -142,9 +142,9 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * 
 	 * @return
 	 */
-	protected PageParametersNg newPageParameters()
+	protected PageParameters newPageParameters()
 	{
-		return new PageParametersNg();
+		return new PageParameters();
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 		encodePageComponentInfo(url, info.getPageComponentInfo());
 
-		PageParametersNg copy = new PageParametersNg(info.getPageParameters());
+		PageParameters copy = new PageParameters(info.getPageParameters());
 
 		for (int i = 0; i < mountSegments.length; ++i)
 		{

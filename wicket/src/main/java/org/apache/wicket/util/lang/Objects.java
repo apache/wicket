@@ -33,6 +33,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.io.IObjectStreamFactory;
@@ -392,11 +393,11 @@ public final class Objects
 	 */
 	public static Object byteArrayToObject(final byte[] data)
 	{
+		ThreadContext old = ThreadContext.get(false);
 		try
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
 			ObjectInputStream ois = null;
-			boolean unsetApplication = false;
 			try
 			{
 				ois = objectStreamFactory.newObjectInputStream(in);
@@ -406,18 +407,13 @@ public final class Objects
 					Application app = Application.get(applicationName);
 					if (app != null)
 					{
-						Application.set(app);
-						unsetApplication = true;
+						ThreadContext.setApplication(app);
 					}
 				}
 				return ois.readObject();
 			}
 			finally
 			{
-				if (unsetApplication)
-				{
-					Application.unset();
-				}
 				if (ois != null)
 				{
 					ois.close();
@@ -434,6 +430,10 @@ public final class Objects
 		{
 			throw new RuntimeException("Could not deserialize object using `" +
 				objectStreamFactory.getClass().getName() + "` object factory", e);
+		}
+		finally
+		{
+			ThreadContext.restore(old);
 		}
 	}
 

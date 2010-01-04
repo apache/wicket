@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 /**
  * Behavior that delegates header contribution to a number of other contributors. It checks the
@@ -58,9 +59,6 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 			return location;
 		}
 
-		return RequestCycle.get()
-			.getProcessor()
-			.getRequestCodingStrategy()
-			.rewriteStaticRelativeUrl(location);
+		return RequestCycle.get().getUrlRenderer().renderUrl(Url.parse(location));
 	}
 }

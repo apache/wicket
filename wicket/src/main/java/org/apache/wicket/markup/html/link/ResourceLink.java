@@ -17,9 +17,12 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.IResource.Attributes;
 
 /**
  * A link to any ResourceReference.
@@ -36,10 +39,10 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	private final ResourceReference resourceReference;
 
 	/** The Resource */
-	private final Resource resource;
+	private final IResource resource;
 
 	/** The resource parameters */
-	private final ValueMap resourceParameters;
+	private final PageParameters resourceParameters;
 
 
 	/**
@@ -68,7 +71,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	 *            The resource parameters
 	 */
 	public ResourceLink(final String id, final ResourceReference resourceReference,
-		ValueMap resourceParameters)
+		PageParameters resourceParameters)
 	{
 		super(id);
 		this.resourceReference = resourceReference;
@@ -84,7 +87,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	 * @param resource
 	 *            The resource
 	 */
-	public ResourceLink(final String id, final Resource resource)
+	public ResourceLink(final String id, final IResource resource)
 	{
 		super(id);
 		this.resource = resource;
@@ -105,7 +108,10 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	 */
 	public final void onResourceRequested()
 	{
-		resource.onResourceRequested();
+
+		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
+			.getResponse(), getLocale(), getStyle(), getVariation(), null);
+		resource.respond(a);
 		onClick();
 	}
 
@@ -126,8 +132,11 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 			// something like
 			// SharedResource.getResourceReferenceForLocale(resourceReference);
 
-			resourceReference.bind(getApplication());
-			return getRequestCycle().urlFor(resourceReference, resourceParameters);
+			getApplication().getResourceReferenceRegistry().registerResourceReference(
+				resourceReference);
+
+			return getRequestCycle().renderUrlFor(
+				new ResourceReferenceRequestHandler(resourceReference, resourceParameters));
 		}
 		return urlFor(IResourceListener.INTERFACE);
 	}

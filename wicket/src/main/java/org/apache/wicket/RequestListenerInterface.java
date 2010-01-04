@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
-import org.apache.wicket.request.ObsoleteRequestParameters;
-import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
+import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,9 +164,9 @@ public class RequestListenerInterface
 	 * @param component
 	 *            The component
 	 */
-	public final void invoke(final Page page, final Component component)
+	public final void invoke(final IRequestableComponent component)
 	{
-		if (!component.isEnabled() || !component.isVisibleInHierarchy())
+		if (!component.isEnabledInHierarchy() || !component.isVisibleInHierarchy())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
@@ -174,7 +174,6 @@ public class RequestListenerInterface
 			return;
 		}
 
-		page.beforeCallComponent(component, this);
 
 		try
 		{
@@ -202,27 +201,49 @@ public class RequestListenerInterface
 		}
 		finally
 		{
-			page.afterCallComponent(component, this);
 		}
 	}
 
 	/**
-	 * Creates a new request target for this request listener interface
+	 * Invokes a given interface on a component's behavior.
 	 * 
-	 * @param page
-	 *            The page
 	 * @param component
 	 *            The component
-	 * @param listener
-	 *            The listener to call
-	 * @param requestParameters
-	 *            Request parameters
-	 * @return The request target
+	 * @param behavior
 	 */
-	public IRequestTarget newRequestTarget(final Page page, final Component component,
-		final RequestListenerInterface listener, final ObsoleteRequestParameters requestParameters)
+	public final void invoke(final IRequestableComponent component, final IBehavior behavior)
 	{
-		return new ListenerInterfaceRequestTarget(page, component, listener, requestParameters);
+		if (!component.canCallListenerInterface())
+		{
+			// just return so that we have a silent fail and just re-render the
+			// page
+			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			return;
+		}
+
+		try
+		{
+			// Invoke the interface method on the component
+			method.invoke(behavior, new Object[] {});
+		}
+		catch (InvocationTargetException e)
+		{
+			if (e.getTargetException() instanceof AbstractRestartResponseException ||
+				e.getTargetException() instanceof AuthorizationException ||
+				e.getTargetException() instanceof WicketRuntimeException)
+			{
+				throw (RuntimeException)e.getTargetException();
+			}
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+				method.getDeclaringClass() + " targeted at behavior " + behavior +
+				" on component " + component + " threw an exception", e);
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+				method.getDeclaringClass() + " targeted at behavior " + behavior +
+				" on component " + component + " threw an exception", e);
+		}
 	}
 
 	/**

@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.examples.staticpages;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.basic.URIRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
@@ -55,7 +55,7 @@ public class Application extends WebApplication
 		mount(new URIRequestTargetUrlCodingStrategy("/docs")
 		{
 			@Override
-			public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
+			public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
 				return new WebExternalResourceRequestTarget(path);
@@ -66,13 +66,13 @@ public class Application extends WebApplication
 		mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
 		{
 			@Override
-			public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
+			public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
 				IResourceStream xslStream = new PackageResourceStream(Application.class,
 					"layout.xsl");
 				IResourceStream docStream = new WebExternalResourceStream(path);
-				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
+				return new ResourceStreamRequestHandler(new XSLTResourceStream(xslStream, docStream));
 			}
 		});
 

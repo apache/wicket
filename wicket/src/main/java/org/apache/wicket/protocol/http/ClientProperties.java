@@ -22,8 +22,8 @@ import java.util.TimeZone;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 

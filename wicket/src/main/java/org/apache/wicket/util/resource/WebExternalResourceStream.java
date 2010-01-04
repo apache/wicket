@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Time;
@@ -98,7 +98,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
-		final ServletContext context = ((WebApplication)RequestCycle.get().getApplication()).getServletContext();
+		final ServletContext context = ((WebApplication)Application.get()).getServletContext();
 
 		in = context.getResourceAsStream(url);
 		if (in == null)

@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.response;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.apache.wicket.Response;
 
 
@@ -56,23 +53,14 @@ public class NullResponse extends Response
 		// Does nothing
 	}
 
-	/**
-	 * @see org.apache.wicket.Response#getOutputStream()
-	 */
-	@Override
-	public OutputStream getOutputStream()
-	{
-		return new OutputStream()
-		{
-			@Override
-			public void write(int b) throws IOException
-			{
-			}
-		};
-	}
-
 	@Override
 	public void write(byte[] array)
 	{
+	}
+
+	@Override
+	public String encodeURL(CharSequence url)
+	{
+		return url != null ? url.toString() : null;
 	}
 }

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng;
 
-import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.IExceptionMapper;
 
 public class DefaultExceptionMapper implements IExceptionMapper

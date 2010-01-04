@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
@@ -91,7 +91,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 		assertTrue(handler instanceof RenderPageRequestHandler);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-		PageParametersNg p = page.getPageParametersNg();
+		PageParameters p = page.getPageParametersNg();
 		assertEquals(1, p.getIndexedParamsCount());
 		assertEquals("indexed1", p.getIndexedParameter(0).toString());
 
@@ -125,7 +125,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
-		PageParametersNg p = page.getPageParametersNg();
+		PageParameters p = page.getPageParametersNg();
 		assertEquals(2, p.getIndexedParamsCount());
 		assertEquals("i1", p.getIndexedParameter(0).toString());
 		assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -172,7 +172,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPath());
 
-		PageParametersNg p = page.getPageParametersNg();
+		PageParameters p = page.getPageParametersNg();
 		assertEquals(2, p.getIndexedParamsCount());
 		assertEquals("i1", p.getIndexedParameter(0).toString());
 		assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -270,7 +270,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	public void testEncode1()
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(MockPage.class,
-			new PageParametersNg());
+			new PageParameters());
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
@@ -282,7 +282,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
 	public void testEncode2()
 	{
-		PageParametersNg parameters = new PageParametersNg();
+		PageParameters parameters = new PageParameters();
 		parameters.setIndexedParameter(0, "i1");
 		parameters.setIndexedParameter(1, "i2");
 		parameters.setNamedParameter("a", "b");
@@ -299,7 +299,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
 	public void testEncode3()
 	{
-		PageParametersNg parameters = new PageParametersNg();
+		PageParameters parameters = new PageParameters();
 		parameters.setIndexedParameter(0, "i1");
 		parameters.setIndexedParameter(1, "i2");
 		parameters.setNamedParameter("a", "b");
@@ -492,7 +492,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 		assertTrue(handler instanceof RenderPageRequestHandler);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-		PageParametersNg p = page.getPageParametersNg();
+		PageParameters p = page.getPageParametersNg();
 		assertEquals(1, p.getIndexedParamsCount());
 		assertEquals("indexed1", p.getIndexedParameter(0).toString());
 
@@ -508,7 +508,7 @@ public class MountedMapperTest extends AbstractEncoderTest
 	 */
 	public void testPlaceholderEncode2()
 	{
-		PageParametersNg parameters = new PageParametersNg();
+		PageParameters parameters = new PageParameters();
 		parameters.setIndexedParameter(0, "i1");
 		parameters.setIndexedParameter(1, "i2");
 		parameters.setNamedParameter("a", "b");

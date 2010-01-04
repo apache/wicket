@@ -16,13 +16,8 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.request.ObsoleteRequestParameters;
-import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;
 
 /**
  * Listens for requests to behaviors. When {@link org.apache.wicket.behavior.IBehavior}s are
@@ -36,21 +31,7 @@ public interface IBehaviorListener extends IRequestListener
 {
 	/** Behavior listener interface */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-		IBehaviorListener.class)
-	{
-		/**
-		 * 
-		 * @see org.apache.wicket.RequestListenerInterface#newRequestTarget(org.apache.wicket.Page,
-		 *      org.apache.wicket.Component, org.apache.wicket.RequestListenerInterface,
-		 *      org.apache.wicket.request.ObsoleteRequestParameters)
-		 */
-		@Override
-		public IRequestTarget newRequestTarget(Page page, Component component,
-			RequestListenerInterface listener, ObsoleteRequestParameters requestParameters)
-		{
-			return new BehaviorRequestTarget(page, component, listener, requestParameters);
-		}
-	};
+		IBehaviorListener.class);
 
 	/**
 	 * Called when a request to a behavior is received.

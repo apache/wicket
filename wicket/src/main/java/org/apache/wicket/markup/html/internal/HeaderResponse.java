@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
@@ -76,7 +78,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			CharSequence url = RequestCycle.get().urlFor(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			CharSequence url = RequestCycle.get().renderUrlFor(handler);
 			renderCSSReference(url.toString(), null);
 		}
 	}
@@ -93,7 +96,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			CharSequence url = RequestCycle.get().urlFor(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			CharSequence url = RequestCycle.get().renderUrlFor(handler);
 			renderCSSReference(url.toString(), media);
 		}
 	}
@@ -137,7 +141,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write(media);
 					getResponse().write("\"");
 				}
-				getResponse().println(" />");
+				getResponse().write(" />");
+				getResponse().write("\n");
 				markRendered(token);
 			}
 		}
@@ -154,7 +159,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			CharSequence url = RequestCycle.get().urlFor(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			CharSequence url = RequestCycle.get().renderUrlFor(handler);
 			renderJavascriptReference(url.toString());
 		}
 	}
@@ -171,7 +177,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			CharSequence url = RequestCycle.get().urlFor(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			CharSequence url = RequestCycle.get().renderUrlFor(handler);
 			renderJavascriptReference(url.toString(), id);
 		}
 	}

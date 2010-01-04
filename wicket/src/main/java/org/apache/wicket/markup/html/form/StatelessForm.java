@@ -62,7 +62,8 @@ public class StatelessForm<T> extends Form<T>
 	public void process(IFormSubmittingComponent submittingComponent)
 	{
 		// set redirect to true for a stateless form.
-		setRedirect(true);
+		// TODO: NG
+		// setRedirect(true);
 
 		super.process(submittingComponent);
 	}

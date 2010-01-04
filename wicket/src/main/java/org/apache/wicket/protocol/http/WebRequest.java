@@ -19,54 +19,38 @@ package org.apache.wicket.protocol.http;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.IRequestParameters;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.util.lang.Bytes;
 
 
 /**
- * Subclass of Request for HTTP protocol requests which holds an underlying HttpServletRequest
- * object. A variety of convenience methods are available that operate on the HttpServletRequest
- * object. These methods do things such as providing access to parameters, cookies, URLs and path
- * information.
+ * Base class for request that provides additional web-related information.
  * 
- * @author Jonathan Locke
+ * @author Matej Knopp
  */
 public abstract class WebRequest extends Request
 {
 	/**
-	 * Get the requests' cookies
-	 * 
-	 * @return Cookies
+	 * @return request cookies
 	 */
-	public Cookie[] getCookies()
-	{
-		return getHttpServletRequest().getCookies();
-	}
+	public abstract Cookie[] getCookies();
 
 	/**
-	 * Get the requests' cookie by name
-	 * 
-	 * @param name
-	 *            The name of the cookie to be looked up
-	 * 
-	 * @return A cookie, null if not found.
-	 * @since 1.3.0-beta4
+	 * @param cookieName
+	 * @return cookie with specified name or <code>null</code> if the cookie does not exist
 	 */
-	public Cookie getCookie(String name)
+	public Cookie getCookie(String cookieName)
 	{
 		Cookie[] cookies = getCookies();
 		if (cookies != null && cookies.length > 0)
 		{
 			for (int i = 0; i < cookies.length; i++)
 			{
-				if (cookies[i].getName().equals(name))
+				if (cookies[i].getName().equals(cookieName))
 				{
 					return cookies[i];
 				}
@@ -76,79 +60,30 @@ public abstract class WebRequest extends Request
 	}
 
 	/**
-	 * Gets the wrapped http servlet request object.
-	 * <p>
-	 * WARNING: it is usually a bad idea to depend on the http servlet request directly. Please use
-	 * the classes and methods that are exposed by Wicket (such as {@link org.apache.wicket.Session}
-	 * instead. Send an email to the mailing list in case it is not clear how to do things or you
-	 * think you miss functionality which causes you to depend on this directly.
-	 * </p>
+	 * Returns all the values of the specified request header.
 	 * 
-	 * @return the wrapped http serlvet request object.
+	 * @param name
+	 * @return unmodifiable list of header values
 	 */
-	public abstract HttpServletRequest getHttpServletRequest();
+	public abstract List<String> getHeaders(String name);
 
 	/**
-	 * Returns the preferred <code>Locale</code> that the client will accept content in, based on
-	 * the Accept-Language header. If the client request doesn't provide an Accept-Language header,
-	 * this method returns the default locale for the server.
+	 * Returns the value of the specified request header as a <code>String</code>
 	 * 
-	 * @return the preferred <code>Locale</code> for the client
+	 * @param name
+	 * @return string value of request header
 	 */
-	@Override
-	public abstract Locale getLocale();
+	public abstract String getHeader(String name);
 
 	/**
-	 * Gets the request parameter with the given key.
+	 * Returns the value of the specified request header as a <code>long</code> value that
+	 * represents a <code>Date</code> object. Use this method with headers that contain dates, such
+	 * as <code>If-Modified-Since</code>.
 	 * 
-	 * @param key
-	 *            Parameter name
-	 * @return Parameter value
+	 * @param name
+	 * @return date value of request header
 	 */
-	@Override
-	public abstract String getParameter(final String key);
-
-	/**
-	 * Gets the request parameters.
-	 * 
-	 * @return Map of parameters
-	 */
-	@Override
-	public abstract Map<String, String[]> getParameterMap();
-
-	/**
-	 * Gets the request parameters with the given key.
-	 * 
-	 * @param key
-	 *            Parameter name
-	 * @return Parameter values
-	 */
-	@Override
-	public abstract String[] getParameters(final String key);
-
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	public abstract String getServletPath();
-
-	/**
-	 * Create a runtime context type specific (e.g. Servlet or Portlet) MultipartWebRequest wrapper
-	 * for handling multipart content uploads.
-	 * 
-	 * @param maxSize
-	 *            the maximum size this request may be
-	 * @return new WebRequest wrapper implementing MultipartWebRequest
-	 */
-	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
-
-	/**
-	 * Is the request an ajax request?
-	 * 
-	 * @return True if the ajax is an ajax request. False if it's not.
-	 */
-	public abstract boolean isAjax();
+	public abstract long getDateHeader(String name);
 
 	/**
 	 * Convenience method for retrieving If-Modified-Since header.
@@ -169,30 +104,20 @@ public abstract class WebRequest extends Request
 	}
 
 	/**
-	 * Returns the value of the specified request header as a <code>long</code> value that
-	 * represents a <code>Date</code> object. Use this method with headers that contain dates, such
-	 * as <code>If-Modified-Since</code>.
-	 * 
-	 * @param name
-	 * @return date value of request header
+	 * Marker parameter for AjaxRequest.
 	 */
-	public abstract long getDateHeader(String name);
+	public static final String PARAM_AJAX = "wicket:ajax";
 
 	/**
-	 * Returns all the values of the specified request header.
+	 * Returns whether this request is an Ajax request. This implementation only checks for value of
+	 * wicket:ajax url parameter. Subclasses can use other approach.
 	 * 
-	 * @param name
-	 * @return unmodifiable list of header values
+	 * @return <code>true</code> if this request is an ajax request, <code>false</code> otherwise.
 	 */
-	public abstract List<String> getHeaders(String name);
-
-	/**
-	 * Returns the value of the specified request header as a <code>String</code>
-	 * 
-	 * @param name
-	 * @return string value of request header
-	 */
-	public abstract String getHeader(String name);
+	public boolean isAjax()
+	{
+		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
+	}
 
 	/**
 	 * Returns request with specified URL and same POST parameters as this request.
@@ -204,7 +129,6 @@ public abstract class WebRequest extends Request
 	@Override
 	public WebRequest requestWithUrl(final Url url)
 	{
-		final WebRequest delegate = this;
 		return new WebRequest()
 		{
 			@Override
@@ -248,72 +172,7 @@ public abstract class WebRequest extends Request
 			{
 				return WebRequest.this.getHeaders(name);
 			}
-
-			@Override
-			public HttpServletRequest getHttpServletRequest()
-			{
-				return delegate.getHttpServletRequest();
-			}
-
-			@Override
-			public String getParameter(String key)
-			{
-				return delegate.getParameter(key);
-			}
-
-			@Override
-			public Map<String, String[]> getParameterMap()
-			{
-				return delegate.getParameterMap();
-			}
-
-			@Override
-			public String[] getParameters(String key)
-			{
-				return delegate.getParameters(key);
-			}
-
-			@Override
-			public String getServletPath()
-			{
-				return delegate.getServletPath();
-			}
-
-			@Override
-			public boolean isAjax()
-			{
-				return delegate.isAjax();
-			}
-
-			@Override
-			public WebRequest newMultipartWebRequest(Bytes maxSize)
-			{
-				return delegate.newMultipartWebRequest(maxSize);
-			}
-
-			@Override
-			public String getPath()
-			{
-				return delegate.getPath();
-			}
-
-			@Override
-			public String getQueryString()
-			{
-				return delegate.getQueryString();
-			}
-
-			@Override
-			public String getRelativePathPrefixToContextRoot()
-			{
-				return delegate.getRelativePathPrefixToContextRoot();
-			}
-
-			@Override
-			public String getRelativePathPrefixToWicketHandler()
-			{
-				return delegate.getRelativePathPrefixToWicketHandler();
-			}
 		};
 	}
+
 }

@@ -28,7 +28,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -199,8 +199,9 @@ public abstract class AbstractTree extends Panel
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
 				String tagName = ((ComponentTag)getMarkup().get(0)).getName();
-				getResponse().write("<", tagName, " style=\"display:none\" id=\"", getMarkupId(),
-					"\"></", tagName, ">");
+				getResponse().write(
+					"<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() + "\"></" +
+						tagName + ">");
 			}
 			else
 			{
@@ -918,10 +919,10 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void updateTree()
 	{
-		IRequestTarget target = getRequestCycle().getRequestTarget();
-		if (target instanceof AjaxRequestTarget)
+		IRequestHandler handler = getRequestCycle().getActiveRequestHandler();
+		if (handler instanceof AjaxRequestTarget)
 		{
-			updateTree((AjaxRequestTarget)target);
+			updateTree((AjaxRequestTarget)handler);
 		}
 	}
 

@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.UrlUtils;
 
 /**
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. Usually this is used for
@@ -160,10 +161,7 @@ public class ExternalLink extends AbstractLink
 					{
 						url = url.substring(1);
 					}
-					url = RequestCycle.get()
-						.getProcessor()
-						.getRequestCodingStrategy()
-						.rewriteStaticRelativeUrl(url);
+					url = UrlUtils.rewriteToContextRelative(url, RequestCycle.get().getRequest());
 				}
 
 				// if the tag is an anchor proper

@@ -18,7 +18,7 @@ package org.apache.wicket.request.target.coding;
 
 import java.math.BigDecimal;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
@@ -46,7 +46,7 @@ public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 		params.add("a", "1");
 		params.add("a", "2");
 		params.add("b", "1");
-		IRequestTarget rt = new BookmarkablePageRequestTarget(TestPage.class, params);
+		IRequestHandler rt = new BookmarkablePageRequestTarget(TestPage.class, params);
 		String path = ucs.encode(rt).toString();
 		log.debug(path);
 		assertEquals("mount/point?a=1&a=2&b=1", path);

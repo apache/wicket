@@ -17,12 +17,10 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.request.ObsoleteRequestParameters;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -87,11 +85,11 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				if (params == null)
 				{
 					// Create page using page factory
-					return Session.get().getPageFactory().newPage(c);
+					return (Page)Session.get().getPageFactory().newPage(c);
 				}
 				else
 				{
-					return Session.get().getPageFactory().newPage(c, params);
+					return (Page)Session.get().getPageFactory().newPage(c, params);
 				}
 			}
 
@@ -192,15 +190,12 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
-		ObsoleteRequestParameters parameters = RequestCycle.get().getRequest().getObsoleteRequestParameters();
-		String oldPageMapName = parameters.getPageMapName();
 		try
 		{
 			setResponsePage(pageLink.getPage());
 		}
 		finally
 		{
-			RequestCycle.get().getRequest().getObsoleteRequestParameters().setPageMapName(oldPageMapName);
 		}
 	}
 

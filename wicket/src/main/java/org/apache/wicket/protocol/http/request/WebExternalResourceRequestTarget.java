@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * <b>NOTE:</b> this class is a wrapper around
- * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(org.apache.wicket.util.resource.IResourceStream)}
+ * {@link ResourceStreamRequestHandler#ResourceStreamRequestTarget(org.apache.wicket.util.resource.IResourceStream)}
  * , and kept for compatibility purposes.
  * </p>
  * 
  * @author Eelco Hillenius
  */
-public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarget
+public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandler
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestTarget.class);
@@ -67,7 +67,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarge
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.RequestCycle)
 	 */
 	@Override
 	public void detach(RequestCycle requestCycle)

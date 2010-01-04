@@ -16,19 +16,19 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.request.mapper.info.ComponentInfo;
 import org.apache.wicket.ng.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.ng.request.mapper.info.PageInfo;
@@ -53,7 +53,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	protected static final class UrlInfo
 	{
 		private final PageComponentInfo pageComponentInfo;
-		private final PageParametersNg pageParameters;
+		private final PageParameters pageParameters;
 		private final Class<? extends IRequestablePage> pageClass;
 
 		/**
@@ -67,7 +67,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		 *            optional parameter providing pageParameters
 		 */
 		public UrlInfo(PageComponentInfo pageComponentInfo,
-			Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
+			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 		{
 			Checks.argumentNotNull(pageClass, "pageClass");
 
@@ -95,7 +95,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		/**
 		 * @return PageParameters instance (never <code>null</code>)
 		 */
-		public PageParametersNg getPageParameters()
+		public PageParameters getPageParameters()
 		{
 			return pageParameters;
 		}
@@ -149,7 +149,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 * @return
 	 */
 	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
-		PageParametersNg pageParameters)
+		PageParameters pageParameters)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageClass, pageParameters);
 		provider.setPageSource(getContext());
@@ -165,7 +165,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 * @return
 	 */
 	private IRequestHandler processHybrid(PageInfo pageInfo,
-		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
+		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
 	{
 		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass,
@@ -182,7 +182,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 * @return
 	 */
 	private IRequestHandler processListener(PageComponentInfo pageComponentInfo,
-		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters)
+		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
@@ -223,7 +223,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		{
 			PageComponentInfo info = urlInfo.getPageComponentInfo();
 			Class<? extends IRequestablePage> pageClass = urlInfo.getPageClass();
-			PageParametersNg pageParameters = urlInfo.getPageParameters();
+			PageParameters pageParameters = urlInfo.getPageParameters();
 
 			if (info == null || info.getPageInfo().getPageId() == null)
 			{

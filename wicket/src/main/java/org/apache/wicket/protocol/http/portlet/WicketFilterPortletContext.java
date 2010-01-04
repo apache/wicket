@@ -153,11 +153,11 @@ public class WicketFilterPortletContext
 	 * @param response
 	 * @return true if running in a portlet context.
 	 */
-	public boolean createPortletRequestContext(WebRequest request, WebResponse response)
+	public boolean createPortletRequestContext(ServletWebRequest request, WebResponse response)
 	{
 		if (request.getHttpServletRequest().getAttribute("javax.portlet.config") != null)
 		{
-			newPortletRequestContext((ServletWebRequest)request, response);
+			newPortletRequestContext(request, response);
 			return true;
 		}
 		return false;

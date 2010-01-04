@@ -17,76 +17,26 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Locale;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Response;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * Implements responses over the HTTP protocol by holding an underlying HttpServletResponse object
- * and providing convenience methods for using that object. Convenience methods include methods
- * which: add a cookie, close the stream, encode a URL, redirect a request to another resource,
- * determine if a redirect has been issued, set the content type, set the locale and, most
- * importantly, write a String to the response output.
+ * Base class for web-related responses.
  * 
- * @author Jonathan Locke
+ * @author Matej Knopp
  */
-public class WebResponse extends Response
+public abstract class WebResponse extends Response
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(WebResponse.class);
-
-	/** True if response is a redirect. */
-	protected boolean redirect;
-
-	/** The underlying response object. */
-	private final HttpServletResponse httpServletResponse;
-
-	/** Is the request an ajax request? */
-	private boolean ajax;
-
-	/**
-	 * Constructor for testing harness.
-	 */
-	public WebResponse()
-	{
-		httpServletResponse = null;
-	}
-
-	/**
-	 * Package private constructor.
-	 * 
-	 * @param httpServletResponse
-	 *            The servlet response object
-	 */
-	public WebResponse(final HttpServletResponse httpServletResponse)
-	{
-		this.httpServletResponse = httpServletResponse;
-	}
-
 	/**
 	 * Add a cookie to the web response
 	 * 
 	 * @param cookie
 	 */
-	public void addCookie(final Cookie cookie)
-	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.addCookie(cookie);
-		}
-	}
+	public abstract void addCookie(final Cookie cookie);
 
 	/**
 	 * Convenience method for clearing a cookie.
@@ -95,342 +45,51 @@ public class WebResponse extends Response
 	 *            The cookie to set
 	 * @see WebResponse#addCookie(Cookie)
 	 */
-	public void clearCookie(final Cookie cookie)
-	{
-		if (httpServletResponse != null)
-		{
-			cookie.setMaxAge(0);
-			cookie.setValue(null);
-			addCookie(cookie);
-		}
-	}
-
-	/**
-	 * Closes response output.
-	 */
-	@Override
-	public void close()
-	{
-		// NOTE: Servlet container will close the response output stream
-		// automatically, so we do nothing here.
-	}
-
-	/**
-	 * Returns the given url encoded.
-	 * 
-	 * @param url
-	 *            The URL to encode
-	 * @return The encoded url
-	 */
-	@Override
-	public CharSequence encodeURL(CharSequence url)
-	{
-		if (httpServletResponse != null && url != null)
-		{
-			if (url.length() > 0 && url.charAt(0) == '?')
-			{
-				// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
-				// when the URL starts with '?'. So we prepend the URL with ./ and remove it
-				// afterwards (unless some container prepends session id before './' or mangles
-				// the URL otherwise
-
-				String encoded = httpServletResponse.encodeURL("./" + url.toString());
-				if (encoded.startsWith("./"))
-				{
-					return encoded.substring(2);
-				}
-				else
-				{
-					return encoded;
-				}
-			}
-			else
-			{
-				return httpServletResponse.encodeURL(url.toString());
-			}
-		}
-		return url;
-	}
-
-	/**
-	 * Gets the wrapped http servlet response object.
-	 * 
-	 * @return The wrapped http servlet response object
-	 */
-	public final HttpServletResponse getHttpServletResponse()
-	{
-		return httpServletResponse;
-	}
-
-	/**
-	 * @see org.apache.wicket.Response#getOutputStream()
-	 */
-	@Override
-	public OutputStream getOutputStream()
-	{
-		try
-		{
-			return httpServletResponse.getOutputStream();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Error while getting output stream.", e);
-		}
-	}
-
-	/**
-	 * Whether this response is going to redirect the user agent.
-	 * 
-	 * @return True if this response is going to redirect the user agent
-	 */
-	@Override
-	public boolean isRedirect()
-	{
-		return redirect;
-	}
-
-	/**
-	 * CLIENTS SHOULD NEVER CALL THIS METHOD FOR DAY TO DAY USE!
-	 * <p>
-	 * Redirects to the given url. Implementations should encode the URL to make sure cookie-less
-	 * operation is supported in case clients forgot.
-	 * </p>
-	 * 
-	 * @param url
-	 *            The URL to redirect to
-	 */
-	@Override
-	public void redirect(String url)
-	{
-		if (!redirect)
-		{
-			if (httpServletResponse != null)
-			{
-				// encode to make sure no caller forgot this
-				url = httpServletResponse.encodeRedirectURL(url);
-				try
-				{
-					if (httpServletResponse.isCommitted())
-					{
-						log.error("Unable to redirect to: " + url +
-							", HTTP Response has already been committed.");
-					}
-
-					if (log.isDebugEnabled())
-					{
-						log.debug("Redirecting to " + url);
-					}
-
-					if (isAjax())
-					{
-						/*
-						 * By reaching this point, make sure the HTTP response status code is set to
-						 * 200, otherwise wicket-ajax.js will not process the Ajax-Location header
-						 */
-						httpServletResponse.addHeader("Ajax-Location", url);
-
-						// safari chokes on empty response. but perhaps this is
-						// not the best place?
-						httpServletResponse.getWriter().write("-");
-
-						configureAjaxRedirect();
-					}
-					else
-					{
-						httpServletResponse.sendRedirect(url);
-					}
-					redirect = true;
-				}
-				catch (IOException e)
-				{
-					log.warn("redirect to " + url + " failed: " + e.getMessage());
-				}
-			}
-		}
-		else
-		{
-			log.info("Already redirecting to an url current one ignored: " + url);
-		}
-	}
-
-	/**
-	 * Configure the header for ajax redirects
-	 */
-	protected void configureAjaxRedirect()
-	{
-		// Set the encoding (see Wicket-2348)
-		final String encoding = Application.get()
-			.getRequestCycleSettings()
-			.getResponseRequestEncoding();
-
-		// Set content type based on markup type for page
-		setCharacterEncoding(encoding);
-		setContentType("text/xml; charset=" + encoding);
-	}
-
-	/**
-	 * Set the content type on the response.
-	 * 
-	 * @param mimeType
-	 *            The mime type
-	 */
-	@Override
-	public void setContentType(final String mimeType)
-	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.setContentType(mimeType);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.Response#setContentLength(long)
-	 */
-	@Override
-	public void setContentLength(long length)
-	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.setContentLength((int)length);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.Response#setLastModifiedTime(org.apache.wicket.util.time.Time)
-	 */
-	@Override
-	public void setLastModifiedTime(Time time)
-	{
-		if (httpServletResponse != null)
-		{
-			if (time != null && time.getMilliseconds() != -1)
-			{
-				httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
-			}
-		}
-	}
-
-	/**
-	 * Output stream encoding. If the deployment descriptor contains a locale-encoding-mapping-list
-	 * element, and that element provides a mapping for the given locale, that mapping is used.
-	 * Otherwise, the mapping from locale to character encoding is container dependent. Default is
-	 * ISO-8859-1.
-	 * 
-	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
-	 * 
-	 * @param locale
-	 *            The locale use for mapping the character encoding
-	 */
-	@Override
-	public final void setLocale(final Locale locale)
-	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.setLocale(locale);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.Response#write(byte[])
-	 */
-	@Override
-	public void write(byte[] array)
-	{
-		try
-		{
-			httpServletResponse.getOutputStream().write(array);
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-	}
-
-	/**
-	 * Writes string to response output.
-	 * 
-	 * @param string
-	 *            The string to write
-	 */
-	@Override
-	public void write(final CharSequence string)
-	{
-		if (string instanceof AppendingStringBuffer)
-		{
-			write((AppendingStringBuffer)string);
-		}
-		else if (string instanceof StringBuffer)
-		{
-			try
-			{
-				StringBuffer sb = (StringBuffer)string;
-				char[] array = new char[sb.length()];
-				sb.getChars(0, sb.length(), array, 0);
-				httpServletResponse.getWriter().write(array, 0, array.length);
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
-			}
-		}
-		else
-		{
-			try
-			{
-				httpServletResponse.getWriter().write(string.toString());
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
-			}
-		}
-	}
-
-	/**
-	 * Writes AppendingStringBuffer to response output.
-	 * 
-	 * @param asb
-	 *            The AppendingStringBuffer to write to the stream
-	 */
-	public void write(AppendingStringBuffer asb)
-	{
-		try
-		{
-			httpServletResponse.getWriter().write(asb.getValue(), 0, asb.length());
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
-		}
-	}
-
-	/**
-	 * Set a header to the date value in the servlet response stream.
-	 * 
-	 * @param header
-	 * @param date
-	 */
-	public void setDateHeader(String header, long date)
-	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.setDateHeader(header, date);
-		}
-	}
-
+	public abstract void clearCookie(final Cookie cookie);
 
 	/**
 	 * Set a header to the string value in the servlet response stream.
 	 * 
-	 * @param header
+	 * @param name
 	 * @param value
 	 */
-	public void setHeader(String header, String value)
+	public abstract void setHeader(String name, String value);
+
+	/**
+	 * Set a header to the date value in the servlet response stream.
+	 * 
+	 * @param name
+	 * @param date
+	 */
+	public abstract void setDateHeader(String name, long date);
+
+	/**
+	 * Set the content length on the response, if appropriate in the subclass. This default
+	 * implementation does nothing.
+	 * 
+	 * @param length
+	 *            The length of the content
+	 */
+	public abstract void setContentLength(final long length);
+
+	/**
+	 * Set the content type on the response, if appropriate in the subclass. This default
+	 * implementation does nothing.
+	 * 
+	 * @param mimeType
+	 *            The mime type
+	 */
+	public abstract void setContentType(final String mimeType);
+
+	/**
+	 * Set the contents last modified time, if appropriate in the subclass.
+	 * 
+	 * @param time
+	 *            The last modified time in milliseconds
+	 */
+	public void setLastModifiedTime(long time)
 	{
-		if (httpServletResponse != null)
-		{
-			httpServletResponse.setHeader(header, value);
-		}
+		setDateHeader("Last-Modified", time);
 	}
 
 	/**
@@ -462,34 +121,33 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Is the request, which matches this response an ajax request.
-	 * 
-	 * @return True if the request is an ajax request.
-	 */
-	public boolean isAjax()
-	{
-		return ajax;
-	}
-
-	/**
-	 * Set that the request which matches this response is an ajax request.
-	 * 
-	 * @param ajax
-	 *            True if the request is an ajax request.
-	 */
-	public void setAjax(boolean ajax)
-	{
-		this.ajax = ajax;
-	}
-
-	/**
 	 * Sets the status code for this response.
 	 * 
 	 * @param sc
 	 *            status code
 	 */
-	public void setStatus(int sc)
-	{
-		httpServletResponse.setStatus(sc);
-	}
+	public abstract void setStatus(int sc);
+
+	/**
+	 * Send error status code with optional message.
+	 * 
+	 * @param sc
+	 * @param msg
+	 * @throws IOException
+	 */
+	public abstract void sendError(int sc, String msg);
+
+	/**
+	 * Redirects the response to specified URL. The implementation is responsible for properly
+	 * encoding the URL.
+	 * 
+	 * @param url
+	 */
+	public abstract void sendRedirect(String url);
+
+	/**
+	 * @return <code>true</code> is {@link #sendRedirect(String)} was called, <code>false</code>
+	 *         otherwise.
+	 */
+	public abstract boolean isRedirect();
 }

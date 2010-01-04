@@ -75,7 +75,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		Object object = contribution.getObject();
 		if (object != null)
 		{
-			response.getResponse().println(object.toString());
+			response.getResponse().write(object.toString());
+			response.getResponse().write("\n");
 		}
 	}
 

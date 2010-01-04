@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 
@@ -94,7 +94,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	@Override
 	protected final void onRequest(final String val, RequestCycle requestCycle)
 	{
-		IRequestTarget target = new IRequestTarget()
+		IRequestHandler target = new IRequestHandler()
 		{
 
 			public void respond(RequestCycle requestCycle)

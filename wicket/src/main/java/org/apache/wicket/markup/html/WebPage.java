@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.behavior.AbstractBehavior;
@@ -28,10 +28,9 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
-import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressor;
 import org.apache.wicket.response.StringResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,12 +101,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		"cookies.js");
 
 	/**
-	 * The url compressor that will compress the urls by collapsing the component path and listener
-	 * interface
-	 */
-	private UrlCompressor compressor;
-
-	/**
 	 * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
 	 * can be called/ created from anywhere.
 	 */
@@ -161,33 +154,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * This method is called when the compressing coding and response strategies are configured in
-	 * your Application object like this:
-	 * 
-	 * <pre>
-	 * protected IRequestCycleProcessor newRequestCycleProcessor()
-	 * {
-	 * 	return new UrlCompressingWebRequestProcessor();
-	 * }
-	 * </pre>
-	 * 
-	 * @return The URLCompressor for this webpage.
-	 * 
-	 * @since 1.2
-	 * 
-	 * @see UrlCompressingWebRequestProcessor
-	 * @see UrlCompressor
-	 */
-	public final UrlCompressor getUrlCompressor()
-	{
-		if (compressor == null)
-		{
-			compressor = new UrlCompressor();
-		}
-		return compressor;
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.html.INewBrowserWindowListener#onNewBrowserWindow()
 	 */
 	public void onNewBrowserWindow()
@@ -215,9 +181,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		super.configureResponse();
 
-		if (getWebRequestCycle().getResponse() instanceof WebResponse)
+		if (getRequestCycle().getResponse() instanceof WebResponse)
 		{
-			final WebResponse response = getWebRequestCycle().getWebResponse();
+			final WebResponse response = (WebResponse)getRequestCycle().getResponse();
 			setHeaders(response);
 		}
 	}
@@ -244,26 +210,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @return The WebRequestCycle for this WebPage.
-	 */
-	protected final WebRequestCycle getWebRequestCycle()
-	{
-		return (WebRequestCycle)getRequestCycle();
-	}
-
-	/**
-	 * Creates and returns a bookmarkable link to this application's home page.
-	 * 
-	 * @param id
-	 *            Name of link
-	 * @return Link to home page for this application
-	 */
-	protected final BookmarkablePageLink<?> homePageLink(final String id)
-	{
-		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.Component#onAfterRender()
 	 */
@@ -277,9 +223,14 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		{
 			// Ignore if an exception and a redirect happened in between (e.g.
 			// RestartResponseAtInterceptPageException)
-			if (getRequestCycle().getResponsePage() == this)
+			IRequestHandler activeHandler = getRequestCycle().getActiveRequestHandler();
+			if (activeHandler instanceof IPageRequestHandler)
 			{
-				validateHeaders();
+				IPageRequestHandler h = (IPageRequestHandler)activeHandler;
+				if (h.getPage() == this)
+				{
+					validateHeaders();
+				}
 			}
 		}
 	}
@@ -358,4 +309,18 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			}
 		}
 	}
+
+	/**
+	 * Creates and returns a bookmarkable link to this application's home page.
+	 * 
+	 * @param id
+	 *            Name of link
+	 * @return Link to home page for this application
+	 */
+	@SuppressWarnings("unchecked")
+	protected final BookmarkablePageLink<?> homePageLink(final String id)
+	{
+		return new BookmarkablePageLink<Void>(id, (Class)getApplication().getHomePage());
+	}
+
 }

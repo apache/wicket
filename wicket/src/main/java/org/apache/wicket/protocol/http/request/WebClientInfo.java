@@ -21,8 +21,9 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,11 +58,11 @@ public class WebClientInfo extends ClientInfo
 	 * @param requestCycle
 	 *            the request cycle
 	 */
-	public WebClientInfo(WebRequestCycle requestCycle)
+	public WebClientInfo(RequestCycle requestCycle)
 	{
 		super();
-		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-			.getHttpServletRequest();
+		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
+		HttpServletRequest httpServletRequest = request.getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
@@ -75,11 +76,10 @@ public class WebClientInfo extends ClientInfo
 	 * @param userAgent
 	 *            the user agent
 	 */
-	public WebClientInfo(WebRequestCycle requestCycle, String userAgent)
+	public WebClientInfo(RequestCycle requestCycle, String userAgent)
 	{
 		super();
 		this.userAgent = userAgent;
-		requestCycle.getWebRequest().getHttpServletRequest();
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
 	}
@@ -119,13 +119,14 @@ public class WebClientInfo extends ClientInfo
 	 *         to: getHttpServletRequest().getRemoteAddr()
 	 * 
 	 */
-	protected String getRemoteAddr(WebRequestCycle requestCycle)
+	protected String getRemoteAddr(RequestCycle requestCycle)
 	{
-		HttpServletRequest httpServletReq = requestCycle.getWebRequest().getHttpServletRequest();
-		String remoteAddr = httpServletReq.getHeader("X-Forwarded-For");
+		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
+		HttpServletRequest req = request.getHttpServletRequest();
+		String remoteAddr = request.getHeader("X-Forwarded-For");
 		if (remoteAddr == null)
 		{
-			remoteAddr = httpServletReq.getRemoteAddr();
+			remoteAddr = req.getRemoteAddr();
 		}
 		else
 		{

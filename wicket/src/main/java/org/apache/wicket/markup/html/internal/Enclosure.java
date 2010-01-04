@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
@@ -31,6 +30,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

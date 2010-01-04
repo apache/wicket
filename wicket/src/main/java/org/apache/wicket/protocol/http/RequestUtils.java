@@ -22,9 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -60,6 +58,35 @@ public final class RequestUtils
 			}
 		}
 	}
+
+	/**
+	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
+	 * value map.
+	 * 
+	 * @param queryString
+	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            value
+	 * @param params
+	 *            parameters map to write the found key/ value pairs to
+	 */
+	public static void decodeParameters(String queryString, PageParameters params)
+	{
+		final String[] paramTuples = queryString.split("&");
+		for (int t = 0; t < paramTuples.length; t++)
+		{
+			final String[] bits = paramTuples[t].split("=");
+			if (bits.length == 2)
+			{
+				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
+					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
+			}
+			else
+			{
+				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
+			}
+		}
+	}
+
 
 	/**
 	 * decores url parameters form <code>queryString</code> into <code>parameters</code> map
@@ -144,18 +171,6 @@ public final class RequestUtils
 	{
 	}
 
-	/**
-	 * Calculates absolute path to url relative to another absolute url.
-	 * 
-	 * @param relativePagePath
-	 *            path, relative to requestPath
-	 * @return absolute path for given url
-	 */
-	public final static String toAbsolutePath(final String relativePagePath)
-	{
-		HttpServletRequest req = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-		return toAbsolutePath(req.getRequestURL().toString(), relativePagePath);
-	}
 
 	/**
 	 * Calculates absolute path to url relative to another absolute url.

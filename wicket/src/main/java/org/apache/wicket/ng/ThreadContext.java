@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 
@@ -35,11 +36,12 @@ public class ThreadContext
 	private static ThreadLocal<ThreadContext> threadLocal = new ThreadLocal<ThreadContext>();
 
 	/**
+	 * INTERNAL METHOD
 	 * 
 	 * @param createIfDoesNotExist
 	 * @return
 	 */
-	private static ThreadContext get(boolean createIfDoesNotExist)
+	public static ThreadContext get(boolean createIfDoesNotExist)
 	{
 		ThreadContext context = threadLocal.get();
 		if (createIfDoesNotExist && context == null)

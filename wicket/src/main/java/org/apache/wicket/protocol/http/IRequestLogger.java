@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.util.List;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.protocol.http.RequestLogger.RequestData;
 import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.session.ISessionStore;
@@ -118,7 +118,7 @@ public interface IRequestLogger
 	 * @param target
 	 *            the response target
 	 */
-	public abstract void logResponseTarget(IRequestTarget target);
+	public abstract void logResponseTarget(IRequestHandler target);
 
 	/**
 	 * Sets the target that was the event target for the current request
@@ -126,6 +126,6 @@ public interface IRequestLogger
 	 * @param target
 	 *            the event target
 	 */
-	public abstract void logEventTarget(IRequestTarget target);
+	public abstract void logEventTarget(IRequestHandler target);
 
 }

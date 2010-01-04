@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,10 +30,9 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -42,9 +40,15 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.IPageRequestHandler;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -78,7 +82,7 @@ import org.slf4j.LoggerFactory;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class AjaxRequestTarget implements IPageRequestTarget
+public class AjaxRequestTarget implements IPageRequestHandler
 {
 	/**
 	 * An {@link AjaxRequestTarget} listener that can be used to respond to various target-related
@@ -137,7 +141,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private final class AjaxResponse extends WebResponse
+	private final class AjaxResponse extends Response
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
@@ -152,16 +156,14 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		 */
 		public AjaxResponse(Response originalResponse)
 		{
-			super(((WebResponse)originalResponse).getHttpServletResponse());
 			this.originalResponse = originalResponse;
-			setAjax(true);
 		}
 
 		/**
 		 * @see org.apache.wicket.Response#encodeURL(CharSequence)
 		 */
 		@Override
-		public CharSequence encodeURL(CharSequence url)
+		public String encodeURL(CharSequence url)
 		{
 			return originalResponse.encodeURL(url);
 		}
@@ -175,33 +177,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		}
 
 		/**
-		 * NOTE: this method is not supported
-		 * 
-		 * @see org.apache.wicket.Response#getOutputStream()
-		 */
-		@Override
-		public OutputStream getOutputStream()
-		{
-			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
-		}
-
-		/**
 		 * @return true if any escaping has been performed, false otherwise
 		 */
 		public boolean isContentsEncoded()
 		{
 			return escaped;
-		}
-
-		/**
-		 * Resets the response to a clean state so it can be reused to save on garbage.
-		 */
-		@Override
-		public void reset()
-		{
-			buffer.clear();
-			escaped = false;
-
 		}
 
 		/**
@@ -221,6 +201,21 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			{
 				buffer.append(cs);
 			}
+		}
+
+		/**
+		 * Resets the response to a clean state so it can be reused to save on garbage.
+		 */
+		public void reset()
+		{
+			buffer.clear();
+			escaped = false;
+		}
+
+		@Override
+		public void write(byte[] array)
+		{
+			throw new UnsupportedOperationException("Cannot write binary data.");
 		}
 	}
 
@@ -439,7 +434,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.RequestCycle)
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
@@ -529,7 +524,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.RequestCycle)
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
@@ -539,8 +534,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		{
 			// the page itself has been added to the request target, we simply issue a redirect back
 			// to the page
-			final String url = requestCycle.urlFor(page).toString();
-			response.redirect(url);
+			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(page));
+			final String url = requestCycle.renderUrlFor(handler).toString();
+			response.sendRedirect(url);
 			return;
 		}
 
@@ -555,7 +551,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		response.setCharacterEncoding(encoding);
 		response.setContentType("text/xml; charset=" + encoding);
 
 		// Make sure it is not cached by a client
@@ -1162,9 +1157,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		final RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle != null)
 		{
-			if (requestCycle.getRequestTarget() instanceof AjaxRequestTarget)
+			if (requestCycle.getActiveRequestHandler() instanceof AjaxRequestTarget)
 			{
-				return (AjaxRequestTarget)requestCycle.getRequestTarget();
+				return (AjaxRequestTarget)requestCycle.getActiveRequestHandler();
 			}
 		}
 		return null;
@@ -1177,9 +1172,18 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 */
 	public String getLastFocusedElementId()
 	{
-		String id = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-			.getHttpServletRequest()
-			.getHeader("Wicket-FocusedElementId");
+		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
+		String id = request.getHeader("Wicket-FocusedElementId");
 		return Strings.isEmpty(id) ? null : id;
+	}
+
+	public Class<? extends IRequestablePage> getPageClass()
+	{
+		return page.getPageClass();
+	}
+
+	public PageParameters getPageParameters()
+	{
+		return page.getPageParameters();
 	}
 }

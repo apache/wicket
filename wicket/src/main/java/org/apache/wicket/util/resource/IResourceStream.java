@@ -23,7 +23,7 @@ import java.util.Locale;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.watch.IModifiable;
 
 
@@ -45,7 +45,7 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	 * Gets the mime type of this resource
 	 * 
 	 * @return The mime type of this resource, such as "image/jpeg" or "text/html". Return null to
-	 *         let {@link ResourceStreamRequestTarget} handle the Content-Type automatically
+	 *         let {@link ResourceStreamRequestHandler} handle the Content-Type automatically
 	 * @see WebResponse#detectContentType(org.apache.wicket.RequestCycle, String)
 	 */
 	String getContentType();

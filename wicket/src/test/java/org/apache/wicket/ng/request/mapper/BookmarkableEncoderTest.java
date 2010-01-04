@@ -20,7 +20,7 @@ import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
@@ -83,7 +83,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
 
-        PageParametersNg p = page.getPageParametersNg();
+        PageParameters p = page.getPageParametersNg();
         assertEquals(1, p.getIndexedParamsCount());
         assertEquals("indexed1", p.getIndexedParameter(0).toString());
 
@@ -117,7 +117,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
         checkPage(page, 15);
 
-        PageParametersNg p = page.getPageParametersNg();
+        PageParameters p = page.getPageParametersNg();
         assertEquals(2, p.getIndexedParamsCount());
         assertEquals("i1", p.getIndexedParameter(0).toString());
         assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -165,7 +165,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
         assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
         assertEquals("foo:bar", h.getComponent().getPath());
 
-        PageParametersNg p = page.getPageParametersNg();
+        PageParameters p = page.getPageParametersNg();
         assertEquals(2, p.getIndexedParamsCount());
         assertEquals("i1", p.getIndexedParameter(0).toString());
         assertEquals("i2", p.getIndexedParameter(1).toString());
@@ -245,7 +245,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	 */
     public void testEncode1()
     {
-        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParametersNg());
+        DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParameters());
         provider.setPageSource(context);
         IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
         Url url = encoder.mapHandler(handler);
@@ -257,7 +257,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	 */
     public void testEncode2()
     {
-        PageParametersNg parameters = new PageParametersNg();
+        PageParameters parameters = new PageParameters();
         parameters.setIndexedParameter(0, "i1");
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");
@@ -274,7 +274,7 @@ public class BookmarkableEncoderTest extends AbstractEncoderTest
 	 */
     public void testEncode3()
     {
-        PageParametersNg parameters = new PageParametersNg();
+        PageParameters parameters = new PageParameters();
         parameters.setIndexedParameter(0, "i1");
         parameters.setIndexedParameter(1, "i2");
         parameters.setNamedParameter("a", "b");

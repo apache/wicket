@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
-import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.tester.WicketTester;
@@ -106,9 +106,9 @@ public class UrlMountingTest extends TestCase
 
 	int getErrorCode(RequestCycle requestCycle)
 	{
-		IRequestTarget requestTarget = requestCycle.getRequestTarget();
-		assertTrue(requestTarget instanceof WebErrorCodeResponseTarget);
-		WebErrorCodeResponseTarget error = (WebErrorCodeResponseTarget)requestTarget;
+		IRequestHandler requestTarget = requestCycle.getRequestTarget();
+		assertTrue(requestTarget instanceof WebErrorCodeResponseHandler);
+		WebErrorCodeResponseHandler error = (WebErrorCodeResponseHandler)requestTarget;
 		return error.getErrorCode();
 	}
 

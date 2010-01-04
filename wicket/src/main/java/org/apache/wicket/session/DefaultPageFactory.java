@@ -23,20 +23,19 @@ import java.util.Map;
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.ng.request.component.PageParametersNg;
 import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.lang.Generics;
 
 
 /**
  * A factory that constructs Pages.
  * 
- * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
- * @see IPageFactory
+ * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(PageFactory)
+ * @see PageFactory
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -44,90 +43,55 @@ import org.apache.wicket.util.lang.Generics;
 public final class DefaultPageFactory implements IPageFactory
 {
 	/** Map of Constructors for Page subclasses */
-	private final Map<Class<? extends Page>, Constructor<? extends Page>> constructorForClass = Generics.newConcurrentHashMap();
+	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
-	 * @see IPageFactory#newPage(Class)
+	 * @see PageFactory#newPage(Class)
 	 */
-	public final <C extends Page> Page newPage(final Class<C> pageClass)
-	{
-		// Try default constructor if one exists
-		Constructor<? extends Page> constructor = constructor(pageClass);
-		if (constructor != null)
-		{
-			// return new Page()
-			return createPage(constructor, null);
-		}
-
-		// Try to get constructor that takes PageParameters
-		constructor = constructor(pageClass, PageParameters.class);
-		if (constructor != null)
-		{
-			// return new Page(parameters)
-			return createPage(constructor, new PageParameters());
-		}
-
-		throw new WicketRuntimeException("Unable to create page from " + pageClass +
-			". Class does neither have a constructor with PageParameter nor a default constructor");
-	}
-
-	/**
-	 * @see IPageFactory#newPage(Class, PageParameters)
-	 * @deprecated
-	 */
-	@Deprecated
-	public final <C extends Page> Page newPage(final Class<C> pageClass, PageParameters parameters)
-	{
-		// If no parameters are provided, try the default constructor first, than the PageParameter
-		// constructor with empty parameter list.
-		if (parameters == null)
-		{
-			return newPage(pageClass);
-		}
-
-		// If parameters not null, than try to get constructor that takes PageParameters
-		Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
-		if (constructor != null)
-		{
-			// return new Page(parameters)
-			return createPage(constructor, parameters);
-		}
-
-		// No constructor with PageParameters found. Try default constructor.
-		constructor = constructor(pageClass);
-		if (constructor != null)
-		{
-			// return new Page()
-			return createPage(constructor, null);
-		}
-
-		throw new WicketRuntimeException("Unable to create page from " + pageClass +
-			". Class does neither have a constructor with PageParameter nor a default constructor");
-	}
-
-	/**
-	 * Looks up a one-arg Page constructor by class and argument type.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageClass
-	 *            The class of page
-	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
-	 *         argument type.
-	 */
-	private final <C extends Page> Constructor<? extends Page> constructor(final Class<C> pageClass)
+	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
 	{
 		try
 		{
-			// Try to find the constructor
-			return pageClass.getConstructor();
+			// throw an exception in case default constructor is missing
+			// => improved error message
+			final Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class[])null);
+
+			return processPage(newPage(constructor, null), null);
 		}
 		catch (NoSuchMethodException e)
 		{
-			// Ignore
+			// a bit of a hack here..
+			Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+			if (constructor != null)
+			{
+				return newPage(constructor, new PageParameters());
+			}
+			else
+			{
+				throw new WicketRuntimeException("Unable to create page from " + pageClass +
+					". Class does not have a default contructor", e);
+			}
+		}
+	}
+
+	/**
+	 * @see PageFactory#newPage(Class, PageParameters)
+	 */
+	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass,
+		final PageParameters parameters)
+	{
+		// Try to get constructor that takes PageParameters
+		Constructor<?> constructor = constructor(pageClass, PageParameters.class);
+
+		// If we got a PageParameters constructor
+		if (constructor != null)
+		{
+			// return new Page(parameters)
+			return processPage(newPage(constructor, parameters), parameters);
 		}
 
-		return null;
+		// Always try default constructor if one exists
+		return processPage(newPage(pageClass), parameters);
 	}
 
 	/**
@@ -142,11 +106,11 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
 	 *         argument type.
 	 */
-	private final <C extends Page> Constructor<? extends Page> constructor(
-		final Class<C> pageClass, final Class<PageParameters> argumentType)
+	private final <C extends IRequestablePage> Constructor<?> constructor(final Class<C> pageClass,
+		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor<? extends Page> constructor = constructorForClass.get(pageClass);
+		Constructor<?> constructor = constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -170,8 +134,6 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Creates a new Page using the given constructor and argument.
-	 * <p>
-	 * Note that you can not create a Page with PageParameters and pass null.
 	 * 
 	 * @param constructor
 	 *            The constructor to invoke
@@ -182,19 +144,14 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private final Page createPage(final Constructor<? extends Page> constructor,
-		final Object argument)
+	private final Page newPage(final Constructor<?> constructor, final Object argument)
 	{
 		try
 		{
 			if (argument != null)
-			{
-				return constructor.newInstance(new Object[] { argument });
-			}
+				return (Page)constructor.newInstance(new Object[] { argument });
 			else
-			{
-				return constructor.newInstance();
-			}
+				return (Page)constructor.newInstance(new Object[] {});
 		}
 		catch (InstantiationException e)
 		{
@@ -206,7 +163,6 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 		catch (InvocationTargetException e)
 		{
-			// honor redirect exception contract defined in IPageFactory
 			if (e.getTargetException() instanceof AbortException ||
 				e.getTargetException() instanceof AuthorizationException ||
 				e.getTargetException() instanceof MarkupException)
@@ -217,51 +173,26 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	/**
-	 * 
-	 * @param constructor
-	 * @param argument
-	 * @return description
-	 */
-	private String createDescription(Constructor<? extends Page> constructor, Object argument)
+	private Page processPage(Page page, PageParameters pageParameters)
 	{
-		if (argument != null)
+		// the page might have not propagate page parameters from constructor. if that's the case
+		// we force the parameters
+		if (pageParameters != null && page.getPageParameters() != pageParameters)
 		{
-			return "Can't instantiate page using constructor " + constructor + " and argument " +
-				argument;
+			page.getPageParameters().assign(pageParameters);
 		}
-		else
-		{
-			return "Can't instantiate page using constructor " + constructor;
-		}
+
+		page.setWasCreatedBookmarkable(true);
+
+		return page;
 	}
 
-	public <C extends Page> IRequestablePage newPage(Class<C> pageClass, PageParametersNg parameters)
+	private String createDescription(Constructor<?> constructor, Object argument)
 	{
-		// If no parameters are provided, try the default constructor first, than the PageParameter
-		// constructor with empty parameter list.
-		if (parameters == null)
-		{
-			return newPage(pageClass);
-		}
-
-		// If parameters not null, than try to get constructor that takes PageParameters
-		Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
-		if (constructor != null)
-		{
-			// return new Page(parameters)
-			return createPage(constructor, parameters);
-		}
-
-		// No constructor with PageParameters found. Try default constructor.
-		constructor = constructor(pageClass);
-		if (constructor != null)
-		{
-			// return new Page()
-			return createPage(constructor, null);
-		}
-
-		throw new WicketRuntimeException("Unable to create page from " + pageClass +
-			". Class does neither have a constructor with PageParameter nor a default constructor");
+		if (argument != null)
+			return "Can't instantiate page using constructor " + constructor + " and argument " +
+				argument;
+		else
+			return "Can't instantiate page using constructor " + constructor;
 	}
 }

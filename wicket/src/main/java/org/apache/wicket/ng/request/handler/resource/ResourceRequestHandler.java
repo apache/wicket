@@ -18,8 +18,8 @@ package org.apache.wicket.ng.request.handler.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.request.IRequestHandler;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.util.lang.Checks;
@@ -35,7 +35,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	private final Locale locale;
 	private final String style;
 	private final String variation;
-	private final PageParametersNg pageParameters;
+	private final PageParameters pageParameters;
 
 	/**
 	 * Construct.
@@ -47,7 +47,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	 * @param pageParameters
 	 */
 	public ResourceRequestHandler(IResource resource, Locale locale, String style,
-		String variation, PageParametersNg pageParameters)
+		String variation, PageParameters pageParameters)
 	{
 		Checks.argumentNotNull(resource, "resource");
 
@@ -55,7 +55,7 @@ public class ResourceRequestHandler implements IRequestHandler
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
-		this.pageParameters = pageParameters != null ? pageParameters : new PageParametersNg();
+		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @return page parameters
 	 */
-	public PageParametersNg getPageParameters()
+	public PageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

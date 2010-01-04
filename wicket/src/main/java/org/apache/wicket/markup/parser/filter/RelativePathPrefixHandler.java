@@ -20,7 +20,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Request;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -29,7 +29,8 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.request.IRequestCodingStrategy;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.util.string.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,10 +79,6 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			IRequestCodingStrategy coder = RequestCycle.get()
-				.getProcessor()
-				.getRequestCodingStrategy();
-
 			// Modify all relevant attributes
 			for (int i = 0; i < attributeNames.length; i++)
 			{
@@ -92,7 +89,9 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					tag.getAttributes().put(attrName, coder.rewriteStaticRelativeUrl(attrValue));
+					Request request = RequestCycle.get().getRequest();
+					tag.getAttributes().put(attrName,
+						UrlUtils.rewriteToContextRelative(attrValue, request));
 				}
 			}
 		}

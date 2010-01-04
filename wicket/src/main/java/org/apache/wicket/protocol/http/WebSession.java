@@ -19,16 +19,13 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
-import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,53 +82,6 @@ public class WebSession extends Session
 		super(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.Session#isCurrentRequestValid(org.apache.wicket.RequestCycle)
-	 */
-	@Override
-	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
-	{
-		WebRequest lockedRequest = (WebRequest)lockedRequestCycle.getRequest();
-
-		// if the request that's holding the lock is ajax, we allow this request
-		if (lockedRequest.isAjax() == true)
-		{
-			return true;
-		}
-
-		if (IResourceListener.INTERFACE.equals(lockedRequest.getObsoleteRequestParameters()
-			.getInterface()))
-		{
-			return true;
-		}
-
-		RequestCycle currentRequestCycle = RequestCycle.get();
-		WebRequest currentRequest = (WebRequest)currentRequestCycle.getRequest();
-
-		if (currentRequest.isAjax() == false)
-		{
-			// if this request is not ajax, we allow it
-			return true;
-		}
-
-		String lockedPageId = Strings.firstPathComponent(
-			lockedRequest.getObsoleteRequestParameters().getComponentPath(),
-			Component.PATH_SEPARATOR);
-		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
-			.getObsoleteRequestParameters()
-			.getComponentPath(), Component.PATH_SEPARATOR);
-
-		int lockedVersion = lockedRequest.getObsoleteRequestParameters().getVersionNumber();
-		int currentVersion = currentRequest.getObsoleteRequestParameters().getVersionNumber();
-
-		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion)
-		{
-			// we don't allow this request
-			return false;
-		}
-
-		return true;
-	}
 
 	/**
 	 * @see org.apache.wicket.Session#cleanupFeedbackMessages()
@@ -146,7 +96,7 @@ public class WebSession extends Session
 		// false in that case)
 		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER ||
 			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
-			(!RequestCycle.get().isRedirect()))
+			(!((WebResponse)RequestCycle.get().getResponse()).isRedirect()))
 		{
 			// If session scoped, rendered messages got indeed cleaned up, mark
 			// the session as dirty

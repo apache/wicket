@@ -63,8 +63,11 @@ public class UrlUtils
 	{
 		if (isRelative(url))
 		{
-			final String prefix = request.getRelativePathPrefixToContextRoot();
-			return prefix + url;
+			// TODO: NG: This is pretty much a marker method; We dont have any means to do this now
+			System.out.println("TODO: Implement UrlUtils # rewriteToContextRelative");
+			// final String prefix = request.getRelativePathPrefixToContextRoot();
+			// return prefix + url;
+			return url;
 		}
 		else
 		{

@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -135,7 +134,7 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.doGet(servletRequest, servletResponse) == false)
+		if (wicketFilter.processRequest(servletRequest, servletResponse, null) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}
@@ -157,10 +156,47 @@ public class WicketServlet extends HttpServlet
 	public final void doPost(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.doGet(servletRequest, servletResponse) == false)
+		if (wicketFilter.processRequest(servletRequest, servletResponse, null) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}
+	}
+
+	private static String getURL(HttpServletRequest httpServletRequest)
+	{
+		/*
+		 * Servlet 2.3 specification :
+		 * 
+		 * Servlet Path: The path section that directly corresponds to the mapping which activated
+		 * this request. This path starts with a "/" character except in the case where the request
+		 * is matched with the "/*" pattern, in which case it is the empty string.
+		 * 
+		 * PathInfo: The part of the request path that is not part of the Context Path or the
+		 * Servlet Path. It is either null if there is no extra path, or is a string with a leading
+		 * "/".
+		 */
+		String url = httpServletRequest.getServletPath();
+		final String pathInfo = httpServletRequest.getPathInfo();
+
+		if (pathInfo != null)
+		{
+			url += pathInfo;
+		}
+
+		final String queryString = httpServletRequest.getQueryString();
+
+		if (queryString != null)
+		{
+			url += ("?" + queryString);
+		}
+
+		// If url is non-empty it will start with '/', which we should lose
+		if (url.length() > 0 && url.charAt(0) == '/')
+		{
+			// Remove leading '/'
+			url = url.substring(1);
+		}
+		return url;
 	}
 
 	private void fallback(HttpServletRequest request, HttpServletResponse response)
@@ -168,8 +204,7 @@ public class WicketServlet extends HttpServlet
 	{
 		// The ServletWebRequest is created here to avoid code duplication. The getURL call doesn't
 		// depend on anything wicket specific
-		ServletWebRequest req = new ServletWebRequest(request);
-		String url = req.getUrl().toString();
+		String url = getURL(request);
 
 		// WICKET-2185: strip of query string
 		if (url.indexOf('?') != -1)
@@ -269,12 +304,4 @@ public class WicketServlet extends HttpServlet
 		wicketFilter = null;
 	}
 
-	/**
-	 * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected long getLastModified(final HttpServletRequest servletRequest)
-	{
-		return wicketFilter.getLastModified(servletRequest);
-	}
 }

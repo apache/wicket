@@ -21,7 +21,7 @@ import java.util.List;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -41,9 +41,9 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 	/**
 	 * @see org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder#decodePageParameters(org.apache.wicket.Request)
 	 */
-	public PageParametersNg decodePageParameters(Request request)
+	public PageParameters decodePageParameters(Request request)
 	{
-		PageParametersNg parameters = new PageParametersNg();
+		PageParameters parameters = new PageParameters();
 
 		int i = 0;
 		for (String s : request.getUrl().getSegments())
@@ -61,9 +61,9 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.ng.request.component.PageParametersNg)
+	 * @see org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.ng.request.component.PageParameters)
 	 */
-	public Url encodePageParameters(PageParametersNg pageParameters)
+	public Url encodePageParameters(PageParameters pageParameters)
 	{
 		Url url = new Url();
 

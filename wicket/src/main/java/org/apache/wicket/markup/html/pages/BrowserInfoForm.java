@@ -21,8 +21,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
@@ -62,7 +62,7 @@ public class BrowserInfoForm extends Panel
 			{
 				ClientPropertiesBean propertiesBean = getModelObject();
 
-				WebRequestCycle requestCycle = (WebRequestCycle)getRequestCycle();
+				RequestCycle requestCycle = getRequestCycle();
 				WebSession session = (WebSession)getSession();
 				ClientInfo clientInfo = session.getClientInfo();
 

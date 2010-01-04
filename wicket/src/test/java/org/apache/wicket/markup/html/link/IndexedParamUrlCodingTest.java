@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -76,7 +76,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 
 		ObsoleteRequestParameters requestParameters = encoder.decode(tester.getWicketRequest());
 
-		IRequestTarget target1 = cycle.getProcessor().resolve(cycle, requestParameters);
+		IRequestHandler target1 = cycle.getProcessor().resolve(cycle, requestParameters);
 		PageParameters params = ((BookmarkablePageRequestTarget)target1).getPageParameters();
 		assertEquals("Integer0", params.getString("0"));
 		assertEquals("Integer1", params.getString("1"));
@@ -90,6 +90,6 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 
 		requestParameters = encoder.decode(tester.getWicketRequest());
 
-		IRequestTarget target2 = cycle.getProcessor().resolve(cycle, requestParameters);
+		IRequestHandler target2 = cycle.getProcessor().resolve(cycle, requestParameters);
 	}
 }

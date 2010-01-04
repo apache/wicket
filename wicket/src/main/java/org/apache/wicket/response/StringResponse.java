@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.response;
 
-import java.io.OutputStream;
-
 import org.apache.wicket.Response;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -55,7 +53,6 @@ public class StringResponse extends Response
 	/**
 	 * @see org.apache.wicket.Response#reset()
 	 */
-	@Override
 	public void reset()
 	{
 		out.clear();
@@ -82,14 +79,14 @@ public class StringResponse extends Response
 	 * @see org.apache.wicket.Response#getOutputStream()
 	 */
 	@Override
-	public OutputStream getOutputStream()
-	{
-		throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
-	}
-
-	@Override
 	public void write(byte[] array)
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String encodeURL(CharSequence url)
+	{
+		return url != null ? url.toString() : null;
 	}
 }

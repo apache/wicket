@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.resource;
 
-import java.io.OutputStream;
+import org.apache.wicket.Response;
 
 /**
  * Special IResourceStream implementation that a Resource can return when it directly wants to write
@@ -35,7 +35,7 @@ public interface IResourceStreamWriter extends IResourceStream
 	 * Implement this method to write the resource data directly the the given OutputStream.
 	 * 
 	 * @param output
-	 *            The output stream where the resource can write its content into.
+	 *            The response where the resource can write its content into.
 	 */
-	void write(OutputStream output);
+	void write(Response output);
 }

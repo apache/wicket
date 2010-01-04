@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
@@ -113,7 +113,7 @@ public class TestMapperContext implements IMapperContext
 	int idCounter = 0;
 
 	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
-		PageParametersNg pageParameters)
+		PageParameters pageParameters)
 	{
 		try
 		{

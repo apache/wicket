@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.ng.protocol.http.WicketURLDecoder;
-import org.apache.wicket.ng.protocol.http.WicketURLEncoder;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
+import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.util.lang.Arrays;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;

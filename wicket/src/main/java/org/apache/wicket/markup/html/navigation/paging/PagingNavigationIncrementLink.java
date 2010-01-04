@@ -76,9 +76,6 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 		// Tell the PageableListView which page to print next
 		pageable.setCurrentPage(getPageNumber());
 
-		// We do need to redirect, else refresh refresh will go to next, next
-		setRedirect(true);
-
 		// Return the current page.
 		setResponsePage(getPage());
 	}

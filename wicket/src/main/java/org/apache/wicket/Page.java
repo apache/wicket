@@ -39,7 +39,9 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.page.IManageablePage;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
@@ -223,7 +225,7 @@ public abstract class Page extends MarkupContainer
 
 
 	/** Page parameters used to construct this page */
-	private final PageParametersNg pageParameters;
+	private final PageParameters pageParameters;
 
 	/** page render count TODO WICKET-NG more javadoc */
 	private int renderCount = 0;
@@ -266,21 +268,16 @@ public abstract class Page extends MarkupContainer
 	{
 		super(null);
 		this.parameters = parameters;
-		pageParameters = new PageParametersNg();
+		pageParameters = new PageParameters();
 		init();
 	}
 
-	public Page(final PageParametersNg parameters)
-	{
-		this(parameters, null);
-	}
-
-	private Page(final PageParametersNg parameters, IModel<?> model)
+	private Page(final PageParameters parameters, IModel<?> model)
 	{
 		super(null, model);
 		if (parameters == null)
 		{ // TODO WICKET-NG is this necessary or can we keep the field as null to save space?
-			pageParameters = new PageParametersNg();
+			pageParameters = new PageParameters();
 		}
 		else
 		{
@@ -508,7 +505,7 @@ public abstract class Page extends MarkupContainer
 		{
 			try
 			{
-				if (getClass().getConstructor(new Class[] { }) != null)
+				if (getClass().getConstructor(new Class[] {}) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -710,7 +707,7 @@ public abstract class Page extends MarkupContainer
 		// If the application wants component uses checked and
 		// the response is not a redirect
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
+		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
@@ -931,8 +928,8 @@ public abstract class Page extends MarkupContainer
 	{
 		// Get the response and application
 		final RequestCycle cycle = getRequestCycle();
-		final Application application = cycle.getApplication();
-		final Response response = cycle.getResponse();
+		final Application application = Application.get();
+		final WebResponse response = (WebResponse)cycle.getResponse();
 
 		// Determine encoding
 		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
@@ -963,7 +960,8 @@ public abstract class Page extends MarkupContainer
 		}
 
 		// Set response locale from session locale
-		response.setLocale(getSession().getLocale());
+		// TODO: NG Is this really necessary
+		// response.setLocale(getSession().getLocale());
 	}
 
 	/**
@@ -1203,11 +1201,6 @@ public abstract class Page extends MarkupContainer
 	public int getPageId()
 	{
 		return numericId;
-	}
-
-	public PageParametersNg getPageParametersNg()
-	{
-		return pageParameters;
 	}
 
 	/**

@@ -19,7 +19,7 @@ package org.apache.wicket.request.target.coding;
 import junit.framework.TestCase;
 
 import org.apache.wicket.IRedirectListener;
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -82,7 +82,7 @@ public class IndexedHybridUrlCodingStrategyTest extends TestCase
 		WicketTester tester = new WicketTester();
 		tester.setupRequestAndResponse();
 		TestPage page = new TestPage(null);
-		IRequestTarget requestTarget = new ListenerInterfaceRequestTarget(page, page,
+		IRequestHandler requestTarget = new ListenerInterfaceRequestTarget(page, page,
 			IRedirectListener.INTERFACE);
 		strategy.encode(requestTarget);
 	}

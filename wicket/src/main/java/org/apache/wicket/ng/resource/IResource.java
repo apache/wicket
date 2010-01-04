@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.util.lang.Checks;
 
@@ -45,7 +45,7 @@ public interface IResource extends Serializable
 		private final Locale locale;
 		private final String style;
 		private final String variation;
-		private final PageParametersNg parameters;
+		private final PageParameters parameters;
 
 		/**
 		 * Construct.
@@ -59,7 +59,7 @@ public interface IResource extends Serializable
 		 * @param parameters
 		 */
 		public Attributes(Request request, Response response, Locale locale, String style,
-			String variation, PageParametersNg parameters)
+			String variation, PageParameters parameters)
 		{
 			Checks.argumentNotNull(request, "request");
 			Checks.argumentNotNull(response, "response");
@@ -132,7 +132,7 @@ public interface IResource extends Serializable
 		 * 
 		 * @return page parameters or <code>null</code>
 		 */
-		public PageParametersNg getParameters()
+		public PageParameters getParameters()
 		{
 			return parameters;
 		}

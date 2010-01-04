@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.staticpages;
 
-import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.ObsoleteRequestParameters;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
@@ -53,7 +53,7 @@ public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy extends
 	 * @see org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.ObsoleteRequestParameters)
 	 */
 	@Override
-	public IRequestTarget decode(ObsoleteRequestParameters requestParameters)
+	public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
 	{
 		return new CapturingBookmarkablePageRequestTarget(capturedPageClass, displayedPageClass)
 		{

@@ -18,11 +18,11 @@ package org.apache.wicket.markup.html.link;
 
 import java.io.File;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
@@ -147,7 +147,7 @@ public class DownloadLink extends Link<File>
 
 		IResourceStream resourceStream = new FileResourceStream(
 			new org.apache.wicket.util.file.File(file));
-		getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(resourceStream)
+		getRequestCycle().setRequestTarget(new ResourceStreamRequestHandler(resourceStream)
 		{
 			@Override
 			public String getFileName()

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -353,7 +352,8 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 
 		if (popupSettings != null)
 		{
-			RequestCycle.get().setUrlForNewWindowEncoding();
+			// TODO (NG): Do this properly
+			// RequestCycle.get().setUrlForNewWindowEncoding();
 		}
 		// Set href to link to this link's linkClicked method
 		CharSequence url = getURL();

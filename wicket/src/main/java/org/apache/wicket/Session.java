@@ -28,14 +28,9 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
-import org.apache.wicket.pageStore.DefaultPageManagerContext;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.pageStore.IPageManager;
-import org.apache.wicket.pageStore.IPageManagerContext;
-import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.pageStore.PersistentPageManager;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
@@ -120,17 +115,12 @@ public abstract class Session implements IClusterable
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
-	/** Thread-local current session. */
-	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
-
 	/** a sequence used for whenever something session-specific needs a unique value */
 	private int sequence = 1;
 
 	/** a sequence used for generating page IDs */
 	private int pageId = 0;
 
-	/** page manager */
-	private IPageManager pageManager;
 
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
@@ -139,106 +129,20 @@ public abstract class Session implements IClusterable
 	 */
 	public static boolean exists()
 	{
-		return current.get() != null;
+		return ThreadContext.getSession() != null;
 	}
 
-	/**
-	 * Locate the session for the client of this request in the {@link ISessionStore} or create a
-	 * new one and attach it when none could be located and sets it as the current instance for this
-	 * thread. Typically, clients never touch this method, but rather use {@link Session#get()},
-	 * which does the locating implicitly when not yet set as a thread local.
-	 * 
-	 * @return The session for the client of this request or a new, unbound
-	 */
-	public static final Session findOrCreate()
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle == null)
-		{
-			throw new IllegalStateException(
-				"you can only locate or create sessions in the context of a request cycle");
-		}
-		Response response = requestCycle.getResponse();
-		Request request = requestCycle.getRequest();
-		return findOrCreate(request, response);
-	}
-
-	/**
-	 * @param response
-	 * @param request
-	 * @return The Session that is found in the current request or created if not.
-	 */
-	public static Session findOrCreate(Request request, Response response)
-	{
-		Application application = Application.get();
-		ISessionStore sessionStore = application.getSessionStore();
-		Session session = sessionStore.lookup(request);
-
-		boolean created = false;
-
-		if (session == null)
-		{
-			// Create session using session factory
-			session = application.newSession(request, response);
-			created = true;
-		}
-
-		// set thread local
-		set(session);
-
-		if (created)
-		{
-			session.getPageManager().newSessionCreated();
-		}
-
-		return session;
-	}
-
-	/**
-	 * Get the session for the calling thread.
-	 * 
-	 * @return Session for calling thread
-	 */
 	public static Session get()
 	{
-		Session session = current.get();
-		if (session == null)
+		Session session = ThreadContext.getSession();
+		if (session != null)
 		{
-			session = findOrCreate();
+			return session;
 		}
-		return session;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Sets session for calling thread. Also triggers {@link #attach()} being called.
-	 * 
-	 * @param session
-	 *            The session
-	 */
-	public static void set(final Session session)
-	{
-		if (session == null)
+		else
 		{
-			throw new IllegalArgumentException("Argument session can not be null");
+			return Application.get().fetchCreateAndSetSession(RequestCycle.get());
 		}
-
-		current.set(session);
-
-		// execute any attach logic now
-		session.attach();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Clears the session for calling thread.
-	 * 
-	 */
-	public static void unset()
-	{
-		current.set(null);
 	}
 
 	/**
@@ -556,12 +460,6 @@ public abstract class Session implements IClusterable
 		{
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
-		}
-
-		if (pageManager != null)
-		{
-			pageManager.destroy();
-			pageManager = null;
 		}
 	}
 
@@ -934,38 +832,6 @@ public abstract class Session implements IClusterable
 	 */
 	public final IPageManager getPageManager()
 	{
-		if (pageManager == null)
-		{
-			pageManager = newPageManager(new DefaultPageManagerContext());
-		}
-		return pageManager;
-	}
-
-	/**
-	 * Create a new page manager on each call. By default a PeristentPageManager with a new
-	 * DiskDataStore and new DefaultPageStore.
-	 * 
-	 * @see #getPageManager()
-	 * 
-	 * @param context
-	 *            the page manager context
-	 * @return a new page manager
-	 */
-	protected IPageManager newPageManager(final IPageManagerContext context)
-	{
-		String name = Application.get().getName();
-		int cacheSize = 40;
-		int fileChannelPoolCapacity = 50;
-		IDataStore dataStore = new DiskDataStore(name, 1000000, fileChannelPoolCapacity);
-		IPageStore pageStore = new DefaultPageStore(name, dataStore, cacheSize);
-		return new PersistentPageManager(name, pageStore, context);
-	}
-
-	/**
-	 * @return the page manager context
-	 */
-	protected final IPageManagerContext getPageManagerContext()
-	{
-		return getPageManager().getContext();
+		return getApplication().getPageManager();
 	}
 }

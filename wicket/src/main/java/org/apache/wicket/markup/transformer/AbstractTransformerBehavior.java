@@ -17,11 +17,11 @@
 package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.response.StringResponse;
 
 /**

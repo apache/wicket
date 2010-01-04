@@ -252,10 +252,10 @@ public class ExceptionErrorPage extends WebPage
 	{
 		super.configureResponse();
 
-		if (getWebRequestCycle().getResponse() instanceof WebResponse)
+		if (getRequestCycle().getResponse() instanceof WebResponse)
 		{
-			getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			WebResponse response = (WebResponse)getRequestCycle().getResponse();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

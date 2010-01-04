@@ -62,7 +62,8 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 					getResponse().write("elem.setAttribute(\"media\",\"" + media + "\");");
 				}
 				getResponse().write("document.getElementsByTagName(\"head\")[0].appendChild(elem);");
-				getResponse().println("</script>");
+				getResponse().write("</script>");
+				getResponse().write("\n");
 				markRendered(token);
 			}
 		}

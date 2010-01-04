@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.ng.request.handler;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
-import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.mapper.IPageSource;
 import org.apache.wicket.ng.request.mapper.StalePageException;
 import org.apache.wicket.pageStore.IPageManager;
@@ -57,7 +57,7 @@ public class DefaultPageProvider implements IPageProvider
 
 	private Integer pageId;
 
-	private PageParametersNg pageParameters;
+	private PageParameters pageParameters;
 
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
@@ -86,7 +86,7 @@ public class DefaultPageProvider implements IPageProvider
 	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
 		Integer renderCount)
 	{
-		this(pageId, pageClass, new PageParametersNg(), renderCount);
+		this(pageId, pageClass, new PageParameters(), renderCount);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class DefaultPageProvider implements IPageProvider
 	 *            optional argument
 	 */
 	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
-		final PageParametersNg pageParameters, final Integer renderCount)
+		final PageParameters pageParameters, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		setPageClass(pageClass);
@@ -117,7 +117,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param pageParameters
 	 */
 	public DefaultPageProvider(final Class<? extends IRequestablePage> pageClass,
-		final PageParametersNg pageParameters)
+		final PageParameters pageParameters)
 	{
 		setPageClass(pageClass);
 		if (pageParameters != null)
@@ -134,7 +134,7 @@ public class DefaultPageProvider implements IPageProvider
 	 */
 	public DefaultPageProvider(Class<? extends IRequestablePage> pageClass)
 	{
-		this(pageClass, new PageParametersNg());
+		this(pageClass, new PageParameters());
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class DefaultPageProvider implements IPageProvider
 	/**
 	 * @see org.apache.wicket.ng.request.handler.IPageProvider#getPageParameters()
 	 */
-	public PageParametersNg getPageParameters()
+	public PageParameters getPageParameters()
 	{
 		if (pageParameters != null)
 		{
@@ -178,7 +178,7 @@ public class DefaultPageProvider implements IPageProvider
 		}
 		else
 		{
-			return getPageInstance().getPageParametersNg();
+			return getPageInstance().getPageParameters();
 		}
 	}
 
@@ -236,7 +236,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @return
 	 */
 	private IRequestablePage getPageInstance(Integer pageId,
-		Class<? extends IRequestablePage> pageClass, PageParametersNg pageParameters,
+		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
 	{
 		IRequestablePage page = null;
@@ -252,7 +252,7 @@ public class DefaultPageProvider implements IPageProvider
 			}
 			else if (page != null && pageParameters != null)
 			{
-				page.getPageParametersNg().assign(pageParameters);
+				page.getPageParameters().assign(pageParameters);
 			}
 		}
 		if (page == null)
@@ -319,7 +319,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * 
 	 * @param pageParameters
 	 */
-	private void setPageParameters(PageParametersNg pageParameters)
+	private void setPageParameters(PageParameters pageParameters)
 	{
 		Checks.argumentNotNull(pageParameters, "pageParameters");
 

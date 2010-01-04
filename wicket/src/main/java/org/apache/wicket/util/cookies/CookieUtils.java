@@ -19,10 +19,10 @@ package org.apache.wicket.util.cookies;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -343,9 +343,9 @@ public class CookieUtils
 	 * 
 	 * @return WebRequest related to the RequestCycle
 	 */
-	private WebRequest getWebRequest()
+	private ServletWebRequest getWebRequest()
 	{
-		return (WebRequest)RequestCycle.get().getRequest();
+		return (ServletWebRequest)RequestCycle.get().getRequest();
 	}
 
 	/**

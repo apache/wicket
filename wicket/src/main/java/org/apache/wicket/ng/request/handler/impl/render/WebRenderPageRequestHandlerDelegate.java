@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.ng.request.handler.impl.render;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.Application;
-import org.apache.wicket.ng.protocol.http.BufferedWebResponse;
-import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
@@ -180,7 +180,7 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
-		response.redirect(relativeUrl);
+		response.sendRedirect(relativeUrl);
 	}
 
 	/**

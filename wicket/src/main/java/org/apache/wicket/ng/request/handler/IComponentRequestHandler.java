@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ng.request.handler;
 
-import org.apache.wicket.ng.request.IRequestHandler;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 
 /**

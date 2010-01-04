@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.ng.protocol.http.WebApplication;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
@@ -25,6 +24,7 @@ import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandler
 import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
 
 public class MockApplication extends WebApplication
@@ -87,4 +87,5 @@ public class MockApplication extends WebApplication
 	{
 		return new MockSessionStore();
 	}
+
 }

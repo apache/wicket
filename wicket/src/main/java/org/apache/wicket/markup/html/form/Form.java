@@ -21,15 +21,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
@@ -41,12 +36,11 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.IRequestParameters;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
-import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.ObsoleteRequestParameters;
-import org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -231,106 +225,105 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	/**
 	 * 
 	 */
-	class FormDispatchRequest extends Request
-	{
-		private final Map<String, String[]> params = new HashMap<String, String[]>();
-
-		private final Request realRequest;
-
-		private final Url url;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param realRequest
-		 * @param url
-		 */
-		public FormDispatchRequest(final Request realRequest, final Url url)
-		{
-			this.realRequest = realRequest;
-			this.url = realRequest.decodeURL(url);
-			this.url.putQueryParameters(params);
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getLocale()
-		 */
-		@Override
-		public Locale getLocale()
-		{
-			return realRequest.getLocale();
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameter(java.lang.String)
-		 */
-		@Override
-		public String getParameter(String key)
-		{
-			String p[] = params.get(key);
-			return p != null && p.length > 0 ? p[0] : null;
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameterMap()
-		 */
-		@Override
-		public Map<String, String[]> getParameterMap()
-		{
-			return params;
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameters(java.lang.String)
-		 */
-		@Override
-		public String[] getParameters(String key)
-		{
-			String[] param = params.get(key);
-			if (param != null)
-			{
-				return param;
-			}
-			return new String[0];
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getPath()
-		 */
-		@Override
-		public String getPath()
-		{
-			return realRequest.getPath();
-		}
-
-		@Override
-		public String getRelativePathPrefixToContextRoot()
-		{
-			return realRequest.getRelativePathPrefixToContextRoot();
-		}
-
-		@Override
-		public String getRelativePathPrefixToWicketHandler()
-		{
-			return realRequest.getRelativePathPrefixToWicketHandler();
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getUrl()
-		 */
-		@Override
-		public Url getUrl()
-		{
-			return url;
-		}
-
-		@Override
-		public String getQueryString()
-		{
-			return realRequest.getQueryString();
-		}
-	}
-
+// class FormDispatchRequest extends Request
+// {
+// private final Map<String, String[]> params = new HashMap<String, String[]>();
+//
+// private final Request realRequest;
+//
+// private final Url url;
+//
+// /**
+// * Construct.
+// *
+// * @param realRequest
+// * @param url
+// */
+// public FormDispatchRequest(final Request realRequest, final Url url)
+// {
+// this.realRequest = realRequest;
+// this.url = realRequest.decodeURL(url);
+// this.url.putQueryParameters(params);
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getLocale()
+// */
+// @Override
+// public Locale getLocale()
+// {
+// return realRequest.getLocale();
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getParameter(java.lang.String)
+// */
+// @Override
+// public String getParameter(String key)
+// {
+// String p[] = params.get(key);
+// return p != null && p.length > 0 ? p[0] : null;
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getParameterMap()
+// */
+// @Override
+// public Map<String, String[]> getParameterMap()
+// {
+// return params;
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getParameters(java.lang.String)
+// */
+// @Override
+// public String[] getParameters(String key)
+// {
+// String[] param = params.get(key);
+// if (param != null)
+// {
+// return param;
+// }
+// return new String[0];
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getPath()
+// */
+// @Override
+// public String getPath()
+// {
+// return realRequest.getPath();
+// }
+//
+// @Override
+// public String getRelativePathPrefixToContextRoot()
+// {
+// return realRequest.getRelativePathPrefixToContextRoot();
+// }
+//
+// @Override
+// public String getRelativePathPrefixToWicketHandler()
+// {
+// return realRequest.getRelativePathPrefixToWicketHandler();
+// }
+//
+// /**
+// * @see org.apache.wicket.Request#getUrl()
+// */
+// @Override
+// public Url getUrl()
+// {
+// return url;
+// }
+//
+// @Override
+// public String getQueryString()
+// {
+// return realRequest.getQueryString();
+// }
+// }
 	/**
 	 * Constant for specifying how a form is submitted, in this case using get.
 	 */
@@ -603,8 +596,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 					if ((form != null) && (form.getRootForm() == Form.this))
 					{
 						String name = submittingComponent.getInputName();
-						if ((getRequest().getParameter(name) != null) ||
-							(getRequest().getParameter(name + ".x") != null))
+						IRequestParameters parameters = getRequest().getRequestParameters();
+						if ((!parameters.getParameterValue(name).isNull()) ||
+							!parameters.getParameterValue(name + ".x").isNull())
 						{
 							if (!component.isVisibleInHierarchy())
 							{
@@ -824,7 +818,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getParameter(getHiddenFieldId());
+			String url = getRequest().getRequestParameters()
+				.getParameterValue(getHiddenFieldId())
+				.toString();
 			if (!Strings.isEmpty(url))
 			{
 				dispatchEvent(getPage(), url);
@@ -906,13 +902,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 				{
 					if (formComponent instanceof FormComponent)
 					{
-						parameters.remove(((FormComponent<?>)formComponent).getInputName());
+						parameters.removeNamedParameter(((FormComponent<?>)formComponent).getInputName());
 					}
 
 					return Component.IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
-			parameters.remove(getHiddenFieldId());
+			parameters.removeNamedParameter(getHiddenFieldId());
 		}
 	}
 
@@ -1173,22 +1169,23 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
-		RequestCycle rc = RequestCycle.get();
-		IRequestCycleProcessor processor = rc.getProcessor();
-		final ObsoleteRequestParameters requestParameters = processor.getRequestCodingStrategy()
-			.decode(new FormDispatchRequest(rc.getRequest(), Url.parse(url)));
-		IRequestTarget rt = processor.resolve(rc, requestParameters);
-		if (rt instanceof IListenerInterfaceRequestTarget)
-		{
-			IListenerInterfaceRequestTarget interfaceTarget = ((IListenerInterfaceRequestTarget)rt);
-			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
-		}
-		else
-		{
-			throw new WicketRuntimeException(
-				"Attempt to access unknown request listener interface " +
-					requestParameters.getInterfaceName());
-		}
+		// TODO: Find a saner way
+// RequestCycle rc = RequestCycle.get();
+// IRequestCycleProcessor processor = rc.getProcessor();
+// final ObsoleteRequestParameters requestParameters = processor.getRequestCodingStrategy()
+// .decode(new FormDispatchRequest(rc.getRequest(), Url.parse(url)));
+// IRequestTarget rt = processor.resolve(rc, requestParameters);
+// if (rt instanceof IListenerInterfaceRequestTarget)
+// {
+// IListenerInterfaceRequestTarget interfaceTarget = ((IListenerInterfaceRequestTarget)rt);
+// interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
+// }
+// else
+// {
+// throw new WicketRuntimeException(
+// "Attempt to access unknown request listener interface " +
+// requestParameters.getInterfaceName());
+// }
 	}
 
 	/**
@@ -1468,24 +1465,19 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			// parsed out correctly
 			try
 			{
-				final WebRequest multipartWebRequest = ((WebRequest)getRequest()).newMultipartWebRequest(getMaxSize());
+				ServletWebRequest request = (ServletWebRequest)getRequest();
+				final WebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize());
+				// TODO: Can't this be detected from header?
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
-			catch (WicketRuntimeException wre)
+			catch (FileUploadException e)
 			{
-				if (wre.getCause() == null || !(wre.getCause() instanceof FileUploadException))
-				{
-					throw wre;
-				}
-
-				FileUploadException e = (FileUploadException)wre.getCause();
-
 				// Create model with exception and maximum size values
 				final Map<String, Object> model = new HashMap<String, Object>();
 				model.put("exception", e);
 				model.put("maxSize", getMaxSize());
 
-				onFileUploadException((FileUploadException)wre.getCause(), model);
+				onFileUploadException(e, model);
 
 				// don't process the form if there is a FileUploadException
 				return false;

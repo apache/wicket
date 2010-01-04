@@ -18,9 +18,10 @@ package org.apache.wicket;
 
 import java.util.Map;
 
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -107,20 +108,21 @@ public abstract class Resource implements IResourceListener
 			IResourceStream resourceStream = init();
 
 			// Get servlet response to use when responding with resource
-			final Response response = cycle.getResponse();
+			final WebResponse response = (WebResponse)cycle.getResponse();
 
 			// FIXME WICKET-385 Move HTTP caching features out of org.apache.wicket.Resource
 			if (isCacheable())
 			{
-				response.setLastModifiedTime(resourceStream.lastModifiedTime());
+				response.setLastModifiedTime(resourceStream.lastModifiedTime().getMilliseconds());
 			}
 			else
 			{
-				response.setLastModifiedTime(Time.valueOf(-1));
+				response.setLastModifiedTime(-1);
 			}
 			configureResponse(response);
 
-			cycle.setRequestTarget(new ResourceStreamRequestTarget(resourceStream));
+			cycle.scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(
+				resourceStream));
 		}
 		finally
 		{
@@ -169,21 +171,6 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected void configureResponse(final Response response)
 	{
-	}
-
-	/**
-	 * @return Any query parameters associated with the request for this resource
-	 */
-	protected ValueMap getParameters()
-	{
-		if (parameters.get() == null)
-		{
-			return new ValueMap(RequestCycle.get()
-				.getRequest()
-				.getObsoleteRequestParameters()
-				.getParameters());
-		}
-		return (ValueMap)parameters.get();
 	}
 
 	/**

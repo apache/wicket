@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -34,7 +34,6 @@ import org.apache.wicket.ng.request.component.PageParametersNg;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-// TODO WICKET-NG change Page to RequestablePage
 public interface IPageFactory
 {
 	/**
@@ -48,26 +47,7 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends Page> Page newPage(final Class<C> pageClass);
-
-	/**
-	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
-	 * exists. If no such constructor exists and the parameters argument is null or empty, then any
-	 * available default constructor will be used.
-	 * 
-	 * @param <C>
-	 * 
-	 * @param pageClass
-	 *            The class of Page to create
-	 * @param parameters
-	 *            Any parameters to pass to the Page's constructor
-	 * @return The new page
-	 * @throws WicketRuntimeException
-	 *             Thrown if the page cannot be constructed
-	 * @deprecated
-	 */
-	@Deprecated
-	<C extends Page> Page newPage(final Class<C> pageClass, final PageParameters parameters);
+	<C extends IRequestablePage> IRequestablePage newPage(final Class<C> pageClass);
 
 	/**
 	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
@@ -84,6 +64,6 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends Page> IRequestablePage newPage(final Class<C> pageClass,
-		final PageParametersNg parameters);
+	<C extends IRequestablePage> IRequestablePage newPage(final Class<C> pageClass,
+		final PageParameters parameters);
 }

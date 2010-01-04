@@ -28,7 +28,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.resource.UrlResourceStream;
 
 
@@ -219,7 +219,7 @@ public class Include extends WebComponent
 	private String importRelativeUrl(CharSequence url)
 	{
 		// make the url absolute
-		HttpServletRequest req = ((WebRequest)getRequest()).getHttpServletRequest();
+		HttpServletRequest req = ((ServletWebRequest)getRequest()).getHttpServletRequest();
 		StringBuffer buildUrl = new StringBuffer(url.length());
 		String scheme = req.getScheme();
 		int port = req.getServerPort();

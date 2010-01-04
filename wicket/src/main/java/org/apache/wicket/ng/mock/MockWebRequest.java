@@ -23,12 +23,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Mutable mock {@link WebRequest}.
@@ -222,82 +220,5 @@ public class MockWebRequest extends WebRequest
 	public MockRequestParameters getPostRequestParameters()
 	{
 		return postRequestParameters;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public HttpServletRequest getHttpServletRequest()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getParameter(String key)
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public Map<String, String[]> getParameterMap()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String[] getParameters(String key)
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getServletPath()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public boolean isAjax()
-	{
-		return false;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public WebRequest newMultipartWebRequest(Bytes maxSize)
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getPath()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getQueryString()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getRelativePathPrefixToContextRoot()
-	{
-		return null;
-	}
-
-	@Override
-	// TODO WICKET-NG implement?
-	public String getRelativePathPrefixToWicketHandler()
-	{
-		return null;
 	}
 }

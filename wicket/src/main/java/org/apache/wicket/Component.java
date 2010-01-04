@@ -48,6 +48,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
@@ -3034,16 +3042,6 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	}
 
 	/**
-	 * @param redirect
-	 *            True if the response should be redirected to
-	 * @see RequestCycle#setRedirect(boolean)
-	 */
-	public final void setRedirect(final boolean redirect)
-	{
-		getRequestCycle().setRedirect(redirect);
-	}
-
-	/**
 	 * If false the component's tag will be printed as well as its body (which is default). If true
 	 * only the body will be printed, but not the component's tag.
 	 * 
@@ -3068,7 +3066,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final <C extends Page> void setResponsePage(final Class<C> cls)
 	{
-		getRequestCycle().setResponsePage(cls);
+		getRequestCycle().setResponsePage(cls, null);
 	}
 
 	/**
@@ -3200,7 +3198,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		return getRequestCycle().urlFor(pageClass, parameters);
+		IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(pageClass,
+			parameters));
+		return getRequestCycle().renderUrlFor(handler);
 	}
 
 	/**
@@ -3216,7 +3216,10 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final CharSequence urlFor(final IBehavior behaviour,
 		final RequestListenerInterface listener)
 	{
-		return getRequestCycle().urlFor(this, behaviour, listener);
+		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
+		int index = getBehaviors().indexOf(behaviour);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, listener, index);
+		return getRequestCycle().renderUrlFor(handler);
 	}
 
 	/**
@@ -3224,14 +3227,14 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * 
 	 * @see RequestCycle#urlFor(IRequestTarget)
 	 * 
-	 * @param requestTarget
+	 * @param requestHandler
 	 *            the request target to reference
 	 * 
 	 * @return a URL that references the given request target
 	 */
-	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	public final CharSequence urlFor(final IRequestHandler requestHandler)
 	{
-		return getRequestCycle().urlFor(requestTarget);
+		return getRequestCycle().renderUrlFor(requestHandler);
 	}
 
 	/**
@@ -3243,7 +3246,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
-		return getRequestCycle().urlFor(this, listener);
+		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, listener);
+		return getRequestCycle().renderUrlFor(handler);
 	}
 
 	/**
@@ -3257,7 +3262,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final CharSequence urlFor(final ResourceReference resourceReference)
 	{
-		return getRequestCycle().urlFor(resourceReference);
+		return getRequestCycle().renderUrlFor(
+			new ResourceReferenceRequestHandler(resourceReference));
 	}
 
 	/**

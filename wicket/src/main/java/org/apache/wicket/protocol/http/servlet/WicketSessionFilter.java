@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,7 +170,7 @@ public class WicketSessionFilter implements Filter
 			if (session != null)
 			{
 				// set the session's threadlocal
-				Session.set(session);
+				ThreadContext.setSession(session);
 
 				if (log.isDebugEnabled())
 				{
@@ -201,7 +202,7 @@ public class WicketSessionFilter implements Filter
 		}
 		finally
 		{
-			Session.unset();
+			ThreadContext.detach();
 		}
 	}
 

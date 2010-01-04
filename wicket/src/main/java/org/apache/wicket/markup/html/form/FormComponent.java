@@ -43,6 +43,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.validation.IErrorMessageSource;
@@ -738,7 +739,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public String[] getInputAsArray()
 	{
-		String[] values = getRequest().getParameters(getInputName());
+		List<StringValue> list = getRequest().getRequestParameters().getParameterValues(
+			getInputName());
+
+		String[] values = null;
+		if (list != null)
+		{
+			values = new String[list.size()];
+			for (int i = 0; i < list.size(); ++i)
+			{
+				values[i] = list.get(i).toString();
+			}
+		}
+
 		if (!isInputNullable())
 		{
 			if (values != null && values.length == 1 && values[0] == null)

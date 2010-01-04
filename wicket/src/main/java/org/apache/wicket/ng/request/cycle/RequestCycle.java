@@ -19,19 +19,21 @@ package org.apache.wicket.ng.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.request.IRequestHandler;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParametersNg;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +94,7 @@ public class RequestCycle extends RequestHandlerStack
 		ThreadContext.setRequestCycle(requestCycle);
 	}
 
-	private final Request request;
+	private Request request;
 
 	private final Response originalResponse;
 
@@ -288,6 +290,16 @@ public class RequestCycle extends RequestHandlerStack
 		return request;
 	}
 
+	@Deprecated
+	// TODO: Remove. Request should be final
+	// the only reason why the method is here is that form sets new request if the request is
+	// multipart
+	// can't this be handled by wicket filter?
+	public void setRequest(Request request)
+	{
+		this.request = request;
+	}
+
 	/**
 	 * @see org.apache.wicket.ng.request.cycle.RequestHandlerStack#getRequestCycle()
 	 */
@@ -423,10 +435,25 @@ public class RequestCycle extends RequestHandlerStack
 	 * @param parameters
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
-		PageParametersNg parameters)
+		PageParameters parameters)
 	{
 		IPageProvider provider = new DefaultPageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+	}
+
+
+	/**
+	 * Creates a new agent info object based on this request. Typically, this method is called once
+	 * by the session and the returned object will be cached in the session after that call; we can
+	 * expect the client to stay the same for the whole session, and implementations of
+	 * {@link #newClientInfo()} might be relatively expensive.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	// TODO! Get this shit out of here
+	public ClientInfo newClientInfo()
+	{
+		return new WebClientInfo(this);
 	}
 }
