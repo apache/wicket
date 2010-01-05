@@ -198,8 +198,14 @@ public class WicketServlet extends HttpServlet
 			{
 				response.setContentType(mimeType);
 			}
-
-			Streams.copy(stream, response.getOutputStream());
+			try
+			{
+				Streams.copy(stream, response.getOutputStream());
+			}
+			finally
+			{
+				stream.close();
+			}
 		}
 	}
 
