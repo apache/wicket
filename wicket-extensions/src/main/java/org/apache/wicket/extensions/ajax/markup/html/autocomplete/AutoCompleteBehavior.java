@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 
 
@@ -106,7 +106,6 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 				final String encoding = Application.get()
 					.getRequestCycleSettings()
 					.getResponseRequestEncoding();
-				r.setCharacterEncoding(encoding);
 				r.setContentType("text/xml; charset=" + encoding);
 
 				// Make sure it is not cached by a
@@ -129,7 +128,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 			}
 
 		};
-		requestCycle.setRequestTarget(target);
+		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 	}
 
 	/**

@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.tree;
 import javax.swing.tree.TreeModel;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
  * Simple panel that contains an icon next to a label.

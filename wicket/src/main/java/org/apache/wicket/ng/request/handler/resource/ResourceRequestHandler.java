@@ -104,7 +104,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	public void respond(final RequestCycle requestCycle)
 	{
 		IResource.Attributes a = new IResource.Attributes(requestCycle.getRequest(),
-			requestCycle.getResponse(), locale, style, variation, pageParameters);
+			requestCycle.getResponse(), pageParameters);
 		resource.respond(a);
 	}
 

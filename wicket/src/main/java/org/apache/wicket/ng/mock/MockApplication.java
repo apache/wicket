@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng.mock;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
@@ -35,7 +36,7 @@ public class MockApplication extends WebApplication
 	}
 
 	@Override
-	public Class<? extends IRequestablePage> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return null;
 	}

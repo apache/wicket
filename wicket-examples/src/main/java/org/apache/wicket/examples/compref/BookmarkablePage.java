@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Example page that cannot be bookmarked. A page is bookmarkable when it has a public default
@@ -61,13 +61,14 @@ public class BookmarkablePage extends WebPage
 		// never null, the check is not nescesarry. On the other hand... would
 		// you ever trust
 		// any API enough to just not check it at all?
-		if (pageParameters == null || pageParameters.getString("message") == null)
+		if (pageParameters == null ||
+			pageParameters.getNamedParameter("message").toOptionalString() == null)
 		{
 			message = "This is the default message";
 		}
 		else
 		{
-			message = pageParameters.getString("message");
+			message = pageParameters.getNamedParameter("message").toOptionalString();
 		}
 
 		// Add a label to display the message

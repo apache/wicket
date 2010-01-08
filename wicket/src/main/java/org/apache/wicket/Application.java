@@ -67,8 +67,8 @@ import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.PersistentPageManager;
+import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
-import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.session.DefaultPageFactory;
@@ -200,9 +200,6 @@ public abstract class Application implements UnboundListener
 	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
 
-	/** Shared resources for this application */
-	private final SharedResources sharedResources;
-
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
 	 * 
@@ -272,9 +269,6 @@ public abstract class Application implements UnboundListener
 	 */
 	public Application()
 	{
-		// Create shared resources repository
-		sharedResources = new SharedResources(this);
-
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
 		addComponentInstantiationListener(new IComponentInstantiationListener()
@@ -621,16 +615,6 @@ public abstract class Application implements UnboundListener
 
 
 	/**
-	 * Gets the shared resources.
-	 * 
-	 * @return The SharedResources for this application.
-	 */
-	public final SharedResources getSharedResources()
-	{
-		return sharedResources;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Initializes wicket components.
@@ -928,6 +912,8 @@ public abstract class Application implements UnboundListener
 
 		// set up default request mapper
 		setRootRequestMapper(new SystemMapper());
+
+		pageFactory = newPageFactory();
 	}
 
 	/**
@@ -948,7 +934,7 @@ public abstract class Application implements UnboundListener
 	 */
 	protected IRequestLogger newRequestLogger()
 	{
-		return new RequestLogger();
+		return new DummyRequestLogger();
 	}
 
 	/**
@@ -1483,4 +1469,5 @@ public abstract class Application implements UnboundListener
 	{
 		return URLConnection.getFileNameMap().getContentTypeFor(fileName);
 	}
+
 }

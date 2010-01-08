@@ -22,8 +22,6 @@ import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
-import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
-import org.apache.wicket.request.target.coding.HybridUrlCodingStrategy;
 
 
 /**
@@ -47,29 +45,32 @@ public class AjaxApplication extends WicketExampleApplication
 		super.init();
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+
+		// TODO (NG)
+		// getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+
 		getDebugSettings().setAjaxDebugModeEnabled(true);
 
-		mount(new HybridUrlCodingStrategy("autocomplete", AutoCompletePage.class));
-		mount(new HybridUrlCodingStrategy("choice", ChoicePage.class));
-		mount(new HybridUrlCodingStrategy("clock", ClockPage.class));
-		mount(new HybridUrlCodingStrategy("editable-label", EditableLabelPage.class));
-		mount(new HybridUrlCodingStrategy("effects", EffectsPage.class));
-		mount(new HybridUrlCodingStrategy("form", FormPage.class));
-		mount(new HybridUrlCodingStrategy("guest-book", GuestBook.class));
-		mount(new HybridUrlCodingStrategy("lazy-loading", LazyLoadingPage.class));
-		mount(new HybridUrlCodingStrategy("links", LinksPage.class));
-		mount(new HybridUrlCodingStrategy("modal-window", ModalWindowPage.class));
-		mount(new HybridUrlCodingStrategy("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class));
-		mount(new HybridUrlCodingStrategy("pageables", PageablesPage.class));
-		mount(new HybridUrlCodingStrategy("ratings", RatingsPage.class));
-		mount(new HybridUrlCodingStrategy("tabbed-panel", TabbedPanelPage.class));
-		mount(new HybridUrlCodingStrategy("todo-list", TodoList.class));
-		mount(new HybridUrlCodingStrategy("world-clock", WorldClockPage.class));
-		mount(new HybridUrlCodingStrategy("tree/simple", SimpleTreePage.class));
-		mount(new HybridUrlCodingStrategy("tree/table", TreeTablePage.class));
-		mount(new HybridUrlCodingStrategy("tree/table/editable", EditableTreeTablePage.class));
-		mount(new HybridUrlCodingStrategy("upload", FileUploadPage.class));
+		mountBookmarkablePage("autocomplete", AutoCompletePage.class);
+		mountBookmarkablePage("choice", ChoicePage.class);
+		mountBookmarkablePage("clock", ClockPage.class);
+		mountBookmarkablePage("editable-label", EditableLabelPage.class);
+		mountBookmarkablePage("effects", EffectsPage.class);
+		mountBookmarkablePage("form", FormPage.class);
+		mountBookmarkablePage("guest-book", GuestBook.class);
+		mountBookmarkablePage("lazy-loading", LazyLoadingPage.class);
+		mountBookmarkablePage("links", LinksPage.class);
+		mountBookmarkablePage("modal-window", ModalWindowPage.class);
+		mountBookmarkablePage("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class);
+		mountBookmarkablePage("pageables", PageablesPage.class);
+		mountBookmarkablePage("ratings", RatingsPage.class);
+		mountBookmarkablePage("tabbed-panel", TabbedPanelPage.class);
+		mountBookmarkablePage("todo-list", TodoList.class);
+		mountBookmarkablePage("world-clock", WorldClockPage.class);
+		mountBookmarkablePage("tree/simple", SimpleTreePage.class);
+		mountBookmarkablePage("tree/table", TreeTablePage.class);
+		mountBookmarkablePage("tree/table/editable", EditableTreeTablePage.class);
+		mountBookmarkablePage("upload", FileUploadPage.class);
 
 	}
 

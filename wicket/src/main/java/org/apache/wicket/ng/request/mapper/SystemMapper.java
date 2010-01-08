@@ -30,6 +30,7 @@ public class SystemMapper extends ThreadsafeCompoundRequestMapper
 	 */
 	public SystemMapper()
 	{
+		register(new HomePageMapper());
 		register(new PageInstanceMapper());
 		register(new BookmarkableMapper());
 		register(new ResourceReferenceMapper());

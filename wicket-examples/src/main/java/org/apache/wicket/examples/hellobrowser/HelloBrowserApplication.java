@@ -18,7 +18,6 @@ package org.apache.wicket.examples.hellobrowser;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.util.lang.PackageName;
 
 /**
  * Application class for hello browser example.
@@ -52,6 +51,6 @@ public class HelloBrowserApplication extends WicketExampleApplication
 		super.init();
 
 		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-		mount("howdy", PackageName.forClass(HelloBrowserApplication.class));
+		mountBookmarkablePage("howdy", HelloBrowser.class);
 	}
 }

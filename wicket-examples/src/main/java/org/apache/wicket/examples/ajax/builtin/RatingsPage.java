@@ -17,13 +17,15 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.rating.RatingPanel;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 
 /**
@@ -191,13 +193,15 @@ public class RatingsPage extends BasePage
 			@Override
 			protected String getActiveStarUrl(int iteration)
 			{
-				return getRequestCycle().urlFor(WICKETSTAR1).toString();
+				IRequestHandler handler = new ResourceReferenceRequestHandler(WICKETSTAR1);
+				return getRequestCycle().renderUrlFor(handler).toString();
 			}
 
 			@Override
 			protected String getInactiveStarUrl(int iteration)
 			{
-				return getRequestCycle().urlFor(WICKETSTAR0).toString();
+				IRequestHandler handler = new ResourceReferenceRequestHandler(WICKETSTAR0);
+				return getRequestCycle().renderUrlFor(handler).toString();
 			}
 
 			@Override

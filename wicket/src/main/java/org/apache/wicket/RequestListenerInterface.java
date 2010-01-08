@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
+import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,7 +184,7 @@ public class RequestListenerInterface
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException ||
+			if (e.getTargetException() instanceof ReplaceHandlerException ||
 				e.getTargetException() instanceof AuthorizationException ||
 				e.getTargetException() instanceof WicketRuntimeException)
 			{
@@ -228,7 +229,7 @@ public class RequestListenerInterface
 		}
 		catch (InvocationTargetException e)
 		{
-			if (e.getTargetException() instanceof AbstractRestartResponseException ||
+			if (e.getTargetException() instanceof ReplaceHandlerException ||
 				e.getTargetException() instanceof AuthorizationException ||
 				e.getTargetException() instanceof WicketRuntimeException)
 			{

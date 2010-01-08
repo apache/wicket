@@ -21,7 +21,6 @@ import javax.swing.tree.TreeModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -31,8 +30,9 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.resource.CompressedResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.Strings;
 

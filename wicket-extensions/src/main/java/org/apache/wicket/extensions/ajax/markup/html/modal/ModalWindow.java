@@ -18,9 +18,8 @@ package org.apache.wicket.extensions.ajax.markup.html.modal;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,10 +29,14 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.resources.CompressedResourceReference;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.resource.CompressedResourceReference;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -985,9 +988,11 @@ public class ModalWindow extends Panel
 			{
 				throw new WicketRuntimeException("Error creating page for modal dialog.");
 			}
-			RequestCycle.get().setUrlForNewWindowEncoding();
+			// TODO (NG)
+// RequestCycle.get().setUrlForNewWindowEncoding();
 
-			appendAssignment(buffer, "settings.src", RequestCycle.get().urlFor(page));
+			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(page));
+			appendAssignment(buffer, "settings.src", RequestCycle.get().renderUrlFor(handler));
 		}
 		else
 		{

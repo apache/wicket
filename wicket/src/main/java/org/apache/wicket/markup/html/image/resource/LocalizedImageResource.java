@@ -25,11 +25,11 @@ import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -389,8 +389,8 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			@Override
 			protected Resource newResource()
 			{
-				PackageResource pr = PackageResource.get(getScope(), getName(),
-					LocalizedImageResource.this.locale, style, variation);
+				PackageResource pr = PackageResource.get(getScope(), getName(), locale, style,
+					variation);
 				locale = pr.getLocale();
 				return pr;
 			}

@@ -21,9 +21,8 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -36,6 +35,9 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.tree.AbstractTree;
 import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.EnumeratedType;
 
 /**
@@ -531,8 +533,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
+				IRequestHandler handler = new ResourceReferenceRequestHandler(getNodeIcon(node));
 				tag.put("style", "background-image: url('" +
-					RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
+					RequestCycle.get().renderUrlFor(handler) + "')");
 			}
 		};
 

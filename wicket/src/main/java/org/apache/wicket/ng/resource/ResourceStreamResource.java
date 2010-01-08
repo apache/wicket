@@ -67,6 +67,8 @@ public class ResourceStreamResource extends AbstractResource
 	{
 		ResourceData data = new ResourceData();
 		data.setLastModified(stream.lastModifiedTime().toDate());
+
+		// performance check; don't bother to do anything if the resource is still cached by client
 		if (!data.notModified(attributes))
 		{
 			InputStream inputStream = null;

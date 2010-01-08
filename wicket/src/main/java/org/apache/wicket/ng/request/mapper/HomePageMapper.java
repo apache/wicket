@@ -14,46 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.images;
+package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.Request;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
-
-/**
- * Application class for the linkomatic example.
- * 
- * @author Jonathan Locke
- */
-public class ImagesApplication extends WicketExampleApplication
+public class HomePageMapper extends AbstractMapper
 {
-	/**
-	 * Constructor
-	 */
-	public ImagesApplication()
-	{
 
+	public HomePageMapper()
+	{
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class<? extends Page> getHomePage()
+	public int getCompatibilityScore(Request request)
 	{
-		return Home.class;
+		return 0;
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
-	@Override
-	protected void init()
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
-		super.init();
+		return null;
+	}
 
-		// TODO (NG)
-// getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+	public IRequestHandler mapRequest(Request request)
+	{
+		if (request.getUrl().getSegments().size() == 0 &&
+			request.getUrl().getQueryParameters().size() == 0)
+		{
+			return new RenderPageRequestHandler(new DefaultPageProvider(
+				getContext().getHomePageClass()));
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 }

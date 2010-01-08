@@ -220,10 +220,6 @@ public abstract class Page extends MarkupContainer
 	 */
 	private transient Boolean stateless = null;
 
-	/** The page parameters object hat constructed this page */
-	private PageParameters parameters;
-
-
 	/** Page parameters used to construct this page */
 	private final PageParameters pageParameters;
 
@@ -267,8 +263,14 @@ public abstract class Page extends MarkupContainer
 	protected Page(final PageParameters parameters)
 	{
 		super(null);
-		this.parameters = parameters;
-		pageParameters = new PageParameters();
+		if (parameters == null)
+		{ // TODO WICKET-NG is this necessary or can we keep the field as null to save space?
+			pageParameters = new PageParameters();
+		}
+		else
+		{
+			pageParameters = parameters;
+		}
 		init();
 	}
 
@@ -294,7 +296,7 @@ public abstract class Page extends MarkupContainer
 	 */
 	public PageParameters getPageParameters()
 	{
-		return parameters;
+		return pageParameters;
 	}
 
 	/**

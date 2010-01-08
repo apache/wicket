@@ -16,17 +16,8 @@
  */
 package org.apache.wicket.examples.staticpages;
 
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import org.apache.wicket.request.ObsoleteRequestParameters;
-import org.apache.wicket.request.target.basic.URIRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.PackageResourceStream;
-import org.apache.wicket.util.resource.WebExternalResourceStream;
-import org.apache.wicket.util.resource.XSLTResourceStream;
 
 /**
  * Examples for serving static files
@@ -51,34 +42,36 @@ public class Application extends WebApplication
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
-		// Hello World as a Static Page
-		mount(new URIRequestTargetUrlCodingStrategy("/docs")
-		{
-			@Override
-			public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
-			{
-				String path = "/staticpages/" + getURI(requestParameters);
-				return new WebExternalResourceRequestTarget(path);
-			}
-		});
-
-		// Hello World as a Static Page with XSLT layout
-		mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
-		{
-			@Override
-			public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
-			{
-				String path = "/staticpages/" + getURI(requestParameters);
-				IResourceStream xslStream = new PackageResourceStream(Application.class,
-					"layout.xsl");
-				IResourceStream docStream = new WebExternalResourceStream(path);
-				return new ResourceStreamRequestHandler(new XSLTResourceStream(xslStream, docStream));
-			}
-		});
-
-		// All requests to bookmarkable page "Page" will be captured, and the
-		// "Sent" page is shown instead
-		mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage",
-			EmailPage.class, Sent.class));
+		// TODO NG
+// // Hello World as a Static Page
+// mount(new URIRequestTargetUrlCodingStrategy("/docs")
+// {
+// @Override
+// public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
+// {
+// String path = "/staticpages/" + getURI(requestParameters);
+// return new WebExternalResourceRequestTarget(path);
+// }
+// });
+//
+// // Hello World as a Static Page with XSLT layout
+// mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
+// {
+// @Override
+// public IRequestHandler decode(ObsoleteRequestParameters requestParameters)
+// {
+// String path = "/staticpages/" + getURI(requestParameters);
+// IResourceStream xslStream = new PackageResourceStream(Application.class,
+// "layout.xsl");
+// IResourceStream docStream = new WebExternalResourceStream(path);
+// return new ResourceStreamRequestHandler(
+// new XSLTResourceStream(xslStream, docStream));
+// }
+// });
+//
+// // All requests to bookmarkable page "Page" will be captured, and the
+// // "Sent" page is shown instead
+// mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage",
+// EmailPage.class, Sent.class));
 	}
 }

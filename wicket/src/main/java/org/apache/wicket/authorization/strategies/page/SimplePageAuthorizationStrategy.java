@@ -21,7 +21,6 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 
@@ -93,7 +92,8 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 					if (component instanceof Page)
 					{
 						// Redirect to page to let the user sign in
-						throw new RestartResponseAtInterceptPageException(signInPageClass);
+						// TODO (NG)
+						// throw new RestartResponseAtInterceptPageException(signInPageClass);
 					}
 					else
 					{

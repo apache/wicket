@@ -174,6 +174,15 @@ public class ResourceReferenceRegistry
 		}
 	}
 
+	private final ClassScanner scanner = new ClassScanner()
+	{
+		@Override
+		void foundResourceReference(ResourceReference reference)
+		{
+			registerResourceReference(reference);
+		}
+	};
+
 	/**
 	 * Looks up resource reference with specified attributes. If the reference is not found and
 	 * <code>strict</code> is set to <code>false</code>, result of
@@ -200,10 +209,15 @@ public class ResourceReferenceRegistry
 	{
 		ResourceReference reference = getResourceReference(scope, name, locale, style, variation,
 			strict, false);
+
 		if (reference == null)
 		{
-			// TODO: Check the class static member for ResourceReferences and register those
+			scanner.scanClass(scope);
 		}
+
+		// try again, it might have been registered by scanner; create default one if necessary
+		reference = getResourceReference(scope, name, locale, style, variation, strict, true);
+
 		return reference;
 	}
 
@@ -219,7 +233,6 @@ public class ResourceReferenceRegistry
 	protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
 		Locale locale, String style, String variation)
 	{
-		// override in superclass to e.g. return PackageResourceReference if there is one
-		return null;
+		return new ResourceReference(scope, name, locale, style, variation);
 	}
 }

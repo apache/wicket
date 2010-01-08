@@ -76,25 +76,8 @@ public abstract class AbstractAjaxBehavior extends AbstractHeaderContributor
 	 * Gets the url that references this handler.
 	 * 
 	 * @return the url that references this handler
-	 * @see #getCallbackUrl(boolean)
 	 */
-	@Deprecated
-	// TODO 1.6 Remove
 	public CharSequence getCallbackUrl()
-	{
-		return getCallbackUrl(true);
-	}
-
-	/**
-	 * Gets the url that references this handler.
-	 * 
-	 * @param onlyTargetActivePage
-	 *            if true the callback to this behavior will be ignore if the page is not the last
-	 *            one the user accessed
-	 * 
-	 * @return the url that references this handler
-	 */
-	public CharSequence getCallbackUrl(final boolean onlyTargetActivePage)
 	{
 		if (getComponent() == null)
 		{
@@ -104,14 +87,7 @@ public abstract class AbstractAjaxBehavior extends AbstractHeaderContributor
 
 		final RequestListenerInterface rli;
 
-		if (onlyTargetActivePage)
-		{
-			rli = IActivePageBehaviorListener.INTERFACE;
-		}
-		else
-		{
-			rli = IBehaviorListener.INTERFACE;
-		}
+		rli = IBehaviorListener.INTERFACE;
 
 		return getComponent().urlFor(this, rli);
 	}

@@ -22,7 +22,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
@@ -91,7 +90,8 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			if (!AuthenticatedWebSession.get().isSignedIn())
 			{
 				// Redirect to intercept page to let the user sign in
-				throw new RestartResponseAtInterceptPageException(getSignInPageClass());
+				// TODO NG
+				// throw new RestartResponseAtInterceptPageException(getSignInPageClass());
 			}
 			else
 			{

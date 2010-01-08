@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.markup.html.ServerAndClientTimeFilter;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -45,7 +44,8 @@ public class RepeaterApplication extends WebApplication
 	protected void init()
 	{
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+		// TODO NG
+		// getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
 	/**

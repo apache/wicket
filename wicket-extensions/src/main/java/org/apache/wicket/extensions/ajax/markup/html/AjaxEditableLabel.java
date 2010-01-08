@@ -20,7 +20,6 @@ import java.io.Serializable;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,6 +30,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.validation.IValidator;
@@ -96,12 +96,12 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.onComponentTag(tag);
 			final String saveCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(true) +
+				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
 					"&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
 
 
 			final String cancelCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(true) + "&save=false'") +
+				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
 				"; return false;}";
 
 
@@ -118,7 +118,10 @@ public class AjaxEditableLabel<T> extends Panel
 		protected void respond(AjaxRequestTarget target)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
-			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"));
+			boolean save = Boolean.valueOf(requestCycle.getRequest()
+				.getRequestParameters()
+				.getParameterValue("save")
+				.toBoolean(false));
 
 			if (save)
 			{

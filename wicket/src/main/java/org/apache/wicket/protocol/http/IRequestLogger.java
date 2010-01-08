@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.protocol.http.RequestLogger.RequestData;
-import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
@@ -127,5 +129,299 @@ public interface IRequestLogger
 	 *            the event target
 	 */
 	public abstract void logEventTarget(IRequestHandler target);
+
+	/**
+	 * This class hold the information one request of a session has.
+	 * 
+	 * @author jcompagner
+	 */
+	public static class SessionData implements IClusterable, Comparable<SessionData>
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String sessionId;
+		private final long startDate;
+		private long lastActive;
+		private long numberOfRequests;
+		private long totalTimeTaken;
+		private long sessionSize;
+		private Object sessionInfo;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param sessionId
+		 */
+		public SessionData(String sessionId)
+		{
+			this.sessionId = sessionId;
+			startDate = System.currentTimeMillis();
+			numberOfRequests = 1;
+		}
+
+		/**
+		 * @return The last active date.
+		 */
+		public Date getLastActive()
+		{
+			return new Date(lastActive);
+		}
+
+		/**
+		 * @return The start date of this session
+		 */
+		public Date getStartDate()
+		{
+			return new Date(startDate);
+		}
+
+		/**
+		 * @return The number of request for this session
+		 */
+		public long getNumberOfRequests()
+		{
+			return numberOfRequests;
+		}
+
+		/**
+		 * @return Returns the session size.
+		 */
+		public long getSessionSize()
+		{
+			return sessionSize;
+		}
+
+		/**
+		 * @return Returns the total time this session has spent.
+		 */
+		public long getTotalTimeTaken()
+		{
+			return totalTimeTaken;
+		}
+
+		/**
+		 * @return The session info object given by the {@link ISessionLogInfo#getSessionInfo()}
+		 *         session method.
+		 */
+		public Object getSessionInfo()
+		{
+			return sessionInfo;
+		}
+
+		/**
+		 * @return The session id
+		 */
+		public String getSessionId()
+		{
+			return sessionId;
+		}
+
+		void addTimeTaken(long time)
+		{
+			lastActive = System.currentTimeMillis();
+			numberOfRequests++;
+			totalTimeTaken += time;
+		}
+
+		void setSessionInfo(Object sessionInfo)
+		{
+			this.sessionInfo = sessionInfo;
+		}
+
+		void setSessionSize(long size)
+		{
+			sessionSize = size;
+		}
+
+		public int compareTo(SessionData sd)
+		{
+			return (int)(sd.lastActive - lastActive);
+		}
+
+	}
+
+
+	/**
+	 * This class hold the information one request of a session has.
+	 * 
+	 * @author jcompagner
+	 */
+	public static class RequestData implements IClusterable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private long startDate;
+		private long timeTaken;
+		private final List<String> entries = new ArrayList<String>(5);
+		private String eventTarget;
+		private String responseTarget;
+
+		private String sessionId;
+
+		private long totalSessionSize;
+
+		private Object sessionInfo;
+
+		private int activeRequest;
+
+		/**
+		 * @return The time taken for this request
+		 */
+		public Long getTimeTaken()
+		{
+			return new Long(timeTaken);
+		}
+
+		/**
+		 * @param activeRequest
+		 *            The number of active request when this request happened
+		 */
+		public void setActiveRequest(int activeRequest)
+		{
+			this.activeRequest = activeRequest;
+		}
+
+		/**
+		 * @return The number of active request when this request happened
+		 */
+		public int getActiveRequest()
+		{
+			return activeRequest;
+		}
+
+		/**
+		 * @return The session object info, created by {@link ISessionLogInfo#getSessionInfo()}
+		 */
+		public Object getSessionInfo()
+		{
+			return sessionInfo;
+		}
+
+		/**
+		 * Set the session info object of the session for this request.
+		 * 
+		 * @param sessionInfo
+		 */
+		public void setSessionInfo(Object sessionInfo)
+		{
+			this.sessionInfo = sessionInfo;
+		}
+
+		/**
+		 * @param sizeInBytes
+		 */
+		public void setSessionSize(long sizeInBytes)
+		{
+			totalSessionSize = sizeInBytes;
+		}
+
+		/**
+		 * @param id
+		 */
+		public void setSessionId(String id)
+		{
+			sessionId = id;
+		}
+
+		/**
+		 * @return The time taken for this request
+		 */
+		public Date getStartDate()
+		{
+			return new Date(startDate);
+		}
+
+		/**
+		 * @return The event target string
+		 */
+		public String getEventTarget()
+		{
+			return eventTarget;
+		}
+
+		/**
+		 * @return The response target string
+		 */
+		public String getResponseTarget()
+		{
+			return responseTarget;
+		}
+
+		/**
+		 * @param target
+		 */
+		public void addResponseTarget(String target)
+		{
+			responseTarget = target;
+		}
+
+		/**
+		 * @param target
+		 */
+		public void addEventTarget(String target)
+		{
+			eventTarget = target;
+		}
+
+		/**
+		 * @param timeTaken
+		 */
+		public void setTimeTaken(long timeTaken)
+		{
+			this.timeTaken = timeTaken;
+			startDate = System.currentTimeMillis() - timeTaken;
+		}
+
+		/**
+		 * @param string
+		 */
+		public void addEntry(String string)
+		{
+			entries.add(string);
+		}
+
+		/**
+		 * @return All entries of the objects that are created/updated or removed in this request
+		 */
+		public String getAlteredObjects()
+		{
+			AppendingStringBuffer sb = new AppendingStringBuffer();
+			for (int i = 0; i < entries.size(); i++)
+			{
+				String element = entries.get(i);
+				sb.append(element);
+				if (entries.size() != i + 1)
+				{
+					sb.append("<br/>");
+				}
+			}
+			return sb.toString();
+		}
+
+		/**
+		 * @return The session id for this request
+		 */
+		public String getSessionId()
+		{
+			return sessionId;
+		}
+
+		/**
+		 * @return The total session size.
+		 */
+		public Long getSessionSize()
+		{
+			return new Long(totalSessionSize);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo +
+				",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request=" +
+				eventTarget + ",response=" + responseTarget + ",alteredobjects=" +
+				getAlteredObjects() + ",activerequest=" + activeRequest + "]";
+		}
+	}
 
 }

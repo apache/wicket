@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -35,6 +35,7 @@ public class Page3 extends WicketExamplePage
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new Label("bookmarkparameter", parameters.getString("bookmarkparameter")));
+		add(new Label("bookmarkparameter", parameters.getNamedParameter("bookmarkparameter")
+			.toOptionalString()));
 	}
 }

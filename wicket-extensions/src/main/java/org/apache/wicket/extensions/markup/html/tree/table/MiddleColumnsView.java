@@ -26,10 +26,10 @@ import java.util.Locale;
 import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
 
 

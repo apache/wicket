@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.repeater;
 
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Application;
 
 /**
  * service locator class for contacts database
@@ -31,7 +31,7 @@ public class DatabaseLocator
 	 */
 	public static ContactsDatabase getDatabase()
 	{
-		RepeaterApplication app = (RepeaterApplication)RequestCycle.get().getApplication();
+		RepeaterApplication app = (RepeaterApplication)Application.get();
 		return app.getContactsDB();
 	}
 }

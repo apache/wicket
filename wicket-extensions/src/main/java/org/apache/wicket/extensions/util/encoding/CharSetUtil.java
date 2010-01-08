@@ -21,8 +21,10 @@ import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +67,7 @@ public class CharSetUtil
 			final ServletContext context = application.getServletContext();
 
 			final InputStream inputStream = context.getResourceAsStream("/WEB-INF/" +
-					CharSetMap.CHARSET_RESOURCE);
+				CharSetMap.CHARSET_RESOURCE);
 
 			if (inputStream == null)
 			{
@@ -99,9 +101,9 @@ public class CharSetUtil
 	{
 		if (charSetMap == null)
 		{
-			initialize((WebApplication)cycle.getApplication());
+			initialize((WebApplication)Application.get());
 		}
 
-		return charSetMap.getCharSet(cycle.getSession().getLocale());
+		return charSetMap.getCharSet(Session.get().getLocale());
 	}
 }

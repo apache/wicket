@@ -18,17 +18,12 @@ package org.apache.wicket.examples.niceurl;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.examples.niceurl.mounted.Page3;
-import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
-import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
-import org.apache.wicket.util.lang.PackageName;
 
 
 /**
  * Application class for this example.
+ * 
+ * TODO NG
  * 
  * @author Eelco Hillenius
  */
@@ -51,10 +46,10 @@ public class NiceUrlApplication extends WicketExampleApplication
 		return Home.class;
 	}
 
-	private <C extends Page> void mountBookmarkablePageWithUrlCoding(String path, Class<C> pageClass)
-	{
-		mount(new QueryStringUrlCodingStrategy(path, pageClass));
-	}
+// private <C extends Page> void mountBookmarkablePageWithUrlCoding(String path, Class<C> pageClass)
+// {
+// mount(new QueryStringUrlCodingStrategy(path, pageClass));
+// }
 
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
@@ -73,7 +68,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
 
-		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded", Page2QP.class);
+// mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded", Page2QP.class);
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
@@ -82,26 +77,26 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// sense to use one of the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
-		mount("/my/mounted/package", PackageName.forClass(Page3.class));
+// mount("/my/mounted/package", PackageName.forClass(Page3.class));
 	}
 
 	/**
 	 * Sets up a request coding strategy that uses case-insensitive mounts
 	 * 
-	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor() //
 	 */
-	@Override
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new WebRequestCycleProcessor()
-		{
-			@Override
-			protected IRequestCodingStrategy newRequestCodingStrategy()
-			{
-				WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
-				stratSettings.setMountsCaseSensitive(false);
-				return new WebRequestCodingStrategy(stratSettings);
-			}
-		};
-	}
+// @Override
+// protected IRequestCycleProcessor newRequestCycleProcessor()
+// {
+// return new WebRequestCycleProcessor()
+// {
+// @Override
+// protected IRequestCodingStrategy newRequestCodingStrategy()
+// {
+// WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
+// stratSettings.setMountsCaseSensitive(false);
+// return new WebRequestCodingStrategy(stratSettings);
+// }
+// };
+// }
 }

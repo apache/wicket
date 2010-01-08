@@ -16,12 +16,8 @@
  */
 package org.apache.wicket.examples.upload;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.file.Folder;
 
 
@@ -81,9 +77,10 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
 	 */
-	@Override
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
-	{
-		return new UploadWebRequest(servletRequest);
-	}
+	// TODO NG
+// @Override
+// protected WebRequest newWebRequest(HttpServletRequest servletRequest)
+// {
+// return new UploadWebRequest(servletRequest);
+// }
 }

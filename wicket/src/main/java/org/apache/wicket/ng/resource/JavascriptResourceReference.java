@@ -14,27 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.linkomatic;
+package org.apache.wicket.ng.resource;
 
-import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.ng.request.component.PageParameters;
+import java.util.Locale;
 
-
-/**
- * Trivial bookmarkable page.
- * 
- * @author Jonathan Locke
- */
-public class Page1 extends WicketExamplePage
+public class JavascriptResourceReference extends ResourceReference
 {
 
-	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 */
-	public Page1(PageParameters parameters)
+	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+		String variation)
 	{
+		super(scope, name, locale, style, variation);
+	}
+
+	public JavascriptResourceReference(Class<?> scope, String name)
+	{
+		super(scope, name);
 	}
 
 }

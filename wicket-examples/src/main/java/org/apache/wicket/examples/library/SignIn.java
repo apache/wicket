@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.library;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.authentication.panel.SignInPanel;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**

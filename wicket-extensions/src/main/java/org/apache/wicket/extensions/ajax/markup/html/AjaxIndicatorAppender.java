@@ -17,13 +17,15 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.AbstractHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 
 /**
  * A behavior that adds a span with wicket's default indicator gif to the end of the component's
@@ -97,7 +99,9 @@ public class AjaxIndicatorAppender extends AbstractHeaderContributor
 	 */
 	protected CharSequence getIndicatorUrl()
 	{
-		return RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR);
+		IRequestHandler handler = new ResourceReferenceRequestHandler(
+			AbstractDefaultAjaxBehavior.INDICATOR);
+		return RequestCycle.get().renderUrlFor(handler);
 	}
 
 	/**

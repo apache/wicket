@@ -22,7 +22,6 @@ import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.IPropertiesFactory;

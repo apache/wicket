@@ -27,14 +27,13 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Request;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -43,7 +42,7 @@ import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.time.Time;
 
@@ -169,7 +168,7 @@ public class KittenCaptchaPanel extends Panel
 				// Call-back script shows loading indicator and makes wicket
 				// ajax request passing in mouse co-ordinates
 				return generateCallbackScript("showLoadingIndicator(); wicketAjaxGet('" +
-					getCallbackUrl(onlyTargetActivePage) +
+					getCallbackUrl() +
 					"&x=' + getEventX(this, event) + '&y=' + getEventY(this, event)");
 			}
 
@@ -177,10 +176,9 @@ public class KittenCaptchaPanel extends Panel
 			protected void onEvent(final AjaxRequestTarget target)
 			{
 				// Get clicked cursor position
-				final WebRequest request = (WebRequest)RequestCycle.get().getRequest();
-				final Map<String, String[]> parameters = request.getParameterMap();
-				final int x = Integer.parseInt(parameters.get("x")[0]);
-				final int y = Integer.parseInt(parameters.get("y")[0]);
+				final Request request = RequestCycle.get().getRequest();
+				final int x = request.getRequestParameters().getParameterValue("x").toInt(0);
+				final int y = request.getRequestParameters().getParameterValue("y").toInt(0);
 
 				// Force refresh
 				imageResource.clearData();

@@ -17,7 +17,6 @@
 package org.apache.wicket.ng.resource;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -42,9 +41,6 @@ public interface IResource extends Serializable
 	{
 		private final Request request;
 		private final Response response;
-		private final Locale locale;
-		private final String style;
-		private final String variation;
 		private final PageParameters parameters;
 
 		/**
@@ -53,22 +49,15 @@ public interface IResource extends Serializable
 		 * @param request
 		 * 
 		 * @param response
-		 * @param locale
-		 * @param style
-		 * @param variation
 		 * @param parameters
 		 */
-		public Attributes(Request request, Response response, Locale locale, String style,
-			String variation, PageParameters parameters)
+		public Attributes(Request request, Response response, PageParameters parameters)
 		{
 			Checks.argumentNotNull(request, "request");
 			Checks.argumentNotNull(response, "response");
 
 			this.request = request;
 			this.response = response;
-			this.locale = locale;
-			this.style = style;
-			this.variation = variation;
 			this.parameters = parameters;
 		}
 
@@ -80,7 +69,7 @@ public interface IResource extends Serializable
 		 */
 		public Attributes(Request request, Response response)
 		{
-			this(request, response, null, null, null, null);
+			this(request, response, null);
 		}
 
 		/**
@@ -101,36 +90,6 @@ public interface IResource extends Serializable
 		public Response getResponse()
 		{
 			return response;
-		}
-
-		/**
-		 * Returns requested locale. The locale is never null.
-		 * 
-		 * @return locale
-		 */
-		public Locale getLocale()
-		{
-			return locale != null ? locale : request.getLocale();
-		}
-
-		/**
-		 * If specified returns requested style. The style is optional.
-		 * 
-		 * @return style or <code>null</code>
-		 */
-		public String getStyle()
-		{
-			return style;
-		}
-
-		/**
-		 * If specified returns requested variation. The variation is optional.
-		 * 
-		 * @return variation or <code>null</code>
-		 */
-		public String getVariation()
-		{
-			return variation;
 		}
 
 		/**

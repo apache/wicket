@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
@@ -51,7 +51,7 @@ public class DynamicPage extends WicketExamplePage
 		map.put("fields", fields);
 
 		VelocityPanel panel;
-		add(panel = new VelocityPanel("templatePanel", new MapModel<String,List<Field>>(map))
+		add(panel = new VelocityPanel("templatePanel", new MapModel<String, List<Field>>(map))
 		{
 			@Override
 			protected IStringResourceStream getTemplateResource()

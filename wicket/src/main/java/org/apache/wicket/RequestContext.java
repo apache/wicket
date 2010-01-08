@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
-import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 
 /**
  * Handles url rewriting, provides access to the namespace for markup Ids and isolated session

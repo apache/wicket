@@ -18,12 +18,12 @@ package org.apache.wicket.examples.pub2;
 
 import java.util.Locale;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 
 

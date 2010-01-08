@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -47,7 +47,8 @@ public class BookmarkablePageLinkPage extends WicketExamplePage
 		// Note that any arguments are passed as request parameters, and should
 		// thus be strings
 		PageParameters parameters = new PageParameters();
-		parameters.put("message", "This message was passed as a page parameter argument");
+		parameters.setNamedParameter("message",
+			"This message was passed as a page parameter argument");
 		add(new BookmarkablePageLink<Void>("pageLinkWithArgs", BookmarkablePage.class, parameters));
 	}
 

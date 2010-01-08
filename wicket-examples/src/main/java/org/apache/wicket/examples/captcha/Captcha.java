@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.captcha;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import org.apache.wicket.markup.ComponentTag;
@@ -25,6 +24,7 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -52,7 +52,8 @@ public class Captcha extends WicketExamplePage
 
 			captchaImageResource = new CaptchaImageResource(imagePass);
 			add(new Image("captchaImage", captchaImageResource));
-			add(new RequiredTextField<String>("password", new PropertyModel<String>(properties, "password"))
+			add(new RequiredTextField<String>("password", new PropertyModel<String>(properties,
+				"password"))
 			{
 				@Override
 				protected final void onComponentTag(final ComponentTag tag)

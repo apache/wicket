@@ -22,7 +22,6 @@ import javax.swing.tree.TreeNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
@@ -34,6 +33,7 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 
 /**

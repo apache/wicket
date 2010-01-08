@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
@@ -35,10 +34,10 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.resources.StyleSheetReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 
 /**
@@ -226,16 +225,6 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	protected ResourceReference getCSS()
 	{
 		return CSS;
-	}
-
-	/**
-	 * Can be overridden by clients for custom style sheet
-	 * 
-	 * @return the style sheet reference
-	 */
-	protected StyleSheetReference getStyleSheet()
-	{
-		return new StyleSheetReference("paletteCSS", getClass(), "palette.css");
 	}
 
 	/**

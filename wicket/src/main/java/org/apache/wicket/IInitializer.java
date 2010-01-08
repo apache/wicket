@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.markup.html.PackageResource;
+import org.apache.wicket.ng.resource.PackageResource;
 
 /**
  * Initializes something when application loads.

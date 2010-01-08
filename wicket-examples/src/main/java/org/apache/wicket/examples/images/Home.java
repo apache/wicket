@@ -21,14 +21,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 
 /**
@@ -102,13 +102,15 @@ public final class Home extends WicketExamplePage
 		return new ResourceReference(Home.class, "image5")
 		{
 			@Override
-			public Resource newResource()
+			public IResource getResource()
 			{
 				final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
 				final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 				drawCircle((Graphics2D)image.getGraphics());
 				resource.setImage(image);
-				return resource;
+
+				// TODO: NG
+				return (IResource)resource;
 			}
 		};
 	}
@@ -138,9 +140,10 @@ public final class Home extends WicketExamplePage
 		return new ResourceReference("okButton")
 		{
 			@Override
-			protected Resource newResource()
+			public IResource getResource()
 			{
-				return new DefaultButtonImageResource("Ok");
+				// TODO NG
+				return (IResource)new DefaultButtonImageResource("Ok");
 			}
 		};
 	}

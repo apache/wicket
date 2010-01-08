@@ -147,25 +147,26 @@ public class DownloadLink extends Link<File>
 
 		IResourceStream resourceStream = new FileResourceStream(
 			new org.apache.wicket.util.file.File(file));
-		getRequestCycle().setRequestTarget(new ResourceStreamRequestHandler(resourceStream)
-		{
-			@Override
-			public String getFileName()
+		getRequestCycle().scheduleRequestHandlerAfterCurrent(
+			new ResourceStreamRequestHandler(resourceStream)
 			{
-				return fn;
-			}
-
-			@Override
-			public void respond(RequestCycle requestCycle)
-			{
-				super.respond(requestCycle);
-
-				if (deleteAfter)
+				@Override
+				public String getFileName()
 				{
-					file.delete();
+					return fn;
 				}
-			}
-		});
+
+				@Override
+				public void respond(RequestCycle requestCycle)
+				{
+					super.respond(requestCycle);
+
+					if (deleteAfter)
+					{
+						file.delete();
+					}
+				}
+			});
 	}
 
 	/**

@@ -18,11 +18,7 @@ package org.apache.wicket.examples;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
 import org.apache.wicket.util.crypt.NoCrypt;
@@ -72,9 +68,10 @@ public abstract class WicketExampleApplication extends WebApplication
 	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycle(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
-	@Override
-	public final RequestCycle newRequestCycle(Request request, Response response)
-	{
-		return new WicketExampleRequestCycle(this, (WebRequest)request, response);
-	}
+	// TODD NG
+// @Override
+// public final RequestCycle newRequestCycle(Request request, Response response)
+// {
+// return new WicketExampleRequestCycle(this, (WebRequest)request, response);
+// }
 }

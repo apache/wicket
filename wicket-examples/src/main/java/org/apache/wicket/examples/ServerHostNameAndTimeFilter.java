@@ -20,7 +20,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.apache.wicket.IResponseFilter;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
@@ -29,8 +28,7 @@ import org.apache.wicket.util.time.Duration;
 
 /**
  * Displays server host name (combination of name, ipaddress and unique id, which is either based)
- * and time it took to handle the request in the browser's status bar like this:
- * <code>window.defaultStatus = 'Host: myhost/192.168.1.66/someid, handled in: 0.01s'</code>
+ * and time it took to handle the request in the browser's status bar like this: <code>window.defaultStatus = 'Host: myhost/192.168.1.66/someid, handled in: 0.01s'</code>
  * 
  * @author eelco hillenius
  */
@@ -82,7 +80,10 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int index = responseBuffer.indexOf("<head>");
-		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
+// long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
+
+		// TODO NG
+		long timeTaken = 0;
 		if (index != -1)
 		{
 			AppendingStringBuffer script = new AppendingStringBuffer(75);
@@ -114,7 +115,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 			String hostName = localMachine.getHostName();
 			String address = localMachine.getHostAddress();
 			host = ((!Strings.isEmpty(hostName)) ? hostName + "/" + address : address) + "/" +
-					hostId;
+				hostId;
 		}
 		catch (UnknownHostException e)
 		{

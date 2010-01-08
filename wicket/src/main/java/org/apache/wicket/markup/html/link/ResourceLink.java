@@ -110,7 +110,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	{
 
 		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
-			.getResponse(), getLocale(), getStyle(), getVariation(), null);
+			.getResponse(), null);
 		resource.respond(a);
 		onClick();
 	}

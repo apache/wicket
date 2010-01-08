@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
  * A bunch of static helper methods to add CSS and Javascript to the markup headers

@@ -37,7 +37,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
@@ -49,7 +48,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -90,7 +90,8 @@ public class SourcesPage extends WebPage
 		{
 			// name contains the name of the selected file
 			if (Strings.isEmpty(name) &&
-				Strings.isEmpty(getPage().getRequest().getParameter(SOURCE)))
+				Strings.isEmpty(getPage().getRequest().getRequestParameters().getParameterValue(
+					SOURCE).toOptionalString()))
 			{
 				return "";
 			}
@@ -99,7 +100,10 @@ public class SourcesPage extends WebPage
 			try
 			{
 				StringBuffer sb = new StringBuffer();
-				source = (name != null) ? name : getPage().getRequest().getParameter(SOURCE);
+				source = (name != null) ? name : getPage().getRequest()
+					.getRequestParameters()
+					.getParameterValue(SOURCE)
+					.toOptionalString();
 				InputStream resourceAsStream = getPageTargetClass().getResourceAsStream(source);
 				if (resourceAsStream == null)
 				{
@@ -517,13 +521,6 @@ public class SourcesPage extends WebPage
 		return name;
 	}
 
-	/**
-	 * Default constructor, only used for test purposes.
-	 */
-	public SourcesPage()
-	{
-		this(new PageParameters(PAGE_CLASS + "=" + SourcesPage.class.getName()));
-	}
 
 	/**
 	 * 
@@ -540,7 +537,10 @@ public class SourcesPage extends WebPage
 			@Override
 			public String getObject()
 			{
-				return name != null ? name : getPage().getRequest().getParameter(SOURCE);
+				return name != null ? name : getPage().getRequest()
+					.getRequestParameters()
+					.getParameterValue(SOURCE)
+					.toOptionalString();
 			}
 
 		});
@@ -570,15 +570,18 @@ public class SourcesPage extends WebPage
 	public static PageParameters generatePageParameters(Class<? extends Page> clazz, String fileName)
 	{
 		PageParameters p = new PageParameters();
-		p.put(PAGE_CLASS, clazz.getName());
+		p.setNamedParameter(PAGE_CLASS, clazz.getName());
 		if (fileName != null)
-			p.put(SOURCE, fileName);
+			p.setNamedParameter(SOURCE, fileName);
 		return p;
 	}
 
 	private String getPageParam()
 	{
-		return getPage().getRequest().getParameter(PAGE_CLASS);
+		return getPage().getRequest()
+			.getRequestParameters()
+			.getParameterValue(PAGE_CLASS)
+			.toOptionalString();
 	}
 
 	private Class<? extends Page> getPageTargetClass()
@@ -594,8 +597,9 @@ public class SourcesPage extends WebPage
 					{
 						log.error("key: " + PAGE_CLASS + " is null.");
 					}
-					throw new AbortWithWebErrorCodeException(404,
-						"Could not find sources for the page you requested");
+					getRequestCycle().replaceAllRequestHandlers(
+						new WebErrorCodeResponseHandler(404,
+							"Could not find sources for the page you requested"));
 				}
 				if (!pageParam.startsWith("org.apache.wicket.examples"))
 				{
@@ -610,8 +614,9 @@ public class SourcesPage extends WebPage
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new AbortWithWebErrorCodeException(404,
-					"Could not find sources for the page you requested");
+				getRequestCycle().replaceAllRequestHandlers(
+					new WebErrorCodeResponseHandler(404,
+						"Could not find sources for the page you requested"));
 			}
 		}
 		return page;

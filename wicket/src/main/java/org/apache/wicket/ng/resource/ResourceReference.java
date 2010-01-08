@@ -19,6 +19,7 @@ package org.apache.wicket.ng.resource;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
@@ -34,7 +35,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Matej Knopp
  */
-public abstract class ResourceReference implements Serializable
+public class ResourceReference implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -66,6 +67,32 @@ public abstract class ResourceReference implements Serializable
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
+	}
+
+	/**
+	 * Creates new {@link ResourceReference} instance.
+	 * 
+	 * @param scope
+	 *            mandatory parameter
+	 * @param name
+	 *            mandatory parameter
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 */
+	public ResourceReference(Class<?> scope, String name)
+	{
+		this(scope, name, null, null, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public ResourceReference(String name)
+	{
+		this(Application.class, name, null, null, null);
 	}
 
 	/**
@@ -144,5 +171,8 @@ public abstract class ResourceReference implements Serializable
 	 * 
 	 * @return new resource instance
 	 */
-	public abstract IResource getResource();
+	public IResource getResource()
+	{
+		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+	}
 }

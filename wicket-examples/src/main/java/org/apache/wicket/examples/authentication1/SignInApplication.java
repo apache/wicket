@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -90,7 +89,9 @@ public final class SignInApplication extends WicketExampleApplication
 					// Intercept the request, but remember the target for later.
 					// Invoke Component.continueToOriginalDestination() after successful logon to
 					// continue with the target remembered.
-					throw new RestartResponseAtInterceptPageException(SignIn.class);
+
+					// TODO (NG)
+// throw new RestartResponseAtInterceptPageException(SignIn.class);
 				}
 
 				// okay to proceed

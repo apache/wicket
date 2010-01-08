@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
  * Resource reference for Wicket AJAX javascript implementation

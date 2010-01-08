@@ -456,4 +456,9 @@ public class RequestCycle extends RequestHandlerStack
 	{
 		return new WebClientInfo(this);
 	}
+
+	public ClientInfo getClientInfo()
+	{
+		return newClientInfo();
+	}
 }

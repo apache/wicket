@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
@@ -43,7 +42,6 @@ public class Initializer implements IInitializer
 		IOnChangeListener.INTERFACE.register();
 		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
-		IActivePageBehaviorListener.INTERFACE.register();
 	}
 
 	/**

@@ -18,7 +18,6 @@ package org.apache.wicket.examples.ajax.prototype;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
 
 
 /**
@@ -44,7 +43,9 @@ public class PrototypeApplication extends WicketExampleApplication
 		super.init();
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+
+		// TODO (NG)
+		// getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 	}
 
 	/**

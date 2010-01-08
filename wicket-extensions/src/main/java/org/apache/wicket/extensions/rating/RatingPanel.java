@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.rating;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.HeaderContributor;
@@ -30,6 +30,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.
@@ -375,7 +377,8 @@ public abstract class RatingPanel extends Panel
 	 */
 	protected String getActiveStarUrl(int iteration)
 	{
-		return getRequestCycle().urlFor(STAR1).toString();
+		IRequestHandler handler = new ResourceReferenceRequestHandler(STAR1);
+		return getRequestCycle().renderUrlFor(handler).toString();
 	}
 
 	/**
@@ -388,7 +391,8 @@ public abstract class RatingPanel extends Panel
 	 */
 	protected String getInactiveStarUrl(int iteration)
 	{
-		return getRequestCycle().urlFor(STAR0).toString();
+		IRequestHandler handler = new ResourceReferenceRequestHandler(STAR0);
+		return getRequestCycle().renderUrlFor(handler).toString();
 	}
 
 	/**

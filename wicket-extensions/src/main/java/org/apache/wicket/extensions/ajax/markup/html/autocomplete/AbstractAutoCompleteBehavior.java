@@ -17,12 +17,12 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -72,7 +72,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		}
 
 		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
-			getCallbackUrl(true), constructSettingsJS(), indicatorId);
+			getCallbackUrl(), constructSettingsJS(), indicatorId);
 		response.renderOnDomReadyJavascript(initJS);
 	}
 
@@ -131,7 +131,10 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	protected void respond(AjaxRequestTarget target)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
-		final String val = requestCycle.getRequest().getParameter("q");
+		final String val = requestCycle.getRequest()
+			.getRequestParameters()
+			.getParameterValue("q")
+			.toOptionalString();
 		onRequest(val, requestCycle);
 	}
 }

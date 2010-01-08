@@ -19,7 +19,6 @@ package org.apache.wicket.examples.linkomatic;
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.ServerHostNameAndTimeFilter;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 
 /**
  * Application class for the linkomatic example.
@@ -46,7 +45,8 @@ public class LinkomaticApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+		// TODO WNG
+		// getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 		// log host name and server time in the browser's status bar
 		getRequestCycleSettings().addResponseFilter(new ServerHostNameAndTimeFilter());
 	}

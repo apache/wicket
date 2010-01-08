@@ -17,11 +17,14 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
 
 /**
@@ -38,7 +41,9 @@ public class BodyFrame extends WebPage
 	{
 		public CharSequence getObject()
 		{
-			return RequestCycle.get().urlFor(frameTarget.getFrameClass(), null);
+			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(
+				frameTarget.getFrameClass()));
+			return RequestCycle.get().renderUrlFor(handler);
 		}
 
 		public void setObject(final CharSequence object)
@@ -66,7 +71,8 @@ public class BodyFrame extends WebPage
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
-		String leftFrameSrc = RequestCycle.get().urlFor(leftFrame).toString();
+		IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(leftFrame));
+		String leftFrameSrc = RequestCycle.get().renderUrlFor(handler).toString();
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent("leftFrame");

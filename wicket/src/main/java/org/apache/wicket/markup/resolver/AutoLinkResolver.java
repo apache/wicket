@@ -24,16 +24,17 @@ import java.util.Set;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.string.Strings;
@@ -594,7 +595,10 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (resourceReference != null)
 			{
 				// Set href to link to this link's linkClicked method
-				CharSequence url = getRequestCycle().urlFor(resourceReference);
+
+				ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(
+					resourceReference);
+				CharSequence url = getRequestCycle().renderUrlFor(handler);
 
 				// generate the href attribute
 				tag.put(attribute, Strings.replaceAll(url, "&", "&amp;"));

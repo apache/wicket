@@ -16,81 +16,85 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
-import org.apache.wicket.examples.source.SourcesPage;
-import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 
 /**
  * Handles the PageExpiredException so that the SourcesPage can recover from a session expired.
  * 
+ * TODO NG
+ * 
  * @author rgravener
  */
-public class WicketExampleRequestCycle extends WebRequestCycle
+public class WicketExampleRequestCycle extends RequestCycle
 {
+
 	/**
 	 * Construct.
 	 * 
-	 * @param application
-	 * @param request
-	 * @param response
+	 * @param context
 	 */
-	public WicketExampleRequestCycle(WebApplication application, WebRequest request,
-		Response response)
+	public WicketExampleRequestCycle(RequestCycleContext context)
 	{
-		super(application, request, response);
+		super(context);
 	}
-
-	/**
-	 * @see org.apache.wicket.RequestCycle#onRuntimeException(org.apache.wicket.Page,
-	 *      java.lang.RuntimeException)
-	 */
-	@Override
-	public Page onRuntimeException(final Page page, final RuntimeException e)
-	{
-		final Throwable cause;
-		if (e.getCause() != null)
-		{
-			cause = e.getCause();
-		}
-		else
-		{
-			cause = e;
-		}
-
-		if (cause instanceof PageExpiredException)
-		{
-			handlePageExpiredException((PageExpiredException)cause);
-		}
-		return super.onRuntimeException(page, e);
-	}
-
-	/**
-	 * Checks to see if the request was ajax based. If so we send a 404 so that the
-	 * org.apache.wicket.ajax.IAjaxCallDecorator failure script is executed.
-	 * 
-	 * @param e
-	 */
-	private void handlePageExpiredException(final PageExpiredException e)
-	{
-		Response response = getOriginalResponse();
-		if (response instanceof BufferedWebResponse)
-		{
-			BufferedWebResponse bufferedWebResponse = (BufferedWebResponse)response;
-			Request request = getRequest();
-			if (bufferedWebResponse.isAjax() &&
-				request.getParameter(SourcesPage.PAGE_CLASS) != null)
-			{
-				// If there is a better way to figure out if SourcesPage was the request, we should
-				// do that.
-				throw new AbortWithWebErrorCodeException(404);
-			}
-		}
-	}
+// /**
+// * Construct.
+// *
+// * @param application
+// * @param request
+// * @param response
+// */
+// public WicketExampleRequestCycle(WebApplication application, WebRequest request,
+// Response response)
+// {
+// super(application, request, response);
+// }
+//
+// /**
+// * @see org.apache.wicket.RequestCycle#onRuntimeException(org.apache.wicket.Page,
+// * java.lang.RuntimeException)
+// */
+// @Override
+// public Page onRuntimeException(final Page page, final RuntimeException e)
+// {
+// final Throwable cause;
+// if (e.getCause() != null)
+// {
+// cause = e.getCause();
+// }
+// else
+// {
+// cause = e;
+// }
+//
+// if (cause instanceof PageExpiredException)
+// {
+// handlePageExpiredException((PageExpiredException)cause);
+// }
+// return super.onRuntimeException(page, e);
+// }
+//
+// /**
+// * Checks to see if the request was ajax based. If so we send a 404 so that the
+// * org.apache.wicket.ajax.IAjaxCallDecorator failure script is executed.
+// *
+// * @param e
+// */
+// private void handlePageExpiredException(final PageExpiredException e)
+// {
+// Response response = getOriginalResponse();
+// if (response instanceof BufferedWebResponse)
+// {
+// BufferedWebResponse bufferedWebResponse = (BufferedWebResponse)response;
+// Request request = getRequest();
+// if (bufferedWebResponse.isAjax() &&
+// request.getParameter(SourcesPage.PAGE_CLASS) != null)
+// {
+// // If there is a better way to figure out if SourcesPage was the request, we should
+// // do that.
+// throw new AbortWithWebErrorCodeException(404);
+// }
+// }
+// }
 }

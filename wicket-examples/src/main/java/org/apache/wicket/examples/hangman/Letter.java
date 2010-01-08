@@ -20,8 +20,8 @@ import java.awt.Color;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Primitives;
 
 
@@ -36,7 +36,7 @@ public class Letter implements IClusterable
 	private boolean guessed;
 
 	/** The letter */
-	private char letter;
+	private final char letter;
 
 	/**
 	 * Constructor
@@ -60,12 +60,13 @@ public class Letter implements IClusterable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object object)
 	{
 		if (object instanceof Letter)
 		{
 			final Letter that = (Letter)object;
-			return that.letter == this.letter && that.guessed == this.guessed;
+			return that.letter == letter && that.guessed == guessed;
 		}
 		return false;
 	}
@@ -76,13 +77,13 @@ public class Letter implements IClusterable
 	public ResourceReference getSharedImageResource()
 	{
 		return new ResourceReference(Letter.class, asString() +
-				(isGuessed() ? "_enabled" : "_disabled"))
+			(isGuessed() ? "_enabled" : "_disabled"))
 		{
 			protected Resource newResource()
 			{
 				// Lazy loading of shared resource
 				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(
-						30, 30, asString());
+					30, 30, asString());
 				if (!isGuessed())
 				{
 					buttonResource.setColor(Color.GRAY);
@@ -97,12 +98,13 @@ public class Letter implements IClusterable
 	 */
 	public void guess()
 	{
-		this.guessed = true;
+		guessed = true;
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return Primitives.hashCode(letter << (guessed ? 1 : 0));
@@ -121,12 +123,13 @@ public class Letter implements IClusterable
 	 */
 	public void reset()
 	{
-		this.guessed = false;
+		guessed = false;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Letter letter = " + letter + ", guessed = " + guessed + "]";
