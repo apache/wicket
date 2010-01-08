@@ -38,24 +38,24 @@ public class MockComponent implements IRequestableComponent
 	private String id;
 	private IRequestablePage page;
 	private String path;
-	
+
 	/**
 	 * Construct.
 	 */
 	public MockComponent()
 	{
 	}
-	
+
 	public IRequestableComponent get(String path)
 	{
 		MockComponent c = new MockComponent();
 		if (Strings.isEmpty(getPath()))
 		{
-			c.setPath(path);	
+			c.setPath(path);
 		}
 		else
 		{
-			c.setPath(this.getPath() + ":" + path);
+			c.setPath(getPath() + ":" + path);
 		}
 		c.setPage(getPage());
 		c.setId(Strings.lastPathComponent(path, ':'));
@@ -90,7 +90,7 @@ public class MockComponent implements IRequestableComponent
 		this.markupId = markupId;
 		return this;
 	}
-	
+
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		return markupId;
@@ -100,7 +100,7 @@ public class MockComponent implements IRequestableComponent
 	{
 		return page;
 	}
-	
+
 	/**
 	 * Sets the page instance
 	 * 
@@ -113,11 +113,11 @@ public class MockComponent implements IRequestableComponent
 		return this;
 	}
 
-	public String getPath()
+	public String getPageRelativePath()
 	{
 		return path;
 	}
-	
+
 	/**
 	 * Sets the component path
 	 * 
@@ -133,14 +133,24 @@ public class MockComponent implements IRequestableComponent
 	public void detach()
 	{
 	}
-	
+
 	public boolean canCallListenerInterface()
 	{
 		return true;
 	}
-	
+
 	public List<IBehavior> getBehaviors()
 	{
 		return Collections.emptyList();
+	}
+
+	public boolean isEnabledInHierarchy()
+	{
+		return false;
+	}
+
+	public boolean isVisibleInHierarchy()
+	{
+		return false;
 	}
 }

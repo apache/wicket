@@ -66,8 +66,7 @@ public class ContextPathGenerator extends AbstractBehavior
 		// get path
 		final String path = contextRelativePath.getObject();
 
-		final String rewritten = UrlUtils.rewriteToContextRelative(path, RequestCycle.get()
-			.getRequest());
+		final String rewritten = UrlUtils.rewriteToContextRelative(path, RequestCycle.get());
 
 		tag.put("src", rewritten);
 	}

@@ -175,7 +175,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 		}
 		else
 		{
-			return component.getPath();
+			return component.getPageRelativePath();
 		}
 	}
 

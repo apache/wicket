@@ -37,6 +37,7 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItemFactory;
@@ -67,10 +68,28 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
 	{
+		this(httpServletRequest, filterPrefix, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param httpServletRequest
+	 * 
+	 * @param filterPrefix
+	 *            contentPath + filterPath, used to extract the actual {@link Url}
+	 * 
+	 * @param url
+	 */
+	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
+	{
 		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
 		Checks.argumentNotNull(filterPrefix, "filterPrefix");
 
-		url = getUrl(httpServletRequest, filterPrefix);
+		if (url != null)
+			this.url = url;
+		else
+			this.url = getUrl(httpServletRequest, filterPrefix);
 		this.httpServletRequest = httpServletRequest;
 		this.filterPrefix = filterPrefix;
 	}
@@ -94,6 +113,11 @@ public class ServletWebRequest extends WebRequest
 		}
 
 		return Url.parse(Strings.stripJSessionId(url.toString()));
+	}
+
+	protected String getFilterPrefix()
+	{
+		return filterPrefix;
 	}
 
 	/**
@@ -244,18 +268,59 @@ public class ServletWebRequest extends WebRequest
 		return new Url(url);
 	}
 
+	@Override
+	public ServletWebRequest requestWithUrl(Url url)
+	{
+		return new ServletWebRequest(httpServletRequest, filterPrefix, url)
+		{
+			@Override
+			public IRequestParameters getPostRequestParameters()
+			{
+				// don't parse post parameters again
+				return ServletWebRequest.this.getPostRequestParameters();
+			}
+		};
+	}
+
+	/**
+	 * Creates multipart web request from this request.
+	 * 
+	 * @param maxSize
+	 * @return multipart request
+	 * @throws FileUploadException
+	 */
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequest(getHttpServletRequest(), filterPrefix, maxSize);
+		return new MultipartServletWebRequestImpl(getHttpServletRequest(), filterPrefix, maxSize);
 	}
 
+	/**
+	 * Creates multipart web request from this request.
+	 * 
+	 * @param maxSize
+	 * @param factory
+	 * @return multipart request
+	 * @throws FileUploadException
+	 */
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, FileItemFactory factory)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequest(getHttpServletRequest(), filterPrefix, maxSize,
+		return new MultipartServletWebRequestImpl(getHttpServletRequest(), filterPrefix, maxSize,
 			factory);
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ServletWebRequest.class);
+
+	@Override
+	public String getPrefixToContextPath()
+	{
+		PrependingStringBuffer buffer = new PrependingStringBuffer();
+		Url filterPrefixUrl = Url.parse(filterPrefix);
+		for (int i = 0; i < filterPrefixUrl.getSegments().size() - 1; ++i)
+		{
+			buffer.prepend("../");
+		}
+		return buffer.toString();
+	}
 }

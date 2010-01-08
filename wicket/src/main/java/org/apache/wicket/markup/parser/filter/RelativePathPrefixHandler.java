@@ -20,7 +20,6 @@ import java.text.ParseException;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Request;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -89,9 +88,8 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					Request request = RequestCycle.get().getRequest();
 					tag.getAttributes().put(attrName,
-						UrlUtils.rewriteToContextRelative(attrValue, request));
+						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
 				}
 			}
 		}

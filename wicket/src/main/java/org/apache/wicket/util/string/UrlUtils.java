@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.string;
 
-import org.apache.wicket.Request;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 
 /**
  * Various url utilities
@@ -56,18 +56,17 @@ public class UrlUtils
 	 * Rewrites a relative url to be context relative, leaves absolute urls same.
 	 * 
 	 * @param url
-	 * @param request
+	 * @param requestCycle
 	 * @return rewritten url
 	 */
-	public static String rewriteToContextRelative(String url, Request request)
+	public static String rewriteToContextRelative(String url, RequestCycle requestCycle)
 	{
 		if (isRelative(url))
 		{
 			// TODO: NG: This is pretty much a marker method; We dont have any means to do this now
-			System.out.println("TODO: Implement UrlUtils # rewriteToContextRelative");
-			// final String prefix = request.getRelativePathPrefixToContextRoot();
-			// return prefix + url;
-			return url;
+			System.out.println("TODO NG: Make sure this work properly");
+			return requestCycle.getUrlRenderer().renderContextPathRelativeUrl(url,
+				requestCycle.getRequest());
 		}
 		else
 		{

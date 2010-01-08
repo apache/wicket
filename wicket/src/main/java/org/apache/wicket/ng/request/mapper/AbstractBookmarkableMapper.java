@@ -325,7 +325,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			PageInfo pageInfo = new PageInfo(page);
 			ComponentInfo componentInfo = new ComponentInfo(page.getRenderCount(),
 				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponent().getPath(), handler.getBehaviorIndex());
+				handler.getComponent().getPageRelativePath(), handler.getBehaviorIndex());
 
 			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(pageInfo, componentInfo),
 				page.getClass(), handler.getPageParameters());

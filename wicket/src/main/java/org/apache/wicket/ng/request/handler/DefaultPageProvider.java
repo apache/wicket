@@ -124,6 +124,10 @@ public class DefaultPageProvider implements IPageProvider
 		{
 			setPageParameters(pageParameters);
 		}
+		else
+		{
+			setPageParameters(new PageParameters());
+		}
 	}
 
 	/**

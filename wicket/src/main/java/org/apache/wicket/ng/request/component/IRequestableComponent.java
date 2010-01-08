@@ -35,7 +35,7 @@ public interface IRequestableComponent
 	 * 
 	 * @return Colon separated path to this component in the component hierarchy
 	 */
-	public String getPath();
+	public String getPageRelativePath();
 
 	/**
 	 * Gets the id of this component.

@@ -170,15 +170,6 @@ public final class Url implements Serializable
 	/**
 	 * Construct.
 	 * 
-	 * @param string
-	 */
-	public Url(String string)
-	{
-	}
-
-	/**
-	 * Construct.
-	 * 
 	 * @param url
 	 *            url being copied
 	 */

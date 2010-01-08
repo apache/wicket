@@ -19,8 +19,10 @@ package org.apache.wicket.ng.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.string.PrependingStringBuffer;
 
 /**
  * Takes care of rendering relative (or in future possibly absolute - depending on configuration)
@@ -123,5 +125,18 @@ public class UrlRenderer
 
 			return new Url(newSegments, url.getQueryParameters()).toString();
 		}
+	}
+
+	public String renderContextPathRelativeUrl(final String url, final Request request)
+	{
+		PrependingStringBuffer buffer = new PrependingStringBuffer(url);
+		for (int i = 0; i < baseUrl.getSegments().size() - 1; ++i)
+		{
+			buffer.prepend("../");
+		}
+
+		buffer.prepend(request.getPrefixToContextPath());
+
+		return buffer.toString();
 	}
 }

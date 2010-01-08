@@ -101,4 +101,17 @@ public abstract class Request
 		};
 	}
 
+	/**
+	 * Returns prefix from Wicket Filter mapping to context path. This method does not take the
+	 * actual URL into account.
+	 * <p>
+	 * For example if Wicket filter is mapped to hello/* this method should return ../
+	 * 
+	 * @return prefix to context path for this request.
+	 * 
+	 */
+	public String getPrefixToContextPath()
+	{
+		return "";
+	}
 }

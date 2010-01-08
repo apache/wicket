@@ -52,8 +52,8 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.DefaultPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -3198,8 +3198,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(pageClass,
-			parameters));
+		IRequestHandler handler = new BookmarkablePageRequestHandler(new DefaultPageProvider(
+			pageClass, parameters));
 		return getRequestCycle().renderUrlFor(handler);
 	}
 

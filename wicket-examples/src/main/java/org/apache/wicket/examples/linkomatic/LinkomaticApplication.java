@@ -45,6 +45,8 @@ public class LinkomaticApplication extends WicketExampleApplication
 	{
 		super.init();
 
+		mountBookmarkablePage("/home", Home.class);
+
 		// TODO WNG
 		// getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 		// log host name and server time in the browser's status bar

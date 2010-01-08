@@ -85,7 +85,7 @@ public class RedirectRequestHandler implements IRequestHandler
 			else
 			{
 				String location = UrlUtils.rewriteToContextRelative(redirectUrl.substring(1),
-					requestCycle.getRequest());
+					requestCycle);
 
 				// IE does not understand "./" in a path, just "." is okay.
 				if (location.startsWith("./"))
@@ -106,5 +106,4 @@ public class RedirectRequestHandler implements IRequestHandler
 			response.sendRedirect(redirectUrl);
 		}
 	}
-
 }

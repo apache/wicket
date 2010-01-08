@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.upload.FileUploadException;
 
@@ -29,7 +29,7 @@ import org.apache.wicket.util.upload.FileUploadException;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-class MultipartRequest extends MultipartServletWebRequest
+class MultipartRequest extends MultipartServletWebRequestImpl
 {
 	/**
 	 * @param req
@@ -46,7 +46,7 @@ class MultipartRequest extends MultipartServletWebRequest
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#wantUploadProgressUpdates()
+	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl#wantUploadProgressUpdates()
 	 */
 	@Override
 	protected boolean wantUploadProgressUpdates()
@@ -55,7 +55,7 @@ class MultipartRequest extends MultipartServletWebRequest
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadStarted(int)
+	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl#onUploadStarted(int)
 	 */
 	@Override
 	protected void onUploadStarted(int totalBytes)
@@ -67,7 +67,7 @@ class MultipartRequest extends MultipartServletWebRequest
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadUpdate(int,
+	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl#onUploadUpdate(int,
 	 *      int)
 	 */
 	@Override
@@ -86,7 +86,7 @@ class MultipartRequest extends MultipartServletWebRequest
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest#onUploadCompleted()
+	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl#onUploadCompleted()
 	 */
 	@Override
 	protected void onUploadCompleted()
