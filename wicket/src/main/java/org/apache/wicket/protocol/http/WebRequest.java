@@ -106,7 +106,8 @@ public abstract class WebRequest extends Request
 	/**
 	 * Marker parameter for AjaxRequest.
 	 */
-	public static final String PARAM_AJAX = "wicket:ajax";
+	private static final String PARAM_AJAX = "wicket:ajax";
+	private static final String HEADER_AJAX = "Wicket-Ajax";
 
 	/**
 	 * Returns whether this request is an Ajax request. This implementation only checks for value of
@@ -116,7 +117,8 @@ public abstract class WebRequest extends Request
 	 */
 	public boolean isAjax()
 	{
-		return getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
+		return "true".equalsIgnoreCase(getHeader(HEADER_AJAX)) ||
+			getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
 	}
 
 	/**

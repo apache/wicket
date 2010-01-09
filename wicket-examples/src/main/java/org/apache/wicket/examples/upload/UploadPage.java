@@ -23,9 +23,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -36,6 +35,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
@@ -184,8 +184,12 @@ public class UploadPage extends WicketExamplePage
 
 		// Add upload form with ajax progress bar
 		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
-		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
+
+		// TODO NG
+// ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
+		ajaxSimpleUploadForm.add(new WebMarkupContainer("progress"));
 		add(ajaxSimpleUploadForm);
+
 
 	}
 

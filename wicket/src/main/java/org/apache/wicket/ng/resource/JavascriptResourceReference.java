@@ -18,6 +18,11 @@ package org.apache.wicket.ng.resource;
 
 import java.util.Locale;
 
+/**
+ * TODO NG
+ * 
+ * @author Matej
+ */
 public class JavascriptResourceReference extends ResourceReference
 {
 

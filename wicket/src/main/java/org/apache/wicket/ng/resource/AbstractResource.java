@@ -28,10 +28,13 @@ import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Checks;
 
 /**
- * Simple resource implementation.
+ * Convenience resource implementation. The subclass must implement
+ * {@link #newResourceData(org.apache.wicket.ng.resource.IResource.Attributes)} method.
  * 
  * @author Matej Knopp
  */
@@ -46,57 +49,36 @@ public abstract class AbstractResource implements IResource
 	{
 	}
 
-	public static abstract class WriteCallback
-	{
-		public abstract void writeData(Attributes attributes);
+	/**
+	 * Override this method to return a {@link ResourceData} for the request.
+	 * 
+	 * @param attributes
+	 * @return resource data instance
+	 */
+	protected abstract ResourceData newResourceData(Attributes attributes);
 
-		protected void writeStream(Attributes attributes, InputStream stream)
-		{
-			final Response response = attributes.getResponse();
-			OutputStream s = new OutputStream()
-			{
-				@Override
-				public void write(int b) throws IOException
-				{
-					response.write(new byte[] { (byte)b });
-				}
-
-				@Override
-				public void write(byte[] b) throws IOException
-				{
-					response.write(b);
-				}
-
-				@Override
-				public void write(byte[] b, int off, int len) throws IOException
-				{
-					if (off == 0 || len == b.length)
-					{
-						write(b);
-					}
-					else
-					{
-						byte copy[] = new byte[len];
-						System.arraycopy(b, off, copy, 0, len);
-						write(copy);
-					}
-				}
-			};
-			try
-			{
-				Streams.copy(stream, s);
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-	};
-
+	/**
+	 * Represents content disposition of a resource
+	 * 
+	 * @author Matej Knopp
+	 */
 	public enum ContentDisposition {
-		INLINE, ATTACHMENT;
+		/**
+		 * Inline resources are usually displayed within the browser window
+		 */
+		INLINE,
+
+		/**
+		 * For attachment resources the browser should display a save dialog
+		 */
+		ATTACHMENT;
 	};
 
+	/**
+	 * Represents data used to configure response and write resource data.
+	 * 
+	 * @author Matej Knopp
+	 */
 	public static class ResourceData
 	{
 		private Integer errorCode;
@@ -107,42 +89,89 @@ public abstract class AbstractResource implements IResource
 		private long contentLength = -1;
 		private Date lastModified = null;
 		private WriteCallback writeCallback;
+		private boolean cacheable = true;
+		private long cacheDuration;
 
+		/**
+		 * Construct.
+		 */
+		public ResourceData()
+		{
+			cacheDuration = Application.get().getResourceSettings().getDefaultCacheDuration();
+		}
+
+		/**
+		 * Sets the error code for resource. If there is an error code set the data will not be
+		 * rendered and the code will be sent to client.
+		 * 
+		 * @param errorCode
+		 */
 		public void setErrorCode(Integer errorCode)
 		{
 			this.errorCode = errorCode;
 		}
 
+		/**
+		 * @return error code or <code>null</code>
+		 */
 		public Integer getErrorCode()
 		{
 			return errorCode;
 		}
 
+		/**
+		 * Sets the file name of the resource.
+		 * 
+		 * @param fileName
+		 */
 		public void setFileName(String fileName)
 		{
 			this.fileName = fileName;
 		}
 
+		/**
+		 * @return resource file name
+		 */
 		public String getFileName()
 		{
 			return fileName;
 		}
 
+		/**
+		 * Determines whether the resource will be inline or an attachment.
+		 * 
+		 * @see ContentDisposition
+		 * 
+		 * @param contentDisposition
+		 */
 		public void setContentDisposition(ContentDisposition contentDisposition)
 		{
+			Checks.argumentNotNull(contentDisposition, "contentDisposition");
 			this.contentDisposition = contentDisposition;
 		}
 
+		/**
+		 * @return whether the resource is inline or attachment
+		 */
 		public ContentDisposition getContentDisposition()
 		{
 			return contentDisposition;
 		}
 
+		/**
+		 * Sets the content type for the resource. If no content type is set it will be determined
+		 * by the extension.
+		 * 
+		 * @param contentType
+		 */
 		public void setContentType(String contentType)
 		{
 			this.contentType = contentType;
 		}
 
+		/**
+		 * @return resource content type
+		 */
 		public String getContentType()
 		{
 			if (contentType == null && fileName != null)
@@ -152,37 +181,75 @@ public abstract class AbstractResource implements IResource
 			return contentType;
 		}
 
+		/**
+		 * Sets the text encoding for the resource. The encoding is only used if the content type
+		 * indicates a textual resource.
+		 * 
+		 * @param textEncoding
+		 */
 		public void setTextEncoding(String textEncoding)
 		{
 			this.textEncoding = textEncoding;
 		}
 
+		/**
+		 * @return text encoding for resource
+		 */
 		protected String getTextEncoding()
 		{
 			return textEncoding;
 		}
 
+		/**
+		 * Sets the content length (in bytes) of the data. Content length is optional but it's
+		 * recommended to set it so that the browser can show download progress.
+		 * 
+		 * @param contentLength
+		 */
 		public void setContentLength(long contentLength)
 		{
 			this.contentLength = contentLength;
 		}
 
+		/**
+		 * @return content length (in bytes)
+		 */
 		public long getContentLength()
 		{
 			return contentLength;
 		}
 
+		/**
+		 * Sets the last modified data of the resource. Even though this method is optional it is
+		 * recommended to set the date. If the date is set properly Wicket can check the
+		 * <code>If-Modified-Since</code> to determine if the actuall data really needs to be sent
+		 * to client.
+		 * 
+		 * @param lastModified
+		 */
 		public void setLastModified(Date lastModified)
 		{
 			this.lastModified = lastModified;
 		}
 
+		/**
+		 * @return last modified date
+		 */
 		public Date getLastModified()
 		{
 			return lastModified;
 		}
 
-		public boolean notModified(Attributes attributes)
+		/**
+		 * Check to determine if the resource data needs to be written. This method checks the
+		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
+		 * In order for this method to work {@link #setLastModified(Date)} has to be called first.
+		 * 
+		 * @param attributes
+		 * @return <code>true</code> if the resource data does need to be written,
+		 *         <code>false</code> otherwise.
+		 */
+		public boolean dataNeedsToBeWritten(Attributes attributes)
 		{
 			WebRequest request = (WebRequest)attributes.getRequest();
 			Date ifModifiedSince = request.getIfModifiedSinceHeader();
@@ -191,35 +258,103 @@ public abstract class AbstractResource implements IResource
 			if (ifModifiedSince != null && lastModifed != null &&
 				lastModifed.before(ifModifiedSince))
 			{
-				return true;
+				return false;
 			}
 			else
 			{
-				return false;
+				return true;
 			}
 		}
 
+		/**
+		 * Cachable resources are cached on client. This flag affects the <code>Expires</code> and
+		 * <code>Cache-Control</code> headers.
+		 * 
+		 * @see #setCacheDuration(int)
+		 * 
+		 * @param cacheable
+		 */
+		public void setCacheable(boolean cacheable)
+		{
+			this.cacheable = cacheable;
+		}
+
+		/**
+		 * @return returns whether this resource is cacheable
+		 */
+		public boolean isCacheable()
+		{
+			return cacheable;
+		}
+
+		/**
+		 * Sets the duration for which this resource should be cached on client (in seconds). #see
+		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
+		 * 
+		 * @param cacheDuration
+		 */
+		public void setCacheDuration(long cacheDuration)
+		{
+			this.cacheDuration = cacheDuration;
+		}
+
+		/**
+		 * @return duration for which the resource shoudl be cached on client (in seconds)
+		 */
+		public long getCacheDuration()
+		{
+			return cacheDuration;
+		}
+
+		/**
+		 * Sets the {@link WriteCallback}. The callback is responsible for generating the response
+		 * data.
+		 * <p>
+		 * It is necessary to set the {@link WriteCallback} if
+		 * {@link #dataNeedsToBeWritten(org.apache.wicket.ng.resource.IResource.Attributes)} returns
+		 * <code>true</code> and {@link #setErrorCode(Integer)} has not been called.
+		 * 
+		 * @param writeCallback
+		 */
 		public void setWriteCallback(WriteCallback writeCallback)
 		{
+			Checks.argumentNotNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
 		}
 
+		/**
+		 * @return write callback.
+		 */
 		public WriteCallback getWriteCallback()
 		{
 			return writeCallback;
 		}
 	};
 
-	protected abstract ResourceData newResourceData(Attributes attributes);
+	protected void configureCache(WebRequest request, WebResponse response, ResourceData data,
+		Attributes attributes)
+	{
+		if (data.isCacheable())
+		{
+			// If time is set also set cache headers.
+			response.setDateHeader("Expires", System.currentTimeMillis() +
+				(data.getCacheDuration() * 1000L));
+			response.setHeader("Cache-Control", "max-age=" + data.getCacheDuration());
+		}
+		else
+		{
+			response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		}
+	}
 
-	public void respond(Attributes attributes)
+	public final void respond(Attributes attributes)
 	{
 		ResourceData data = newResourceData(attributes);
 
 		WebRequest request = (WebRequest)attributes.getRequest();
 		WebResponse response = (WebResponse)attributes.getResponse();
 
-		if (data.notModified(attributes))
+		if (!data.dataNeedsToBeWritten(attributes))
 		{
 			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
@@ -230,6 +365,11 @@ public abstract class AbstractResource implements IResource
 		}
 		else
 		{
+			if (data.getWriteCallback() == null)
+			{
+				throw new IllegalStateException(
+					"ResourceData#setWriteCallback must be called for AbstractResource.");
+			}
 
 			String fileName = data.getFileName();
 			ContentDisposition disposition = data.getContentDisposition();
@@ -276,16 +416,83 @@ public abstract class AbstractResource implements IResource
 				response.setLastModifiedTime(lastModified.getTime());
 			}
 
-			// 4. Content Length
+			// 4. Caching
+
+			configureCache(request, response, data, attributes);
+
+			// 5. Content Length
 
 			if (contentLength != -1)
 			{
 				response.setContentLength(contentLength);
 			}
 
-			// 5. Write Data
+			// 6. Write Data
 			data.getWriteCallback().writeData(attributes);
 		}
 	}
 
+	/**
+	 * Callback invoked when resource data needs to be written to response. Subclass needs to
+	 * implement the {@link #writeData(org.apache.wicket.ng.resource.IResource.Attributes)} method.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static abstract class WriteCallback
+	{
+		/**
+		 * Write the resource data to response.
+		 * 
+		 * @param attributes
+		 */
+		public abstract void writeData(Attributes attributes);
+
+		/**
+		 * Convenience method to write an {@link InputStream} to response.
+		 * 
+		 * @param attributes
+		 * @param stream
+		 */
+		protected final void writeStream(Attributes attributes, InputStream stream)
+		{
+			final Response response = attributes.getResponse();
+			OutputStream s = new OutputStream()
+			{
+				@Override
+				public void write(int b) throws IOException
+				{
+					response.write(new byte[] { (byte)b });
+				}
+
+				@Override
+				public void write(byte[] b) throws IOException
+				{
+					response.write(b);
+				}
+
+				@Override
+				public void write(byte[] b, int off, int len) throws IOException
+				{
+					if (off == 0 || len == b.length)
+					{
+						write(b);
+					}
+					else
+					{
+						byte copy[] = new byte[len];
+						System.arraycopy(b, off, copy, 0, len);
+						write(copy);
+					}
+				}
+			};
+			try
+			{
+				Streams.copy(stream, s);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+	};
 }

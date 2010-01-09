@@ -18,6 +18,7 @@ package org.apache.wicket.ng.resource;
 
 import java.util.Locale;
 
+// TODO NG
 public class CompressedResourceReference extends ResourceReference
 {
 

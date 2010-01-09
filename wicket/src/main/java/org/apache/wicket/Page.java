@@ -257,14 +257,13 @@ public abstract class Page extends MarkupContainer
 	 * @param parameters
 	 *            externally passed parameters
 	 * @see PageParameters
-	 * @deprecated wicket-ng use PageParametersNg constructor
 	 */
-	@Deprecated
 	protected Page(final PageParameters parameters)
 	{
 		super(null);
+
 		if (parameters == null)
-		{ // TODO WICKET-NG is this necessary or can we keep the field as null to save space?
+		{
 			pageParameters = new PageParameters();
 		}
 		else

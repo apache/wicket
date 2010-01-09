@@ -69,7 +69,7 @@ public class ResourceStreamResource extends AbstractResource
 		data.setLastModified(stream.lastModifiedTime().toDate());
 
 		// performance check; don't bother to do anything if the resource is still cached by client
-		if (!data.notModified(attributes))
+		if (data.dataNeedsToBeWritten(attributes))
 		{
 			InputStream inputStream = null;
 			if (stream instanceof IResourceStreamWriter == false)
