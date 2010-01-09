@@ -167,7 +167,7 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final IRequestableComponent component)
 	{
-		if (!component.isEnabledInHierarchy() || !component.isVisibleInHierarchy())
+		if (!component.canCallListenerInterface())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page

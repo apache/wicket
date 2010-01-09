@@ -4294,7 +4294,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/** TODO WICKET-NG javadoc */
 	public boolean canCallListenerInterface()
 	{
-		if (!isEnabled() || !determineVisibility())
+		if (!isEnabledInHierarchy() || !determineVisibility())
 		{
 			return false;
 		}

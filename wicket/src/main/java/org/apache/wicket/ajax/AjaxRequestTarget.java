@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -528,6 +529,11 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
+		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
+		Url baseURL = Url.parse(((WebRequest)requestCycle.getRequest()).getHeader("Wicket-Ajax-BaseURL"));
+
+		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
+
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 
 		if (markupIdToComponent.values().contains(page))
@@ -595,6 +601,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		response.write("</ajax-response>");
+
+		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**

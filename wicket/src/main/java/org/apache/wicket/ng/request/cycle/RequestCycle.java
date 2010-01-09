@@ -217,6 +217,7 @@ public class RequestCycle extends RequestHandlerStack
 			{
 				log.error("Error during request processing", e);
 			}
+			return true;
 		}
 		finally
 		{
@@ -291,7 +292,7 @@ public class RequestCycle extends RequestHandlerStack
 	}
 
 	@Deprecated
-	// TODO: Remove. Request should be final
+	// TODO NG: Remove. Request should be final
 	// the only reason why the method is here is that form sets new request if the request is
 	// multipart
 	// can't this be handled by wicket filter?
@@ -451,7 +452,7 @@ public class RequestCycle extends RequestHandlerStack
 	 * 
 	 * @return the agent info object based on this request
 	 */
-	// TODO! Get this shit out of here
+	// TODO NG Get this shit out of here!
 	public ClientInfo newClientInfo()
 	{
 		return new WebClientInfo(this);

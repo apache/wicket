@@ -835,6 +835,7 @@ Wicket.Ajax.Request.prototype = {
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
+				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket.Ajax.baseUrl);
 				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");
@@ -884,6 +885,7 @@ Wicket.Ajax.Request.prototype = {
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
+				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket.Ajax.baseUrl);
 				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");

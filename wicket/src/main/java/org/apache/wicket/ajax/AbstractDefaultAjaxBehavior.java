@@ -80,6 +80,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 		}
 
+		// TODO NG Escape
+		response.renderJavascript("Wicket.Ajax.baseUrl=\"" +
+			RequestCycle.get().getUrlRenderer().getBaseUrl() + "\";", "wicket-ajax-base-url");
+
 		RequestContext context = RequestContext.get();
 		if (context.isPortletRequest())
 		{
@@ -113,8 +117,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript(boolean onlyTargetActivePage)
 	{
-		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
-			"'");
+		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'");
 	}
 
 	/**
