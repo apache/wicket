@@ -18,14 +18,24 @@ package org.apache.wicket.ng;
 
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.IExceptionMapper;
+import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.request.mapper.StalePageException;
 
 public class DefaultExceptionMapper implements IExceptionMapper
 {
 
 	public IRequestHandler map(Exception e)
 	{
-		// TODO
-		return null;
+		if (e instanceof StalePageException)
+		{
+			// If the page was stale, just rerender it
+			return new RenderPageRequestHandler(new DefaultPageProvider(
+				((StalePageException)e).getPage()));
+		}
+		else
+			// TODO
+			return null;
 	}
 
 }
