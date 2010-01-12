@@ -322,8 +322,14 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 				return null;
 			}
 
+			Integer renderCount = null;
+			if (handler.getListenerInterface().isIncludeRenderCount())
+			{
+				renderCount = page.getRenderCount();
+			}
+
 			PageInfo pageInfo = new PageInfo(page);
-			ComponentInfo componentInfo = new ComponentInfo(page.getRenderCount(),
+			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(handler.getListenerInterface()),
 				handler.getComponent().getPageRelativePath(), handler.getBehaviorIndex());
 

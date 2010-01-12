@@ -64,34 +64,25 @@ public class RequestListenerInterface
 	private final String name;
 
 	/**
-	 * Whether or not this listener is targeted for a specific page version. If recordVersion is
-	 * true the page will be rolled back to the version which created the url, if false the latest
-	 * version of the page will be used.
+	 * Whether the render count should be included in URL. This should be true for every listener
+	 * interface URL that should only be active on last rendered page (links, etc) and false for
+	 * other (resources);
 	 */
-	private boolean recordsPageVersion = true;
+	private boolean includeRenderCount = true;
 
 	/**
-	 * Constructor that creates listener interfaces which record the page version.
-	 * 
-	 * @param listenerInterfaceClass
-	 *            The interface class, which must extend IRequestListener.
+	 * Whether the page should be rendered by default after the invocation of this listener
+	 * interface. Applies only during non-ajax requests.
 	 */
-	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass)
-	{
-		this(listenerInterfaceClass, true);
-	}
+	private boolean renderPageAfterInvocation = true;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
-	 * @param recordsPageVersion
-	 *            Whether or not urls encoded for this interface contain the page version. If set to
-	 *            false the latest page version is always used.
 	 */
-	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass,
-		boolean recordsPageVersion)
+	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass)
 	{
 		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
@@ -99,8 +90,6 @@ public class RequestListenerInterface
 			throw new IllegalArgumentException("Class " + listenerInterfaceClass +
 				" must extend IRequestListener");
 		}
-
-		this.recordsPageVersion = recordsPageVersion;
 
 		// Get interface methods
 		final Method[] methods = listenerInterfaceClass.getMethods();
@@ -133,6 +122,43 @@ public class RequestListenerInterface
 	}
 
 	/**
+	 * @param includeRenderCount
+	 * @return self
+	 */
+	public RequestListenerInterface setIncludeRenderCount(boolean includeRenderCount)
+	{
+		this.includeRenderCount = includeRenderCount;
+		return this;
+	}
+
+	/**
+	 * @return whether the render count should be included in url
+	 */
+	public boolean isIncludeRenderCount()
+	{
+		return includeRenderCount;
+	}
+
+	/**
+	 * @param renderPageAfterInvocation
+	 * @return self
+	 */
+	public RequestListenerInterface setRenderPageAfterInvocation(boolean renderPageAfterInvocation)
+	{
+		this.renderPageAfterInvocation = renderPageAfterInvocation;
+		return this;
+	}
+
+	/**
+	 * @return whether the page should be rendered after invocation of this interface (during
+	 *         non-ajax requests)
+	 */
+	public boolean isRenderPageAfterInvocation()
+	{
+		return renderPageAfterInvocation;
+	}
+
+	/**
 	 * @return The method for this request listener interface
 	 */
 	public final Method getMethod()
@@ -146,15 +172,6 @@ public class RequestListenerInterface
 	public final String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * @return true if urls encoded for this interface should record the page version, false if they
-	 *         should always be encoded for the latest page version
-	 */
-	public final boolean getRecordsPageVersion()
-	{
-		return recordsPageVersion;
 	}
 
 	/**

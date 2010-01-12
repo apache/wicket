@@ -28,6 +28,7 @@ import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -143,13 +144,18 @@ public class ListenerInterfaceRequestHandler
 	{
 		if (getComponent().getPage() == getPage())
 		{
-			// schedule page render after current request handler is done. this can be overridden
-			// during invocation of listener
-			// method (i.e. by calling RequestCycle#setResponsePage)
-			RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT
-				: RedirectPolicy.AUTO_REDIRECT;
-			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
-				new DefaultPageProvider(getPage()), policy));
+			if (((WebRequest)requestCycle.getRequest()).isAjax() == false &&
+				listenerInterface.isRenderPageAfterInvocation())
+			{
+				// schedule page render after current request handler is done. this can be
+				// overridden
+				// during invocation of listener
+				// method (i.e. by calling RequestCycle#setResponsePage)
+				RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT
+					: RedirectPolicy.AUTO_REDIRECT;
+				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
+					new DefaultPageProvider(getPage()), policy));
+			}
 
 			if (getBehaviorIndex() == null)
 			{

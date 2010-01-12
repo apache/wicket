@@ -39,10 +39,10 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.DynamicImageResource;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.time.Time;
 
@@ -386,6 +386,13 @@ public class KittenCaptchaPanel extends Panel
 		 */
 		private transient SoftReference<byte[]> data = null;
 
+		@Override
+		protected void configureResponse(ResourceResponse response, Attributes attributes)
+		{
+			super.configureResponse(response, attributes);
+			response.setCacheable(false);
+		}
+
 		/**
 		 * @param animals
 		 *            The positioned animals
@@ -393,7 +400,6 @@ public class KittenCaptchaPanel extends Panel
 		private CaptchaImageResource(final PlacedAnimalList animals)
 		{
 			this.animals = animals;
-			setCacheable(false);
 			setFormat("jpg");
 		}
 
@@ -423,7 +429,6 @@ public class KittenCaptchaPanel extends Panel
 		/**
 		 * Invalidates the image data
 		 */
-		@Override
 		protected void invalidate()
 		{
 			data = null;

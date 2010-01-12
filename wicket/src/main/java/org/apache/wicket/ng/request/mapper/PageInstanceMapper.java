@@ -117,8 +117,14 @@ public class PageInstanceMapper extends AbstractMapper
 			String componentPath = handler.getComponent().getPageRelativePath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
+			Integer renderCount = null;
+			if (listenerInterface.isIncludeRenderCount())
+			{
+				renderCount = page.getRenderCount();
+			}
+
 			PageInfo pageInfo = new PageInfo(page);
-			ComponentInfo componentInfo = new ComponentInfo(page.getRenderCount(),
+			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(listenerInterface), componentPath,
 				handler.getBehaviorIndex());
 			info = new PageComponentInfo(pageInfo, componentInfo);

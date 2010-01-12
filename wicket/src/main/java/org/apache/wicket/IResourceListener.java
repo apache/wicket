@@ -35,7 +35,7 @@ public interface IResourceListener extends IRequestListener
 {
 	/** Resource listener interface object */
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
-		IResourceListener.class);
+		IResourceListener.class).setIncludeRenderCount(false).setRenderPageAfterInvocation(false);
 
 	/**
 	 * Called when a resource is requested.
