@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.resource.DynamicImageResource;
 import org.apache.wicket.util.io.Streams;
 
 
@@ -40,27 +40,6 @@ public abstract class BlobImageResource extends DynamicImageResource
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param locale
-	 */
-	public BlobImageResource(Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param format
-	 * @param locale
-	 */
-	public BlobImageResource(String format, Locale locale)
-	{
-		super(format, locale);
-	}
 
 	/**
 	 * Construct.

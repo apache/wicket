@@ -19,8 +19,8 @@ package org.apache.wicket.markup.html.image.resource;
 import java.util.Locale;
 
 import org.apache.wicket.IResourceFactory;
-import org.apache.wicket.Resource;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.IntegerGroup;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -40,7 +40,7 @@ public class DefaultButtonImageResourceFactory implements IResourceFactory
 	 * @see org.apache.wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale,
 	 *      java.lang.String, java.lang.String)
 	 */
-	public Resource newResource(final String specification, final Locale locale,
+	public IResource newResource(final String specification, final Locale locale,
 		final String style, final String variation)
 	{
 		final Parser parser = new Parser(specification);

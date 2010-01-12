@@ -17,13 +17,13 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.Resource;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -92,7 +92,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            The resource parameters
 	 */
 	public ImageButton(final String id, final ResourceReference resourceReference,
-		ValueMap resourceParameters)
+		PageParameters resourceParameters)
 	{
 		super(id);
 		setImageResourceReference(resourceReference, resourceParameters);
@@ -111,7 +111,7 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public ImageButton(final String id, final Resource imageResource)
+	public ImageButton(final String id, final IResource imageResource)
 	{
 		super(id);
 		setImageResource(imageResource);
@@ -145,14 +145,14 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	public void onResourceRequested()
 	{
-		localizedImageResource.onResourceRequested();
+		localizedImageResource.onResourceRequested(null);
 	}
 
 	/**
 	 * @param imageResource
 	 *            The new ImageResource to set.
 	 */
-	public void setImageResource(final Resource imageResource)
+	public void setImageResource(final IResource imageResource)
 	{
 		localizedImageResource.setResource(imageResource);
 	}
@@ -173,7 +173,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Set the resource parameters for the resource.
 	 */
 	public void setImageResourceReference(final ResourceReference resourceReference,
-		final ValueMap parameters)
+		final PageParameters parameters)
 	{
 		localizedImageResource.setResourceReference(resourceReference, parameters);
 	}
@@ -194,7 +194,7 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @return Resource returned from subclass
 	 */
-	protected Resource getImageResource()
+	protected IResource getImageResource()
 	{
 		return localizedImageResource.getResource();
 	}
@@ -220,7 +220,7 @@ public class ImageButton extends Button implements IResourceListener
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "image");
 
-		final Resource resource = getImageResource();
+		final IResource resource = getImageResource();
 		if (resource != null)
 		{
 			localizedImageResource.setResource(resource);

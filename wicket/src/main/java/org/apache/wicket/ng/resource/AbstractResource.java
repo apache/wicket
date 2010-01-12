@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.Checks;
 
 /**
  * Convenience resource implementation. The subclass must implement
- * {@link #newResourceData(org.apache.wicket.ng.resource.IResource.Attributes)} method.
+ * {@link #newResourceResponse(org.apache.wicket.ng.resource.IResource.Attributes)} method.
  * 
  * @author Matej Knopp
  */
@@ -50,12 +50,12 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 * Override this method to return a {@link ResourceData} for the request.
+	 * Override this method to return a {@link ResourceResponse} for the request.
 	 * 
 	 * @param attributes
 	 * @return resource data instance
 	 */
-	protected abstract ResourceData newResourceData(Attributes attributes);
+	protected abstract ResourceResponse newResourceResponse(Attributes attributes);
 
 	/**
 	 * Represents content disposition of a resource
@@ -79,7 +79,7 @@ public abstract class AbstractResource implements IResource
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class ResourceData
+	public static class ResourceResponse
 	{
 		private Integer errorCode;
 		private String fileName = null;
@@ -95,7 +95,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Construct.
 		 */
-		public ResourceData()
+		public ResourceResponse()
 		{
 			cacheDuration = Application.get().getResourceSettings().getDefaultCacheDuration();
 		}
@@ -331,7 +331,7 @@ public abstract class AbstractResource implements IResource
 		}
 	};
 
-	protected void configureCache(WebRequest request, WebResponse response, ResourceData data,
+	protected void configureCache(WebRequest request, WebResponse response, ResourceResponse data,
 		Attributes attributes)
 	{
 		if (data.isCacheable())
@@ -349,7 +349,7 @@ public abstract class AbstractResource implements IResource
 
 	public final void respond(Attributes attributes)
 	{
-		ResourceData data = newResourceData(attributes);
+		ResourceResponse data = newResourceResponse(attributes);
 
 		WebRequest request = (WebRequest)attributes.getRequest();
 		WebResponse response = (WebResponse)attributes.getResponse();

@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
+import org.apache.wicket.ng.resource.IResource;
+
 /**
  * A factory which creates resources for a given specification string. The format of the
  * specification string is determined by the resource factory subclass. If the resource factory
@@ -40,6 +42,6 @@ public interface IResourceFactory
 	 *            The component's variation
 	 * @return The resource
 	 */
-	Resource newResource(final String specification, final Locale locale, final String style,
+	IResource newResource(final String specification, final Locale locale, final String style,
 		final String variation);
 }

@@ -63,9 +63,9 @@ public class ResourceStreamResource extends AbstractResource
 	}
 
 	@Override
-	protected ResourceData newResourceData(Attributes attributes)
+	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		ResourceData data = new ResourceData();
+		ResourceResponse data = new ResourceResponse();
 		data.setLastModified(stream.lastModifiedTime().toDate());
 
 		// performance check; don't bother to do anything if the resource is still cached by client

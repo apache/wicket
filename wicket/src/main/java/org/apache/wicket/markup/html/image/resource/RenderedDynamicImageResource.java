@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
 
+import org.apache.wicket.ng.resource.DynamicImageResource;
 import org.apache.wicket.util.time.Time;
 
 
@@ -116,7 +117,6 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * 
 	 * @see org.apache.wicket.Resource#invalidate()
 	 */
-	@Override
 	public synchronized void invalidate()
 	{
 		imageData = null;

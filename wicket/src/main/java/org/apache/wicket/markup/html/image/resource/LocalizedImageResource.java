@@ -21,22 +21,24 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Resource;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.PackageResource;
 import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.IResource.Attributes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.MetaPatternParser;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -67,7 +69,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-public final class LocalizedImageResource implements IClusterable, IResourceListener
+public final class LocalizedImageResource implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -81,13 +83,13 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private final Component component;
 
 	/** The image resource this image component references */
-	private Resource resource;
+	private IResource resource;
 
 	/** The resource reference */
 	private ResourceReference resourceReference;
 
 	/** The resource parameters */
-	private ValueMap resourceParameters;
+	private PageParameters resourceParameters;
 
 	/** The locale of the image resource */
 	private Locale locale;
@@ -179,33 +181,36 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		// If we have a resource reference
 		if (resourceReference != null)
 		{
+			component.getApplication().getResourceReferenceRegistry().registerResourceReference(
+				resourceReference);
 			// Bind the reference to the application
-			resourceReference.bind(component.getApplication());
 
 			// Then dereference the resource
 			resource = resourceReference.getResource();
 
 			if (resource instanceof PackageResource)
 			{
-				resourceReference.setLocale(((PackageResource)resource).getLocale());
+				// TODO NG - deal with this
+				// it's really ugly how resource pushes locale to resource reference :-|
+				// resourceReference.setLocale(((PackageResource)resource).getLocale());
 			}
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
-	 */
-	public final void onResourceRequested()
+	public final void onResourceRequested(PageParameters parameters)
 	{
 		bind();
-		resource.onResourceRequested();
+		RequestCycle requestCycle = RequestCycle.get();
+		Attributes attributes = new Attributes(requestCycle.getRequest(),
+			requestCycle.getResponse(), parameters);
+		resource.respond(attributes);
 	}
 
 	/**
 	 * @param resource
 	 *            The resource to set.
 	 */
-	public final void setResource(final Resource resource)
+	public final void setResource(final IResource resource)
 	{
 		if (this.resource != resource)
 		{
@@ -238,7 +243,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 *            The resource parameters for the shared resource
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference,
-		final ValueMap resourceParameters)
+		final PageParameters resourceParameters)
 	{
 		if (resourceReference != this.resourceReference)
 		{
@@ -291,44 +296,49 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		{
 			resourceReference = (ResourceReference)modelObject;
 		}
-		else if (modelObject instanceof Resource)
+		else if (modelObject instanceof IResource)
 		{
-			resource = (Resource)modelObject;
+			resource = (IResource)modelObject;
 		}
 
+		// FIXME NG
+		// Not yet supported
+
 		// Need to load image resource for this component?
-		if (resource == null && resourceReference == null)
-		{
-			// Get SRC attribute of tag
-			final CharSequence src = tag.getString("src");
-			if (src != null)
-			{
-				// Try to load static image
-				loadStaticImage(src.toString());
-			}
-			else
-			{
-				// Get VALUE attribute of tag
-				final CharSequence value = tag.getString("value");
-				if (value != null)
-				{
-					// Try to generate an image using an image factory
-					newImage(value);
-				}
-				else
-				{
-					// Load static image using model object as the path
-					loadStaticImage(component.getDefaultModelObjectAsString());
-				}
-			}
-		}
+// if (resource == null && resourceReference == null)
+// {
+// // Get SRC attribute of tag
+// final CharSequence src = tag.getString("src");
+// if (src != null)
+// {
+// // Try to load static image
+// // loadStaticImage(src.toString());
+// }
+// else
+// {
+// // Get VALUE attribute of tag
+// final CharSequence value = tag.getString("value");
+// if (value != null)
+// {
+// // Try to generate an image using an image factory
+// newImage(value);
+// }
+// else
+// {
+// // Load static image using model object as the path
+// loadStaticImage(component.getDefaultModelObjectAsString());
+// }
+// }
+// }
 
 		// Get URL for resource
 		final CharSequence url;
 		if (resourceReference != null)
 		{
 			// Create URL to shared resource
-			url = RequestCycle.get().urlFor(resourceReference, resourceParameters);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(resourceReference,
+				resourceParameters);
+			url = RequestCycle.get().renderUrlFor(handler);
 		}
 		else
 		{
@@ -365,41 +375,27 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		return factory;
 	}
 
-	/**
-	 * Tries to load static image at the given path and throws an exception if the image cannot be
-	 * located.
-	 * 
-	 * @param path
-	 *            The path to the image
-	 * @throws WicketRuntimeException
-	 *             Thrown if the image cannot be located
-	 */
-	@SuppressWarnings("unchecked")
-	private void loadStaticImage(final String path)
-	{
-		MarkupContainer parent = component.findParentWithAssociatedMarkup();
-		final Class scope = parent.getClass();
-		resourceReference = new ResourceReference(scope, path)
-		{
-			private static final long serialVersionUID = 1L;
 
-			/**
-			 * @see org.apache.wicket.ResourceReference#newResource()
-			 */
-			@Override
-			protected Resource newResource()
-			{
-				PackageResource pr = PackageResource.get(getScope(), getName(), locale, style,
-					variation);
-				locale = pr.getLocale();
-				return pr;
-			}
-		};
-		resourceReference.setLocale(locale);
-		resourceReference.setStyle(style);
-		resourceReference.setVariation(variation);
-		bind();
-	}
+	static class SimpleStaticResourceReference extends ResourceReference
+	{
+		final IResource resource;
+
+		public SimpleStaticResourceReference(Class<?> scope, String name, Locale locale,
+			String style, String variation, IResource resource)
+		{
+			super(scope, name, locale, style, variation);
+			this.resource = resource;
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public IResource getResource()
+		{
+			return resource;
+		}
+
+	};
 
 	/**
 	 * Generates an image resource based on the attribute values on tag
@@ -424,22 +420,23 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			if (!Strings.isEmpty(imageReferenceName))
 			{
 				// Is resource already available via the application?
-				if (application.getSharedResources().get(Application.class, imageReferenceName,
-					locale, style, variation, true) == null)
+				if (application.getResourceReferenceRegistry().getResourceReference(
+					Application.class, imageReferenceName, locale, style, variation, false) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
-					final Resource imageResource = getResourceFactory(application, factoryName).newResource(
+					final IResource imageResource = getResourceFactory(application, factoryName).newResource(
 						specification, locale, style, variation);
-					application.getSharedResources().add(Application.class, imageReferenceName,
-						locale, style, variation, imageResource);
+
+					ResourceReference ref = new SimpleStaticResourceReference(Application.class,
+						imageReferenceName, locale, style, variation, imageResource);
+
+					application.getResourceReferenceRegistry().registerResourceReference(ref);
 				}
 
 				// Create resource reference
-				resourceReference = new ResourceReference(Application.class, imageReferenceName);
-				resourceReference.setLocale(locale);
-				resourceReference.setStyle(style);
-				resourceReference.setVariation(variation);
+				resourceReference = new ResourceReference(Application.class, imageReferenceName,
+					locale, style, variation);
 			}
 			else
 			{
@@ -461,7 +458,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 * 
 	 * @return resource or <code>null</code> if there is none
 	 */
-	public final Resource getResource()
+	public final IResource getResource()
 	{
 		return resource;
 	}

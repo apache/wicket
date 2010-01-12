@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.markup.html.image;
 
-import org.apache.wicket.Resource;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -56,7 +57,7 @@ public class NonCachingImage extends Image
 	 * @param id
 	 * @param imageResource
 	 */
-	public NonCachingImage(String id, Resource imageResource)
+	public NonCachingImage(String id, IResource imageResource)
 	{
 		super(id, imageResource);
 	}
@@ -71,7 +72,7 @@ public class NonCachingImage extends Image
 	 * @param resourceParameters
 	 */
 	public NonCachingImage(String id, ResourceReference resourceReference,
-		ValueMap resourceParameters)
+		PageParameters resourceParameters)
 	{
 		super(id, resourceReference, resourceParameters);
 	}
