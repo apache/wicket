@@ -199,4 +199,17 @@ public class ServletWebResponse extends WebResponse
 	{
 		return redirect;
 	}
+
+	@Override
+	public void flush()
+	{
+		try
+		{
+			httpServletResponse.flushBuffer();
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
 }

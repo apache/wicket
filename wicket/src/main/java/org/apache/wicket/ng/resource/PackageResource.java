@@ -80,7 +80,7 @@ public class PackageResource implements IResource
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in
 	 * @param name
-	 *            The re;atove path to the resource
+	 *            The relative path to the resource
 	 * @param locale
 	 *            The locale of the resource
 	 * @param style

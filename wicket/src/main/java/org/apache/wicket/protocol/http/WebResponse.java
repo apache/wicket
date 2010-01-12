@@ -150,4 +150,9 @@ public abstract class WebResponse extends Response
 	 *         otherwise.
 	 */
 	public abstract boolean isRedirect();
+
+	/**
+	 * Flushes the response.
+	 */
+	public abstract void flush();
 }

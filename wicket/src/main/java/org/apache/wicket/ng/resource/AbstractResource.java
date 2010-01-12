@@ -427,7 +427,12 @@ public abstract class AbstractResource implements IResource
 				response.setContentLength(contentLength);
 			}
 
-			// 6. Write Data
+			// 6. Flush the response
+			// This is necessary for firefox if this resource is an image, otherwise it messes up
+			// other images on page
+			response.flush();
+
+			// 7. Write Data
 			data.getWriteCallback().writeData(attributes);
 		}
 	}

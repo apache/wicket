@@ -86,6 +86,7 @@ public class MockWebResponse extends WebResponse
 	/**
 	 * @return <code>true</code> if redirect URL was set, <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean isRedirect()
 	{
 		return redirectUrl != null;
@@ -284,4 +285,8 @@ public class MockWebResponse extends WebResponse
 		return errorMessage;
 	}
 
+	@Override
+	public void flush()
+	{
+	}
 }

@@ -184,6 +184,8 @@ public class WicketFilter implements Filter
 			{
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
+
+			response.flushBuffer();
 		}
 		return res;
 	}

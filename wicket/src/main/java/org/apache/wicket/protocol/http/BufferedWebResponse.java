@@ -20,12 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Checks;
 
@@ -39,6 +38,228 @@ import org.apache.wicket.util.lang.Checks;
 public abstract class BufferedWebResponse extends WebResponse
 {
 
+	private static abstract class Action
+	{
+		protected abstract void invoke(WebResponse response);
+	};
+
+	private static class WriteCharSequenceAction extends Action
+	{
+		private final StringBuilder builder = new StringBuilder(4096);
+
+		public WriteCharSequenceAction()
+		{
+
+		}
+
+		public void append(CharSequence sequence)
+		{
+			builder.append(sequence);
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.write(builder);
+		}
+	};
+
+	private static class WriteDataAction extends Action
+	{
+		private final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+		public WriteDataAction()
+		{
+
+		}
+
+		public void append(byte data[])
+		{
+			try
+			{
+				stream.write(data);
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			writeStream(response, stream);
+		}
+	}
+
+	private static class CloseAction extends Action
+	{
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.close();
+		}
+	};
+
+	private static class AddCookieAction extends Action
+	{
+		private final Cookie cookie;
+
+		public AddCookieAction(Cookie cookie)
+		{
+			this.cookie = cookie;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.addCookie(cookie);
+		}
+	};
+
+	private static class ClearCookieAction extends Action
+	{
+		private final Cookie cookie;
+
+		public ClearCookieAction(Cookie cookie)
+		{
+			this.cookie = cookie;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.clearCookie(cookie);
+		}
+	};
+
+	private static class SetHeaderAction extends Action
+	{
+		private final String name;
+		private final String value;
+
+		public SetHeaderAction(String name, String value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.setHeader(name, value);
+		}
+	}
+
+	private static class SetDateHeaderAction extends Action
+	{
+		private final String name;
+		private final long value;
+
+		public SetDateHeaderAction(String name, long value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.setDateHeader(name, value);
+		}
+	}
+
+	private static class SetContentLengthAction extends Action
+	{
+		private final long contentLength;
+
+		public SetContentLengthAction(long contentLength)
+		{
+			this.contentLength = contentLength;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.setContentLength(contentLength);
+		}
+	};
+
+	private static class SetContentTypeAction extends Action
+	{
+		private final String contentType;
+
+		public SetContentTypeAction(String contentType)
+		{
+			this.contentType = contentType;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.setContentType(contentType);
+		}
+	};
+
+	private static class SetStatusAction extends Action
+	{
+		private final int sc;
+
+		public SetStatusAction(int sc)
+		{
+			this.sc = sc;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.setStatus(sc);
+		}
+	};
+
+	private static class SendErrorAction extends Action
+	{
+		private final int sc;
+		private final String msg;
+
+		public SendErrorAction(int sc, String msg)
+		{
+			this.sc = sc;
+			this.msg = msg;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.sendError(sc, msg);
+		}
+	};
+
+	private static class SendRedirectAction extends Action
+	{
+		private final String url;
+
+		public SendRedirectAction(String url)
+		{
+			this.url = url;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.sendRedirect(url);
+		}
+	};
+
+	private static class FlushAction extends Action
+	{
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.flush();
+		}
+	};
+
 	/**
 	 * Construct.
 	 */
@@ -46,136 +267,95 @@ public abstract class BufferedWebResponse extends WebResponse
 	{
 	}
 
-	private static class CookieEntry
-	{
-		Cookie cookie;
-		boolean add;
-	}
-
-	private final List<CookieEntry> cookieEntries = new ArrayList<CookieEntry>();
+	private final List<Action> actions = new ArrayList<Action>();
+	private WriteCharSequenceAction charSequenceAction;
+	private WriteDataAction dataAction;
 
 	@Override
 	public void addCookie(Cookie cookie)
 	{
-		CookieEntry entry = new CookieEntry();
-		entry.cookie = cookie;
-		entry.add = true;
-		cookieEntries.add(entry);
+		actions.add(new AddCookieAction(cookie));
 	}
 
 	@Override
 	public void clearCookie(Cookie cookie)
 	{
-		CookieEntry entry = new CookieEntry();
-		entry.cookie = cookie;
-		entry.add = false;
-		cookieEntries.add(entry);
+		actions.add(new ClearCookieAction(cookie));
 	}
-
-	private Long contentLength = null;
 
 	@Override
 	public void setContentLength(long length)
 	{
-		contentLength = length;
+		actions.add(new SetContentLengthAction(length));
 	}
-
-	private String contentType = null;
 
 	@Override
 	public void setContentType(String mimeType)
 	{
-		contentType = mimeType;
+		actions.add(new SetContentTypeAction(mimeType));
 	}
-
-	private final Map<String, Long> dateHeaders = new HashMap<String, Long>();
 
 	@Override
 	public void setDateHeader(String name, long date)
 	{
-		dateHeaders.put(name, date);
+		actions.add(new SetDateHeaderAction(name, date));
 	}
-
-	private final Map<String, String> headers = new HashMap<String, String>();
 
 	@Override
 	public void setHeader(String name, String value)
 	{
-		headers.put(name, value);
+		actions.add(new SetHeaderAction(name, value));
 	}
-
-	private StringBuilder builder;
-	private ByteArrayOutputStream stream;
 
 	@Override
 	public void write(CharSequence sequence)
 	{
-		if (stream != null)
+		if (dataAction != null)
 		{
 			throw new IllegalStateException(
 				"Can't call write(CharSequence) after write(byte[]) has been called.");
 		}
 
-		if (builder == null)
+		if (charSequenceAction == null)
 		{
-			builder = new StringBuilder(4096);
+			charSequenceAction = new WriteCharSequenceAction();
+			actions.add(charSequenceAction);
 		}
-
-		builder.append(sequence);
+		charSequenceAction.append(sequence);
 	}
 
 	@Override
 	public void write(byte[] array)
 	{
-		if (builder != null)
+		if (charSequenceAction != null)
 		{
 			throw new IllegalStateException(
 				"Can't call write(byte[]) after write(CharSequence) has been called.");
 		}
-		if (stream == null)
+		if (dataAction == null)
 		{
-			stream = new ByteArrayOutputStream(array.length);
+			dataAction = new WriteDataAction();
+			actions.add(dataAction);
 		}
-		try
-		{
-			stream.write(array);
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		dataAction.append(array);
 	}
-
-	private String redirectUrl = null;
 
 	@Override
 	public void sendRedirect(String url)
 	{
-		redirectUrl = url;
+		actions.add(new SendRedirectAction(url));
 	}
-
-	private Integer statusCode = null;
 
 	@Override
 	public void setStatus(int sc)
 	{
-		statusCode = sc;
+		actions.add(new SetStatusAction(sc));
 	}
-
-	static class Error
-	{
-		int sc;
-		String message;
-	}
-
-	private Error error = null;
 
 	@Override
 	public void sendError(int sc, String msg)
 	{
-		error = new Error();
-		error.sc = sc;
-		error.message = msg;
+		actions.add(new SendErrorAction(sc, msg));
 	}
 
 	/**
@@ -188,88 +368,63 @@ public abstract class BufferedWebResponse extends WebResponse
 	{
 		Checks.argumentNotNull(response, "response");
 
-		for (CookieEntry e : cookieEntries)
+		for (Action action : actions)
 		{
-			if (e.add)
-			{
-				response.addCookie(e.cookie);
-			}
-			else
-			{
-				response.clearCookie(e.cookie);
-			}
-		}
-		if (contentLength != null)
-		{
-			response.setContentLength(contentLength);
-		}
-		if (contentType != null)
-		{
-			response.setContentType(contentType);
-		}
-		for (String s : dateHeaders.keySet())
-		{
-			response.setDateHeader(s, dateHeaders.get(s));
-		}
-		for (String s : headers.keySet())
-		{
-			response.setHeader(s, headers.get(s));
-		}
-		if (statusCode != null)
-		{
-			response.setStatus(statusCode);
-		}
-		if (error != null)
-		{
-			response.sendError(error.sc, error.message);
-		}
-		if (redirectUrl != null)
-		{
-			response.sendRedirect(redirectUrl);
-		}
-		if (builder != null)
-		{
-			response.write(builder);
-		}
-		else if (stream != null)
-		{
-			final boolean copied[] = { false };
-			try
-			{
-				// try to avoid copying the array
-				stream.writeTo(new OutputStream()
-				{
-					@Override
-					public void write(int b) throws IOException
-					{
-
-					}
-
-					@Override
-					public void write(byte[] b, int off, int len) throws IOException
-					{
-						if (off == 0 && len == b.length)
-						{
-							response.write(b);
-							copied[0] = true;
-						}
-					}
-				});
-			}
-			catch (IOException e1)
-			{
-				throw new WicketRuntimeException(e1);
-			}
-			if (copied[0] == false)
-			{
-				response.write(stream.toByteArray());
-			}
+			action.invoke(response);
 		}
 	}
 
 	@Override
 	public boolean isRedirect()
 	{
-		return redirectUrl != null;
+		for (Action action : actions)
+		{
+			if (action instanceof SendRedirectAction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void flush()
+	{
+		actions.add(new FlushAction());
+	}
+
+	private static final void writeStream(final Response response, ByteArrayOutputStream stream)
+	{
+		final boolean copied[] = { false };
+		try
+		{
+			// try to avoid copying the array
+			stream.writeTo(new OutputStream()
+			{
+				@Override
+				public void write(int b) throws IOException
+				{
+
+				}
+
+				@Override
+				public void write(byte[] b, int off, int len) throws IOException
+				{
+					if (off == 0 && len == b.length)
+					{
+						response.write(b);
+						copied[0] = true;
+					}
+				}
+			});
+		}
+		catch (IOException e1)
+		{
+			throw new WicketRuntimeException(e1);
+		}
+		if (copied[0] == false)
+		{
+			response.write(stream.toByteArray());
+		}
 	}
 }
