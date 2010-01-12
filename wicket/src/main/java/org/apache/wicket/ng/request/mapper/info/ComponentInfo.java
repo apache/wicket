@@ -94,7 +94,7 @@ public class ComponentInfo
 		Integer behaviorIndex)
 	{
 		Checks.argumentNotEmpty(listenerInterface, "listenerInterface");
-		Checks.argumentNotEmpty(componentPath, "componentPath");
+		Checks.argumentNotNull(componentPath, "componentPath");
 
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;
@@ -207,10 +207,6 @@ public class ComponentInfo
 			String componentPath = decodeComponentPath(string.substring(i + 1));
 
 			if (Strings.isEmpty(listenerInterface))
-			{
-				return null;
-			}
-			if (Strings.isEmpty(componentPath))
 			{
 				return null;
 			}

@@ -23,10 +23,12 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.JavascriptResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -296,8 +298,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		WebApplication app = (WebApplication)getComponent().getApplication();
 		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
-		RequestCycle.get().scheduleRequestHandlerAfterCurrent(target);
+		RequestCycle requestCycle = RequestCycle.get();
+		requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
+		Url baseURL = Url.parse(((WebRequest)requestCycle.getRequest()).getHeader("Wicket-Ajax-BaseURL"));
+		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
+
 		respond(target);
+
+		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**

@@ -31,8 +31,6 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -43,7 +41,10 @@ import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
 import org.apache.wicket.util.lang.Objects;
@@ -230,8 +231,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("alignWithIcon", alignWithIcon());
 		variables.put("hideOnSelect", hideOnSelect());
 		// variables for YUILoader
-		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().urlFor(YUI)));
-		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE));
+		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().renderUrlFor(
+				new ResourceReferenceRequestHandler(YUI))));
+		variables.put("wicketDatePath", RequestCycle.get().renderUrlFor(
+				new ResourceReferenceRequestHandler(WICKET_DATE)));
 		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
 		{
 			variables.put("filter", "filter: \"RAW\",");
@@ -539,7 +542,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	protected CharSequence getIconUrl()
 	{
-		return RequestCycle.get().urlFor(new ResourceReference(DatePicker.class, "icon1.gif"));
+		return RequestCycle.get().renderUrlFor(
+				new ResourceReferenceRequestHandler(new ResourceReference(DatePicker.class,
+						"icon1.gif")));
 	}
 
 	/**
