@@ -174,6 +174,10 @@ public class WicketFilter implements Filter
 					}
 					res = false;
 				}
+				else
+				{
+					resp.flush();
+				}
 			}
 		}
 		finally
