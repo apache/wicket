@@ -108,7 +108,10 @@ public final class DefaultClassResolver implements IClassResolver
 					{
 						loader = DefaultClassResolver.class.getClassLoader();
 					}
-					clazz = loader.loadClass(classname);
+
+					// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+					// clazz = loader.loadClass(classname);
+					clazz = Class.forName(classname, false, loader);
 				}
 				classes.put(classname, new WeakReference<Class<?>>(clazz));
 			}

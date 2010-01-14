@@ -65,7 +65,10 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 			{
 				loader = getClass().getClassLoader();
 			}
-			final Class<?> applicationClass = loader.loadClass(applicationClassName);
+
+			// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+			// final Class<?> applicationClass = loader.loadClass(applicationClassName);
+			final Class<?> applicationClass = Class.forName(applicationClassName, false, loader);
 			if (WebApplication.class.isAssignableFrom(applicationClass))
 			{
 				// Construct WebApplication subclass
