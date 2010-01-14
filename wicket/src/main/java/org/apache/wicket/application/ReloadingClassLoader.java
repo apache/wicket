@@ -197,7 +197,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 */
 	public ReloadingClassLoader(ClassLoader parent)
 	{
-		super(new URL[] {}, parent);
+		super(new URL[] { }, parent);
 		// probably doubles from this class, but just in case
 		addClassLoaderUrls(parent);
 
@@ -282,7 +282,9 @@ public class ReloadingClassLoader extends URLClassLoader
 				else
 				{
 					// Will throw a CFNE if not found in parent
-					clazz = parent.loadClass(name);
+					// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+					// clazz = parent.loadClass(name);
+					clazz = Class.forName(name, false, parent);
 				}
 			}
 		}

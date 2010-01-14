@@ -228,9 +228,12 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Try to find the specified factory class
-				final Class<?> factoryClass = Thread.currentThread()
-					.getContextClassLoader()
-					.loadClass(appFactoryClassName);
+				// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+				// final Class<?> factoryClass = Thread.currentThread()
+				// .getContextClassLoader()
+				// .loadClass(appFactoryClassName);
+				final Class<?> factoryClass = Class.forName(appFactoryClassName, false,
+					Thread.currentThread().getContextClassLoader());
 
 				// Instantiate the factory
 				return (IWebApplicationFactory)factoryClass.newInstance();
