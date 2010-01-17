@@ -18,15 +18,9 @@ package org.apache.wicket.protocol.http.request;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
-import org.apache.wicket.protocol.http.MockPage;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
-import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.IRequestCycleProcessor;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.ng.mock.WicketTester;
 
 /**
  * Simple test using the WicketTester
@@ -35,32 +29,10 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 {
 	private WicketTester tester;
 
-	WebApplication _app = new WebApplication()
-	{
-		@Override
-		public Class<? extends Page> getHomePage()
-		{
-			return MockPage.class;
-		}
-
-		@Override
-		protected IRequestCycleProcessor newRequestCycleProcessor()
-		{
-			return new WebRequestCycleProcessor()
-			{
-				@Override
-				protected IRequestCodingStrategy newRequestCodingStrategy()
-				{
-					return new CryptedUrlWebRequestCodingStrategy(super.newRequestCodingStrategy());
-				}
-			};
-		}
-	};
-
 	@Override
 	public void setUp()
 	{
-		tester = new WicketTester(_app);
+		tester = new WicketTester(new WicketApplication());
 	}
 
 	/**
@@ -73,5 +45,24 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 		assertEquals(page.getClass(), p.getClass());
 	}
 
+	public void testRenderMyPagePost()
+	{
+		// start and render the test page
+		tester.startPage(HomePage.class);
+		tester.assertRenderedPage(HomePage.class);
+
+		// POST
+		tester.submitForm("form1");
+	}
+
+	public void testRenderMyPageGet()
+	{
+		// start and render the test page
+		tester.startPage(HomePage.class);
+		tester.assertRenderedPage(HomePage.class);
+
+		// POST
+		tester.submitForm("form2");
+	}
 
 }
