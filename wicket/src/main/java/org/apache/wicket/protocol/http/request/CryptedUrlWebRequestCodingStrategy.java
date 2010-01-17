@@ -251,6 +251,11 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected String decodeURL(final String url)
 	{
 		int startIndex = url.indexOf("?x=");
+		if (startIndex == -1)
+		{
+			startIndex = url.indexOf("&x=");
+		}
+
 		if (startIndex != -1)
 		{
 			try
@@ -444,6 +449,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			// Rebuild the URL with the 'x' param removed
 			int pos1 = url.indexOf("?x=");
+			if (pos1 == -1)
+			{
+				pos1 = url.indexOf("&x=");
+			}
 			if (pos1 == -1)
 			{
 				throw new WicketRuntimeException("Programming error: we should come here");
