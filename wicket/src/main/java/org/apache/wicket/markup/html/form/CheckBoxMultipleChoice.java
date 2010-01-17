@@ -417,7 +417,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
 					" type=\"checkbox\"").append(
 					(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(
-					(isEnabled() && !isDisabled(choice, index, selected) ? ""
+					(isEnabledInHierarchy() && !isDisabled(choice, index, selected) ? ""
 						: " disabled=\"disabled\"")).append(" value=\"").append(id).append(
 					"\" id=\"").append(idAttr).append("\"/>");
 
