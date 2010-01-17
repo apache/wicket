@@ -28,7 +28,7 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 {
 	private final MarkupStream markupStream;
 	private final ComponentTag parent;
-	private ComponentTag next = null;
+	private ComponentTag next;
 	private int nextIndex;
 	private int currentIndex;
 	private final int originalIndex;
@@ -91,6 +91,9 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 		return currentIndex;
 	}
 
+	/**
+	 * 
+	 */
 	private void findNext()
 	{
 		ComponentTag tag = next;
@@ -102,9 +105,10 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 			tag = null;
 		}
 
+		markupStream.next();
 		while (markupStream.hasMore())
 		{
-			final MarkupElement cursor = markupStream.next();
+			final MarkupElement cursor = markupStream.get();
 
 			if (cursor.closes(parent))
 			{
@@ -124,6 +128,7 @@ class DirectChildTagIterator extends ReadOnlyIterator<ComponentTag>
 				nextIndex = markupStream.getCurrentIndex();
 				break;
 			}
+			markupStream.next();
 		}
 	}
 }

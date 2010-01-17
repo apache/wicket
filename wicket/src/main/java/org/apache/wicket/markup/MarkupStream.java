@@ -309,7 +309,16 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Note:
+	 * The correct way of using MarkupStream is like:
+	 * 
+	 * <pre>
+	 * while (markupStream.hasMore())
+	 * {
+	 *    final MarkupElement cursor = markupStream.get();
+	 *    ...
+	 *    markupStream.next();
+	 * }
+	 * </pre>
 	 * 
 	 * @return The next markup element in the stream
 	 */
