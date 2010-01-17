@@ -1085,7 +1085,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 			{
 				public Object component(Component component)
 				{
-					if (component.isVisible())
+					if (component.isVisibleInHierarchy())
 					{
 						component.renderHead(header);
 						return CONTINUE_TRAVERSAL;
