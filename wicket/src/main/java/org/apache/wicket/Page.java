@@ -688,7 +688,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			try
 			{
 
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { }) != null)
 				{
 					bookmarkable = Boolean.TRUE;
 				}
@@ -1105,12 +1105,30 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				// Get rid of set
 				renderedComponents = null;
 
+				List<Component> transparentContainerChildren = new ArrayList<Component>();
+
 				Iterator<Component> iterator = unrenderedComponents.iterator();
 				outerWhile : while (iterator.hasNext())
 				{
 					Component component = iterator.next();
-					// Now first test if the component has a sibling that is a transparent resolver.
 
+					// If any of the transparentContainerChildren is a parent to component, than
+					// ignore it.
+					for (Component transparentContainerChild : transparentContainerChildren)
+					{
+						MarkupContainer parent = component.getParent();
+						while (parent != null)
+						{
+							if (parent == transparentContainerChild)
+							{
+								iterator.remove();
+								continue outerWhile;
+							}
+							parent = parent.getParent();
+						}
+					}
+
+					// Now first test if the component has a sibling that is a transparent resolver.
 					Iterator<? extends Component> iterator2 = component.getParent().iterator();
 					while (iterator2.hasNext())
 					{
@@ -1127,6 +1145,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 								log.debug(
 									"Component {} wasn't rendered but most likely it has a transparent parent: {}",
 									component, sibling);
+								transparentContainerChildren.add(component);
 								iterator.remove();
 								continue outerWhile;
 							}
@@ -1155,6 +1174,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 						iterator.remove();
 					}
 				}
+
 				// if still > 0
 				if (unrenderedComponents.size() > 0)
 				{
