@@ -18,9 +18,7 @@ package org.apache.wicket.ng.request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -49,18 +47,6 @@ public class UrlTest extends TestCase
 		}
 
 		assertEquals(list, url.getQueryParameters());
-	}
-
-	public void testPutParameters()
-	{
-		Url url = Url.parse("foo?color=green&width=50&color=red");
-		Map<String, String[]> params = new HashMap<String, String[]>();
-		url.putQueryParameters(params);
-		assertEquals(2, params.size());
-		assertEquals("50", params.get("width")[0]);
-		assertEquals(2, params.get("color").length);
-		assertEquals("green", params.get("color")[0]);
-		assertEquals("red", params.get("color")[1]);
 	}
 
 	/**

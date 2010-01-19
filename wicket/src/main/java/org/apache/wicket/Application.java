@@ -200,6 +200,7 @@ public abstract class Application implements UnboundListener
 	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
 
+
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
 	 * 
@@ -909,6 +910,7 @@ public abstract class Application implements UnboundListener
 
 		pageManager = newPageManager(getPageManagerContext());
 		resourceReferenceRegistry = newResourceReferenceRegistry();
+		sharedResources = newSharedResources(resourceReferenceRegistry);
 
 		// set up default request mapper
 		setRootRequestMapper(new SystemMapper());
@@ -1278,6 +1280,18 @@ public abstract class Application implements UnboundListener
 		return resourceReferenceRegistry;
 	}
 
+	private SharedResources sharedResources;
+
+	protected SharedResources newSharedResources(ResourceReferenceRegistry registry)
+	{
+		return new SharedResources(registry);
+	}
+
+	public SharedResources getSharedResources()
+	{
+		return sharedResources;
+	}
+
 	private IPageFactory pageFactory;
 
 	/**
@@ -1399,7 +1413,6 @@ public abstract class Application implements UnboundListener
 	 */
 	protected RequestCycle newRequestCycle(RequestCycleContext context)
 	{
-
 		return new RequestCycle(context);
 	}
 

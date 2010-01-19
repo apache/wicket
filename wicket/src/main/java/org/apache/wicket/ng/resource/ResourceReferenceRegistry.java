@@ -43,11 +43,11 @@ public class ResourceReferenceRegistry
 			Checks.argumentNotNull(scope, "scope");
 			Checks.argumentNotNull(name, "name");
 
-			this.scope = scope;
-			this.name = name;
+			this.scope = scope.intern();
+			this.name = name.intern();
 			this.locale = locale;
-			this.style = style;
-			this.variation = variation;
+			this.style = style != null ? style.intern() : null;
+			this.variation = variation != null ? variation.intern() : null;
 		}
 
 		/**
@@ -102,7 +102,11 @@ public class ResourceReferenceRegistry
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle(), reference.getVariation());
-		map.put(key, reference);
+
+		if (map.containsKey(key) == false)
+		{
+			map.put(key, reference);
+		}
 	}
 
 	/**

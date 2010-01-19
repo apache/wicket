@@ -108,9 +108,7 @@ public final class Home extends WicketExamplePage
 				final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 				drawCircle((Graphics2D)image.getGraphics());
 				resource.setImage(image);
-
-				// TODO: NG
-				return (IResource)resource;
+				return resource;
 			}
 		};
 	}
@@ -142,8 +140,7 @@ public final class Home extends WicketExamplePage
 			@Override
 			public IResource getResource()
 			{
-				// TODO NG
-				return (IResource)new DefaultButtonImageResource("Ok");
+				return new DefaultButtonImageResource("Ok");
 			}
 		};
 	}

@@ -20,11 +20,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
-import org.apache.wicket.util.lang.Arrays;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
@@ -68,7 +66,7 @@ public final class Url implements Serializable
 	/**
 	 * 
 	 * @param qp
-	 * @return query paramaters
+	 * @return query parameters
 	 */
 	private static QueryParameter parseQueryParameter(final String qp)
 	{
@@ -214,31 +212,6 @@ public final class Url implements Serializable
 	public List<QueryParameter> getQueryParameters()
 	{
 		return parameters;
-	}
-
-	/**
-	 * Populates the provided {@code params} map with query parameters
-	 * 
-	 * @deprecated the code should be using proper QuaryParameter oriented method, this is just to
-	 *             help ease migration
-	 */
-	@Deprecated
-	public void putQueryParameters(Map<String, String[]> params)
-	{
-		for (QueryParameter param : getQueryParameters())
-		{
-			String[] array = params.get(param.getName());
-			if (array == null)
-			{
-				array = new String[] { param.getValue() };
-			}
-			else
-			{
-				array = Arrays.copyOf(array, array.length + 1);
-				array[array.length - 1] = param.getValue();
-			}
-			params.put(param.getName(), array);
-		}
 	}
 
 	/**

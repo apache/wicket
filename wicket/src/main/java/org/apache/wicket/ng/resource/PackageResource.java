@@ -101,6 +101,8 @@ public class PackageResource implements IResource
 					". See IPackageResourceGuard");
 		}
 
+		// TODO NG: Check path for ../
+
 		scopeName = scope.getName();
 		path = name;
 		this.locale = locale;
