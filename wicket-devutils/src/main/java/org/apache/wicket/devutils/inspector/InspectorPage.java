@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.string.StringValueConversionException;
 
@@ -63,7 +64,7 @@ public final class InspectorPage extends DevUtilsPage
 		        // Ignore
 		}
 		add(new PageView("page", entry == null ? null : entry.getPage()));
-		add(new Image("bug"));
+		add(new Image("bug", new ResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
