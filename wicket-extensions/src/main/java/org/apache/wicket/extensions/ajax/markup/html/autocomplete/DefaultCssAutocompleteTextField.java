@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -33,7 +33,7 @@ public abstract class DefaultCssAutocompleteTextField<T> extends AutoCompleteTex
 	public DefaultCssAutocompleteTextField(String string, IModel<T> model)
 	{
 		super(string, model);
-		add(HeaderContributor.forCss(DefaultCssAutocompleteTextField.class,
+		add(CSSPackageResource.getHeaderContribution(DefaultCssAutocompleteTextField.class,
 			"DefaultCssAutocompleteTextField.css"));
 	}
 

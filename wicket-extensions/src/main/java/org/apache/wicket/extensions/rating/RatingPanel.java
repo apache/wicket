@@ -20,8 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
@@ -319,7 +319,7 @@ public abstract class RatingPanel extends Panel
 	 */
 	public final void addDefaultCssStyle()
 	{
-		add(HeaderContributor.forCss(RatingPanel.class, "RatingPanel.css"));
+		add(CSSPackageResource.getHeaderContribution(RatingPanel.class, "RatingPanel.css"));
 	}
 
 	/**

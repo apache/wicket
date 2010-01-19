@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.wizard;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
@@ -171,7 +171,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public void addDefaultCssStyle()
 	{
-		add(HeaderContributor.forCss(Wizard.class, "Wizard.css"));
+		add(CSSPackageResource.getHeaderContribution(Wizard.class, "Wizard.css"));
 	}
 
 	/**

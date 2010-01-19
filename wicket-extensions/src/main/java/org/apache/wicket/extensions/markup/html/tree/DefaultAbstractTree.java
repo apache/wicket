@@ -23,9 +23,9 @@ import org.apache.wicket.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.tree.AbstractTree;
@@ -593,7 +593,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		ResourceReference css = getCSS();
 		if (css != null)
 		{
-			add(HeaderContributor.forCss(css.getScope(), css.getName()));
+			add(CSSPackageResource.getHeaderContribution(css.getScope(), css.getName()));
 		}
 	}
 

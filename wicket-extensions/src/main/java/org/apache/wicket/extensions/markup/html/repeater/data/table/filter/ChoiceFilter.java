@@ -66,7 +66,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
 		boolean autoSubmit)
 	{
-		this(id, model, form, Model.valueOf(choices), defaultRenderer, autoSubmit);
+		this(id, model, form, Model.ofList(choices), defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
 		IChoiceRenderer<T> renderer, boolean autoSubmit)
 	{
-		this(id, model, form, Model.valueOf(choices), renderer, autoSubmit);
+		this(id, model, form, Model.ofList(choices), renderer, autoSubmit);
 	}
 
 
