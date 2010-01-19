@@ -229,9 +229,18 @@ public class WebResponse extends Response
 						 */
 						httpServletResponse.addHeader("Ajax-Location", url);
 
-						// safari chokes on empty response. but perhaps this is
-						// not the best place?
-						httpServletResponse.getWriter().write("-");
+						// safari chokes on empty response. so we should always output at least a
+						// "-"
+
+						/*
+						 * usually the Ajax-Location header is enough and we do not need to the
+						 * redirect url into the response, but sometimes the response is processed
+						 * via an iframe (eg using multipart ajax handling) and the headers are not
+						 * available because XHR is not used and that is the only way javascript has
+						 * access to response headers.
+						 */
+						httpServletResponse.getWriter().write(
+							"<ajax-response><redirect>" + url + "</redirect></ajax-response>");
 
 						configureAjaxRedirect();
 					}

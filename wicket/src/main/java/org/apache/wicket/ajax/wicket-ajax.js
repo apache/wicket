@@ -1248,6 +1248,8 @@ Wicket.Ajax.Call.prototype = {
 		           this.processEvaluation(steps, node);
 		        } else if (node.tagName == "header-contribution") {
 		           this.processHeaderContribution(steps, node);
+		        } else if (node.tagName == "redirect") {
+		           this.processRedirect(steps, node);
 		        }
 		        
 		    }
@@ -1370,6 +1372,14 @@ Wicket.Ajax.Call.prototype = {
 		var c = new Wicket.Head.Contributor();
 		c.processContribution(steps, node);
 	},
+
+	// Adds a closure that processes a redirect
+	processRedirect: function(steps, node) {
+		var text = node.firstChild.nodeValue;
+		Wicket.Log.info("Redirecting to: "+text);
+		window.location=text;
+	},
+
 
 	// mark the focused component so that we know if it has been replaced by response
 	processFocusedComponentMark: function(steps) {
