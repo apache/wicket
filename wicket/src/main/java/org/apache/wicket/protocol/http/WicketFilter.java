@@ -1133,8 +1133,7 @@ public class WicketFilter implements Filter
 
 		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
 		{
-
-			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
+			final String resourceReferenceKey = WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length()));
 
 			Resource resource = null;
 			WebRequestCycle requestCycle = null;

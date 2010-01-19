@@ -45,6 +45,7 @@ import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
@@ -696,7 +697,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			int ix = RESOURCES_PATH_PREFIX.length();
 			if (pathInfo.length() > ix)
 			{
-				StringBuffer path = new StringBuffer(pathInfo.substring(ix));
+				StringBuffer path = new StringBuffer(
+					WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(ix)));
 				int ixSemiColon = path.indexOf(";");
 				// strip off any jsession id
 				if (ixSemiColon != -1)
