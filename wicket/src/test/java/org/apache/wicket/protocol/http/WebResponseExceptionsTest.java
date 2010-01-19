@@ -90,7 +90,6 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		cycle.request();
 
 		document = tester.getServletResponse().getDocument();
-		assertTrue(document.equals("-"));
 		tester.assertAjaxLocation();
 	}
 
