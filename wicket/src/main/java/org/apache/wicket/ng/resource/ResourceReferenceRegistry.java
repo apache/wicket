@@ -105,12 +105,16 @@ public class ResourceReferenceRegistry
 	{
 		Checks.argumentNotNull(reference, "reference");
 
-		Key key = new Key(reference.getScope().getName(), reference.getName(),
-			reference.getLocale(), reference.getStyle(), reference.getVariation());
-
-		if (map.containsKey(key) == false)
+		if (reference.canBeRegistered())
 		{
-			map.put(key, reference);
+
+			Key key = new Key(reference.getScope().getName(), reference.getName(),
+				reference.getLocale(), reference.getStyle(), reference.getVariation());
+
+			if (map.containsKey(key) == false)
+			{
+				map.put(key, reference);
+			}
 		}
 	}
 

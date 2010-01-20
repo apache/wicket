@@ -256,4 +256,15 @@ public abstract class ResourceReference implements Serializable
 			return Objects.hashCode(getLocale(), getStyle(), getVariation());
 		}
 	};
+
+	/**
+	 * Can be used to disable registering certain resource references in
+	 * {@link ResourceReferenceRegistry}.
+	 * 
+	 * @return <code>true</code> if this reference can be registered, <code>false</code> otherwise.
+	 */
+	public boolean canBeRegistered()
+	{
+		return true;
+	}
 }

@@ -62,10 +62,20 @@ public class SharedResourceReference extends ResourceReference
 				}
 			};
 		}
-		else
+		else if (ref != this)
 		{
 			return ref.getResource();
 		}
+		else
+		{
+			throw new IllegalStateException(
+				"SharedResourceReference can not be registered globally.");
+		}
 	}
 
+	@Override
+	public boolean canBeRegistered()
+	{
+		return false;
+	}
 }
