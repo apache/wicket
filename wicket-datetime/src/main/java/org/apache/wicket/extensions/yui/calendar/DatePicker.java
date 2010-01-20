@@ -44,6 +44,7 @@ import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvi
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
@@ -543,7 +544,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected CharSequence getIconUrl()
 	{
 		return RequestCycle.get().renderUrlFor(
-				new ResourceReferenceRequestHandler(new ResourceReference(DatePicker.class,
+				new ResourceReferenceRequestHandler(new PackageResourceReference(DatePicker.class,
 						"icon1.gif")));
 	}
 
