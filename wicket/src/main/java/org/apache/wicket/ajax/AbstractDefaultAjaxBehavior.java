@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -47,7 +48,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the default indicator gif file. */
-	public static final ResourceReference INDICATOR = new ResourceReference(
+	public static final ResourceReference INDICATOR = new PackageResourceReference(
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	/** reference to the default ajax debug support javascript file. */

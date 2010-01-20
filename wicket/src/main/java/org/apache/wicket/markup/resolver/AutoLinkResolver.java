@@ -34,6 +34,7 @@ import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.lang.Packages;
@@ -567,8 +568,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle(), getVariation()))
 			{
 				// Create the component implementing the link
-				resourceReference = new ResourceReference(clazz, href, getLocale(), getStyle(),
-					getVariation());
+				resourceReference = new PackageResourceReference(clazz, href, getLocale(),
+					getStyle(), getVariation());
 			}
 			else
 			{

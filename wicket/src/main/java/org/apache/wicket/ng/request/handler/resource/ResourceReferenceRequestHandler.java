@@ -86,5 +86,6 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
+		new ResourceRequestHandler(getResourceReference().getResource(), getPageParameters()).respond(requestCycle);
 	}
 }

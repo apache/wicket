@@ -31,6 +31,7 @@ import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.ng.resource.IResource.Attributes;
 import org.apache.wicket.util.lang.Objects;
@@ -421,7 +422,7 @@ public final class LocalizedImageResource implements IClusterable
 			{
 				// Is resource already available via the application?
 				if (application.getResourceReferenceRegistry().getResourceReference(
-					Application.class, imageReferenceName, locale, style, variation, false) == null)
+					Application.class, imageReferenceName, locale, style, variation, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
@@ -435,8 +436,8 @@ public final class LocalizedImageResource implements IClusterable
 				}
 
 				// Create resource reference
-				resourceReference = new ResourceReference(Application.class, imageReferenceName,
-					locale, style, variation);
+				resourceReference = new PackageResourceReference(Application.class,
+					imageReferenceName, locale, style, variation);
 			}
 			else
 			{

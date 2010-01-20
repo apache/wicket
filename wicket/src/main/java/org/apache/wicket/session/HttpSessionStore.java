@@ -63,6 +63,11 @@ public class HttpSessionStore implements ISessionStore
 	{
 	}
 
+	private String getSessionAttribute()
+	{
+		return SESSION_ATTRIBUTE_NAME + Application.get().getApplicationKey();
+	}
+
 	/**
 	 * 
 	 * @param request
@@ -98,7 +103,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public final void bind(final Request request, final Session newSession)
 	{
-		if (getAttribute(request, SESSION_ATTRIBUTE_NAME) != newSession)
+		if (getAttribute(request, getSessionAttribute()) != newSession)
 		{
 			// call template method
 			onBind(request, newSession);
@@ -111,7 +116,7 @@ public class HttpSessionStore implements ISessionStore
 				new SessionBindingListener(applicationKey, httpSession.getId()));
 
 			// register the session object itself
-			setAttribute(request, SESSION_ATTRIBUTE_NAME, newSession);
+			setAttribute(request, getSessionAttribute(), newSession);
 		}
 	}
 
@@ -170,7 +175,7 @@ public class HttpSessionStore implements ISessionStore
 		String sessionId = getSessionId(request, false);
 		if (sessionId != null)
 		{
-			return (Session)getAttribute(request, SESSION_ATTRIBUTE_NAME);
+			return (Session)getAttribute(request, getSessionAttribute());
 		}
 		return null;
 	}

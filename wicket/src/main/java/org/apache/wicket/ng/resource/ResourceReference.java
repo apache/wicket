@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Matej Knopp
  */
-public class ResourceReference implements Serializable
+public abstract class ResourceReference implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -167,12 +167,93 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * Creates new resource.
+	 * Returns the resource.
 	 * 
-	 * @return new resource instance
+	 * @return resource instance
 	 */
-	public IResource getResource()
+	public abstract IResource getResource();
+
+	/**
+	 * Allows to specify which locale, style and variation values will the generated URL for this
+	 * resource reference have.
+	 * 
+	 * @return url attributes
+	 */
+	public UrlAttributes getUrlAttributes()
 	{
-		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+		return new UrlAttributes(getLocale(), getStyle(), getVariation());
 	}
+
+	/**
+	 * @see ResourceReference#getUrlAttributes()
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static class UrlAttributes
+	{
+		private final Locale locale;
+		private final String style;
+		private final String variation;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param locale
+		 * @param style
+		 * @param variation
+		 */
+		public UrlAttributes(Locale locale, String style, String variation)
+		{
+			this.locale = locale;
+			this.style = style;
+			this.variation = variation;
+		}
+
+		/**
+		 * @return locale
+		 */
+		public Locale getLocale()
+		{
+			return locale;
+		}
+
+		/**
+		 * @return style
+		 */
+		public String getStyle()
+		{
+			return style;
+		}
+
+		/**
+		 * @return variation
+		 */
+		public String getVariation()
+		{
+			return variation;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			if (obj instanceof UrlAttributes == false)
+			{
+				return false;
+			}
+			UrlAttributes that = (UrlAttributes)obj;
+			return Objects.equal(getLocale(), that.getLocale()) &&
+				Objects.equal(getStyle(), that.getStyle()) &&
+				Objects.equal(getVariation(), that.getVariation());
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hashCode(getLocale(), getStyle(), getVariation());
+		}
+	};
 }

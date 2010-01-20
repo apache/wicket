@@ -18,23 +18,54 @@ package org.apache.wicket.ng.resource;
 
 import java.util.Locale;
 
-/**
- * TODO NG
- * 
- * @author Matej
- */
-public class JavascriptResourceReference extends PackageResourceReference
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.wicket.Application;
+
+public class SharedResourceReference extends ResourceReference
 {
 
-	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+	public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
 	}
 
-	public JavascriptResourceReference(Class<?> scope, String name)
+	public SharedResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
+	}
+
+	public SharedResourceReference(String name)
+	{
+		super(name);
+	}
+
+	@Override
+	public IResource getResource()
+	{
+		ResourceReference ref = Application.get()
+			.getResourceReferenceRegistry()
+			.getResourceReference(getScope(), getName(), getLocale(), getStyle(), getVariation(),
+				false);
+
+		if (ref == null)
+		{
+			return new AbstractResource()
+			{
+				@Override
+				protected ResourceResponse newResourceResponse(Attributes attributes)
+				{
+					ResourceResponse res = new ResourceResponse();
+					res.setErrorCode(HttpServletResponse.SC_NOT_FOUND);
+					return res;
+				}
+			};
+		}
+		else
+		{
+			return ref.getResource();
+		}
 	}
 
 }

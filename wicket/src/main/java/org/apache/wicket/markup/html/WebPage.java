@@ -29,6 +29,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.response.StringResponse;
@@ -97,7 +98,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/** The resource references used for new window/tab support */
-	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
+	private static ResourceReference cookiesResource = new PackageResourceReference(WebPage.class,
 		"cookies.js");
 
 	/**

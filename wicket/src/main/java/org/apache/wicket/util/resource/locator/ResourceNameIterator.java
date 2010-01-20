@@ -76,6 +76,8 @@ public class ResourceNameIterator implements Iterator<String>
 	private final static Set<String> isoLanguages = new ConcurrentHashSet<String>(
 		Arrays.asList(Locale.getISOLanguages()));
 
+	private final boolean strict;
+
 	/**
 	 * Construct.
 	 * 
@@ -89,9 +91,12 @@ public class ResourceNameIterator implements Iterator<String>
 	 *            The Locale to apply
 	 * @param extensions
 	 *            the filname's extensions (comma separated)
+	 * 
+	 * @param strict
+	 *            whether other combinations should be tried
 	 */
 	public ResourceNameIterator(String path, final String style, final String variation,
-		final Locale locale, final String extensions)
+		final Locale locale, final String extensions, boolean strict)
 	{
 		this.locale = locale;
 		if ((extensions == null) && (path.indexOf('.') != -1))
@@ -107,6 +112,7 @@ public class ResourceNameIterator implements Iterator<String>
 		path = getLocaleFromFilename(path);
 
 		styleIterator = new StyleAndVariationResourceNameIterator(path, style, variation);
+		this.strict = strict;
 	}
 
 	/**
@@ -152,7 +158,7 @@ public class ResourceNameIterator implements Iterator<String>
 			{
 				path = path.substring(0, path.length() - filename.length() + matcher.start());
 				localeIterator = new LocaleResourceNameIterator(path, new Locale(language,
-					country != null ? country : "", variant != null ? variant : ""));
+					country != null ? country : "", variant != null ? variant : ""), strict);
 			}
 		} // else skip the whole thing... probably user specific underscores used
 
@@ -212,7 +218,7 @@ public class ResourceNameIterator implements Iterator<String>
 		{
 			String newPath = styleIterator.next();
 
-			localeIterator = new LocaleResourceNameIterator(newPath, locale);
+			localeIterator = new LocaleResourceNameIterator(newPath, locale, strict);
 			while (localeIterator.hasNext())
 			{
 				newPath = localeIterator.next();
@@ -222,6 +228,11 @@ public class ResourceNameIterator implements Iterator<String>
 				{
 					return true;
 				}
+			}
+
+			if (strict)
+			{
+				break;
 			}
 		}
 

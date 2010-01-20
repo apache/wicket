@@ -19,8 +19,8 @@ package org.apache.wicket.examples.hangman;
 import java.awt.Color;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.Resource;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
+import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Primitives;
 
@@ -79,7 +79,8 @@ public class Letter implements IClusterable
 		return new ResourceReference(Letter.class, asString() +
 			(isGuessed() ? "_enabled" : "_disabled"))
 		{
-			protected Resource newResource()
+			@Override
+			public IResource getResource()
 			{
 				// Lazy loading of shared resource
 				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(

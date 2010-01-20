@@ -18,7 +18,9 @@ package org.apache.wicket.ng.resource;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
@@ -83,6 +85,9 @@ public class ResourceReferenceRegistry
 	};
 
 	private final Map<Key, ResourceReference> map = new ConcurrentHashMap<Key, ResourceReference>();
+	private final Queue<Key> autoAddedQueue = new ConcurrentLinkedQueue<Key>();
+
+	private int autoAddedCapacity = 1000;
 
 	/**
 	 * Construct.
@@ -139,6 +144,13 @@ public class ResourceReferenceRegistry
 	{
 		Key key = new Key(scope.getName(), name, locale, style, variation);
 		ResourceReference res = map.get(key);
+		if (strict)
+		{
+			if (res == null)
+			{
+				res = addDefaultResourceReference(scope, name, locale, style, variation);
+			}
+		}
 		if (strict || res != null)
 		{
 			return res;
@@ -172,7 +184,7 @@ public class ResourceReferenceRegistry
 			}
 			if (res == null && createIfNotFound)
 			{
-				res = createDefaultResourceReference(scope, name, locale, style, variation);
+				res = addDefaultResourceReference(scope, name, locale, style, variation);
 			}
 			return res;
 		}
@@ -225,18 +237,38 @@ public class ResourceReferenceRegistry
 		return reference;
 	}
 
-	/**
-	 * 
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 * @param variation
-	 * @return
-	 */
+
+	private ResourceReference addDefaultResourceReference(Class<?> scope, String name,
+		Locale locale, String style, String variation)
+	{
+		Key key = new Key(scope.getName(), name, locale, style, variation);
+		if (autoAddedQueue.size() > getAutoAddedCapacity())
+		{
+			Key first = autoAddedQueue.remove();
+			map.remove(first);
+		}
+		autoAddedQueue.add(key);
+
+		ResourceReference reference = createDefaultResourceReference(scope, name, locale, style,
+			variation);
+		registerResourceReference(reference);
+		return reference;
+	}
+
 	protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
 		Locale locale, String style, String variation)
 	{
-		return new ResourceReference(scope, name, locale, style, variation);
+		return new PackageResourceReference(scope, name, locale, style, variation);
+	}
+
+
+	public void setAutoAddedCapacity(int autoAddedCapacity)
+	{
+		this.autoAddedCapacity = autoAddedCapacity;
+	}
+
+	public int getAutoAddedCapacity()
+	{
+		return autoAddedCapacity;
 	}
 }

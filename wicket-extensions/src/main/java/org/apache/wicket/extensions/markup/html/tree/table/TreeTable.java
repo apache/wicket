@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.ng.resource.CompressedResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 
@@ -109,8 +110,8 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/** Reference to the css file. */
-	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
-		"res/tree-table.css");
+	private static final ResourceReference CSS = new CompressedResourceReference(
+		DefaultAbstractTree.class, "res/tree-table.css");
 
 	private static final long serialVersionUID = 1L;
 

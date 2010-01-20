@@ -57,6 +57,8 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	/** Internal state */
 	private int state = 0;
 
+	private final boolean strict;
+
 	/**
 	 * While iterating the various combinations, it will always contain the current combination used
 	 * to create the path
@@ -71,11 +73,13 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 * 
 	 * @param path
 	 * @param locale
+	 * @param strict
 	 */
-	public LocaleResourceNameIterator(final String path, final Locale locale)
+	public LocaleResourceNameIterator(final String path, final Locale locale, boolean strict)
 	{
 		this.path = path;
 		this.locale = locale;
+		this.strict = strict;
 	}
 
 	/**
@@ -92,7 +96,13 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 */
 	public boolean hasNext()
 	{
-		return (state < 4);
+		int limit = 4;
+		if (strict && locale != null)
+		{
+			// omit the last step
+			limit = 3;
+		}
+		return (state < limit);
 	}
 
 	/**

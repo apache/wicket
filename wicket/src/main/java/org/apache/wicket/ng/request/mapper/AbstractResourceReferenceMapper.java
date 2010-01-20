@@ -30,44 +30,36 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 {
-	/**
-	 * 
-	 */
-	protected static class ResourceReferenceAttributes
-	{
-		protected Locale locale;
-		protected String style;
-		protected String variation;
-	};
 
 	/**
 	 * 
 	 * @param attributes
 	 * @return
 	 */
-	protected static String encodeResourceReferenceAttributes(ResourceReferenceAttributes attributes)
+	protected static String encodeResourceReferenceAttributes(
+		ResourceReference.UrlAttributes attributes)
 	{
 		if (attributes == null ||
-			(attributes.locale == null && attributes.style == null && attributes.variation == null))
+			(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
 		{
 			return null;
 		}
 		else
 		{
 			StringBuilder res = new StringBuilder();
-			if (attributes.locale != null)
+			if (attributes.getLocale() != null)
 			{
-				res.append(attributes.locale.toString());
+				res.append(attributes.getLocale().toString());
 			}
-			if (!Strings.isEmpty(attributes.style))
+			if (!Strings.isEmpty(attributes.getStyle()))
 			{
 				res.append("-");
-				res.append(attributes.style);
+				res.append(attributes.getStyle());
 			}
-			if (!Strings.isEmpty(attributes.variation))
+			if (!Strings.isEmpty(attributes.getVariation()))
 			{
 				res.append("-");
-				res.append(attributes.variation);
+				res.append(attributes.getVariation());
 			}
 			return res.toString();
 		}
@@ -78,24 +70,28 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 	 * @param attributes
 	 * @return
 	 */
-	protected static ResourceReferenceAttributes decodeResourceReferenceAttributes(String attributes)
+	protected static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(
+		String attributes)
 	{
-		ResourceReferenceAttributes res = new ResourceReferenceAttributes();
+		Locale locale = null;
+		String style = null;
+		String variation = null;
+
 		if (!Strings.isEmpty(attributes))
 		{
 			String split[] = attributes.split("-", 3);
-			res.locale = parseLocale(split[0]);
+			locale = parseLocale(split[0]);
 			if (split.length == 2)
 			{
-				res.style = split[1];
+				style = split[1];
 			}
 			else if (split.length == 3)
 			{
-				res.style = split[1];
-				res.variation = split[2];
+				style = split[1];
+				variation = split[2];
 			}
 		}
-		return res;
+		return new ResourceReference.UrlAttributes(locale, style, variation);
 	}
 
 	/**
@@ -138,11 +134,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 	 */
 	protected void encodeResourceReferenceAttributes(Url url, ResourceReference reference)
 	{
-		ResourceReferenceAttributes attributes = new ResourceReferenceAttributes();
-		attributes.locale = reference.getLocale();
-		attributes.style = reference.getStyle();
-		attributes.variation = reference.getVariation();
-		String encoded = encodeResourceReferenceAttributes(attributes);
+		String encoded = encodeResourceReferenceAttributes(reference.getUrlAttributes());
 		if (!Strings.isEmpty(encoded))
 		{
 			url.getQueryParameters().add(new Url.QueryParameter(encoded, ""));
@@ -154,7 +146,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 	 * @param url
 	 * @return
 	 */
-	protected ResourceReferenceAttributes getResourceReferenceAttributes(Url url)
+	protected ResourceReference.UrlAttributes getResourceReferenceAttributes(Url url)
 	{
 		if (url == null)
 		{
@@ -168,6 +160,6 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 				return decodeResourceReferenceAttributes(param.getName());
 			}
 		}
-		return new ResourceReferenceAttributes();
+		return new ResourceReference.UrlAttributes(null, null, null);
 	}
 }

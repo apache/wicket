@@ -1387,7 +1387,7 @@ public abstract class Application implements UnboundListener
 		Session session = getSessionStore().lookup(requestCycle.getRequest());
 		if (session == null)
 		{
-			session = newSession(requestCycle);
+			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
 			getPageManager().newSessionCreated();
 		}
@@ -1396,11 +1396,6 @@ public abstract class Application implements UnboundListener
 			ThreadContext.setSession(session);
 		}
 		return session;
-	}
-
-	protected Session newSession(RequestCycle requestCycle)
-	{
-		return new WebSession(requestCycle.getRequest());
 	}
 
 	/**

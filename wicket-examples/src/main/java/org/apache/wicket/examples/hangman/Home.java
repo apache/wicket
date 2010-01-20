@@ -36,6 +36,7 @@ public class Home extends HangmanPage
 	 */
 	public Home(final PageParameters parameters)
 	{
+		getSession().bind();
 		final String word = parameters.getNamedParameter("word").toOptionalString();
 		if (word == null)
 		{

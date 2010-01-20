@@ -28,7 +28,9 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.SharedResourceReference;
 
 
 /**
@@ -58,7 +60,7 @@ public final class Home extends WicketExamplePage
 		}
 	}
 
-	private static final ResourceReference RESOURCE_REF = new ResourceReference(Home.class,
+	private static final ResourceReference RESOURCE_REF = new PackageResourceReference(Home.class,
 		"Image2.gif");
 
 	/**
@@ -67,7 +69,7 @@ public final class Home extends WicketExamplePage
 	public Home()
 	{
 		// Image as package resource
-		add(new Image("image2"));
+		add(new Image("image2", new PackageResourceReference(Home.class, "image2.gif")));
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.
@@ -83,7 +85,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("okButton", getOkButtonImage()));
 
 		// Add cancel button image
-		add(new Image("cancelButton", new ResourceReference("cancelButton")));
+		add(new Image("cancelButton", new SharedResourceReference("cancelButton")));
 
 		// image loaded as resource ref via model.
 		add(new Image("imageModelResourceReference", new Model<ResourceReference>(RESOURCE_REF)));

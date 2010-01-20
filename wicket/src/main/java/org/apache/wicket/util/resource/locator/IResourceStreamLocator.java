@@ -65,4 +65,28 @@ public interface IResourceStreamLocator
 	 */
 	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
 		Locale locale, String extension);
+
+	/**
+	 * Loads a resource, given a path, style, variation, locale and extension.
+	 * 
+	 * @param clazz
+	 *            The class loader for delegating the loading of the resource
+	 * @param path
+	 *            The path of the resource
+	 * @param style
+	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
+	 * @param locale
+	 *            The locale of the resource to load
+	 * @param extension
+	 *            The extension of the resource
+	 * 
+	 * @param strict
+	 *            whether the specified attributes must match exactly
+	 * 
+	 * @return The resource or null
+	 */
+	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
+		Locale locale, String extension, boolean strict);
 }

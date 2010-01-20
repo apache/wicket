@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -44,7 +45,7 @@ public final class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Image("beer"));
+		add(new Image("beer", new PackageResourceReference(Home.class, "Beer.gif")));
 
 		// create a dummy object to serve as our substitution model
 		ValueMap map = new ValueMap();

@@ -37,6 +37,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.ng.resource.CompressedResourceReference;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 
@@ -112,26 +115,28 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new ResourceReference(Palette.class,
-		"palette.js");
+	private static final ResourceReference JAVASCRIPT = new JavascriptResourceReference(
+		Palette.class, "palette.js");
 
 	/** reference to the palette's css resource */
-	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
+	private static final ResourceReference CSS = new CompressedResourceReference(Palette.class,
+		"palette.css");
 
 
 	/** reference to default up button image */
-	private static final ResourceReference UP_IMAGE = new ResourceReference(Palette.class, "up.gif");
+	private static final ResourceReference UP_IMAGE = new PackageResourceReference(Palette.class,
+		"up.gif");
 
 	/** reference to default down button image */
-	private static final ResourceReference DOWN_IMAGE = new ResourceReference(Palette.class,
+	private static final ResourceReference DOWN_IMAGE = new PackageResourceReference(Palette.class,
 		"down.gif");
 
 	/** reference to default remove button image */
-	private static final ResourceReference REMOVE_IMAGE = new ResourceReference(Palette.class,
-		"remove.gif");
+	private static final ResourceReference REMOVE_IMAGE = new PackageResourceReference(
+		Palette.class, "remove.gif");
 
 	/** reference to default add button image */
-	private static final ResourceReference ADD_IMAGE = new ResourceReference(Palette.class,
+	private static final ResourceReference ADD_IMAGE = new PackageResourceReference(Palette.class,
 		"add.gif");
 
 	/**

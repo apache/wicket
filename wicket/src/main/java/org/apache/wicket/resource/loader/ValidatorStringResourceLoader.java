@@ -77,7 +77,7 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 
 			// iterate over all the combinations
 			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
-				null);
+				null, false);
 			while (iter.hasNext())
 			{
 				String newPath = iter.next();

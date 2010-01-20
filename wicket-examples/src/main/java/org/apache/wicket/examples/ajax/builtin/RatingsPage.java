@@ -25,6 +25,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 
@@ -38,14 +39,14 @@ public class RatingsPage extends BasePage
 	/**
 	 * Star image for no selected star
 	 */
-	public static final ResourceReference WICKETSTAR0 = new ResourceReference(RatingsPage.class,
-		"WicketStar0.png");
+	public static final ResourceReference WICKETSTAR0 = new PackageResourceReference(
+		RatingsPage.class, "WicketStar0.png");
 
 	/**
 	 * Star image for selected star
 	 */
-	public static final ResourceReference WICKETSTAR1 = new ResourceReference(RatingsPage.class,
-		"WicketStar1.png");
+	public static final ResourceReference WICKETSTAR1 = new PackageResourceReference(
+		RatingsPage.class, "WicketStar1.png");
 
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;

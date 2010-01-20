@@ -113,10 +113,16 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final String variation, final Locale locale, final String extension)
 	{
+		return locate(clazz, path, style, variation, locale, extension, false);
+	}
+
+	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
+		Locale locale, String extension, boolean strict)
+	{
 		// Try the various combinations of style, locale and extension to find
 		// the resource.
 		ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
-			extension);
+			extension, strict);
 		while (iter.hasNext())
 		{
 			String newPath = iter.next();

@@ -89,7 +89,7 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 
 				// Iterator over all the combinations
 				ResourceNameIterator iter = new ResourceNameIterator(path, style, variation,
-					locale, null);
+					locale, null, false);
 				while (iter.hasNext())
 				{
 					String newPath = iter.next();

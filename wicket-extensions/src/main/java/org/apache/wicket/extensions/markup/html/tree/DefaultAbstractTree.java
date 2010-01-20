@@ -37,6 +37,8 @@ import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.CompressedResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.EnumeratedType;
 
@@ -119,20 +121,20 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Reference to the css file.
 	 */
-	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
-		"res/tree.css");
+	private static final ResourceReference CSS = new CompressedResourceReference(
+		DefaultAbstractTree.class, "res/tree.css");
 
 	/** Reference to the icon of closed tree folder */
-	private static final ResourceReference FOLDER_CLOSED = new ResourceReference(
+	private static final ResourceReference FOLDER_CLOSED = new PackageResourceReference(
 		DefaultAbstractTree.class, "res/folder-closed.gif");
 
 	/** Reference to the icon of open tree folder */
-	private static final ResourceReference FOLDER_OPEN = new ResourceReference(
+	private static final ResourceReference FOLDER_OPEN = new PackageResourceReference(
 		DefaultAbstractTree.class, "res/folder-open.gif");
 
 	/** Reference to the icon of tree item (not a folder) */
-	private static final ResourceReference ITEM = new ResourceReference(DefaultAbstractTree.class,
-		"res/item.gif");
+	private static final ResourceReference ITEM = new PackageResourceReference(
+		DefaultAbstractTree.class, "res/item.gif");
 
 	/** The link type, default is {@link LinkType#AJAX ajax}. */
 	private LinkType linkType = LinkType.AJAX;

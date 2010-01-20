@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.SharedResourceReference;
 
 
 /**
@@ -134,7 +134,7 @@ public class Home extends WicketExamplePage
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
-		add(new ResourceLink("cancelButtonLink", new ResourceReference("cancelButton")));
+		add(new ResourceLink("cancelButtonLink", new SharedResourceReference("cancelButton")));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");

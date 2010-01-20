@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
@@ -172,10 +173,10 @@ public class LabelIconPanel extends Panel
 		return RESOURCE_ITEM;
 	}
 
-	private static final ResourceReference RESOURCE_FOLDER_OPEN = new ResourceReference(
+	private static final ResourceReference RESOURCE_FOLDER_OPEN = new PackageResourceReference(
 		LabelIconPanel.class, "res/folder-open.gif");
-	private static final ResourceReference RESOURCE_FOLDER_CLOSED = new ResourceReference(
+	private static final ResourceReference RESOURCE_FOLDER_CLOSED = new PackageResourceReference(
 		LabelIconPanel.class, "res/folder-closed.gif");
-	private static final ResourceReference RESOURCE_ITEM = new ResourceReference(
+	private static final ResourceReference RESOURCE_ITEM = new PackageResourceReference(
 		LabelIconPanel.class, "res/item.gif");
 }

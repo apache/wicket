@@ -46,13 +46,12 @@ public class Image extends WebComponent implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * This constructor can be used if you have a img tag that has a src that points to a
-	 * PackageResource (which will be created and bind to the shared resources) Or if you have a
-	 * value attribute in your tag for which the image factory can make an image.
+	 * This constructor can be used if you override {@link #getImageResourceReference()} or
+	 * {@link #getImageResource()}
 	 * 
-	 * @see org.apache.wicket.Component#Component(String)
+	 * @param id
 	 */
-	public Image(final String id)
+	protected Image(final String id)
 	{
 		super(id);
 	}

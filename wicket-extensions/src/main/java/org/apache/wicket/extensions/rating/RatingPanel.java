@@ -31,6 +31,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
@@ -157,13 +158,13 @@ public abstract class RatingPanel extends Panel
 	/**
 	 * Star image for no selected star
 	 */
-	public static final ResourceReference STAR0 = new ResourceReference(RatingPanel.class,
+	public static final ResourceReference STAR0 = new PackageResourceReference(RatingPanel.class,
 		"star0.gif");
 
 	/**
 	 * Star image for selected star
 	 */
-	public static final ResourceReference STAR1 = new ResourceReference(RatingPanel.class,
+	public static final ResourceReference STAR1 = new PackageResourceReference(RatingPanel.class,
 		"star1.gif");
 
 	/**

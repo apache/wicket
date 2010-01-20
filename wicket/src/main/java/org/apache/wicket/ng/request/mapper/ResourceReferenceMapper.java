@@ -21,10 +21,8 @@ import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.ng.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
-import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.lang.Classes;
 
@@ -85,7 +83,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				name.append(url.getSegments().get(i));
 			}
 
-			ResourceReferenceAttributes attributes = getResourceReferenceAttributes(url);
+			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
 
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request,
@@ -95,18 +93,11 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 			if (scope != null)
 			{
 				ResourceReference res = getContext().getResourceReferenceRegistry()
-					.getResourceReference(scope, name.toString(), attributes.locale,
-						attributes.style, attributes.variation, false);
+					.getResourceReference(scope, name.toString(), attributes.getLocale(),
+						attributes.getStyle(), attributes.getVariation(), true);
 				if (res != null)
 				{
-					IResource resource = res.getResource();
-					if (resource != null)
-					{
-						ResourceRequestHandler handler = new ResourceRequestHandler(resource,
-							attributes.locale, attributes.style, attributes.variation,
-							pageParameters);
-						return handler;
-					}
+					return new ResourceReferenceRequestHandler(res, pageParameters);
 				}
 			}
 		}
